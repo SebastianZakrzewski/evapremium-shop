@@ -26,8 +26,8 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
         coverflowEffect={{
           rotate: 0,
           stretch: 0,
-          depth: 100,
-          modifier: 1,
+          depth: 200,
+          modifier: 1.5,
           slideShadows: false,
         }}
         navigation={{
@@ -38,9 +38,9 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
         className="w-full"
       >
         {images.map((color, index) => (
-          <SwiperSlide key={index} className="w-80 h-96 md:w-96 md:h-[28rem]">
+          <SwiperSlide key={index} className="w-64 h-96 md:w-80 md:h-[28rem]">
             <div 
-              className="relative w-full h-full rounded-lg overflow-hidden flex items-center justify-center text-white text-2xl font-bold"
+              className="relative w-full h-full rounded-xl overflow-hidden flex items-center justify-center text-white text-xl font-bold shadow-2xl"
               style={{ backgroundColor: `#${color}` }}
             >
               <span>Produkt {index + 1}</span>
