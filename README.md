@@ -1,24 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Eva Website v0.1 Alpha
 
-## Getting Started
+Nowoczesna aplikacja Next.js z Tailwind CSS i shadcn/ui.
 
-First, run the development server:
+## 🚀 Technologie
 
+- **Next.js 14** - Framework React z App Router
+- **TypeScript** - Typowanie statyczne
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - Komponenty UI zbudowane na Radix UI
+- **ESLint** - Linting kodu
+
+## 📦 Instalacja
+
+1. Sklonuj repozytorium:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd eva-website-v0.1-alpha
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Zainstaluj zależności:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Uruchom serwer deweloperski:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Otwórz [http://localhost:3000](http://localhost:3000) w przeglądarce.
+
+## 🛠️ Dostępne skrypty
+
+- `npm run dev` - Uruchamia serwer deweloperski
+- `npm run build` - Buduje aplikację do produkcji
+- `npm run start` - Uruchamia aplikację w trybie produkcji
+- `npm run lint` - Sprawdza kod za pomocą ESLint
+
+## 📁 Struktura projektu
+
+```
+src/
+├── app/                 # App Router (Next.js 14)
+│   ├── globals.css     # Globalne style CSS
+│   ├── layout.tsx      # Główny layout
+│   └── page.tsx        # Strona główna
+├── components/         # Komponenty React
+│   └── ui/            # Komponenty shadcn/ui
+│       ├── button.tsx
+│       └── card.tsx
+└── lib/               # Narzędzia i utilities
+    └── utils.ts       # Funkcje pomocnicze
+```
+
+## 🎨 shadcn/ui
+
+Projekt używa shadcn/ui do komponentów UI. Aby dodać nowe komponenty:
+
+```bash
+npx shadcn@latest add <component-name>
+```
+
+Dostępne komponenty:
+- `button` - Przyciski z różnymi wariantami
+- `card` - Karty z nagłówkiem, treścią i stopką
+
+## 🌙 Tryb ciemny
+
+Aplikacja wspiera tryb ciemny dzięki Tailwind CSS i shadcn/ui. Kolory automatycznie dostosowują się do preferencji systemu.
+
+## 📱 Responsywność
+
+Aplikacja jest w pełni responsywna i działa na wszystkich urządzeniach dzięki Tailwind CSS.
+
+## 🔧 Konfiguracja
+
+- `tailwind.config.js` - Konfiguracja Tailwind CSS
+- `components.json` - Konfiguracja shadcn/ui
+- `postcss.config.mjs` - Konfiguracja PostCSS
+
+## 📄 Licencja
+
+MIT
 
 ## Learn More
 
