@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const heroSlides = [
   {
@@ -75,9 +76,12 @@ export default function HeroSection() {
                 <p className="text-xl md:text-2xl mb-8 text-gray-300 animate-fade-in-delay">
                   {slide.subtitle}
                 </p>
-                <button className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition-colors animate-fade-in-delay-2">
+                <Link 
+                  href="#products" 
+                  className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition-colors animate-fade-in-delay-2 inline-block"
+                >
                   {slide.cta}
-                </button>
+                </Link>
               </div>
             </div>
           </div>
