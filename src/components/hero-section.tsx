@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 const heroSlides = [
   {
@@ -76,12 +75,20 @@ export default function HeroSection() {
                 <p className="text-xl md:text-2xl mb-8 text-gray-300 animate-fade-in-delay">
                   {slide.subtitle}
                 </p>
-                <Link 
-                  href="#products" 
-                  className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition-colors animate-fade-in-delay-2 inline-block"
+                <button 
+                  onClick={() => {
+                    const element = document.getElementById('products');
+                    if (element) {
+                      element.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                      });
+                    }
+                  }}
+                  className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition-colors animate-fade-in-delay-2"
                 >
                   {slide.cta}
-                </Link>
+                </button>
               </div>
             </div>
           </div>
