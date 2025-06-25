@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import HeroSection from "@/components/hero-section";
 import ProductSelection from "@/components/product-selection";
