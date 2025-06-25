@@ -17,13 +17,13 @@ export const brands: Brand[] = [
   {
     id: 3,
     name: "Mercedes-Benz",
-    logo: "/images/logos/mercedes.svg", // Placeholder - brak zdjęcia
+    logo: "/images/products/audi.jpg", // Tymczasowo używamy Audi jako placeholder
     description: "Niemiecka marka luksusowa"
   },
   {
     id: 4,
     name: "Tesla",
-    logo: "/images/logos/tesla.svg", // Placeholder - brak zdjęcia
+    logo: "/images/products/porsche.png", // Tymczasowo używamy Porsche jako placeholder
     description: "Amerykańska marka elektryczna"
   },
   {
