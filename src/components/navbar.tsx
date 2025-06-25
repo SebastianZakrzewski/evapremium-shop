@@ -13,7 +13,7 @@ export default function Navbar() {
             <rect width="28" height="28" rx="6" fill="#fff"/>
             <path d="M7 21V7h7.5a4.5 4.5 0 1 1 0 9H9.5V21H7Zm2.5-6.5h5a2.5 2.5 0 1 0 0-5h-5v5Z" fill="#000"/>
           </svg>
-          Framer
+          EvaPremium
         </Link>
         {/* Desktop Links */}
         <div className="hidden md:flex gap-6 items-center">

@@ -6,10 +6,10 @@ import Image from "next/image";
 const heroSlides = [
   {
     id: 1,
-    title: "Odkryj Nową Kolekcję",
-    subtitle: "Najnowsze trendy w modzie",
+    title: "Maty samochodowe Evapremium",
+    subtitle: "Najwyższej jakości dywaniki do Twojego auta",
     image: "/next.svg",
-    cta: "Zobacz Kolekcję"
+    cta: "Zamów"
   },
   {
     id: 2,
