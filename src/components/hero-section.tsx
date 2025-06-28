@@ -1,28 +1,27 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 
 const heroSlides = [
   {
     id: 1,
     title: "Maty samochodowe Evapremium",
     subtitle: "Najwyższej jakości dywaniki do Twojego auta",
-    image: "/next.svg",
+    video: "/images/hero/heromat.mp4",
     cta: "Zamów"
   },
   {
     id: 2,
     title: "Ekskluzywne Materiały",
     subtitle: "Najwyższa jakość wykonania",
-    image: "/vercel.svg",
+    video: "/images/hero/heromat.mp4",
     cta: "Poznaj Materiały"
   },
   {
     id: 3,
     title: "Spersonalizowane Projekty",
     subtitle: "Dostosowane do Twoich potrzeb",
-    image: "/file.svg",
+    video: "/images/hero/heromat.mp4",
     cta: "Zamów Projekt"
   }
 ];
@@ -30,13 +29,13 @@ const heroSlides = [
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-  //   }, 5000);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
 
-  //   return () => clearInterval(timer);
-  // }, []);
+    return () => clearInterval(timer);
+  }, []);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
@@ -61,18 +60,43 @@ export default function HeroSection() {
               index === currentSlide ? "opacity-100" : "opacity-0"
             }`}
           >
-            {/* Background Image */}
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900">
-              <div className="absolute inset-0 bg-black/50"></div>
+            {/* Video Background */}
+            <div className="absolute inset-0 w-full h-full">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                poster="/images/hero/heromat-poster.jpg"
+                className="w-full h-full object-cover"
+                style={{
+                  objectPosition: 'center center',
+                  transform: 'scale(1.01)',
+                  filter: 'brightness(1.05) contrast(1.02)'
+                }}
+                onLoadedData={(e) => {
+                  const video = e.target as HTMLVideoElement;
+                  video.playbackRate = 1.0;
+                }}
+              >
+                <source src={slide.video} type="video/mp4" />
+                <source src="/images/hero/heromat.webm" type="video/webm" />
+                <source src="/images/hero/heromat-4k.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              
+              {/* Enhanced Overlay with Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40"></div>
             </div>
             
             {/* Content */}
             <div className="relative z-10 flex items-center justify-center h-full text-center text-white px-4">
               <div className="max-w-4xl">
-                <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
+                <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in drop-shadow-2xl">
                   {slide.title}
                 </h1>
-                <p className="text-xl md:text-2xl mb-8 text-gray-300 animate-fade-in-delay">
+                <p className="text-xl md:text-2xl mb-8 text-gray-300 animate-fade-in-delay drop-shadow-lg">
                   {slide.subtitle}
                 </p>
                 <button 
@@ -85,7 +109,7 @@ export default function HeroSection() {
                       });
                     }
                   }}
-                  className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition-colors animate-fade-in-delay-2"
+                  className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition-colors animate-fade-in-delay-2 shadow-2xl"
                 >
                   {slide.cta}
                 </button>
