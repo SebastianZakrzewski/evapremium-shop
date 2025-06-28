@@ -50,19 +50,21 @@ export default function WhyUsSection() {
             return (
               <div
                 key={item.id}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-700/50 hover:border-red-800/50"
+                className="flex items-center justify-center group cursor-pointer"
               >
-                <div className="flex flex-col items-center text-center">
-                  {/* Icon */}
-                  <div className="w-16 h-16 bg-red-900/40 rounded-full flex items-center justify-center mb-6 group-hover:bg-red-800/50 transition-colors border border-red-800/50">
-                    <IconComponent className="w-8 h-8 text-red-400" />
+                <div className="flex flex-col items-center text-center transition-all duration-300 transform hover:scale-105">
+                  {/* Icon Container with black background and red border */}
+                  <div className="mb-4 bg-black rounded-xl p-4 w-40 h-40 md:w-56 md:h-56 lg:w-72 lg:h-72 flex items-center justify-center border-4 border-red-800/50 hover:border-red-700/50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl">
+                    <div className="w-16 h-16 bg-red-900/40 rounded-full flex items-center justify-center transition-all duration-300 border border-red-800/50 group-hover:bg-red-800/50 group-hover:scale-110">
+                      <IconComponent className="w-8 h-8 text-red-400 transition-all duration-300 group-hover:scale-110" />
+                    </div>
                   </div>
                   
                   {/* Content */}
-                  <h3 className="text-xl md:text-2xl font-semibold text-white mb-4">
+                  <h3 className="text-lg md:text-xl font-semibold text-white mb-4 transition-all duration-300 group-hover:text-red-400">
                     {item.title}
                   </h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <p className="text-gray-300 leading-relaxed max-w-xs transition-all duration-300 group-hover:text-white">
                     {item.description}
                   </p>
                 </div>
