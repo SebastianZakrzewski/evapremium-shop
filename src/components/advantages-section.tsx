@@ -31,7 +31,7 @@ export default function AdvantagesSection() {
     <section className="py-8 md:py-12 bg-black">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-8 md:mb-12">
+        <div className="text-center mb-6 md:mb-10">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
             POZNAJ NASZ PRODUKT
           </h2>
