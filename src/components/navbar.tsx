@@ -27,6 +27,7 @@ export default function Navbar() {
           <div className="hidden md:flex gap-6 items-center absolute left-1/2 transform -translate-x-1/2">
             <Link href="#dywaniki" className="text-white/90 hover:text-white transition font-medium">Dywaniki Samochodowe</Link>
             <Link href="/modele" className="text-white/90 hover:text-white transition font-medium">Modele Aut</Link>
+            <Link href="/konfigurator" className="text-white/90 hover:text-white transition font-medium">Konfigurator</Link>
             <Link href="#o-nas" className="text-white/90 hover:text-white transition font-medium">O Nas</Link>
             <Link href="#kontakt" className="text-white/90 hover:text-white transition font-medium">Kontakt</Link>
           </div>
@@ -90,6 +91,7 @@ export default function Navbar() {
           <div className="flex flex-col gap-4 py-6 px-8">
             <Link href="#dywaniki" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Dywaniki Samochodowe</Link>
             <Link href="/modele" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Modele Aut</Link>
+            <Link href="/konfigurator" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Konfigurator</Link>
             <Link href="#o-nas" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>O Nas</Link>
             <Link href="#kontakt" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Kontakt</Link>
             <a href="tel:+48505401233" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>
