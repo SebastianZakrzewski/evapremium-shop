@@ -7,9 +7,9 @@ import { Brand } from '../types/carousel';
 
 export default function ProductSelection() {
   return (
-    <section id="products" className="bg-black min-h-screen flex items-center justify-center">
+    <section id="products" className="bg-black py-6 md:py-8 flex items-center justify-center">
       <div className="w-full max-w-7xl mx-auto px-4">
-        <div className="text-center mb-12">
+        <div className="text-center mb-4 md:mb-6">
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
             Wybierz Markę
           </h2>

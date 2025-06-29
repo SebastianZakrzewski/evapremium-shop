@@ -31,10 +31,10 @@ const whyUsItems = [
 
 export default function WhyUsSection() {
   return (
-    <section className="py-16 md:py-24 bg-black">
+    <section className="py-8 md:py-12 bg-black">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12 md:mb-16">
+        <div className="text-center mb-6 md:mb-10">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
             Dlaczego My?
           </h2>
@@ -74,7 +74,7 @@ export default function WhyUsSection() {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center mt-12 md:mt-16">
+        <div className="text-center mt-6 md:mt-10">
           <button 
             onClick={() => {
               const element = document.getElementById('products');
