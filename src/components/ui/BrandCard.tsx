@@ -9,7 +9,7 @@ interface BrandCardProps {
 
 export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) => {
   // Sprawdź czy to jest zdjęcie czy logo SVG
-  const isImage = brand.logo.includes('.jpg') || brand.logo.includes('.png') || brand.logo.includes('.jpeg');
+  const isImage = brand.logo.includes('.jpg') || brand.logo.includes('.png') || brand.logo.includes('.jpeg') || brand.logo.includes('.avif');
   
   return (
     <div
