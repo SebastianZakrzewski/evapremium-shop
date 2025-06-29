@@ -17,13 +17,13 @@ export const brands: Brand[] = [
   {
     id: 3,
     name: "Mercedes-Benz",
-    logo: "/images/products/audi.jpg", // Tymczasowo używamy Audi jako placeholder
+    logo: "/images/products/mercedes.jpg",
     description: "Niemiecka marka luksusowa"
   },
   {
     id: 4,
     name: "Tesla",
-    logo: "/images/products/porsche.png", // Tymczasowo używamy Porsche jako placeholder
+    logo: "/images/products/tesla.avif",
     description: "Amerykańska marka elektryczna"
   },
   {
@@ -51,7 +51,7 @@ export const modelsByBrand: Record<string, Model[]> = {
       name: "A6",
       brand: "Audi", 
       year: 2024,
-      imageSrc: "/images/products/audi.jpg", // Używamy tego samego zdjęcia
+      imageSrc: "/images/products/audi.jpg",
       price: "250,000 PLN",
       description: "Luksusowy sedan"
     },
@@ -60,7 +60,7 @@ export const modelsByBrand: Record<string, Model[]> = {
       name: "Q5",
       brand: "Audi",
       year: 2024,
-      imageSrc: "/images/products/audi.jpg", // Używamy tego samego zdjęcia
+      imageSrc: "/images/products/audi.jpg",
       price: "220,000 PLN",
       description: "SUV premium"
     }
@@ -80,7 +80,7 @@ export const modelsByBrand: Record<string, Model[]> = {
       name: "X3",
       brand: "BMW",
       year: 2024,
-      imageSrc: "/images/products/bmw.png", // Używamy tego samego zdjęcia
+      imageSrc: "/images/products/bmw.png",
       price: "280,000 PLN",
       description: "Kompaktowy SUV"
     },
@@ -89,7 +89,7 @@ export const modelsByBrand: Record<string, Model[]> = {
       name: "3 Series",
       brand: "BMW",
       year: 2024,
-      imageSrc: "/images/products/bmw.png", // Używamy tego samego zdjęcia
+      imageSrc: "/images/products/bmw.png",
       price: "200,000 PLN",
       description: "Sportowy sedan"
     }
@@ -100,7 +100,7 @@ export const modelsByBrand: Record<string, Model[]> = {
       name: "C-Class",
       brand: "Mercedes-Benz",
       year: 2024,
-      imageSrc: "/images/products/audi.jpg", // Tymczasowo używamy Audi
+      imageSrc: "/images/products/mercedes.jpg",
       price: "220,000 PLN",
       description: "Elegancki sedan"
     },
@@ -109,7 +109,7 @@ export const modelsByBrand: Record<string, Model[]> = {
       name: "E-Class",
       brand: "Mercedes-Benz",
       year: 2024,
-      imageSrc: "/images/products/bmw.png", // Tymczasowo używamy BMW
+      imageSrc: "/images/products/mercedes.jpg",
       price: "350,000 PLN",
       description: "Luksusowy sedan"
     }
@@ -120,7 +120,7 @@ export const modelsByBrand: Record<string, Model[]> = {
       name: "Model 3",
       brand: "Tesla",
       year: 2024,
-      imageSrc: "/images/products/porsche.png", // Tymczasowo używamy Porsche
+      imageSrc: "/images/products/tesla.avif",
       price: "280,000 PLN",
       description: "Elektryczny sedan"
     },
@@ -129,7 +129,7 @@ export const modelsByBrand: Record<string, Model[]> = {
       name: "Model Y",
       brand: "Tesla",
       year: 2024,
-      imageSrc: "/images/products/audi.jpg", // Tymczasowo używamy Audi
+      imageSrc: "/images/products/tesla.avif",
       price: "320,000 PLN",
       description: "Elektryczny SUV"
     }
@@ -149,7 +149,7 @@ export const modelsByBrand: Record<string, Model[]> = {
       name: "Cayenne",
       brand: "Porsche",
       year: 2024,
-      imageSrc: "/images/products/porsche.png", // Używamy tego samego zdjęcia
+      imageSrc: "/images/products/porsche.png",
       price: "380,000 PLN",
       description: "Sportowy SUV"
     }
