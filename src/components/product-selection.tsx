@@ -9,7 +9,7 @@ export default function ProductSelection() {
   return (
     <section id="products" className="bg-black py-8 md:py-12 flex items-center justify-center">
       <div className="w-full max-w-7xl mx-auto px-4">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 md:mb-10">
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
             Wybierz Markę
           </h2>
