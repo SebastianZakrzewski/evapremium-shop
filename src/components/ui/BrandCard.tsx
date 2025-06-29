@@ -11,9 +11,6 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
   // Sprawdź czy to jest zdjęcie czy logo SVG
   const isImage = brand.logo.includes('.jpg') || brand.logo.includes('.png') || brand.logo.includes('.jpeg') || brand.logo.includes('.avif');
   
-  // Specjalne ustawienia dla Tesli
-  const isTesla = brand.name === "Tesla";
-  
   return (
     <div
       className={`w-44 h-72 md:w-56 md:h-96 aspect-[9/16] flex flex-col items-center justify-center rounded-2xl shadow-lg overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 transition-all duration-300 cursor-pointer relative ${className}`}
@@ -26,7 +23,7 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
             src={brand.logo}
             alt={`${brand.name}`}
             fill
-            className={`object-cover ${isTesla ? 'object-top' : 'object-center'}`}
+            className="object-cover"
             sizes="(max-width: 768px) 176px 288px, 224px 384px"
             priority={true}
             quality={95}
@@ -53,7 +50,7 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
         )}
         
         {/* Overlay dla lepszej czytelności tekstu */}
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-black/20" />
       </div>
       
       {/* Zawartość tekstowa */}
