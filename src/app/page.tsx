@@ -5,7 +5,7 @@ import HeroSection from "@/components/hero-section";
 import AdvantagesSection from "@/components/advantages-section";
 import WhyUsSection from "@/components/why-us-section";
 import ProductSelection from "@/components/product-selection";
-import Footer from "@/components/footer";
+// import Footer from "@/components/footer";
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
       <AdvantagesSection />
       <WhyUsSection />
       <ProductSelection />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }
