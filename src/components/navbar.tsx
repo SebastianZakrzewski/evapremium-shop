@@ -30,8 +30,11 @@ export default function Navbar() {
             <Link href="#o-nas" className="text-white/90 hover:text-white transition font-medium">O Nas</Link>
             <Link href="#kontakt" className="text-white/90 hover:text-white transition font-medium">Kontakt</Link>
           </div>
-          {/* Desktop Cart Icon */}
+          {/* Desktop Cart Icon and Contact */}
           <div className="hidden md:flex items-center gap-3">
+            <a href="tel:+48505401233" className="text-white/90 hover:text-white transition-colors font-medium text-sm">
+              +48 505 401 233
+            </a>
             <Link href="/wyszukaj" className="text-white/90 hover:text-white transition-colors p-2 group">
               <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -89,6 +92,9 @@ export default function Navbar() {
             <Link href="/modele" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Modele Aut</Link>
             <Link href="#o-nas" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>O Nas</Link>
             <Link href="#kontakt" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Kontakt</Link>
+            <a href="tel:+48505401233" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>
+              +48 505 401 233
+            </a>
           </div>
         </div>
       </nav>
