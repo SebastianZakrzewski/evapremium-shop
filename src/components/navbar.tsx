@@ -14,10 +14,9 @@ export default function Navbar() {
         {/* Desktop Links - Centered */}
         <div className="hidden md:flex gap-6 items-center absolute left-1/2 transform -translate-x-1/2">
           <Link href="#dywaniki" className="text-white/90 hover:text-white transition font-medium">Dywaniki Samochodowe</Link>
-          <Link href="#features" className="text-white/90 hover:text-white transition font-medium">Features</Link>
-          <Link href="#pricing" className="text-white/90 hover:text-white transition font-medium">Pricing</Link>
-          <Link href="#resources" className="text-white/90 hover:text-white transition font-medium">Resources</Link>
-          <Link href="#blog" className="text-white/90 hover:text-white transition font-medium">Blog</Link>
+          <Link href="/modele" className="text-white/90 hover:text-white transition font-medium">Modele Aut</Link>
+          <Link href="#o-nas" className="text-white/90 hover:text-white transition font-medium">O Nas</Link>
+          <Link href="#kontakt" className="text-white/90 hover:text-white transition font-medium">Kontakt</Link>
         </div>
         {/* Hamburger */}
         <button
@@ -36,10 +35,9 @@ export default function Navbar() {
       >
         <div className="flex flex-col gap-4 py-6 px-8">
           <Link href="#dywaniki" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Dywaniki Samochodowe</Link>
-          <Link href="#features" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Features</Link>
-          <Link href="#pricing" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Pricing</Link>
-          <Link href="#resources" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Resources</Link>
-          <Link href="#blog" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Blog</Link>
+          <Link href="/modele" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Modele Aut</Link>
+          <Link href="#o-nas" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>O Nas</Link>
+          <Link href="#kontakt" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Kontakt</Link>
         </div>
       </div>
     </nav>
