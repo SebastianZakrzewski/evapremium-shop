@@ -43,29 +43,74 @@ export default function ImageCarousel<T>({
   renderItem
 }: ImageCarouselProps<T>) {
   const [centerIndex, setCenterIndex] = useState(2);
+  const [search, setSearch] = useState("");
   const total = items?.length || 0;
 
+  // Filtrowanie po nazwie (jeśli obiekt ma pole name)
+  const filteredItems = search.trim().length > 0
+    ? items.filter((item: any) => typeof item === 'object' && 'name' in item && item.name.toLowerCase().includes(search.toLowerCase()))
+    : items;
+
+  // Jeśli po wyszukiwaniu zmienia się liczba elementów, ustaw środek
+  React.useEffect(() => {
+    if (filteredItems.length > 0) {
+      // Znajdź indeks karty z wpisaną marką
+      const searchTerm = search.toLowerCase().trim();
+      if (searchTerm.length > 0) {
+        const foundIndex = filteredItems.findIndex((item: any) => 
+          typeof item === 'object' && 'name' in item && 
+          item.name.toLowerCase().includes(searchTerm)
+        );
+        if (foundIndex !== -1) {
+          setCenterIndex(foundIndex);
+        } else {
+          setCenterIndex(Math.floor(filteredItems.length / 2));
+        }
+      } else {
+        setCenterIndex(Math.floor(filteredItems.length / 2));
+      }
+    } else {
+      setCenterIndex(0);
+    }
+  }, [search, filteredItems.length]);
+
   // Jeśli nie ma elementów, nie renderuj karuzeli
-  if (!items || items.length === 0) {
+  if (!filteredItems || filteredItems.length === 0) {
     return (
-      <div className={`relative bg-black py-16 flex justify-center items-center ${className}`}>
+      <div className={`relative bg-black py-16 flex flex-col justify-center items-center ${className}`}>
+        <input
+          type="text"
+          placeholder="Szukaj marki..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="mb-6 px-4 py-2 rounded bg-neutral-900 text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-[#ff0033] w-full max-w-xs"
+        />
         <div className="text-white text-xl">Brak elementów do wyświetlenia</div>
       </div>
     );
   }
 
   const getVisibleIndexes = () => {
-    return [
-      (centerIndex - 2 + total) % total,
-      (centerIndex - 1 + total) % total,
-      centerIndex % total,
-      (centerIndex + 1) % total,
-      (centerIndex + 2) % total,
-    ];
+    // Pokazuj tylko tyle kart, ile jest dostępnych (max 5)
+    const visible = [];
+    const maxVisible = Math.min(5, filteredItems.length);
+    
+    // Jeśli jest tylko jedna karta, pokaż ją na środku
+    if (filteredItems.length === 1) {
+      return [0];
+    }
+    
+    // Oblicz pozycje względem centerIndex
+    const halfVisible = Math.floor(maxVisible / 2);
+    for (let i = 0; i < maxVisible; i++) {
+      const index = (centerIndex - halfVisible + i + filteredItems.length) % filteredItems.length;
+      visible.push(index);
+    }
+    return visible;
   };
 
-  const handlePrev = () => setCenterIndex((prev) => (prev - 1 + total) % total);
-  const handleNext = () => setCenterIndex((prev) => (prev + 1) % total);
+  const handlePrev = () => setCenterIndex((prev) => (prev - 1 + filteredItems.length) % filteredItems.length);
+  const handleNext = () => setCenterIndex((prev) => (prev + 1) % filteredItems.length);
 
   const visibleIndexes = getVisibleIndexes();
 
@@ -76,73 +121,91 @@ export default function ImageCarousel<T>({
   };
 
   return (
-    <div className={`relative bg-black py-16 flex justify-center items-center ${className}`}>
-      <button
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-[#ff0033] p-3 rounded-full transition-colors"
-        onClick={handlePrev}
-        aria-label="Poprzedni"
-      >
-        <ChevronLeft size={32} />
-      </button>
-      
-      <div className="flex w-full max-w-5xl justify-center items-center gap-0 select-none">
-        {visibleIndexes.map((itemIdx, posIdx) => {
-          const item = items[itemIdx];
-          const positionClass = getPositionClass(POSITIONS[posIdx]) + " transition-all duration-300";
-          
-          // Sprawdzenie czy item istnieje
-          if (!item) return null;
-          
-          // Jeśli przekazano custom renderItem, użyj go
-          if (renderItem) {
-            return (
-              <div 
-                key={itemIdx} 
-                className={positionClass}
-                onClick={() => handleCardClick(item)}
-                style={{ cursor: onItemClick ? 'pointer' : 'default' }}
-              >
-                {renderItem(item, itemIdx, POSITIONS[posIdx])}
-              </div>
-            );
-          }
-          
-          // Domyślne renderowanie (kompatybilność wsteczna)
-          if (typeof item === 'string') {
-            return (
-              <WindowCard
-                key={itemIdx}
-                title={`Produkt ${itemIdx + 1}`}
-                backgroundColor={`#${item}`}
-                imageSrc="/window.svg"
-                className={positionClass}
-              />
-            );
-          }
-          
-          // Dla obiektów z name i imageSrc
-          if (typeof item === 'object' && 'name' in item && 'imageSrc' in item) {
-            return (
-              <WindowCard
-                key={itemIdx}
-                title={(item as any).name}
-                imageSrc={(item as any).imageSrc}
-                className={positionClass}
-              />
-            );
-          }
-          
-          return null;
-        })}
+    <div className={`relative bg-black py-16 flex flex-col justify-center items-center ${className}`}>
+      <input
+        type="text"
+        placeholder="Szukaj marki..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        className="mb-6 px-4 py-2 rounded bg-neutral-900 text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-[#ff0033] w-full max-w-xs"
+      />
+      <div className="w-full flex justify-center items-center relative">
+        <button
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-[#ff0033] p-3 rounded-full transition-colors"
+          onClick={handlePrev}
+          aria-label="Poprzedni"
+        >
+          <ChevronLeft size={32} />
+        </button>
+        <div className="flex w-full max-w-5xl justify-center items-center gap-0 select-none">
+          {visibleIndexes.map((itemIdx, posIdx) => {
+            const item = filteredItems[itemIdx];
+            // Oblicz pozycję względem centerIndex
+            const relativePos = (itemIdx - centerIndex + filteredItems.length) % filteredItems.length;
+            let position;
+            
+            if (filteredItems.length === 1) {
+              position = "center";
+            } else if (relativePos === 0) {
+              position = "center";
+            } else if (relativePos === 1 || relativePos === filteredItems.length - 1) {
+              position = "right";
+            } else if (relativePos === 2 || relativePos === filteredItems.length - 2) {
+              position = "far-right";
+            } else if (relativePos === filteredItems.length - 1 || relativePos === 1) {
+              position = "left";
+            } else if (relativePos === filteredItems.length - 2 || relativePos === 2) {
+              position = "far-left";
+            } else {
+              position = "center";
+            }
+            
+            const positionClass = getPositionClass(position) + " transition-all duration-300";
+            if (!item) return null;
+            if (renderItem) {
+              return (
+                <div 
+                  key={itemIdx} 
+                  className={positionClass}
+                  onClick={() => handleCardClick(item)}
+                  style={{ cursor: onItemClick ? 'pointer' : 'default' }}
+                >
+                  {renderItem(item, itemIdx, position)}
+                </div>
+              );
+            }
+            if (typeof item === 'string') {
+              return (
+                <WindowCard
+                  key={itemIdx}
+                  title={`Produkt ${itemIdx + 1}`}
+                  backgroundColor={`#${item}`}
+                  imageSrc="/window.svg"
+                  className={positionClass}
+                />
+              );
+            }
+            if (typeof item === 'object' && 'name' in item && 'imageSrc' in item) {
+              return (
+                <WindowCard
+                  key={itemIdx}
+                  title={(item as any).name}
+                  imageSrc={(item as any).imageSrc}
+                  className={positionClass}
+                />
+              );
+            }
+            return null;
+          })}
+        </div>
+        <button
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-[#ff0033] p-3 rounded-full transition-colors"
+          onClick={handleNext}
+          aria-label="Następny"
+        >
+          <ChevronRight size={32} />
+        </button>
       </div>
-      
-      <button
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-[#ff0033] p-3 rounded-full transition-colors"
-        onClick={handleNext}
-        aria-label="Następny"
-      >
-        <ChevronRight size={32} />
-      </button>
     </div>
   );
 }
