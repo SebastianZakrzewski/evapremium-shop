@@ -15,6 +15,7 @@ export default function Home() {
       <WhyUsSection />
       <ProductSelection />
       {/* <Footer /> */}
+      {/* Test automatycznej aktualizacji - zmiana w kodzie */}
     </div>
   );
 }
