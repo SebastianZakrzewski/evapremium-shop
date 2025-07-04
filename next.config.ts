@@ -9,6 +9,16 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
+  webpack: (config, { dev, isServer }) => {
+    if (dev && !isServer) {
+      // Dodaj polling dla lepszego hot reload w Docker
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+      };
+    }
+    return config;
+  },
 };
 
 export default nextConfig;

@@ -23,6 +23,7 @@ const textures = [
   { name: "3D", img: "/images/zalety/3d.png" },
 ];
 const configurations = [
+  { name: "Przód + Tył + Bagażnik", img: "/images/konfigurator/ptb.png" },
   { name: "Przód", img: "/images/products/audi.jpg" },
   { name: "Przód i tył", img: "/images/products/bmw.png" },
   { name: "Przód i tył + bagażnik", img: "/images/products/mercedes.jpg" },
@@ -50,7 +51,7 @@ export default function ConfiguratorSection() {
       {/* Galeria */}
       <div className="flex-1 flex flex-col items-center">
         <div className="w-full aspect-square relative rounded-lg overflow-hidden border-2 border-[#ff0033]">
-          <Image src="/images/products/audi.jpg" alt="Dywanik" fill className="object-cover" />
+          <Image src="/images/konfigurator/dywanik.jpg" alt="Dywanik" fill className="object-cover" />
         </div>
         <div className="flex gap-2 mt-4">
           <Image src="/images/products/audi.jpg" alt="mini1" width={60} height={60} className="rounded border-2 border-[#ff0033] object-cover" />
@@ -80,14 +81,23 @@ export default function ConfiguratorSection() {
         <div className="flex gap-4 items-center">
           <span className="font-medium text-white">Konfiguracja:</span>
           {configurations.map((c, i) => (
-            <button key={c.name} onClick={() => setSelectedConfig(i)} className={`rounded border-2 p-1 bg-neutral-900 ${selectedConfig === i ? "border-[#ff0033] ring-2 ring-[#ff0033]" : "border-neutral-700"}`}><Image src={c.img} alt={c.name} width={40} height={40} /></button>
+            <button
+              key={c.name}
+              onClick={() => setSelectedConfig(i)}
+              className={`rounded-xl border-4 flex items-center justify-center p-0 bg-neutral-900 transition-all duration-200
+                group
+                ${selectedConfig === i ? "border-[#ff0033] ring-4 ring-[#ff0033] scale-105 shadow-lg" : "border-neutral-700 opacity-80 hover:opacity-100"}`}
+              style={{ width: 70, height: 70 }}
+            >
+              <Image src={c.img} alt={c.name} width={56} height={56} className="object-contain rounded-lg transition-transform duration-200 group-hover:scale-110" />
+            </button>
           ))}
         </div>
         <div className="rounded-lg p-4 flex flex-col gap-3 bg-neutral-900 border border-neutral-800">
           <div className="flex items-center gap-2">
             <span className="font-bold text-[#ff0033] w-6 h-6 flex items-center justify-center rounded-full bg-neutral-800">1</span>
             <span className="text-white">Marka:</span>
-            <select className="ml-2 border rounded px-2 py-1 bg-black text-white border-neutral-700 focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033]" value={brand} onChange={e => setBrand(e.target.value)}>
+            <select className="ml-2 border rounded px-2 py-1 bg-black text-white border-neutral-700 focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033] disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed" value={brand} onChange={e => setBrand(e.target.value)}>
               <option value="">wybierz</option>
               {carBrands.map(b => <option key={b}>{b}</option>)}
             </select>
@@ -95,7 +105,7 @@ export default function ConfiguratorSection() {
           <div className="flex items-center gap-2">
             <span className="font-bold text-[#ff0033] w-6 h-6 flex items-center justify-center rounded-full bg-neutral-800">2</span>
             <span className="text-white">Model:</span>
-            <select className="ml-2 border rounded px-2 py-1 bg-black text-white border-neutral-700 focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033]" value={model} onChange={e => setModel(e.target.value)}>
+            <select className="ml-2 border rounded px-2 py-1 bg-black text-white border-neutral-700 focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033] disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed" value={model} onChange={e => setModel(e.target.value)} disabled={!brand}>
               <option value="">wybierz</option>
               {carModels.map(m => <option key={m}>{m}</option>)}
             </select>
@@ -103,7 +113,7 @@ export default function ConfiguratorSection() {
           <div className="flex items-center gap-2">
             <span className="font-bold text-[#ff0033] w-6 h-6 flex items-center justify-center rounded-full bg-neutral-800">3</span>
             <span className="text-white">Rocznik:</span>
-            <select className="ml-2 border rounded px-2 py-1 bg-black text-white border-neutral-700 focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033]" value={year} onChange={e => setYear(e.target.value)}>
+            <select className="ml-2 border rounded px-2 py-1 bg-black text-white border-neutral-700 focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033] disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed" value={year} onChange={e => setYear(e.target.value)} disabled={!model}>
               <option value="">wybierz</option>
               {carYears.map(y => <option key={y}>{y}</option>)}
             </select>
@@ -111,7 +121,7 @@ export default function ConfiguratorSection() {
           <div className="flex items-center gap-2">
             <span className="font-bold text-[#ff0033] w-6 h-6 flex items-center justify-center rounded-full bg-neutral-800">4</span>
             <span className="text-white">Nadwozie:</span>
-            <select className="ml-2 border rounded px-2 py-1 bg-black text-white border-neutral-700 focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033]" value={body} onChange={e => setBody(e.target.value)}>
+            <select className="ml-2 border rounded px-2 py-1 bg-black text-white border-neutral-700 focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033] disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed" value={body} onChange={e => setBody(e.target.value)} disabled={!year}>
               <option value="">wybierz</option>
               {carBodies.map(b => <option key={b}>{b}</option>)}
             </select>
@@ -119,7 +129,7 @@ export default function ConfiguratorSection() {
           <div className="flex items-center gap-2">
             <span className="font-bold text-[#ff0033] w-6 h-6 flex items-center justify-center rounded-full bg-neutral-800">5</span>
             <span className="text-white">Skrzynia biegów:</span>
-            <select className="ml-2 border rounded px-2 py-1 bg-black text-white border-neutral-700 focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033]" value={trans} onChange={e => setTrans(e.target.value)}>
+            <select className="ml-2 border rounded px-2 py-1 bg-black text-white border-neutral-700 focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033] disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed" value={trans} onChange={e => setTrans(e.target.value)} disabled={!body}>
               <option value="">wybierz</option>
               {carTransmissions.map(t => <option key={t}>{t}</option>)}
             </select>

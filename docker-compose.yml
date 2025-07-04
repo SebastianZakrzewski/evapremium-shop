@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: eva-website
+    ports:
+      - "3000:3000"
+    volumes:
+      # Montuj kod źródłowy dla hot reload
+      - .:/app
+      # Wyklucz node_modules (użyj z kontenera)
+      - /app/node_modules
+      # Wyklucz .next (użyj z kontenera)
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+    command: npm run dev
+    stdin_open: true
+    tty: true
+    depends_on:
+      - database
+    networks:
+      - eva-network
+
+  database:
+    image: postgres:15-alpine
+    container_name: eva-database
+    environment:
+      - POSTGRES_DB=eva_db
+      - POSTGRES_USER=eva_user
+      - POSTGRES_PASSWORD=eva_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - eva-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  eva-network:
+    driver: bridge 
