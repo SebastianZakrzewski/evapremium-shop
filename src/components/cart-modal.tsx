@@ -2,6 +2,7 @@
 
 import React from "react";
 import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -18,6 +19,8 @@ interface CartItem {
 }
 
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
+  const router = useRouter();
+
   // Przykładowe dane koszyka - później można zastąpić stanem globalnym
   const cartItems: CartItem[] = [
     {
@@ -43,6 +46,11 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
     const price = parseInt(item.price.replace(/[^\d]/g, ''));
     return sum + (price * item.quantity);
   }, 0);
+
+  const handleCheckout = () => {
+    onClose(); // Zamknij modal koszyka
+    router.push('/checkout'); // Przekieruj do strony checkout
+  };
 
   return (
     <>
@@ -123,7 +131,10 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 <span className="text-lg font-medium text-white">Razem ({totalItems} produktów):</span>
                 <span className="text-2xl font-bold text-white">{totalPrice.toLocaleString()} PLN</span>
               </div>
-              <button className="w-full bg-red-600 text-white py-5 px-6 rounded-lg font-medium hover:bg-red-700 transition-colors shadow-lg">
+              <button 
+                onClick={handleCheckout}
+                className="w-full bg-red-600 text-white py-5 px-6 rounded-lg font-medium hover:bg-red-700 transition-colors shadow-lg"
+              >
                 Przejdź do kasy
               </button>
               <button className="w-full bg-white text-black py-5 px-6 rounded-lg font-medium hover:bg-gray-100 transition-colors shadow-lg border border-neutral-700 mt-3">
