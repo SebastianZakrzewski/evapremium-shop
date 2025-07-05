@@ -80,6 +80,14 @@ export default function AdvantagesSection() {
   const handleItemClick = (itemId: number) => {
     setClickedItem(itemId);
     setTimeout(() => setClickedItem(null), 300);
+
+    // Płynne przewijanie do sekcji 3D mats dla pierwszego elementu
+    if (itemId === 1) {
+      const threeDMatsSection = document.getElementById('3d-mats-section');
+      if (threeDMatsSection) {
+        threeDMatsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   return (
