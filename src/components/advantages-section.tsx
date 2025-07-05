@@ -87,15 +87,13 @@ export default function AdvantagesSection() {
       {/* Animowane tło z gradientem */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
       
-      {/* Animowane cząsteczki tła - tylko na desktop */}
-      {!isMobile && (
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-          <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-          <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
-        </div>
-      )}
+      {/* Animowane cząsteczki tła - teraz również na mobile */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+      </div>
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Header z animacją */}
@@ -111,14 +109,14 @@ export default function AdvantagesSection() {
           </p>
         </div>
 
-        {/* Grid z animowanymi oknami */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        {/* Grid z animowanymi oknami - idealnie wyrównany */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 justify-items-center items-start">
           {advantagesItems.map((item, index) => {
             const IconComponent = item.icon;
             return (
               <div
                 key={item.id}
-                className={`group cursor-pointer transition-all duration-1000 ease-out ${
+                className={`group cursor-pointer transition-all duration-1000 ease-out w-full max-w-sm lg:max-w-none ${
                   isVisible ? (
                     index === 0 ? 'animate-float-in-delay-1' :
                     index === 1 ? 'animate-float-in-delay-2' :
@@ -126,13 +124,13 @@ export default function AdvantagesSection() {
                     'animate-float-in-delay-4'
                   ) : 'opacity-0 translate-y-20'
                 }`}
-                onMouseEnter={() => !isMobile && setHoveredItem(item.id)}
-                onMouseLeave={() => !isMobile && setHoveredItem(null)}
+                onMouseEnter={() => setHoveredItem(item.id)}
+                onMouseLeave={() => setHoveredItem(null)}
                 onClick={() => handleItemClick(item.id)}
               >
-                <div className="relative flex flex-col items-center text-center h-full">
+                <div className="relative flex flex-col items-center text-center h-full p-2">
                   {/* Główny kontener z animowanym tłem */}
-                  <div className="relative w-full h-full">
+                  <div className="relative w-full h-full flex flex-col items-center">
                     {/* Animowane tło z gradientem */}
                     <div className={`absolute inset-0 rounded-2xl transition-all duration-700 ease-out ${
                       hoveredItem === item.id 
@@ -140,8 +138,8 @@ export default function AdvantagesSection() {
                         : 'bg-gradient-to-br from-gray-900/50 to-gray-800/30 scale-100'
                     }`}></div>
                     
-                    {/* Kontener z obrazem */}
-                    <div className={`relative mb-4 bg-black rounded-xl p-4 w-40 h-40 md:w-56 md:h-56 lg:w-72 lg:h-72 flex items-center justify-center border-4 transition-all duration-700 ease-out transform ${
+                    {/* Kontener z obrazem - wypełnia całą szerokość */}
+                    <div className={`relative mb-4 bg-black rounded-xl p-4 w-full h-40 md:h-56 lg:h-72 flex items-center justify-center border-4 transition-all duration-700 ease-out transform ${
                       hoveredItem === item.id 
                         ? 'border-red-500/80 scale-110 shadow-2xl shadow-red-500/30 animate-float-hover' 
                         : 'border-red-800/50 scale-100 shadow-lg'
@@ -156,22 +154,22 @@ export default function AdvantagesSection() {
                           : 'bg-transparent'
                       }`}></div>
                       
-                      {/* Obraz z animacją */}
-                      <div className="relative z-10">
+                      {/* Obraz z animacją - wypełnia całą szerokość */}
+                      <div className="relative z-10 flex items-center justify-center w-full h-full">
                         <Image
                           src={item.src}
                           alt={item.title}
-                          width={200}
-                          height={200}
-                          className={`transition-all duration-700 ease-out object-cover ${
+                          width={400}
+                          height={400}
+                          className={`transition-all duration-700 ease-out object-cover w-full h-full ${
                             hoveredItem === item.id 
-                              ? 'w-36 h-36 md:w-52 md:h-52 lg:w-68 lg:h-68 scale-110 rotate-3' 
-                              : 'w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 scale-100 rotate-0'
+                              ? 'scale-110 rotate-3' 
+                              : 'scale-100 rotate-0'
                           }`}
                         />
                       </div>
                       
-                      {/* Ikona z animacją */}
+                      {/* Ikona z animacją - teraz również na mobile */}
                       <div className={`absolute top-2 right-2 transition-all duration-700 ${
                         hoveredItem === item.id 
                           ? 'opacity-100 scale-100 rotate-12 animate-pulse' 
@@ -180,7 +178,7 @@ export default function AdvantagesSection() {
                         <IconComponent className="w-6 h-6 text-red-400" />
                       </div>
 
-                      {/* Strzałka z animacją */}
+                      {/* Strzałka z animacją - teraz również na mobile */}
                       <div className={`absolute bottom-2 right-2 transition-all duration-700 ${
                         hoveredItem === item.id 
                           ? 'opacity-100 translate-x-0' 
@@ -190,8 +188,8 @@ export default function AdvantagesSection() {
                       </div>
                     </div>
                     
-                    {/* Tytuł z animacją */}
-                    <h3 className={`text-lg md:text-xl font-semibold transition-all duration-700 ease-out ${
+                    {/* Tytuł z animacją - idealnie wyśrodkowany */}
+                    <h3 className={`text-lg md:text-xl font-semibold transition-all duration-700 ease-out text-center w-full mb-2 ${
                       hoveredItem === item.id 
                         ? 'text-red-400 scale-105' 
                         : 'text-white scale-100'
@@ -199,13 +197,13 @@ export default function AdvantagesSection() {
                       {item.title}
                     </h3>
                     
-                    {/* Opis z animacją - zawsze widoczny na mobile */}
-                    <div className={`overflow-hidden transition-all duration-700 ease-out ${
-                      isMobile || hoveredItem === item.id 
+                    {/* Opis z animacją - idealnie wyśrodkowany */}
+                    <div className={`overflow-hidden transition-all duration-700 ease-out w-full text-center ${
+                      hoveredItem === item.id 
                         ? 'max-h-32 opacity-100' 
-                        : 'max-h-0 opacity-0'
+                        : 'max-h-32 opacity-100'
                     }`}>
-                      <p className="text-sm text-gray-400 mt-2 max-w-xs">
+                      <p className="text-sm text-gray-400 mt-2 max-w-xs mx-auto leading-relaxed">
                         {item.description}
                       </p>
                     </div>
@@ -223,7 +221,7 @@ export default function AdvantagesSection() {
           })}
         </div>
         
-        {/* Dodatkowy element dekoracyjny */}
+        {/* Dodatkowy element dekoracyjny - idealnie wyśrodkowany */}
         <div className={`text-center mt-8 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500/20 to-red-700/20 px-6 py-3 rounded-full border border-red-500/30 hover:scale-105 transition-all duration-300 cursor-pointer group">
             <Sparkles className="w-5 h-5 text-red-400 animate-pulse" />
