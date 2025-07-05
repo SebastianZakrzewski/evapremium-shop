@@ -88,6 +88,14 @@ export default function AdvantagesSection() {
         threeDMatsSection.scrollIntoView({ behavior: 'smooth' });
       }
     }
+
+    // Płynne przewijanie do sekcji custom fit dla drugiego elementu
+    if (itemId === 2) {
+      const customFitSection = document.getElementById('custom-fit-section');
+      if (customFitSection) {
+        customFitSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   return (
