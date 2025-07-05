@@ -67,16 +67,16 @@ export default function ThreeDMatsSection() {
   }, []);
 
   return (
-    <section id="3d-mats-section" className="py-12 md:py-16 bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
+    <section id="3d-mats-section" className="py-12 md:py-16 bg-black relative overflow-hidden">
       {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-black to-purple-900/10"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
       
       {/* Animowane cząsteczki */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-20 left-20 w-2 h-2 bg-blue-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1.5 h-1.5 bg-purple-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/3 w-1 h-1 bg-cyan-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/4 w-1.5 h-1.5 bg-blue-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
@@ -192,14 +192,17 @@ export default function ThreeDMatsSection() {
 
               {/* CTA */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                <button className="flex-1 bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                   <span className="flex items-center justify-center">
                     Sprawdź dostępne modele
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </span>
                 </button>
-                <button className="flex-1 bg-transparent border-2 border-blue-500/50 hover:border-blue-500 text-blue-400 hover:text-blue-300 font-semibold py-3 px-6 rounded-xl transition-all duration-300">
-                  Dowiedz się więcej
+                <button className="flex-1 bg-transparent border-2 border-red-500/50 hover:border-red-500 text-red-400 hover:text-red-300 font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105">
+                  <span className="flex items-center justify-center">
+                    Dowiedz się więcej
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </span>
                 </button>
               </div>
             </div>
