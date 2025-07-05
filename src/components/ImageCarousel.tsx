@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { WindowCard } from "./ui/WindowCard";
 import { ImageCarouselProps } from "../types/carousel";
@@ -44,7 +44,6 @@ export default function ImageCarousel<T>({
 }: ImageCarouselProps<T>) {
   const [centerIndex, setCenterIndex] = useState(2);
   const [search, setSearch] = useState("");
-  const total = items?.length || 0;
 
   // Filtrowanie po nazwie (jeśli obiekt ma pole name)
   const filteredItems = search.trim().length > 0
@@ -118,8 +117,13 @@ export default function ImageCarousel<T>({
     return visible;
   };
 
-  const handlePrev = () => setCenterIndex((prev) => (prev - 1 + filteredItems.length) % filteredItems.length);
-  const handleNext = () => setCenterIndex((prev) => (prev + 1) % filteredItems.length);
+  const handlePrev = () => {
+    setCenterIndex((prev) => (prev - 1 + filteredItems.length) % filteredItems.length);
+  };
+
+  const handleNext = () => {
+    setCenterIndex((prev) => (prev + 1) % filteredItems.length);
+  };
 
   const visibleIndexes = getVisibleIndexes();
 
@@ -141,6 +145,7 @@ export default function ImageCarousel<T>({
         />
         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
       </div>
+
       <div className="w-full flex justify-center items-center relative">
         <button
           className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-red-500 p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-red-500/25"
@@ -149,6 +154,7 @@ export default function ImageCarousel<T>({
         >
           <ChevronLeft size={32} />
         </button>
+        
         <div className="flex w-full max-w-5xl justify-center items-center gap-0 select-none animate-fade-in">
           {visibleIndexes.map((itemIdx, posIdx) => {
             const item = filteredItems[itemIdx];
@@ -172,7 +178,8 @@ export default function ImageCarousel<T>({
               position = "center";
             }
             
-            const positionClass = getPositionClass(position) + " transition-all duration-500 ease-out";
+            const positionClass = getPositionClass(position) + " transition-all duration-700 ease-out";
+            
             if (!item) return null;
             if (renderItem) {
               return (
@@ -210,6 +217,7 @@ export default function ImageCarousel<T>({
             return null;
           })}
         </div>
+        
         <button
           className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-red-500 p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-red-500/25"
           onClick={handleNext}
