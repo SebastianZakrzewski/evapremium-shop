@@ -150,26 +150,50 @@ html {
   }
 
   /* Responsywne animacje dla urządzeń mobilnych */
-  @media (max-width: 768px) {
+  @media (max-width: 640px) {
     .animate-float-in,
     .animate-float-in-delay-1,
     .animate-float-in-delay-2,
     .animate-float-in-delay-3,
     .animate-float-in-delay-4 {
-      animation-duration: 0.6s;
+      animation-duration: 0.5s;
     }
     
     .animate-pulse-glow,
     .animate-glow-border {
-      animation-duration: 1.5s;
+      animation-duration: 1.2s;
     }
     
     .animate-float-hover {
-      animation-duration: 2s;
+      animation-duration: 1.5s;
     }
 
     .animate-shimmer {
-      animation-duration: 1.5s;
+      animation-duration: 1.2s;
+    }
+  }
+
+  /* Animacje dla tabletów */
+  @media (min-width: 641px) and (max-width: 1023px) {
+    .animate-float-in,
+    .animate-float-in-delay-1,
+    .animate-float-in-delay-2,
+    .animate-float-in-delay-3,
+    .animate-float-in-delay-4 {
+      animation-duration: 0.8s;
+    }
+    
+    .animate-pulse-glow,
+    .animate-glow-border {
+      animation-duration: 1.8s;
+    }
+    
+    .animate-float-hover {
+      animation-duration: 2.5s;
+    }
+
+    .animate-shimmer {
+      animation-duration: 1.8s;
     }
   }
 
