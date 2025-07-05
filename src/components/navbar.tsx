@@ -25,11 +25,11 @@ export default function Navbar() {
           </Link>
           {/* Desktop Links - Centered */}
           <div className="hidden md:flex gap-6 items-center absolute left-1/2 transform -translate-x-1/2">
-            <Link href="#dywaniki" className="text-white/90 hover:text-white transition font-medium">Dywaniki Samochodowe</Link>
-            <Link href="/modele" className="text-white/90 hover:text-white transition font-medium">Modele Aut</Link>
-            <Link href="/konfigurator" className="text-white/90 hover:text-white transition font-medium">Konfigurator</Link>
-            <Link href="#o-nas" className="text-white/90 hover:text-white transition font-medium">O Nas</Link>
-            <Link href="#kontakt" className="text-white/90 hover:text-white transition font-medium">Kontakt</Link>
+            <Link href="#dywaniki" className="text-white/90 hover:text-white transition font-medium" title="Dywaniki Samochodowe EVA Premium">Dywaniki Samochodowe</Link>
+            <Link href="/modele" className="text-white/90 hover:text-white transition font-medium" title="Modele Samochodów - Wybierz Swój">Modele Aut</Link>
+            <Link href="/konfigurator" className="text-white/90 hover:text-white transition font-medium" title="Konfigurator Dywaników">Konfigurator</Link>
+            <Link href="#o-nas" className="text-white/90 hover:text-white transition font-medium" title="O Firmie EvaPremium">O Nas</Link>
+            <Link href="#kontakt" className="text-white/90 hover:text-white transition font-medium" title="Kontakt - EvaPremium">Kontakt</Link>
           </div>
           {/* Desktop Cart Icon and Contact */}
           <div className="hidden md:flex items-center gap-3">

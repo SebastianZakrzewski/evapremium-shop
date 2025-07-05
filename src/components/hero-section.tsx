@@ -5,24 +5,30 @@ import { useState, useEffect } from "react";
 const heroSlides = [
   {
     id: 1,
-    title: "Maty samochodowe Evapremium",
-    subtitle: "Najwyższej jakości dywaniki do Twojego auta",
+    title: "Dywaniki Samochodowe EVA Premium",
+    subtitle: "Wodoodporne, łatwe w czyszczeniu, precyzyjnie dopasowane do Twojego auta",
     video: "/images/hero/heromat.mp4",
-    cta: "Zamów"
+    cta: "Sprawdź Ceny",
+    price: "Od 199 zł",
+    benefits: ["Wodoodporne", "Łatwe w czyszczeniu", "Darmowa dostawa"]
   },
   {
     id: 2,
-    title: "Ekskluzywne Materiały",
-    subtitle: "Najwyższa jakość wykonania",
+    title: "Najwyższa Jakość Materiałów EVA",
+    subtitle: "Profesjonalne dywaniki samochodowe najwyższej jakości",
     video: "/images/hero/heromat.mp4",
-    cta: "Poznaj Materiały"
+    cta: "Poznaj Materiały",
+    price: "Gwarancja 2 lata",
+    benefits: ["Materiał EVA", "Odporność na wilgoć", "Trwałość"]
   },
   {
     id: 3,
-    title: "Spersonalizowane Projekty",
-    subtitle: "Dostosowane do Twoich potrzeb",
+    title: "Spersonalizowane Dywaniki Samochodowe",
+    subtitle: "Dokładnie dopasowane do modelu Twojego auta",
     video: "/images/hero/heromat.mp4",
-    cta: "Zamów Projekt"
+    cta: "Wybierz Model",
+    price: "Dostawa 24h",
+    benefits: ["Precyzyjne dopasowanie", "Szybka dostawa", "5000+ zadowolonych klientów"]
   }
 ];
 
@@ -92,27 +98,61 @@ export default function HeroSection() {
             
             {/* Content */}
             <div className="relative z-10 flex items-center justify-center h-full text-center text-white px-4">
-              <div className="max-w-4xl">
-                <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in drop-shadow-2xl">
+              <div className="max-w-5xl">
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 animate-fade-in drop-shadow-2xl">
                   {slide.title}
                 </h1>
-                <p className="text-xl md:text-2xl mb-8 text-gray-300 animate-fade-in-delay drop-shadow-lg">
+                <p className="text-lg md:text-xl lg:text-2xl mb-6 text-gray-300 animate-fade-in-delay drop-shadow-lg max-w-3xl mx-auto">
                   {slide.subtitle}
                 </p>
-                <button 
-                  onClick={() => {
-                    const element = document.getElementById('products');
-                    if (element) {
-                      element.scrollIntoView({ 
-                        behavior: 'smooth',
-                        block: 'start'
-                      });
-                    }
-                  }}
-                  className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition-colors animate-fade-in-delay-2 shadow-2xl"
-                >
-                  {slide.cta}
-                </button>
+                
+                {/* Price and Benefits */}
+                <div className="mb-8 animate-fade-in-delay">
+                  <div className="text-2xl md:text-3xl font-bold text-red-400 mb-4">
+                    {slide.price}
+                  </div>
+                  <div className="flex flex-wrap justify-center gap-3 mb-6">
+                    {slide.benefits.map((benefit, index) => (
+                      <span 
+                        key={index}
+                        className="bg-white/10 backdrop-blur px-4 py-2 rounded-full text-sm md:text-base border border-white/20"
+                      >
+                        ✓ {benefit}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-delay-2">
+                  <button 
+                    onClick={() => {
+                      const element = document.getElementById('products');
+                      if (element) {
+                        element.scrollIntoView({ 
+                          behavior: 'smooth',
+                          block: 'start'
+                        });
+                      }
+                    }}
+                    className="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 shadow-2xl hover:shadow-red-500/25 hover:scale-105"
+                  >
+                    {slide.cta}
+                  </button>
+                  <button 
+                    onClick={() => {
+                      const element = document.getElementById('o-nas');
+                      if (element) {
+                        element.scrollIntoView({ 
+                          behavior: 'smooth',
+                          block: 'start'
+                        });
+                      }
+                    }}
+                    className="bg-white/10 backdrop-blur border border-white/20 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:bg-white/20"
+                  >
+                    Dowiedz się więcej
+                  </button>
+                </div>
               </div>
             </div>
           </div>
