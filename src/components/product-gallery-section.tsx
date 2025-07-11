@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ProductImage {
   id: number;
@@ -14,49 +14,52 @@ interface ProductImage {
 const productImages: ProductImage[] = [
   {
     id: 1,
-    src: "/images/products/audi.jpg",
-    alt: "Dywaniki samochodowe Audi",
-    title: "Dywaniki Audi Premium",
-    description: "Precyzyjnie dopasowane dywaniki do modeli Audi"
+    src: "/galeria/photo_2024-10-21_16.32.33_1.jpg",
+    alt: "Dywaniki samochodowe EVA Premium",
+    title: "Dywaniki EVA Premium",
+    description: "Najwyższej jakości dywaniki EVA do samochodów osobowych"
   },
   {
     id: 2,
-    src: "/images/products/bmw.png",
-    alt: "Dywaniki samochodowe BMW",
-    title: "Dywaniki BMW Premium",
-    description: "Wodoodporne dywaniki do modeli BMW"
+    src: "/galeria/photo_2025-04-25_16.57.33 (1).webp",
+    alt: "Dywaniki samochodowe EVA - widok z góry",
+    title: "Dywaniki EVA - Widok Premium",
+    description: "Precyzyjnie dopasowane dywaniki EVA z doskonałym wykończeniem"
   },
   {
     id: 3,
-    src: "/images/products/mercedes.jpg",
-    alt: "Dywaniki samochodowe Mercedes",
-    title: "Dywaniki Mercedes Premium",
-    description: "Luksusowe dywaniki do modeli Mercedes"
+    src: "/galeria/photo_2025-04-25_17.05.47.webp",
+    alt: "Dywaniki samochodowe EVA - detal",
+    title: "Dywaniki EVA - Detal",
+    description: "Szczegółowe wykończenie dywaników EVA Premium"
   },
   {
     id: 4,
-    src: "/images/products/tesla.avif",
-    alt: "Dywaniki samochodowe Tesla",
-    title: "Dywaniki Tesla Premium",
-    description: "Nowoczesne dywaniki do modeli Tesla"
+    src: "/galeria/photo_2025-04-25_17.08.33.webp",
+    alt: "Dywaniki samochodowe EVA - montaż",
+    title: "Dywaniki EVA - Montaż",
+    description: "Łatwy montaż dywaników EVA do każdego modelu samochodu"
   },
   {
     id: 5,
-    src: "/images/products/porsche.png",
-    alt: "Dywaniki samochodowe Porsche",
-    title: "Dywaniki Porsche Premium",
-    description: "Sportowe dywaniki do modeli Porsche"
-  },
-  {
-    id: 6,
-    src: "/images/konfigurator/dywanik.jpg",
-    alt: "Dywaniki samochodowe Premium",
-    title: "Dywaniki Premium EVA",
-    description: "Najwyższej jakości dywaniki EVA Premium"
+    src: "/galeria/photo_2025-04-25_17.08.40.webp",
+    alt: "Dywaniki samochodowe EVA - gotowy produkt",
+    title: "Dywaniki EVA - Gotowy Produkt",
+    description: "Gotowe do montażu dywaniki EVA Premium"
   }
 ];
 
 export default function ProductGallerySection() {
+  const [selectedImage, setSelectedImage] = useState<ProductImage | null>(null);
+
+  const openModal = (image: ProductImage) => {
+    setSelectedImage(image);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+
   return (
     <section className="py-20 bg-black relative overflow-hidden">
       {/* Animowane tło z gradientem */}
@@ -109,7 +112,10 @@ export default function ProductGallerySection() {
           {/* Pierwszy zestaw obrazów */}
           {productImages.map((image, index) => (
             <div key={`first-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
-              <div className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20">
+              <div 
+                className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer"
+                onClick={() => openModal(image)}
+              >
                 <Image
                   src={image.src}
                   alt={image.alt}
@@ -141,7 +147,10 @@ export default function ProductGallerySection() {
           {/* Drugi zestaw obrazów */}
           {productImages.map((image, index) => (
             <div key={`second-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
-              <div className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20">
+              <div 
+                className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer"
+                onClick={() => openModal(image)}
+              >
                 <Image
                   src={image.src}
                   alt={image.alt}
@@ -172,7 +181,10 @@ export default function ProductGallerySection() {
           {/* Trzeci zestaw obrazów */}
           {productImages.map((image, index) => (
             <div key={`third-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
-              <div className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20">
+              <div 
+                className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer"
+                onClick={() => openModal(image)}
+              >
                 <Image
                   src={image.src}
                   alt={image.alt}
@@ -203,7 +215,10 @@ export default function ProductGallerySection() {
           {/* Czwarty zestaw obrazów */}
           {productImages.map((image, index) => (
             <div key={`fourth-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
-              <div className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20">
+              <div 
+                className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer"
+                onClick={() => openModal(image)}
+              >
                 <Image
                   src={image.src}
                   alt={image.alt}
@@ -234,7 +249,10 @@ export default function ProductGallerySection() {
           {/* Piąty zestaw obrazów */}
           {productImages.map((image, index) => (
             <div key={`fifth-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
-              <div className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20">
+              <div 
+                className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer"
+                onClick={() => openModal(image)}
+              >
                 <Image
                   src={image.src}
                   alt={image.alt}
@@ -263,6 +281,61 @@ export default function ProductGallerySection() {
           ))}
         </motion.div>
       </div>
+
+      {/* Modal dla powiększonego obrazu */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={closeModal}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative max-w-4xl max-h-[90vh] w-full h-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Przycisk zamknięcia */}
+              <button
+                onClick={closeModal}
+                className="absolute -top-12 right-0 z-10 text-white hover:text-red-400 transition-colors duration-200"
+              >
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              {/* Kontener obrazu */}
+              <div className="relative w-full h-full rounded-2xl overflow-hidden">
+                <Image
+                  src={selectedImage.src}
+                  alt={selectedImage.alt}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                  quality={100}
+                  priority
+                />
+              </div>
+
+              {/* Informacje o produkcie */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 text-white">
+                <h3 className="text-2xl font-bold mb-2">
+                  {selectedImage.title}
+                </h3>
+                <p className="text-lg text-gray-200">
+                  {selectedImage.description}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Call to Action - z kontenerem */}
       <div className="container mx-auto px-4 relative z-10">
