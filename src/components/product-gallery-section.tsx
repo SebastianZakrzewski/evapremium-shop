@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 interface ProductImage {
   id: number;
@@ -89,8 +90,22 @@ export default function ProductGallerySection() {
 
       {/* Kontener galerii - pełna szerokość */}
       <div className="w-full overflow-hidden relative z-10">
-        {/* Główny kontener z CSS animation - pełna szerokość */}
-        <div className="flex animate-scroll-left" style={{ width: 'max-content' }}>
+        {/* Główny kontener z Framer Motion infinite loop */}
+        <motion.div 
+          className="flex"
+          style={{ width: 'max-content' }}
+          animate={{
+            x: [0, -1500]
+          }}
+          transition={{
+            x: {
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 60,
+              ease: "linear"
+            }
+          }}
+        >
           {/* Pierwszy zestaw obrazów */}
           {productImages.map((image, index) => (
             <div key={`first-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
@@ -99,14 +114,19 @@ export default function ProductGallerySection() {
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                  sizes="(max-width: 768px) 384px 320px, 384px 320px"
+                  priority={index < 3}
+                  quality={95}
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
                 
                 {/* Overlay z gradientem */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
                 
                 {/* Tekst na obrazie */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
                   <h3 className="text-2xl font-bold mb-3">
                     {image.title}
                   </h3>
@@ -118,7 +138,7 @@ export default function ProductGallerySection() {
             </div>
           ))}
 
-          {/* Drugi zestaw obrazów (dla płynnego loopu) */}
+          {/* Drugi zestaw obrazów */}
           {productImages.map((image, index) => (
             <div key={`second-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
               <div className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20">
@@ -126,14 +146,18 @@ export default function ProductGallerySection() {
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                  sizes="(max-width: 768px) 384px 320px, 384px 320px"
+                  quality={95}
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
                 
                 {/* Overlay z gradientem */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
                 
                 {/* Tekst na obrazie */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
                   <h3 className="text-2xl font-bold mb-3">
                     {image.title}
                   </h3>
@@ -145,7 +169,7 @@ export default function ProductGallerySection() {
             </div>
           ))}
 
-          {/* Trzeci zestaw obrazów (dla jeszcze płynniejszego loopu) */}
+          {/* Trzeci zestaw obrazów */}
           {productImages.map((image, index) => (
             <div key={`third-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
               <div className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20">
@@ -153,14 +177,18 @@ export default function ProductGallerySection() {
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                  sizes="(max-width: 768px) 384px 320px, 384px 320px"
+                  quality={95}
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
                 
                 {/* Overlay z gradientem */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
                 
                 {/* Tekst na obrazie */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
                   <h3 className="text-2xl font-bold mb-3">
                     {image.title}
                   </h3>
@@ -172,7 +200,7 @@ export default function ProductGallerySection() {
             </div>
           ))}
 
-          {/* Czwarty zestaw obrazów (dla kompletnego loopu) */}
+          {/* Czwarty zestaw obrazów */}
           {productImages.map((image, index) => (
             <div key={`fourth-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
               <div className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20">
@@ -180,14 +208,18 @@ export default function ProductGallerySection() {
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                  sizes="(max-width: 768px) 384px 320px, 384px 320px"
+                  quality={95}
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
                 
                 {/* Overlay z gradientem */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
                 
                 {/* Tekst na obrazie */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
                   <h3 className="text-2xl font-bold mb-3">
                     {image.title}
                   </h3>
@@ -199,7 +231,7 @@ export default function ProductGallerySection() {
             </div>
           ))}
 
-          {/* Piąty zestaw obrazów (dla jeszcze lepszego loopu) */}
+          {/* Piąty zestaw obrazów */}
           {productImages.map((image, index) => (
             <div key={`fifth-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
               <div className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20">
@@ -207,14 +239,18 @@ export default function ProductGallerySection() {
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                  sizes="(max-width: 768px) 384px 320px, 384px 320px"
+                  quality={95}
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
                 
                 {/* Overlay z gradientem */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
                 
                 {/* Tekst na obrazie */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
                   <h3 className="text-2xl font-bold mb-3">
                     {image.title}
                   </h3>
@@ -225,7 +261,7 @@ export default function ProductGallerySection() {
               </div>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       {/* Call to Action - z kontenerem */}

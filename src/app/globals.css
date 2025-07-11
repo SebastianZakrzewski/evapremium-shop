@@ -150,7 +150,8 @@ html {
   }
 
   .animate-scroll-left {
-    animation: scroll-left 120s linear infinite;
+    animation: scroll-left 180s linear infinite;
+    will-change: transform;
   }
 
   /* Responsywne animacje dla urządzeń mobilnych */
@@ -384,6 +385,6 @@ html {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-1200px);
+    transform: translateX(-1500px);
   }
 }
