@@ -17,13 +17,13 @@ const getPositionClass = (pos: string) => {
     case "center":
       return "z-20 scale-100 blur-0 shadow-2xl";
     case "left":
-      return "z-10 scale-95 blur-sm -mx-6 opacity-90";
+      return "z-10 scale-95 blur-sm -mx-8 opacity-90";
     case "right":
-      return "z-10 scale-95 blur-sm -mx-6 opacity-90";
+      return "z-10 scale-95 blur-sm -mx-8 opacity-90";
     case "far-left":
-      return "z-0 scale-90 blur-md -mx-10 opacity-70";
+      return "z-0 scale-90 blur-md -mx-12 opacity-70";
     case "far-right":
-      return "z-0 scale-90 blur-md -mx-10 opacity-70";
+      return "z-0 scale-90 blur-md -mx-12 opacity-70";
     default:
       return "hidden";
   }
@@ -155,7 +155,7 @@ export default function ImageCarousel<T>({
           <ChevronLeft size={32} />
         </button>
         
-        <div className="flex w-full max-w-5xl justify-center items-center gap-0 select-none animate-fade-in">
+        <div className="flex w-full max-w-6xl justify-center items-center gap-0 select-none animate-fade-in">
           {visibleIndexes.map((itemIdx, posIdx) => {
             const item = filteredItems[itemIdx];
             // Oblicz pozycję względem centerIndex
