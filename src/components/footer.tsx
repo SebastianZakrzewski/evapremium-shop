@@ -12,11 +12,11 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity">
               <Image
-                src="/LOGO.png"
+                src="/Logo svg .svg"
                 alt="EvaPremium Logo"
-                width={240}
-                height={240}
-                className="object-contain"
+                width={500}
+                height={200}
+                className="object-contain h-28 md:h-32"
                 priority
               />
             </Link>
