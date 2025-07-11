@@ -82,7 +82,7 @@ export default function RootLayout({
     "@type": "Organization",
     "name": "EvaPremium",
     "url": "https://evapremium.pl",
-    "logo": "https://evapremium.pl/LOGO.png",
+    "logo": "https://evapremium.pl/Logo svg.svg",
     "description": "Profesjonalne dywaniki samochodowe EVA Premium",
     "address": {
       "@type": "PostalAddress",
@@ -150,7 +150,7 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} bg-black min-h-screen`}>
         <Navbar />
-        <div className="pt-16">{children}</div>
+        <div className="pt-16 md:pt-20 lg:pt-24">{children}</div>
         <Footer />
       </body>
     </html>

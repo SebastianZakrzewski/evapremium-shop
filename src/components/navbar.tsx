@@ -11,15 +11,15 @@ export default function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-50 bg-black/90 backdrop-blur border-b border-neutral-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 md:h-20 lg:h-24 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 text-white font-bold text-lg hover:opacity-80 transition-opacity">
+          <Link href="/" className="flex items-end justify-center gap-2 text-white font-bold text-lg hover:opacity-80 transition-opacity -mb-2">
             <Image
-              src="/LOGO.png"
+              src="/Logo svg .svg"
               alt="EvaPremium Logo"
-              width={110}
-              height={110}
-              className="object-contain w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32"
+              width={450}
+              height={180}
+              className="object-contain h-22 md:h-26 lg:h-30"
               priority
             />
           </Link>
