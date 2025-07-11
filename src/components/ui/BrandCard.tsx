@@ -14,7 +14,7 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
   
   return (
     <div
-      className={`w-44 h-72 md:w-56 md:h-96 aspect-[9/16] flex flex-col items-center justify-center rounded-2xl shadow-lg overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 transition-all duration-300 cursor-pointer relative group ${className}`}
+      className={`w-56 h-80 md:w-72 md:h-112 aspect-[9/16] flex flex-col items-center justify-center rounded-2xl shadow-lg overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 transition-all duration-300 cursor-pointer relative group ${className}`}
     >
               {/* Zdjęcie/Logo marki */}
         <div className="w-full h-full relative">
@@ -25,7 +25,7 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
               alt={`${brand.name}`}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
-              sizes="(max-width: 768px) 176px 288px, 224px 384px"
+              sizes="(max-width: 768px) 224px 320px, 288px 448px"
               priority={true}
               quality={95}
               placeholder="blur"
@@ -33,12 +33,12 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
             />
           ) : (
             // Dla logo SVG - w centrum
-            <div className="w-24 h-24 mb-6 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="w-32 h-32 mb-8 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <Image
                 src={brand.logo}
                 alt={`${brand.name} logo`}
-                width={96}
-                height={96}
+                width={128}
+                height={128}
                 className="object-contain"
                 quality={95}
                 onError={(e) => {
@@ -57,13 +57,13 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
       {/* Zawartość tekstowa */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
         {/* Nazwa marki */}
-        <h3 className="text-white text-2xl font-bold text-center mb-2 drop-shadow-lg">
+        <h3 className="text-white text-3xl font-bold text-center mb-3 drop-shadow-lg">
           {brand.name}
         </h3>
         
         {/* Opis marki */}
         {brand.description && (
-          <p className="text-white/90 text-sm text-center px-4 drop-shadow-lg">
+          <p className="text-white/90 text-base text-center px-6 drop-shadow-lg">
             {brand.description}
           </p>
         )}
@@ -73,8 +73,8 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
       <div className="absolute inset-0 bg-[#ff0033]/0 group-hover:bg-[#ff0033]/10 transition-colors duration-300 z-20" />
       
       {/* Indikator wyboru */}
-      <div className="absolute top-3 right-3 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
-        <Car className="w-3 h-3 text-white" />
+      <div className="absolute top-4 right-4 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
+        <Car className="w-4 h-4 text-white" />
       </div>
     </div>
   );
