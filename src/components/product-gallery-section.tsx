@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -11,6 +11,7 @@ interface ProductImage {
   description: string;
 }
 
+// Przeniesienie danych poza komponent dla lepszej wydajności
 const productImages: ProductImage[] = [
   {
     id: 1,
@@ -49,16 +50,157 @@ const productImages: ProductImage[] = [
   }
 ];
 
+// Zoptymalizowany komponent obrazu z React.memo
+const ProductImageCard = React.memo(({ 
+  image, 
+  index, 
+  setKey, 
+  onImageClick 
+}: { 
+  image: ProductImage; 
+  index: number; 
+  setKey: string; 
+  onImageClick: (image: ProductImage) => void;
+}) => {
+  const isPriority = index < 3;
+  
+  return (
+    <div key={`${setKey}-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
+      <div 
+        className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer"
+        onClick={() => onImageClick(image)}
+      >
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+          sizes="(max-width: 768px) 384px 320px, 384px 320px"
+          priority={isPriority}
+          quality={85}
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+        />
+        
+        {/* Overlay z gradientem */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
+        
+        {/* Tekst na obrazie */}
+        <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+          <h3 className="text-2xl font-bold mb-3">
+            {image.title}
+          </h3>
+          <p className="text-base text-gray-200">
+            {image.description}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+ProductImageCard.displayName = 'ProductImageCard';
+
+// Zoptymalizowany komponent modala
+const ImageModal = React.memo(({ 
+  selectedImage, 
+  onClose 
+}: { 
+  selectedImage: ProductImage | null; 
+  onClose: () => void;
+}) => {
+  if (!selectedImage) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+        className="relative max-w-4xl max-h-[90vh] w-full h-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Przycisk zamknięcia */}
+        <button
+          onClick={onClose}
+          className="absolute -top-12 right-0 z-10 text-white hover:text-red-400 transition-colors duration-200"
+        >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* Kontener obrazu */}
+        <div className="relative w-full h-full rounded-2xl overflow-hidden">
+          <Image
+            src={selectedImage.src}
+            alt={selectedImage.alt}
+            fill
+            className="object-contain"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+            quality={100}
+            priority
+          />
+        </div>
+
+        {/* Informacje o produkcie */}
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 text-white">
+          <h3 className="text-2xl font-bold mb-2">
+            {selectedImage.title}
+          </h3>
+          <p className="text-lg text-gray-200">
+            {selectedImage.description}
+          </p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+});
+
+ImageModal.displayName = 'ImageModal';
+
 export default function ProductGallerySection() {
   const [selectedImage, setSelectedImage] = useState<ProductImage | null>(null);
 
-  const openModal = (image: ProductImage) => {
+  // Zoptymalizowane funkcje z useCallback
+  const openModal = useCallback((image: ProductImage) => {
     setSelectedImage(image);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setSelectedImage(null);
-  };
+  }, []);
+
+  // Zoptymalizowane zestawy obrazów z useMemo
+  const imageSets = useMemo(() => {
+    const sets = ['first', 'second', 'third', 'fourth', 'fifth'];
+    return sets.map(setKey => 
+      productImages.map((image, index) => (
+        <ProductImageCard
+          key={`${setKey}-${index}`}
+          image={image}
+          index={index}
+          setKey={setKey}
+          onImageClick={openModal}
+        />
+      ))
+    );
+  }, [openModal]);
+
+  // Zoptymalizowane animowane cząsteczki
+  const animatedParticles = useMemo(() => [
+    { top: 'top-20', left: 'left-10', size: 'w-2 h-2', color: 'bg-red-500', delay: '0s' },
+    { top: 'top-40', left: 'right-20', size: 'w-1 h-1', color: 'bg-red-400', delay: '1s' },
+    { top: 'bottom-20', left: 'left-1/4', size: 'w-1.5 h-1.5', color: 'bg-red-300', delay: '2s' },
+    { top: 'bottom-40', left: 'right-1/3', size: 'w-1 h-1', color: 'bg-red-600', delay: '0.5s' }
+  ], []);
 
   return (
     <section className="py-20 bg-black relative overflow-hidden">
@@ -67,10 +209,13 @@ export default function ProductGallerySection() {
       
       {/* Animowane cząsteczki tła */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+        {animatedParticles.map((particle, index) => (
+          <div
+            key={index}
+            className={`absolute ${particle.top} ${particle.left} ${particle.size} ${particle.color} rounded-full animate-float-hover`}
+            style={{animationDelay: particle.delay}}
+          />
+        ))}
       </div>
 
       {/* Nagłówek sekcji - z kontenerem */}
@@ -109,232 +254,14 @@ export default function ProductGallerySection() {
             }
           }}
         >
-          {/* Pierwszy zestaw obrazów */}
-          {productImages.map((image, index) => (
-            <div key={`first-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
-              <div 
-                className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer"
-                onClick={() => openModal(image)}
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-                  sizes="(max-width: 768px) 384px 320px, 384px 320px"
-                  priority={index < 3}
-                  quality={95}
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                />
-                
-                {/* Overlay z gradientem */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
-                
-                {/* Tekst na obrazie */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
-                  <h3 className="text-2xl font-bold mb-3">
-                    {image.title}
-                  </h3>
-                  <p className="text-base text-gray-200">
-                    {image.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {/* Drugi zestaw obrazów */}
-          {productImages.map((image, index) => (
-            <div key={`second-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
-              <div 
-                className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer"
-                onClick={() => openModal(image)}
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-                  sizes="(max-width: 768px) 384px 320px, 384px 320px"
-                  quality={95}
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                />
-                
-                {/* Overlay z gradientem */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
-                
-                {/* Tekst na obrazie */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
-                  <h3 className="text-2xl font-bold mb-3">
-                    {image.title}
-                  </h3>
-                  <p className="text-base text-gray-200">
-                    {image.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {/* Trzeci zestaw obrazów */}
-          {productImages.map((image, index) => (
-            <div key={`third-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
-              <div 
-                className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer"
-                onClick={() => openModal(image)}
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-                  sizes="(max-width: 768px) 384px 320px, 384px 320px"
-                  quality={95}
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                />
-                
-                {/* Overlay z gradientem */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
-                
-                {/* Tekst na obrazie */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
-                  <h3 className="text-2xl font-bold mb-3">
-                    {image.title}
-                  </h3>
-                  <p className="text-base text-gray-200">
-                    {image.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {/* Czwarty zestaw obrazów */}
-          {productImages.map((image, index) => (
-            <div key={`fourth-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
-              <div 
-                className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer"
-                onClick={() => openModal(image)}
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-                  sizes="(max-width: 768px) 384px 320px, 384px 320px"
-                  quality={95}
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                />
-                
-                {/* Overlay z gradientem */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
-                
-                {/* Tekst na obrazie */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
-                  <h3 className="text-2xl font-bold mb-3">
-                    {image.title}
-                  </h3>
-                  <p className="text-base text-gray-200">
-                    {image.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {/* Piąty zestaw obrazów */}
-          {productImages.map((image, index) => (
-            <div key={`fifth-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
-              <div 
-                className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer"
-                onClick={() => openModal(image)}
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-                  sizes="(max-width: 768px) 384px 320px, 384px 320px"
-                  quality={95}
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                />
-                
-                {/* Overlay z gradientem */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
-                
-                {/* Tekst na obrazie */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
-                  <h3 className="text-2xl font-bold mb-3">
-                    {image.title}
-                  </h3>
-                  <p className="text-base text-gray-200">
-                    {image.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+          {/* Zoptymalizowane zestawy obrazów */}
+          {imageSets}
         </motion.div>
       </div>
 
       {/* Modal dla powiększonego obrazu */}
       <AnimatePresence>
-        {selectedImage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={closeModal}
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative max-w-4xl max-h-[90vh] w-full h-full"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Przycisk zamknięcia */}
-              <button
-                onClick={closeModal}
-                className="absolute -top-12 right-0 z-10 text-white hover:text-red-400 transition-colors duration-200"
-              >
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-
-              {/* Kontener obrazu */}
-              <div className="relative w-full h-full rounded-2xl overflow-hidden">
-                <Image
-                  src={selectedImage.src}
-                  alt={selectedImage.alt}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-                  quality={100}
-                  priority
-                />
-              </div>
-
-              {/* Informacje o produkcie */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 text-white">
-                <h3 className="text-2xl font-bold mb-2">
-                  {selectedImage.title}
-                </h3>
-                <p className="text-lg text-gray-200">
-                  {selectedImage.description}
-                </p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
+        <ImageModal selectedImage={selectedImage} onClose={closeModal} />
       </AnimatePresence>
 
       {/* Call to Action - z kontenerem */}
