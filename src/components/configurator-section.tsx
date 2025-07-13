@@ -15,21 +15,39 @@ import {
 } from "lucide-react";
 
 const carpetColors = [
-  { name: "Czarny", color: "#222", description: "Klasyczny czarny kolor, łatwy w utrzymaniu" },
-  { name: "Szary", color: "#888", description: "Elegancki szary, pasuje do każdego wnętrza" },
-  { name: "Brązowy", color: "#7a5c3e", description: "Ciepły brązowy, naturalny wygląd" },
-  { name: "Czerwony", color: "#b13a2b", description: "Sportowy czerwony, dynamiczny wygląd" },
-  { name: "Żółty", color: "#ffd600", description: "Jaskrawy żółty, przyciąga uwagę" },
-  { name: "Niebieski", color: "#1e40af", description: "Spokojny niebieski, profesjonalny" },
+  { name: "Niebieski", color: "#0084d1" },
+  { name: "Czerwony", color: "#d12d1c" },
+  { name: "Żółty", color: "#ffe100" },
+  { name: "Kość słoniowa", color: "#d9d7c7" },
+  { name: "Granatowy", color: "#1a355b" },
+  { name: "Bordowy", color: "#6d2635" },
+  { name: "Pomarańczowy", color: "#ff7b1c" },
+  { name: "Jasnobeżowy", color: "#d1b48c" },
+  { name: "Ciemnoszary", color: "#4a4a4a" },
+  { name: "Fioletowy", color: "#7c4bc8" },
+  { name: "Jasnozielony", color: "#8be000" },
+  { name: "Beżowy", color: "#b48a5a" },
+  { name: "Różowy", color: "#ff7eb9" },
+  { name: "Czarny", color: "#222" },
+  { name: "Zielony", color: "#1b5e3c" },
+  { name: "Brązowy", color: "#4b2e1e" },
 ];
 
 const edgeColors = [
-  { name: "Czarny", color: "#222", description: "Uniwersalny czarny, pasuje do wszystkiego" },
-  { name: "Brązowy", color: "#7a5c3e", description: "Naturalny brązowy, elegancki" },
-  { name: "Ciemnoczerwony", color: "#b13a2b", description: "Ciemny czerwony, sportowy" },
-  { name: "Niebieski", color: "#1e40af", description: "Niebieski, profesjonalny" },
-  { name: "Żółty", color: "#ffd600", description: "Żółty, kontrastowy" },
-  { name: "Czerwony", color: "#ff0033", description: "Jaskrawy czerwony, dynamiczny" },
+  { name: "Zielony", color: "#1b5e3c" },
+  { name: "Brązowy", color: "#4b2e1e" },
+  { name: "Ciemnoszary", color: "#4a4a4a" },
+  { name: "Czerwony", color: "#d12d1c" },
+  { name: "Różowy", color: "#ff7eb9" },
+  { name: "Niebieski", color: "#0084d1" },
+  { name: "Czarny", color: "#222" },
+  { name: "Bordowy", color: "#6d2635" },
+  { name: "Granatowy", color: "#1a355b" },
+  { name: "Żółty", color: "#ffe100" },
+  { name: "Fioletowy", color: "#7c4bc8" },
+  { name: "Beżowy", color: "#b48a5a" },
+  { name: "Pomarańczowy", color: "#ff7b1c" },
+  { name: "Jasnoszary", color: "#bdbdbd" },
 ];
 
 const textures = [
@@ -304,7 +322,7 @@ export default function ConfiguratorSection() {
                   <label className="block text-gray-300 text-sm mb-3">Kolor dywanika:</label>
                   <div className="flex flex-wrap gap-3">
                     {carpetColors.map((color, index) => (
-                      <Tooltip key={color.name} content={color.description}>
+                      <Tooltip key={color.name} content={color.name}>
                         <button
                           onClick={() => updateState({ selectedCarpet: index })}
                           className={`w-12 h-12 rounded-full border-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/50 ${
@@ -324,7 +342,7 @@ export default function ConfiguratorSection() {
                   <label className="block text-gray-300 text-sm mb-3">Kolor obszycia:</label>
                   <div className="flex flex-wrap gap-3">
                     {edgeColors.map((color, index) => (
-                      <Tooltip key={color.name} content={color.description}>
+                      <Tooltip key={color.name} content={color.name}>
                         <button
                           onClick={() => updateState({ selectedEdge: index })}
                           className={`w-12 h-12 rounded-full border-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/50 ${
