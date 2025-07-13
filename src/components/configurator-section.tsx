@@ -52,16 +52,16 @@ const edgeColors = [
 
 const textures = [
   { 
-    name: "Plaster miodu", 
+    name: "Plaster", 
     img: "/images/zalety/plaster.png",
     description: "Klasyczna tekstura plastra miodu, doskonała przyczepność",
     price: 0
   },
   { 
-    name: "3D", 
-    img: "/images/zalety/3d.png",
-    description: "Nowoczesna tekstura 3D, lepsza izolacja termiczna",
-    price: 30
+    name: "Romby", 
+    img: "/images/zalety/romby.png", // Użyj romby.png jako obrazek dla Romby
+    description: "Nowoczesna tekstura w romby, stylowy wygląd i dobra przyczepność",
+    price: 0
   },
 ];
 
@@ -357,6 +357,40 @@ export default function ConfiguratorSection() {
                     ))}
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Rodzaj zestawu */}
+            <div className="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-xl p-6">
+              <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+                <Settings className="w-5 h-5 text-red-400" />
+                Rodzaj zestawu
+              </h3>
+              <div className="flex gap-4 flex-wrap justify-center mb-2">
+                {configurations.map((config, idx) => (
+                  <button
+                    key={config.name}
+                    onClick={() => updateState({ selectedConfig: idx })}
+                    className={`flex flex-col items-center justify-center w-28 h-32 rounded-lg border-2 p-2 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500/50 ${
+                      state.selectedConfig === idx
+                        ? "border-red-500 ring-2 ring-red-500/50 bg-red-500/10"
+                        : "border-gray-700 hover:border-red-400 bg-gray-800"
+                    }`}
+                    aria-label={`Wybierz zestaw: ${config.name}`}
+                  >
+                    <Image
+                      src={config.img}
+                      alt={config.name}
+                      width={72}
+                      height={48}
+                      className="object-contain rounded mb-2"
+                    />
+                    <span className="text-white text-xs font-medium text-center leading-tight">{config.name}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="text-gray-400 text-sm italic mb-2 text-center">
+                {configurations[state.selectedConfig].description}
               </div>
             </div>
 
