@@ -394,6 +394,18 @@ export default function ConfiguratorSection() {
               </div>
             </div>
 
+            {/* Wariant Dywanika */}
+            <div className="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-xl p-6">
+              <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+                <Settings className="w-5 h-5 text-red-400" />
+                Wariant Dywanika
+              </h3>
+              <div className="text-gray-400 text-sm italic mb-2 text-center">
+                Wybierz wariant dywanika (np. Standard, Premium, z logo, bez logo itp.)
+              </div>
+              {/* Tu możesz dodać przyciski/checkboxy do wyboru wariantu */}
+            </div>
+
             {/* Tekstury */}
             <div className="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-xl p-6">
               <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
