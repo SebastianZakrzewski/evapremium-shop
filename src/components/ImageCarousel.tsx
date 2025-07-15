@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { WindowCard } from "./ui/WindowCard";
 import { ImageCarouselProps } from "../types/carousel";
 
@@ -17,13 +17,13 @@ const getPositionClass = (pos: string) => {
     case "center":
       return "z-20 scale-100 blur-0 shadow-2xl";
     case "left":
-      return "z-10 scale-95 blur-sm -mx-6 opacity-90";
+      return "z-10 scale-95 blur-sm -mx-8 opacity-90";
     case "right":
-      return "z-10 scale-95 blur-sm -mx-6 opacity-90";
+      return "z-10 scale-95 blur-sm -mx-8 opacity-90";
     case "far-left":
-      return "z-0 scale-90 blur-md -mx-10 opacity-70";
+      return "z-0 scale-90 blur-md -mx-12 opacity-70";
     case "far-right":
-      return "z-0 scale-90 blur-md -mx-10 opacity-70";
+      return "z-0 scale-90 blur-md -mx-12 opacity-70";
     default:
       return "hidden";
   }
@@ -44,7 +44,6 @@ export default function ImageCarousel<T>({
 }: ImageCarouselProps<T>) {
   const [centerIndex, setCenterIndex] = useState(2);
   const [search, setSearch] = useState("");
-  const total = items?.length || 0;
 
   // Filtrowanie po nazwie (jeśli obiekt ma pole name)
   const filteredItems = search.trim().length > 0
@@ -78,14 +77,23 @@ export default function ImageCarousel<T>({
   if (!filteredItems || filteredItems.length === 0) {
     return (
       <div className={`relative bg-black py-16 flex flex-col justify-center items-center ${className}`}>
-        <input
-          type="text"
-          placeholder="Szukaj marki..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="mb-6 px-4 py-2 rounded bg-neutral-900 text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-[#ff0033] w-full max-w-xs"
-        />
-        <div className="text-white text-xl">Brak elementów do wyświetlenia</div>
+        <div className="relative mb-6 w-full max-w-xs">
+          <input
+            type="text"
+            placeholder="Szukaj marki..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full px-4 py-3 rounded-lg bg-gray-900/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
+          />
+          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+        </div>
+        <div className="text-center animate-fade-in">
+          <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Search className="w-8 h-8 text-gray-400" />
+          </div>
+          <div className="text-white text-xl mb-2">Brak wyników</div>
+          <div className="text-gray-400 text-sm">Spróbuj wpisać inną nazwę marki</div>
+        </div>
       </div>
     );
   }
@@ -109,8 +117,13 @@ export default function ImageCarousel<T>({
     return visible;
   };
 
-  const handlePrev = () => setCenterIndex((prev) => (prev - 1 + filteredItems.length) % filteredItems.length);
-  const handleNext = () => setCenterIndex((prev) => (prev + 1) % filteredItems.length);
+  const handlePrev = () => {
+    setCenterIndex((prev) => (prev - 1 + filteredItems.length) % filteredItems.length);
+  };
+
+  const handleNext = () => {
+    setCenterIndex((prev) => (prev + 1) % filteredItems.length);
+  };
 
   const visibleIndexes = getVisibleIndexes();
 
@@ -122,22 +135,27 @@ export default function ImageCarousel<T>({
 
   return (
     <div className={`relative bg-black py-16 flex flex-col justify-center items-center ${className}`}>
-      <input
-        type="text"
-        placeholder="Szukaj marki..."
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        className="mb-6 px-4 py-2 rounded bg-neutral-900 text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-[#ff0033] w-full max-w-xs"
-      />
+      <div className="relative mb-6 w-full max-w-xs">
+        <input
+          type="text"
+          placeholder="Szukaj marki..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="w-full px-4 py-3 rounded-lg bg-gray-900/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
+        />
+        <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+      </div>
+
       <div className="w-full flex justify-center items-center relative">
         <button
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-[#ff0033] p-3 rounded-full transition-colors"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-red-500 p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-red-500/25"
           onClick={handlePrev}
           aria-label="Poprzedni"
         >
           <ChevronLeft size={32} />
         </button>
-        <div className="flex w-full max-w-5xl justify-center items-center gap-0 select-none">
+        
+        <div className="flex w-full max-w-6xl justify-center items-center gap-0 select-none animate-fade-in">
           {visibleIndexes.map((itemIdx, posIdx) => {
             const item = filteredItems[itemIdx];
             // Oblicz pozycję względem centerIndex
@@ -160,7 +178,8 @@ export default function ImageCarousel<T>({
               position = "center";
             }
             
-            const positionClass = getPositionClass(position) + " transition-all duration-300";
+            const positionClass = getPositionClass(position) + " transition-all duration-700 ease-out";
+            
             if (!item) return null;
             if (renderItem) {
               return (
@@ -198,8 +217,9 @@ export default function ImageCarousel<T>({
             return null;
           })}
         </div>
+        
         <button
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-[#ff0033] p-3 rounded-full transition-colors"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-red-500 p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-red-500/25"
           onClick={handleNext}
           aria-label="Następny"
         >

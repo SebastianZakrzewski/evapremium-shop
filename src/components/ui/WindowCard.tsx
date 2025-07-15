@@ -15,13 +15,13 @@ export const WindowCard: React.FC<WindowCardProps> = ({
 }) => {
   return (
     <div
-      className={`w-44 h-72 md:w-56 md:h-96 aspect-[9/16] flex flex-col items-center justify-center rounded-2xl shadow-lg overflow-hidden ${className}`}
+      className={`w-56 h-80 md:w-72 md:h-112 aspect-[9/16] flex flex-col items-center justify-center rounded-2xl shadow-lg overflow-hidden ${className}`}
       style={{ backgroundColor }}
     >
       {imageSrc && (
-        <img src={imageSrc} alt="Okno" className="w-16 h-16 mb-4 select-none pointer-events-none" draggable={false} />
+        <img src={imageSrc} alt="Okno" className="w-20 h-20 mb-6 select-none pointer-events-none" draggable={false} />
       )}
-      <span className="text-white text-xl font-bold select-none text-center px-2">
+      <span className="text-white text-2xl font-bold select-none text-center px-4">
         {title}
       </span>
     </div>
