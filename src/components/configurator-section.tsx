@@ -233,7 +233,7 @@ export default function ConfiguratorSection() {
               <div className="w-full aspect-square relative rounded-xl overflow-hidden border-2 border-red-500 shadow-2xl">
                 <Image 
                   src="/images/konfigurator/dywanik.jpg" 
-                  alt="Podgląd dywanika" 
+                  alt="Podgląd dywanika gumowego czarnego" 
                   fill 
                   className="object-cover" 
                 />
