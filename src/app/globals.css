@@ -62,17 +62,166 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Responsywne animacje - wyłącz na urządzeniach z preferencją reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.8s ease-in-out;
+    animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .animate-fade-in-delay {
-    animation: fadeIn 0.8s ease-in-out 0.2s both;
+    animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
   }
   
   .animate-fade-in-delay-2 {
-    animation: fadeIn 0.8s ease-in-out 0.4s both;
+    animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
+  }
+  
+  .animate-slide-in-left {
+    animation: slideInLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-slide-in-right {
+    animation: slideInRight 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-bounce-in {
+    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .animate-click {
+    animation: click 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Nowe animacje dla sekcji "Poznaj nasz produkt" */
+  .animate-float-in {
+    animation: floatIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .animate-float-in-delay-1 {
+    animation: floatIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.1s both;
+  }
+  
+  .animate-float-in-delay-2 {
+    animation: floatIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.2s both;
+  }
+  
+  .animate-float-in-delay-3 {
+    animation: floatIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s both;
+  }
+  
+  .animate-float-in-delay-4 {
+    animation: floatIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s both;
+  }
+  
+  .animate-pulse-glow {
+    animation: pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animate-rotate-slow {
+    animation: rotateSlow 20s linear infinite;
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-float-hover {
+    animation: floatHover 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animate-glow-border {
+    animation: glowBorder 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animate-scale-bounce {
+    animation: scaleBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .animate-scroll-left {
+    animation: scroll-left 180s linear infinite;
+    will-change: transform;
+  }
+
+  /* Responsywne animacje dla urządzeń mobilnych */
+  @media (max-width: 640px) {
+    .animate-float-in,
+    .animate-float-in-delay-1,
+    .animate-float-in-delay-2,
+    .animate-float-in-delay-3,
+    .animate-float-in-delay-4 {
+      animation-duration: 0.5s;
+    }
+    
+    .animate-pulse-glow,
+    .animate-glow-border {
+      animation-duration: 1.2s;
+    }
+    
+    .animate-float-hover {
+      animation-duration: 1.5s;
+    }
+
+    .animate-shimmer {
+      animation-duration: 1.2s;
+    }
+  }
+
+  /* Animacje dla tabletów */
+  @media (min-width: 641px) and (max-width: 1023px) {
+    .animate-float-in,
+    .animate-float-in-delay-1,
+    .animate-float-in-delay-2,
+    .animate-float-in-delay-3,
+    .animate-float-in-delay-4 {
+      animation-duration: 0.8s;
+    }
+    
+    .animate-pulse-glow,
+    .animate-glow-border {
+      animation-duration: 1.8s;
+    }
+    
+    .animate-float-hover {
+      animation-duration: 2.5s;
+    }
+
+    .animate-shimmer {
+      animation-duration: 1.8s;
+    }
+  }
+
+  /* Animacje dla urządzeń z wysoką rozdzielczością */
+  @media (min-width: 1024px) {
+    .animate-float-in,
+    .animate-float-in-delay-1,
+    .animate-float-in-delay-2,
+    .animate-float-in-delay-3,
+    .animate-float-in-delay-4 {
+      animation-duration: 1.2s;
+    }
+  }
+
+  /* Animacje dla urządzeń z bardzo wysoką rozdzielczością */
+  @media (min-width: 1440px) {
+    .animate-float-in,
+    .animate-float-in-delay-1,
+    .animate-float-in-delay-2,
+    .animate-float-in-delay-3,
+    .animate-float-in-delay-4 {
+      animation-duration: 1.4s;
+    }
   }
   
   .animate-slide-in-left {
@@ -151,5 +300,107 @@ html {
   100% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes click {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Nowe animacje dla sekcji "Poznaj nasz produkt" */
+@keyframes floatIn {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.8);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(220, 38, 38, 0.6);
+  }
+}
+
+@keyframes rotateSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes floatHover {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glowBorder {
+  0%, 100% {
+    border-color: rgba(220, 38, 38, 0.5);
+    box-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+  }
+  50% {
+    border-color: rgba(220, 38, 38, 0.8);
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.6);
+  }
+}
+
+@keyframes scaleBounce {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  75% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-1500px);
   }
 }
