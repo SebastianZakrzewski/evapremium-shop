@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Shield, Zap, Target, Star, CheckCircle, ArrowRight } from "lucide-react";
 import Image from "next/image";
 
@@ -44,9 +44,27 @@ const features3D = [
   "Łatwe w montażu i demontażu"
 ];
 
+const defaultMainImage = "/images/zalety/3d.png";
+const ochronaImage = "/7.webp";
+
 export default function ThreeDMatsSection() {
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredBenefit, setHoveredBenefit] = useState<number | null>(null);
+  const [mainImage, setMainImage] = useState<string>(defaultMainImage);
+  const [activeBenefit, setActiveBenefit] = useState<number | null>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  // Fade animacja przy zmianie obrazka
+  useEffect(() => {
+    if (imageRef.current) {
+      imageRef.current.classList.remove("opacity-0");
+      void imageRef.current.offsetWidth;
+      imageRef.current.classList.add("opacity-0");
+      setTimeout(() => {
+        if (imageRef.current) imageRef.current.classList.remove("opacity-0");
+      }, 200);
+    }
+  }, [mainImage]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -104,11 +122,13 @@ export default function ThreeDMatsSection() {
                 
                 <div className="relative z-10">
                   <Image
-                    src="/images/zalety/3d.png"
+                    ref={imageRef}
+                    src={mainImage}
                     alt="Dywaniki 3D z rantami"
                     width={600}
                     height={400}
-                    className="w-full h-auto rounded-xl object-cover"
+                    className="w-full h-auto rounded-xl object-cover transition-all duration-500 opacity-100"
+                    style={{ transition: 'opacity 0.4s' }}
                   />
                 </div>
                 
@@ -141,23 +161,44 @@ export default function ThreeDMatsSection() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {benefits3D.map((benefit, index) => {
                   const IconComponent = benefit.icon;
+                  const isActive = activeBenefit === benefit.id;
                   return (
                     <div
                       key={benefit.id}
-                      className={`group cursor-pointer transition-all duration-500 ease-out p-4 rounded-xl border-2 ${
-                        hoveredBenefit === benefit.id
-                          ? 'border-blue-500/80 bg-gradient-to-br from-blue-500/20 to-purple-500/20 scale-105 shadow-lg shadow-blue-500/30'
-                          : 'border-gray-700/50 bg-gray-800/30 hover:border-blue-500/50 hover:bg-gray-800/50'
+                      className={`group cursor-pointer transition-all duration-500 ease-out p-4 rounded-xl border-2 outline-none ${
+                        isActive
+                          ? 'border-yellow-400 ring-4 ring-yellow-300/40 scale-105 shadow-yellow-400/30 bg-yellow-400/10'
+                          : hoveredBenefit === benefit.id
+                            ? 'border-blue-500/80 bg-gradient-to-br from-blue-500/20 to-purple-500/20 scale-105 shadow-lg shadow-blue-500/30'
+                            : 'border-gray-700/50 bg-gray-800/30 hover:border-blue-500/50 hover:bg-gray-800/50'
                       }`}
+                      tabIndex={0}
+                      aria-pressed={isActive}
                       onMouseEnter={() => setHoveredBenefit(benefit.id)}
                       onMouseLeave={() => setHoveredBenefit(null)}
+                      onClick={() => {
+                        setMainImage(benefit.id === 1 ? ochronaImage : defaultMainImage);
+                        setActiveBenefit(benefit.id);
+                      }}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          setMainImage(benefit.id === 1 ? ochronaImage : defaultMainImage);
+                          setActiveBenefit(benefit.id);
+                        }
+                      }}
                     >
                       <div className="flex items-start space-x-3">
-                        <div className={`p-2 rounded-lg bg-gradient-to-br ${benefit.color} ${
-                          hoveredBenefit === benefit.id ? 'scale-110' : 'scale-100'
-                        } transition-transform duration-300`}>
-                          <IconComponent className="w-5 h-5 text-white" />
-                        </div>
+                        {benefit.id === 1 ? (
+                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
+                            <Image src="/7.webp" alt="Doskonała ochrona" width={80} height={80} className="object-cover w-full h-full" />
+                          </div>
+                        ) : (
+                          <div className={`p-2 rounded-lg bg-gradient-to-br ${benefit.color} ${
+                            hoveredBenefit === benefit.id ? 'scale-110' : 'scale-100'
+                          } transition-transform duration-300`}>
+                            <IconComponent className="w-5 h-5 text-white" />
+                          </div>
+                        )}
                         <div>
                           <h4 className={`font-semibold mb-1 transition-colors duration-300 ${
                             hoveredBenefit === benefit.id ? 'text-blue-300' : 'text-white'
