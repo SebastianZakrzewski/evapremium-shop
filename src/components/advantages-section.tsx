@@ -104,6 +104,14 @@ export default function AdvantagesSection() {
         kolorystykaSection.scrollIntoView({ behavior: 'smooth' });
       }
     }
+
+    // Płynne przewijanie do sekcji głęboka struktura komórek dla czwartego elementu
+    if (itemId === 4) {
+      const glebokaSection = document.getElementById('gleboka-struktura-komorek-section');
+      if (glebokaSection) {
+        glebokaSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   return (
