@@ -96,6 +96,14 @@ export default function AdvantagesSection() {
         customFitSection.scrollIntoView({ behavior: 'smooth' });
       }
     }
+
+    // Płynne przewijanie do sekcji różnorodna kolorystyka dla trzeciego elementu
+    if (itemId === 3) {
+      const kolorystykaSection = document.getElementById('roznorodna-kolorystyka-section');
+      if (kolorystykaSection) {
+        kolorystykaSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   return (
