@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Star } from "lucide-react";
+import { useState } from "react";
 
 const colorVariants = [
   { name: "Niebieski", color: "#0084d1" },
@@ -22,7 +23,16 @@ const colorVariants = [
   { name: "Brązowy", color: "#4b2e1e" },
 ];
 
+// Przykładowe mapowanie kolorów na zdjęcia dywaników w autach
+const colorImages: Record<string, string> = {
+  "Czarny": "/images/real/kia-czarny.jpg", // <- tu wstaw ścieżkę do zdjęcia z auta
+  "Ciemnoszary": "/images/kolory dywanikow/szare.jpg", // <- nowe zdjęcie dla ciemnoszarego
+  "Jasnobeżowy": "/images/kolory dywanikow/jasnobezowy.jpg",
+  // Dodaj kolejne kolory, jeśli masz zdjęcia
+};
+
 export default function RoznorodnaKolorystykaSection() {
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   return (
     <section id="roznorodna-kolorystyka-section" className="py-12 md:py-16 bg-black relative overflow-hidden">
       {/* Animowane tło */}
@@ -46,18 +56,31 @@ export default function RoznorodnaKolorystykaSection() {
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
             Szeroka paleta kolorów dopasowana do wnętrza Twojego auta. Wybierz swój styl!
           </p>
+          <p className="text-base text-yellow-300 mt-2 max-w-2xl mx-auto">
+            Pełna konfiguracja kolorystyczna (materiał + obszycie) dostępna jest w <b>konfiguratorze</b> podczas personalizacji zamówienia. Poniżej prezentujemy przykładowe kolory materiału dywanika w realnych autach.
+          </p>
         </div>
         <div className="flex flex-col md:flex-row gap-12 items-center justify-center">
           {/* Obrazek */}
           <div className="relative w-full md:w-1/2 flex justify-center">
-            <div className="relative bg-black rounded-2xl p-6 border-4 border-yellow-600/50 shadow-2xl w-full max-w-md">
-              <Image
-                src="/images/zalety/kolorystyka.png"
-                alt="Różnorodna kolorystyka dywaników"
-                width={400}
-                height={400}
-                className="w-full h-auto rounded-xl object-cover"
-              />
+            <div className="relative bg-black rounded-2xl p-12 shadow-2xl w-full max-w-2xl min-h-[520px] flex items-center justify-center">
+              {selectedColor && colorImages[selectedColor] ? (
+                <Image
+                  src={colorImages[selectedColor]}
+                  alt={`Dywanik w aucie - kolor ${selectedColor}`}
+                  width={400}
+                  height={400}
+                  className="w-full h-auto rounded-xl object-cover transition-all duration-500"
+                />
+              ) : (
+                <Image
+                  src="/images/zalety/kolorystyka.png"
+                  alt="Różnorodna kolorystyka dywaników"
+                  width={400}
+                  height={400}
+                  className="w-full h-auto rounded-xl object-cover"
+                />
+              )}
             </div>
           </div>
           {/* Paleta kolorów */}
@@ -66,11 +89,15 @@ export default function RoznorodnaKolorystykaSection() {
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
               {colorVariants.map((variant) => (
                 <div key={variant.name} className="flex flex-col items-center">
-                  <div
-                    className="w-12 h-12 rounded-full border-4 border-yellow-400 shadow-lg mb-2 transition-transform duration-300 hover:scale-110"
+                  <button
+                    className={`w-12 h-12 rounded-full border-4 shadow-lg mb-2 transition-transform duration-300 hover:scale-110 focus:outline-none ${
+                      selectedColor === variant.name ? 'border-yellow-400 ring-2 ring-yellow-300' : 'border-yellow-400'
+                    }`}
                     style={{ background: variant.color }}
                     title={variant.name}
-                  ></div>
+                    onClick={() => setSelectedColor(variant.name)}
+                    aria-pressed={selectedColor === variant.name}
+                  ></button>
                   <span className="text-sm text-gray-200 text-center">{variant.name}</span>
                 </div>
               ))}
