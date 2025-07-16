@@ -8,6 +8,7 @@ import WhyUsSection from "@/components/why-us-section";
 import ProductGallerySection from "@/components/product-gallery-section";
 import ProductSelection from "@/components/product-selection";
 import CustomFitSection from "@/components/custom-fit-section";
+import RoznorodnaKolorystykaSection from "@/components/roznorodna-kolorystyka-section";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <AdvantagesSection />
       <ThreeDMatsSection />
       <CustomFitSection />
+      <RoznorodnaKolorystykaSection />
       <ProductGallerySection />
       <WhyUsSection />
       <ProductSelection />
