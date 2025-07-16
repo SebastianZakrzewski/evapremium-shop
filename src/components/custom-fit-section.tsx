@@ -59,25 +59,25 @@ export default function CustomFitSection() {
   }, []);
 
   return (
-    <section id="custom-fit-section" className="py-12 md:py-16 bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
+    <section id="custom-fit-section" className="py-12 md:py-16 bg-black relative overflow-hidden">
       {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-black to-blue-800/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
       
       {/* Animowane cząsteczki */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-blue-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-blue-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-blue-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-blue-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className={`text-center mb-12 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full mb-6 animate-pulse-glow">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-6 animate-pulse-glow">
             <Target className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 bg-gradient-to-r from-white via-red-100 to-white bg-clip-text text-transparent">
             SZYTE NA MIARĘ DO TWOJEGO AUTA
           </h2>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
@@ -90,7 +90,7 @@ export default function CustomFitSection() {
           <div className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
             <div className="relative">
               {/* Główny obraz */}
-              <div className="relative bg-black rounded-2xl p-6 border-4 border-blue-800/50 shadow-2xl">
+              <div className="relative bg-black rounded-2xl p-6 border-4 border-red-800/50 shadow-2xl">
                 <Image
                   src="/images/zalety/szycie.png"
                   alt="Szyte na miarę dywaniki"
@@ -103,7 +103,7 @@ export default function CustomFitSection() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent rounded-2xl"></div>
                 
                 {/* Ikony na obrazie */}
-                <div className="absolute top-4 left-4 flex items-center gap-2 bg-blue-500/90 backdrop-blur-sm px-3 py-2 rounded-full">
+                <div className="absolute top-4 left-4 flex items-center gap-2 bg-red-500/90 backdrop-blur-sm px-3 py-2 rounded-full">
                   <Ruler className="w-4 h-4 text-white" />
                   <span className="text-white text-sm font-medium">Precyzyjne wymiary</span>
                 </div>
@@ -147,14 +147,14 @@ export default function CustomFitSection() {
                     onMouseLeave={() => setHoveredFeature(null)}
                   >
                     <div className="flex items-start gap-4">
-                      <div className={`flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center transition-all duration-500 ${
+                      <div className={`flex-shrink-0 w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-lg flex items-center justify-center transition-all duration-500 ${
                         hoveredFeature === index ? 'scale-110 rotate-12' : 'scale-100 rotate-0'
                       }`}>
                         <IconComponent className="w-6 h-6 text-white" />
                       </div>
                       <div className="flex-1">
                         <h3 className={`text-xl font-semibold mb-2 transition-all duration-500 ${
-                          hoveredFeature === index ? 'text-blue-400' : 'text-white'
+                          hoveredFeature === index ? 'text-red-400' : 'text-white'
                         }`}>
                           {feature.title}
                         </h3>
@@ -162,7 +162,7 @@ export default function CustomFitSection() {
                           {feature.description}
                         </p>
                       </div>
-                      <ArrowRight className={`w-5 h-5 text-blue-400 transition-all duration-500 ${
+                      <ArrowRight className={`w-5 h-5 text-red-400 transition-all duration-500 ${
                         hoveredFeature === index ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
                       }`} />
                     </div>
@@ -179,7 +179,7 @@ export default function CustomFitSection() {
                   <div
                     key={index}
                     className={`group p-4 bg-gray-900/50 rounded-lg border border-gray-700/50 transition-all duration-500 ease-out hover:scale-110 cursor-pointer ${
-                      hoveredBrand === index ? 'border-blue-500/80 bg-blue-900/20' : ''
+                      hoveredBrand === index ? 'border-red-500/80 bg-red-900/20' : ''
                     }`}
                     onMouseEnter={() => setHoveredBrand(index)}
                     onMouseLeave={() => setHoveredBrand(null)}
@@ -194,7 +194,7 @@ export default function CustomFitSection() {
                         />
                       </div>
                       <span className={`text-sm font-medium transition-all duration-500 ${
-                        hoveredBrand === index ? 'text-blue-400' : 'text-gray-300'
+                        hoveredBrand === index ? 'text-red-400' : 'text-gray-300'
                       }`}>
                         {brand.name}
                       </span>
@@ -208,12 +208,12 @@ export default function CustomFitSection() {
 
         {/* Call to action */}
         <div className={`text-center mt-12 transition-all duration-1000 ease-out delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-500/20 to-blue-700/20 px-8 py-4 rounded-full border border-blue-500/30 hover:scale-105 transition-all duration-300 cursor-pointer group">
-            <Target className="w-6 h-6 text-blue-400 animate-pulse" />
-            <span className="text-blue-300 font-semibold text-lg group-hover:text-blue-200 transition-colors duration-300">
+          <div className="inline-flex items-center gap-3 bg-gradient-to-r from-red-500/20 to-red-700/20 px-8 py-4 rounded-full border border-red-500/30 hover:scale-105 transition-all duration-300 cursor-pointer group">
+            <Target className="w-6 h-6 text-red-400 animate-pulse" />
+            <span className="text-red-300 font-semibold text-lg group-hover:text-red-200 transition-colors duration-300">
               Sprawdź dopasowanie dla swojego auta
             </span>
-            <ArrowRight className="w-5 h-5 text-blue-400 group-hover:translate-x-1 transition-transform duration-300" />
+            <ArrowRight className="w-5 h-5 text-red-400 group-hover:translate-x-1 transition-transform duration-300" />
           </div>
         </div>
       </div>
