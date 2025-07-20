@@ -28,6 +28,7 @@ const colorImages: Record<string, string> = {
   "Czarny": "/images/real/kia-czarny.jpg", // <- tu wstaw ścieżkę do zdjęcia z auta
   "Ciemnoszary": "/images/kolory dywanikow/szare.jpg", // <- nowe zdjęcie dla ciemnoszarego
   "Jasnobeżowy": "/images/kolory dywanikow/jasnobezowy.jpg",
+  "Niebieski": "/images/kolory dywanikow/niebieski.jpg", // <- nowe zdjęcie dla niebieskiego
   // Dodaj kolejne kolory, jeśli masz zdjęcia
 };
 
