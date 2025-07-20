@@ -22,17 +22,19 @@ const benefits3D = [
   },
   {
     id: 3,
-    icon: Target,
-    title: "Idealne dopasowanie",
-    description: "Precyzyjne dopasowanie do kształtu podłogi samochodu",
-    color: "from-purple-500 to-pink-600"
+    icon: Shield,
+    title: "Bezpieczeństwo użytkowania",
+    description: "Antypoślizgowe właściwości zapewniają bezpieczeństwo podczas jazdy",
+    color: "from-purple-500 to-pink-600",
+    fullDescription: "Specjalne antypoślizgowe właściwości dywaników 3D zapewniają maksymalne bezpieczeństwo podczas jazdy. Materiał EVA o wysokiej gęstości zapobiega przesuwaniu się dywaników, co eliminuje ryzyko zaklinowania pedałów i zapewnia pełną kontrolę nad pojazdem."
   },
   {
     id: 4,
     icon: Star,
-    title: "Trwałość materiału",
-    description: "Wysokiej jakości EVA zapewnia długoletnie użytkowanie",
-    color: "from-orange-500 to-red-600"
+    title: "Łatwość czyszczenia",
+    description: "Specjalna struktura 3D ułatwia szybkie i skuteczne czyszczenie",
+    color: "from-orange-500 to-red-600",
+    fullDescription: "Głęboka struktura komórek 3D ułatwia szybkie i skuteczne czyszczenie dywaników. Brud i zanieczyszczenia nie wnikają głęboko w materiał, co pozwala na łatwe usunięcie ich za pomocą wody i łagodnego detergentu. Dzięki temu dywaniki zawsze wyglądają jak nowe."
   }
 ];
 
@@ -48,11 +50,16 @@ const features3D = [
 const defaultMainImage = "/images/zalety/3d.png";
 const ochronaImage = "/7.webp";
 
+const defaultTitle = "Dlaczego dywaniki 3D z rantami?";
+const defaultDescription = "Nasze dywaniki 3D z rantami to najnowocześniejsze rozwiązanie w ochronie podłogi samochodu. Specjalna technologia 3D zapewnia doskonałe dopasowanie i maksymalną skuteczność w zatrzymywaniu brudu, wilgoci i innych zanieczyszczeń.";
+
 export default function ThreeDMatsSection() {
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredBenefit, setHoveredBenefit] = useState<number | null>(null);
   const [mainImage, setMainImage] = useState<string>(defaultMainImage);
   const [activeBenefit, setActiveBenefit] = useState<number | null>(null);
+  const [mainTitle, setMainTitle] = useState<string>(defaultTitle);
+  const [mainDescription, setMainDescription] = useState<string>(defaultDescription);
   const imageRef = useRef<HTMLImageElement>(null);
 
   // Fade animacja przy zmianie obrazka
@@ -148,13 +155,11 @@ export default function ThreeDMatsSection() {
           <div className={`transition-all duration-1000 ease-out delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             <div className="space-y-8">
               <div>
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                  Dlaczego dywaniki 3D z rantami?
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 transition-all duration-500">
+                  {mainTitle}
                 </h3>
-                <p className="text-lg text-gray-300 leading-relaxed">
-                  Nasze dywaniki 3D z rantami to najnowocześniejsze rozwiązanie w ochronie podłogi samochodu. 
-                  Specjalna technologia 3D zapewnia doskonałe dopasowanie i maksymalną skuteczność w zatrzymywaniu 
-                  brudu, wilgoci i innych zanieczyszczeń.
+                <p className="text-lg text-gray-300 leading-relaxed transition-all duration-500">
+                  {mainDescription}
                 </p>
               </div>
 
@@ -177,19 +182,61 @@ export default function ThreeDMatsSection() {
                       aria-pressed={isActive}
                       onMouseEnter={() => setHoveredBenefit(benefit.id)}
                       onMouseLeave={() => setHoveredBenefit(null)}
-                      onClick={() => {
+                                              onClick={() => {
                         let image = defaultMainImage;
-                        if (benefit.id === 1) image = ochronaImage;
-                        else if (benefit.id === 2) image = '/3djezor.png';
+                        let title = defaultTitle;
+                        let description = defaultDescription;
+                        
+                        if (benefit.id === 1) {
+                          image = ochronaImage;
+                          title = "DOSKONAŁA OCHRONA";
+                          description = "Ranty 3D o wysokości 15-20mm skutecznie chronią przed wnikaniem brudu, wilgoci i zanieczyszczeń pod dywanik, zapewniając długotrwałą ochronę podłogi Twojego samochodu.";
+                        } else if (benefit.id === 2) {
+                          image = '/3djezor.png';
+                          title = "3D JĘZOR";
+                          description = "Zintegrowany jęzor 3D pod pedałami gazu chroni wykładzinę i nie przesuwa się. To praktyczne rozwiązanie dla osób, które cenią trwałość i wygodę użytkowania.";
+                        } else if (benefit.id === 3) {
+                          image = '/1.webp';
+                          title = "BEZPIECZEŃSTWO UŻYTKOWANIA";
+                          description = "Specjalne antypoślizgowe właściwości dywaników 3D zapewniają maksymalne bezpieczeństwo podczas jazdy. Materiał EVA o wysokiej gęstości zapobiega przesuwaniu się dywaników.";
+                        } else if (benefit.id === 4) {
+                          image = defaultMainImage;
+                          title = "ŁATWOŚĆ CZYSZCZENIA";
+                          description = "Głęboka struktura komórek 3D ułatwia szybkie i skuteczne czyszczenie dywaników. Brud i zanieczyszczenia nie wnikają głęboko w materiał, co pozwala na łatwe usunięcie ich.";
+                        }
+                        
                         setMainImage(image);
+                        setMainTitle(title);
+                        setMainDescription(description);
                         setActiveBenefit(benefit.id);
                       }}
                       onKeyDown={e => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           let image = defaultMainImage;
-                          if (benefit.id === 1) image = ochronaImage;
-                          else if (benefit.id === 2) image = '/3djezor.png';
+                          let title = defaultTitle;
+                          let description = defaultDescription;
+                          
+                          if (benefit.id === 1) {
+                            image = ochronaImage;
+                            title = "DOSKONAŁA OCHRONA";
+                            description = "Ranty 3D o wysokości 15-20mm skutecznie chronią przed wnikaniem brudu, wilgoci i zanieczyszczeń pod dywanik, zapewniając długotrwałą ochronę podłogi Twojego samochodu.";
+                          } else if (benefit.id === 2) {
+                            image = '/3djezor.png';
+                            title = "3D JĘZOR";
+                            description = "Zintegrowany jęzor 3D pod pedałami gazu chroni wykładzinę i nie przesuwa się. To praktyczne rozwiązanie dla osób, które cenią trwałość i wygodę użytkowania.";
+                          } else if (benefit.id === 3) {
+                            image = '/1.webp';
+                            title = "BEZPIECZEŃSTWO UŻYTKOWANIA";
+                            description = "Specjalne antypoślizgowe właściwości dywaników 3D zapewniają maksymalne bezpieczeństwo podczas jazdy. Materiał EVA o wysokiej gęstości zapobiega przesuwaniu się dywaników.";
+                          } else if (benefit.id === 4) {
+                            image = defaultMainImage;
+                            title = "ŁATWOŚĆ CZYSZCZENIA";
+                            description = "Głęboka struktura komórek 3D ułatwia szybkie i skuteczne czyszczenie dywaników. Brud i zanieczyszczenia nie wnikają głęboko w materiał, co pozwala na łatwe usunięcie ich.";
+                          }
+                          
                           setMainImage(image);
+                          setMainTitle(title);
+                          setMainDescription(description);
                           setActiveBenefit(benefit.id);
                         }
                       }}
@@ -202,6 +249,10 @@ export default function ThreeDMatsSection() {
                         ) : benefit.id === 2 ? (
                           <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
                             <Image src="/3djezor.png" alt="3D Jęzor" width={80} height={80} className="object-cover w-full h-full" />
+                          </div>
+                        ) : benefit.id === 3 ? (
+                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
+                            <Image src="/1.webp" alt="Bezpieczeństwo użytkowania" width={80} height={80} className="object-cover w-full h-full" />
                           </div>
                         ) : (
                           <div className={`p-2 rounded-lg bg-gradient-to-br ${benefit.color} ${
