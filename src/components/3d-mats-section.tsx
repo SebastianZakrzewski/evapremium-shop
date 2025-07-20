@@ -15,9 +15,10 @@ const benefits3D = [
   {
     id: 2,
     icon: Zap,
-    title: "Łatwe czyszczenie",
-    description: "Specjalna struktura pozwala na szybkie i skuteczne usuwanie zabrudzeń",
-    color: "from-green-500 to-emerald-600"
+    title: "3D Jęzor",
+    description: "Zintegrowany jęzor 3D pod pedałami gazu chroni wykładzinę i nie przesuwa się.",
+    color: "from-green-500 to-emerald-600",
+    fullDescription: "Jęzor 3D pod pedałami gazu jest zintegrowany z dywanikiem, nie przesuwa się i skutecznie chroni wykładzinę w miejscu najbardziej narażonym na zużycie. To praktyczne rozwiązanie dla osób, które cenią trwałość i wygodę użytkowania."
   },
   {
     id: 3,
@@ -177,12 +178,18 @@ export default function ThreeDMatsSection() {
                       onMouseEnter={() => setHoveredBenefit(benefit.id)}
                       onMouseLeave={() => setHoveredBenefit(null)}
                       onClick={() => {
-                        setMainImage(benefit.id === 1 ? ochronaImage : defaultMainImage);
+                        let image = defaultMainImage;
+                        if (benefit.id === 1) image = ochronaImage;
+                        else if (benefit.id === 2) image = '/3djezor.png';
+                        setMainImage(image);
                         setActiveBenefit(benefit.id);
                       }}
                       onKeyDown={e => {
                         if (e.key === 'Enter' || e.key === ' ') {
-                          setMainImage(benefit.id === 1 ? ochronaImage : defaultMainImage);
+                          let image = defaultMainImage;
+                          if (benefit.id === 1) image = ochronaImage;
+                          else if (benefit.id === 2) image = '/3djezor.png';
+                          setMainImage(image);
                           setActiveBenefit(benefit.id);
                         }
                       }}
@@ -191,6 +198,10 @@ export default function ThreeDMatsSection() {
                         {benefit.id === 1 ? (
                           <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
                             <Image src="/7.webp" alt="Doskonała ochrona" width={80} height={80} className="object-cover w-full h-full" />
+                          </div>
+                        ) : benefit.id === 2 ? (
+                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
+                            <Image src="/3djezor.png" alt="3D Jęzor" width={80} height={80} className="object-cover w-full h-full" />
                           </div>
                         ) : (
                           <div className={`p-2 rounded-lg bg-gradient-to-br ${benefit.color} ${
