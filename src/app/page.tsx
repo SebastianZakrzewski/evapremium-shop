@@ -4,12 +4,15 @@ import Image from "next/image";
 import HeroSection from "@/components/hero-section";
 import AdvantagesSection from "@/components/advantages-section";
 import ThreeDMatsSection from "@/components/3d-mats-section";
-import WhyUsSection from "@/components/why-us-section";
 import ProductGallerySection from "@/components/product-gallery-section";
 import ProductSelection from "@/components/product-selection";
 import CustomFitSection from "@/components/custom-fit-section";
 import RoznorodnaKolorystykaSection from "@/components/roznorodna-kolorystyka-section";
 import GlebokaStrukturaKomorekSection from "@/components/gleboka-struktura-komorek-section";
+import CustomerReviews from "@/components/CustomerReviews";
+import FAQSection from "@/components/FAQSection";
+import CallToActionSection from "@/components/CallToActionSection";
+import PartnersSection from "@/components/PartnersSection";
 
 export default function Home() {
   return (
@@ -21,8 +24,11 @@ export default function Home() {
       <RoznorodnaKolorystykaSection />
       <GlebokaStrukturaKomorekSection />
       <ProductGallerySection />
-      <WhyUsSection />
       <ProductSelection />
+      <CustomerReviews />
+      <FAQSection />
+      <CallToActionSection />
+      <PartnersSection />
     </div>
   );
 } 
