@@ -39,7 +39,7 @@ const benefits3D = [
 ];
 
 const features3D = [
-  "Ranty o wysokości 15-20mm",
+  "Ranty o wysokości do 8 cm",
   "Głęboka struktura komórek",
   "Materiał EVA o gęstości 0.6g/cm³",
   "Odporność na temperaturę -40°C do +80°C",
@@ -108,14 +108,14 @@ export default function ThreeDMatsSection() {
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mb-8 animate-pulse-glow shadow-lg shadow-blue-500/30">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mb-8 animate-pulse-glow shadow-lg shadow-blue-500/30 transition-all duration-1000 ease-out" style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
             <Shield className="w-10 h-10 text-white" />
           </div>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-tight">
+          <h2 className={`text-4xl md:text-6xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-tight transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
             DYWANIKI 3D Z RANTAMI
           </h2>
-          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-            Zaawansowana technologia 3D zapewnia doskonałe dopasowanie i maksymalną ochronę podłogi Twojego samochodu
+          <p className={`text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
+            Odkryj nowy wymiar komfortu i ochrony swojego auta! Nasze dywaniki 3D z wysokimi rantami to połączenie nowoczesnej technologii, prestiżowego wyglądu i maksymalnej funkcjonalności. Dzięki precyzyjnemu dopasowaniu do każdego modelu samochodu oraz innowacyjnej strukturze, skutecznie zatrzymują brud, wilgoć i zanieczyszczenia. Zadbaj o perfekcyjną czystość i elegancję wnętrza – wybierz rozwiązanie, które podnosi standard Twojej codziennej jazdy.
           </p>
         </div>
 
@@ -190,7 +190,7 @@ export default function ThreeDMatsSection() {
                         if (benefit.id === 1) {
                           image = ochronaImage;
                           title = "DOSKONAŁA OCHRONA";
-                          description = "Ranty 3D o wysokości 15-20mm skutecznie chronią przed wnikaniem brudu, wilgoci i zanieczyszczeń pod dywanik, zapewniając długotrwałą ochronę podłogi Twojego samochodu.";
+                          description = "Ranty 3D o wysokości do 8 cm skutecznie chronią przed wnikaniem brudu, wilgoci i zanieczyszczeń pod dywanik, zapewniając długotrwałą ochronę podłogi Twojego samochodu.";
                         } else if (benefit.id === 2) {
                           image = '/3djezor.png';
                           title = "3D JĘZOR";
@@ -198,9 +198,9 @@ export default function ThreeDMatsSection() {
                         } else if (benefit.id === 3) {
                           image = '/1.webp';
                           title = "BEZPIECZEŃSTWO UŻYTKOWANIA";
-                          description = "Specjalne antypoślizgowe właściwości dywaników 3D zapewniają maksymalne bezpieczeństwo podczas jazdy. Materiał EVA o wysokiej gęstości zapobiega przesuwaniu się dywaników.";
+                          description = "Oryginalne mocowania dywaników 3D zapewniają stabilność i bezpieczeństwo podczas jazdy – dywaniki nie przesuwają się nawet podczas gwałtownego hamowania.";
                         } else if (benefit.id === 4) {
-                          image = defaultMainImage;
+                          image = '/komorki.png';
                           title = "ŁATWOŚĆ CZYSZCZENIA";
                           description = "Głęboka struktura komórek 3D ułatwia szybkie i skuteczne czyszczenie dywaników. Brud i zanieczyszczenia nie wnikają głęboko w materiał, co pozwala na łatwe usunięcie ich.";
                         }
@@ -219,7 +219,7 @@ export default function ThreeDMatsSection() {
                           if (benefit.id === 1) {
                             image = ochronaImage;
                             title = "DOSKONAŁA OCHRONA";
-                            description = "Ranty 3D o wysokości 15-20mm skutecznie chronią przed wnikaniem brudu, wilgoci i zanieczyszczeń pod dywanik, zapewniając długotrwałą ochronę podłogi Twojego samochodu.";
+                            description = "Ranty 3D o wysokości do 8 cm skutecznie chronią przed wnikaniem brudu, wilgoci i zanieczyszczeń pod dywanik, zapewniając długotrwałą ochronę podłogi Twojego samochodu.";
                           } else if (benefit.id === 2) {
                             image = '/3djezor.png';
                             title = "3D JĘZOR";
@@ -227,9 +227,9 @@ export default function ThreeDMatsSection() {
                           } else if (benefit.id === 3) {
                             image = '/1.webp';
                             title = "BEZPIECZEŃSTWO UŻYTKOWANIA";
-                            description = "Specjalne antypoślizgowe właściwości dywaników 3D zapewniają maksymalne bezpieczeństwo podczas jazdy. Materiał EVA o wysokiej gęstości zapobiega przesuwaniu się dywaników.";
+                            description = "Oryginalne mocowania dywaników 3D zapewniają stabilność i bezpieczeństwo podczas jazdy – dywaniki nie przesuwają się nawet podczas gwałtownego hamowania.";
                           } else if (benefit.id === 4) {
-                            image = defaultMainImage;
+                            image = '/komorki.png';
                             title = "ŁATWOŚĆ CZYSZCZENIA";
                             description = "Głęboka struktura komórek 3D ułatwia szybkie i skuteczne czyszczenie dywaników. Brud i zanieczyszczenia nie wnikają głęboko w materiał, co pozwala na łatwe usunięcie ich.";
                           }
@@ -254,6 +254,10 @@ export default function ThreeDMatsSection() {
                           <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
                             <Image src="/1.webp" alt="Bezpieczeństwo użytkowania" width={80} height={80} className="object-cover w-full h-full" />
                           </div>
+                        ) : benefit.id === 4 ? (
+                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
+                            <Image src="/komorki.png" alt="Łatwość czyszczenia" width={80} height={80} className="object-cover w-full h-full" />
+                          </div>
                         ) : (
                           <div className={`p-2 rounded-lg bg-gradient-to-br ${benefit.color} ${
                             hoveredBenefit === benefit.id ? 'scale-110' : 'scale-100'
@@ -267,7 +271,7 @@ export default function ThreeDMatsSection() {
                           }`}>
                             {benefit.title}
                           </h4>
-                          <p className="text-sm text-gray-400 leading-relaxed">
+                          <p className="text-sm md:text-base text-gray-400 leading-relaxed line-clamp-3">
                             {benefit.description}
                           </p>
                         </div>
