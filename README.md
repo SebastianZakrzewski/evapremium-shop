@@ -1,99 +1,123 @@
-# Eva Website v0.1 Alpha
+# Eva Website v0.1-alpha
 
-Nowoczesna aplikacja Next.js z Tailwind CSS i shadcn/ui.
+## 🛡️ Bezpieczeństwo
 
-## 🚀 Technologie
+### Implementowane zabezpieczenia:
+- ✅ **Autoryzacja JWT** z hashowaniem haseł (bcrypt)
+- ✅ **Rate limiting** - ochrona przed DDoS
+- ✅ **Security headers** (CSP, XSS Protection, etc.)
+- ✅ **CORS** konfiguracja
+- ✅ **Input validation** z Zod
+- ✅ **Prisma ORM** - ochrona przed SQL injection
+- ✅ **Backup system** - automatyczne backupy bazy danych
+- ✅ **Environment variables** - bezpieczne zarządzanie konfiguracją
 
-- **Next.js 14** - Framework React z App Router
-- **TypeScript** - Typowanie statyczne
-- **Tailwind CSS** - Utility-first CSS framework
-- **shadcn/ui** - Komponenty UI zbudowane na Radix UI
-- **ESLint** - Linting kodu
+### 🔧 Konfiguracja bezpieczeństwa:
 
-## 📦 Instalacja
+1. **Skonfiguruj zmienne środowiskowe:**
+   ```bash
+   cp env.example .env
+   # Edytuj .env z bezpiecznymi wartościami
+   ```
 
-1. Sklonuj repozytorium:
-```bash
-git clone <repository-url>
-cd eva-website-v0.1-alpha
-```
+2. **Wygeneruj bezpieczny JWT secret:**
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+   ```
 
-2. Zainstaluj zależności:
-```bash
-npm install
-```
+3. **Uruchom migracje bazy danych:**
+   ```bash
+   npx prisma migrate dev
+   ```
 
-3. Uruchom serwer deweloperski:
+4. **Utwórz pierwszy backup:**
+   ```bash
+   npm run backup:create
+   ```
+
+## 🚀 Uruchomienie
+
+### Development:
 ```bash
 npm run dev
 ```
 
-4. Otwórz [http://localhost:3000](http://localhost:3000) w przeglądarce.
+### Production:
+```bash
+npm run build
+npm start
+```
 
-## 🛠️ Dostępne skrypty
+### Docker:
+```bash
+npm run docker:dev
+```
 
-- `npm run dev` - Uruchamia serwer deweloperski
-- `npm run build` - Buduje aplikację do produkcji
-- `npm run start` - Uruchamia aplikację w trybie produkcji
-- `npm run lint` - Sprawdza kod za pomocą ESLint
+## 📋 Checklist bezpieczeństwa przed wdrożeniem:
 
-## 📁 Struktura projektu
+- [ ] Zmień domyślne hasła w bazie danych
+- [ ] Skonfiguruj HTTPS w produkcji
+- [ ] Ustaw bezpieczny JWT_SECRET
+- [ ] Skonfiguruj firewall
+- [ ] Włącz logowanie błędów
+- [ ] Skonfiguruj monitoring
+- [ ] Ustaw automatyczne backupy
+- [ ] Przetestuj rate limiting
+- [ ] Sprawdź CORS settings
+- [ ] Weryfikuj security headers
 
+## 🔄 Backupy
+
+### Automatyczne backupy:
+```bash
+npm run backup:create  # Utwórz backup
+npm run backup:list    # Lista backupów
+npm run backup:restore # Przywróć backup
+```
+
+### Cron job dla automatycznych backupów:
+```bash
+# Dodaj do crontab
+0 2 * * * cd /path/to/project && npm run backup:create
+```
+
+## 📊 Monitoring
+
+Aplikacja zawiera podstawowe logowanie błędów i monitoring. W produkcji zalecane jest użycie:
+- **Sentry** dla error tracking
+- **Prometheus + Grafana** dla metryk
+- **ELK Stack** dla logów
+
+## 🛠️ Development
+
+### Struktura projektu:
 ```
 src/
-├── app/                 # App Router (Next.js 14)
-│   ├── globals.css     # Globalne style CSS
-│   ├── layout.tsx      # Główny layout
-│   └── page.tsx        # Strona główna
-├── components/         # Komponenty React
-│   └── ui/            # Komponenty shadcn/ui
-│       ├── button.tsx
-│       └── card.tsx
-└── lib/               # Narzędzia i utilities
-    └── utils.ts       # Funkcje pomocnicze
+├── lib/
+│   ├── middleware/     # Security middleware
+│   ├── services/       # Business logic
+│   ├── database/       # Database connection
+│   └── utils/          # Utilities (backup, etc.)
+├── components/         # React components
+└── app/               # Next.js app router
 ```
 
-## 🎨 shadcn/ui
+### Dodanie nowego endpointu z zabezpieczeniami:
+```typescript
+import { authMiddleware, securityMiddleware } from '@/lib/middleware/security';
 
-Projekt używa shadcn/ui do komponentów UI. Aby dodać nowe komponenty:
-
-```bash
-npx shadcn@latest add <component-name>
+export async function GET(request: NextRequest) {
+  // Zastosuj security middleware
+  const response = securityMiddleware(request);
+  
+  // Sprawdź autoryzację
+  const authResult = await authMiddleware(request);
+  if (authResult.status === 401) return authResult;
+  
+  // Twoja logika...
+}
 ```
 
-Dostępne komponenty:
-- `button` - Przyciski z różnymi wariantami
-- `card` - Karty z nagłówkiem, treścią i stopką
+## 📞 Support
 
-## 🌙 Tryb ciemny
-
-Aplikacja wspiera tryb ciemny dzięki Tailwind CSS i shadcn/ui. Kolory automatycznie dostosowują się do preferencji systemu.
-
-## 📱 Responsywność
-
-Aplikacja jest w pełni responsywna i działa na wszystkich urządzeniach dzięki Tailwind CSS.
-
-## 🔧 Konfiguracja
-
-- `tailwind.config.js` - Konfiguracja Tailwind CSS
-- `components.json` - Konfiguracja shadcn/ui
-- `postcss.config.mjs` - Konfiguracja PostCSS
-
-## 📄 Licencja
-
-MIT
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+W przypadku problemów z bezpieczeństwem, skontaktuj się z zespołem deweloperskim.

@@ -1,23 +1,19 @@
 export interface User {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  phone?: string;
+  firstName?: string;
+  lastName?: string;
   role: UserRole;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  isActive?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
-
-export type UserRole = 'customer' | 'admin' | 'moderator';
 
 export interface CreateUserRequest {
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
-  phone?: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 export interface LoginRequest {
@@ -26,6 +22,10 @@ export interface LoginRequest {
 }
 
 export interface AuthResponse {
-  user: User;
-  token: string;
-} 
+  success: boolean;
+  token?: string;
+  user?: User;
+  error?: string;
+}
+
+export type UserRole = 'customer' | 'admin' | 'moderator'; 

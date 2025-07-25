@@ -12,7 +12,21 @@
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
     "docker:restart": "docker-compose restart",
-    "docker:rebuild": "docker-compose down && docker-compose up --build -d"
+    "docker:rebuild": "docker-compose down && docker-compose up --build -d",
+    "backup:create": "node scripts/backup-prisma.js create",
+    "backup:list": "node scripts/backup-prisma.js list",
+    "backup:restore": "node scripts/backup-prisma.js restore",
+    "backup:cleanup": "node scripts/backup-prisma.js cleanup",
+    "backup:check": "node scripts/backup-prisma.js check",
+    "backup:source:create": "node scripts/backup-source.js create",
+    "backup:source:list": "node scripts/backup-source.js list",
+    "backup:source:restore": "node scripts/backup-source.js restore",
+    "backup:source:cleanup": "node scripts/backup-source.js cleanup",
+    "backup:full": "npm run backup:create && npm run backup:source:create",
+    "security:check": "npm audit && npm run lint",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
