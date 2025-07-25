@@ -404,3 +404,19 @@ html {
     transform: translateX(-1500px);
   }
 }
+
+@keyframes ring-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.ring-pulse {
+  animation: ring-pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

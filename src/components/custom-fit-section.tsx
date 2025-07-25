@@ -131,34 +131,70 @@ const timelineSteps = [
 
 export default function CustomFitSection() {
   return (
-    <section id="custom-fit-section" className="py-12 md:py-16 bg-black relative overflow-hidden">
+    <section id="custom-fit-section" className="pt-0 md:pt-0 pb-64 md:pb-[400px] bg-black relative overflow-visible">
+      {/* Tło auta */}
+      <div className="absolute inset-0 w-full h-full z-0">
+        <Image
+          src="/mc.webp"
+          alt="Auto w tle"
+          fill
+          className="object-cover object-center opacity-30"
+          priority={true}
+          quality={90}
+          style={{ objectPosition: 'center' }}
+        />
+        {/* Overlay dla lepszej czytelności */}
+        <div className="absolute inset-0 bg-black/60" />
+      </div>
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-16 transition-all duration-1000 ease-out">
+        <div className="text-center mb-4 transition-all duration-1000 ease-out">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-8 animate-pulse-glow shadow-lg shadow-red-500/30">
             <Target className="w-10 h-10 text-white" />
           </div>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 bg-gradient-to-r from-white via-red-100 to-white bg-clip-text text-transparent leading-tight">
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-2 bg-gradient-to-r from-white via-red-100 to-white bg-clip-text text-transparent leading-tight">
             SZYTE NA MIARĘ DO TWOJEGO AUTA
           </h2>
           <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
             Każdy dywanik jest precyzyjnie dopasowany do konkretnego modelu samochodu z dokładnością do milimetra.
           </p>
         </div>
-        {/* Timeline */}
-        <div className="relative w-full flex flex-col items-center mt-16">
-          {/* Linia główna */}
-          <div className="absolute left-8 right-8 top-1/2 md:top-1/2 h-1 bg-gradient-to-r from-red-600 via-red-400 to-red-600 opacity-40 z-0" style={{height: '4px', top: '50%', transform: 'translateY(-50%)'}} />
+        {/* Nagłówek procesu timeline */}
+        <div className="text-center mb-0">
+          <h3 className="text-2xl md:text-3xl font-semibold text-white mb-2">Jak wygląda proces realizacji zamówienia?</h3>
+          <p className="text-gray-400 max-w-2xl mx-auto">Poznaj wszystkie etapy produkcji i wysyłki Twoich dywaników szytych na miarę.</p>
+        </div>
+        {/* Timeline stylizowany jak na przesłanym obrazku */}
+        <div className="relative w-full flex flex-col items-center mt-48">
+          {/* Jedna linia pod wszystkimi węzłami */}
+          <div className="absolute left-0 right-0 top-1/2 transform -translate-y-1/2 z-0 h-2">
+            <div className="w-full h-full bg-gradient-to-r from-red-700 via-red-500 to-red-400 opacity-80 rounded-full border-2 border-red-500" />
+          </div>
           <div className="w-full flex flex-col md:flex-row items-center justify-between relative z-10">
             {timelineSteps.map((step, idx) => {
               const Icon = step.icon;
+              const isEven = idx % 2 === 0;
               return (
-                <div key={idx} className="flex flex-col items-center flex-1 min-w-[120px] max-w-[160px] mx-auto md:mx-0 group">
-                  <div className="w-16 h-16 flex items-center justify-center rounded-full border-4 border-red-500 bg-black shadow-lg group-hover:scale-110 transition-transform duration-300 animate-fade-in" style={{animationDelay: `${idx * 120}ms`}}>
+                <div
+                  key={idx}
+                  className={`relative flex flex-col items-center flex-1 min-w-[120px] max-w-[160px] mx-auto md:mx-0 group gap-6 md:gap-12`}
+                  tabIndex={0}
+                >
+                  {/* Węzeł (ikona) na linii – premium: czerwona obwódka, czarne tło, biała ikona, cień */}
+                  <div
+                    className={`relative z-10 w-16 h-16 flex items-center justify-center rounded-full border-4 border-red-500 bg-black shadow-lg transition-transform duration-300 animate-fade-in
+                      group-hover:scale-110 group-focus:scale-110 group-hover:border-white group-focus:border-white group-hover:bg-red-700 group-focus:bg-red-700'}`}
+                    style={{animationDelay: `${idx * 120}ms`}}
+                  >
                     <Icon className="w-8 h-8 text-white" />
+                    {/* Tooltip */}
+                    <span className="absolute left-1/2 -translate-x-1/2 -bottom-10 px-3 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20 shadow-lg border border-red-500">
+                      {step.title}
+                    </span>
                   </div>
-                  <div className="mt-4 text-center">
-                    <div className="text-white font-semibold text-base md:text-lg mb-1 animate-fade-in" style={{animationDelay: `${200 + idx * 120}ms`}}>{step.title}</div>
-                    <div className="text-gray-400 text-xs md:text-sm animate-fade-in" style={{animationDelay: `${400 + idx * 120}ms`}}>{step.day}</div>
+                  {/* Zygzakowaty opis */}
+                  <div className={`absolute w-max max-w-[110px] ${isEven ? 'top-24 md:top-20' : 'bottom-24 md:bottom-20'} left-1/2 -translate-x-1/2 text-center md:${isEven ? '' : 'top-auto bottom-20'} ${isEven ? '' : 'md:top-auto md:bottom-20'} ${isEven ? 'sm:top-24' : 'sm:bottom-24'} ${isEven ? 'top-auto' : 'top-auto'} sm:top-auto` + (typeof window !== 'undefined' && window.innerWidth < 768 ? ' top-auto bottom-20' : '')}>
+                    <div className="text-white font-semibold text-base md:text-lg mb-1 animate-fade-in drop-shadow-lg" style={{animationDelay: `${200 + idx * 120}ms`}}>{step.title}</div>
+                    <div className="text-gray-300 text-xs md:text-sm animate-fade-in drop-shadow-lg" style={{animationDelay: `${400 + idx * 120}ms`}}>{step.day}</div>
                   </div>
                 </div>
               );
