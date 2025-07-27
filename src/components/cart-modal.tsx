@@ -3,6 +3,7 @@
 import React from "react";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSession } from "@/lib/contexts/session-context";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -20,32 +21,7 @@ interface CartItem {
 
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
   const router = useRouter();
-
-  // Przykładowe dane koszyka - później można zastąpić stanem globalnym
-  const cartItems: CartItem[] = [
-    {
-      id: 1,
-      name: "A4",
-      brand: "Audi",
-      price: "180,000 PLN",
-      quantity: 1,
-      image: "/images/products/audi.jpg"
-    },
-    {
-      id: 2,
-      name: "X5",
-      brand: "BMW",
-      price: "320,000 PLN",
-      quantity: 2,
-      image: "/images/products/bmw.png"
-    }
-  ];
-
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cartItems.reduce((sum, item) => {
-    const price = parseInt(item.price.replace(/[^\d]/g, ''));
-    return sum + (price * item.quantity);
-  }, 0);
+  const { cartItems, cartCount, cartTotal, removeFromCart, updateCartItemQuantity } = useSession();
 
   const handleCheckout = () => {
     onClose(); // Zamknij modal koszyka
@@ -106,16 +82,25 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                       <h3 className="font-medium text-white">{item.brand} {item.name}</h3>
                       <p className="text-sm text-neutral-400">{item.price}</p>
                       <div className="flex items-center gap-2 mt-2">
-                        <button className="w-6 h-6 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 transition-colors text-white">
+                        <button 
+                          onClick={() => updateCartItemQuantity(item.id, item.quantity - 1)}
+                          className="w-6 h-6 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 transition-colors text-white"
+                        >
                           -
                         </button>
                         <span className="w-8 text-center text-sm font-medium text-white">{item.quantity}</span>
-                        <button className="w-6 h-6 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 transition-colors text-white">
+                        <button 
+                          onClick={() => updateCartItemQuantity(item.id, item.quantity + 1)}
+                          className="w-6 h-6 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 transition-colors text-white"
+                        >
                           +
                         </button>
                       </div>
                     </div>
-                    <button className="text-red-500 hover:text-red-400 transition-colors">
+                    <button 
+                      onClick={() => removeFromCart(item.id)}
+                      className="text-red-500 hover:text-red-400 transition-colors"
+                    >
                       <X className="w-5 h-5" />
                     </button>
                   </div>
@@ -128,8 +113,8 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
           {cartItems.length > 0 && (
             <div className="border-t border-neutral-800 p-6">
               <div className="flex justify-between items-center mb-4">
-                <span className="text-lg font-medium text-white">Razem ({totalItems} produktów):</span>
-                <span className="text-2xl font-bold text-white">{totalPrice.toLocaleString()} PLN</span>
+                <span className="text-lg font-medium text-white">Razem ({cartCount} produktów):</span>
+                <span className="text-2xl font-bold text-white">{cartTotal.toLocaleString()} PLN</span>
               </div>
               <button 
                 onClick={handleCheckout}

@@ -3,10 +3,12 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import CartModal from "./cart-modal";
+import { useSession } from "@/lib/contexts/session-context";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { cartCount } = useSession();
 
   return (
     <>
@@ -49,9 +51,11 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {/* Cart Badge */}
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-medium rounded-full h-5 w-5 flex items-center justify-center shadow-lg group-hover:bg-red-400 transition-colors">
-                2
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-medium rounded-full h-5 w-5 flex items-center justify-center shadow-lg group-hover:bg-red-400 transition-colors">
+                  {cartCount}
+                </span>
+              )}
             </button>
           </div>
           {/* Mobile Cart Icon and Hamburger */}
@@ -69,9 +73,11 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {/* Cart Badge */}
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-medium rounded-full h-5 w-5 flex items-center justify-center shadow-lg group-hover:bg-red-400 transition-colors">
-                2
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-medium rounded-full h-5 w-5 flex items-center justify-center shadow-lg group-hover:bg-red-400 transition-colors">
+                  {cartCount}
+                </span>
+              )}
             </button>
             <button
               className="flex flex-col justify-center items-center w-10 h-10 text-white"

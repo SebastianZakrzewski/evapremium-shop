@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import Script from "next/script";
+import { SessionProvider } from "@/lib/contexts/session-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -149,9 +150,11 @@ export default function RootLayout({
         />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} bg-black min-h-screen`}>
-        <Navbar />
-        <div className="pt-16 md:pt-20 lg:pt-24">{children}</div>
-        <Footer />
+        <SessionProvider>
+          <Navbar />
+          <div className="pt-16 md:pt-20 lg:pt-24">{children}</div>
+          <Footer />
+        </SessionProvider>
       </body>
     </html>
   );
