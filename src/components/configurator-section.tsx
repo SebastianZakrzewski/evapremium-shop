@@ -211,6 +211,19 @@ export default function ConfiguratorSection() {
     setState(prev => ({ ...prev, ...updates }));
   };
 
+  // Funkcja do auto-scroll do podglądu
+  const scrollToPreview = () => {
+    setTimeout(() => {
+      const previewElement = document.getElementById('main-preview');
+      if (previewElement) {
+        previewElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
+    }, 100);
+  };
+
   // Funkcja do zmiany koloru dywanika
   const handleCarpetColorChange = (colorIndex: number) => {
     updateState({ selectedCarpet: colorIndex });
@@ -229,6 +242,17 @@ export default function ConfiguratorSection() {
         }
       }
     }
+    
+    // Auto-scroll do głównego podglądu
+    setTimeout(() => {
+      const previewElement = document.getElementById('main-preview');
+      if (previewElement) {
+        previewElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
+    }, 100);
   };
 
   // Funkcja do pobierania dywaników z czarnym obszyciem
@@ -392,81 +416,119 @@ export default function ConfiguratorSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Enhanced Preview Panel */}
-          <div className="lg:col-span-3 space-y-6 max-w-4xl">
-                          <div className="relative group">
-                <div className="w-full aspect-[4/3] relative rounded-2xl overflow-hidden border-2 border-red-500/50 shadow-2xl shadow-red-500/10 transition-all duration-300 group-hover:border-red-400">
-                <Image 
-                  src={selectedMat?.image || "/images/konfigurator/dywanik.jpg"} 
-                  alt="Podgląd dywanika" 
-                  fill 
-                  className="object-cover transition-transform duration-300 group-hover:scale-105" 
-                />
-                
-                {/* Enhanced Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                
-                <div className="absolute top-4 left-4 bg-black/80 backdrop-blur rounded-xl p-4 text-white">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{ 
-                        background: selectedMat ? colorMapping[selectedMat.color]?.color || "#ccc" : carpetColors[state.selectedCarpet].color 
-                      }}></div>
-                      <span className="text-sm font-medium">
-                        {selectedMat ? colorMapping[selectedMat.color]?.name || selectedMat.color : carpetColors[state.selectedCarpet].name}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Shield className="w-4 h-4 text-red-400" />
-                      <span className="text-sm">{threeDVariants[state.selected3DVariant].name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Settings className="w-4 h-4 text-red-400" />
-                      <span className="text-sm">{textures[state.selectedTexture].name}</span>
+        {/* Main Layout - Preview Left, Configuration Right */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Preview Panel - Left Side */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-8">
+              <div className="relative group">
+                <div className="w-full h-full min-h-[600px] relative rounded-xl overflow-hidden border-2 border-red-500/50 shadow-xl shadow-red-500/10 transition-all duration-300 group-hover:border-red-400">
+                  <Image 
+                    src={selectedMat?.image || "/images/konfigurator/dywanik.jpg"} 
+                    alt="Podgląd dywanika" 
+                    fill 
+                    className="object-cover transition-transform duration-300 group-hover:scale-105" 
+                  />
+                  
+                  {/* Enhanced Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  
+                  <div className="absolute top-4 left-4 bg-black/80 backdrop-blur rounded-xl p-4 text-white">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{ 
+                          background: selectedMat ? colorMapping[selectedMat.color]?.color || "#ccc" : carpetColors[state.selectedCarpet].color 
+                        }}></div>
+                        <span className="text-sm font-medium">
+                          {selectedMat ? colorMapping[selectedMat.color]?.name || selectedMat.color : carpetColors[state.selectedCarpet].name}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-red-400" />
+                        <span className="text-sm">{threeDVariants[state.selected3DVariant].name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Settings className="w-4 h-4 text-red-400" />
+                        <span className="text-sm">{textures[state.selectedTexture].name}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Price Badge */}
-                <div className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-lg shadow-lg">
-                  {calculateTotalPrice()} zł
+                  {/* Price Badge */}
+                  <div className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-lg shadow-lg">
+                    {calculateTotalPrice()} zł
+                  </div>
+                </div>
+                
+                {/* Enhanced Thumbnail Gallery */}
+                <div className="flex gap-1 mt-2 overflow-x-auto pb-1 scrollbar-hide">
+                  {configurations.map((config, index) => (
+                    <button
+                      key={config.name}
+                      onClick={() => updateState({ selectedConfig: index })}
+                      className={`flex-shrink-0 rounded-md border-2 transition-all duration-300 hover:scale-105 ${
+                        state.selectedConfig === index 
+                          ? "border-red-500 ring-2 ring-red-500/50 shadow-lg shadow-red-500/25" 
+                          : "border-gray-700 hover:border-red-400"
+                      }`}
+                      style={{ width: 60, height: 45 }}
+                    >
+                      <Image 
+                        src={config.img} 
+                        alt={config.name} 
+                        width={56} 
+                        height={41} 
+                        className="object-cover rounded-md" 
+                      />
+                    </button>
+                  ))}
                 </div>
               </div>
-              
-              {/* Enhanced Thumbnail Gallery */}
-              <div className="flex gap-3 mt-4 overflow-x-auto pb-2 scrollbar-hide">
-                {configurations.map((config, index) => (
-                  <button
-                    key={config.name}
-                    onClick={() => updateState({ selectedConfig: index })}
-                    className={`flex-shrink-0 rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
-                      state.selectedConfig === index 
-                        ? "border-red-500 ring-2 ring-red-500/50 shadow-lg shadow-red-500/25" 
-                        : "border-gray-700 hover:border-red-400"
-                    }`}
-                    style={{ width: 100, height: 80 }}
-                  >
-                    <Image 
-                      src={config.img} 
-                      alt={config.name} 
-                      width={96} 
-                      height={76} 
-                      className="object-cover rounded-xl" 
-                    />
-                  </button>
-                ))}
+            </div>
+          </div>
+
+          {/* Configuration Panel - Right Side */}
+          <div className="lg:col-span-2">
+            {/* Price Summary - Top of Configuration */}
+            <div className="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-xl p-3 mb-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-white font-semibold flex items-center gap-2">
+                  <Star className="w-5 h-5 text-red-400" />
+                  Podsumowanie ceny
+                </h3>
+                <div className="text-right">
+                  <div className="text-red-400 font-bold text-2xl">{calculateTotalPrice()} zł</div>
+                  <div className="text-gray-400 text-sm">Cena całkowita</div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Zestaw:</span>
+                  <span className="text-white">{configurations[state.selectedConfig].price} zł</span>
+                </div>
+                {textures[state.selectedTexture].price > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Tekstura:</span>
+                    <span className="text-white">+{textures[state.selectedTexture].price} zł</span>
+                  </div>
+                )}
+                {threeDVariants[state.selected3DVariant].price > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Wariant 3D:</span>
+                    <span className="text-white">+{threeDVariants[state.selected3DVariant].price} zł</span>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Step Content */}
-            <div className="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-2xl p-8">
-              {currentStep === 1 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <Car className="w-12 h-12 text-red-400 mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-white mb-2">Wybór samochodu</h2>
-                    <p className="text-gray-400">Wybierz markę, model i specyfikację swojego auta</p>
+            <div className="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-xl p-4">
+                              {currentStep === 1 && (
+                  <div className="space-y-4">
+                  <div className="text-center mb-4">
+                    <Car className="w-8 h-8 text-red-400 mx-auto mb-2" />
+                    <h2 className="text-lg font-bold text-white mb-1">Wybór samochodu</h2>
+                    <p className="text-gray-400 text-xs">Wybierz markę, model i specyfikację swojego auta</p>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -541,12 +603,12 @@ export default function ConfiguratorSection() {
                 </div>
               )}
 
-              {currentStep === 2 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <Settings className="w-12 h-12 text-red-400 mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-white mb-2">Konfiguracja zestawu</h2>
-                    <p className="text-gray-400">Wybierz rodzaj zestawu dywaników</p>
+                              {currentStep === 2 && (
+                  <div className="space-y-4">
+                  <div className="text-center mb-4">
+                    <Settings className="w-8 h-8 text-red-400 mx-auto mb-2" />
+                    <h2 className="text-lg font-bold text-white mb-1">Konfiguracja zestawu</h2>
+                    <p className="text-gray-400 text-xs">Wybierz rodzaj zestawu dywaników</p>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -578,12 +640,12 @@ export default function ConfiguratorSection() {
                 </div>
               )}
 
-              {currentStep === 3 && (
-                <div className="space-y-8">
-                  <div className="text-center mb-8">
-                    <Palette className="w-12 h-12 text-red-400 mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-white mb-2">Kolory i tekstury</h2>
-                    <p className="text-gray-400">Dostosuj wygląd swoich dywaników</p>
+                              {currentStep === 3 && (
+                  <div className="space-y-4">
+                  <div className="text-center mb-4">
+                    <Palette className="w-8 h-8 text-red-400 mx-auto mb-2" />
+                    <h2 className="text-lg font-bold text-white mb-1">Kolory i tekstury</h2>
+                    <p className="text-gray-400 text-xs">Dostosuj wygląd swoich dywaników</p>
                   </div>
 
                   {/* Wariant 3D */}
@@ -629,14 +691,14 @@ export default function ConfiguratorSection() {
                       Kolory
                     </h3>
                     <div className="space-y-4">
-                      <div>
-                        <label className="block text-gray-300 text-sm mb-3">Kolor dywanika:</label>
-                        <div className="flex flex-wrap gap-3">
+                                              <div>
+                          <label className="block text-gray-300 text-xs mb-2">Kolor dywanika:</label>
+                        <div className="flex flex-wrap gap-1">
                           {carpetColors.map((color, index) => (
                             <Tooltip key={color.name} content={color.name}>
                               <button
                                 onClick={() => handleCarpetColorChange(index)}
-                                className={`w-12 h-12 rounded-full border-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/50 ${
+                                className={`w-8 h-8 rounded-full border-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/50 ${
                                   state.selectedCarpet === index 
                                     ? "border-red-500 ring-2 ring-red-500/50 shadow-lg shadow-red-500/25" 
                                     : "border-gray-700 hover:border-red-400"
@@ -648,14 +710,14 @@ export default function ConfiguratorSection() {
                         </div>
                       </div>
 
-                      <div>
-                        <label className="block text-gray-300 text-sm mb-3">Kolor obszycia:</label>
-                        <div className="flex flex-wrap gap-3">
+                                              <div>
+                          <label className="block text-gray-300 text-xs mb-2">Kolor obszycia:</label>
+                        <div className="flex flex-wrap gap-1">
                           {edgeColors.map((color, index) => (
                             <Tooltip key={color.name} content={color.name}>
                               <button
                                 onClick={() => updateState({ selectedEdge: index })}
-                                className={`w-12 h-12 rounded-full border-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/50 ${
+                                className={`w-8 h-8 rounded-full border-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/50 ${
                                   state.selectedEdge === index 
                                     ? "border-red-500 ring-2 ring-red-500/50 shadow-lg shadow-red-500/25" 
                                     : "border-gray-700 hover:border-red-400"
@@ -709,12 +771,12 @@ export default function ConfiguratorSection() {
                 </div>
               )}
 
-              {currentStep === 4 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <Check className="w-12 h-12 text-green-400 mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-white mb-2">Podsumowanie</h2>
-                    <p className="text-gray-400">Sprawdź swoją konfigurację przed dodaniem do koszyka</p>
+                              {currentStep === 4 && (
+                  <div className="space-y-4">
+                  <div className="text-center mb-4">
+                    <Check className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                    <h2 className="text-lg font-bold text-white mb-1">Podsumowanie</h2>
+                    <p className="text-gray-400 text-xs">Sprawdź swoją konfigurację przed dodaniem do koszyka</p>
                   </div>
                   
                   <div className="bg-gray-800/50 rounded-xl p-6 space-y-4">
@@ -776,119 +838,60 @@ export default function ConfiguratorSection() {
               )}
 
               {/* Navigation */}
-              <div className="flex items-center justify-between pt-6">
+              <div className="flex items-center justify-between pt-3">
                 <button
                   onClick={prevStep}
                   disabled={currentStep === 1}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-md font-medium transition-all duration-200 text-sm ${
                     currentStep === 1
                       ? "bg-gray-800 text-gray-500 cursor-not-allowed"
                       : "bg-gray-800 text-white hover:bg-gray-700"
                   }`}
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-3 h-3" />
                   Wstecz
                 </button>
 
                 {currentStep < 4 ? (
                   <button
                     onClick={nextStep}
-                    className="flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium transition-all duration-200"
+                    className="flex items-center gap-1 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-md font-medium transition-all duration-200 text-sm"
                   >
                     Dalej
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-3 h-3" />
                   </button>
                 ) : (
                   <button 
-                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-md font-medium transition-all duration-200 text-sm ${
                       isConfigurationComplete
                         ? "bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white shadow-lg hover:shadow-red-500/25 transform hover:scale-105"
                         : "bg-gray-700 text-gray-400 cursor-not-allowed"
                     }`}
                     disabled={!isConfigurationComplete}
                   >
-                    <ShoppingCart className="w-5 h-5" />
+                    <ShoppingCart className="w-3 h-3" />
                     DODAJ DO KOSZYKA
                   </button>
                 )}
               </div>
             </div>
-          </div>
-
-          {/* Enhanced Sidebar */}
-          <div className="space-y-6">
-            {/* Price Summary */}
-            <div className="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-2xl p-6">
-              <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-                <Star className="w-5 h-5 text-red-400" />
-                Podsumowanie ceny
-              </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-300">Zestaw:</span>
-                  <span className="text-white">{configurations[state.selectedConfig].price} zł</span>
+            
+            {/* Reset Button */}
+            <div className="mt-3">
+              <button
+                onClick={resetConfiguration}
+                className="w-full flex items-center justify-center gap-1 px-2 py-1.5 text-gray-300 hover:text-white transition-colors duration-200 border border-gray-700 rounded-md hover:border-gray-600 text-xs"
+              >
+                <RotateCcw className="w-3 h-3" />
+                Resetuj konfigurację
+              </button>
+              
+              {showSavedMessage && (
+                <div className="flex items-center gap-2 text-green-400 text-sm p-3 bg-green-500/10 border border-green-500/20 rounded-xl mt-4">
+                  <Save className="w-4 h-4" />
+                  <span>Konfiguracja zresetowana</span>
                 </div>
-                {textures[state.selectedTexture].price > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Tekstura:</span>
-                    <span className="text-white">+{textures[state.selectedTexture].price} zł</span>
-                  </div>
-                )}
-                {threeDVariants[state.selected3DVariant].price > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Wariant 3D:</span>
-                    <span className="text-white">+{threeDVariants[state.selected3DVariant].price} zł</span>
-                  </div>
-                )}
-                <div className="border-t border-gray-700 pt-3">
-                  <div className="flex justify-between">
-                    <span className="text-white font-bold">Razem:</span>
-                    <span className="text-red-400 font-bold text-xl">{calculateTotalPrice()} zł</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Configuration Status */}
-            <div className="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-2xl p-6">
-              <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-                <Check className="w-5 h-5 text-red-400" />
-                Status konfiguracji
-              </h3>
-              <div className="space-y-3">
-                {steps.map((step) => (
-                  <div key={step.id} className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${
-                      step.completed ? "bg-green-500" : "bg-gray-600"
-                    }`} />
-                    <span className={`text-sm ${
-                      step.completed ? "text-green-400" : "text-gray-400"
-                    }`}>
-                      {step.name}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-2xl p-6">
-              <div className="space-y-4">
-                <button
-                  onClick={resetConfiguration}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 text-gray-300 hover:text-white transition-colors duration-200 border border-gray-700 rounded-xl hover:border-gray-600"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                  Resetuj konfigurację
-                </button>
-                
-                {showSavedMessage && (
-                  <div className="flex items-center gap-2 text-green-400 text-sm p-3 bg-green-500/10 border border-green-500/20 rounded-xl">
-                    <Save className="w-4 h-4" />
-                    <span>Konfiguracja zresetowana</span>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </div>
         </div>
