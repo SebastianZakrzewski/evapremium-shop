@@ -23,12 +23,14 @@ export class BitrixService {
           TITLE: `Zamówienie dywaników - ${orderData.customer.firstName} ${orderData.customer.lastName}`,
           STAGE_ID: this.BITRIX_DEAL_STAGE_ID,
           CURRENCY_ID: 'PLN',
-          OPPORTUNITY: orderData.totalAmount,
+          OPPORTUNITY: orderData.pricing.totalAmount,
           COMMENTS: this.formatOrderComments(orderData),
           CONTACT_ID: orderData.contactId,
           ASSIGNED_BY_ID: this.BITRIX_ASSIGNED_BY_ID,
           SOURCE_ID: 'WEB',
-          UTM_SOURCE: 'eva-website',
+          UTM_SOURCE: orderData.metadata.utmSource || 'eva-website',
+          UTM_MEDIUM: orderData.metadata.utmMedium || '',
+          UTM_CAMPAIGN: orderData.metadata.utmCampaign || '',
           // TODO: Dodaj niestandardowe pola jeśli są potrzebne w Twoim Bitrix24
           // UF_CRM_CAR_BRAND: orderData.carDetails.brand,
           // UF_CRM_CAR_MODEL: orderData.carDetails.model,
@@ -41,6 +43,11 @@ export class BitrixService {
           // UF_CRM_MAT_VARIANT: orderData.productDetails.variant,
           // UF_CRM_MAT_EDGE_COLOR: orderData.productDetails.edgeColor,
           // UF_CRM_MAT_IMAGE: orderData.productDetails.image,
+          // UF_CRM_SHIPPING_METHOD: orderData.shipping.methodName,
+          // UF_CRM_PAYMENT_METHOD: orderData.payment.methodName,
+          // UF_CRM_COMPANY_NAME: orderData.company.name,
+          // UF_CRM_COMPANY_NIP: orderData.company.nip,
+          // UF_CRM_ORDER_ID: orderData.metadata.orderId,
         }
       };
 
@@ -134,7 +141,7 @@ export class BitrixService {
    */
   private static formatOrderComments(orderData: BitrixOrder): string {
     return `
-Zamówienie dywaników:
+Zamówienie dywaników - ${orderData.metadata.orderId}
 
 Samochód:
 - Marka: ${orderData.carDetails.brand}
@@ -155,8 +162,34 @@ Klient:
 - Nazwisko: ${orderData.customer.lastName}
 - Email: ${orderData.customer.email}
 - Telefon: ${orderData.customer.phone}
+- Adres: ${orderData.customer.address}
 
-Cena całkowita: ${orderData.totalAmount} PLN
+Dostawa:
+- Metoda: ${orderData.shipping.methodName}
+- Koszt: ${orderData.shipping.cost} PLN
+- Szacowany czas: ${orderData.shipping.estimatedDelivery}
+
+Płatność:
+- Metoda: ${orderData.payment.methodName}
+
+${orderData.company.isInvoice ? `
+Firma:
+- Nazwa: ${orderData.company.name}
+- NIP: ${orderData.company.nip}
+` : ''}
+
+Cennik:
+- Wartość produktów: ${orderData.pricing.subtotal} PLN
+- Koszt dostawy: ${orderData.pricing.shippingCost} PLN
+- Rabat: ${orderData.pricing.discountAmount} PLN
+- Cena całkowita: ${orderData.pricing.totalAmount} PLN
+
+Dodatkowe informacje:
+- Regulamin zaakceptowany: ${orderData.additional.termsAccepted ? 'Tak' : 'Nie'}
+- Newsletter: ${orderData.additional.newsletter ? 'Tak' : 'Nie'}
+- Kod rabatowy: ${orderData.additional.discountCode || 'Brak'}
+- Źródło: ${orderData.metadata.source}
+- Data zamówienia: ${orderData.metadata.orderDate.toLocaleDateString('pl-PL')}
     `.trim();
   }
 } 

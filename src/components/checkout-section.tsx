@@ -142,6 +142,25 @@ export function CheckoutSection() {
   const [isLoading, setIsLoading] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
+  const [configuratorDictionary, setConfiguratorDictionary] = useState<any>(null)
+
+  // Odczytywanie danych ze słownika konfiguratora z URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const orderDataParam = urlParams.get('orderData')
+      
+      if (orderDataParam) {
+        try {
+          const decodedData = JSON.parse(decodeURIComponent(orderDataParam))
+          setConfiguratorDictionary(decodedData)
+          console.log('📋 Odczytywanie danych ze słownika konfiguratora:', decodedData)
+        } catch (error) {
+          console.error('❌ Błąd podczas odczytywania danych zamówienia:', error)
+        }
+      }
+    }
+  }, [])
   
   const {
     register,
@@ -307,6 +326,63 @@ export function CheckoutSection() {
     setErrorMessage("")
     
     try {
+      // Aktualizuj słownik z danymi klienta
+      if (configuratorDictionary) {
+        const updatedDictionary = {
+          ...configuratorDictionary,
+          customer: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            phone: data.phone,
+            address: data.street,
+            city: data.city,
+            postalCode: data.postalCode,
+            country: data.country || 'Polska',
+            isComplete: true,
+          },
+          shipping: {
+            method: data.shippingMethod,
+            methodName: shippingMethods.find(m => m.id === data.shippingMethod)?.name || '',
+            cost: shippingMethods.find(m => m.id === data.shippingMethod)?.price || 0,
+            estimatedDelivery: shippingMethods.find(m => m.id === data.shippingMethod)?.description || '',
+            isComplete: true,
+          },
+          payment: {
+            method: data.paymentMethod,
+            methodName: data.paymentMethod === 'card' ? 'Karta kredytowa' : 
+                       data.paymentMethod === 'transfer' ? 'Przelew bankowy' : 
+                       data.paymentMethod === 'blik' ? 'BLIK' : 'Pobranie',
+            isComplete: true,
+          },
+          company: {
+            name: data.companyName || '',
+            nip: data.nip || '',
+            isInvoice: !data.sameAsShipping,
+            isComplete: !data.sameAsShipping ? !!(data.companyName && data.nip) : true,
+          },
+          additional: {
+            termsAccepted: data.termsAccepted,
+            newsletter: data.newsletter,
+            discountCode: discountCode,
+            discountApplied: discountApplied,
+            discountAmount: discountApplied ? (total * 0.1) : 0,
+            notes: '',
+          },
+          metadata: {
+            ...configuratorDictionary.metadata,
+            orderFinalized: true,
+            lastUpdated: new Date(),
+          }
+        };
+        
+        setConfiguratorDictionary(updatedDictionary);
+        console.log('📋 Finalny słownik z danymi klienta:', updatedDictionary);
+        
+        // Tutaj można wysłać dane do Bitrix24
+        // await sendOrderToBitrix(updatedDictionary);
+      }
+      
       // Symulacja procesu płatności
       await new Promise(resolve => setTimeout(resolve, 2000))
       

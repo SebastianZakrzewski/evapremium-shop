@@ -150,6 +150,111 @@ interface MatsData {
   image: string;
 }
 
+// Słownik konfiguracji - dynamicznie przechowuje dane z każdego etapu konfiguratora
+interface ConfiguratorDictionary {
+  // Etap 1: Wybór samochodu
+  carSelection: {
+    brand: string;
+    model: string;
+    year: string;
+    body: string;
+    trans: string;
+    isComplete: boolean;
+  };
+  
+  // Etap 2: Konfiguracja
+  configuration: {
+    selectedConfig: number;
+    configName: string;
+    configPrice: number;
+    isComplete: boolean;
+  };
+  
+  // Etap 3: Kolory i tekstury
+  customization: {
+    selectedCarpet: number;
+    carpetColor: string;
+    carpetColorName: string;
+    selectedEdge: number;
+    edgeColor: string;
+    edgeColorName: string;
+    selectedTexture: number;
+    textureName: string;
+    texturePrice: number;
+    selected3DVariant: number;
+    variantName: string;
+    variantPrice: number;
+    selectedMatImage: string;
+    isComplete: boolean;
+  };
+  
+  // Etap 4: Podsumowanie
+  summary: {
+    totalPrice: number;
+    isComplete: boolean;
+  };
+  
+  // Dane klienta z formularza finalizacji zamówienia
+  customer: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+    isComplete: boolean;
+  };
+  
+  // Dane dostawy i płatności
+  shipping: {
+    method: string;
+    methodName: string;
+    cost: number;
+    estimatedDelivery: string;
+    isComplete: boolean;
+  };
+  
+  payment: {
+    method: string;
+    methodName: string;
+    isComplete: boolean;
+  };
+  
+  // Dane firmy (jeśli faktura)
+  company: {
+    name: string;
+    nip: string;
+    isInvoice: boolean;
+    isComplete: boolean;
+  };
+  
+  // Dodatkowe informacje
+  additional: {
+    termsAccepted: boolean;
+    newsletter: boolean;
+    discountCode: string;
+    discountApplied: boolean;
+    discountAmount: number;
+    notes: string;
+  };
+  
+  // Metadane zamówienia
+  metadata: {
+    currentStep: number;
+    lastUpdated: Date;
+    isConfigurationComplete: boolean;
+    orderFinalized: boolean;
+    orderId: string;
+    orderDate: Date;
+    source: string;
+    utmSource: string;
+    utmMedium: string;
+    utmCampaign: string;
+  };
+}
+
 const ConfiguratorSection = React.memo(function ConfiguratorSection() {
   const [state, setState] = useState<ConfiguratorState>({
     selectedCarpet: 0,
@@ -173,6 +278,93 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
   const [selectedMat, setSelectedMat] = useState<MatsData | null>(null);
   const [isLoadingMats, setIsLoadingMats] = useState(false);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Słownik konfiguracji - dynamicznie przechowuje dane z każdego etapu konfiguratora
+  const [configuratorDictionary, setConfiguratorDictionary] = useState<ConfiguratorDictionary>({
+    carSelection: {
+      brand: '',
+      model: '',
+      year: '',
+      body: '',
+      trans: '',
+      isComplete: false,
+    },
+    configuration: {
+      selectedConfig: 0,
+      configName: '',
+      configPrice: 0,
+      isComplete: false,
+    },
+    customization: {
+      selectedCarpet: 0,
+      carpetColor: '',
+      carpetColorName: '',
+      selectedEdge: 0,
+      edgeColor: '',
+      edgeColorName: '',
+      selectedTexture: 0,
+      textureName: '',
+      texturePrice: 0,
+      selected3DVariant: 0,
+      variantName: '',
+      variantPrice: 0,
+      selectedMatImage: '',
+      isComplete: false,
+    },
+    summary: {
+      totalPrice: 0,
+      isComplete: false,
+    },
+    customer: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      address: '',
+      city: '',
+      postalCode: '',
+      country: 'Polska',
+      isComplete: false,
+    },
+    shipping: {
+      method: '',
+      methodName: '',
+      cost: 0,
+      estimatedDelivery: '',
+      isComplete: false,
+    },
+    payment: {
+      method: '',
+      methodName: '',
+      isComplete: false,
+    },
+    company: {
+      name: '',
+      nip: '',
+      isInvoice: false,
+      isComplete: false,
+    },
+    additional: {
+      termsAccepted: false,
+      newsletter: false,
+      discountCode: '',
+      discountApplied: false,
+      discountAmount: 0,
+      notes: '',
+    },
+    metadata: {
+      currentStep: 1,
+      lastUpdated: new Date(),
+      isConfigurationComplete: false,
+      orderFinalized: false,
+      orderId: '',
+      orderDate: new Date(),
+      source: 'eva-website',
+      utmSource: '',
+      utmMedium: '',
+      utmCampaign: '',
+    },
+  });
 
   // Auto-save functionality
   useEffect(() => {
@@ -196,6 +388,8 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
     const isComplete = state.brand && state.model && state.year && state.body && state.trans;
     setIsConfigurationComplete(!!isComplete);
   }, [state.brand, state.model, state.year, state.body, state.trans]);
+
+
 
   // Fetch mats when edge color, 3D variant, or texture changes with debouncing
   useEffect(() => {
@@ -222,6 +416,94 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
 
   const updateState = useCallback((updates: Partial<ConfiguratorState>) => {
     setState(prev => ({ ...prev, ...updates }));
+  }, []);
+
+  // Funkcja do aktualizacji słownika konfiguracji
+  const updateConfiguratorDictionary = useCallback((step: string, data: any) => {
+    setConfiguratorDictionary(prev => {
+      const updated = { ...prev };
+      
+      switch (step) {
+        case 'carSelection':
+          updated.carSelection = {
+            ...updated.carSelection,
+            ...data,
+            isComplete: !!(data.brand && data.model && data.year && data.body && data.trans)
+          };
+          break;
+          
+        case 'configuration':
+          updated.configuration = {
+            ...updated.configuration,
+            ...data,
+            isComplete: data.selectedConfig > 0
+          };
+          break;
+          
+        case 'customization':
+          updated.customization = {
+            ...updated.customization,
+            ...data,
+            isComplete: !!(data.selectedCarpet > 0 && data.selectedEdge > 0 && data.selectedTexture > 0 && data.selected3DVariant >= 0)
+          };
+          break;
+          
+        case 'summary':
+          updated.summary = {
+            ...updated.summary,
+            ...data,
+            isComplete: true
+          };
+          break;
+          
+        case 'customer':
+          updated.customer = {
+            ...updated.customer,
+            ...data,
+            isComplete: !!(data.firstName && data.lastName && data.email && data.phone && data.address && data.city && data.postalCode)
+          };
+          break;
+          
+        case 'shipping':
+          updated.shipping = {
+            ...updated.shipping,
+            ...data,
+            isComplete: !!(data.method && data.methodName)
+          };
+          break;
+          
+        case 'payment':
+          updated.payment = {
+            ...updated.payment,
+            ...data,
+            isComplete: !!(data.method && data.methodName)
+          };
+          break;
+          
+        case 'company':
+          updated.company = {
+            ...updated.company,
+            ...data,
+            isComplete: data.isInvoice ? !!(data.name && data.nip) : true
+          };
+          break;
+          
+        case 'additional':
+          updated.additional = {
+            ...updated.additional,
+            ...data
+          };
+          break;
+      }
+      
+      updated.metadata.lastUpdated = new Date();
+      updated.metadata.isConfigurationComplete = 
+        updated.carSelection.isComplete && 
+        updated.configuration.isComplete && 
+        updated.customization.isComplete;
+      
+      return updated;
+    });
   }, []);
 
   // Funkcja do auto-scroll do podglądu
@@ -319,6 +601,133 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
     return basePrice + texturePrice + variantPrice;
   }, [state.selectedConfig, state.selectedTexture, state.selected3DVariant]);
 
+  // Funkcja do przygotowania danych do wysłania do Bitrix24
+  const prepareBitrixData = useCallback(() => {
+    return {
+      customer: {
+        firstName: configuratorDictionary.customer.firstName,
+        lastName: configuratorDictionary.customer.lastName,
+        email: configuratorDictionary.customer.email,
+        phone: configuratorDictionary.customer.phone,
+        address: `${configuratorDictionary.customer.address}, ${configuratorDictionary.customer.postalCode} ${configuratorDictionary.customer.city}, ${configuratorDictionary.customer.country}`,
+      },
+      carDetails: {
+        brand: configuratorDictionary.carSelection.brand,
+        model: configuratorDictionary.carSelection.model,
+        year: configuratorDictionary.carSelection.year,
+        body: configuratorDictionary.carSelection.body,
+        trans: configuratorDictionary.carSelection.trans,
+      },
+      productDetails: {
+        type: configuratorDictionary.customization.variantName.includes('3D') ? '3D' : 'klasyczny',
+        color: configuratorDictionary.customization.carpetColorName,
+        texture: configuratorDictionary.customization.textureName,
+        variant: configuratorDictionary.customization.variantName,
+        edgeColor: configuratorDictionary.customization.edgeColorName,
+        image: configuratorDictionary.customization.selectedMatImage,
+      },
+      shipping: {
+        method: configuratorDictionary.shipping.method,
+        methodName: configuratorDictionary.shipping.methodName,
+        cost: configuratorDictionary.shipping.cost,
+        estimatedDelivery: configuratorDictionary.shipping.estimatedDelivery,
+      },
+      payment: {
+        method: configuratorDictionary.payment.method,
+        methodName: configuratorDictionary.payment.methodName,
+      },
+      company: {
+        name: configuratorDictionary.company.name,
+        nip: configuratorDictionary.company.nip,
+        isInvoice: configuratorDictionary.company.isInvoice,
+      },
+      pricing: {
+        subtotal: configuratorDictionary.summary.totalPrice,
+        shippingCost: configuratorDictionary.shipping.cost,
+        discountAmount: configuratorDictionary.additional.discountAmount,
+        totalAmount: configuratorDictionary.summary.totalPrice + configuratorDictionary.shipping.cost - configuratorDictionary.additional.discountAmount,
+      },
+      additional: {
+        termsAccepted: configuratorDictionary.additional.termsAccepted,
+        newsletter: configuratorDictionary.additional.newsletter,
+        discountCode: configuratorDictionary.additional.discountCode,
+        discountApplied: configuratorDictionary.additional.discountApplied,
+        notes: configuratorDictionary.additional.notes,
+      },
+      metadata: {
+        orderId: configuratorDictionary.metadata.orderId,
+        orderDate: configuratorDictionary.metadata.orderDate,
+        source: configuratorDictionary.metadata.source,
+        utmSource: configuratorDictionary.metadata.utmSource,
+        utmMedium: configuratorDictionary.metadata.utmMedium,
+        utmCampaign: configuratorDictionary.metadata.utmCampaign,
+      },
+    };
+  }, [configuratorDictionary]);
+
+  // Funkcja do wysłania zamówienia do Bitrix24
+  const sendOrderToBitrix = useCallback(async () => {
+    try {
+      const bitrixData = prepareBitrixData();
+      
+      console.log('📤 Wysyłanie zamówienia do Bitrix24:', bitrixData);
+      
+      const response = await fetch('/api/bitrix/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bitrixData)
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        console.log('✅ Zamówienie zostało pomyślnie wysłane do Bitrix24');
+        return result;
+      } else {
+        console.error('❌ Błąd podczas wysyłania zamówienia:', result.error);
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      console.error('❌ Błąd podczas wysyłania zamówienia do Bitrix24:', error);
+      throw error;
+    }
+  }, [prepareBitrixData]);
+
+  // Funkcja do finalizacji zamówienia - wywoływana przy kliknięciu "DODAJ DO KOSZYKA"
+  const finalizeOrder = useCallback(async () => {
+    try {
+      // Generuj unikalny ID zamówienia
+      const orderId = `EVA-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+      
+      // Aktualizuj słownik z finalnymi danymi konfiguracji
+      const finalDictionary = {
+        ...configuratorDictionary,
+        metadata: {
+          ...configuratorDictionary.metadata,
+          orderFinalized: true,
+          lastUpdated: new Date(),
+          orderId: orderId,
+          orderDate: new Date(),
+        }
+      };
+      
+      setConfiguratorDictionary(finalDictionary);
+      
+      console.log('📋 Finalny słownik konfiguracji:', finalDictionary);
+      console.log('📤 Dane do Bitrix24:', prepareBitrixData());
+      
+      // Przekieruj do strony finalizacji zamówienia z danymi
+      const orderData = encodeURIComponent(JSON.stringify(finalDictionary));
+      window.location.href = `/checkout?orderData=${orderData}`;
+      
+    } catch (error) {
+      console.error('❌ Błąd podczas finalizacji zamówienia:', error);
+      alert('❌ Wystąpił błąd podczas finalizacji zamówienia');
+    }
+  }, [configuratorDictionary, prepareBitrixData]);
+
   const getProgressPercentage = useMemo(() => {
     const steps = [state.brand, state.model, state.year, state.body, state.trans];
     const completedSteps = steps.filter(step => step).length;
@@ -331,6 +740,66 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
 
   const prevStep = useCallback(() => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
+  }, [currentStep]);
+
+  // Automatyczna aktualizacja słownika konfiguracji
+  useEffect(() => {
+    // Aktualizuj dane samochodu
+    updateConfiguratorDictionary('carSelection', {
+      brand: state.brand,
+      model: state.model,
+      year: state.year,
+      body: state.body,
+      trans: state.trans,
+    });
+  }, [state.brand, state.model, state.year, state.body, state.trans, updateConfiguratorDictionary]);
+
+  // Aktualizuj konfigurację
+  useEffect(() => {
+    updateConfiguratorDictionary('configuration', {
+      selectedConfig: state.selectedConfig,
+      configName: configurations[state.selectedConfig]?.name || '',
+      configPrice: configurations[state.selectedConfig]?.price || 0,
+    });
+  }, [state.selectedConfig, updateConfiguratorDictionary]);
+
+  // Aktualizuj personalizację
+  useEffect(() => {
+    updateConfiguratorDictionary('customization', {
+      selectedCarpet: state.selectedCarpet,
+      carpetColor: carpetColors[state.selectedCarpet]?.color || '',
+      carpetColorName: carpetColors[state.selectedCarpet]?.name || '',
+      selectedEdge: state.selectedEdge,
+      edgeColor: edgeColors[state.selectedEdge]?.color || '',
+      edgeColorName: edgeColors[state.selectedEdge]?.name || '',
+      selectedTexture: state.selectedTexture,
+      textureName: textures[state.selectedTexture]?.name || '',
+      texturePrice: textures[state.selectedTexture]?.price || 0,
+      selected3DVariant: state.selected3DVariant,
+      variantName: threeDVariants[state.selected3DVariant]?.name || '',
+      variantPrice: threeDVariants[state.selected3DVariant]?.price || 0,
+      selectedMatImage: selectedMat?.image || '',
+    });
+  }, [state.selectedCarpet, state.selectedEdge, state.selectedTexture, state.selected3DVariant, selectedMat, updateConfiguratorDictionary]);
+
+  // Aktualizuj podsumowanie
+  useEffect(() => {
+    const totalPrice = calculateTotalPrice();
+    updateConfiguratorDictionary('summary', {
+      totalPrice,
+    });
+  }, [calculateTotalPrice, updateConfiguratorDictionary]);
+
+  // Aktualizuj metadane
+  useEffect(() => {
+    setConfiguratorDictionary(prev => ({
+      ...prev,
+      metadata: {
+        ...prev.metadata,
+        currentStep,
+        lastUpdated: new Date(),
+      }
+    }));
   }, [currentStep]);
 
   const Tooltip = useMemo(() => ({ children, content }: { children: React.ReactNode; content: string }) => (
@@ -854,6 +1323,8 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
                       </div>
                     </div>
                   </div>
+                  
+
                 </div>
               )}
 
@@ -882,6 +1353,7 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
                   </button>
                 ) : (
                   <button 
+                    onClick={finalizeOrder}
                     className={`flex items-center gap-1 px-3 py-1.5 rounded-md font-medium transition-all duration-200 text-sm ${
                       isConfigurationComplete
                         ? "bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white shadow-lg hover:shadow-red-500/25 transform hover:scale-105"
