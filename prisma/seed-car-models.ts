@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../src/generated/prisma/index.js';
 
 const prisma = new PrismaClient();
 
@@ -125,7 +125,10 @@ async function main() {
   ];
 
   // Filtruj modele, które mają przypisaną markę
-  const validModels = carModels.filter(model => model.carBrandId);
+  const validModels = carModels.filter(model => model.carBrandId).map(model => ({
+    ...model,
+    carBrandId: model.carBrandId!
+  }));
 
   for (const model of validModels) {
     try {
@@ -133,7 +136,7 @@ async function main() {
         where: {
           name_carBrandId_yearFrom: {
             name: model.name,
-            carBrandId: model.carBrandId!,
+            carBrandId: model.carBrandId,
             yearFrom: model.yearFrom!
           }
         },
