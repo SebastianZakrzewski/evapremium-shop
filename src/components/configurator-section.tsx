@@ -18,6 +18,7 @@ import {
   Zap,
   Shield
 } from "lucide-react";
+import { HybridSessionManager } from "@/lib/utils/hybrid-session-manager";
 
 // Mapowanie kolorów z bazy danych na kolory hex
 const colorMapping: { [key: string]: { name: string; color: string } } = {
@@ -252,10 +253,20 @@ interface ConfiguratorDictionary {
     utmSource: string;
     utmMedium: string;
     utmCampaign: string;
+    sessionId: string;
   };
 }
 
 const ConfiguratorSection = React.memo(function ConfiguratorSection() {
+  // Użyj HybridSessionManager do zarządzania sesją
+  const sessionId = useMemo(() => HybridSessionManager.getSessionId(), []);
+
+  // Klucze dla localStorage z unikalnym ID sesji
+  const localStorageKeys = useMemo(() => ({
+    configuratorState: `configurator-state-${sessionId}`,
+    configuratorDictionary: `configurator-dictionary-${sessionId}`,
+  }), [sessionId]);
+
   const [state, setState] = useState<ConfiguratorState>({
     selectedCarpet: 0,
     selectedEdge: 0,
@@ -352,36 +363,75 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
       discountAmount: 0,
       notes: '',
     },
-    metadata: {
-      currentStep: 1,
-      lastUpdated: new Date(),
-      isConfigurationComplete: false,
-      orderFinalized: false,
-      orderId: '',
-      orderDate: new Date(),
-      source: 'eva-website',
-      utmSource: '',
-      utmMedium: '',
-      utmCampaign: '',
-    },
+          metadata: {
+        currentStep: 1,
+        lastUpdated: new Date(),
+        isConfigurationComplete: false,
+        orderFinalized: false,
+        orderId: '',
+        orderDate: new Date(),
+        source: 'eva-website',
+        utmSource: '',
+        utmMedium: '',
+        utmCampaign: '',
+        sessionId: sessionId,
+      },
   });
 
-  // Auto-save functionality
+  // Auto-save functionality z izolacją per-sesja
   useEffect(() => {
-    const savedConfig = localStorage.getItem('configurator-state');
-    if (savedConfig) {
-      try {
-        const parsedConfig = JSON.parse(savedConfig);
-        setState(parsedConfig);
-      } catch (error) {
-        console.log('No saved configuration found');
+    // Sprawdź czy jesteśmy po stronie klienta i czy sessionId jest prawidłowy
+    if (typeof window !== 'undefined' && sessionId && !sessionId.startsWith('temp-')) {
+      const savedConfig = localStorage.getItem(localStorageKeys.configuratorState);
+      if (savedConfig) {
+        try {
+          const parsedConfig = JSON.parse(savedConfig);
+          setState(parsedConfig);
+          console.log('📋 Przywrócono konfigurację dla sesji:', sessionId);
+        } catch (error) {
+          console.log('No saved configuration found for this session');
+        }
       }
     }
-  }, []);
+  }, [localStorageKeys.configuratorState, sessionId]);
 
+
+
+  // Auto-save dla stanu konfiguratora używając HybridSessionManager
   useEffect(() => {
-    localStorage.setItem('configurator-state', JSON.stringify(state));
-  }, [state]);
+    if (HybridSessionManager.isValidSession(sessionId)) {
+      HybridSessionManager.saveConfigData(sessionId, state);
+    }
+  }, [state, sessionId]);
+
+  // Auto-load dla stanu konfiguratora
+  useEffect(() => {
+    if (HybridSessionManager.isValidSession(sessionId)) {
+      const savedState = HybridSessionManager.getConfigData(sessionId);
+      if (savedState) {
+        setState(savedState);
+        console.log('📋 Przywrócono stan konfiguratora dla sesji:', sessionId);
+      }
+    }
+  }, [sessionId]);
+
+  // Auto-save dla słownika konfiguracji
+  useEffect(() => {
+    if (HybridSessionManager.isValidSession(sessionId)) {
+      HybridSessionManager.saveOrderData(sessionId, configuratorDictionary);
+    }
+  }, [configuratorDictionary, sessionId]);
+
+  // Auto-load dla słownika konfiguracji
+  useEffect(() => {
+    if (HybridSessionManager.isValidSession(sessionId)) {
+      const savedDictionary = HybridSessionManager.getOrderData(sessionId);
+      if (savedDictionary) {
+        setConfiguratorDictionary(savedDictionary);
+        console.log('📋 Przywrócono słownik dla sesji:', sessionId);
+      }
+    }
+  }, [sessionId]);
 
   // Check if configuration is complete
   useEffect(() => {
@@ -588,11 +638,131 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
       body: "",
       trans: "",
     });
-    localStorage.removeItem('configurator-state');
+    
+    // Resetuj słownik konfiguracji
+    setConfiguratorDictionary({
+      carSelection: {
+        brand: '',
+        model: '',
+        year: '',
+        body: '',
+        trans: '',
+        isComplete: false,
+      },
+      configuration: {
+        selectedConfig: 0,
+        configName: '',
+        configPrice: 0,
+        isComplete: false,
+      },
+      customization: {
+        selectedCarpet: 0,
+        carpetColor: '',
+        carpetColorName: '',
+        selectedEdge: 0,
+        edgeColor: '',
+        edgeColorName: '',
+        selectedTexture: 0,
+        textureName: '',
+        texturePrice: 0,
+        selected3DVariant: 0,
+        variantName: '',
+        variantPrice: 0,
+        selectedMatImage: '',
+        isComplete: false,
+      },
+      summary: {
+        totalPrice: 0,
+        isComplete: false,
+      },
+      customer: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        address: '',
+        city: '',
+        postalCode: '',
+        country: 'Polska',
+        isComplete: false,
+      },
+      shipping: {
+        method: '',
+        methodName: '',
+        cost: 0,
+        estimatedDelivery: '',
+        isComplete: false,
+      },
+      payment: {
+        method: '',
+        methodName: '',
+        isComplete: false,
+      },
+      company: {
+        name: '',
+        nip: '',
+        isInvoice: false,
+        isComplete: false,
+      },
+      additional: {
+        termsAccepted: false,
+        newsletter: false,
+        discountCode: '',
+        discountApplied: false,
+        discountAmount: 0,
+        notes: '',
+      },
+      metadata: {
+        currentStep: 1,
+        lastUpdated: new Date(),
+        isConfigurationComplete: false,
+        orderFinalized: false,
+        orderId: '',
+        orderDate: new Date(),
+        source: 'eva-website',
+        utmSource: '',
+        utmMedium: '',
+        utmCampaign: '',
+        sessionId: sessionId,
+      },
+    });
+    
+    // Wyczyść dane używając HybridSessionManager
+    if (HybridSessionManager.isValidSession(sessionId)) {
+      HybridSessionManager.clearSession(sessionId);
+    }
+    
     setShowSavedMessage(true);
     setTimeout(() => setShowSavedMessage(false), 2000);
     setCurrentStep(1);
-  }, []);
+  }, [sessionId, localStorageKeys]);
+
+  // Funkcja do debugowania sesji (tylko w trybie development)
+  const debugSession = useCallback(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🆔 Session ID:', sessionId);
+      console.log('🔑 LocalStorage keys:', localStorageKeys);
+      console.log('💾 Saved state:', localStorage.getItem(localStorageKeys.configuratorState));
+      console.log('📋 Saved dictionary:', localStorage.getItem(localStorageKeys.configuratorDictionary));
+    }
+  }, [sessionId, localStorageKeys]);
+
+  // Funkcja do czyszczenia starych sesji (tylko w trybie development)
+  const cleanupOldSessions = useCallback(() => {
+    if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
+      const keys = Object.keys(localStorage);
+      const sessionKeys = keys.filter(key => key.includes('configurator-'));
+      const oldSessions = sessionKeys.filter(key => {
+        const sessionIdFromKey = key.split('-').slice(-4).join('-');
+        return !sessionIdFromKey.includes(sessionId);
+      });
+      
+      if (oldSessions.length > 0) {
+        console.log('🧹 Czyszczenie starych sesji:', oldSessions);
+        oldSessions.forEach(key => localStorage.removeItem(key));
+      }
+    }
+  }, [sessionId]);
 
   const calculateTotalPrice = useCallback(() => {
     const basePrice = configurations[state.selectedConfig].price;
@@ -710,6 +880,7 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
           lastUpdated: new Date(),
           orderId: orderId,
           orderDate: new Date(),
+          sessionId: sessionId, // Dodaj sessionId do metadanych
         }
       };
       
@@ -717,16 +888,17 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
       
       console.log('📋 Finalny słownik konfiguracji:', finalDictionary);
       console.log('📤 Dane do Bitrix24:', prepareBitrixData());
+      console.log('🆔 Session ID:', sessionId);
       
       // Przekieruj do strony finalizacji zamówienia z danymi
       const orderData = encodeURIComponent(JSON.stringify(finalDictionary));
-      window.location.href = `/checkout?orderData=${orderData}`;
+      window.location.href = `/checkout?orderData=${orderData}&sessionId=${sessionId}`;
       
     } catch (error) {
       console.error('❌ Błąd podczas finalizacji zamówienia:', error);
       alert('❌ Wystąpił błąd podczas finalizacji zamówienia');
     }
-  }, [configuratorDictionary, prepareBitrixData]);
+  }, [configuratorDictionary, prepareBitrixData, sessionId]);
 
   const getProgressPercentage = useMemo(() => {
     const steps = [state.brand, state.model, state.year, state.body, state.trans];

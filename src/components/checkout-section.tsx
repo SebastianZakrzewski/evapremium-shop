@@ -33,6 +33,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { HybridSessionManager } from "@/lib/utils/hybrid-session-manager"
 
 // Schema walidacji
 const checkoutSchema = z.object({
@@ -144,19 +145,31 @@ export function CheckoutSection() {
   const [errorMessage, setErrorMessage] = useState("")
   const [configuratorDictionary, setConfiguratorDictionary] = useState<any>(null)
 
-  // Odczytywanie danych ze słownika konfiguratora z URL
+  // Odczytywanie danych ze słownika konfiguratora używając HybridSessionManager
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search)
-      const orderDataParam = urlParams.get('orderData')
+      const sessionIdParam = urlParams.get('sessionId')
       
-      if (orderDataParam) {
-        try {
-          const decodedData = JSON.parse(decodeURIComponent(orderDataParam))
-          setConfiguratorDictionary(decodedData)
-          console.log('📋 Odczytywanie danych ze słownika konfiguratora:', decodedData)
-        } catch (error) {
-          console.error('❌ Błąd podczas odczytywania danych zamówienia:', error)
+      if (sessionIdParam && HybridSessionManager.isValidSession(sessionIdParam)) {
+        // Pobierz dane z HybridSessionManager
+        const savedDictionary = HybridSessionManager.getOrderData(sessionIdParam)
+        if (savedDictionary) {
+          setConfiguratorDictionary(savedDictionary)
+          console.log('📋 Odczytywanie danych ze słownika konfiguratora:', savedDictionary)
+          console.log('🆔 Session ID:', sessionIdParam)
+        }
+      } else {
+        // Fallback - odczytaj z URL (stara metoda)
+        const orderDataParam = urlParams.get('orderData')
+        if (orderDataParam) {
+          try {
+            const decodedData = JSON.parse(decodeURIComponent(orderDataParam))
+            setConfiguratorDictionary(decodedData)
+            console.log('📋 Odczytywanie danych ze słownika konfiguratora (fallback):', decodedData)
+          } catch (error) {
+            console.error('❌ Błąd podczas odczytywania danych zamówienia:', error)
+          }
         }
       }
     }
@@ -378,6 +391,13 @@ export function CheckoutSection() {
         
         setConfiguratorDictionary(updatedDictionary);
         console.log('📋 Finalny słownik z danymi klienta:', updatedDictionary);
+        
+        // Zapisz dane używając HybridSessionManager
+        const sessionIdParam = new URLSearchParams(window.location.search).get('sessionId');
+        if (sessionIdParam && HybridSessionManager.isValidSession(sessionIdParam)) {
+          await HybridSessionManager.saveData(sessionIdParam, updatedDictionary, 'order');
+          console.log('💾 Zapisano dane zamówienia w HybridSessionManager');
+        }
         
         // Tutaj można wysłać dane do Bitrix24
         // await sendOrderToBitrix(updatedDictionary);
