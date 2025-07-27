@@ -13,7 +13,7 @@ export interface BitrixOrder {
     lastName: string;
     email: string;
     phone: string;
-    address?: string;
+    address: string;
   };
   carDetails: {
     brand: string;
@@ -30,6 +30,41 @@ export interface BitrixOrder {
     edgeColor: string;
     image: string;
   };
-  totalAmount: number;
+  shipping: {
+    method: string;
+    methodName: string;
+    cost: number;
+    estimatedDelivery: string;
+  };
+  payment: {
+    method: string;
+    methodName: string;
+  };
+  company: {
+    name: string;
+    nip: string;
+    isInvoice: boolean;
+  };
+  pricing: {
+    subtotal: number;
+    shippingCost: number;
+    discountAmount: number;
+    totalAmount: number;
+  };
+  additional: {
+    termsAccepted: boolean;
+    newsletter: boolean;
+    discountCode: string;
+    discountApplied: boolean;
+    notes: string;
+  };
+  metadata: {
+    orderId: string;
+    orderDate: Date;
+    source: string;
+    utmSource: string;
+    utmMedium: string;
+    utmCampaign: string;
+  };
   contactId?: string;
 } 
