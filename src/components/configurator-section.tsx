@@ -19,6 +19,7 @@ import {
   Shield
 } from "lucide-react";
 import { HybridSessionManager } from "@/lib/utils/hybrid-session-manager";
+import { useSession } from "@/lib/contexts/session-context";
 
 // Mapowanie kolorów z bazy danych na kolory hex
 const colorMapping: { [key: string]: { name: string; color: string } } = {
@@ -289,6 +290,9 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
   const [selectedMat, setSelectedMat] = useState<MatsData | null>(null);
   const [isLoadingMats, setIsLoadingMats] = useState(false);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Użyj sesji do zarządzania koszykiem
+  const { addToCart } = useSession();
   
   // Słownik konfiguracji - dynamicznie przechowuje dane z każdego etapu konfiguratora
   const [configuratorDictionary, setConfiguratorDictionary] = useState<ConfiguratorDictionary>({
@@ -886,9 +890,23 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
       
       setConfiguratorDictionary(finalDictionary);
       
+      // Dodaj produkt do koszyka
+      const cartItem = {
+        id: Date.now(), // Unikalny ID dla koszyka
+        name: `${state.brand} ${state.model}`,
+        brand: state.brand,
+        price: `${calculateTotalPrice()} PLN`,
+        quantity: 1,
+        image: selectedMat?.image || '/images/products/bmw.png',
+        configuration: finalDictionary // Zapisz pełną konfigurację
+      };
+      
+      addToCart(cartItem);
+      
       console.log('📋 Finalny słownik konfiguracji:', finalDictionary);
       console.log('📤 Dane do Bitrix24:', prepareBitrixData());
       console.log('🆔 Session ID:', sessionId);
+      console.log('🛒 Dodano do koszyka:', cartItem);
       
       // Przekieruj do strony finalizacji zamówienia z danymi
       const orderData = encodeURIComponent(JSON.stringify(finalDictionary));
@@ -898,7 +916,7 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
       console.error('❌ Błąd podczas finalizacji zamówienia:', error);
       alert('❌ Wystąpił błąd podczas finalizacji zamówienia');
     }
-  }, [configuratorDictionary, prepareBitrixData, sessionId]);
+  }, [configuratorDictionary, prepareBitrixData, sessionId, addToCart, state, selectedMat, calculateTotalPrice]);
 
   const getProgressPercentage = useMemo(() => {
     const steps = [state.brand, state.model, state.year, state.body, state.trans];
