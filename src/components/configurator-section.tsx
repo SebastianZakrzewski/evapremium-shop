@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import Image from "next/image";
 import { 
   Info, 
@@ -150,7 +150,7 @@ interface MatsData {
   image: string;
 }
 
-export default function ConfiguratorSection() {
+const ConfiguratorSection = React.memo(function ConfiguratorSection() {
   const [state, setState] = useState<ConfiguratorState>({
     selectedCarpet: 0,
     selectedEdge: 0,
@@ -172,6 +172,7 @@ export default function ConfiguratorSection() {
   const [threeDMats, setThreeDMats] = useState<MatsData[]>([]);
   const [selectedMat, setSelectedMat] = useState<MatsData | null>(null);
   const [isLoadingMats, setIsLoadingMats] = useState(false);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-save functionality
   useEffect(() => {
@@ -196,23 +197,35 @@ export default function ConfiguratorSection() {
     setIsConfigurationComplete(!!isComplete);
   }, [state.brand, state.model, state.year, state.body, state.trans]);
 
-  // Fetch mats when edge color, 3D variant, or texture changes
+  // Fetch mats when edge color, 3D variant, or texture changes with debouncing
   useEffect(() => {
-    const edgeColorName = edgeColors[state.selectedEdge].name.toLowerCase();
-    if (edgeColorName === 'czarny') {
-      fetchMatsWithBlackEdging('black');
-    } else {
-      setThreeDMats([]);
-      setSelectedMat(null);
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      const edgeColorName = edgeColors[state.selectedEdge].name.toLowerCase();
+      if (edgeColorName === 'czarny') {
+        fetchMatsWithBlackEdging('black');
+      } else {
+        setThreeDMats([]);
+        setSelectedMat(null);
+      }
+    }, 300); // 300ms debounce
+
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
   }, [state.selectedEdge, state.selected3DVariant, state.selectedTexture]);
 
-  const updateState = (updates: Partial<ConfiguratorState>) => {
+  const updateState = useCallback((updates: Partial<ConfiguratorState>) => {
     setState(prev => ({ ...prev, ...updates }));
-  };
+  }, []);
 
   // Funkcja do auto-scroll do podglądu
-  const scrollToPreview = () => {
+  const scrollToPreview = useCallback(() => {
     setTimeout(() => {
       const previewElement = document.getElementById('main-preview');
       if (previewElement) {
@@ -222,10 +235,10 @@ export default function ConfiguratorSection() {
         });
       }
     }, 100);
-  };
+  }, []);
 
   // Funkcja do zmiany koloru dywanika
-  const handleCarpetColorChange = (colorIndex: number) => {
+  const handleCarpetColorChange = useCallback((colorIndex: number) => {
     updateState({ selectedCarpet: colorIndex });
     
     // Jeśli mamy dostępne dywaniki z czarnym obszyciem, zmień główny obrazek
@@ -244,19 +257,11 @@ export default function ConfiguratorSection() {
     }
     
     // Auto-scroll do głównego podglądu
-    setTimeout(() => {
-      const previewElement = document.getElementById('main-preview');
-      if (previewElement) {
-        previewElement.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start' 
-        });
-      }
-    }, 100);
-  };
+    scrollToPreview();
+  }, [threeDMats, updateState, scrollToPreview]);
 
   // Funkcja do pobierania dywaników z czarnym obszyciem
-  const fetchMatsWithBlackEdging = async (edgeColor: string) => {
+  const fetchMatsWithBlackEdging = useCallback(async (edgeColor: string) => {
     if (edgeColor === 'black') {
       setIsLoadingMats(true);
       try {
@@ -286,9 +291,9 @@ export default function ConfiguratorSection() {
       setThreeDMats([]);
       setSelectedMat(null);
     }
-  };
+  }, [state.selected3DVariant]);
 
-  const resetConfiguration = () => {
+  const resetConfiguration = useCallback(() => {
     setState({
       selectedCarpet: 0,
       selectedEdge: 0,
@@ -305,30 +310,30 @@ export default function ConfiguratorSection() {
     setShowSavedMessage(true);
     setTimeout(() => setShowSavedMessage(false), 2000);
     setCurrentStep(1);
-  };
+  }, []);
 
-  const calculateTotalPrice = () => {
+  const calculateTotalPrice = useCallback(() => {
     const basePrice = configurations[state.selectedConfig].price;
     const texturePrice = textures[state.selectedTexture].price;
     const variantPrice = threeDVariants[state.selected3DVariant].price;
     return basePrice + texturePrice + variantPrice;
-  };
+  }, [state.selectedConfig, state.selectedTexture, state.selected3DVariant]);
 
-  const getProgressPercentage = () => {
+  const getProgressPercentage = useMemo(() => {
     const steps = [state.brand, state.model, state.year, state.body, state.trans];
     const completedSteps = steps.filter(step => step).length;
     return (completedSteps / steps.length) * 100;
-  };
+  }, [state.brand, state.model, state.year, state.body, state.trans]);
 
-  const nextStep = () => {
+  const nextStep = useCallback(() => {
     if (currentStep < 4) setCurrentStep(currentStep + 1);
-  };
+  }, [currentStep]);
 
-  const prevStep = () => {
+  const prevStep = useCallback(() => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
-  };
+  }, [currentStep]);
 
-  const Tooltip = ({ children, content }: { children: React.ReactNode; content: string }) => (
+  const Tooltip = useMemo(() => ({ children, content }: { children: React.ReactNode; content: string }) => (
     <div className="relative group">
       {children}
       <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
@@ -336,7 +341,7 @@ export default function ConfiguratorSection() {
         <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
       </div>
     </div>
-  );
+  ), []);
 
   const steps = [
     { id: 1, name: "Wybór samochodu", icon: Car, completed: !!(state.brand && state.model && state.year && state.body && state.trans) },
@@ -417,7 +422,7 @@ export default function ConfiguratorSection() {
         </div>
 
         {/* Main Layout - Preview Left, Configuration Right */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Preview Panel - Left Side */}
           <div className="lg:col-span-1">
             <div className="sticky top-8">
@@ -428,6 +433,8 @@ export default function ConfiguratorSection() {
                     alt="Podgląd dywanika" 
                     fill 
                     className="object-cover transition-transform duration-300 group-hover:scale-105" 
+                    priority
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   
                   {/* Enhanced Overlay */}
@@ -461,24 +468,25 @@ export default function ConfiguratorSection() {
                 </div>
                 
                 {/* Enhanced Thumbnail Gallery */}
-                <div className="flex gap-1 mt-2 overflow-x-auto pb-1 scrollbar-hide">
+                <div className="flex gap-2 mt-3 overflow-x-auto pb-2 scrollbar-hide">
                   {configurations.map((config, index) => (
                     <button
                       key={config.name}
                       onClick={() => updateState({ selectedConfig: index })}
-                      className={`flex-shrink-0 rounded-md border-2 transition-all duration-300 hover:scale-105 ${
+                      className={`flex-shrink-0 rounded-lg border-2 transition-all duration-300 hover:scale-105 ${
                         state.selectedConfig === index 
                           ? "border-red-500 ring-2 ring-red-500/50 shadow-lg shadow-red-500/25" 
                           : "border-gray-700 hover:border-red-400"
                       }`}
-                      style={{ width: 60, height: 45 }}
+                      style={{ width: 80, height: 60 }}
                     >
                       <Image 
                         src={config.img} 
                         alt={config.name} 
-                        width={56} 
-                        height={41} 
-                        className="object-cover rounded-md" 
+                        width={76} 
+                        height={56} 
+                        className="object-cover rounded-lg" 
+                        loading="lazy"
                       />
                     </button>
                   ))}
@@ -488,7 +496,7 @@ export default function ConfiguratorSection() {
           </div>
 
           {/* Configuration Panel - Right Side */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-1">
             {/* Price Summary - Top of Configuration */}
             <div className="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-xl p-3 mb-3">
               <div className="flex items-center justify-between">
@@ -524,11 +532,11 @@ export default function ConfiguratorSection() {
             {/* Step Content */}
             <div className="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-xl p-4">
                               {currentStep === 1 && (
-                  <div className="space-y-4">
-                  <div className="text-center mb-4">
-                    <Car className="w-8 h-8 text-red-400 mx-auto mb-2" />
-                    <h2 className="text-lg font-bold text-white mb-1">Wybór samochodu</h2>
-                    <p className="text-gray-400 text-xs">Wybierz markę, model i specyfikację swojego auta</p>
+                  <div className="space-y-6">
+                  <div className="text-center mb-6">
+                    <Car className="w-10 h-10 text-red-400 mx-auto mb-3" />
+                    <h2 className="text-xl font-bold text-white mb-2">Wybór samochodu</h2>
+                    <p className="text-gray-300 text-sm">Wybierz markę, model i specyfikację swojego auta</p>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -604,11 +612,11 @@ export default function ConfiguratorSection() {
               )}
 
                               {currentStep === 2 && (
-                  <div className="space-y-4">
-                  <div className="text-center mb-4">
-                    <Settings className="w-8 h-8 text-red-400 mx-auto mb-2" />
-                    <h2 className="text-lg font-bold text-white mb-1">Konfiguracja zestawu</h2>
-                    <p className="text-gray-400 text-xs">Wybierz rodzaj zestawu dywaników</p>
+                  <div className="space-y-6">
+                  <div className="text-center mb-6">
+                    <Settings className="w-10 h-10 text-red-400 mx-auto mb-3" />
+                    <h2 className="text-xl font-bold text-white mb-2">Konfiguracja zestawu</h2>
+                    <p className="text-gray-300 text-sm">Wybierz rodzaj zestawu dywaników</p>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -645,38 +653,44 @@ export default function ConfiguratorSection() {
                   <div className="text-center mb-4">
                     <Palette className="w-8 h-8 text-red-400 mx-auto mb-2" />
                     <h2 className="text-lg font-bold text-white mb-1">Kolory i tekstury</h2>
-                    <p className="text-gray-400 text-xs">Dostosuj wygląd swoich dywaników</p>
+                    <p className="text-gray-300 text-xs">Dostosuj wygląd swoich dywaników</p>
                   </div>
 
                   {/* Wariant 3D */}
-                  <div>
-                    <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+                  <div className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/50">
+                    <h3 className="text-white font-semibold mb-4 flex items-center gap-2 text-base">
                       <Shield className="w-5 h-5 text-red-400" />
                       Wariant 3D
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {threeDVariants.map((variant, index) => (
                         <Tooltip key={variant.name} content={variant.description}>
                           <button
                             onClick={() => updateState({ selected3DVariant: index })}
-                            className={`rounded-xl border-2 p-4 transition-all duration-300 hover:scale-105 ${
+                            className={`group relative rounded-lg border-2 p-3 transition-all duration-300 hover:scale-105 ${
                               state.selected3DVariant === index 
                                 ? "border-red-500 ring-2 ring-red-500/50 bg-red-500/10 shadow-lg shadow-red-500/25" 
-                                : "border-gray-700 hover:border-red-400 bg-gray-800"
+                                : "border-gray-700 hover:border-red-400 bg-gray-800/50 hover:bg-gray-800"
                             }`}
                           >
-                            <Image 
-                              src={variant.image} 
-                              alt={variant.name} 
-                              width={80} 
-                              height={80} 
-                              className="object-contain mx-auto mb-3" 
-                            />
-                            <div className="text-center">
-                              <div className="text-white font-medium mb-1">{variant.name}</div>
-                              {variant.price > 0 && (
-                                <div className="text-red-400 text-sm">+{variant.price} zł</div>
-                              )}
+                            <div className="flex items-center gap-3">
+                              <div className="flex-shrink-0">
+                                <Image 
+                                  src={variant.image} 
+                                  alt={variant.name} 
+                                  width={40} 
+                                  height={40} 
+                                  className="object-contain" 
+                                  loading="lazy"
+                                />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <div className="text-white font-medium mb-1 text-sm">{variant.name}</div>
+                                <div className="text-gray-300 text-xs mb-1">{variant.description}</div>
+                                {variant.price > 0 && (
+                                  <div className="text-red-400 text-xs font-medium">+{variant.price} zł</div>
+                                )}
+                              </div>
                             </div>
                           </button>
                         </Tooltip>
@@ -684,21 +698,21 @@ export default function ConfiguratorSection() {
                     </div>
                   </div>
 
-                  {/* Kolory */}
-                  <div>
-                    <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+                                    {/* Kolory */}
+                  <div className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/50">
+                    <h3 className="text-white font-semibold mb-4 flex items-center gap-2 text-base">
                       <Palette className="w-5 h-5 text-red-400" />
                       Kolory
                     </h3>
                     <div className="space-y-4">
-                                              <div>
-                          <label className="block text-gray-300 text-xs mb-2">Kolor dywanika:</label>
-                        <div className="flex flex-wrap gap-1">
+                      <div>
+                        <label className="block text-gray-200 font-medium mb-3 text-sm">Kolor dywanika</label>
+                        <div className="grid grid-cols-8 gap-2">
                           {carpetColors.map((color, index) => (
                             <Tooltip key={color.name} content={color.name}>
                               <button
                                 onClick={() => handleCarpetColorChange(index)}
-                                className={`w-8 h-8 rounded-full border-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/50 ${
+                                className={`w-10 h-10 rounded-full border-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/50 ${
                                   state.selectedCarpet === index 
                                     ? "border-red-500 ring-2 ring-red-500/50 shadow-lg shadow-red-500/25" 
                                     : "border-gray-700 hover:border-red-400"
@@ -710,14 +724,14 @@ export default function ConfiguratorSection() {
                         </div>
                       </div>
 
-                                              <div>
-                          <label className="block text-gray-300 text-xs mb-2">Kolor obszycia:</label>
-                        <div className="flex flex-wrap gap-1">
+                      <div>
+                        <label className="block text-gray-200 font-medium mb-3 text-sm">Kolor obszycia</label>
+                        <div className="grid grid-cols-8 gap-2">
                           {edgeColors.map((color, index) => (
                             <Tooltip key={color.name} content={color.name}>
                               <button
                                 onClick={() => updateState({ selectedEdge: index })}
-                                className={`w-8 h-8 rounded-full border-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/50 ${
+                                className={`w-10 h-10 rounded-full border-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/50 ${
                                   state.selectedEdge === index 
                                     ? "border-red-500 ring-2 ring-red-500/50 shadow-lg shadow-red-500/25" 
                                     : "border-gray-700 hover:border-red-400"
@@ -734,34 +748,40 @@ export default function ConfiguratorSection() {
 
 
                   {/* Tekstury */}
-                  <div>
-                    <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+                  <div className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/50">
+                    <h3 className="text-white font-semibold mb-4 flex items-center gap-2 text-base">
                       <Settings className="w-5 h-5 text-red-400" />
                       Tekstura
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {textures.map((texture, index) => (
                         <Tooltip key={texture.name} content={texture.description}>
                           <button
                             onClick={() => updateState({ selectedTexture: index })}
-                            className={`rounded-xl border-2 p-4 transition-all duration-300 hover:scale-105 ${
+                            className={`group relative rounded-lg border-2 p-3 transition-all duration-300 hover:scale-105 ${
                               state.selectedTexture === index 
                                 ? "border-red-500 ring-2 ring-red-500/50 bg-red-500/10 shadow-lg shadow-red-500/25" 
-                                : "border-gray-700 hover:border-red-400 bg-gray-800"
+                                : "border-gray-700 hover:border-red-400 bg-gray-800/50 hover:bg-gray-800"
                             }`}
                           >
-                            <Image 
-                              src={texture.img} 
-                              alt={texture.name} 
-                              width={80} 
-                              height={80} 
-                              className="object-contain mx-auto mb-3" 
-                            />
-                            <div className="text-center">
-                              <div className="text-white font-medium mb-1">{texture.name}</div>
-                              {texture.price > 0 && (
-                                <div className="text-red-400 text-sm">+{texture.price} zł</div>
-                              )}
+                            <div className="flex items-center gap-3">
+                              <div className="flex-shrink-0">
+                                <Image 
+                                  src={texture.img} 
+                                  alt={texture.name} 
+                                  width={40} 
+                                  height={40} 
+                                  className="object-contain" 
+                                  loading="lazy"
+                                />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <div className="text-white font-medium mb-1 text-sm">{texture.name}</div>
+                                <div className="text-gray-300 text-xs mb-1">{texture.description}</div>
+                                {texture.price > 0 && (
+                                  <div className="text-red-400 text-xs font-medium">+{texture.price} zł</div>
+                                )}
+                              </div>
                             </div>
                           </button>
                         </Tooltip>
@@ -772,11 +792,11 @@ export default function ConfiguratorSection() {
               )}
 
                               {currentStep === 4 && (
-                  <div className="space-y-4">
-                  <div className="text-center mb-4">
-                    <Check className="w-8 h-8 text-green-400 mx-auto mb-2" />
-                    <h2 className="text-lg font-bold text-white mb-1">Podsumowanie</h2>
-                    <p className="text-gray-400 text-xs">Sprawdź swoją konfigurację przed dodaniem do koszyka</p>
+                  <div className="space-y-6">
+                  <div className="text-center mb-6">
+                    <Check className="w-10 h-10 text-green-400 mx-auto mb-3" />
+                    <h2 className="text-xl font-bold text-white mb-2">Podsumowanie</h2>
+                    <p className="text-gray-300 text-sm">Sprawdź swoją konfigurację przed dodaniem do koszyka</p>
                   </div>
                   
                   <div className="bg-gray-800/50 rounded-xl p-6 space-y-4">
@@ -898,4 +918,6 @@ export default function ConfiguratorSection() {
       </div>
     </div>
   );
-} 
+});
+
+export default ConfiguratorSection; 
