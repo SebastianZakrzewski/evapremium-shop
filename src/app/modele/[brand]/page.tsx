@@ -9,14 +9,14 @@ import { CarModel } from "@/lib/types/car-model";
 import { Separator } from "@/components/ui/separator";
 
 interface BrandPageProps {
-  params: {
+  params: Promise<{
     brand: string;
-  };
+  }>;
 }
 
 export default function BrandPage({ params }: BrandPageProps) {
   const router = useRouter();
-  const { brand } = params;
+  const [brand, setBrand] = useState<string>("");
   const [carModels, setCarModels] = useState<CarModel[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -33,6 +33,15 @@ export default function BrandPage({ params }: BrandPageProps) {
   };
 
   const currentBrand = brandMapping[brand.toLowerCase()];
+
+  // Pobierz brand z params
+  useEffect(() => {
+    const getParams = async () => {
+      const resolvedParams = await params;
+      setBrand(resolvedParams.brand);
+    };
+    getParams();
+  }, [params]);
 
   useEffect(() => {
     const fetchCarModels = async () => {
@@ -52,7 +61,7 @@ export default function BrandPage({ params }: BrandPageProps) {
       }
     };
 
-    if (currentBrand) {
+    if (currentBrand && brand) {
       fetchCarModels();
     }
   }, [brand, currentBrand]);

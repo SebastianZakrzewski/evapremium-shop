@@ -39,6 +39,7 @@ export default function CarModelsSection() {
   useEffect(() => {
     if (brandParam) {
       setLoading(true);
+      console.log('Fetching models for brand:', brandParam);
       fetch(`/api/car-models?brandName=${brandParam}`)
         .then(response => {
           if (!response.ok) {
@@ -47,6 +48,7 @@ export default function CarModelsSection() {
           return response.json();
         })
         .then(data => {
+          console.log('API response:', data);
           // Upewnij się, że data jest tablicą
           setApiModels(Array.isArray(data) ? data : []);
           setLoading(false);
@@ -64,17 +66,21 @@ export default function CarModelsSection() {
   // Mapowanie modeli z API na format komponentu
   const mappedApiModels: Model[] = useMemo(() => {
     if (!Array.isArray(apiModels) || apiModels.length === 0) {
+      console.log('No API models to map');
       return [];
     }
-    return apiModels.map(model => ({
+    console.log('Mapping API models:', apiModels.length);
+    const mapped = apiModels.map(model => ({
       id: model.id,
-      name: model.name,
+      name: model.displayName || model.name,
       brand: model.carBrand?.displayName || model.carBrand?.name || 'Unknown',
       year: model.yearFrom || 2024,
       imageSrc: model.carBrand?.logo || '/images/products/audi.jpg',
       price: '200,000 PLN',
       description: `${model.bodyType || 'Samochód'} ${model.engineType || 'silnik'}`
     }));
+    console.log('Mapped models:', mapped);
+    return mapped;
   }, [apiModels]);
 
   // Używaj modeli z API jeśli są dostępne, w przeciwnym razie statyczne
@@ -91,12 +97,16 @@ export default function CarModelsSection() {
     modelsToDisplay.forEach(model => {
       if (model.description?.includes('SUV')) types.add('SUV');
       if (model.description?.includes('sedan')) types.add('Sedan');
+      if (model.description?.includes('coupe')) types.add('Coupe');
+      if (model.description?.includes('hatchback')) types.add('Hatchback');
+      if (model.description?.includes('roadster')) types.add('Roadster');
       if (model.description?.includes('sportowy')) types.add('Sportowy');
       if (model.description?.includes('elektryczny')) types.add('Elektryczny');
       if (model.description?.includes('luksusowy')) types.add('Luksusowy');
       if (model.description?.includes('suv')) types.add('SUV');
       if (model.description?.includes('petrol')) types.add('Benzyna');
       if (model.description?.includes('electric')) types.add('Elektryczny');
+      if (model.description?.includes('hybrid')) types.add('Hybrydowy');
     });
     return Array.from(types);
   }, [modelsToDisplay]);
@@ -317,7 +327,7 @@ export default function CarModelsSection() {
                     className="flex items-center justify-center group cursor-pointer"
                   >
                     <Link 
-                      href={`/modele/${model.brand.toLowerCase()}/${model.name.toLowerCase()}-${model.year}`}
+                      href={`/konfigurator?brand=${model.brand.toLowerCase()}&model=${model.name.toLowerCase()}`}
                       className="flex flex-col items-center text-center transition-all duration-300 transform hover:scale-105"
                     >
                       {/* Car Model Window */}
