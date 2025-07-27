@@ -1,4 +1,4 @@
-import { PrismaClient } from '../src/generated/prisma/index.js';
+import { PrismaClient } from './src/generated/prisma/index.js';
 const prisma = new PrismaClient();
 
 async function checkMats() {
@@ -28,6 +28,47 @@ async function checkMats() {
     console.log('\nDostępne kolory:');
     colors.forEach(color => {
       console.log(`- ${color.color}`);
+    });
+
+    // Sprawdź dywaniki z czarnym obszyciem
+    const blackEdgeMats = await prisma.mats.findMany({
+      where: {
+        edgeColor: 'black'
+      }
+    });
+    
+    console.log('\nDywaniki z czarnym obszyciem:');
+    blackEdgeMats.forEach((mat, index) => {
+      console.log(`${index + 1}. ID: ${mat.id}, Kolor: ${mat.color}, Typ: ${mat.type}, Komórki: ${mat.cellType}, Obszycie: ${mat.edgeColor}`);
+      console.log(`   Obraz: ${mat.image}`);
+    });
+
+    // Sprawdź dywaniki klasyczne z czarnym obszyciem
+    const classicBlackEdgeMats = await prisma.mats.findMany({
+      where: {
+        edgeColor: 'black',
+        type: 'classic'
+      }
+    });
+    
+    console.log('\nDywaniki klasyczne z czarnym obszyciem:');
+    classicBlackEdgeMats.forEach((mat, index) => {
+      console.log(`${index + 1}. ID: ${mat.id}, Kolor: ${mat.color}, Typ: ${mat.type}, Komórki: ${mat.cellType}, Obszycie: ${mat.edgeColor}`);
+      console.log(`   Obraz: ${mat.image}`);
+    });
+
+    // Sprawdź dywaniki 3D z czarnym obszyciem
+    const threeDBlackEdgeMats = await prisma.mats.findMany({
+      where: {
+        edgeColor: 'black',
+        type: '3d'
+      }
+    });
+    
+    console.log('\nDywaniki 3D z czarnym obszyciem:');
+    threeDBlackEdgeMats.forEach((mat, index) => {
+      console.log(`${index + 1}. ID: ${mat.id}, Kolor: ${mat.color}, Typ: ${mat.type}, Komórki: ${mat.cellType}, Obszycie: ${mat.edgeColor}`);
+      console.log(`   Obraz: ${mat.image}`);
     });
     
   } catch (error) {

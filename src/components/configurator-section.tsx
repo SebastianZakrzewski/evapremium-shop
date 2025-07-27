@@ -270,7 +270,7 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
 
   const [state, setState] = useState<ConfiguratorState>({
     selectedCarpet: 0,
-    selectedEdge: 0,
+    selectedEdge: 6, // Zmieniono na czarny kolor obszycia (indeks 6)
     selectedTexture: 0,
     selectedConfig: 0,
     selected3DVariant: 0,
@@ -468,6 +468,14 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
     };
   }, [state.selectedEdge, state.selected3DVariant, state.selectedTexture]);
 
+  // Inicjalizacja - załaduj dywaniki z czarnym obszyciem na początku, jeśli domyślnie wybrany jest czarny
+  useEffect(() => {
+    const edgeColorName = edgeColors[state.selectedEdge].name.toLowerCase();
+    if (edgeColorName === 'czarny') {
+      fetchMatsWithBlackEdging('black');
+    }
+  }, []); // Pusty dependency array - uruchom tylko raz przy montowaniu komponentu
+
   const updateState = useCallback((updates: Partial<ConfiguratorState>) => {
     setState(prev => ({ ...prev, ...updates }));
   }, []);
@@ -610,7 +618,8 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
           matType = 'classic'; // Używamy klasycznych dla "3D bez rantów"
         }
         
-        const response = await fetch(`/api/mats/3d?edgeColor=${edgeColor}&cellType=diamonds&type=${matType}`);
+        // Użyj głównego endpointu zamiast /api/mats/3d
+        const response = await fetch(`/api/mats?edgeColor=${edgeColor}&cellType=diamonds&type=${matType}`);
         const data = await response.json();
         if (data.success) {
           setThreeDMats(data.data);
