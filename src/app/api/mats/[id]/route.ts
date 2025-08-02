@@ -1,108 +1,90 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MatsService } from '@/lib/services/MatsService';
 
-// GET /api/mats/[id]
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id);
+    const { id } = await params;
+    const idNum = parseInt(id);
     
-    if (isNaN(id)) {
+    if (isNaN(idNum)) {
       return NextResponse.json(
-        { success: false, error: 'Nieprawidłowe ID' },
+        { error: 'Nieprawidłowe ID maty' },
         { status: 400 }
       );
     }
 
-    const mats = await MatsService.getMatsById(id);
+    const mat = await MatsService.getMatsById(idNum);
     
-    if (!mats) {
+    if (!mat) {
       return NextResponse.json(
-        { success: false, error: 'Dywanik nie został znaleziony' },
+        { error: 'Mata nie została znaleziona' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      data: mats
-    });
+    return NextResponse.json(mat);
   } catch (error) {
-    console.error('Error fetching mats by ID:', error);
+    console.error('Błąd podczas pobierania maty:', error);
     return NextResponse.json(
-      { success: false, error: 'Błąd serwera' },
+      { error: 'Wystąpił błąd podczas pobierania maty' },
       { status: 500 }
     );
   }
 }
 
-// PUT /api/mats/[id]
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id);
+    const { id } = await params;
+    const idNum = parseInt(id);
     
-    if (isNaN(id)) {
+    if (isNaN(idNum)) {
       return NextResponse.json(
-        { success: false, error: 'Nieprawidłowe ID' },
+        { error: 'Nieprawidłowe ID maty' },
         { status: 400 }
       );
     }
 
     const body = await request.json();
-    const updateData = { ...body, id };
-
-    const mats = await MatsService.updateMats(updateData);
+    const mat = await MatsService.updateMats({ id: idNum, ...body });
     
-    return NextResponse.json({
-      success: true,
-      data: mats
-    });
+    return NextResponse.json(mat);
   } catch (error) {
-    console.error('Error updating mats:', error);
+    console.error('Błąd podczas aktualizacji maty:', error);
     return NextResponse.json(
-      { success: false, error: 'Błąd podczas aktualizacji dywanika' },
+      { error: 'Wystąpił błąd podczas aktualizacji maty' },
       { status: 500 }
     );
   }
 }
 
-// DELETE /api/mats/[id]
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id);
+    const { id } = await params;
+    const idNum = parseInt(id);
     
-    if (isNaN(id)) {
+    if (isNaN(idNum)) {
       return NextResponse.json(
-        { success: false, error: 'Nieprawidłowe ID' },
+        { error: 'Nieprawidłowe ID maty' },
         { status: 400 }
       );
     }
 
-    const success = await MatsService.deleteMats(id);
+    await MatsService.deleteMats(idNum);
     
-    if (!success) {
-      return NextResponse.json(
-        { success: false, error: 'Nie udało się usunąć dywanika' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: 'Dywanik został usunięty'
-    });
+    return NextResponse.json({ message: 'Mata została usunięta' });
   } catch (error) {
-    console.error('Error deleting mats:', error);
+    console.error('Błąd podczas usuwania maty:', error);
     return NextResponse.json(
-      { success: false, error: 'Błąd podczas usuwania dywanika' },
+      { error: 'Wystąpił błąd podczas usuwania maty' },
       { status: 500 }
     );
   }

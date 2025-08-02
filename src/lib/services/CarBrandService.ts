@@ -9,7 +9,13 @@ export class CarBrandService {
     try {
       const carBrands = await prisma.carBrand.findMany(
         {orderBy: { name: 'asc' }});
-      return carBrands;
+      return carBrands.map(brand => ({
+        ...brand,
+        displayName: brand.displayName || undefined,
+        logo: brand.logo || undefined,
+        description: brand.description || undefined,
+        website: brand.website || undefined,
+      }));
     } catch (error) {
       console.error('Error fetching car brands:', error);
       throw new Error('Failed to fetch car brands');
