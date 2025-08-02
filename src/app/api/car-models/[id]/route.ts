@@ -3,19 +3,20 @@ import { CarModelService } from '@/lib/services/CarModelService';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id);
+    const { id } = await params;
+    const idNum = parseInt(id);
     
-    if (isNaN(id)) {
+    if (isNaN(idNum)) {
       return NextResponse.json(
         { error: 'Nieprawidłowe ID modelu auta' },
         { status: 400 }
       );
     }
 
-    const carModel = await CarModelService.getCarModelById(id);
+    const carModel = await CarModelService.getCarModelById(idNum);
     
     if (!carModel) {
       return NextResponse.json(
@@ -36,12 +37,13 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id);
+    const { id } = await params;
+    const idNum = parseInt(id);
     
-    if (isNaN(id)) {
+    if (isNaN(idNum)) {
       return NextResponse.json(
         { error: 'Nieprawidłowe ID modelu auta' },
         { status: 400 }
@@ -49,7 +51,7 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const carModel = await CarModelService.updateCarModel({ id, ...body });
+    const carModel = await CarModelService.updateCarModel({ id: idNum, ...body });
     
     return NextResponse.json(carModel);
   } catch (error) {
@@ -63,19 +65,20 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id);
+    const { id } = await params;
+    const idNum = parseInt(id);
     
-    if (isNaN(id)) {
+    if (isNaN(idNum)) {
       return NextResponse.json(
         { error: 'Nieprawidłowe ID modelu auta' },
         { status: 400 }
       );
     }
 
-    await CarModelService.deleteCarModel(id);
+    await CarModelService.deleteCarModel(idNum);
     
     return NextResponse.json({ message: 'Model auta został usunięty' });
   } catch (error) {

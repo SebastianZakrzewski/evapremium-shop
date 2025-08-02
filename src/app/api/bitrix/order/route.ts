@@ -41,7 +41,42 @@ export async function POST(request: NextRequest) {
         edgeColor: body.productDetails.edgeColor || '',
         image: body.productDetails.image || '',
       },
-      totalAmount: body.totalAmount || 0,
+      shipping: {
+        method: body.shipping?.method || '',
+        methodName: body.shipping?.methodName || '',
+        cost: body.shipping?.cost || 0,
+        estimatedDelivery: body.shipping?.estimatedDelivery || '',
+      },
+      payment: {
+        method: body.payment?.method || '',
+        methodName: body.payment?.methodName || '',
+      },
+      company: {
+        name: body.company?.name || '',
+        nip: body.company?.nip || '',
+        isInvoice: body.company?.isInvoice || false,
+      },
+      pricing: {
+        subtotal: body.pricing?.subtotal || 0,
+        shippingCost: body.pricing?.shippingCost || 0,
+        discountAmount: body.pricing?.discountAmount || 0,
+        totalAmount: body.totalAmount || 0,
+      },
+      additional: {
+        termsAccepted: body.additional?.termsAccepted || false,
+        newsletter: body.additional?.newsletter || false,
+        discountCode: body.additional?.discountCode || '',
+        discountApplied: body.additional?.discountApplied || false,
+        notes: body.additional?.notes || '',
+      },
+      metadata: {
+        orderId: body.metadata?.orderId || '',
+        orderDate: body.metadata?.orderDate || new Date(),
+        source: body.metadata?.source || '',
+        utmSource: body.metadata?.utmSource || '',
+        utmMedium: body.metadata?.utmMedium || '',
+        utmCampaign: body.metadata?.utmCampaign || '',
+      },
       contactId: body.contactId,
     };
 
