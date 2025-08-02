@@ -36,16 +36,14 @@ model CarModel {
   displayName String?
   yearFrom    Int?
   yearTo      Int?
-  generation   String?
-  bodyType    String?  // sedan, suv, hatchback, etc.
-  engineType  String?  // petrol, diesel, electric, hybrid
+  generation  String?
+  bodyType    String?
+  engineType  String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
-  // Relation to CarBrand
   carBrandId  Int
   carBrand    CarBrand @relation(fields: [carBrandId], references: [id], onDelete: Cascade)
-  
+
   @@unique([name, carBrandId, yearFrom])
 }

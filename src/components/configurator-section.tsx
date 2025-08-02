@@ -452,13 +452,7 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      const edgeColorName = edgeColors[state.selectedEdge].name.toLowerCase();
-      if (edgeColorName === 'czarny') {
-        fetchMatsWithBlackEdging('black');
-      } else {
-        setThreeDMats([]);
-        setSelectedMat(null);
-      }
+      fetchMatsForCurrentConfiguration();
     }, 300); // 300ms debounce
 
     return () => {
@@ -466,14 +460,11 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
         clearTimeout(debounceTimeoutRef.current);
       }
     };
-  }, [state.selectedEdge, state.selected3DVariant, state.selectedTexture]);
+  }, [state.selectedEdge, state.selected3DVariant, state.selectedTexture, state.selectedCarpet]);
 
-  // Inicjalizacja - załaduj dywaniki z czarnym obszyciem na początku, jeśli domyślnie wybrany jest czarny
+  // Inicjalizacja - załaduj dywaniki na początku
   useEffect(() => {
-    const edgeColorName = edgeColors[state.selectedEdge].name.toLowerCase();
-    if (edgeColorName === 'czarny') {
-      fetchMatsWithBlackEdging('black');
-    }
+    fetchMatsForCurrentConfiguration();
   }, []); // Pusty dependency array - uruchom tylko raz przy montowaniu komponentu
 
   const updateState = useCallback((updates: Partial<ConfiguratorState>) => {
@@ -585,58 +576,95 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
   const handleCarpetColorChange = useCallback((colorIndex: number) => {
     updateState({ selectedCarpet: colorIndex });
     
-    // Jeśli mamy dostępne dywaniki z czarnym obszyciem, zmień główny obrazek
-    if (threeDMats.length > 0) {
-      const colorName = carpetColors[colorIndex].name.toLowerCase();
-      const colorKey = Object.keys(colorMapping).find(key => 
-        colorMapping[key].name.toLowerCase() === colorName
-      );
-      
-      if (colorKey) {
-        const matchingMat = threeDMats.find(mat => mat.color === colorKey);
-        if (matchingMat) {
-          setSelectedMat(matchingMat);
-        }
-      }
-    }
-    
     // Auto-scroll do głównego podglądu
     scrollToPreview();
-  }, [threeDMats, updateState, scrollToPreview]);
+  }, [updateState, scrollToPreview]);
 
-  // Funkcja do pobierania dywaników z czarnym obszyciem
-  const fetchMatsWithBlackEdging = useCallback(async (edgeColor: string) => {
-    if (edgeColor === 'black') {
-      setIsLoadingMats(true);
-      try {
-        let matType = 'classic'; // Domyślnie klasyczne dla "3D bez rantów"
-        
-        // Sprawdź czy wybrano wariant 3D
-        if (state.selected3DVariant === 0) { // "3D Z rantami"
-          matType = '3d';
-        } else if (state.selected3DVariant === 1) { // "3D bez rantów"
-          matType = 'classic'; // Używamy klasycznych dla "3D bez rantów"
-        }
-        
-        // Użyj głównego endpointu zamiast /api/mats/3d
-        const response = await fetch(`/api/mats?edgeColor=${edgeColor}&cellType=diamonds&type=${matType}`);
-        const data = await response.json();
-        if (data.success) {
-          setThreeDMats(data.data);
-          if (data.data.length > 0) {
-            setSelectedMat(data.data[0]);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching mats:', error);
-      } finally {
-        setIsLoadingMats(false);
+  // Funkcja do pobierania dywaników na podstawie aktualnej konfiguracji
+  const fetchMatsForCurrentConfiguration = useCallback(async () => {
+    setIsLoadingMats(true);
+    try {
+      // Określ typ dywanika na podstawie wybranego wariantu 3D
+      let matType = 'classic';
+      if (state.selected3DVariant === 0) { // "3D Z rantami"
+        matType = '3d';
+      } else if (state.selected3DVariant === 1) { // "3D bez rantów"
+        matType = 'classic';
       }
-    } else {
+      
+      // Określ typ komórek na podstawie wybranej tekstury
+      let cellType = 'diamonds';
+      if (state.selectedTexture === 0) { // "Plaster"
+        cellType = 'honey';
+      } else if (state.selectedTexture === 1) { // "Romby"
+        cellType = 'diamonds';
+      }
+      
+      // Pobierz kolor obszycia
+      const edgeColorName = edgeColors[state.selectedEdge].name.toLowerCase();
+      const edgeColorMapping: { [key: string]: string } = {
+        'czarny': 'black',
+        'beżowy': 'beige',
+        'bordowy': 'maroon',
+        'brązowy': 'brown',
+        'ciemnoszary': 'darkgrey',
+        'czerwony': 'red',
+        'fioletowy': 'purple',
+        'granatowy': 'darkblue',
+        'jasnoszary': 'lightgrey',
+        'niebieski': 'blue',
+        'pomarańczowy': 'orange',
+        'różowy': 'pink',
+        'zielony': 'green',
+        'żółty': 'yellow'
+      };
+      
+      const edgeColor = edgeColorMapping[edgeColorName] || 'black';
+      
+      // Pobierz kolor dywanika
+      const carpetColorName = carpetColors[state.selectedCarpet].name.toLowerCase();
+      const colorMapping: { [key: string]: string } = {
+        'niebieski': 'blue',
+        'czerwony': 'red',
+        'żółty': 'yellow',
+        'kość słoniowa': 'ivory',
+        'granatowy': 'darkblue',
+        'bordowy': 'maroon',
+        'pomarańczowy': 'orange',
+        'jasnobeżowy': 'lightbeige',
+        'ciemnoszary': 'darkgrey',
+        'fioletowy': 'purple',
+        'jasnozielony': 'lime',
+        'beżowy': 'beige',
+        'różowy': 'pink',
+        'czarny': 'black',
+        'zielony': 'darkgreen',
+        'brązowy': 'brown',
+        'biały': 'white'
+      };
+      
+      const carpetColor = colorMapping[carpetColorName] || 'black';
+      
+      // Pobierz dywaniki z API
+      const response = await fetch(`/api/mats?type=${matType}&cellType=${cellType}&edgeColor=${edgeColor}&color=${carpetColor}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setThreeDMats(data.data);
+        if (data.data.length > 0) {
+          setSelectedMat(data.data[0]);
+        } else {
+          setSelectedMat(null);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching mats:', error);
       setThreeDMats([]);
       setSelectedMat(null);
+    } finally {
+      setIsLoadingMats(false);
     }
-  }, [state.selected3DVariant]);
+  }, [state.selected3DVariant, state.selectedTexture, state.selectedEdge, state.selectedCarpet]);
 
   const resetConfiguration = useCallback(() => {
     setState({
@@ -1519,6 +1547,22 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
                             <span className="text-white">{threeDVariants[state.selected3DVariant].name}</span>
                           </div>
                         </div>
+                        
+                        {/* Wyświetlanie obrazu wybranego dywanika */}
+                        {configuratorDictionary.customization.selectedMatImage && (
+                          <div className="mt-4">
+                            <h4 className="text-white font-medium mb-2">Podgląd wybranego dywanika:</h4>
+                            <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-600">
+                              <Image
+                                src={configuratorDictionary.customization.selectedMatImage}
+                                alt="Wybrany dywanik"
+                                fill
+                                className="object-contain"
+                                loading="lazy"
+                              />
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -18,12 +18,12 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <HeroSection />
+      <ProductGallerySection />
       <AdvantagesSection />
       <ThreeDMatsSection />
       <CustomFitSection />
       <RoznorodnaKolorystykaSection />
       <GlebokaStrukturaKomorekSection />
-      <ProductGallerySection />
       <ProductSelection />
       <CustomerReviews />
       <FAQSection />
