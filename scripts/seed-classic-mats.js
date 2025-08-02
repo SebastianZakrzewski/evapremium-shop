@@ -1,160 +1,133 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('../src/generated/prisma/index.js');
+const fs = require('fs');
+const path = require('path');
 
 const prisma = new PrismaClient();
 
-const classicMatsData = [
-  {
-    type: 'classic',
-    color: 'blue',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-blue-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'red',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-red-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'yellow',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-yellow-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'ivory',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-ivory-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'darkblue',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-darkblue-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'maroon',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-maroon-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'orange',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-orange-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'lightbeige',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-lightbeige-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'darkgrey',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-darkgrey-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'purple',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-purple-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'lime',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-lime-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'beige',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-beige-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'pink',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-pink-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'black',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-black-black (1).webp'
-  },
-  {
-    type: 'classic',
-    color: 'darkgreen',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-darkgreen-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'brown',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-brown-black.webp'
-  },
-  {
-    type: 'classic',
-    color: 'white',
-    cellType: 'diamonds',
-    edgeColor: 'black',
-    image: '/images/konfigurator/dywaniki/klasyczne/czarne obszycie/5os-classic-diamonds-white-black.webp'
-  }
-];
+// Mapowanie nazw katalogów na kolory obszycia
+const edgeColorMapping = {
+  'czarne obszycie': 'black',
+  'romby bezowe obszycie': 'beige',
+  'romby bordowe obszycie': 'maroon',
+  'romby brazowe obszycie': 'brown',
+  'romby ciemnoszare obszycie': 'darkgrey',
+  'romby czerwone obszycie': 'red',
+  'romby fioletowe obszycie': 'purple',
+  'romby granatowe obszycie': 'darkblue',
+  'romby jasnoszare obszycie': 'lightgrey',
+  'romby niebieskie obszycie': 'blue',
+  'romby pomaranczowe obszycie': 'orange',
+  'romby rozowe obszycie': 'pink',
+  'romby zielone obszycie': 'green',
+  'romby zolte obszycie': 'yellow'
+};
+
+// Mapowanie nazw kolorów z plików na kolory w bazie
+const colorMapping = {
+  'black': 'black',
+  'blue': 'blue',
+  'brown': 'brown',
+  'darkblue': 'darkblue',
+  'darkgreen': 'darkgreen',
+  'darkgrey': 'darkgrey',
+  'ivory': 'ivory',
+  'lightbeige': 'lightbeige',
+  'lime': 'lime',
+  'maroon': 'maroon',
+  'orange': 'orange',
+  'pink': 'pink',
+  'purple': 'purple',
+  'red': 'red',
+  'white': 'white',
+  'yellow': 'yellow'
+};
 
 async function seedClassicMats() {
   try {
-    console.log('Seeding classic mats data...');
+    console.log('Rozpoczynam dodawanie dywaników klasycznych...');
     
-    // Clear existing classic mats with black edging
-    await prisma.mats.deleteMany({
+    const basePath = path.join(__dirname, '../public/images/konfigurator/dywaniki/klasyczne');
+    
+    // Sprawdź które dywaniki już istnieją
+    const existingMats = await prisma.mats.findMany({
       where: {
-        type: 'classic',
-        edgeColor: 'black'
+        type: 'classic'
+      },
+      select: {
+        color: true,
+        cellType: true,
+        edgeColor: true
       }
     });
     
-    // Insert new classic mats
-    const createdMats = await prisma.mats.createMany({
-      data: classicMatsData
-    });
+    console.log(`Znaleziono ${existingMats.length} istniejących dywaników klasycznych`);
     
-    console.log(`Successfully seeded ${createdMats.count} classic mats`);
+    let addedCount = 0;
+    let skippedCount = 0;
     
-    // Verify the data
-    const count = await prisma.mats.count({
-      where: {
-        type: 'classic',
-        edgeColor: 'black'
+    // Przejdź przez wszystkie katalogi
+    for (const [folderName, edgeColor] of Object.entries(edgeColorMapping)) {
+      const folderPath = path.join(basePath, folderName);
+      
+      if (!fs.existsSync(folderPath)) {
+        console.log(`Katalog nie istnieje: ${folderName}`);
+        continue;
       }
-    });
+      
+      const files = fs.readdirSync(folderPath);
+      
+      for (const file of files) {
+        if (!file.endsWith('.webp')) continue;
+        
+        // Parsuj nazwę pliku: 5os-classic-honey-red-beige.webp
+        const parts = file.replace('.webp', '').split('-');
+        if (parts.length < 5) continue;
+        
+        const cellType = parts[2]; // honey lub diamonds
+        const color = parts[3]; // kolor dywanika
+        const fileEdgeColor = parts[4]; // kolor obszycia z nazwy pliku
+        
+        // Sprawdź czy już istnieje
+        const exists = existingMats.some(mat => 
+          mat.color === colorMapping[color] && 
+          mat.cellType === cellType && 
+          mat.edgeColor === edgeColor
+        );
+        
+        if (exists) {
+          console.log(`Pominięto: ${color} ${cellType} ${edgeColor} (już istnieje)`);
+          skippedCount++;
+          continue;
+        }
+        
+        // Dodaj nowy dywanik
+        try {
+          await prisma.mats.create({
+            data: {
+              type: 'classic',
+              color: colorMapping[color] || color,
+              cellType: cellType,
+              edgeColor: edgeColor,
+              image: `/images/konfigurator/dywaniki/klasyczne/${folderName}/${file}`
+            }
+          });
+          
+          console.log(`Dodano: ${color} ${cellType} ${edgeColor}`);
+          addedCount++;
+          
+        } catch (error) {
+          console.error(`Błąd podczas dodawania ${file}:`, error.message);
+        }
+      }
+    }
     
-    console.log(`Total classic mats with black edging: ${count}`);
+    console.log(`\nPodsumowanie:`);
+    console.log(`- Dodano: ${addedCount} dywaników`);
+    console.log(`- Pominięto: ${skippedCount} dywaników (już istnieją)`);
+    console.log(`- Łącznie: ${addedCount + skippedCount} przetworzonych`);
     
   } catch (error) {
-    console.error('Error seeding classic mats:', error);
+    console.error('Błąd podczas dodawania dywaników:', error);
   } finally {
     await prisma.$disconnect();
   }
