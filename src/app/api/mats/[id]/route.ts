@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SupabaseMatsService } from '@/lib/services/SupabaseMatsService';
+import { supabaseAdmin, TABLES } from '@/lib/database/supabase';
 
 export async function GET(
   request: NextRequest,
@@ -16,14 +16,33 @@ export async function GET(
       );
     }
 
-    const mat = await SupabaseMatsService.getMatsById(idNum);
+    // Znajdź matę po ID (konwersja z UUID)
+    const { data, error } = await supabaseAdmin
+      .from(TABLES.MATS)
+      .select('*')
+      .limit(1000);
+
+    if (error) throw error;
     
-    if (!mat) {
+    const foundItem = (data || []).find(item => 
+      parseInt(item.id.split('-')[0], 16) === idNum
+    );
+    
+    if (!foundItem) {
       return NextResponse.json(
         { error: 'Mata nie została znaleziona' },
         { status: 404 }
       );
     }
+
+    const mat = {
+      id: parseInt(foundItem.id.split('-')[0], 16) || 0,
+      type: foundItem.matType,
+      color: foundItem.materialColor,
+      cellType: foundItem.cellStructure,
+      edgeColor: foundItem.borderColor,
+      image: foundItem.imagePath
+    };
 
     return NextResponse.json(mat);
   } catch (error) {
@@ -51,7 +70,49 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const mat = await SupabaseMatsService.updateMats({ id: idNum, ...body });
+    
+    // Znajdź matę po ID
+    const { data: allData, error: fetchError } = await supabaseAdmin
+      .from(TABLES.MATS)
+      .select('*')
+      .limit(1000);
+
+    if (fetchError) throw fetchError;
+    
+    const foundItem = (allData || []).find(item => 
+      parseInt(item.id.split('-')[0], 16) === idNum
+    );
+    
+    if (!foundItem) {
+      return NextResponse.json(
+        { error: 'Mata nie została znaleziona' },
+        { status: 404 }
+      );
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from(TABLES.MATS)
+      .update({
+        matType: body.type,
+        materialColor: body.color,
+        cellStructure: body.cellType,
+        borderColor: body.edgeColor,
+        imagePath: body.image
+      })
+      .eq('id', foundItem.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    const mat = {
+      id: parseInt(data.id.split('-')[0], 16) || 0,
+      type: data.matType,
+      color: data.materialColor,
+      cellType: data.cellStructure,
+      edgeColor: data.borderColor,
+      image: data.imagePath
+    };
     
     return NextResponse.json(mat);
   } catch (error) {
@@ -78,7 +139,31 @@ export async function DELETE(
       );
     }
 
-    await SupabaseMatsService.deleteMats(idNum);
+    // Znajdź matę po ID
+    const { data: allData, error: fetchError } = await supabaseAdmin
+      .from(TABLES.MATS)
+      .select('*')
+      .limit(1000);
+
+    if (fetchError) throw fetchError;
+    
+    const foundItem = (allData || []).find(item => 
+      parseInt(item.id.split('-')[0], 16) === idNum
+    );
+    
+    if (!foundItem) {
+      return NextResponse.json(
+        { error: 'Mata nie została znaleziona' },
+        { status: 404 }
+      );
+    }
+
+    const { error } = await supabaseAdmin
+      .from(TABLES.MATS)
+      .delete()
+      .eq('id', foundItem.id);
+
+    if (error) throw error;
     
     return NextResponse.json({ message: 'Mata została usunięta' });
   } catch (error) {

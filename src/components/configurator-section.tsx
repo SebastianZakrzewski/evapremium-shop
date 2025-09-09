@@ -23,27 +23,27 @@ import { useSession } from "@/lib/contexts/session-context";
 import { ColorFilterService, AvailableColors } from "@/lib/services/ColorFilterService";
 
 // Mapowanie kolorów z bazy danych na kolory hex - używamy polskich nazw
-const colorMapping: { [key: string]: { name: string; color: string } } = {
-  'niebieski': { name: "Niebieski", color: "#0084d1" },
-  'czerwony': { name: "Czerwony", color: "#d12d1c" },
-  'żółty': { name: "Żółty", color: "#ffe100" },
-  'kość słoniowa': { name: "Kość słoniowa", color: "#d9d7c7" },
-  'ciemnoniebieski': { name: "Ciemnoniebieski", color: "#1a355b" },
-  'bordowy': { name: "Bordowy", color: "#6d2635" },
-  'pomarańczowy': { name: "Pomarańczowy", color: "#ff7b1c" },
-  'jasnobeżowy': { name: "Jasnobeżowy", color: "#d1b48c" },
-  'ciemnoszary': { name: "Ciemnoszary", color: "#4a4a4a" },
-  'fioletowy': { name: "Fioletowy", color: "#7c4bc8" },
-  'limonkowy': { name: "Limonkowy", color: "#8be000" },
-  'beżowy': { name: "Beżowy", color: "#b48a5a" },
-  'różowy': { name: "Różowy", color: "#ff7eb9" },
-  'czarny': { name: "Czarny", color: "#222" },
-  'ciemnozielony': { name: "Ciemnozielony", color: "#1b5e3c" },
-  'brązowy': { name: "Brązowy", color: "#4b2e1e" },
-  'biały': { name: "Biały", color: "#ffffff" },
-  'jasnoszary': { name: "Jasnoszary", color: "#bdbdbd" },
-  'lightgrey': { name: "Jasnoszary", color: "#bdbdbd" },
-  'zielony': { name: "Zielony", color: "#4caf50" },
+const colorMapping: { [key: string]: { name: string; color: string; dbKey: string } } = {
+  'niebieski': { name: "Niebieski", color: "#0084d1", dbKey: "niebieski" },
+  'czerwony': { name: "Czerwony", color: "#d12d1c", dbKey: "czerwony" },
+  'żółty': { name: "Żółty", color: "#ffe100", dbKey: "żółty" },
+  'kość słoniowa': { name: "Kość słoniowa", color: "#d9d7c7", dbKey: "kość słoniowa" },
+  'ciemnoniebieski': { name: "Ciemnoniebieski", color: "#1a355b", dbKey: "ciemnoniebieski" },
+  'bordowy': { name: "Bordowy", color: "#6d2635", dbKey: "bordowy" },
+  'pomarańczowy': { name: "Pomarańczowy", color: "#ff7b1c", dbKey: "pomarańczowy" },
+  'jasnobeżowy': { name: "Jasnobeżowy", color: "#d1b48c", dbKey: "jasnobeżowy" },
+  'ciemnoszary': { name: "Ciemnoszary", color: "#4a4a4a", dbKey: "ciemnoszary" },
+  'fioletowy': { name: "Fioletowy", color: "#7c4bc8", dbKey: "fioletowy" },
+  'limonkowy': { name: "Limonkowy", color: "#8be000", dbKey: "limonkowy" },
+  'beżowy': { name: "Beżowy", color: "#b48a5a", dbKey: "beżowy" },
+  'różowy': { name: "Różowy", color: "#ff7eb9", dbKey: "różowy" },
+  'czarny': { name: "Czarny", color: "#222", dbKey: "czarny" },
+  'ciemnozielony': { name: "Ciemnozielony", color: "#1b5e3c", dbKey: "ciemnozielony" },
+  'brązowy': { name: "Brązowy", color: "#4b2e1e", dbKey: "brązowy" },
+  'biały': { name: "Biały", color: "#ffffff", dbKey: "biały" },
+  'jasnoszary': { name: "Jasnoszary", color: "#bdbdbd", dbKey: "jasnoszary" },
+  'lightgrey': { name: "Jasnoszary", color: "#bdbdbd", dbKey: "jasnoszary" },
+  'zielony': { name: "Zielony", color: "#4caf50", dbKey: "zielony" },
 };
 
 // Wszystkie kolory będą filtrowane dynamicznie na podstawie wybranej struktury
@@ -639,23 +639,33 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
       
       // Pobierz kolor obszycia - używaj przefiltrowanych kolorów
       const edgeColorName = filteredEdgeColors[state.selectedEdge]?.name;
-      const edgeColor = edgeColorName?.toLowerCase() || 'czarny'; // Używaj małych liter jak w bazie
+      const edgeColor = filteredEdgeColors[state.selectedEdge]?.dbKey || 'czarny';
       
       // Pobierz kolor dywanika - używaj przefiltrowanych kolorów
       const carpetColorName = filteredCarpetColors[state.selectedCarpet]?.name;
-      const carpetColor = carpetColorName?.toLowerCase() || 'czarny'; // Używaj małych liter jak w bazie
+      const carpetColor = filteredCarpetColors[state.selectedCarpet]?.dbKey || 'czarny';
       
       // Pobierz dywaniki z API
-      const response = await fetch(`/api/mats?type=${matType}&cellType=${cellType}&edgeColor=${edgeColor}&color=${carpetColor}`);
+      const apiUrl = `/api/mats?type=${matType}&cellType=${cellType}&edgeColor=${edgeColor}&color=${carpetColor}`;
+      console.log('🔍 Fetching mats with URL:', apiUrl);
+      console.log('📊 Parameters:', { matType, cellType, edgeColor, carpetColor });
+      
+      const response = await fetch(apiUrl);
       const data = await response.json();
+      
+      console.log('📥 API Response:', data);
       
       if (data.success) {
         setThreeDMats(data.data);
         if (data.data.length > 0) {
           setSelectedMat(data.data[0]);
+          console.log('✅ Selected mat:', data.data[0]);
         } else {
           setSelectedMat(null);
+          console.log('❌ No mats found for this configuration');
         }
+      } else {
+        console.error('❌ API Error:', data.error);
       }
     } catch (error) {
       console.error('Error fetching mats:', error);
