@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MatsService } from '@/lib/services/MatsService';
+import { SupabaseMatsService } from '@/lib/services/SupabaseMatsService';
 
 export async function GET(
   request: NextRequest,
@@ -16,7 +16,7 @@ export async function GET(
       );
     }
 
-    const mat = await MatsService.getMatsById(idNum);
+    const mat = await SupabaseMatsService.getMatsById(idNum);
     
     if (!mat) {
       return NextResponse.json(
@@ -51,7 +51,7 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const mat = await MatsService.updateMats({ id: idNum, ...body });
+    const mat = await SupabaseMatsService.updateMats({ id: idNum, ...body });
     
     return NextResponse.json(mat);
   } catch (error) {
@@ -78,7 +78,7 @@ export async function DELETE(
       );
     }
 
-    await MatsService.deleteMats(idNum);
+    await SupabaseMatsService.deleteMats(idNum);
     
     return NextResponse.json({ message: 'Mata została usunięta' });
   } catch (error) {

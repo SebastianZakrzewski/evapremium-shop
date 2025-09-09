@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CarModelService } from '@/lib/services/CarModelService';
+import { SupabaseCarModelService } from '@/lib/services/SupabaseCarModelService';
 
 export async function GET(
   request: NextRequest,
@@ -16,7 +16,7 @@ export async function GET(
       );
     }
 
-    const carModel = await CarModelService.getCarModelById(idNum);
+    const carModel = await SupabaseCarModelService.getCarModelById(idNum);
     
     if (!carModel) {
       return NextResponse.json(
@@ -51,7 +51,7 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const carModel = await CarModelService.updateCarModel({ id: idNum, ...body });
+    const carModel = await SupabaseCarModelService.updateCarModel({ id: idNum, ...body });
     
     return NextResponse.json(carModel);
   } catch (error) {
@@ -78,7 +78,7 @@ export async function DELETE(
       );
     }
 
-    await CarModelService.deleteCarModel(idNum);
+    await SupabaseCarModelService.deleteCarModel(idNum);
     
     return NextResponse.json({ message: 'Model auta został usunięty' });
   } catch (error) {

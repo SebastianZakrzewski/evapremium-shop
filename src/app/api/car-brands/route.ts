@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CarBrandService } from '@/lib/services/CarBrandService';
+import { SupabaseCarBrandService } from '@/lib/services/SupabaseCarBrandService';
 
 export async function GET() {
   try {
-    const carBrands = await CarBrandService.getActiveCarBrands();
+    const carBrands = await SupabaseCarBrandService.getActiveCarBrands();
     return NextResponse.json(carBrands);
   } catch (error) {
     console.error('Error fetching car brands:', error);
@@ -17,7 +17,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const carBrand = await CarBrandService.createCarBrand(body);
+    const carBrand = await SupabaseCarBrandService.createCarBrand(body);
     return NextResponse.json(carBrand, { status: 201 });
   } catch (error) {
     console.error('Error creating car brand:', error);

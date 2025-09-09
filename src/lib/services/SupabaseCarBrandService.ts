@@ -1,15 +1,20 @@
-import { prisma } from '../database/prisma';
+import { supabaseAdmin, TABLES } from '../database/supabase';
 import { CarBrand, CreateCarBrandRequest, UpdateCarBrandRequest } from '../types/car-brand';
 
-export class CarBrandService {
+export class SupabaseCarBrandService {
   /**
    * Get all car brands
    */
   static async getAllCarBrands(): Promise<CarBrand[]> {
     try {
-      const carBrands = await prisma.carBrand.findMany(
-        {orderBy: { name: 'asc' }});
-      return carBrands.map(brand => ({
+      const { data, error } = await supabaseAdmin
+        .from(TABLES.CAR_BRANDS)
+        .select('*')
+        .order('name', { ascending: true });
+
+      if (error) throw error;
+      
+      return (data || []).map(brand => ({
         ...brand,
         displayName: brand.displayName || undefined,
         logo: brand.logo || undefined,
@@ -27,11 +32,14 @@ export class CarBrandService {
    */
   static async getActiveCarBrands(): Promise<CarBrand[]> {
     try {
-      const carBrands = await prisma.carBrand.findMany({
-        where: { isActive: true },
-        orderBy: { name: 'asc' }
-      });
-      return carBrands;
+      const { data, error } = await supabaseAdmin
+        .from(TABLES.CAR_BRANDS)
+        .select('*')
+        .eq('isActive', true)
+        .order('name', { ascending: true });
+
+      if (error) throw error;
+      return data || [];
     } catch (error) {
       console.error('Error fetching active car brands:', error);
       throw new Error('Failed to fetch active car brands');
@@ -43,10 +51,17 @@ export class CarBrandService {
    */
   static async getCarBrandById(id: number): Promise<CarBrand | null> {
     try {
-      const carBrand = await prisma.carBrand.findUnique({
-        where: { id }
-      });
-      return carBrand;
+      const { data, error } = await supabaseAdmin
+        .from(TABLES.CAR_BRANDS)
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') return null; // No rows found
+        throw error;
+      }
+      return data;
     } catch (error) {
       console.error('Error fetching car brand by ID:', error);
       throw new Error('Failed to fetch car brand');
@@ -58,10 +73,17 @@ export class CarBrandService {
    */
   static async getCarBrandByName(name: string): Promise<CarBrand | null> {
     try {
-      const carBrand = await prisma.carBrand.findUnique({
-        where: { name }
-      });
-      return carBrand;
+      const { data, error } = await supabaseAdmin
+        .from(TABLES.CAR_BRANDS)
+        .select('*')
+        .eq('name', name)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') return null; // No rows found
+        throw error;
+      }
+      return data;
     } catch (error) {
       console.error('Error fetching car brand by name:', error);
       throw new Error('Failed to fetch car brand');
@@ -73,17 +95,21 @@ export class CarBrandService {
    */
   static async createCarBrand(data: CreateCarBrandRequest): Promise<CarBrand> {
     try {
-      const carBrand = await prisma.carBrand.create({
-        data: {
+      const { data: result, error } = await supabaseAdmin
+        .from(TABLES.CAR_BRANDS)
+        .insert([{
           name: data.name,
           displayName: data.displayName,
           logo: data.logo,
           description: data.description,
           website: data.website,
           isActive: data.isActive ?? true
-        }
-      });
-      return carBrand;
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return result;
     } catch (error) {
       console.error('Error creating car brand:', error);
       throw new Error('Failed to create car brand');
@@ -95,18 +121,22 @@ export class CarBrandService {
    */
   static async updateCarBrand(id: number, data: UpdateCarBrandRequest): Promise<CarBrand> {
     try {
-      const carBrand = await prisma.carBrand.update({
-        where: { id },
-        data: {
+      const { data: result, error } = await supabaseAdmin
+        .from(TABLES.CAR_BRANDS)
+        .update({
           name: data.name,
           displayName: data.displayName,
           logo: data.logo,
           description: data.description,
           website: data.website,
           isActive: data.isActive
-        }
-      });
-      return carBrand;
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return result;
     } catch (error) {
       console.error('Error updating car brand:', error);
       throw new Error('Failed to update car brand');
@@ -118,9 +148,12 @@ export class CarBrandService {
    */
   static async deleteCarBrand(id: number): Promise<void> {
     try {
-      await prisma.carBrand.delete({
-        where: { id }
-      });
+      const { error } = await supabaseAdmin
+        .from(TABLES.CAR_BRANDS)
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
     } catch (error) {
       console.error('Error deleting car brand:', error);
       throw new Error('Failed to delete car brand');
@@ -132,11 +165,15 @@ export class CarBrandService {
    */
   static async deactivateCarBrand(id: number): Promise<CarBrand> {
     try {
-      const carBrand = await prisma.carBrand.update({
-        where: { id },
-        data: { isActive: false }
-      });
-      return carBrand;
+      const { data, error } = await supabaseAdmin
+        .from(TABLES.CAR_BRANDS)
+        .update({ isActive: false })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
     } catch (error) {
       console.error('Error deactivating car brand:', error);
       throw new Error('Failed to deactivate car brand');
@@ -148,14 +185,18 @@ export class CarBrandService {
    */
   static async activateCarBrand(id: number): Promise<CarBrand> {
     try {
-      const carBrand = await prisma.carBrand.update({
-        where: { id },
-        data: { isActive: true }
-      });
-      return carBrand;
+      const { data, error } = await supabaseAdmin
+        .from(TABLES.CAR_BRANDS)
+        .update({ isActive: true })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
     } catch (error) {
       console.error('Error activating car brand:', error);
       throw new Error('Failed to activate car brand');
     }
   }
-} 
+}

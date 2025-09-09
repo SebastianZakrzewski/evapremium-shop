@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MatsService } from '@/lib/services/MatsService';
+import { SupabaseMatsService } from '@/lib/services/SupabaseMatsService';
 
 // GET /api/mats
 export async function GET(request: NextRequest) {
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
       if (cellType) filter.cellType = cellType;
       if (edgeColor) filter.edgeColor = edgeColor;
 
-      mats = await MatsService.getMatsByFilter(filter);
+      mats = await SupabaseMatsService.getMatsByFilter(filter);
       
       return NextResponse.json({
         success: true,
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Jeśli nie ma filtrów, zwróć z paginacją
-    const result = await MatsService.getMatsWithPagination(page, limit);
+    const result = await SupabaseMatsService.getMatsWithPagination(page, limit);
     
     return NextResponse.json({
       success: true,
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const mats = await MatsService.createMats(body);
+    const mats = await SupabaseMatsService.createMats(body);
     
     return NextResponse.json({
       success: true,

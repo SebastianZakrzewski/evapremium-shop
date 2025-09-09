@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MatsService } from '@/lib/services/MatsService';
+import { SupabaseMatsService } from '@/lib/services/SupabaseMatsService';
 
 // GET /api/mats/3d
 export async function GET(request: NextRequest) {
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       edgeColor
     };
 
-    const mats = await MatsService.getMatsByFilter(filter);
+    const mats = await SupabaseMatsService.getMatsByFilter(filter);
     
     return NextResponse.json({
       success: true,

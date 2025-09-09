@@ -20,46 +20,35 @@ import {
 } from "lucide-react";
 import { HybridSessionManager } from "@/lib/utils/hybrid-session-manager";
 import { useSession } from "@/lib/contexts/session-context";
+import { ColorFilterService, AvailableColors } from "@/lib/services/ColorFilterService";
 
-// Mapowanie kolorów z bazy danych na kolory hex
+// Mapowanie kolorów z bazy danych na kolory hex - używamy polskich nazw
 const colorMapping: { [key: string]: { name: string; color: string } } = {
-  'blue': { name: "Niebieski", color: "#0084d1" },
-  'red': { name: "Czerwony", color: "#d12d1c" },
-  'yellow': { name: "Żółty", color: "#ffe100" },
-  'ivory': { name: "Kość słoniowa", color: "#d9d7c7" },
-  'darkblue': { name: "Granatowy", color: "#1a355b" },
-  'maroon': { name: "Bordowy", color: "#6d2635" },
-  'orange': { name: "Pomarańczowy", color: "#ff7b1c" },
-  'lightbeige': { name: "Jasnobeżowy", color: "#d1b48c" },
-  'darkgrey': { name: "Ciemnoszary", color: "#4a4a4a" },
-  'purple': { name: "Fioletowy", color: "#7c4bc8" },
-  'lime': { name: "Jasnozielony", color: "#8be000" },
-  'beige': { name: "Beżowy", color: "#b48a5a" },
-  'pink': { name: "Różowy", color: "#ff7eb9" },
-  'black': { name: "Czarny", color: "#222" },
-  'darkgreen': { name: "Zielony", color: "#1b5e3c" },
-  'brown': { name: "Brązowy", color: "#4b2e1e" },
-  'white': { name: "Biały", color: "#ffffff" },
+  'niebieski': { name: "Niebieski", color: "#0084d1" },
+  'czerwony': { name: "Czerwony", color: "#d12d1c" },
+  'żółty': { name: "Żółty", color: "#ffe100" },
+  'kość słoniowa': { name: "Kość słoniowa", color: "#d9d7c7" },
+  'ciemnoniebieski': { name: "Ciemnoniebieski", color: "#1a355b" },
+  'bordowy': { name: "Bordowy", color: "#6d2635" },
+  'pomarańczowy': { name: "Pomarańczowy", color: "#ff7b1c" },
+  'jasnobeżowy': { name: "Jasnobeżowy", color: "#d1b48c" },
+  'ciemnoszary': { name: "Ciemnoszary", color: "#4a4a4a" },
+  'fioletowy': { name: "Fioletowy", color: "#7c4bc8" },
+  'limonkowy': { name: "Limonkowy", color: "#8be000" },
+  'beżowy': { name: "Beżowy", color: "#b48a5a" },
+  'różowy': { name: "Różowy", color: "#ff7eb9" },
+  'czarny': { name: "Czarny", color: "#222" },
+  'ciemnozielony': { name: "Ciemnozielony", color: "#1b5e3c" },
+  'brązowy': { name: "Brązowy", color: "#4b2e1e" },
+  'biały': { name: "Biały", color: "#ffffff" },
+  'jasnoszary': { name: "Jasnoszary", color: "#bdbdbd" },
+  'lightgrey': { name: "Jasnoszary", color: "#bdbdbd" },
+  'zielony': { name: "Zielony", color: "#4caf50" },
 };
 
-const carpetColors = Object.values(colorMapping);
-
-const edgeColors = [
-  { name: "Zielony", color: "#1b5e3c" },
-  { name: "Brązowy", color: "#4b2e1e" },
-  { name: "Ciemnoszary", color: "#4a4a4a" },
-  { name: "Czerwony", color: "#d12d1c" },
-  { name: "Różowy", color: "#ff7eb9" },
-  { name: "Niebieski", color: "#0084d1" },
-  { name: "Czarny", color: "#222" },
-  { name: "Bordowy", color: "#6d2635" },
-  { name: "Granatowy", color: "#1a355b" },
-  { name: "Żółty", color: "#ffe100" },
-  { name: "Fioletowy", color: "#7c4bc8" },
-  { name: "Beżowy", color: "#b48a5a" },
-  { name: "Pomarańczowy", color: "#ff7b1c" },
-  { name: "Jasnoszary", color: "#bdbdbd" },
-];
+// Wszystkie kolory będą filtrowane dynamicznie na podstawie wybranej struktury
+const allCarpetColors = Object.values(colorMapping);
+const allEdgeColors = Object.values(colorMapping);
 
 const textures = [
   { 
@@ -289,6 +278,9 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
   const [threeDMats, setThreeDMats] = useState<MatsData[]>([]);
   const [selectedMat, setSelectedMat] = useState<MatsData | null>(null);
   const [isLoadingMats, setIsLoadingMats] = useState(false);
+  const [availableColors, setAvailableColors] = useState<AvailableColors | null>(null);
+  const [filteredCarpetColors, setFilteredCarpetColors] = useState(allCarpetColors);
+  const [filteredEdgeColors, setFilteredEdgeColors] = useState(allEdgeColors);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   // Użyj sesji do zarządzania koszykiem
@@ -467,6 +459,51 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
     fetchMatsForCurrentConfiguration();
   }, []); // Pusty dependency array - uruchom tylko raz przy montowaniu komponentu
 
+  // Funkcja do pobierania dostępnych kolorów dla wybranej struktury
+  const fetchAvailableColors = useCallback(async (cellStructure: string) => {
+    try {
+      const colors = await ColorFilterService.getAvailableColors(cellStructure);
+      setAvailableColors(colors);
+      
+      // Filtruj kolory na podstawie dostępnych w bazie
+      const filteredCarpet = allCarpetColors.filter(color => 
+        colors.materialColors.includes(color.name.toLowerCase())
+      );
+      const filteredEdge = allEdgeColors.filter(color => 
+        colors.borderColors.includes(color.name.toLowerCase())
+      );
+      
+      setFilteredCarpetColors(filteredCarpet);
+      setFilteredEdgeColors(filteredEdge);
+      
+      // Sprawdź czy aktualnie wybrane kolory są nadal dostępne
+      const currentCarpetName = allCarpetColors[state.selectedCarpet]?.name.toLowerCase();
+      const currentEdgeName = allEdgeColors[state.selectedEdge]?.name.toLowerCase();
+      
+      if (currentCarpetName && !colors.materialColors.includes(currentCarpetName)) {
+        // Jeśli aktualny kolor dywanika nie jest dostępny, wybierz pierwszy dostępny
+        setState(prev => ({ ...prev, selectedCarpet: 0 }));
+      }
+      
+      if (currentEdgeName && !colors.borderColors.includes(currentEdgeName)) {
+        // Jeśli aktualny kolor obszycia nie jest dostępny, wybierz pierwszy dostępny
+        setState(prev => ({ ...prev, selectedEdge: 0 }));
+      }
+      
+    } catch (error) {
+      console.error('Error fetching available colors:', error);
+      // W przypadku błędu, pokaż wszystkie kolory
+      setFilteredCarpetColors(allCarpetColors);
+      setFilteredEdgeColors(allEdgeColors);
+    }
+  }, [state.selectedCarpet, state.selectedEdge]);
+
+  // Pobierz dostępne kolory przy zmianie struktury tekstury
+  useEffect(() => {
+    const cellStructure = state.selectedTexture === 0 ? 'honeycomb' : 'rhombus';
+    fetchAvailableColors(cellStructure);
+  }, [state.selectedTexture, fetchAvailableColors]);
+
   const updateState = useCallback((updates: Partial<ConfiguratorState>) => {
     setState(prev => ({ ...prev, ...updates }));
   }, []);
@@ -585,65 +622,28 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
     setIsLoadingMats(true);
     try {
       // Określ typ dywanika na podstawie wybranego wariantu 3D
-      let matType = 'classic';
+      let matType = '3d-without-rims';
       if (state.selected3DVariant === 0) { // "3D Z rantami"
-        matType = '3d';
+        matType = '3d-with-rims';
       } else if (state.selected3DVariant === 1) { // "3D bez rantów"
-        matType = 'classic';
+        matType = '3d-without-rims';
       }
       
       // Określ typ komórek na podstawie wybranej tekstury
-      let cellType = 'diamonds';
+      let cellType = 'rhombus';
       if (state.selectedTexture === 0) { // "Plaster"
-        cellType = 'honey';
+        cellType = 'honeycomb';
       } else if (state.selectedTexture === 1) { // "Romby"
-        cellType = 'diamonds';
+        cellType = 'rhombus';
       }
       
-      // Pobierz kolor obszycia
-      const edgeColorName = edgeColors[state.selectedEdge].name.toLowerCase();
-      const edgeColorMapping: { [key: string]: string } = {
-        'czarny': 'black',
-        'beżowy': 'beige',
-        'bordowy': 'maroon',
-        'brązowy': 'brown',
-        'ciemnoszary': 'darkgrey',
-        'czerwony': 'red',
-        'fioletowy': 'purple',
-        'granatowy': 'darkblue',
-        'jasnoszary': 'lightgrey',
-        'niebieski': 'blue',
-        'pomarańczowy': 'orange',
-        'różowy': 'pink',
-        'zielony': 'green',
-        'żółty': 'yellow'
-      };
+      // Pobierz kolor obszycia - używaj przefiltrowanych kolorów
+      const edgeColorName = filteredEdgeColors[state.selectedEdge]?.name;
+      const edgeColor = edgeColorName?.toLowerCase() || 'czarny'; // Używaj małych liter jak w bazie
       
-      const edgeColor = edgeColorMapping[edgeColorName] || 'black';
-      
-      // Pobierz kolor dywanika
-      const carpetColorName = carpetColors[state.selectedCarpet].name.toLowerCase();
-      const colorMapping: { [key: string]: string } = {
-        'niebieski': 'blue',
-        'czerwony': 'red',
-        'żółty': 'yellow',
-        'kość słoniowa': 'ivory',
-        'granatowy': 'darkblue',
-        'bordowy': 'maroon',
-        'pomarańczowy': 'orange',
-        'jasnobeżowy': 'lightbeige',
-        'ciemnoszary': 'darkgrey',
-        'fioletowy': 'purple',
-        'jasnozielony': 'lime',
-        'beżowy': 'beige',
-        'różowy': 'pink',
-        'czarny': 'black',
-        'zielony': 'darkgreen',
-        'brązowy': 'brown',
-        'biały': 'white'
-      };
-      
-      const carpetColor = colorMapping[carpetColorName] || 'black';
+      // Pobierz kolor dywanika - używaj przefiltrowanych kolorów
+      const carpetColorName = filteredCarpetColors[state.selectedCarpet]?.name;
+      const carpetColor = carpetColorName?.toLowerCase() || 'czarny'; // Używaj małych liter jak w bazie
       
       // Pobierz dywaniki z API
       const response = await fetch(`/api/mats?type=${matType}&cellType=${cellType}&edgeColor=${edgeColor}&color=${carpetColor}`);
@@ -664,7 +664,7 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
     } finally {
       setIsLoadingMats(false);
     }
-  }, [state.selected3DVariant, state.selectedTexture, state.selectedEdge, state.selectedCarpet]);
+  }, [state.selected3DVariant, state.selectedTexture, state.selectedEdge, state.selectedCarpet, filteredEdgeColors, filteredCarpetColors]);
 
   const resetConfiguration = useCallback(() => {
     setState({
@@ -994,11 +994,11 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
   useEffect(() => {
     updateConfiguratorDictionary('customization', {
       selectedCarpet: state.selectedCarpet,
-      carpetColor: carpetColors[state.selectedCarpet]?.color || '',
-      carpetColorName: carpetColors[state.selectedCarpet]?.name || '',
+      carpetColor: filteredCarpetColors[state.selectedCarpet]?.color || '',
+      carpetColorName: filteredCarpetColors[state.selectedCarpet]?.name || '',
       selectedEdge: state.selectedEdge,
-      edgeColor: edgeColors[state.selectedEdge]?.color || '',
-      edgeColorName: edgeColors[state.selectedEdge]?.name || '',
+      edgeColor: filteredEdgeColors[state.selectedEdge]?.color || '',
+      edgeColorName: filteredEdgeColors[state.selectedEdge]?.name || '',
       selectedTexture: state.selectedTexture,
       textureName: textures[state.selectedTexture]?.name || '',
       texturePrice: textures[state.selectedTexture]?.price || 0,
@@ -1140,10 +1140,10 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full" style={{ 
-                          background: selectedMat ? colorMapping[selectedMat.color]?.color || "#ccc" : carpetColors[state.selectedCarpet].color 
+                          background: selectedMat ? colorMapping[selectedMat.color]?.color || "#ccc" : filteredCarpetColors[state.selectedCarpet]?.color || "#ccc"
                         }}></div>
                         <span className="text-sm font-medium">
-                          {selectedMat ? colorMapping[selectedMat.color]?.name || selectedMat.color : carpetColors[state.selectedCarpet].name}
+                          {selectedMat ? colorMapping[selectedMat.color]?.name || selectedMat.color : filteredCarpetColors[state.selectedCarpet]?.name || "Nieznany"}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -1404,7 +1404,7 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
                       <div>
                         <label className="block text-gray-200 font-medium mb-3 text-sm">Kolor dywanika</label>
                         <div className="grid grid-cols-8 gap-2">
-                          {carpetColors.map((color, index) => (
+                          {filteredCarpetColors.map((color, index) => (
                             <Tooltip key={color.name} content={color.name}>
                               <button
                                 onClick={() => handleCarpetColorChange(index)}
@@ -1423,7 +1423,7 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
                       <div>
                         <label className="block text-gray-200 font-medium mb-3 text-sm">Kolor obszycia</label>
                         <div className="grid grid-cols-8 gap-2">
-                          {edgeColors.map((color, index) => (
+                          {filteredEdgeColors.map((color, index) => (
                             <Tooltip key={color.name} content={color.name}>
                               <button
                                 onClick={() => updateState({ selectedEdge: index })}
@@ -1532,11 +1532,11 @@ const ConfiguratorSection = React.memo(function ConfiguratorSection() {
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-300">Kolor dywanika:</span>
-                            <span className="text-white">{carpetColors[state.selectedCarpet].name}</span>
+                            <span className="text-white">{filteredCarpetColors[state.selectedCarpet]?.name || "Nieznany"}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-300">Kolor obszycia:</span>
-                            <span className="text-white">{edgeColors[state.selectedEdge].name}</span>
+                            <span className="text-white">{filteredEdgeColors[state.selectedEdge]?.name || "Nieznany"}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-300">Tekstura:</span>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CarModelService } from '@/lib/services/CarModelService';
-import { CarBrandService } from '@/lib/services/CarBrandService';
+import { SupabaseCarModelService } from '@/lib/services/SupabaseCarModelService';
+import { SupabaseCarBrandService } from '@/lib/services/SupabaseCarBrandService';
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       filters.brandId = parseInt(brandId);
     } else if (brandName) {
       // Jeśli podano nazwę marki, najpierw znajdź jej ID
-      const brand = await CarBrandService.getCarBrandByName(brandName);
+      const brand = await SupabaseCarBrandService.getCarBrandByName(brandName);
       if (brand) {
         filters.brandId = brand.id;
       } else {
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     if (yearFrom) filters.yearFrom = parseInt(yearFrom);
     if (yearTo) filters.yearTo = parseInt(yearTo);
 
-    const carModels = await CarModelService.getCarModelsWithFilters(filters);
+    const carModels = await SupabaseCarModelService.getCarModelsWithFilters(filters);
     
     return NextResponse.json(carModels);
   } catch (error) {
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const carModel = await CarModelService.createCarModel(body);
+    const carModel = await SupabaseCarModelService.createCarModel(body);
     
     return NextResponse.json(carModel, { status: 201 });
   } catch (error) {
