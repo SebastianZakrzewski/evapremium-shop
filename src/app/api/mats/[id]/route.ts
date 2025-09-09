@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin, TABLES } from '@/lib/database/supabase';
+import { CarMatService } from '@/lib/services/carmat-service';
 
 export async function GET(
   request: NextRequest,
@@ -16,35 +16,23 @@ export async function GET(
       );
     }
 
-    // Znajdź matę po ID (konwersja z UUID)
-    const { data, error } = await supabaseAdmin
-      .from(TABLES.MATS)
-      .select('*')
-      .limit(1000);
+    const result = await CarMatService.getMatById(idNum);
 
-    if (error) throw error;
-    
-    const foundItem = (data || []).find(item => 
-      parseInt(item.id.split('-')[0], 16) === idNum
-    );
-    
-    if (!foundItem) {
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error || 'Wystąpił błąd podczas pobierania maty' },
+        { status: result.data === null ? 404 : 500 }
+      );
+    }
+
+    if (!result.data) {
       return NextResponse.json(
         { error: 'Mata nie została znaleziona' },
         { status: 404 }
       );
     }
 
-    const mat = {
-      id: parseInt(foundItem.id.split('-')[0], 16) || 0,
-      type: foundItem.matType,
-      color: foundItem.materialColor,
-      cellType: foundItem.cellStructure,
-      edgeColor: foundItem.borderColor,
-      image: foundItem.imagePath
-    };
-
-    return NextResponse.json(mat);
+    return NextResponse.json(result.data);
   } catch (error) {
     console.error('Błąd podczas pobierania maty:', error);
     return NextResponse.json(
@@ -71,50 +59,23 @@ export async function PUT(
 
     const body = await request.json();
     
-    // Znajdź matę po ID
-    const { data: allData, error: fetchError } = await supabaseAdmin
-      .from(TABLES.MATS)
-      .select('*')
-      .limit(1000);
+    const result = await CarMatService.updateMat(idNum, body);
 
-    if (fetchError) throw fetchError;
-    
-    const foundItem = (allData || []).find(item => 
-      parseInt(item.id.split('-')[0], 16) === idNum
-    );
-    
-    if (!foundItem) {
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error || 'Wystąpił błąd podczas aktualizacji maty' },
+        { status: result.data === null ? 404 : 400 }
+      );
+    }
+
+    if (!result.data) {
       return NextResponse.json(
         { error: 'Mata nie została znaleziona' },
         { status: 404 }
       );
     }
-
-    const { data, error } = await supabaseAdmin
-      .from(TABLES.MATS)
-      .update({
-        matType: body.type,
-        materialColor: body.color,
-        cellStructure: body.cellType,
-        borderColor: body.edgeColor,
-        imagePath: body.image
-      })
-      .eq('id', foundItem.id)
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    const mat = {
-      id: parseInt(data.id.split('-')[0], 16) || 0,
-      type: data.matType,
-      color: data.materialColor,
-      cellType: data.cellStructure,
-      edgeColor: data.borderColor,
-      image: data.imagePath
-    };
     
-    return NextResponse.json(mat);
+    return NextResponse.json(result.data);
   } catch (error) {
     console.error('Błąd podczas aktualizacji maty:', error);
     return NextResponse.json(
@@ -139,31 +100,14 @@ export async function DELETE(
       );
     }
 
-    // Znajdź matę po ID
-    const { data: allData, error: fetchError } = await supabaseAdmin
-      .from(TABLES.MATS)
-      .select('*')
-      .limit(1000);
+    const result = await CarMatService.deleteMat(idNum);
 
-    if (fetchError) throw fetchError;
-    
-    const foundItem = (allData || []).find(item => 
-      parseInt(item.id.split('-')[0], 16) === idNum
-    );
-    
-    if (!foundItem) {
+    if (!result.success) {
       return NextResponse.json(
-        { error: 'Mata nie została znaleziona' },
-        { status: 404 }
+        { error: result.error || 'Wystąpił błąd podczas usuwania maty' },
+        { status: 500 }
       );
     }
-
-    const { error } = await supabaseAdmin
-      .from(TABLES.MATS)
-      .delete()
-      .eq('id', foundItem.id);
-
-    if (error) throw error;
     
     return NextResponse.json({ message: 'Mata została usunięta' });
   } catch (error) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin, TABLES } from '@/lib/database/supabase';
+import { CarMatService } from '@/lib/services/carmat-service';
 
 // GET /api/mats
 export async function GET(request: NextRequest) {
@@ -11,33 +11,28 @@ export async function GET(request: NextRequest) {
     const edgeColor = searchParams.get('edgeColor');
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
+    const offset = (page - 1) * limit;
 
-    let query = supabaseAdmin.from(TABLES.MATS).select('*');
-    
-    // Zastosuj filtry
-    if (type) query = query.eq('matType', type);
-    if (color) query = query.eq('materialColor', color);
-    if (cellType) query = query.eq('cellStructure', cellType);
-    if (edgeColor) query = query.eq('borderColor', edgeColor);
+    const result = await CarMatService.getAllMats({
+      type: type || undefined,
+      color: color || undefined,
+      cellType: cellType || undefined,
+      edgeColor: edgeColor || undefined,
+      limit,
+      offset
+    });
 
-    const { data, error } = await query.order('createdAt', { ascending: true });
-
-    if (error) throw error;
-
-    // Mapowanie danych z bazy na format API
-    const mats = (data || []).map(item => ({
-      id: parseInt(item.id.split('-')[0], 16) || 0,
-      type: item.matType,
-      color: item.materialColor,
-      cellType: item.cellStructure,
-      edgeColor: item.borderColor,
-      image: item.imagePath
-    }));
+    if (!result.success) {
+      return NextResponse.json(
+        { success: false, error: result.error || 'Błąd serwera' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
-      data: mats,
-      count: mats.length,
+      data: result.data,
+      count: result.count,
       filtered: !!(type || color || cellType || edgeColor)
     });
   } catch (error) {
@@ -54,32 +49,18 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const { data, error } = await supabaseAdmin
-      .from(TABLES.MATS)
-      .insert([{
-        matType: body.type,
-        materialColor: body.color,
-        cellStructure: body.cellType,
-        borderColor: body.edgeColor,
-        imagePath: body.image
-      }])
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    const mat = {
-      id: parseInt(data.id.split('-')[0], 16) || 0,
-      type: data.matType,
-      color: data.materialColor,
-      cellType: data.cellStructure,
-      edgeColor: data.borderColor,
-      image: data.imagePath
-    };
+    const result = await CarMatService.createMat(body);
+    
+    if (!result.success) {
+      return NextResponse.json(
+        { success: false, error: result.error || 'Nieprawidłowe dane dywanika' },
+        { status: 400 }
+      );
+    }
     
     return NextResponse.json({
       success: true,
-      data: mat
+      data: result.data
     });
   } catch (error) {
     console.error('Error creating mats:', error);
