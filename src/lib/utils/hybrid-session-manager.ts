@@ -67,7 +67,7 @@ export class HybridSessionManager {
    * Sprawdza czy sesja jest ważna
    */
   static isValidSession(sessionId: string): boolean {
-    return sessionId && !sessionId.startsWith('temp-');
+    return Boolean(sessionId && !sessionId.startsWith('temp-'));
   }
 
   /**

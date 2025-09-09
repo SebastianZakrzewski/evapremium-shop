@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SupabaseCarModelService } from '@/lib/services/SupabaseCarModelService';
-import { SupabaseCarBrandService } from '@/lib/services/SupabaseCarBrandService';
+import { supabaseAdmin, TABLES } from '@/lib/database/supabase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,27 +13,33 @@ export async function GET(request: NextRequest) {
 
     const filters: any = {};
     
+    let query = supabaseAdmin.from(TABLES.CAR_MODELS).select('*');
+    
     if (brandId) {
-      filters.brandId = parseInt(brandId);
+      query = query.eq('carBrandId', parseInt(brandId));
     } else if (brandName) {
       // Jeśli podano nazwę marki, najpierw znajdź jej ID
-      const brand = await SupabaseCarBrandService.getCarBrandByName(brandName);
-      if (brand) {
-        filters.brandId = brand.id;
-      } else {
-        // Jeśli marka nie istnieje, zwróć pustą listę
+      const { data: brandData, error: brandError } = await supabaseAdmin
+        .from(TABLES.CAR_BRANDS)
+        .select('id')
+        .eq('name', brandName)
+        .single();
+      
+      if (brandError || !brandData) {
         return NextResponse.json([]);
       }
+      query = query.eq('carBrandId', brandData.id);
     }
     
-    if (bodyType) filters.bodyType = bodyType;
-    if (engineType) filters.engineType = engineType;
-    if (yearFrom) filters.yearFrom = parseInt(yearFrom);
-    if (yearTo) filters.yearTo = parseInt(yearTo);
+    if (bodyType) query = query.eq('bodyType', bodyType);
+    if (engineType) query = query.eq('engineType', engineType);
+    if (yearFrom) query = query.gte('yearFrom', parseInt(yearFrom));
+    if (yearTo) query = query.lte('yearTo', parseInt(yearTo));
 
-    const carModels = await SupabaseCarModelService.getCarModelsWithFilters(filters);
+    const { data, error } = await query.order('name', { ascending: true });
     
-    return NextResponse.json(carModels);
+    if (error) throw error;
+    return NextResponse.json(data || []);
   } catch (error) {
     console.error('Błąd podczas pobierania modeli aut:', error);
     return NextResponse.json(
@@ -48,9 +53,15 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const carModel = await SupabaseCarModelService.createCarModel(body);
+    const { data, error } = await supabaseAdmin
+      .from(TABLES.CAR_MODELS)
+      .insert([body])
+      .select()
+      .single();
+
+    if (error) throw error;
     
-    return NextResponse.json(carModel, { status: 201 });
+    return NextResponse.json(data, { status: 201 });
   } catch (error) {
     console.error('Błąd podczas tworzenia modelu auta:', error);
     return NextResponse.json(

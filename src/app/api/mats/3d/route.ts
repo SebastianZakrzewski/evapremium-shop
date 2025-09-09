@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SupabaseMatsService } from '@/lib/services/SupabaseMatsService';
+import { supabaseAdmin, TABLES } from '@/lib/database/supabase';
 
 // GET /api/mats/3d
 export async function GET(request: NextRequest) {
@@ -9,14 +9,26 @@ export async function GET(request: NextRequest) {
     const cellType = searchParams.get('cellType') || 'diamonds';
     const type = searchParams.get('type') || '3d';
 
-    // Pobierz dywaniki z określonym kolorem obszycia
-    const filter = {
-      type,
-      cellType,
-      edgeColor
-    };
+    // Pobierz dywaniki z określonymi filtrami
+    const { data, error } = await supabaseAdmin
+      .from(TABLES.MATS)
+      .select('*')
+      .eq('matType', type)
+      .eq('cellStructure', cellType)
+      .eq('borderColor', edgeColor)
+      .order('createdAt', { ascending: true });
 
-    const mats = await SupabaseMatsService.getMatsByFilter(filter);
+    if (error) throw error;
+
+    // Mapowanie danych z bazy na format API
+    const mats = (data || []).map(item => ({
+      id: parseInt(item.id.split('-')[0], 16) || 0,
+      type: item.matType,
+      color: item.materialColor,
+      cellType: item.cellStructure,
+      edgeColor: item.borderColor,
+      image: item.imagePath
+    }));
     
     return NextResponse.json({
       success: true,
