@@ -327,7 +327,7 @@ export default function CarModelsSection() {
                     className="flex items-center justify-center group cursor-pointer"
                   >
                     <Link 
-                      href={`/konfigurator?brand=${model.brand.toLowerCase()}&model=${model.name.toLowerCase()}`}
+                      href={`/modele/${model.brand.toLowerCase()}`}
                       className="flex flex-col items-center text-center transition-all duration-300 transform hover:scale-105"
                     >
                       {/* Car Model Window */}
