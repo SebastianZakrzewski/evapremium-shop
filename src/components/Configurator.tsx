@@ -6,6 +6,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { getAvailableColors, getColorInfo } from "@/lib/color-mapping";
+import { getMatImagePath } from "@/lib/image-mapping";
+
+// Mapowanie ID na typy dla funkcji getMatImagePath
+const getMatTypeForImage = (setTypeId: string): '3d' | 'classic' => {
+  if (setTypeId === 'classic') return 'classic';
+  return '3d'; // dla '3d-with-rims' i '3d-without-rims'
+};
 
 type MatColor = {
   id: string;
@@ -117,22 +124,75 @@ export default function Configurator() {
   const cellType = useMemo(() => cellTypes.find(c => c.id === selectedCellType)!, [selectedCellType]);
   const setVariant = useMemo(() => setVariants.find(v => v.id === selectedSetVariant)!, [selectedSetVariant]);
 
+  // Obraz dywanika z wszystkimi dependencies
+  const matImagePath = useMemo(() => {
+    const matType = getMatTypeForImage(selectedSetType);
+    const path = getMatImagePath(
+      matType,
+      selectedCellType as 'diamonds' | 'honey',
+      selectedMat,
+      selectedEdge
+    );
+    
+    // Debug - wyświetl ścieżkę w konsoli
+    console.log('🖼️ Obraz dywanika:', {
+      selectedSetType,
+      matType,
+      selectedCellType,
+      selectedMat,
+      selectedEdge,
+      path
+    });
+    
+    return path;
+  }, [selectedSetType, selectedCellType, selectedMat, selectedEdge]);
+
   return (
     <section className="w-full bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 md:py-16">
         <div className="flex flex-col lg:flex-row gap-10">
           <div className="flex-1">
-            <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 flex items-center justify-center">
-              <div className="text-center space-y-4">
+            <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
+              {/* Rzeczywisty obraz dywanika */}
+              <Image
+                key={`${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`}
+                src={matImagePath}
+                alt={`Dywanik ${mat.name} z obszyciem ${edge.name}`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                onError={(e) => {
+                  // Fallback do emoji jeśli obraz nie istnieje
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  const fallback = target.nextElementSibling as HTMLElement;
+                  if (fallback) fallback.style.display = 'flex';
+                }}
+              />
+              
+              {/* Fallback z emoji i kolorami */}
+              <div className="absolute inset-0 flex items-center justify-center text-center space-y-4" style={{ display: 'none' }}>
                 <div className="text-6xl">🚗</div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-center gap-2">
-                    <span className="inline-block h-6 w-6 rounded-full border-2 border-white/20" style={{ backgroundColor: mat.color }} />
-                    <span className="text-sm">Kolor: {mat.name}</span>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-center gap-3">
+                    <span 
+                      className="inline-block h-4 w-4 rounded-full border-2 shadow-lg" 
+                      style={{ 
+                        backgroundColor: mat.color,
+                        borderColor: mat.color === '#ffffff' || mat.color === '#d9d7c7' || mat.color === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
+                      }} 
+                    />
+                    <span className="text-sm font-medium">Kolor: {mat.name}</span>
                   </div>
-                  <div className="flex items-center justify-center gap-2">
-                    <span className="inline-block h-6 w-6 rounded-full border-2 border-white/20" style={{ backgroundColor: edge.hex }} />
-                    <span className="text-sm">Obszycie: {edge.name}</span>
+                  <div className="flex items-center justify-center gap-3">
+                    <span 
+                      className="inline-block h-4 w-4 rounded-full border-2 shadow-lg" 
+                      style={{ 
+                        backgroundColor: edge.hex,
+                        borderColor: edge.hex === '#ffffff' || edge.hex === '#d9d7c7' || edge.hex === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
+                      }} 
+                    />
+                    <span className="text-sm font-medium">Obszycie: {edge.name}</span>
                   </div>
                 </div>
               </div>
@@ -222,13 +282,26 @@ export default function Configurator() {
 
             <div className="mt-6">
               <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
-              <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-3 gap-3">
+              <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-4 gap-3">
                 {availableMaterialColors.map((c) => (
-                  <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedMat === c.id ? "border-white" : "border-neutral-800"} p-3 bg-neutral-900/50 hover:bg-neutral-900 transition focus-within:ring-2 focus-within:ring-white/30`}>
+                  <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-xl border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} p-4 bg-neutral-900/50 hover:bg-neutral-800 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30`}>
                     <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
-                    <div className="flex items-center gap-3">
-                      <span className="inline-block h-8 w-8 rounded-full border-2 border-white/20" style={{ backgroundColor: c.color }} />
-                      <span className="text-sm">{c.name}</span>
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="relative">
+                        <span 
+                          className="inline-block h-6 w-6 rounded-full border-2 shadow-lg" 
+                          style={{ 
+                            backgroundColor: c.color,
+                            borderColor: c.color === '#ffffff' || c.color === '#d9d7c7' || c.color === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
+                          }} 
+                        />
+                        {selectedMat === c.id && (
+                          <div className="absolute -top-1 -right-1 h-4 w-4 bg-white rounded-full flex items-center justify-center">
+                            <div className="h-2 w-2 bg-black rounded-full"></div>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-xs text-center leading-tight">{c.name}</span>
                     </div>
                   </Label>
                 ))}
@@ -237,16 +310,31 @@ export default function Configurator() {
 
             <div className="mt-6">
               <h3 className="text-sm font-medium mb-3">Kolor obszycia</h3>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-4 gap-3">
                 {availableEdgeColors.map((e) => (
                   <button
                     key={e.id}
                     onClick={() => setSelectedEdge(e.id)}
-                    className={`rounded-xl border ${selectedEdge === e.id ? "border-white" : "border-neutral-800"} p-3 flex items-center gap-3 bg-neutral-900/50 hover:bg-neutral-900 transition`}
+                    className={`rounded-xl border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} p-4 bg-neutral-900/50 hover:bg-neutral-800 transition-all duration-200`}
                     aria-pressed={selectedEdge === e.id}
                   >
-                    <span className="inline-block h-8 w-8 rounded-full border-2 border-white/20" style={{ backgroundColor: e.hex }} />
-                    <span className="text-sm">{e.name}</span>
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="relative">
+                        <span 
+                          className="inline-block h-6 w-6 rounded-full border-2 shadow-lg" 
+                          style={{ 
+                            backgroundColor: e.hex,
+                            borderColor: e.hex === '#ffffff' || e.hex === '#d9d7c7' || e.hex === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
+                          }} 
+                        />
+                        {selectedEdge === e.id && (
+                          <div className="absolute -top-1 -right-1 h-4 w-4 bg-white rounded-full flex items-center justify-center">
+                            <div className="h-2 w-2 bg-black rounded-full"></div>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-xs text-center leading-tight">{e.name}</span>
+                    </div>
                   </button>
                 ))}
               </div>

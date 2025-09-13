@@ -38,6 +38,7 @@ export const colorMapping = {
   'blue': { name: "Niebieski", color: "#0084d1" },
   'red': { name: "Czerwony", color: "#d12d1c" },
   'yellow': { name: "Żółty", color: "#ffe100" },
+  'darkgreen': { name: "Ciemnozielony", color: "#1b5e3c" },
 };
 
 // Kolory dostępne dla każdej struktury komórek (na podstawie analizy bazy danych)
