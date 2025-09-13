@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getAvailableColors, getColorInfo } from "@/lib/color-mapping";
 import { getMatImagePath } from "@/lib/image-mapping";
 
@@ -67,12 +68,39 @@ const setVariants: SetVariant[] = [
 ];
 
 export default function Configurator() {
+  const [currentSection, setCurrentSection] = useState<number>(0);
   const [selectedMat, setSelectedMat] = useState<string>("black");
   const [selectedEdge, setSelectedEdge] = useState<string>("black");
   const [selectedHeelPad, setSelectedHeelPad] = useState<string>("brak");
   const [selectedSetType, setSelectedSetType] = useState<string>(setTypes[0].id);
   const [selectedCellType, setSelectedCellType] = useState<string>(cellTypes[0].id);
   const [selectedSetVariant, setSelectedSetVariant] = useState<string>(setVariants[0].id);
+
+  const totalSections = 6;
+
+  const nextSection = () => {
+    if (currentSection < totalSections - 1) {
+      setCurrentSection(currentSection + 1);
+    }
+  };
+
+  const prevSection = () => {
+    if (currentSection > 0) {
+      setCurrentSection(currentSection - 1);
+    }
+  };
+
+  const getSectionTitle = (section: number) => {
+    const titles = [
+      "Rodzaj zestawu",
+      "Rodzaj dywaników", 
+      "Rodzaj komórek",
+      "Kolory",
+      "Dodatki",
+      "Podsumowanie"
+    ];
+    return titles[section] || "";
+  };
 
   // Dynamiczne kolory na podstawie wybranej struktury komórek
   const availableMaterialColors = useMemo(() => {
@@ -151,6 +179,7 @@ export default function Configurator() {
     <section className="w-full bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 md:py-16">
         <div className="flex flex-col lg:flex-row gap-10">
+          {/* Lewa strona - wizualizacja */}
           <div className="flex-1">
             <div className="relative w-full h-[700px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
               {/* Rzeczywisty obraz dywanika */}
@@ -208,178 +237,250 @@ export default function Configurator() {
               Wizualizacja poglądowa. Docelowy kształt dywanika dopasujemy do Twojego modelu auta.
             </p>
           </div>
-          <div className="w-full lg:w-[420px] xl:w-[460px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-5 md:p-6 h-fit">
-            <h2 className="text-xl md:text-2xl font-semibold">Skonfiguruj swoje dywaniki</h2>
-            <p className="text-white/70 text-sm mt-1">Zachowujemy stylistykę EvaPremium i jakość premium.</p>
 
-            <Separator className="my-5 bg-neutral-800" />
-
-            <div>
-              <h3 className="text-sm font-medium mb-3">Rodzaj dywaników</h3>
-              <RadioGroup value={selectedSetType} onValueChange={setSelectedSetType} className="space-y-3">
-                {setTypes.map((s) => (
-                  <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
-                    <RadioGroupItem value={s.id} id={`set-${s.id}`} className="sr-only" />
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-sm font-medium">{s.name}</div>
-                        <div className="text-xs text-white/60">{s.description}</div>
-                      </div>
-                      {s.priceModifier !== 0 && (
-                        <div className={`text-xs font-medium ${s.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                          {s.priceModifier > 0 ? '+' : ''}{s.priceModifier} zł
-                        </div>
-                      )}
-                    </div>
-                  </Label>
-                ))}
-              </RadioGroup>
-            </div>
-
-            <div className="mt-6">
-              <h3 className="text-sm font-medium mb-3">Rodzaj komórek</h3>
-              <RadioGroup value={selectedCellType} onValueChange={setSelectedCellType} className="space-y-3">
-                {cellTypes.map((c) => (
-                  <Label key={c.id} htmlFor={`cell-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedCellType === c.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
-                    <RadioGroupItem value={c.id} id={`cell-${c.id}`} className="sr-only" />
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-sm font-medium">{c.name}</div>
-                        <div className="text-xs text-white/60">{c.description}</div>
-                      </div>
-                      {c.priceModifier !== 0 && (
-                        <div className={`text-xs font-medium ${c.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                          {c.priceModifier > 0 ? '+' : ''}{c.priceModifier} zł
-                        </div>
-                      )}
-                    </div>
-                  </Label>
-                ))}
-              </RadioGroup>
-            </div>
-
-            <div className="mt-6">
-              <h3 className="text-sm font-medium mb-3">Rodzaj zestawu</h3>
-              <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
-                {setVariants.map((v) => (
-                  <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
-                    <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-sm font-medium">{v.name}</div>
-                        <div className="text-xs text-white/60">{v.description}</div>
-                      </div>
-                      {v.priceModifier !== 0 && (
-                        <div className={`text-xs font-medium ${v.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                          {v.priceModifier > 0 ? '+' : ''}{v.priceModifier} zł
-                        </div>
-                      )}
-                    </div>
-                  </Label>
-                ))}
-              </RadioGroup>
-            </div>
-
-            <div className="mt-6">
-              <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
-              <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-4 gap-3">
-                {availableMaterialColors.map((c) => (
-                  <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-xl border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} p-4 bg-neutral-900/50 hover:bg-neutral-800 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30`}>
-                    <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="relative">
-                        <span 
-                          className="inline-block h-6 w-6 rounded-full border-2 shadow-lg" 
-                          style={{ 
-                            backgroundColor: c.color,
-                            borderColor: c.color === '#ffffff' || c.color === '#d9d7c7' || c.color === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
-                          }} 
-                        />
-                        {selectedMat === c.id && (
-                          <div className="absolute -top-1 -right-1 h-4 w-4 bg-white rounded-full flex items-center justify-center">
-                            <div className="h-2 w-2 bg-black rounded-full"></div>
-                          </div>
-                        )}
-                      </div>
-                      <span className="text-xs text-center leading-tight">{c.name}</span>
-                    </div>
-                  </Label>
-                ))}
-              </RadioGroup>
-            </div>
-
-            <div className="mt-6">
-              <h3 className="text-sm font-medium mb-3">Kolor obszycia</h3>
-              <div className="grid grid-cols-4 gap-3">
-                {availableEdgeColors.map((e) => (
-                  <button
-                    key={e.id}
-                    onClick={() => setSelectedEdge(e.id)}
-                    className={`rounded-xl border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} p-4 bg-neutral-900/50 hover:bg-neutral-800 transition-all duration-200`}
-                    aria-pressed={selectedEdge === e.id}
-                  >
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="relative">
-                        <span 
-                          className="inline-block h-6 w-6 rounded-full border-2 shadow-lg" 
-                          style={{ 
-                            backgroundColor: e.hex,
-                            borderColor: e.hex === '#ffffff' || e.hex === '#d9d7c7' || e.hex === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
-                          }} 
-                        />
-                        {selectedEdge === e.id && (
-                          <div className="absolute -top-1 -right-1 h-4 w-4 bg-white rounded-full flex items-center justify-center">
-                            <div className="h-2 w-2 bg-black rounded-full"></div>
-                          </div>
-                        )}
-                      </div>
-                      <span className="text-xs text-center leading-tight">{e.name}</span>
-                    </div>
-                  </button>
-                ))}
+          {/* Prawa strona - konfigurator z sekcjami */}
+          <div className="w-full lg:w-[420px] xl:w-[460px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-5 md:p-6 h-[700px] flex flex-col">
+            {/* Header z progressem */}
+            <div className="mb-6">
+              <h2 className="text-xl md:text-2xl font-semibold">Skonfiguruj swoje dywaniki</h2>
+              <p className="text-white/70 text-sm mt-1">Zachowujemy stylistykę EvaPremium i jakość premium.</p>
+              
+              {/* Progress indicator */}
+              <div className="mt-4 flex items-center gap-2">
+                <div className="flex-1 bg-neutral-800 rounded-full h-2">
+                  <div 
+                    className="bg-white rounded-full h-2 transition-all duration-300"
+                    style={{ width: `${((currentSection + 1) / totalSections) * 100}%` }}
+                  />
+                </div>
+                <span className="text-xs text-white/60">
+                  {currentSection + 1} / {totalSections}
+                </span>
               </div>
             </div>
 
-            <div className="mt-6">
-              <h3 className="text-sm font-medium mb-3">Ochraniacz pod piętę</h3>
-              <RadioGroup value={selectedHeelPad} onValueChange={setSelectedHeelPad} className="grid grid-cols-2 gap-3">
-                {[
-                  { id: "brak", name: "Brak" },
-                  { id: "gumowy", name: "Gumowy" },
-                ].map((h) => (
-                  <Label key={h.id} htmlFor={`heel-${h.id}`} className={`cursor-pointer rounded-xl border ${selectedHeelPad === h.id ? "border-white" : "border-neutral-800"} px-4 py-3 bg-neutral-900/50 hover:bg-neutral-900 transition` }>
-                    <RadioGroupItem value={h.id} id={`heel-${h.id}`} className="sr-only" />
-                    <span className="text-sm">{h.name}</span>
-                  </Label>
-                ))}
-              </RadioGroup>
-            </div>
+            <Separator className="mb-6 bg-neutral-800" />
 
-            <Separator className="my-5 bg-neutral-800" />
+            {/* Sekcja 1: Rodzaj zestawu */}
+            {currentSection === 0 && (
+              <div className="flex-1 space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj zestawu</h3>
+                  <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
+                    {setVariants.map((v) => (
+                      <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                        <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="text-sm font-medium">{v.name}</div>
+                            <div className="text-xs text-white/60">{v.description}</div>
+                          </div>
+                          {v.priceModifier !== 0 && (
+                            <div className={`text-xs font-medium ${v.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                              {v.priceModifier > 0 ? '+' : ''}{v.priceModifier} zł
+                            </div>
+                          )}
+                        </div>
+                      </Label>
+                    ))}
+                  </RadioGroup>
+                </div>
+              </div>
+            )}
 
-            <div className="space-y-3">
-              <div className="text-sm">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-white/70">Wybrana konfiguracja:</span>
+            {/* Sekcja 2: Rodzaj dywaników */}
+            {currentSection === 1 && (
+              <div className="flex-1 space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj dywaników</h3>
+                  <RadioGroup value={selectedSetType} onValueChange={setSelectedSetType} className="space-y-3">
+                    {setTypes.map((s) => (
+                      <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                        <RadioGroupItem value={s.id} id={`set-${s.id}`} className="sr-only" />
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="text-sm font-medium">{s.name}</div>
+                            <div className="text-xs text-white/60">{s.description}</div>
+                          </div>
+                          {s.priceModifier !== 0 && (
+                            <div className={`text-xs font-medium ${s.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                              {s.priceModifier > 0 ? '+' : ''}{s.priceModifier} zł
+                            </div>
+                          )}
+                        </div>
+                      </Label>
+                    ))}
+                  </RadioGroup>
                 </div>
-                <div className="text-xs text-white/60 space-y-1">
-                  <div>• {setType.name}</div>
-                  <div>• {cellType.name}</div>
-                  <div>• {setVariant.name}</div>
-                  <div>• {mat.name} + {edge.name} obszycie</div>
-                  {selectedHeelPad !== "brak" && <div>• Ochraniacz pod piętę</div>}
+              </div>
+            )}
+
+            {/* Sekcja 3: Rodzaj komórek */}
+            {currentSection === 2 && (
+              <div className="flex-1 space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj komórek</h3>
+                  <RadioGroup value={selectedCellType} onValueChange={setSelectedCellType} className="space-y-3">
+                    {cellTypes.map((c) => (
+                      <Label key={c.id} htmlFor={`cell-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedCellType === c.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                        <RadioGroupItem value={c.id} id={`cell-${c.id}`} className="sr-only" />
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="text-sm font-medium">{c.name}</div>
+                            <div className="text-xs text-white/60">{c.description}</div>
+                          </div>
+                          {c.priceModifier !== 0 && (
+                            <div className={`text-xs font-medium ${c.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                              {c.priceModifier > 0 ? '+' : ''}{c.priceModifier} zł
+                            </div>
+                          )}
+                        </div>
+                      </Label>
+                    ))}
+                  </RadioGroup>
                 </div>
+              </div>
+            )}
+
+            {/* Sekcja 4: Kolory */}
+            {currentSection === 3 && (
+              <div className="flex-1 space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
+                  <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-5 gap-3">
+                    {availableMaterialColors.map((c) => (
+                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} p-2 bg-neutral-900/50 hover:bg-neutral-800 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30`}>
+                        <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
+                        <div className="flex flex-col items-center gap-1">
+                          <div className="relative">
+                            <div 
+                              className="h-4 w-4 rounded border-2 shadow-lg" 
+                              style={{ 
+                                backgroundColor: c.color,
+                                borderColor: c.color === '#ffffff' || c.color === '#d9d7c7' || c.color === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
+                              }} 
+                            />
+                            {selectedMat === c.id && (
+                              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-white rounded flex items-center justify-center">
+                                <div className="h-1 w-1 bg-black rounded"></div>
+                              </div>
+                            )}
+                          </div>
+                          <span className="text-xs text-center leading-tight">{c.name}</span>
+                        </div>
+                      </Label>
+                    ))}
+                  </RadioGroup>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-medium mb-3">Kolor obszycia</h3>
+                  <div className="grid grid-cols-5 gap-3">
+                    {availableEdgeColors.map((e) => (
+                      <button
+                        key={e.id}
+                        onClick={() => setSelectedEdge(e.id)}
+                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} p-2 bg-neutral-900/50 hover:bg-neutral-800 transition-all duration-200`}
+                        aria-pressed={selectedEdge === e.id}
+                      >
+                        <div className="flex flex-col items-center gap-1">
+                          <div className="relative">
+                            <div 
+                              className="h-4 w-4 rounded border-2 shadow-lg" 
+                              style={{ 
+                                backgroundColor: e.hex,
+                                borderColor: e.hex === '#ffffff' || e.hex === '#d9d7c7' || e.hex === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
+                              }} 
+                            />
+                            {selectedEdge === e.id && (
+                              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-white rounded flex items-center justify-center">
+                                <div className="h-1 w-1 bg-black rounded"></div>
+                              </div>
+                            )}
+                          </div>
+                          <span className="text-xs text-center leading-tight">{e.name}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Sekcja 5: Dodatki */}
+            {currentSection === 4 && (
+              <div className="flex-1 space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium mb-3">Ochraniacz pod piętę</h3>
+                  <RadioGroup value={selectedHeelPad} onValueChange={setSelectedHeelPad} className="grid grid-cols-2 gap-3">
+                    {[
+                      { id: "brak", name: "Brak" },
+                      { id: "gumowy", name: "Gumowy" },
+                    ].map((h) => (
+                      <Label key={h.id} htmlFor={`heel-${h.id}`} className={`cursor-pointer rounded-xl border ${selectedHeelPad === h.id ? "border-white" : "border-neutral-800"} px-4 py-3 bg-neutral-900/50 hover:bg-neutral-900 transition` }>
+                        <RadioGroupItem value={h.id} id={`heel-${h.id}`} className="sr-only" />
+                        <span className="text-sm">{h.name}</span>
+                      </Label>
+                    ))}
+                  </RadioGroup>
+                </div>
+              </div>
+            )}
+
+            {/* Sekcja 6: Podsumowanie */}
+            {currentSection === 5 && (
+              <div className="flex-1 space-y-6">
+                <div className="space-y-3">
+                  <div className="text-sm">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-white/70">Wybrana konfiguracja:</span>
+                    </div>
+                    <div className="text-xs text-white/60 space-y-1">
+                      <div>• {setVariant.name}</div>
+                      <div>• {setType.name}</div>
+                      <div>• {cellType.name}</div>
+                      <div>• {mat.name} + {edge.name} obszycie</div>
+                      {selectedHeelPad !== "brak" && <div>• Ochraniacz pod piętę</div>}
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-white/70 text-xs">Cena wstępna</p>
+                      <p className="text-2xl font-semibold">{price} zł</p>
+                    </div>
+                    <Button className="bg-white text-black hover:bg-white/90" onClick={() => window.open("/checkout", "_blank", "noopener,noreferrer")}>Przejdź do zamówienia</Button>
+                  </div>
+                </div>
+                <p className="text-xs text-white/60">Finalna cena może się różnić w zależności od modelu auta.</p>
+              </div>
+            )}
+
+            {/* Navigation buttons */}
+            <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
+              <Button
+                variant="outline"
+                onClick={prevSection}
+                disabled={currentSection === 0}
+                className="flex items-center gap-2 border-neutral-700 text-white hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Wstecz
+              </Button>
+              
+              <div className="text-xs text-white/60">
+                {getSectionTitle(currentSection)}
               </div>
               
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/70 text-xs">Cena wstępna</p>
-                  <p className="text-2xl font-semibold">{price} zł</p>
-                </div>
-                <Button className="bg-white text-black hover:bg-white/90" onClick={() => window.open("/checkout", "_blank", "noopener,noreferrer")}>Przejdź do zamówienia</Button>
-              </div>
+              <Button
+                onClick={nextSection}
+                disabled={currentSection === totalSections - 1}
+                className="flex items-center gap-2 bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Dalej
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
-            <p className="mt-2 text-xs text-white/60">Finalna cena może się różnić w zależności od modelu auta.</p>
           </div>
         </div>
       </div>
