@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Mats {
+  id            String   @id @default(uuid())
+  matType       String   // typ maty (3d, classic, etc.)
+  materialColor String   // kolor materiału
+  cellStructure String   // struktura komórek (diamonds, squares, etc.)
+  borderColor   String   // kolor obszycia
+  imagePath     String   // ścieżka do obrazu
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("Mats")
+}
+
+model CarBrand {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  displayName String?
+  logo        String?
+  description String?
+  website     String?
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  carModels   CarModel[]
+}
+
+model CarModel {
+  id          Int      @id @default(autoincrement())
+  name        String
+  displayName String?
+  yearFrom    Int?
+  yearTo      Int?
+  generation  String?
+  bodyType    String? // sedan, suv, hatchback, etc.
+  engineType  String? // petrol, diesel, electric, hybrid
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relation to CarBrand
+  carBrandId Int
+  carBrand   CarBrand @relation(fields: [carBrandId], references: [id], onDelete: Cascade)
+
+  @@unique([name, carBrandId, yearFrom])
+}
