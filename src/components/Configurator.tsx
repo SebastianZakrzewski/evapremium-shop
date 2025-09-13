@@ -347,26 +347,11 @@ export default function Configurator() {
               <div className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
-                  <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-5 gap-3">
+                  <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-7 gap-1.5">
                     {availableMaterialColors.map((c) => (
-                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} p-2 bg-neutral-900/50 hover:bg-neutral-800 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30`}>
+                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square`} style={{ backgroundColor: c.color }}>
                         <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
-                        <div className="flex flex-col items-center gap-1">
-                          <div className="relative">
-                            <div 
-                              className="h-4 w-4 rounded border-2 shadow-lg" 
-                              style={{ 
-                                backgroundColor: c.color,
-                                borderColor: c.color === '#ffffff' || c.color === '#d9d7c7' || c.color === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
-                              }} 
-                            />
-                            {selectedMat === c.id && (
-                              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-white rounded flex items-center justify-center">
-                                <div className="h-1 w-1 bg-black rounded"></div>
-                              </div>
-                            )}
-                          </div>
-                          <span className="text-xs text-center leading-tight">{c.name}</span>
+                        <div className="flex items-center justify-center h-full">
                         </div>
                       </Label>
                     ))}
@@ -375,30 +360,16 @@ export default function Configurator() {
 
                 <div>
                   <h3 className="text-sm font-medium mb-3">Kolor obszycia</h3>
-                  <div className="grid grid-cols-5 gap-3">
+                  <div className="grid grid-cols-7 gap-1.5">
                     {availableEdgeColors.map((e) => (
                       <button
                         key={e.id}
                         onClick={() => setSelectedEdge(e.id)}
-                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} p-2 bg-neutral-900/50 hover:bg-neutral-800 transition-all duration-200`}
+                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 transition-all duration-200 aspect-square cursor-pointer`}
+                        style={{ backgroundColor: e.hex }}
                         aria-pressed={selectedEdge === e.id}
                       >
-                        <div className="flex flex-col items-center gap-1">
-                          <div className="relative">
-                            <div 
-                              className="h-4 w-4 rounded border-2 shadow-lg" 
-                              style={{ 
-                                backgroundColor: e.hex,
-                                borderColor: e.hex === '#ffffff' || e.hex === '#d9d7c7' || e.hex === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
-                              }} 
-                            />
-                            {selectedEdge === e.id && (
-                              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-white rounded flex items-center justify-center">
-                                <div className="h-1 w-1 bg-black rounded"></div>
-                              </div>
-                            )}
-                          </div>
-                          <span className="text-xs text-center leading-tight">{e.name}</span>
+                        <div className="flex items-center justify-center h-full">
                         </div>
                       </button>
                     ))}
