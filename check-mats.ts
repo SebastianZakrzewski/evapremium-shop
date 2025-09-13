@@ -14,61 +14,61 @@ async function checkMats() {
     
     console.log('\nPrzykładowe rekordy:');
     mats.forEach((mat, index) => {
-      console.log(`${index + 1}. ID: ${mat.id}, Kolor: ${mat.color}, Typ: ${mat.type}, Komórki: ${mat.cellType}, Obszycie: ${mat.edgeColor}`);
+      console.log(`${index + 1}. ID: ${mat.id}, Kolor: ${mat.materialColor}, Typ: ${mat.matType}, Komórki: ${mat.cellStructure}, Obszycie: ${mat.borderColor}`);
     });
     
     // Sprawdź unikalne kolory
     const colors = await prisma.mats.findMany({
       select: {
-        color: true
+        materialColor: true
       },
-      distinct: ['color']
+      distinct: ['materialColor']
     });
     
     console.log('\nDostępne kolory:');
     colors.forEach(color => {
-      console.log(`- ${color.color}`);
+      console.log(`- ${color.materialColor}`);
     });
 
     // Sprawdź dywaniki z czarnym obszyciem
     const blackEdgeMats = await prisma.mats.findMany({
       where: {
-        edgeColor: 'black'
+        borderColor: 'black'
       }
     });
     
     console.log('\nDywaniki z czarnym obszyciem:');
     blackEdgeMats.forEach((mat, index) => {
-      console.log(`${index + 1}. ID: ${mat.id}, Kolor: ${mat.color}, Typ: ${mat.type}, Komórki: ${mat.cellType}, Obszycie: ${mat.edgeColor}`);
-      console.log(`   Obraz: ${mat.image}`);
+      console.log(`${index + 1}. ID: ${mat.id}, Kolor: ${mat.materialColor}, Typ: ${mat.matType}, Komórki: ${mat.cellStructure}, Obszycie: ${mat.borderColor}`);
+      console.log(`   Obraz: ${mat.imagePath}`);
     });
 
     // Sprawdź dywaniki klasyczne z czarnym obszyciem
     const classicBlackEdgeMats = await prisma.mats.findMany({
       where: {
-        edgeColor: 'black',
-        type: 'classic'
+        borderColor: 'black',
+        matType: 'classic'
       }
     });
     
     console.log('\nDywaniki klasyczne z czarnym obszyciem:');
     classicBlackEdgeMats.forEach((mat, index) => {
-      console.log(`${index + 1}. ID: ${mat.id}, Kolor: ${mat.color}, Typ: ${mat.type}, Komórki: ${mat.cellType}, Obszycie: ${mat.edgeColor}`);
-      console.log(`   Obraz: ${mat.image}`);
+      console.log(`${index + 1}. ID: ${mat.id}, Kolor: ${mat.materialColor}, Typ: ${mat.matType}, Komórki: ${mat.cellStructure}, Obszycie: ${mat.borderColor}`);
+      console.log(`   Obraz: ${mat.imagePath}`);
     });
 
     // Sprawdź dywaniki 3D z czarnym obszyciem
     const threeDBlackEdgeMats = await prisma.mats.findMany({
       where: {
-        edgeColor: 'black',
-        type: '3d'
+        borderColor: 'black',
+        matType: '3d'
       }
     });
     
     console.log('\nDywaniki 3D z czarnym obszyciem:');
     threeDBlackEdgeMats.forEach((mat, index) => {
-      console.log(`${index + 1}. ID: ${mat.id}, Kolor: ${mat.color}, Typ: ${mat.type}, Komórki: ${mat.cellType}, Obszycie: ${mat.edgeColor}`);
-      console.log(`   Obraz: ${mat.image}`);
+      console.log(`${index + 1}. ID: ${mat.id}, Kolor: ${mat.materialColor}, Typ: ${mat.matType}, Komórki: ${mat.cellStructure}, Obszycie: ${mat.borderColor}`);
+      console.log(`   Obraz: ${mat.imagePath}`);
     });
     
   } catch (error) {

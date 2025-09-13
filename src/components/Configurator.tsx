@@ -1,10 +1,11 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { getAvailableColors, getColorInfo } from "@/lib/color-mapping";
 
 type MatColor = {
   id: string;
@@ -39,17 +40,7 @@ type SetVariant = {
   priceModifier: number;
 };
 
-const matColors: MatColor[] = [
-  { id: "black", name: "Czarny", swatch: "/images/konfigurator/mats/black.webp" },
-  { id: "grey", name: "Szary", swatch: "/images/konfigurator/mats/grey.webp" },
-  { id: "beige", name: "Beżowy", swatch: "/images/konfigurator/mats/beige.webp" },
-];
-
-const edgeColors: EdgeColor[] = [
-  { id: "black", name: "Czarny", hex: "#111111" },
-  { id: "red", name: "Czerwony", hex: "#ef4444" },
-  { id: "grey", name: "Szary", hex: "#6b7280" },
-];
+// Kolory będą generowane dynamicznie na podstawie wybranej struktury komórek
 
 const setTypes: SetType[] = [
   { id: "3d-with-rims", name: "3D z rantami", description: "Dywaniki 3D z obszyciem rantowym", priceModifier: 0 },
@@ -58,9 +49,8 @@ const setTypes: SetType[] = [
 ];
 
 const cellTypes: CellType[] = [
-  { id: "rhombus", name: "Romby", description: "Struktura rombowa", priceModifier: 0 },
-  { id: "honeycomb", name: "Plaster miodu", description: "Struktura plastra miodu", priceModifier: 10 },
-  { id: "diamonds", name: "Diamenty", description: "Struktura diamentowa", priceModifier: 5 },
+  { id: "diamonds", name: "Romby", description: "Struktura rombowa", priceModifier: 0 },
+  { id: "honey", name: "Plaster miodu", description: "Struktura plastra miodu", priceModifier: 10 },
 ];
 
 const setVariants: SetVariant[] = [
@@ -70,12 +60,39 @@ const setVariants: SetVariant[] = [
 ];
 
 export default function Configurator() {
-  const [selectedMat, setSelectedMat] = useState<string>(matColors[0].id);
-  const [selectedEdge, setSelectedEdge] = useState<string>(edgeColors[0].id);
+  const [selectedMat, setSelectedMat] = useState<string>("black");
+  const [selectedEdge, setSelectedEdge] = useState<string>("black");
   const [selectedHeelPad, setSelectedHeelPad] = useState<string>("brak");
   const [selectedSetType, setSelectedSetType] = useState<string>(setTypes[0].id);
   const [selectedCellType, setSelectedCellType] = useState<string>(cellTypes[0].id);
   const [selectedSetVariant, setSelectedSetVariant] = useState<string>(setVariants[0].id);
+
+  // Dynamiczne kolory na podstawie wybranej struktury komórek
+  const availableMaterialColors = useMemo(() => {
+    return getAvailableColors(selectedCellType, 'material').map(colorKey => ({
+      id: colorKey,
+      name: getColorInfo(colorKey).name,
+      color: getColorInfo(colorKey).color
+    }));
+  }, [selectedCellType]);
+
+  const availableEdgeColors = useMemo(() => {
+    return getAvailableColors(selectedCellType, 'border').map(colorKey => ({
+      id: colorKey,
+      name: getColorInfo(colorKey).name,
+      hex: getColorInfo(colorKey).color
+    }));
+  }, [selectedCellType]);
+
+  // Resetuj wybrane kolory jeśli nie są dostępne dla nowej struktury komórek
+  useEffect(() => {
+    if (!availableMaterialColors.find(c => c.id === selectedMat)) {
+      setSelectedMat(availableMaterialColors[0]?.id || "black");
+    }
+    if (!availableEdgeColors.find(c => c.id === selectedEdge)) {
+      setSelectedEdge(availableEdgeColors[0]?.id || "black");
+    }
+  }, [selectedCellType, availableMaterialColors, availableEdgeColors, selectedMat, selectedEdge]);
 
   const price = useMemo(() => {
     let base = 219; // PLN, starter price
@@ -94,8 +111,8 @@ export default function Configurator() {
     return Math.max(base, 99); // Minimalna cena 99 zł
   }, [selectedEdge, selectedHeelPad, selectedSetType, selectedCellType, selectedSetVariant]);
 
-  const mat = useMemo(() => matColors.find(m => m.id === selectedMat)!, [selectedMat]);
-  const edge = useMemo(() => edgeColors.find(e => e.id === selectedEdge)!, [selectedEdge]);
+  const mat = useMemo(() => availableMaterialColors.find(m => m.id === selectedMat)!, [selectedMat, availableMaterialColors]);
+  const edge = useMemo(() => availableEdgeColors.find(e => e.id === selectedEdge)!, [selectedEdge, availableEdgeColors]);
   const setType = useMemo(() => setTypes.find(s => s.id === selectedSetType)!, [selectedSetType]);
   const cellType = useMemo(() => cellTypes.find(c => c.id === selectedCellType)!, [selectedCellType]);
   const setVariant = useMemo(() => setVariants.find(v => v.id === selectedSetVariant)!, [selectedSetVariant]);
@@ -105,20 +122,25 @@ export default function Configurator() {
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 md:py-16">
         <div className="flex flex-col lg:flex-row gap-10">
           <div className="flex-1">
-            <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
-              <Image
-                src={mat.swatch}
-                alt={`Dywanik ${mat.name}`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                priority
-              />
+            <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 flex items-center justify-center">
+              <div className="text-center space-y-4">
+                <div className="text-6xl">🚗</div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="inline-block h-6 w-6 rounded-full border-2 border-white/20" style={{ backgroundColor: mat.color }} />
+                    <span className="text-sm">Kolor: {mat.name}</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="inline-block h-6 w-6 rounded-full border-2 border-white/20" style={{ backgroundColor: edge.hex }} />
+                    <span className="text-sm">Obszycie: {edge.name}</span>
+                  </div>
+                </div>
+              </div>
               <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-4 right-4 text-xs md:text-sm bg-black/60 backdrop-blur px-3 py-1.5 rounded-full border border-neutral-800">
                   <div>Typ: {setType.name}</div>
                   <div>Komórki: {cellType.name}</div>
-                  <div>Krawędź: <span style={{ color: edge.hex }}>{edge.name}</span></div>
+                  <div>Zestaw: {setVariant.name}</div>
                 </div>
               </div>
             </div>
@@ -201,13 +223,13 @@ export default function Configurator() {
             <div className="mt-6">
               <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
               <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-3 gap-3">
-                {matColors.map((c) => (
-                  <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedMat === c.id ? "border-white" : "border-neutral-800"} overflow-hidden focus-within:ring-2 focus-within:ring-white/30`}>
+                {availableMaterialColors.map((c) => (
+                  <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedMat === c.id ? "border-white" : "border-neutral-800"} p-3 bg-neutral-900/50 hover:bg-neutral-900 transition focus-within:ring-2 focus-within:ring-white/30`}>
                     <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
-                    <div className="relative aspect-square w-full">
-                      <Image src={c.swatch} alt={c.name} fill className="object-cover" sizes="100px" />
+                    <div className="flex items-center gap-3">
+                      <span className="inline-block h-8 w-8 rounded-full border-2 border-white/20" style={{ backgroundColor: c.color }} />
+                      <span className="text-sm">{c.name}</span>
                     </div>
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-center text-xs py-1">{c.name}</div>
                   </Label>
                 ))}
               </RadioGroup>
@@ -216,14 +238,14 @@ export default function Configurator() {
             <div className="mt-6">
               <h3 className="text-sm font-medium mb-3">Kolor obszycia</h3>
               <div className="grid grid-cols-3 gap-3">
-                {edgeColors.map((e) => (
+                {availableEdgeColors.map((e) => (
                   <button
                     key={e.id}
                     onClick={() => setSelectedEdge(e.id)}
                     className={`rounded-xl border ${selectedEdge === e.id ? "border-white" : "border-neutral-800"} p-3 flex items-center gap-3 bg-neutral-900/50 hover:bg-neutral-900 transition`}
                     aria-pressed={selectedEdge === e.id}
                   >
-                    <span className="inline-block h-5 w-5 rounded-full" style={{ backgroundColor: e.hex }} />
+                    <span className="inline-block h-8 w-8 rounded-full border-2 border-white/20" style={{ backgroundColor: e.hex }} />
                     <span className="text-sm">{e.name}</span>
                   </button>
                 ))}
