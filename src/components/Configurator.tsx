@@ -18,6 +18,27 @@ type EdgeColor = {
   hex: string;
 };
 
+type SetType = {
+  id: string;
+  name: string;
+  description: string;
+  priceModifier: number;
+};
+
+type CellType = {
+  id: string;
+  name: string;
+  description: string;
+  priceModifier: number;
+};
+
+type SetVariant = {
+  id: string;
+  name: string;
+  description: string;
+  priceModifier: number;
+};
+
 const matColors: MatColor[] = [
   { id: "black", name: "Czarny", swatch: "/images/konfigurator/mats/black.webp" },
   { id: "grey", name: "Szary", swatch: "/images/konfigurator/mats/grey.webp" },
@@ -30,20 +51,54 @@ const edgeColors: EdgeColor[] = [
   { id: "grey", name: "Szary", hex: "#6b7280" },
 ];
 
+const setTypes: SetType[] = [
+  { id: "3d-with-rims", name: "3D z rantami", description: "Dywaniki 3D z obszyciem rantowym", priceModifier: 0 },
+  { id: "3d-without-rims", name: "3D bez rantów", description: "Dywaniki 3D bez obszycia rantowego", priceModifier: -20 },
+  { id: "classic", name: "Classic", description: "Klasyczne dywaniki płaskie", priceModifier: -40 },
+];
+
+const cellTypes: CellType[] = [
+  { id: "rhombus", name: "Romby", description: "Struktura rombowa", priceModifier: 0 },
+  { id: "honeycomb", name: "Plaster miodu", description: "Struktura plastra miodu", priceModifier: 10 },
+  { id: "diamonds", name: "Diamenty", description: "Struktura diamentowa", priceModifier: 5 },
+];
+
+const setVariants: SetVariant[] = [
+  { id: "basic", name: "Podstawowy", description: "4 dywaniki (przód + tył)", priceModifier: 0 },
+  { id: "premium", name: "Premium", description: "5 dywaników (przód + tył + bagażnik)", priceModifier: 50 },
+  { id: "complete", name: "Kompletny", description: "6 dywaników (przód + tył + bagażnik + dodatkowe)", priceModifier: 80 },
+];
+
 export default function Configurator() {
   const [selectedMat, setSelectedMat] = useState<string>(matColors[0].id);
   const [selectedEdge, setSelectedEdge] = useState<string>(edgeColors[0].id);
   const [selectedHeelPad, setSelectedHeelPad] = useState<string>("brak");
+  const [selectedSetType, setSelectedSetType] = useState<string>(setTypes[0].id);
+  const [selectedCellType, setSelectedCellType] = useState<string>(cellTypes[0].id);
+  const [selectedSetVariant, setSelectedSetVariant] = useState<string>(setVariants[0].id);
 
   const price = useMemo(() => {
     let base = 219; // PLN, starter price
     if (selectedHeelPad !== "brak") base += 29;
     if (selectedEdge === "red") base += 10; // small premium for contrast edge
-    return base;
-  }, [selectedEdge, selectedHeelPad]);
+    
+    // Dodaj modyfikatory cenowe dla nowych opcji
+    const setType = setTypes.find(s => s.id === selectedSetType);
+    const cellType = cellTypes.find(c => c.id === selectedCellType);
+    const setVariant = setVariants.find(v => v.id === selectedSetVariant);
+    
+    if (setType) base += setType.priceModifier;
+    if (cellType) base += cellType.priceModifier;
+    if (setVariant) base += setVariant.priceModifier;
+    
+    return Math.max(base, 99); // Minimalna cena 99 zł
+  }, [selectedEdge, selectedHeelPad, selectedSetType, selectedCellType, selectedSetVariant]);
 
   const mat = useMemo(() => matColors.find(m => m.id === selectedMat)!, [selectedMat]);
   const edge = useMemo(() => edgeColors.find(e => e.id === selectedEdge)!, [selectedEdge]);
+  const setType = useMemo(() => setTypes.find(s => s.id === selectedSetType)!, [selectedSetType]);
+  const cellType = useMemo(() => cellTypes.find(c => c.id === selectedCellType)!, [selectedCellType]);
+  const setVariant = useMemo(() => setVariants.find(v => v.id === selectedSetVariant)!, [selectedSetVariant]);
 
   return (
     <section className="w-full bg-black text-white">
@@ -61,7 +116,9 @@ export default function Configurator() {
               />
               <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-4 right-4 text-xs md:text-sm bg-black/60 backdrop-blur px-3 py-1.5 rounded-full border border-neutral-800">
-                  Krawędź: <span style={{ color: edge.hex }}>{edge.name}</span>
+                  <div>Typ: {setType.name}</div>
+                  <div>Komórki: {cellType.name}</div>
+                  <div>Krawędź: <span style={{ color: edge.hex }}>{edge.name}</span></div>
                 </div>
               </div>
             </div>
@@ -76,6 +133,72 @@ export default function Configurator() {
             <Separator className="my-5 bg-neutral-800" />
 
             <div>
+              <h3 className="text-sm font-medium mb-3">Rodzaj dywaników</h3>
+              <RadioGroup value={selectedSetType} onValueChange={setSelectedSetType} className="space-y-3">
+                {setTypes.map((s) => (
+                  <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                    <RadioGroupItem value={s.id} id={`set-${s.id}`} className="sr-only" />
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm font-medium">{s.name}</div>
+                        <div className="text-xs text-white/60">{s.description}</div>
+                      </div>
+                      {s.priceModifier !== 0 && (
+                        <div className={`text-xs font-medium ${s.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                          {s.priceModifier > 0 ? '+' : ''}{s.priceModifier} zł
+                        </div>
+                      )}
+                    </div>
+                  </Label>
+                ))}
+              </RadioGroup>
+            </div>
+
+            <div className="mt-6">
+              <h3 className="text-sm font-medium mb-3">Rodzaj komórek</h3>
+              <RadioGroup value={selectedCellType} onValueChange={setSelectedCellType} className="space-y-3">
+                {cellTypes.map((c) => (
+                  <Label key={c.id} htmlFor={`cell-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedCellType === c.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                    <RadioGroupItem value={c.id} id={`cell-${c.id}`} className="sr-only" />
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm font-medium">{c.name}</div>
+                        <div className="text-xs text-white/60">{c.description}</div>
+                      </div>
+                      {c.priceModifier !== 0 && (
+                        <div className={`text-xs font-medium ${c.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                          {c.priceModifier > 0 ? '+' : ''}{c.priceModifier} zł
+                        </div>
+                      )}
+                    </div>
+                  </Label>
+                ))}
+              </RadioGroup>
+            </div>
+
+            <div className="mt-6">
+              <h3 className="text-sm font-medium mb-3">Rodzaj zestawu</h3>
+              <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
+                {setVariants.map((v) => (
+                  <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                    <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm font-medium">{v.name}</div>
+                        <div className="text-xs text-white/60">{v.description}</div>
+                      </div>
+                      {v.priceModifier !== 0 && (
+                        <div className={`text-xs font-medium ${v.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                          {v.priceModifier > 0 ? '+' : ''}{v.priceModifier} zł
+                        </div>
+                      )}
+                    </div>
+                  </Label>
+                ))}
+              </RadioGroup>
+            </div>
+
+            <div className="mt-6">
               <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
               <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-3 gap-3">
                 {matColors.map((c) => (
@@ -124,12 +247,27 @@ export default function Configurator() {
 
             <Separator className="my-5 bg-neutral-800" />
 
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-white/70 text-xs">Cena wstępna</p>
-                <p className="text-2xl font-semibold">{price} zł</p>
+            <div className="space-y-3">
+              <div className="text-sm">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-white/70">Wybrana konfiguracja:</span>
+                </div>
+                <div className="text-xs text-white/60 space-y-1">
+                  <div>• {setType.name}</div>
+                  <div>• {cellType.name}</div>
+                  <div>• {setVariant.name}</div>
+                  <div>• {mat.name} + {edge.name} obszycie</div>
+                  {selectedHeelPad !== "brak" && <div>• Ochraniacz pod piętę</div>}
+                </div>
               </div>
-              <Button className="bg-white text-black hover:bg-white/90" onClick={() => window.open("/checkout", "_blank", "noopener,noreferrer")}>Przejdź do zamówienia</Button>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white/70 text-xs">Cena wstępna</p>
+                  <p className="text-2xl font-semibold">{price} zł</p>
+                </div>
+                <Button className="bg-white text-black hover:bg-white/90" onClick={() => window.open("/checkout", "_blank", "noopener,noreferrer")}>Przejdź do zamówienia</Button>
+              </div>
             </div>
             <p className="mt-2 text-xs text-white/60">Finalna cena może się różnić w zależności od modelu auta.</p>
           </div>
