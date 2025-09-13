@@ -211,7 +211,7 @@ export class CarMatService {
         };
       }
 
-      const uniqueValues = [...new Set(data?.map(item => item[field]).filter(Boolean) || [])];
+      const uniqueValues = [...new Set(data?.map(item => (item as any)[field]).filter(Boolean) || [])];
       
       return {
         success: true,

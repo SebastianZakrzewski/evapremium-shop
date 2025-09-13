@@ -26,11 +26,11 @@ async function main() {
   for (const mat of matsData) {
     await prisma.mats.create({
       data: {
-        type: "3d",
-        color: mat.color,
-        cellType: "diamond",
-        edgeColor: "black",
-        image: mat.image,
+        matType: "3d",
+        materialColor: mat.color,
+        cellStructure: "diamond",
+        borderColor: "black",
+        imagePath: mat.image,
       }
     });
   }
