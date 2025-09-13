@@ -152,7 +152,7 @@ export default function Configurator() {
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 md:py-16">
         <div className="flex flex-col lg:flex-row gap-10">
           <div className="flex-1">
-            <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
+            <div className="relative w-full h-[700px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
               {/* Rzeczywisty obraz dywanika */}
               <Image
                 key={`${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`}
