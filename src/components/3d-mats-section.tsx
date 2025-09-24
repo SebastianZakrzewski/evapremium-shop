@@ -47,7 +47,7 @@ const features3D = [
   "Łatwe w montażu i demontażu"
 ];
 
-const defaultMainImage = "/images/zalety/3d.png";
+const defaultMainImage = "/images/zalety/dywanik_z_rantami.png";
 const ochronaImage = "/7.webp";
 
 const defaultTitle = "Dlaczego dywaniki 3D z rantami?";

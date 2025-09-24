@@ -58,6 +58,30 @@ const carBrands = [
     logo: "/images/products/baic2.webp",
     models: ["EU5", "EX5", "EU7", "EC5"],
     description: "Chińska innowacja elektryczna"
+  },
+  { 
+    name: "Bentley", 
+    logo: "/images/products/bentley.webp",
+    models: ["Continental GT", "Bentayga", "Flying Spur", "Mulsanne"],
+    description: "Brytyjski luksus i elegancja"
+  },
+  { 
+    name: "Bugatti", 
+    logo: "/images/products/bugatti.jpg",
+    models: ["Chiron", "Veyron", "Divo", "Centodieci"],
+    description: "Francuska supremacja sportowa"
+  },
+  { 
+    name: "Buick", 
+    logo: "/images/products/buick.avif",
+    models: ["Enclave", "Encore", "LaCrosse", "Regal"],
+    description: "Amerykański komfort i styl"
+  },
+  { 
+    name: "Cadillac", 
+    logo: "/images/products/cadilac.jpeg",
+    models: ["Escalade", "CT5", "XT6", "CT4"],
+    description: "Amerykański luksus i prestiż"
   }
 ];
 

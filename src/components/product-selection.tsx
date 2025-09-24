@@ -39,7 +39,7 @@ export default function ProductSelection() {
           </p>
           <div className="mt-6 text-sm text-gray-400 animate-fade-in-delay-2">
             <span className="bg-gray-800/50 px-4 py-2 rounded-full border border-gray-700">
-              🚗 BMW, Mercedes, Audi, Porsche, Tesla, Acura, Alfa Romeo, Aston Martin, BAIC i inne
+              🚗 BMW, Mercedes, Audi, Porsche, Tesla, Acura, Alfa Romeo, Aston Martin, BAIC, Bentley, Bugatti, Buick, Cadillac i inne
             </span>
           </div>
         </div>
@@ -67,7 +67,7 @@ export default function ProductSelection() {
                 <Car className="w-6 h-6 text-red-400" />
               </div>
               <h3 className="text-white font-semibold mb-2">Precyzyjne Dopasowanie</h3>
-              <p className="text-gray-400 text-sm">Każdy dywanik samochodowy jest precyzyjnie dopasowany do konkretnego modelu auta - BMW, Mercedes, Audi, Porsche, Tesla, Acura, Alfa Romeo, Aston Martin, BAIC</p>
+              <p className="text-gray-400 text-sm">Każdy dywanik samochodowy jest precyzyjnie dopasowany do konkretnego modelu auta - BMW, Mercedes, Audi, Porsche, Tesla, Acura, Alfa Romeo, Aston Martin, BAIC, Bentley, Bugatti, Buick, Cadillac</p>
             </div>
             
             <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 rounded-lg p-6 border border-gray-700 hover:border-red-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/10">

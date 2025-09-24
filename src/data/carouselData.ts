@@ -55,6 +55,30 @@ export const brands: Brand[] = [
     name: "BAIC",
     logo: "/images/products/baic2.webp",
     description: "Chińska marka samochodowa"
+  },
+  {
+    id: 10,
+    name: "Bentley",
+    logo: "/images/products/bentley.webp",
+    description: "Brytyjska marka luksusowa"
+  },
+  {
+    id: 11,
+    name: "Bugatti",
+    logo: "/images/products/bugatti.jpg",
+    description: "Francuska marka supersportowa"
+  },
+  {
+    id: 12,
+    name: "Buick",
+    logo: "/images/products/buick.avif",
+    description: "Amerykańska marka premium"
+  },
+  {
+    id: 13,
+    name: "Cadillac",
+    logo: "/images/products/cadilac.jpeg",
+    description: "Amerykańska marka luksusowa"
   }
 ];
 
@@ -292,6 +316,122 @@ export const modelsByBrand: Record<string, Model[]> = {
       imageSrc: "/images/products/baic2.webp",
       price: "160,000 PLN",
       description: "Luksusowy sedan elektryczny"
+    }
+  ],
+  "Bentley": [
+    {
+      id: 25,
+      name: "Continental GT",
+      brand: "Bentley",
+      year: 2024,
+      imageSrc: "/images/products/bentley.webp",
+      price: "1,200,000 PLN",
+      description: "Luksusowy grand tourer"
+    },
+    {
+      id: 26,
+      name: "Bentayga",
+      brand: "Bentley",
+      year: 2024,
+      imageSrc: "/images/products/bentley.webp",
+      price: "1,500,000 PLN",
+      description: "Luksusowy SUV"
+    },
+    {
+      id: 27,
+      name: "Flying Spur",
+      brand: "Bentley",
+      year: 2024,
+      imageSrc: "/images/products/bentley.webp",
+      price: "1,800,000 PLN",
+      description: "Luksusowy sedan"
+    }
+  ],
+  "Bugatti": [
+    {
+      id: 28,
+      name: "Chiron",
+      brand: "Bugatti",
+      year: 2024,
+      imageSrc: "/images/products/bugatti.jpg",
+      price: "15,000,000 PLN",
+      description: "Supersportowy hypercar"
+    },
+    {
+      id: 29,
+      name: "Veyron",
+      brand: "Bugatti",
+      year: 2024,
+      imageSrc: "/images/products/bugatti.jpg",
+      price: "12,000,000 PLN",
+      description: "Legendarny supersportowy"
+    },
+    {
+      id: 30,
+      name: "Divo",
+      brand: "Bugatti",
+      year: 2024,
+      imageSrc: "/images/products/bugatti.jpg",
+      price: "18,000,000 PLN",
+      description: "Track-focused hypercar"
+    }
+  ],
+  "Buick": [
+    {
+      id: 31,
+      name: "Enclave",
+      brand: "Buick",
+      year: 2024,
+      imageSrc: "/images/products/buick.avif",
+      price: "200,000 PLN",
+      description: "Luksusowy SUV"
+    },
+    {
+      id: 32,
+      name: "Encore",
+      brand: "Buick",
+      year: 2024,
+      imageSrc: "/images/products/buick.avif",
+      price: "150,000 PLN",
+      description: "Kompaktowy SUV"
+    },
+    {
+      id: 33,
+      name: "LaCrosse",
+      brand: "Buick",
+      year: 2024,
+      imageSrc: "/images/products/buick.avif",
+      price: "180,000 PLN",
+      description: "Luksusowy sedan"
+    }
+  ],
+  "Cadillac": [
+    {
+      id: 34,
+      name: "Escalade",
+      brand: "Cadillac",
+      year: 2024,
+      imageSrc: "/images/products/cadilac.jpeg",
+      price: "400,000 PLN",
+      description: "Luksusowy SUV"
+    },
+    {
+      id: 35,
+      name: "CT5",
+      brand: "Cadillac",
+      year: 2024,
+      imageSrc: "/images/products/cadilac.jpeg",
+      price: "250,000 PLN",
+      description: "Sportowy sedan"
+    },
+    {
+      id: 36,
+      name: "XT6",
+      brand: "Cadillac",
+      year: 2024,
+      imageSrc: "/images/products/cadilac.jpeg",
+      price: "300,000 PLN",
+      description: "Luksusowy crossover"
     }
   ]
 };
