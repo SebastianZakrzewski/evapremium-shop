@@ -8,7 +8,7 @@ const advantagesItems = [
   {
     id: 1,
     type: "image" as const,
-    src: "/images/zalety/3d.png",
+    src: "/images/zalety/dywanik_z_rantami.png",
     title: "Dywaniki 3D z rantami",
     description: "Zaawansowana technologia 3D zapewnia doskonałe dopasowanie i trwałość",
     icon: Sparkles,
