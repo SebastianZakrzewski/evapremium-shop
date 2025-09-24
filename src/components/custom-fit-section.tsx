@@ -34,6 +34,30 @@ const carBrands = [
     logo: "/images/products/tesla.avif",
     models: ["Model 3", "Model S", "Model X", "Model Y"],
     description: "Przyszłość motoryzacji z idealnym dopasowaniem"
+  },
+  { 
+    name: "Acura", 
+    logo: "/images/products/acura.avif",
+    models: ["TLX", "RDX", "MDX", "ILX"],
+    description: "Japońska precyzja i luksus"
+  },
+  { 
+    name: "Alfa Romeo", 
+    logo: "/images/products/alfa_romeo.jpg",
+    models: ["Giulia", "Stelvio", "Tonale", "4C"],
+    description: "Włoska pasja i elegancja"
+  },
+  { 
+    name: "Aston Martin", 
+    logo: "/images/products/aston_martin.avif",
+    models: ["DB11", "Vantage", "DBX", "DBS"],
+    description: "Brytyjski luksus i elegancja"
+  },
+  { 
+    name: "BAIC", 
+    logo: "/images/products/baic2.webp",
+    models: ["EU5", "EX5", "EU7", "EC5"],
+    description: "Chińska innowacja elektryczna"
   }
 ];
 

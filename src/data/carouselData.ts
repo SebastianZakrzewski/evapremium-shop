@@ -31,6 +31,30 @@ export const brands: Brand[] = [
     name: "Porsche",
     logo: "/images/products/porsche.png",
     description: "Niemiecka marka sportowa"
+  },
+  {
+    id: 6,
+    name: "Acura",
+    logo: "/images/products/acura.avif",
+    description: "Japońska marka premium"
+  },
+  {
+    id: 7,
+    name: "Alfa Romeo",
+    logo: "/images/products/alfa_romeo.jpg",
+    description: "Włoska marka sportowa"
+  },
+  {
+    id: 8,
+    name: "Aston Martin",
+    logo: "/images/products/aston_martin.avif",
+    description: "Brytyjska marka luksusowa"
+  },
+  {
+    id: 9,
+    name: "BAIC",
+    logo: "/images/products/baic2.webp",
+    description: "Chińska marka samochodowa"
   }
 ];
 
@@ -152,6 +176,122 @@ export const modelsByBrand: Record<string, Model[]> = {
       imageSrc: "/images/products/porsche.png",
       price: "380,000 PLN",
       description: "Sportowy SUV"
+    }
+  ],
+  "Acura": [
+    {
+      id: 13,
+      name: "TLX",
+      brand: "Acura",
+      year: 2024,
+      imageSrc: "/images/products/acura.avif",
+      price: "180,000 PLN",
+      description: "Luksusowy sedan"
+    },
+    {
+      id: 14,
+      name: "RDX",
+      brand: "Acura",
+      year: 2024,
+      imageSrc: "/images/products/acura.avif",
+      price: "220,000 PLN",
+      description: "Kompaktowy SUV premium"
+    },
+    {
+      id: 15,
+      name: "MDX",
+      brand: "Acura",
+      year: 2024,
+      imageSrc: "/images/products/acura.avif",
+      price: "280,000 PLN",
+      description: "Luksusowy SUV"
+    }
+  ],
+  "Alfa Romeo": [
+    {
+      id: 16,
+      name: "Giulia",
+      brand: "Alfa Romeo",
+      year: 2024,
+      imageSrc: "/images/products/alfa_romeo.jpg",
+      price: "200,000 PLN",
+      description: "Sportowy sedan"
+    },
+    {
+      id: 17,
+      name: "Stelvio",
+      brand: "Alfa Romeo",
+      year: 2024,
+      imageSrc: "/images/products/alfa_romeo.jpg",
+      price: "250,000 PLN",
+      description: "Sportowy SUV"
+    },
+    {
+      id: 18,
+      name: "Tonale",
+      brand: "Alfa Romeo",
+      year: 2024,
+      imageSrc: "/images/products/alfa_romeo.jpg",
+      price: "180,000 PLN",
+      description: "Kompaktowy SUV"
+    }
+  ],
+  "Aston Martin": [
+    {
+      id: 19,
+      name: "DB11",
+      brand: "Aston Martin",
+      year: 2024,
+      imageSrc: "/images/products/aston_martin.avif",
+      price: "800,000 PLN",
+      description: "Luksusowy grand tourer"
+    },
+    {
+      id: 20,
+      name: "Vantage",
+      brand: "Aston Martin",
+      year: 2024,
+      imageSrc: "/images/products/aston_martin.avif",
+      price: "600,000 PLN",
+      description: "Sportowy coupe"
+    },
+    {
+      id: 21,
+      name: "DBX",
+      brand: "Aston Martin",
+      year: 2024,
+      imageSrc: "/images/products/aston_martin.avif",
+      price: "900,000 PLN",
+      description: "Luksusowy SUV"
+    }
+  ],
+  "BAIC": [
+    {
+      id: 22,
+      name: "EU5",
+      brand: "BAIC",
+      year: 2024,
+      imageSrc: "/images/products/baic2.webp",
+      price: "120,000 PLN",
+      description: "Elektryczny sedan"
+    },
+    {
+      id: 23,
+      name: "EX5",
+      brand: "BAIC",
+      year: 2024,
+      imageSrc: "/images/products/baic2.webp",
+      price: "140,000 PLN",
+      description: "Elektryczny SUV"
+    },
+    {
+      id: 24,
+      name: "EU7",
+      brand: "BAIC",
+      year: 2024,
+      imageSrc: "/images/products/baic2.webp",
+      price: "160,000 PLN",
+      description: "Luksusowy sedan elektryczny"
     }
   ]
 };
