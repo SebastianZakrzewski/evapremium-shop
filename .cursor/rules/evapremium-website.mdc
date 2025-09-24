@@ -1,0 +1,39 @@
+---
+description: "Rules for EvaPremium Website project"
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.mdx"
+alwaysApply: true
+---
+
+STACK
+- Next.js 14 (App Router) + TypeScript strict.
+- TailwindCSS + shadcn/ui for UI components.
+- Vitest + React Testing Library for tests.
+- Zod for all external data validation (API, forms, env).
+
+ARCHITECTURE
+- Feature folder structure: `src/{features,entities,shared}` + `app/` routes.
+- Public API of features must be re-exported via `index.ts`.
+- No business logic inside components – keep it in hooks/services.
+
+STYLE & QUALITY
+- ESLint + Prettier, no warnings (`--max-warnings=0`).
+- No `any` types – always use strict typing.
+- Components: `PascalCase.tsx`, utils: `camelCase.ts`.
+
+WORKFLOW
+- Always write tests first → then implementation → then refactor.
+- Every new feature must include a README with usage example.
+- Use Conventional Commits (feat:, fix:, chore:, docs:, refactor:).
+
+SECURITY
+- Secrets only from `process.env`, validated with Zod.
+- Never commit API keys or sensitive data.
+- Always escape and sanitize external input.
+
+AGENT OUTPUT
+- Always show a PLAN first (5–9 steps).
+- Provide code in PR-sized chunks (≤150 lines).
+- Always add regression tests when fixing bugs.

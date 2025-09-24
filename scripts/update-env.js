@@ -1,7 +1,7 @@
 const fs = require('fs');
 
-// Read the .env file
-const envPath = '.env';
+// Read the .env.local file
+const envPath = '.env.local';
 let content = fs.readFileSync(envPath, 'utf8');
 
 // Update SUPABASE_KEY

@@ -545,10 +545,6 @@ export function CheckoutSection() {
               Strona główna
             </a>
             <span className="text-gray-600">/</span>
-            <a href="/konfigurator" className="hover:text-red-400 transition-colors flex items-center gap-1">
-              <span>⚙️</span>
-              Konfigurator
-            </a>
             <span className="text-gray-600">/</span>
             <span className="text-red-400 flex items-center gap-1">
               <span>🛒</span>

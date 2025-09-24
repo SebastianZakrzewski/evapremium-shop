@@ -60,7 +60,7 @@ export default function RoznorodnaKolorystykaSection() {
             Szeroka paleta kolorów dopasowana do wnętrza Twojego auta. Wybierz swój styl!
           </p>
           <p className="text-base text-yellow-300 mt-2 max-w-2xl mx-auto">
-            Pełna konfiguracja kolorystyczna (materiał + obszycie) dostępna jest w <b>konfiguratorze</b> podczas personalizacji zamówienia. Poniżej prezentujemy przykładowe kolory materiału dywanika w realnych autach.
+            Pełna konfiguracja kolorystyczna (materiał + obszycie) dostępna jest podczas personalizacji zamówienia. Poniżej prezentujemy przykładowe kolory materiału dywanika w realnych autach.
           </p>
         </div>
         <div className="flex flex-col md:flex-row gap-12 items-center justify-center">

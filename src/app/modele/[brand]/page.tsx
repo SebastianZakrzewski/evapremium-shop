@@ -259,7 +259,7 @@ export default function BrandPage({ params }: BrandPageProps) {
                   <div
                     key={model.id}
                     className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 hover:border-red-500/50 transition-all duration-300 group cursor-pointer"
-                    onClick={() => router.push(`/konfigurator?brand=${brand}&model=${model.name}`)}
+                    onClick={() => router.push(`/modele/${brand}`)}
                   >
                     {/* Model Image */}
                     <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden">

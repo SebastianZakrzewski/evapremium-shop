@@ -1,0 +1,6072 @@
+{
+  "metadata": {
+    "generatedAt": "2025-09-12T22:06:53.258Z",
+    "totalRecords": 752,
+    "sourceDirectory": "public/dywaniki"
+  },
+  "statistics": {
+    "total": 752,
+    "byType": {
+      "3d": 378,
+      "classic": 374
+    },
+    "byCellType": {
+      "diamonds": 472,
+      "honey": 280
+    },
+    "byColor": {
+      "beige": 27,
+      "black": 56,
+      "blue": 56,
+      "brown": 56,
+      "darkblue": 56,
+      "darkgreen": 56,
+      "darkgrey": 56,
+      "ivory": 55,
+      "lightbeige": 56,
+      "lime": 27,
+      "maroon": 56,
+      "orange": 28,
+      "pink": 27,
+      "purple": 28,
+      "red": 56,
+      "white": 28,
+      "yellow": 28
+    },
+    "byEdgeColor": {
+      "beige": 54,
+      "black": 54,
+      "blue": 64,
+      "brown": 54,
+      "darkblue": 44,
+      "darkgrey": 51,
+      "green": 54,
+      "lightgrey": 53,
+      "maroon": 54,
+      "orange": 54,
+      "pink": 54,
+      "purple": 54,
+      "red": 54,
+      "yellow": 54
+    },
+    "uniqueCombinations": {}
+  },
+  "records": [
+    {
+      "id": 1,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-beige-beige.webp"
+    },
+    {
+      "id": 2,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-black-beige.webp"
+    },
+    {
+      "id": 3,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-blue-beige.webp"
+    },
+    {
+      "id": 4,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-brown-beige.webp"
+    },
+    {
+      "id": 5,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-darkblue-beige.webp"
+    },
+    {
+      "id": 6,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-darkgreen-beige.webp"
+    },
+    {
+      "id": 7,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-darkgrey-beige.webp"
+    },
+    {
+      "id": 8,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-ivory-beige.webp"
+    },
+    {
+      "id": 9,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-lightbeige-beige.webp"
+    },
+    {
+      "id": 10,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-lime-beige.webp"
+    },
+    {
+      "id": 11,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-maroon-beige.webp"
+    },
+    {
+      "id": 12,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-orange-beige.webp"
+    },
+    {
+      "id": 13,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-pink-beige.webp"
+    },
+    {
+      "id": 14,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-purple-beige.webp"
+    },
+    {
+      "id": 15,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-red-beige.webp"
+    },
+    {
+      "id": 16,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-white-beige.webp"
+    },
+    {
+      "id": 17,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/diamonds/beige/5os-3d-diamonds-yellow-beige.webp"
+    },
+    {
+      "id": 18,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-beige-black.webp"
+    },
+    {
+      "id": 19,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-black-black.webp"
+    },
+    {
+      "id": 20,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-blue-black.webp"
+    },
+    {
+      "id": 21,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-brown-black.webp"
+    },
+    {
+      "id": 22,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-darkblue-black.webp"
+    },
+    {
+      "id": 23,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-darkgreen-black.webp"
+    },
+    {
+      "id": 24,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-darkgrey-black.webp"
+    },
+    {
+      "id": 25,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-ivory-black.webp"
+    },
+    {
+      "id": 26,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-lightbeige-black.webp"
+    },
+    {
+      "id": 27,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-lime-black.webp"
+    },
+    {
+      "id": 28,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-maroon-black.webp"
+    },
+    {
+      "id": 29,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-orange-black.webp"
+    },
+    {
+      "id": 30,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-pink-black.webp"
+    },
+    {
+      "id": 31,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-purple-black.webp"
+    },
+    {
+      "id": 32,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-red-black.webp"
+    },
+    {
+      "id": 33,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-white-black.webp"
+    },
+    {
+      "id": 34,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/diamonds/black/5os-3d-diamonds-yellow-black.webp"
+    },
+    {
+      "id": 35,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-beige-blue.webp"
+    },
+    {
+      "id": 36,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-black-blue.webp"
+    },
+    {
+      "id": 37,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-blue-blue.webp"
+    },
+    {
+      "id": 38,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-brown-blue.webp"
+    },
+    {
+      "id": 39,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-darkblue-blue.webp"
+    },
+    {
+      "id": 40,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-darkgreen-blue.webp"
+    },
+    {
+      "id": 41,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-darkgrey-blue.webp"
+    },
+    {
+      "id": 42,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-ivory-blue.webp"
+    },
+    {
+      "id": 43,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-lightbeige-blue.webp"
+    },
+    {
+      "id": 44,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-lime-blue.webp"
+    },
+    {
+      "id": 45,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-maroon-blue.webp"
+    },
+    {
+      "id": 46,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-orange-blue.webp"
+    },
+    {
+      "id": 47,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-pink-blue.webp"
+    },
+    {
+      "id": 48,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-purple-blue.webp"
+    },
+    {
+      "id": 49,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-red-blue.webp"
+    },
+    {
+      "id": 50,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-white-blue.webp"
+    },
+    {
+      "id": 51,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/diamonds/blue/5os-3d-diamonds-yellow-blue.webp"
+    },
+    {
+      "id": 52,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-beige-brown.webp"
+    },
+    {
+      "id": 53,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-black-brown.webp"
+    },
+    {
+      "id": 54,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-blue-brown.webp"
+    },
+    {
+      "id": 55,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-brown-brown.webp"
+    },
+    {
+      "id": 56,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-darkblue-brown.webp"
+    },
+    {
+      "id": 57,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-darkgreen-brown.webp"
+    },
+    {
+      "id": 58,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-darkgrey-brown.webp"
+    },
+    {
+      "id": 59,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-ivory-brown.webp"
+    },
+    {
+      "id": 60,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-lightbeige-brown.webp"
+    },
+    {
+      "id": 61,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-lime-brown.webp"
+    },
+    {
+      "id": 62,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-maroon-brown.webp"
+    },
+    {
+      "id": 63,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-orange-brown.webp"
+    },
+    {
+      "id": 64,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-pink-brown.webp"
+    },
+    {
+      "id": 65,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-purple-brown.webp"
+    },
+    {
+      "id": 66,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-red-brown.webp"
+    },
+    {
+      "id": 67,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-white-brown.webp"
+    },
+    {
+      "id": 68,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/diamonds/brown/5os-3d-diamonds-yellow-brown.webp"
+    },
+    {
+      "id": 69,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-beige-darkblue.webp"
+    },
+    {
+      "id": 70,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-black-darkblue.webp"
+    },
+    {
+      "id": 71,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-blue-darkblue.webp"
+    },
+    {
+      "id": 72,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-brown-darkblue.webp"
+    },
+    {
+      "id": 73,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-darkblue-darkblue.webp"
+    },
+    {
+      "id": 74,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-darkgreen-darkblue.webp"
+    },
+    {
+      "id": 75,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-darkgrey-darkblue.webp"
+    },
+    {
+      "id": 76,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-ivory-darkblue.webp"
+    },
+    {
+      "id": 77,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-lightbeige-darkblue.webp"
+    },
+    {
+      "id": 78,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-lime-darkblue.webp"
+    },
+    {
+      "id": 79,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-maroon-darkblue.webp"
+    },
+    {
+      "id": 80,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-orange-darkblue.webp"
+    },
+    {
+      "id": 81,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-pink-darkblue.webp"
+    },
+    {
+      "id": 82,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-purple-darkblue.webp"
+    },
+    {
+      "id": 83,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-red-darkblue.webp"
+    },
+    {
+      "id": 84,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-white-darkblue.webp"
+    },
+    {
+      "id": 85,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/diamonds/darkblue/5os-3d-diamonds-yellow-darkblue.webp"
+    },
+    {
+      "id": 86,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-beige-darkgrey.webp"
+    },
+    {
+      "id": 87,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-black-darkgrey.webp"
+    },
+    {
+      "id": 88,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-blue-darkgrey.webp"
+    },
+    {
+      "id": 89,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-brown-darkgrey.webp"
+    },
+    {
+      "id": 90,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-darkblue-darkgrey.webp"
+    },
+    {
+      "id": 91,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-darkgreen-darkgrey.webp"
+    },
+    {
+      "id": 92,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-darkgrey-darkgrey.webp"
+    },
+    {
+      "id": 93,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-ivory-darkgrey.webp"
+    },
+    {
+      "id": 94,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-lightbeige-darkgrey.webp"
+    },
+    {
+      "id": 95,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-lime-darkgrey.webp"
+    },
+    {
+      "id": 96,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-maroon-darkgrey.webp"
+    },
+    {
+      "id": 97,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-orange-darkgrey.webp"
+    },
+    {
+      "id": 98,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-pink-darkgrey.webp"
+    },
+    {
+      "id": 99,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-purple-darkgrey.webp"
+    },
+    {
+      "id": 100,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-red-darkgrey.webp"
+    },
+    {
+      "id": 101,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-white-darkgrey.webp"
+    },
+    {
+      "id": 102,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/diamonds/darkgrey/5os-3d-diamonds-yellow-darkgrey.webp"
+    },
+    {
+      "id": 103,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-beige-green.webp"
+    },
+    {
+      "id": 104,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-black-green.webp"
+    },
+    {
+      "id": 105,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-blue-green.webp"
+    },
+    {
+      "id": 106,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-brown-green.webp"
+    },
+    {
+      "id": 107,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-darkblue-green.webp"
+    },
+    {
+      "id": 108,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-darkgreen-green.webp"
+    },
+    {
+      "id": 109,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-darkgrey-green.webp"
+    },
+    {
+      "id": 110,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-ivory-green.webp"
+    },
+    {
+      "id": 111,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-lightbeige-green.webp"
+    },
+    {
+      "id": 112,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-lime-green.webp"
+    },
+    {
+      "id": 113,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-maroon-green.webp"
+    },
+    {
+      "id": 114,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-orange-green.webp"
+    },
+    {
+      "id": 115,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-pink-green.webp"
+    },
+    {
+      "id": 116,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-purple-green.webp"
+    },
+    {
+      "id": 117,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-red-green.webp"
+    },
+    {
+      "id": 118,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-white-green.webp"
+    },
+    {
+      "id": 119,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/diamonds/green/5os-3d-diamonds-yellow-green.webp"
+    },
+    {
+      "id": 120,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-beige-lightgrey.webp"
+    },
+    {
+      "id": 121,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-black-lightgrey.webp"
+    },
+    {
+      "id": 122,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-blue-lightgrey.webp"
+    },
+    {
+      "id": 123,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-brown-lightgrey.webp"
+    },
+    {
+      "id": 124,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-darkblue-lightgrey.webp"
+    },
+    {
+      "id": 125,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-darkgreen-lightgrey.webp"
+    },
+    {
+      "id": 126,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-darkgrey-lightgrey.webp"
+    },
+    {
+      "id": 127,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-ivory-lightgrey.webp"
+    },
+    {
+      "id": 128,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-lightbeige-lightgrey.webp"
+    },
+    {
+      "id": 129,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-lime-lightgrey.webp"
+    },
+    {
+      "id": 130,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-maroon-lightgrey.webp"
+    },
+    {
+      "id": 131,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-orange-lightgrey.webp"
+    },
+    {
+      "id": 132,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-pink-lightgrey.webp"
+    },
+    {
+      "id": 133,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-purple-lightgrey.webp"
+    },
+    {
+      "id": 134,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-red-lightgrey.webp"
+    },
+    {
+      "id": 135,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-white-lightgrey.webp"
+    },
+    {
+      "id": 136,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/diamonds/lightgrey/5os-3d-diamonds-yellow-lightgrey.webp"
+    },
+    {
+      "id": 137,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-beige-maroon.webp"
+    },
+    {
+      "id": 138,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-black-maroon.webp"
+    },
+    {
+      "id": 139,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-blue-maroon.webp"
+    },
+    {
+      "id": 140,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-brown-maroon.webp"
+    },
+    {
+      "id": 141,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-darkblue-maroon.webp"
+    },
+    {
+      "id": 142,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-darkgreen-maroon.webp"
+    },
+    {
+      "id": 143,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-darkgrey-maroon.webp"
+    },
+    {
+      "id": 144,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-ivory-maroon.webp"
+    },
+    {
+      "id": 145,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-lightbeige-maroon.webp"
+    },
+    {
+      "id": 146,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-lime-maroon.webp"
+    },
+    {
+      "id": 147,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-maroon-maroon.webp"
+    },
+    {
+      "id": 148,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-orange-maroon.webp"
+    },
+    {
+      "id": 149,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-pink-maroon.webp"
+    },
+    {
+      "id": 150,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-purple-maroon.webp"
+    },
+    {
+      "id": 151,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-red-maroon.webp"
+    },
+    {
+      "id": 152,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-white-maroon.webp"
+    },
+    {
+      "id": 153,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/diamonds/maroon/5os-3d-diamonds-yellow-maroon.webp"
+    },
+    {
+      "id": 154,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-beige-orange.webp"
+    },
+    {
+      "id": 155,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-black-orange.webp"
+    },
+    {
+      "id": 156,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-blue-orange.webp"
+    },
+    {
+      "id": 157,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-brown-orange.webp"
+    },
+    {
+      "id": 158,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-darkblue-orange.webp"
+    },
+    {
+      "id": 159,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-darkgreen-orange.webp"
+    },
+    {
+      "id": 160,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-darkgrey-orange.webp"
+    },
+    {
+      "id": 161,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-ivory-orange.webp"
+    },
+    {
+      "id": 162,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-lightbeige-orange.webp"
+    },
+    {
+      "id": 163,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-lime-orange.webp"
+    },
+    {
+      "id": 164,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-maroon-orange.webp"
+    },
+    {
+      "id": 165,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-orange-orange.webp"
+    },
+    {
+      "id": 166,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-pink-orange.webp"
+    },
+    {
+      "id": 167,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-purple-orange.webp"
+    },
+    {
+      "id": 168,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-red-orange.webp"
+    },
+    {
+      "id": 169,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-white-orange.webp"
+    },
+    {
+      "id": 170,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/diamonds/orange/5os-3d-diamonds-yellow-orange.webp"
+    },
+    {
+      "id": 171,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-beige-pink.webp"
+    },
+    {
+      "id": 172,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-black-pink.webp"
+    },
+    {
+      "id": 173,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-blue-pink.webp"
+    },
+    {
+      "id": 174,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-brown-pink.webp"
+    },
+    {
+      "id": 175,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-darkblue-pink.webp"
+    },
+    {
+      "id": 176,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-darkgreen-pink.webp"
+    },
+    {
+      "id": 177,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-darkgrey-pink.webp"
+    },
+    {
+      "id": 178,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-ivory-pink.webp"
+    },
+    {
+      "id": 179,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-lightbeige-pink.webp"
+    },
+    {
+      "id": 180,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-lime-pink.webp"
+    },
+    {
+      "id": 181,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-maroon-pink.webp"
+    },
+    {
+      "id": 182,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-orange-pink.webp"
+    },
+    {
+      "id": 183,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-pink-pink.webp"
+    },
+    {
+      "id": 184,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-purple-pink.webp"
+    },
+    {
+      "id": 185,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-red-pink.webp"
+    },
+    {
+      "id": 186,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-white-pink.webp"
+    },
+    {
+      "id": 187,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/diamonds/pink/5os-3d-diamonds-yellow-pink.webp"
+    },
+    {
+      "id": 188,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-beige-purple.webp"
+    },
+    {
+      "id": 189,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-black-purple.webp"
+    },
+    {
+      "id": 190,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-blue-purple.webp"
+    },
+    {
+      "id": 191,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-brown-purple.webp"
+    },
+    {
+      "id": 192,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-darkblue-purple.webp"
+    },
+    {
+      "id": 193,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-darkgreen-purple.webp"
+    },
+    {
+      "id": 194,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-darkgrey-purple.webp"
+    },
+    {
+      "id": 195,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-ivory-purple.webp"
+    },
+    {
+      "id": 196,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-lightbeige-purple.webp"
+    },
+    {
+      "id": 197,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-lime-purple.webp"
+    },
+    {
+      "id": 198,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-maroon-purple.webp"
+    },
+    {
+      "id": 199,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-orange-purple.webp"
+    },
+    {
+      "id": 200,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-pink-purple.webp"
+    },
+    {
+      "id": 201,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-purple-purple.webp"
+    },
+    {
+      "id": 202,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-red-purple.webp"
+    },
+    {
+      "id": 203,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-white-purple.webp"
+    },
+    {
+      "id": 204,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/diamonds/purple/5os-3d-diamonds-yellow-purple.webp"
+    },
+    {
+      "id": 205,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-beige-red.webp"
+    },
+    {
+      "id": 206,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-black-red.webp"
+    },
+    {
+      "id": 207,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-blue-red.webp"
+    },
+    {
+      "id": 208,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-brown-red.webp"
+    },
+    {
+      "id": 209,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-darkblue-red.webp"
+    },
+    {
+      "id": 210,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-darkgreen-red.webp"
+    },
+    {
+      "id": 211,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-darkgrey-red.webp"
+    },
+    {
+      "id": 212,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-ivory-red.webp"
+    },
+    {
+      "id": 213,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-lightbeige-red.webp"
+    },
+    {
+      "id": 214,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-lime-red.webp"
+    },
+    {
+      "id": 215,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-maroon-red.webp"
+    },
+    {
+      "id": 216,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-orange-red.webp"
+    },
+    {
+      "id": 217,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-pink-red.webp"
+    },
+    {
+      "id": 218,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-purple-red.webp"
+    },
+    {
+      "id": 219,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-red-red.webp"
+    },
+    {
+      "id": 220,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-white-red.webp"
+    },
+    {
+      "id": 221,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/diamonds/red/5os-3d-diamonds-yellow-red.webp"
+    },
+    {
+      "id": 222,
+      "type": "3d",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-beige-yellow.webp"
+    },
+    {
+      "id": 223,
+      "type": "3d",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-black-yellow.webp"
+    },
+    {
+      "id": 224,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-blue-yellow.webp"
+    },
+    {
+      "id": 225,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-brown-yellow.webp"
+    },
+    {
+      "id": 226,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-darkblue-yellow.webp"
+    },
+    {
+      "id": 227,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-darkgreen-yellow.webp"
+    },
+    {
+      "id": 228,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-darkgrey-yellow.webp"
+    },
+    {
+      "id": 229,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-ivory-yellow.webp"
+    },
+    {
+      "id": 230,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-lightbeige-yellow.webp"
+    },
+    {
+      "id": 231,
+      "type": "3d",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-lime-yellow.webp"
+    },
+    {
+      "id": 232,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-maroon-yellow.webp"
+    },
+    {
+      "id": 233,
+      "type": "3d",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-orange-yellow.webp"
+    },
+    {
+      "id": 234,
+      "type": "3d",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-pink-yellow.webp"
+    },
+    {
+      "id": 235,
+      "type": "3d",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-purple-yellow.webp"
+    },
+    {
+      "id": 236,
+      "type": "3d",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-red-yellow.webp"
+    },
+    {
+      "id": 237,
+      "type": "3d",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-white-yellow.webp"
+    },
+    {
+      "id": 238,
+      "type": "3d",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/diamonds/yellow/5os-3d-diamonds-yellow-yellow.webp"
+    },
+    {
+      "id": 239,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/honey/beige/5os-3d-honey-black-beige.webp"
+    },
+    {
+      "id": 240,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/honey/beige/5os-3d-honey-blue-beige.webp"
+    },
+    {
+      "id": 241,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/honey/beige/5os-3d-honey-brown-beige.webp"
+    },
+    {
+      "id": 242,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/honey/beige/5os-3d-honey-darkblue-beige.webp"
+    },
+    {
+      "id": 243,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/honey/beige/5os-3d-honey-darkgreen-beige.webp"
+    },
+    {
+      "id": 244,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/honey/beige/5os-3d-honey-darkgrey-beige.webp"
+    },
+    {
+      "id": 245,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/honey/beige/5os-3d-honey-ivory-beige.webp"
+    },
+    {
+      "id": 246,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/honey/beige/5os-3d-honey-lightbeige-beige.webp"
+    },
+    {
+      "id": 247,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/honey/beige/5os-3d-honey-maroon-beige.webp"
+    },
+    {
+      "id": 248,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/3d/honey/beige/5os-3d-honey-red-beige.webp"
+    },
+    {
+      "id": 249,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/honey/black/5os-3d-honey-black-black.webp"
+    },
+    {
+      "id": 250,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/honey/black/5os-3d-honey-blue-black.webp"
+    },
+    {
+      "id": 251,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/honey/black/5os-3d-honey-brown-black.webp"
+    },
+    {
+      "id": 252,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/honey/black/5os-3d-honey-darkblue-black.webp"
+    },
+    {
+      "id": 253,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/honey/black/5os-3d-honey-darkgreen-black.webp"
+    },
+    {
+      "id": 254,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/honey/black/5os-3d-honey-darkgrey-black.webp"
+    },
+    {
+      "id": 255,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/honey/black/5os-3d-honey-ivory-black.webp"
+    },
+    {
+      "id": 256,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/honey/black/5os-3d-honey-lightbeige-black.webp"
+    },
+    {
+      "id": 257,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/honey/black/5os-3d-honey-maroon-black.webp"
+    },
+    {
+      "id": 258,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/3d/honey/black/5os-3d-honey-red-black.webp"
+    },
+    {
+      "id": 259,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/honey/blue/5os-3d-honey-black-blue.webp"
+    },
+    {
+      "id": 260,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/honey/blue/5os-3d-honey-blue-blue.webp"
+    },
+    {
+      "id": 261,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/honey/blue/5os-3d-honey-brown-blue.webp"
+    },
+    {
+      "id": 262,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/honey/blue/5os-3d-honey-darkblue-blue.webp"
+    },
+    {
+      "id": 263,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/honey/blue/5os-3d-honey-darkgreen-blue.webp"
+    },
+    {
+      "id": 264,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/honey/blue/5os-3d-honey-darkgrey-blue.webp"
+    },
+    {
+      "id": 265,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/honey/blue/5os-3d-honey-ivory-blue.webp"
+    },
+    {
+      "id": 266,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/honey/blue/5os-3d-honey-lightbeige-blue.webp"
+    },
+    {
+      "id": 267,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/honey/blue/5os-3d-honey-maroon-blue.webp"
+    },
+    {
+      "id": 268,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/3d/honey/blue/5os-3d-honey-red-blue.webp"
+    },
+    {
+      "id": 269,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/honey/brown/5os-3d-honey-black-brown.webp"
+    },
+    {
+      "id": 270,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/honey/brown/5os-3d-honey-blue-brown.webp"
+    },
+    {
+      "id": 271,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/honey/brown/5os-3d-honey-brown-brown.webp"
+    },
+    {
+      "id": 272,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/honey/brown/5os-3d-honey-darkblue-brown.webp"
+    },
+    {
+      "id": 273,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/honey/brown/5os-3d-honey-darkgreen-brown.webp"
+    },
+    {
+      "id": 274,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/honey/brown/5os-3d-honey-darkgrey-brown.webp"
+    },
+    {
+      "id": 275,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/honey/brown/5os-3d-honey-ivory-brown.webp"
+    },
+    {
+      "id": 276,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/honey/brown/5os-3d-honey-lightbeige-brown.webp"
+    },
+    {
+      "id": 277,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/honey/brown/5os-3d-honey-maroon-brown.webp"
+    },
+    {
+      "id": 278,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/3d/honey/brown/5os-3d-honey-red-brown.webp"
+    },
+    {
+      "id": 279,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/honey/darkblue/5os-3d-honey-black-darkblue.webp"
+    },
+    {
+      "id": 280,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/honey/darkblue/5os-3d-honey-blue-darkblue.webp"
+    },
+    {
+      "id": 281,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/honey/darkblue/5os-3d-honey-brown-darkblue.webp"
+    },
+    {
+      "id": 282,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/honey/darkblue/5os-3d-honey-darkblue-darkblue.webp"
+    },
+    {
+      "id": 283,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/honey/darkblue/5os-3d-honey-darkgreen-darkblue.webp"
+    },
+    {
+      "id": 284,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/honey/darkblue/5os-3d-honey-darkgrey-darkblue.webp"
+    },
+    {
+      "id": 285,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/honey/darkblue/5os-3d-honey-ivory-darkblue.webp"
+    },
+    {
+      "id": 286,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/honey/darkblue/5os-3d-honey-lightbeige-darkblue.webp"
+    },
+    {
+      "id": 287,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/honey/darkblue/5os-3d-honey-maroon-darkblue.webp"
+    },
+    {
+      "id": 288,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/3d/honey/darkblue/5os-3d-honey-red-darkblue.webp"
+    },
+    {
+      "id": 289,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/honey/darkgrey/5os-3d-honey-black-darkgrey.webp"
+    },
+    {
+      "id": 290,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/honey/darkgrey/5os-3d-honey-blue-darkgrey.webp"
+    },
+    {
+      "id": 291,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/honey/darkgrey/5os-3d-honey-brown-darkgrey.webp"
+    },
+    {
+      "id": 292,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/honey/darkgrey/5os-3d-honey-darkblue-darkgrey.webp"
+    },
+    {
+      "id": 293,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/honey/darkgrey/5os-3d-honey-darkgreen-darkgrey.webp"
+    },
+    {
+      "id": 294,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/honey/darkgrey/5os-3d-honey-darkgrey-darkgrey.webp"
+    },
+    {
+      "id": 295,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/honey/darkgrey/5os-3d-honey-ivory-darkgrey.webp"
+    },
+    {
+      "id": 296,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/honey/darkgrey/5os-3d-honey-lightbeige-darkgrey.webp"
+    },
+    {
+      "id": 297,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/honey/darkgrey/5os-3d-honey-maroon-darkgrey.webp"
+    },
+    {
+      "id": 298,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/3d/honey/darkgrey/5os-3d-honey-red-darkgrey.webp"
+    },
+    {
+      "id": 299,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/honey/green/5os-3d-honey-black-green.webp"
+    },
+    {
+      "id": 300,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/honey/green/5os-3d-honey-blue-green.webp"
+    },
+    {
+      "id": 301,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/honey/green/5os-3d-honey-brown-green.webp"
+    },
+    {
+      "id": 302,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/honey/green/5os-3d-honey-darkblue-green.webp"
+    },
+    {
+      "id": 303,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/honey/green/5os-3d-honey-darkgreen-green.webp"
+    },
+    {
+      "id": 304,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/honey/green/5os-3d-honey-darkgrey-green.webp"
+    },
+    {
+      "id": 305,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/honey/green/5os-3d-honey-ivory-green.webp"
+    },
+    {
+      "id": 306,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/honey/green/5os-3d-honey-lightbeige-green.webp"
+    },
+    {
+      "id": 307,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/honey/green/5os-3d-honey-maroon-green.webp"
+    },
+    {
+      "id": 308,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/3d/honey/green/5os-3d-honey-red-green.webp"
+    },
+    {
+      "id": 309,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/honey/lightgrey/5os-3d-honey-black-lightgrey.webp"
+    },
+    {
+      "id": 310,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/honey/lightgrey/5os-3d-honey-blue-lightgrey.webp"
+    },
+    {
+      "id": 311,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/honey/lightgrey/5os-3d-honey-brown-lightgrey.webp"
+    },
+    {
+      "id": 312,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/honey/lightgrey/5os-3d-honey-darkblue-lightgrey.webp"
+    },
+    {
+      "id": 313,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/honey/lightgrey/5os-3d-honey-darkgreen-lightgrey.webp"
+    },
+    {
+      "id": 314,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/honey/lightgrey/5os-3d-honey-darkgrey-lightgrey.webp"
+    },
+    {
+      "id": 315,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/honey/lightgrey/5os-3d-honey-ivory-lightgrey.webp"
+    },
+    {
+      "id": 316,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/honey/lightgrey/5os-3d-honey-lightbeige-lightgrey.webp"
+    },
+    {
+      "id": 317,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/honey/lightgrey/5os-3d-honey-maroon-lightgrey.webp"
+    },
+    {
+      "id": 318,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/3d/honey/lightgrey/5os-3d-honey-red-lightgrey.webp"
+    },
+    {
+      "id": 319,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/honey/maroon/5os-3d-honey-black-maroon.webp"
+    },
+    {
+      "id": 320,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/honey/maroon/5os-3d-honey-blue-maroon.webp"
+    },
+    {
+      "id": 321,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/honey/maroon/5os-3d-honey-brown-maroon.webp"
+    },
+    {
+      "id": 322,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/honey/maroon/5os-3d-honey-darkblue-maroon.webp"
+    },
+    {
+      "id": 323,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/honey/maroon/5os-3d-honey-darkgreen-maroon.webp"
+    },
+    {
+      "id": 324,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/honey/maroon/5os-3d-honey-darkgrey-maroon.webp"
+    },
+    {
+      "id": 325,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/honey/maroon/5os-3d-honey-ivory-maroon.webp"
+    },
+    {
+      "id": 326,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/honey/maroon/5os-3d-honey-lightbeige-maroon.webp"
+    },
+    {
+      "id": 327,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/honey/maroon/5os-3d-honey-maroon-maroon.webp"
+    },
+    {
+      "id": 328,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/3d/honey/maroon/5os-3d-honey-red-maroon.webp"
+    },
+    {
+      "id": 329,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/honey/orange/5os-3d-honey-black-orange.webp"
+    },
+    {
+      "id": 330,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/honey/orange/5os-3d-honey-blue-orange.webp"
+    },
+    {
+      "id": 331,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/honey/orange/5os-3d-honey-brown-orange.webp"
+    },
+    {
+      "id": 332,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/honey/orange/5os-3d-honey-darkblue-orange.webp"
+    },
+    {
+      "id": 333,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/honey/orange/5os-3d-honey-darkgreen-orange.webp"
+    },
+    {
+      "id": 334,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/honey/orange/5os-3d-honey-darkgrey-orange.webp"
+    },
+    {
+      "id": 335,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/honey/orange/5os-3d-honey-ivory-orange.webp"
+    },
+    {
+      "id": 336,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/honey/orange/5os-3d-honey-lightbeige-orange.webp"
+    },
+    {
+      "id": 337,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/honey/orange/5os-3d-honey-maroon-orange.webp"
+    },
+    {
+      "id": 338,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/3d/honey/orange/5os-3d-honey-red-orange.webp"
+    },
+    {
+      "id": 339,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/honey/pink/5os-3d-honey-black-pink.webp"
+    },
+    {
+      "id": 340,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/honey/pink/5os-3d-honey-blue-pink.webp"
+    },
+    {
+      "id": 341,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/honey/pink/5os-3d-honey-brown-pink.webp"
+    },
+    {
+      "id": 342,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/honey/pink/5os-3d-honey-darkblue-pink.webp"
+    },
+    {
+      "id": 343,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/honey/pink/5os-3d-honey-darkgreen-pink.webp"
+    },
+    {
+      "id": 344,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/honey/pink/5os-3d-honey-darkgrey-pink.webp"
+    },
+    {
+      "id": 345,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/honey/pink/5os-3d-honey-ivory-pink.webp"
+    },
+    {
+      "id": 346,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/honey/pink/5os-3d-honey-lightbeige-pink.webp"
+    },
+    {
+      "id": 347,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/honey/pink/5os-3d-honey-maroon-pink.webp"
+    },
+    {
+      "id": 348,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/3d/honey/pink/5os-3d-honey-red-pink.webp"
+    },
+    {
+      "id": 349,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/honey/purple/5os-3d-honey-black-purple.webp"
+    },
+    {
+      "id": 350,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/honey/purple/5os-3d-honey-blue-purple.webp"
+    },
+    {
+      "id": 351,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/honey/purple/5os-3d-honey-brown-purple.webp"
+    },
+    {
+      "id": 352,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/honey/purple/5os-3d-honey-darkblue-purple.webp"
+    },
+    {
+      "id": 353,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/honey/purple/5os-3d-honey-darkgreen-purple.webp"
+    },
+    {
+      "id": 354,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/honey/purple/5os-3d-honey-darkgrey-purple.webp"
+    },
+    {
+      "id": 355,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/honey/purple/5os-3d-honey-ivory-purple.webp"
+    },
+    {
+      "id": 356,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/honey/purple/5os-3d-honey-lightbeige-purple.webp"
+    },
+    {
+      "id": 357,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/honey/purple/5os-3d-honey-maroon-purple.webp"
+    },
+    {
+      "id": 358,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/3d/honey/purple/5os-3d-honey-red-purple.webp"
+    },
+    {
+      "id": 359,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/honey/red/5os-3d-honey-black-red.webp"
+    },
+    {
+      "id": 360,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/honey/red/5os-3d-honey-blue-red.webp"
+    },
+    {
+      "id": 361,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/honey/red/5os-3d-honey-brown-red.webp"
+    },
+    {
+      "id": 362,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/honey/red/5os-3d-honey-darkblue-red.webp"
+    },
+    {
+      "id": 363,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/honey/red/5os-3d-honey-darkgreen-red.webp"
+    },
+    {
+      "id": 364,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/honey/red/5os-3d-honey-darkgrey-red.webp"
+    },
+    {
+      "id": 365,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/honey/red/5os-3d-honey-ivory-red.webp"
+    },
+    {
+      "id": 366,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/honey/red/5os-3d-honey-lightbeige-red.webp"
+    },
+    {
+      "id": 367,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/honey/red/5os-3d-honey-maroon-red.webp"
+    },
+    {
+      "id": 368,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/3d/honey/red/5os-3d-honey-red-red.webp"
+    },
+    {
+      "id": 369,
+      "type": "3d",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/honey/yellow/5os-3d-honey-black-yellow.webp"
+    },
+    {
+      "id": 370,
+      "type": "3d",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/honey/yellow/5os-3d-honey-blue-yellow.webp"
+    },
+    {
+      "id": 371,
+      "type": "3d",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/honey/yellow/5os-3d-honey-brown-yellow.webp"
+    },
+    {
+      "id": 372,
+      "type": "3d",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/honey/yellow/5os-3d-honey-darkblue-yellow.webp"
+    },
+    {
+      "id": 373,
+      "type": "3d",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/honey/yellow/5os-3d-honey-darkgreen-yellow.webp"
+    },
+    {
+      "id": 374,
+      "type": "3d",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/honey/yellow/5os-3d-honey-darkgrey-yellow.webp"
+    },
+    {
+      "id": 375,
+      "type": "3d",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/honey/yellow/5os-3d-honey-ivory-yellow.webp"
+    },
+    {
+      "id": 376,
+      "type": "3d",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/honey/yellow/5os-3d-honey-lightbeige-yellow.webp"
+    },
+    {
+      "id": 377,
+      "type": "3d",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/honey/yellow/5os-3d-honey-maroon-yellow.webp"
+    },
+    {
+      "id": 378,
+      "type": "3d",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/3d/honey/yellow/5os-3d-honey-red-yellow.webp"
+    },
+    {
+      "id": 379,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-beige-beige.webp"
+    },
+    {
+      "id": 380,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-black-beige.webp"
+    },
+    {
+      "id": 381,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-blue-beige.webp"
+    },
+    {
+      "id": 382,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-brown-beige.webp"
+    },
+    {
+      "id": 383,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-darkblue-beige.webp"
+    },
+    {
+      "id": 384,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-darkgreen-beige.webp"
+    },
+    {
+      "id": 385,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-darkgrey-beige.webp"
+    },
+    {
+      "id": 386,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-ivory-beige.webp"
+    },
+    {
+      "id": 387,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-lightbeige-beige.webp"
+    },
+    {
+      "id": 388,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-lime-beige.webp"
+    },
+    {
+      "id": 389,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-maroon-beige.webp"
+    },
+    {
+      "id": 390,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-orange-beige.webp"
+    },
+    {
+      "id": 391,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-pink-beige.webp"
+    },
+    {
+      "id": 392,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-purple-beige.webp"
+    },
+    {
+      "id": 393,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-red-beige.webp"
+    },
+    {
+      "id": 394,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-white-beige.webp"
+    },
+    {
+      "id": 395,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/diamonds/diamonds beige/5os-classic-diamonds-yellow-beige.webp"
+    },
+    {
+      "id": 396,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-beige-black.webp"
+    },
+    {
+      "id": 397,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-black-black.webp"
+    },
+    {
+      "id": 398,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-blue-black.webp"
+    },
+    {
+      "id": 399,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-brown-black.webp"
+    },
+    {
+      "id": 400,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-darkblue-black.webp"
+    },
+    {
+      "id": 401,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-darkgreen-black.webp"
+    },
+    {
+      "id": 402,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-darkgrey-black.webp"
+    },
+    {
+      "id": 403,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-ivory-black.webp"
+    },
+    {
+      "id": 404,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-lightbeige-black.webp"
+    },
+    {
+      "id": 405,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-lime-black.webp"
+    },
+    {
+      "id": 406,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-maroon-black.webp"
+    },
+    {
+      "id": 407,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-orange-black.webp"
+    },
+    {
+      "id": 408,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-pink-black.webp"
+    },
+    {
+      "id": 409,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-purple-black.webp"
+    },
+    {
+      "id": 410,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-red-black.webp"
+    },
+    {
+      "id": 411,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-white-black.webp"
+    },
+    {
+      "id": 412,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/diamonds/diamonds black/5os-classic-diamonds-yellow-black.webp"
+    },
+    {
+      "id": 413,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-beige-blue.webp"
+    },
+    {
+      "id": 414,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-black-blue.webp"
+    },
+    {
+      "id": 415,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-blue-blue.webp"
+    },
+    {
+      "id": 416,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-brown-blue.webp"
+    },
+    {
+      "id": 417,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-darkblue-blue.webp"
+    },
+    {
+      "id": 418,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-darkgreen-blue.webp"
+    },
+    {
+      "id": 419,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-darkgrey-blue.webp"
+    },
+    {
+      "id": 420,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-ivory-blue.webp"
+    },
+    {
+      "id": 421,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-lightbeige-blue.webp"
+    },
+    {
+      "id": 422,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-lime-blue.webp"
+    },
+    {
+      "id": 423,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-maroon-blue.webp"
+    },
+    {
+      "id": 424,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-orange-blue.webp"
+    },
+    {
+      "id": 425,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-pink-blue.webp"
+    },
+    {
+      "id": 426,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-purple-blue.webp"
+    },
+    {
+      "id": 427,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-red-blue.webp"
+    },
+    {
+      "id": 428,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-white-blue.webp"
+    },
+    {
+      "id": 429,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/diamonds/diamonds blue/5os-classic-diamonds-yellow-blue.webp"
+    },
+    {
+      "id": 430,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-beige-brown.webp"
+    },
+    {
+      "id": 431,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-black-brown.webp"
+    },
+    {
+      "id": 432,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-blue-brown.webp"
+    },
+    {
+      "id": 433,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-brown-brown.webp"
+    },
+    {
+      "id": 434,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-darkblue-brown.webp"
+    },
+    {
+      "id": 435,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-darkgreen-brown.webp"
+    },
+    {
+      "id": 436,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-darkgrey-brown.webp"
+    },
+    {
+      "id": 437,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-ivory-brown.webp"
+    },
+    {
+      "id": 438,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-lightbeige-brown.webp"
+    },
+    {
+      "id": 439,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-lime-brown.webp"
+    },
+    {
+      "id": 440,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-maroon-brown.webp"
+    },
+    {
+      "id": 441,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-orange-brown.webp"
+    },
+    {
+      "id": 442,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-pink-brown.webp"
+    },
+    {
+      "id": 443,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-purple-brown.webp"
+    },
+    {
+      "id": 444,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-red-brown.webp"
+    },
+    {
+      "id": 445,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-white-brown.webp"
+    },
+    {
+      "id": 446,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/diamonds/diamonds brown/5os-classic-diamonds-yellow-brown.webp"
+    },
+    {
+      "id": 447,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-beige-darkblue.webp"
+    },
+    {
+      "id": 448,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-black-darkblue.webp"
+    },
+    {
+      "id": 449,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-blue-darkblue.webp"
+    },
+    {
+      "id": 450,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-brown-darkblue.webp"
+    },
+    {
+      "id": 451,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-darkblue-darkblue.webp"
+    },
+    {
+      "id": 452,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-darkgreen-darkblue.webp"
+    },
+    {
+      "id": 453,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-darkgrey-darkblue.webp"
+    },
+    {
+      "id": 454,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-ivory-darkblue.webp"
+    },
+    {
+      "id": 455,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-lightbeige-darkblue.webp"
+    },
+    {
+      "id": 456,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-lime-darkblue.webp"
+    },
+    {
+      "id": 457,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-maroon-darkblue.webp"
+    },
+    {
+      "id": 458,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-orange-darkblue.webp"
+    },
+    {
+      "id": 459,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-pink-darkblue.webp"
+    },
+    {
+      "id": 460,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-purple-darkblue.webp"
+    },
+    {
+      "id": 461,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-red-darkblue.webp"
+    },
+    {
+      "id": 462,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-white-darkblue.webp"
+    },
+    {
+      "id": 463,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "darkblue",
+      "image": "/dywaniki/classic/diamonds/diamonds darkblue/5os-classic-diamonds-yellow-darkblue.webp"
+    },
+    {
+      "id": 464,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-black-darkgrey.webp"
+    },
+    {
+      "id": 465,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-blue-darkgrey.webp"
+    },
+    {
+      "id": 466,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-brown-darkgrey.webp"
+    },
+    {
+      "id": 467,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-darkblue-darkgrey.webp"
+    },
+    {
+      "id": 468,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-darkgreen-darkgrey.webp"
+    },
+    {
+      "id": 469,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-darkgrey-darkgrey.webp"
+    },
+    {
+      "id": 470,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-lightbeige-darkgrey.webp"
+    },
+    {
+      "id": 471,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-maroon-darkgrey.webp"
+    },
+    {
+      "id": 472,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-orange-darkgrey.webp"
+    },
+    {
+      "id": 473,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-pink-darkgrey.webp"
+    },
+    {
+      "id": 474,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-purple-darkgrey.webp"
+    },
+    {
+      "id": 475,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-red-darkgrey.webp"
+    },
+    {
+      "id": 476,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-white-darkgrey.webp"
+    },
+    {
+      "id": 477,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds darkgrey/5os-classic-diamonds-yellow-darkgrey.webp"
+    },
+    {
+      "id": 478,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-beige-green.webp"
+    },
+    {
+      "id": 479,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-black-green.webp"
+    },
+    {
+      "id": 480,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-blue-green.webp"
+    },
+    {
+      "id": 481,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-brown-green.webp"
+    },
+    {
+      "id": 482,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-darkblue-green.webp"
+    },
+    {
+      "id": 483,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-darkgreen-green.webp"
+    },
+    {
+      "id": 484,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-darkgrey-green.webp"
+    },
+    {
+      "id": 485,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-ivory-green.webp"
+    },
+    {
+      "id": 486,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-lightbeige-green.webp"
+    },
+    {
+      "id": 487,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-lime-green.webp"
+    },
+    {
+      "id": 488,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-maroon-green.webp"
+    },
+    {
+      "id": 489,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-orange-green.webp"
+    },
+    {
+      "id": 490,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-pink-green.webp"
+    },
+    {
+      "id": 491,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-purple-green.webp"
+    },
+    {
+      "id": 492,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-red-green.webp"
+    },
+    {
+      "id": 493,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-white-green.webp"
+    },
+    {
+      "id": 494,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/diamonds/diamonds green/5os-classic-diamonds-yellow-green.webp"
+    },
+    {
+      "id": 495,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-beige-lightgrey.webp"
+    },
+    {
+      "id": 496,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-black-lightgrey.webp"
+    },
+    {
+      "id": 497,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-blue-lightgrey.webp"
+    },
+    {
+      "id": 498,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-brown-lightgrey.webp"
+    },
+    {
+      "id": 499,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-darkblue-lightgrey.webp"
+    },
+    {
+      "id": 500,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-darkgreen-lightgrey.webp"
+    },
+    {
+      "id": 501,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-darkgrey-lightgrey.webp"
+    },
+    {
+      "id": 502,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-ivory-lightgrey.webp"
+    },
+    {
+      "id": 503,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-lightbeige-lightgrey.webp"
+    },
+    {
+      "id": 504,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-lime-lightgrey.webp"
+    },
+    {
+      "id": 505,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-maroon-lightgrey.webp"
+    },
+    {
+      "id": 506,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-orange-lightgrey.webp"
+    },
+    {
+      "id": 507,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-purple-lightgrey.webp"
+    },
+    {
+      "id": 508,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-red-lightgrey.webp"
+    },
+    {
+      "id": 509,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-white-lightgrey.webp"
+    },
+    {
+      "id": 510,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/diamonds/diamonds lightgrey/5os-classic-diamonds-yellow-lightgrey.webp"
+    },
+    {
+      "id": 511,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-beige-maroon.webp"
+    },
+    {
+      "id": 512,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-black-maroon.webp"
+    },
+    {
+      "id": 513,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-blue-maroon.webp"
+    },
+    {
+      "id": 514,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-brown-maroon.webp"
+    },
+    {
+      "id": 515,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-darkblue-maroon.webp"
+    },
+    {
+      "id": 516,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-darkgreen-maroon.webp"
+    },
+    {
+      "id": 517,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-darkgrey-maroon.webp"
+    },
+    {
+      "id": 518,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-ivory-maroon.webp"
+    },
+    {
+      "id": 519,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-lightbeige-maroon.webp"
+    },
+    {
+      "id": 520,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-lime-maroon.webp"
+    },
+    {
+      "id": 521,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-maroon-maroon.webp"
+    },
+    {
+      "id": 522,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-orange-maroon.webp"
+    },
+    {
+      "id": 523,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-pink-maroon.webp"
+    },
+    {
+      "id": 524,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-purple-maroon.webp"
+    },
+    {
+      "id": 525,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-red-maroon.webp"
+    },
+    {
+      "id": 526,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-white-maroon.webp"
+    },
+    {
+      "id": 527,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/diamonds/diamonds maroon/5os-classic-diamonds-yellow-maroon.webp"
+    },
+    {
+      "id": 528,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-beige-orange.webp"
+    },
+    {
+      "id": 529,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-black-orange.webp"
+    },
+    {
+      "id": 530,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-blue-orange.webp"
+    },
+    {
+      "id": 531,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-brown-orange.webp"
+    },
+    {
+      "id": 532,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-darkblue-orange.webp"
+    },
+    {
+      "id": 533,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-darkgreen-orange.webp"
+    },
+    {
+      "id": 534,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-darkgrey-orange.webp"
+    },
+    {
+      "id": 535,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-ivory-orange.webp"
+    },
+    {
+      "id": 536,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-lightbeige-orange.webp"
+    },
+    {
+      "id": 537,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-lime-orange.webp"
+    },
+    {
+      "id": 538,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-maroon-orange.webp"
+    },
+    {
+      "id": 539,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-orange-orange.webp"
+    },
+    {
+      "id": 540,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-pink-orange.webp"
+    },
+    {
+      "id": 541,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-purple-orange.webp"
+    },
+    {
+      "id": 542,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-red-orange.webp"
+    },
+    {
+      "id": 543,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-white-orange.webp"
+    },
+    {
+      "id": 544,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/diamonds/diamonds orange/5os-classic-diamonds-yellow-orange.webp"
+    },
+    {
+      "id": 545,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-beige-pink.webp"
+    },
+    {
+      "id": 546,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-black-pink.webp"
+    },
+    {
+      "id": 547,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-blue-pink.webp"
+    },
+    {
+      "id": 548,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-brown-pink.webp"
+    },
+    {
+      "id": 549,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-darkblue-pink.webp"
+    },
+    {
+      "id": 550,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-darkgreen-pink.webp"
+    },
+    {
+      "id": 551,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-darkgrey-pink.webp"
+    },
+    {
+      "id": 552,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-ivory-pink.webp"
+    },
+    {
+      "id": 553,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-lightbeige-pink.webp"
+    },
+    {
+      "id": 554,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-lime-pink.webp"
+    },
+    {
+      "id": 555,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-maroon-pink.webp"
+    },
+    {
+      "id": 556,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-orange-pink.webp"
+    },
+    {
+      "id": 557,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-pink-pink.webp"
+    },
+    {
+      "id": 558,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-purple-pink.webp"
+    },
+    {
+      "id": 559,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-red-pink.webp"
+    },
+    {
+      "id": 560,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-white-pink.webp"
+    },
+    {
+      "id": 561,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/diamonds/diamonds pink/5os-classic-diamonds-yellow-pink.webp"
+    },
+    {
+      "id": 562,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-beige-purple.webp"
+    },
+    {
+      "id": 563,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-black-purple.webp"
+    },
+    {
+      "id": 564,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-blue-purple.webp"
+    },
+    {
+      "id": 565,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-brown-purple.webp"
+    },
+    {
+      "id": 566,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-darkblue-purple.webp"
+    },
+    {
+      "id": 567,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-darkgreen-purple.webp"
+    },
+    {
+      "id": 568,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-darkgrey-purple.webp"
+    },
+    {
+      "id": 569,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-ivory-purple.webp"
+    },
+    {
+      "id": 570,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-lightbeige-purple.webp"
+    },
+    {
+      "id": 571,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-lime-purple.webp"
+    },
+    {
+      "id": 572,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-maroon-purple.webp"
+    },
+    {
+      "id": 573,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-orange-purple.webp"
+    },
+    {
+      "id": 574,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-pink-purple.webp"
+    },
+    {
+      "id": 575,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-purple-purple.webp"
+    },
+    {
+      "id": 576,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-red-purple.webp"
+    },
+    {
+      "id": 577,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-white-purple.webp"
+    },
+    {
+      "id": 578,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/diamonds/diamonds purple/5os-classic-diamonds-yellow-purple.webp"
+    },
+    {
+      "id": 579,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-beige-red.webp"
+    },
+    {
+      "id": 580,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-black-red.webp"
+    },
+    {
+      "id": 581,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-blue-red.webp"
+    },
+    {
+      "id": 582,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-brown-red.webp"
+    },
+    {
+      "id": 583,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-darkblue-red.webp"
+    },
+    {
+      "id": 584,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-darkgreen-red.webp"
+    },
+    {
+      "id": 585,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-darkgrey-red.webp"
+    },
+    {
+      "id": 586,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-ivory-red.webp"
+    },
+    {
+      "id": 587,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-lightbeige-red.webp"
+    },
+    {
+      "id": 588,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-lime-red.webp"
+    },
+    {
+      "id": 589,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-maroon-red.webp"
+    },
+    {
+      "id": 590,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-orange-red.webp"
+    },
+    {
+      "id": 591,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-pink-red.webp"
+    },
+    {
+      "id": 592,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-purple-red.webp"
+    },
+    {
+      "id": 593,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-red-red.webp"
+    },
+    {
+      "id": 594,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-white-red.webp"
+    },
+    {
+      "id": 595,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/diamonds/diamonds red/5os-classic-diamonds-yellow-red.webp"
+    },
+    {
+      "id": 596,
+      "type": "classic",
+      "color": "beige",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-beige-yellow.webp"
+    },
+    {
+      "id": 597,
+      "type": "classic",
+      "color": "black",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-black-yellow.webp"
+    },
+    {
+      "id": 598,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-blue-yellow.webp"
+    },
+    {
+      "id": 599,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-brown-yellow.webp"
+    },
+    {
+      "id": 600,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-darkblue-yellow.webp"
+    },
+    {
+      "id": 601,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-darkgreen-yellow.webp"
+    },
+    {
+      "id": 602,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-darkgrey-yellow.webp"
+    },
+    {
+      "id": 603,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-ivory-yellow.webp"
+    },
+    {
+      "id": 604,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-lightbeige-yellow.webp"
+    },
+    {
+      "id": 605,
+      "type": "classic",
+      "color": "lime",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-lime-yellow.webp"
+    },
+    {
+      "id": 606,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-maroon-yellow.webp"
+    },
+    {
+      "id": 607,
+      "type": "classic",
+      "color": "orange",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-orange-yellow.webp"
+    },
+    {
+      "id": 608,
+      "type": "classic",
+      "color": "pink",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-pink-yellow.webp"
+    },
+    {
+      "id": 609,
+      "type": "classic",
+      "color": "purple",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-purple-yellow.webp"
+    },
+    {
+      "id": 610,
+      "type": "classic",
+      "color": "red",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-red-yellow.webp"
+    },
+    {
+      "id": 611,
+      "type": "classic",
+      "color": "white",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-white-yellow.webp"
+    },
+    {
+      "id": 612,
+      "type": "classic",
+      "color": "yellow",
+      "cellType": "diamonds",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/diamonds/diamonds yellow/5os-classic-diamonds-yellow-yellow.webp"
+    },
+    {
+      "id": 613,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/honeycomb/honey beige trim/5os-classic-honey-black-beige.webp"
+    },
+    {
+      "id": 614,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/honeycomb/honey beige trim/5os-classic-honey-blue-beige.webp"
+    },
+    {
+      "id": 615,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/honeycomb/honey beige trim/5os-classic-honey-brown-beige.webp"
+    },
+    {
+      "id": 616,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/honeycomb/honey beige trim/5os-classic-honey-darkblue-beige.webp"
+    },
+    {
+      "id": 617,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/honeycomb/honey beige trim/5os-classic-honey-darkgreen-beige.webp"
+    },
+    {
+      "id": 618,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/honeycomb/honey beige trim/5os-classic-honey-darkgrey-beige.webp"
+    },
+    {
+      "id": 619,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/honeycomb/honey beige trim/5os-classic-honey-ivory-beige.webp"
+    },
+    {
+      "id": 620,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/honeycomb/honey beige trim/5os-classic-honey-lightbeige-beige.webp"
+    },
+    {
+      "id": 621,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/honeycomb/honey beige trim/5os-classic-honey-maroon-beige.webp"
+    },
+    {
+      "id": 622,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "beige",
+      "image": "/dywaniki/classic/honeycomb/honey beige trim/5os-classic-honey-red-beige.webp"
+    },
+    {
+      "id": 623,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/honeycomb/honey black/5os-classic-honey-black-black.webp"
+    },
+    {
+      "id": 624,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/honeycomb/honey black/5os-classic-honey-blue-black.webp"
+    },
+    {
+      "id": 625,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/honeycomb/honey black/5os-classic-honey-brown-black.webp"
+    },
+    {
+      "id": 626,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/honeycomb/honey black/5os-classic-honey-darkblue-black.webp"
+    },
+    {
+      "id": 627,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/honeycomb/honey black/5os-classic-honey-darkgreen-black.webp"
+    },
+    {
+      "id": 628,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/honeycomb/honey black/5os-classic-honey-darkgrey-black.webp"
+    },
+    {
+      "id": 629,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/honeycomb/honey black/5os-classic-honey-ivory-black.webp"
+    },
+    {
+      "id": 630,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/honeycomb/honey black/5os-classic-honey-lightbeige-black.webp"
+    },
+    {
+      "id": 631,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/honeycomb/honey black/5os-classic-honey-maroon-black.webp"
+    },
+    {
+      "id": 632,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "black",
+      "image": "/dywaniki/classic/honeycomb/honey black/5os-classic-honey-red-black.webp"
+    },
+    {
+      "id": 633,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey blue trim/5os-classic-honey-black-blue.webp"
+    },
+    {
+      "id": 634,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey blue trim/5os-classic-honey-blue-blue.webp"
+    },
+    {
+      "id": 635,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey blue trim/5os-classic-honey-brown-blue.webp"
+    },
+    {
+      "id": 636,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey blue trim/5os-classic-honey-darkblue-blue.webp"
+    },
+    {
+      "id": 637,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey blue trim/5os-classic-honey-darkgreen-blue.webp"
+    },
+    {
+      "id": 638,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey blue trim/5os-classic-honey-darkgrey-blue.webp"
+    },
+    {
+      "id": 639,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey blue trim/5os-classic-honey-ivory-blue.webp"
+    },
+    {
+      "id": 640,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey blue trim/5os-classic-honey-lightbeige-blue.webp"
+    },
+    {
+      "id": 641,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey blue trim/5os-classic-honey-maroon-blue.webp"
+    },
+    {
+      "id": 642,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey blue trim/5os-classic-honey-red-blue.webp"
+    },
+    {
+      "id": 643,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/honeycomb/honey brown trim/5os-classic-honey-black-brown.webp"
+    },
+    {
+      "id": 644,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/honeycomb/honey brown trim/5os-classic-honey-blue-brown.webp"
+    },
+    {
+      "id": 645,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/honeycomb/honey brown trim/5os-classic-honey-brown-brown.webp"
+    },
+    {
+      "id": 646,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/honeycomb/honey brown trim/5os-classic-honey-darkblue-brown.webp"
+    },
+    {
+      "id": 647,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/honeycomb/honey brown trim/5os-classic-honey-darkgreen-brown.webp"
+    },
+    {
+      "id": 648,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/honeycomb/honey brown trim/5os-classic-honey-darkgrey-brown.webp"
+    },
+    {
+      "id": 649,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/honeycomb/honey brown trim/5os-classic-honey-ivory-brown.webp"
+    },
+    {
+      "id": 650,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/honeycomb/honey brown trim/5os-classic-honey-lightbeige-brown.webp"
+    },
+    {
+      "id": 651,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/honeycomb/honey brown trim/5os-classic-honey-maroon-brown.webp"
+    },
+    {
+      "id": 652,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "brown",
+      "image": "/dywaniki/classic/honeycomb/honey brown trim/5os-classic-honey-red-brown.webp"
+    },
+    {
+      "id": 653,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey darkblue trim/5os-classic-honey-black-blue.webp"
+    },
+    {
+      "id": 654,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey darkblue trim/5os-classic-honey-blue-blue.webp"
+    },
+    {
+      "id": 655,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey darkblue trim/5os-classic-honey-brown-blue.webp"
+    },
+    {
+      "id": 656,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey darkblue trim/5os-classic-honey-darkblue-blue.webp"
+    },
+    {
+      "id": 657,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey darkblue trim/5os-classic-honey-darkgreen-blue.webp"
+    },
+    {
+      "id": 658,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey darkblue trim/5os-classic-honey-darkgrey-blue.webp"
+    },
+    {
+      "id": 659,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey darkblue trim/5os-classic-honey-ivory-blue.webp"
+    },
+    {
+      "id": 660,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey darkblue trim/5os-classic-honey-lightbeige-blue.webp"
+    },
+    {
+      "id": 661,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey darkblue trim/5os-classic-honey-maroon-blue.webp"
+    },
+    {
+      "id": 662,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "blue",
+      "image": "/dywaniki/classic/honeycomb/honey darkblue trim/5os-classic-honey-red-blue.webp"
+    },
+    {
+      "id": 663,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/honeycomb/honey darkgrey trim/5os-classic-honey-black-darkgrey.webp"
+    },
+    {
+      "id": 664,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/honeycomb/honey darkgrey trim/5os-classic-honey-blue-darkgrey.webp"
+    },
+    {
+      "id": 665,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/honeycomb/honey darkgrey trim/5os-classic-honey-brown-darkgrey.webp"
+    },
+    {
+      "id": 666,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/honeycomb/honey darkgrey trim/5os-classic-honey-darkblue-darkgrey.webp"
+    },
+    {
+      "id": 667,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/honeycomb/honey darkgrey trim/5os-classic-honey-darkgreen-darkgrey.webp"
+    },
+    {
+      "id": 668,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/honeycomb/honey darkgrey trim/5os-classic-honey-darkgrey-darkgrey.webp"
+    },
+    {
+      "id": 669,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/honeycomb/honey darkgrey trim/5os-classic-honey-ivory-darkgrey.webp"
+    },
+    {
+      "id": 670,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/honeycomb/honey darkgrey trim/5os-classic-honey-lightbeige-darkgrey.webp"
+    },
+    {
+      "id": 671,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/honeycomb/honey darkgrey trim/5os-classic-honey-maroon-darkgrey.webp"
+    },
+    {
+      "id": 672,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "darkgrey",
+      "image": "/dywaniki/classic/honeycomb/honey darkgrey trim/5os-classic-honey-red-darkgrey.webp"
+    },
+    {
+      "id": 673,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/honeycomb/honey green trim/5os-classic-honey-black-green.webp"
+    },
+    {
+      "id": 674,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/honeycomb/honey green trim/5os-classic-honey-blue-green.webp"
+    },
+    {
+      "id": 675,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/honeycomb/honey green trim/5os-classic-honey-brown-green.webp"
+    },
+    {
+      "id": 676,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/honeycomb/honey green trim/5os-classic-honey-darkblue-green.webp"
+    },
+    {
+      "id": 677,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/honeycomb/honey green trim/5os-classic-honey-darkgreen-green.webp"
+    },
+    {
+      "id": 678,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/honeycomb/honey green trim/5os-classic-honey-darkgrey-green.webp"
+    },
+    {
+      "id": 679,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/honeycomb/honey green trim/5os-classic-honey-ivory-green.webp"
+    },
+    {
+      "id": 680,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/honeycomb/honey green trim/5os-classic-honey-lightbeige-green.webp"
+    },
+    {
+      "id": 681,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/honeycomb/honey green trim/5os-classic-honey-maroon-green.webp"
+    },
+    {
+      "id": 682,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "green",
+      "image": "/dywaniki/classic/honeycomb/honey green trim/5os-classic-honey-red-green.webp"
+    },
+    {
+      "id": 683,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/honeycomb/honey lightgrey trim/5os-classic-honey-black-lightgrey.webp"
+    },
+    {
+      "id": 684,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/honeycomb/honey lightgrey trim/5os-classic-honey-blue-lightgrey.webp"
+    },
+    {
+      "id": 685,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/honeycomb/honey lightgrey trim/5os-classic-honey-brown-lightgrey.webp"
+    },
+    {
+      "id": 686,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/honeycomb/honey lightgrey trim/5os-classic-honey-darkblue-lightgrey.webp"
+    },
+    {
+      "id": 687,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/honeycomb/honey lightgrey trim/5os-classic-honey-darkgreen-lightgrey.webp"
+    },
+    {
+      "id": 688,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/honeycomb/honey lightgrey trim/5os-classic-honey-darkgrey-lightgrey.webp"
+    },
+    {
+      "id": 689,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/honeycomb/honey lightgrey trim/5os-classic-honey-ivory-lightgrey.webp"
+    },
+    {
+      "id": 690,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/honeycomb/honey lightgrey trim/5os-classic-honey-lightbeige-lightgrey.webp"
+    },
+    {
+      "id": 691,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/honeycomb/honey lightgrey trim/5os-classic-honey-maroon-lightgrey.webp"
+    },
+    {
+      "id": 692,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "lightgrey",
+      "image": "/dywaniki/classic/honeycomb/honey lightgrey trim/5os-classic-honey-red-lightgrey.webp"
+    },
+    {
+      "id": 693,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/honeycomb/honey maroon trim/5os-classic-honey-black-maroon.webp"
+    },
+    {
+      "id": 694,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/honeycomb/honey maroon trim/5os-classic-honey-blue-maroon.webp"
+    },
+    {
+      "id": 695,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/honeycomb/honey maroon trim/5os-classic-honey-brown-maroon.webp"
+    },
+    {
+      "id": 696,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/honeycomb/honey maroon trim/5os-classic-honey-darkblue-maroon.webp"
+    },
+    {
+      "id": 697,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/honeycomb/honey maroon trim/5os-classic-honey-darkgreen-maroon.webp"
+    },
+    {
+      "id": 698,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/honeycomb/honey maroon trim/5os-classic-honey-darkgrey-maroon.webp"
+    },
+    {
+      "id": 699,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/honeycomb/honey maroon trim/5os-classic-honey-ivory-maroon.webp"
+    },
+    {
+      "id": 700,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/honeycomb/honey maroon trim/5os-classic-honey-lightbeige-maroon.webp"
+    },
+    {
+      "id": 701,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/honeycomb/honey maroon trim/5os-classic-honey-maroon-maroon.webp"
+    },
+    {
+      "id": 702,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "maroon",
+      "image": "/dywaniki/classic/honeycomb/honey maroon trim/5os-classic-honey-red-maroon.webp"
+    },
+    {
+      "id": 703,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/honeycomb/honey orange trim/5os-classic-honey-black-orange.webp"
+    },
+    {
+      "id": 704,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/honeycomb/honey orange trim/5os-classic-honey-blue-orange.webp"
+    },
+    {
+      "id": 705,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/honeycomb/honey orange trim/5os-classic-honey-brown-orange.webp"
+    },
+    {
+      "id": 706,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/honeycomb/honey orange trim/5os-classic-honey-darkblue-orange.webp"
+    },
+    {
+      "id": 707,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/honeycomb/honey orange trim/5os-classic-honey-darkgreen-orange.webp"
+    },
+    {
+      "id": 708,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/honeycomb/honey orange trim/5os-classic-honey-darkgrey-orange.webp"
+    },
+    {
+      "id": 709,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/honeycomb/honey orange trim/5os-classic-honey-ivory-orange.webp"
+    },
+    {
+      "id": 710,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/honeycomb/honey orange trim/5os-classic-honey-lightbeige-orange.webp"
+    },
+    {
+      "id": 711,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/honeycomb/honey orange trim/5os-classic-honey-maroon-orange.webp"
+    },
+    {
+      "id": 712,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "orange",
+      "image": "/dywaniki/classic/honeycomb/honey orange trim/5os-classic-honey-red-orange.webp"
+    },
+    {
+      "id": 713,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/honeycomb/honey pink trim/5os-classic-honey-black-pink.webp"
+    },
+    {
+      "id": 714,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/honeycomb/honey pink trim/5os-classic-honey-blue-pink.webp"
+    },
+    {
+      "id": 715,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/honeycomb/honey pink trim/5os-classic-honey-brown-pink.webp"
+    },
+    {
+      "id": 716,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/honeycomb/honey pink trim/5os-classic-honey-darkblue-pink.webp"
+    },
+    {
+      "id": 717,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/honeycomb/honey pink trim/5os-classic-honey-darkgreen-pink.webp"
+    },
+    {
+      "id": 718,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/honeycomb/honey pink trim/5os-classic-honey-darkgrey-pink.webp"
+    },
+    {
+      "id": 719,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/honeycomb/honey pink trim/5os-classic-honey-ivory-pink.webp"
+    },
+    {
+      "id": 720,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/honeycomb/honey pink trim/5os-classic-honey-lightbeige-pink.webp"
+    },
+    {
+      "id": 721,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/honeycomb/honey pink trim/5os-classic-honey-maroon-pink.webp"
+    },
+    {
+      "id": 722,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "pink",
+      "image": "/dywaniki/classic/honeycomb/honey pink trim/5os-classic-honey-red-pink.webp"
+    },
+    {
+      "id": 723,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/honeycomb/honey purple trim/5os-classic-honey-black-purple.webp"
+    },
+    {
+      "id": 724,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/honeycomb/honey purple trim/5os-classic-honey-blue-purple.webp"
+    },
+    {
+      "id": 725,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/honeycomb/honey purple trim/5os-classic-honey-brown-purple.webp"
+    },
+    {
+      "id": 726,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/honeycomb/honey purple trim/5os-classic-honey-darkblue-purple.webp"
+    },
+    {
+      "id": 727,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/honeycomb/honey purple trim/5os-classic-honey-darkgreen-purple.webp"
+    },
+    {
+      "id": 728,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/honeycomb/honey purple trim/5os-classic-honey-darkgrey-purple.webp"
+    },
+    {
+      "id": 729,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/honeycomb/honey purple trim/5os-classic-honey-ivory-purple.webp"
+    },
+    {
+      "id": 730,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/honeycomb/honey purple trim/5os-classic-honey-lightbeige-purple.webp"
+    },
+    {
+      "id": 731,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/honeycomb/honey purple trim/5os-classic-honey-maroon-purple.webp"
+    },
+    {
+      "id": 732,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "purple",
+      "image": "/dywaniki/classic/honeycomb/honey purple trim/5os-classic-honey-red-purple.webp"
+    },
+    {
+      "id": 733,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/honeycomb/honey red trim/5os-classic-honey-black-red.webp"
+    },
+    {
+      "id": 734,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/honeycomb/honey red trim/5os-classic-honey-blue-red.webp"
+    },
+    {
+      "id": 735,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/honeycomb/honey red trim/5os-classic-honey-brown-red.webp"
+    },
+    {
+      "id": 736,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/honeycomb/honey red trim/5os-classic-honey-darkblue-red.webp"
+    },
+    {
+      "id": 737,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/honeycomb/honey red trim/5os-classic-honey-darkgreen-red.webp"
+    },
+    {
+      "id": 738,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/honeycomb/honey red trim/5os-classic-honey-darkgrey-red.webp"
+    },
+    {
+      "id": 739,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/honeycomb/honey red trim/5os-classic-honey-ivory-red.webp"
+    },
+    {
+      "id": 740,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/honeycomb/honey red trim/5os-classic-honey-lightbeige-red.webp"
+    },
+    {
+      "id": 741,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/honeycomb/honey red trim/5os-classic-honey-maroon-red.webp"
+    },
+    {
+      "id": 742,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "red",
+      "image": "/dywaniki/classic/honeycomb/honey red trim/5os-classic-honey-red-red.webp"
+    },
+    {
+      "id": 743,
+      "type": "classic",
+      "color": "black",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/honeycomb/honey yellow trim/5os-classic-honey-black-yellow.webp"
+    },
+    {
+      "id": 744,
+      "type": "classic",
+      "color": "blue",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/honeycomb/honey yellow trim/5os-classic-honey-blue-yellow.webp"
+    },
+    {
+      "id": 745,
+      "type": "classic",
+      "color": "brown",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/honeycomb/honey yellow trim/5os-classic-honey-brown-yellow.webp"
+    },
+    {
+      "id": 746,
+      "type": "classic",
+      "color": "darkblue",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/honeycomb/honey yellow trim/5os-classic-honey-darkblue-yellow.webp"
+    },
+    {
+      "id": 747,
+      "type": "classic",
+      "color": "darkgreen",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/honeycomb/honey yellow trim/5os-classic-honey-darkgreen-yellow.webp"
+    },
+    {
+      "id": 748,
+      "type": "classic",
+      "color": "darkgrey",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/honeycomb/honey yellow trim/5os-classic-honey-darkgrey-yellow.webp"
+    },
+    {
+      "id": 749,
+      "type": "classic",
+      "color": "ivory",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/honeycomb/honey yellow trim/5os-classic-honey-ivory-yellow.webp"
+    },
+    {
+      "id": 750,
+      "type": "classic",
+      "color": "lightbeige",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/honeycomb/honey yellow trim/5os-classic-honey-lightbeige-yellow.webp"
+    },
+    {
+      "id": 751,
+      "type": "classic",
+      "color": "maroon",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/honeycomb/honey yellow trim/5os-classic-honey-maroon-yellow.webp"
+    },
+    {
+      "id": 752,
+      "type": "classic",
+      "color": "red",
+      "cellType": "honey",
+      "edgeColor": "yellow",
+      "image": "/dywaniki/classic/honeycomb/honey yellow trim/5os-classic-honey-red-yellow.webp"
+    }
+  ]
+}

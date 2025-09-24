@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { BitrixService } from '@/lib/services/BitrixService';
 import { BitrixOrder } from '@/lib/types/bitrix';
 
 export async function POST(request: NextRequest) {
@@ -85,26 +84,15 @@ export async function POST(request: NextRequest) {
     // TODO: Dodaj logikę tworzenia kontaktu jeśli jest potrzebna
     // const contactResult = await BitrixService.createOrUpdateContact({...});
 
-    // Wysyłanie zamówienia do Bitrix24
-    const result = await BitrixService.sendOrder(orderData);
-
-    if (!result.success) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Błąd podczas wysyłania zamówienia do Bitrix24',
-          details: result.error 
-        },
-        { status: 500 }
-      );
-    }
+    // TODO: Implementuj integrację z Bitrix24
+    console.log('📦 Zamówienie do wysłania:', orderData);
 
     return NextResponse.json({
       success: true,
-      message: 'Zamówienie zostało pomyślnie wysłane do Bitrix24',
+      message: 'Zamówienie zostało zapisane (integracja z Bitrix24 wyłączona)',
       data: {
-        orderId: result.data,
-        bitrixResponse: result
+        orderId: `temp-${Date.now()}`,
+        orderData: orderData
       }
     });
 
@@ -124,23 +112,11 @@ export async function POST(request: NextRequest) {
 // GET - test połączenia z Bitrix24
 export async function GET() {
   try {
-    const testResult = await BitrixService.testConnection();
-    
-    if (!testResult.success) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Błąd połączenia z Bitrix24',
-          details: testResult.error 
-        },
-        { status: 500 }
-      );
-    }
-
+    // TODO: Implementuj test połączenia z Bitrix24
     return NextResponse.json({
       success: true,
-      message: 'Połączenie z Bitrix24 działa poprawnie',
-      data: testResult.data
+      message: 'Test połączenia wyłączony (integracja z Bitrix24 nieaktywna)',
+      data: { status: 'disabled' }
     });
 
   } catch (error) {

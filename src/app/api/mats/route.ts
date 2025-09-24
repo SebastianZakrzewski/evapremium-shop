@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SupabaseMatsService } from '@/lib/services/SupabaseMatsService';
+import { CarMatService } from '@/lib/services/carmat-service';
 
 // GET /api/mats
 export async function GET(request: NextRequest) {
@@ -11,42 +11,29 @@ export async function GET(request: NextRequest) {
     const edgeColor = searchParams.get('edgeColor');
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
+    const offset = (page - 1) * limit;
 
-    let mats;
+    const result = await CarMatService.getAllMats({
+      type: type || undefined,
+      color: color || undefined,
+      cellType: cellType || undefined,
+      edgeColor: edgeColor || undefined,
+      limit,
+      offset
+    });
 
-    // Jeśli są parametry filtrowania
-    if (type || color || cellType || edgeColor) {
-      const filter: any = {};
-      if (type) filter.type = type;
-      if (color) filter.color = color;
-      if (cellType) filter.cellType = cellType;
-      if (edgeColor) filter.edgeColor = edgeColor;
-
-      mats = await SupabaseMatsService.getMatsByFilter(filter);
-      
-      return NextResponse.json({
-        success: true,
-        data: mats,
-        count: mats.length,
-        filtered: true
-      });
+    if (!result.success) {
+      return NextResponse.json(
+        { success: false, error: result.error || 'Błąd serwera' },
+        { status: 500 }
+      );
     }
 
-    // Jeśli nie ma filtrów, zwróć z paginacją
-    const result = await SupabaseMatsService.getMatsWithPagination(page, limit);
-    
     return NextResponse.json({
       success: true,
-      data: result.mats,
-      count: result.total,
-      page: result.page,
-      totalPages: result.totalPages,
-      pagination: {
-        current: result.page,
-        total: result.totalPages,
-        hasNext: result.page < result.totalPages,
-        hasPrev: result.page > 1
-      }
+      data: result.data,
+      count: result.count,
+      filtered: !!(type || color || cellType || edgeColor)
     });
   } catch (error) {
     console.error('Error fetching mats:', error);
@@ -62,11 +49,18 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const mats = await SupabaseMatsService.createMats(body);
+    const result = await CarMatService.createMat(body);
+    
+    if (!result.success) {
+      return NextResponse.json(
+        { success: false, error: result.error || 'Nieprawidłowe dane dywanika' },
+        { status: 400 }
+      );
+    }
     
     return NextResponse.json({
       success: true,
-      data: mats
+      data: result.data
     });
   } catch (error) {
     console.error('Error creating mats:', error);

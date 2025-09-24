@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SupabaseMatsService } from '@/lib/services/SupabaseMatsService';
+import { CarMatService } from '@/lib/services/carmat-service';
 
 export async function GET(
   request: NextRequest,
@@ -16,16 +16,23 @@ export async function GET(
       );
     }
 
-    const mat = await SupabaseMatsService.getMatsById(idNum);
-    
-    if (!mat) {
+    const result = await CarMatService.getMatById(idNum);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error || 'Wystąpił błąd podczas pobierania maty' },
+        { status: result.data === null ? 404 : 500 }
+      );
+    }
+
+    if (!result.data) {
       return NextResponse.json(
         { error: 'Mata nie została znaleziona' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(mat);
+    return NextResponse.json(result.data);
   } catch (error) {
     console.error('Błąd podczas pobierania maty:', error);
     return NextResponse.json(
@@ -51,9 +58,24 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const mat = await SupabaseMatsService.updateMats({ id: idNum, ...body });
     
-    return NextResponse.json(mat);
+    const result = await CarMatService.updateMat(idNum, body);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error || 'Wystąpił błąd podczas aktualizacji maty' },
+        { status: result.data === null ? 404 : 400 }
+      );
+    }
+
+    if (!result.data) {
+      return NextResponse.json(
+        { error: 'Mata nie została znaleziona' },
+        { status: 404 }
+      );
+    }
+    
+    return NextResponse.json(result.data);
   } catch (error) {
     console.error('Błąd podczas aktualizacji maty:', error);
     return NextResponse.json(
@@ -78,7 +100,14 @@ export async function DELETE(
       );
     }
 
-    await SupabaseMatsService.deleteMats(idNum);
+    const result = await CarMatService.deleteMat(idNum);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error || 'Wystąpił błąd podczas usuwania maty' },
+        { status: 500 }
+      );
+    }
     
     return NextResponse.json({ message: 'Mata została usunięta' });
   } catch (error) {
