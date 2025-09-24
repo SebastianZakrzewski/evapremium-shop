@@ -52,8 +52,7 @@ type SetVariant = {
 
 const setTypes: SetType[] = [
   { id: "3d-with-rims", name: "3D z rantami", description: "Dywaniki 3D z obszyciem rantowym", priceModifier: 0 },
-  { id: "3d-without-rims", name: "3D bez rantów", description: "Dywaniki 3D bez obszycia rantowego", priceModifier: -20 },
-  { id: "classic", name: "Classic", description: "Klasyczne dywaniki płaskie", priceModifier: -40 },
+  { id: "classic", name: "3D bez rantów", description: "Klasyczne dywaniki płaskie", priceModifier: -40 },
 ];
 
 const cellTypes: CellType[] = [
@@ -62,7 +61,8 @@ const cellTypes: CellType[] = [
 ];
 
 const setVariants: SetVariant[] = [
-  { id: "basic", name: "Podstawowy", description: "4 dywaniki (przód + tył)", priceModifier: 0 },
+  { id: "front", name: "Starter", description: "2 dywaniki (tylko przód)", priceModifier: -30 },
+  { id: "basic", name: "Podstawowy", description: "5 dywaników (przód + tył + ochrona na tunel środkowy)", priceModifier: 0 },
   { id: "premium", name: "Premium", description: "5 dywaników (przód + tył + bagażnik)", priceModifier: 50 },
   { id: "complete", name: "Kompletny", description: "6 dywaników (przód + tył + bagażnik + dodatkowe)", priceModifier: 80 },
 ];
@@ -271,12 +271,30 @@ export default function Configurator() {
                       <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
                         <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
                         <div className="flex items-center justify-between">
-                          <div>
-                            <div className="text-sm font-medium">{v.name}</div>
-                            <div className="text-xs text-white/60">{v.description}</div>
+                          <div className="flex items-center gap-3 flex-1">
+                            <div className="flex-1">
+                              <div className="text-sm font-medium">{v.name}</div>
+                              <div className="text-xs text-white/60">{v.description}</div>
+                            </div>
+                            {(v.id === "front" || v.id === "basic") && (
+                              <div className="flex flex-col items-center gap-1">
+                                <span className="text-xs text-white/50">Przód</span>
+                                <Image
+                                  src={v.id === "front" ? "/konfigurator/zestaw/przod.png" : "/konfigurator/zestaw/pt.png"}
+                                  alt="Wizualizacja zestawu przód"
+                                  width={80}
+                                  height={48}
+                                  className="rounded-lg flex-shrink-0"
+                                  sizes="80px"
+                                />
+                              </div>
+                            )}
+                            {v.id !== "front" && v.id !== "basic" && (
+                              <div className="w-20 h-12 flex-shrink-0"></div>
+                            )}
                           </div>
-                          {v.priceModifier !== 0 && (
-                            <div className={`text-xs font-medium ${v.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                          {v.priceModifier !== 0 && v.id !== 'front' && (
+                            <div className={`text-xs font-medium ${v.priceModifier > 0 ? 'text-green-400' : 'text-red-400'} flex-shrink-0`}>
                               {v.priceModifier > 0 ? '+' : ''}{v.priceModifier} zł
                             </div>
                           )}
@@ -302,7 +320,7 @@ export default function Configurator() {
                             <div className="text-sm font-medium">{s.name}</div>
                             <div className="text-xs text-white/60">{s.description}</div>
                           </div>
-                          {s.priceModifier !== 0 && (
+                          {s.priceModifier !== 0 && s.id !== 'classic' && (
                             <div className={`text-xs font-medium ${s.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
                               {s.priceModifier > 0 ? '+' : ''}{s.priceModifier} zł
                             </div>
@@ -329,7 +347,7 @@ export default function Configurator() {
                             <div className="text-sm font-medium">{c.name}</div>
                             <div className="text-xs text-white/60">{c.description}</div>
                           </div>
-                          {c.priceModifier !== 0 && (
+                          {c.priceModifier !== 0 && c.id !== 'honey' && (
                             <div className={`text-xs font-medium ${c.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
                               {c.priceModifier > 0 ? '+' : ''}{c.priceModifier} zł
                             </div>
@@ -349,9 +367,27 @@ export default function Configurator() {
                   <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
                   <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-7 gap-1.5">
                     {availableMaterialColors.map((c) => (
-                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square`} style={{ backgroundColor: c.color }}>
+                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden`}>
                         <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
-                        <div className="flex items-center justify-center h-full">
+                        <div
+                          className="absolute inset-0"
+                          style={{
+                            backgroundColor: c.color,
+                            filter: 'brightness(1.15) saturate(1.25) contrast(1.05)'
+                          }}
+                        />
+                        <div
+                          className="absolute inset-0 pointer-events-none"
+                          data-testid="texture-overlay"
+                          style={{
+                            backgroundImage: `url(${selectedCellType === 'honey' ? '/konfigurator/komorki/plaster.png' : '/konfigurator/komorki/romb.png'})`,
+                            backgroundSize: 'cover',
+                            backgroundRepeat: 'no-repeat',
+                            mixBlendMode: 'multiply',
+                            opacity: 0.35
+                          }}
+                        />
+                        <div className="flex items-center justify-center h-full relative z-[1]">
                         </div>
                       </Label>
                     ))}
