@@ -1,8 +1,8 @@
 const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config();
+require('dotenv').config({ path: '.env.local' });
 
-const supabaseUrl = process.env.SUPABASE_URL || 'https://diqbnsinhsedmvvstvvc.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://diqbnsinhsedmvvstvvc.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseKey) {
   console.error('❌ Missing Supabase key. Please set SUPABASE_SERVICE_ROLE_KEY environment variable.');

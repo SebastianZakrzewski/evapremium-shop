@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SupabaseMatsService } from '@/lib/services/SupabaseMatsService';
+import { CarMatService } from '@/lib/services/carmat-service';
 
 // GET /api/mats/3d
 export async function GET(request: NextRequest) {
@@ -9,19 +9,22 @@ export async function GET(request: NextRequest) {
     const cellType = searchParams.get('cellType') || 'diamonds';
     const type = searchParams.get('type') || '3d';
 
-    // Pobierz dywaniki z określonym kolorem obszycia
-    const filter = {
-      type,
-      cellType,
-      edgeColor
-    };
+    const result = await CarMatService.get3DMats({
+      cellType: cellType === 'diamonds' ? 'rhombus' : cellType,
+      edgeColor: edgeColor === 'black' ? 'czarny' : edgeColor
+    });
 
-    const mats = await SupabaseMatsService.getMatsByFilter(filter);
+    if (!result.success) {
+      return NextResponse.json(
+        { success: false, error: result.error || 'Błąd serwera' },
+        { status: 500 }
+      );
+    }
     
     return NextResponse.json({
       success: true,
-      data: mats,
-      count: mats.length,
+      data: result.data,
+      count: result.count,
       filter: {
         type,
         cellType,

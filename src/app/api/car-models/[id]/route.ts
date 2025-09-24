@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SupabaseCarModelService } from '@/lib/services/SupabaseCarModelService';
+import { supabaseAdmin, TABLES } from '@/lib/database/supabase';
 
 export async function GET(
   request: NextRequest,
@@ -16,16 +16,20 @@ export async function GET(
       );
     }
 
-    const carModel = await SupabaseCarModelService.getCarModelById(idNum);
-    
-    if (!carModel) {
+    const { data, error } = await supabaseAdmin
+      .from(TABLES.CAR_MODELS)
+      .select('*')
+      .eq('id', idNum)
+      .single();
+
+    if (error || !data) {
       return NextResponse.json(
         { error: 'Model auta nie został znaleziony' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(carModel);
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Błąd podczas pobierania modelu auta:', error);
     return NextResponse.json(
@@ -51,9 +55,17 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const carModel = await SupabaseCarModelService.updateCarModel({ id: idNum, ...body });
     
-    return NextResponse.json(carModel);
+    const { data, error } = await supabaseAdmin
+      .from(TABLES.CAR_MODELS)
+      .update(body)
+      .eq('id', idNum)
+      .select()
+      .single();
+
+    if (error) throw error;
+    
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Błąd podczas aktualizacji modelu auta:', error);
     return NextResponse.json(
@@ -78,7 +90,12 @@ export async function DELETE(
       );
     }
 
-    await SupabaseCarModelService.deleteCarModel(idNum);
+    const { error } = await supabaseAdmin
+      .from(TABLES.CAR_MODELS)
+      .delete()
+      .eq('id', idNum);
+
+    if (error) throw error;
     
     return NextResponse.json({ message: 'Model auta został usunięty' });
   } catch (error) {
