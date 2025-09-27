@@ -541,7 +541,7 @@ export default function Configurator() {
               ) : (
                 <Button
                   onClick={nextSection}
-                  className="flex items-center gap-2 bg-white text-black hover:bg-white/90"
+                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700"
                 >
                   Dalej
                   <ChevronRight className="h-4 w-4" />
