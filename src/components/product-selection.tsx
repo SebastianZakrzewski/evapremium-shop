@@ -18,8 +18,8 @@ export default function ProductSelection() {
     // Animacja kliknięcia - reset po 300ms
     setTimeout(() => {
       setClickedCardId(null);
-      // Przekierowanie do strony modele z parametrem marki
-      router.push(`/modele?brand=${brand.name.toLowerCase()}`);
+      // Przekierowanie do konfiguratora zamiast do strony modeli
+      router.push('/konfigurator');
     }, 300);
   };
 
