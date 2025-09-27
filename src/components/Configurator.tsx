@@ -197,7 +197,7 @@ export default function Configurator() {
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 md:py-16">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Lewa strona - wizualizacja */}
-          <div className="flex-1">
+          <div className="w-full lg:w-[900px] xl:w-[1000px]">
             <div className="relative w-full h-[700px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
               {/* Rzeczywisty obraz dywanika */}
               <Image
@@ -256,7 +256,7 @@ export default function Configurator() {
           </div>
 
           {/* Prawa strona - konfigurator z sekcjami */}
-          <div className="w-full lg:w-[420px] xl:w-[460px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-5 md:p-6 h-[700px] flex flex-col overflow-y-auto pb-20">
+          <div className="w-full lg:w-[700px] xl:w-[780px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-8 md:p-10 h-[900px] flex flex-col overflow-y-auto pb-24">
             {/* Header z progressem */}
             <div className="mb-6">
               <h2 className="text-xl md:text-2xl font-semibold">
