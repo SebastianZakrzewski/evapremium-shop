@@ -64,8 +64,8 @@ const cellTypes: CellType[] = [
 const setVariants: SetVariant[] = [
   { id: "front", name: "Starter", description: "2 dywaniki (tylko przód)", priceModifier: -30 },
   { id: "basic", name: "Podstawowy", description: "5 dywaników (przód + tył + ochrona na tunel środkowy)", priceModifier: 0 },
-  { id: "premium", name: "Premium", description: "5 dywaników (przód + tył + bagażnik)", priceModifier: 50 },
-  { id: "complete", name: "Kompletny", description: "6 dywaników (przód + tył + bagażnik + dodatkowe)", priceModifier: 80 },
+  { id: "premium", name: "Premium", description: "5 dywaników (przód + tył + bagażnik)", priceModifier: 0 },
+  { id: "complete", name: "Mata do Bagażnika", description: "6 dywaników (przód + tył + bagażnik + dodatkowe)", priceModifier: 0 },
 ];
 
 export default function Configurator() {
@@ -79,6 +79,19 @@ export default function Configurator() {
   const [selectedSetType, setSelectedSetType] = useState<string>(setTypes[0].id);
   const [selectedCellType, setSelectedCellType] = useState<string>(cellTypes[0].id);
   const [selectedSetVariant, setSelectedSetVariant] = useState<string>(setVariants[0].id);
+
+  // Oblicz datę dostawy (2 tygodnie od dzisiaj)
+  const deliveryDate = useMemo(() => {
+    const today = new Date();
+    const delivery = new Date(today);
+    delivery.setDate(today.getDate() + 14); // +2 tygodnie
+    
+    return delivery.toLocaleDateString('pl-PL', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }, []);
 
   const totalSections = 6;
 
@@ -243,11 +256,11 @@ export default function Configurator() {
           </div>
 
           {/* Prawa strona - konfigurator z sekcjami */}
-          <div className="w-full lg:w-[420px] xl:w-[460px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-5 md:p-6 h-[700px] flex flex-col">
+          <div className="w-full lg:w-[420px] xl:w-[460px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-5 md:p-6 h-[700px] flex flex-col overflow-y-auto pb-20">
             {/* Header z progressem */}
             <div className="mb-6">
               <h2 className="text-xl md:text-2xl font-semibold">
-                {brandParam ? `Skonfiguruj dywaniki dla ${brandParam.toUpperCase()}` : 'Skonfiguruj swoje dywaniki'}
+                Skonfiguruj dywaniki
               </h2>
               <p className="text-white/70 text-sm mt-1">
                 {brandParam 
@@ -282,33 +295,29 @@ export default function Configurator() {
                       <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
                         <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3 flex-1">
-                            <div className="flex-1">
-                              <div className="text-sm font-medium">{v.name}</div>
-                              <div className="text-xs text-white/60">{v.description}</div>
-                            </div>
-                            {(v.id === "front" || v.id === "basic") && (
-                              <div className="flex flex-col items-center gap-1">
-                                <span className="text-xs text-white/50">Przód</span>
+                          <div className="flex-1">
+                            <div className="text-sm font-medium">{v.name}</div>
+                            <div className="text-xs text-white/60">{v.description}</div>
+                          </div>
+                          <div className="flex items-center gap-3 flex-shrink-0">
+                            {(v.id === "front" || v.id === "basic" || v.id === "premium" || v.id === "complete") && (
+                              <div className="flex items-center justify-center">
                                 <Image
-                                  src={v.id === "front" ? "/konfigurator/zestaw/przod.png" : "/konfigurator/zestaw/pt.png"}
-                                  alt="Wizualizacja zestawu przód"
+                                  src={v.id === "front" ? "/konfigurator/zestaw/przod.png" : v.id === "basic" ? "/konfigurator/zestaw/pt.png" : v.id === "premium" ? "/konfigurator/zestaw/ptb.png" : "/konfigurator/zestaw/mata.png"}
+                                  alt={`Wizualizacja zestawu ${v.name}`}
                                   width={80}
                                   height={48}
-                                  className="rounded-lg flex-shrink-0"
+                                  className="rounded-lg"
                                   sizes="80px"
                                 />
                               </div>
                             )}
-                            {v.id !== "front" && v.id !== "basic" && (
-                              <div className="w-20 h-12 flex-shrink-0"></div>
+                            {v.priceModifier !== 0 && v.id !== 'front' && (
+                              <div className={`text-xs font-medium ${v.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                {v.priceModifier > 0 ? '+' : ''}{v.priceModifier} zł
+                              </div>
                             )}
                           </div>
-                          {v.priceModifier !== 0 && v.id !== 'front' && (
-                            <div className={`text-xs font-medium ${v.priceModifier > 0 ? 'text-green-400' : 'text-red-400'} flex-shrink-0`}>
-                              {v.priceModifier > 0 ? '+' : ''}{v.priceModifier} zł
-                            </div>
-                          )}
                         </div>
                       </Label>
                     ))}
@@ -467,12 +476,47 @@ export default function Configurator() {
                       <p className="text-white/70 text-xs">Cena wstępna</p>
                       <p className="text-2xl font-semibold">{price} zł</p>
                     </div>
-                    <Button className="bg-white text-black hover:bg-white/90" onClick={() => window.open("/checkout", "_blank", "noopener,noreferrer")}>Przejdź do zamówienia</Button>
                   </div>
                 </div>
                 <p className="text-xs text-white/60">Finalna cena może się różnić w zależności od modelu auta.</p>
+                
+                {/* Szacowany czas dostawy */}
+                <div className="mt-6 p-3 bg-neutral-800/50 rounded-lg border border-neutral-700">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-xs text-white/80 font-medium">Szacowany czas dostawy</span>
+                  </div>
+                  <p className="text-xs text-white/60 mt-1 ml-4">
+                    Szacowana data dostawy: <span className="text-green-400 font-medium">{deliveryDate}</span>
+                  </p>
+                </div>
+                
+                {/* Uwagi do zamówienia */}
+                <div className="mt-4">
+                  <label htmlFor="order-notes" className="block text-xs text-white/70 mb-2">
+                    Uwagi do zamówienia (opcjonalnie)
+                  </label>
+                  <textarea
+                    id="order-notes"
+                    placeholder="Dodatkowe informacje, uwagi, specjalne życzenia..."
+                    className="w-full h-20 px-3 py-2 bg-neutral-800 border border-neutral-600 rounded-lg text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                  />
+                </div>
+                
+                {/* Checkbox zgody */}
+                <div className="mt-4 flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="privacy-agreement"
+                    className="w-4 h-4 text-red-600 bg-neutral-800 border-neutral-600 rounded focus:ring-red-500 focus:ring-2"
+                  />
+                  <label htmlFor="privacy-agreement" className="text-xs text-white/70 cursor-pointer">
+                    Zgadzam się z polityką prywatności i regulaminem
+                  </label>
+                </div>
               </div>
             )}
+
 
             {/* Navigation buttons */}
             <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
@@ -486,18 +530,23 @@ export default function Configurator() {
                 Wstecz
               </Button>
               
-              <div className="text-xs text-white/60">
-                {getSectionTitle(currentSection)}
-              </div>
               
-              <Button
-                onClick={nextSection}
-                disabled={currentSection === totalSections - 1}
-                className="flex items-center gap-2 bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Dalej
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+              {currentSection === totalSections - 1 ? (
+                <Button
+                  onClick={() => {/* TODO: Add to cart logic */}}
+                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 px-8 py-3 text-lg font-semibold min-w-[200px]"
+                >
+                  Dodaj do Koszyka
+                </Button>
+              ) : (
+                <Button
+                  onClick={nextSection}
+                  className="flex items-center gap-2 bg-white text-black hover:bg-white/90"
+                >
+                  Dalej
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              )}
             </div>
           </div>
         </div>
