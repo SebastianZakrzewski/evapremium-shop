@@ -1,5 +1,6 @@
 "use client";
 import React, { useMemo, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -68,6 +69,9 @@ const setVariants: SetVariant[] = [
 ];
 
 export default function Configurator() {
+  const searchParams = useSearchParams();
+  const brandParam = searchParams.get('brand');
+  
   const [currentSection, setCurrentSection] = useState<number>(0);
   const [selectedMat, setSelectedMat] = useState<string>("black");
   const [selectedEdge, setSelectedEdge] = useState<string>("black");
@@ -242,8 +246,15 @@ export default function Configurator() {
           <div className="w-full lg:w-[420px] xl:w-[460px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-5 md:p-6 h-[700px] flex flex-col">
             {/* Header z progressem */}
             <div className="mb-6">
-              <h2 className="text-xl md:text-2xl font-semibold">Skonfiguruj swoje dywaniki</h2>
-              <p className="text-white/70 text-sm mt-1">Zachowujemy stylistykę EvaPremium i jakość premium.</p>
+              <h2 className="text-xl md:text-2xl font-semibold">
+                {brandParam ? `Skonfiguruj dywaniki dla ${brandParam.toUpperCase()}` : 'Skonfiguruj swoje dywaniki'}
+              </h2>
+              <p className="text-white/70 text-sm mt-1">
+                {brandParam 
+                  ? `Dopasowane dywaniki EVA Premium dla marki ${brandParam.toUpperCase()}. Zachowujemy stylistykę EvaPremium i jakość premium.`
+                  : 'Zachowujemy stylistykę EvaPremium i jakość premium.'
+                }
+              </p>
               
               {/* Progress indicator */}
               <div className="mt-4 flex items-center gap-2">
