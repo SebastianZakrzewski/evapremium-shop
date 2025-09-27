@@ -56,9 +56,9 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative h-screen overflow-hidden">
+    <section className="relative h-[60vh] md:h-[70vh] overflow-hidden">
       {/* Carousel */}
-      <div className="relative w-full h-full">
+      <div className="container mx-auto px-4 relative h-full">
         {heroSlides.map((slide, index) => (
           <div
             key={slide.id}
@@ -67,55 +67,57 @@ export default function HeroSection() {
             }`}
           >
             {/* Video Background */}
-            <div className="absolute inset-0 w-full h-full">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                poster="/images/hero/heromat-poster.jpg"
-                className="w-full h-full object-cover"
-                style={{
-                  objectPosition: 'center center',
-                  transform: 'scale(1.01)',
-                  filter: 'brightness(1.05) contrast(1.02)'
-                }}
-                onLoadedData={(e) => {
-                  const video = e.target as HTMLVideoElement;
-                  video.playbackRate = 1.0;
-                }}
-              >
+            <div className="absolute inset-0 w-full h-full flex justify-center">
+              <div className="w-full h-full">
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  poster="/images/hero/heromat-poster.jpg"
+                  className="w-full h-full object-cover object-center rounded-lg"
+                  style={{
+                    objectPosition: 'center center',
+                    transform: 'scale(1.0)',
+                    filter: 'brightness(1.0) contrast(1.0)'
+                  }}
+                  onLoadedData={(e) => {
+                    const video = e.target as HTMLVideoElement;
+                    video.playbackRate = 0.8;
+                  }}
+                >
                 <source src={slide.video} type="video/mp4" />
                 <source src="/images/hero/heromat.webm" type="video/webm" />
                 <source src="/images/hero/heromat-4k.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
-              </video>
-              
-              {/* Enhanced Overlay with Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40"></div>
+                </video>
+                
+                {/* Enhanced Overlay with Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 rounded-lg"></div>
+              </div>
             </div>
             
             {/* Content */}
-            <div className="relative z-10 flex items-center justify-center h-full text-center text-white px-4">
-              <div className="max-w-5xl">
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 animate-fade-in drop-shadow-2xl">
+            <div className="relative z-10 flex items-center justify-center h-full text-center text-white">
+              <div className="w-full">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 animate-fade-in drop-shadow-2xl">
                   {slide.title}
                 </h1>
-                <p className="text-lg md:text-xl lg:text-2xl mb-6 text-gray-300 animate-fade-in-delay drop-shadow-lg max-w-3xl mx-auto">
+                <p className="text-base md:text-lg lg:text-xl mb-4 text-gray-300 animate-fade-in-delay drop-shadow-lg max-w-2xl mx-auto">
                   {slide.subtitle}
                 </p>
                 
                 {/* Price and Benefits */}
-                <div className="mb-8 animate-fade-in-delay">
-                  <div className="text-2xl md:text-3xl font-bold text-red-400 mb-4">
+                <div className="mb-6 animate-fade-in-delay">
+                  <div className="text-xl md:text-2xl font-bold text-red-400 mb-3">
                     {slide.price}
                   </div>
-                  <div className="flex flex-wrap justify-center gap-3 mb-6">
+                  <div className="flex flex-wrap justify-center gap-2 mb-4">
                     {slide.benefits.map((benefit, index) => (
                       <span 
                         key={index}
-                        className="bg-white/10 backdrop-blur px-4 py-2 rounded-full text-sm md:text-base border border-white/20"
+                        className="bg-white/10 backdrop-blur px-3 py-1.5 rounded-full text-xs md:text-sm border border-white/20"
                       >
                         ✓ {benefit}
                       </span>
@@ -123,7 +125,7 @@ export default function HeroSection() {
                   </div>
                 </div>
                 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-delay-2">
+                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center animate-fade-in-delay-2">
                   <button 
                     onClick={() => {
                       const element = document.getElementById('products');
@@ -134,7 +136,7 @@ export default function HeroSection() {
                         });
                       }
                     }}
-                    className="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 shadow-2xl hover:shadow-red-500/25 hover:scale-105"
+                    className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full text-base font-semibold transition-all duration-300 shadow-xl hover:shadow-red-500/25 hover:scale-105"
                   >
                     {slide.cta}
                   </button>
@@ -148,7 +150,7 @@ export default function HeroSection() {
                         });
                       }
                     }}
-                    className="bg-white/10 backdrop-blur border border-white/20 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:bg-white/20"
+                    className="bg-white/10 backdrop-blur border border-white/20 text-white px-6 py-3 rounded-full text-base font-semibold transition-all duration-300 hover:bg-white/20"
                   >
                     Dowiedz się więcej
                   </button>
@@ -162,31 +164,31 @@ export default function HeroSection() {
       {/* Navigation Arrows */}
       <button
         onClick={goToPrev}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-colors z-20"
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition-colors z-20"
         aria-label="Poprzedni slajd"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
       
       <button
         onClick={goToNext}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-colors z-20"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition-colors z-20"
         aria-label="Następny slajd"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </button>
 
       {/* Indicators */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
         {heroSlides.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-3 h-3 rounded-full transition-colors ${
+            className={`w-2 h-2 rounded-full transition-colors ${
               index === currentSlide ? "bg-white" : "bg-white/50"
             }`}
             aria-label={`Przejdź do slajdu ${index + 1}`}
