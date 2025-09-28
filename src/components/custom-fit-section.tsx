@@ -213,9 +213,14 @@ export default function CustomFitSection() {
         </div>
         {/* Timeline stylizowany jak na przesłanym obrazku */}
         <div className="relative w-full flex flex-col items-center mt-48">
-          {/* Jedna linia pod wszystkimi węzłami */}
-          <div className="absolute left-0 right-0 top-1/2 transform -translate-y-1/2 z-0 h-2">
+          {/* Linia pozioma na desktop */}
+          <div className="hidden md:block absolute left-0 right-0 top-1/2 transform -translate-y-1/2 z-0 h-2">
             <div className="w-full h-full bg-gradient-to-r from-red-700 via-red-500 to-red-400 opacity-80 rounded-full border-2 border-red-500" />
+          </div>
+          
+          {/* Linia pionowa na mobile */}
+          <div className="md:hidden absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 z-0 w-2">
+            <div className="w-full h-full bg-gradient-to-b from-red-700 via-red-500 to-red-400 opacity-80 rounded-full border-2 border-red-500" />
           </div>
           
           {/* Timeline na mobile - pionowy układ */}
