@@ -601,34 +601,7 @@ export default function Configurator() {
               </div>
             )}
 
-            {/* Sekcja 2: Rodzaj zestawu */}
-            {currentSection === 1 && (
-              <div className="flex-1 space-y-6">
-                <div>
-                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj zestawu</h3>
-                  <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
-                    {setVariants.map((v) => (
-                      <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
-                        <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="text-sm font-medium">{v.name}</div>
-                            <div className="text-xs text-white/60">{v.description}</div>
-                          </div>
-                          {v.priceModifier !== 0 && (
-                            <div className={`text-xs font-medium ${v.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                              {v.priceModifier > 0 ? '+' : ''}{v.priceModifier} zł
-                            </div>
-                          )}
-                        </div>
-                      </Label>
-                    ))}
-                  </RadioGroup>
-                </div>
-              </div>
-            )}
-
-            {/* Sekcja 3: Rodzaj dywaników */}
+            {/* Sekcja 2: Rodzaj dywaników */}
             {currentSection === 2 && (
               <div className="flex-1 space-y-6">
                 <div>
