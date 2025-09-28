@@ -85,6 +85,19 @@ const setVariants: SetVariant[] = [
   { id: "complete", name: "Mata do Bagażnika", description: "6 dywaników (przód + tył + bagażnik + dodatkowe)", priceModifier: 0 },
 ];
 
+const bodyTypes = [
+  { id: "sedan", name: "Sedan", description: "4-drzwiowy sedan", icon: "🚗" },
+  { id: "suv", name: "SUV", description: "Sport Utility Vehicle", icon: "🚙" },
+  { id: "hatchback", name: "Hatchback", description: "3-drzwiowy lub 5-drzwiowy", icon: "🚗" },
+  { id: "coupe", name: "Coupe", description: "2-drzwiowy sportowy", icon: "🏎️" },
+  { id: "convertible", name: "Kabriolet", description: "Z otwieranym dachem", icon: "🚗" },
+  { id: "wagon", name: "Kombi", description: "5-drzwiowy kombi", icon: "🚐" },
+  { id: "pickup", name: "Pickup", description: "Samochód dostawczy", icon: "🛻" },
+  { id: "van", name: "Van", description: "Van/minibus", icon: "🚐" },
+  { id: "crossover", name: "Crossover", description: "Mieszanka SUV i hatchback", icon: "🚙" },
+  { id: "other", name: "Inne", description: "Inny typ nadwozia", icon: "🚗" }
+];
+
 
 export default function Configurator() {
   const searchParams = useSearchParams();
@@ -96,6 +109,7 @@ export default function Configurator() {
   const [selectedCarBrand, setSelectedCarBrand] = useState<string>(brandParam || "");
   const [selectedCarModel, setSelectedCarModel] = useState<string>("");
   const [selectedCarYear, setSelectedCarYear] = useState<string>("");
+  const [selectedBodyType, setSelectedBodyType] = useState<string>("");
   const [selectedMat, setSelectedMat] = useState<string>("black");
   const [selectedEdge, setSelectedEdge] = useState<string>("black");
   const [selectedHeelPad, setSelectedHeelPad] = useState<string>("brak");
@@ -117,7 +131,7 @@ export default function Configurator() {
     });
   }, []);
 
-  const totalSections = 6;
+  const totalSections = 7;
 
   // Pobierz modele na podstawie wybranej marki
   const availableModels = useMemo(() => {
@@ -155,9 +169,10 @@ export default function Configurator() {
     return years;
   }, [selectedCarModel, availableModels]);
 
-  // Resetuj rocznik przy zmianie modelu
+  // Resetuj rocznik i typ nadwozia przy zmianie modelu
   useEffect(() => {
     setSelectedCarYear("");
+    setSelectedBodyType("");
   }, [selectedCarModel]);
 
   const nextSection = () => {
@@ -512,6 +527,31 @@ export default function Configurator() {
                   </div>
                 )}
 
+                {selectedCarYear && (
+                  <div>
+                    <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz typ nadwozia</h3>
+                    <div className="relative">
+                      <select
+                        value={selectedBodyType}
+                        onChange={(e) => setSelectedBodyType(e.target.value)}
+                        className="w-full p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer"
+                      >
+                        <option value="" className="bg-neutral-900 text-gray-400">Wybierz typ nadwozia...</option>
+                        {bodyTypes.map((bodyType) => (
+                          <option key={bodyType.id} value={bodyType.id} className="bg-neutral-900 text-white">
+                            {bodyType.name} - {bodyType.description}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {!selectedCarBrand && (
                   <div className="text-center py-8">
                     <p className="text-gray-400 mb-4">Nie wybrano marki auta</p>
@@ -561,8 +601,35 @@ export default function Configurator() {
               </div>
             )}
 
-            {/* Sekcja 2: Rodzaj dywaników */}
+            {/* Sekcja 2: Rodzaj zestawu */}
             {currentSection === 1 && (
+              <div className="flex-1 space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj zestawu</h3>
+                  <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
+                    {setVariants.map((v) => (
+                      <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                        <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="text-sm font-medium">{v.name}</div>
+                            <div className="text-xs text-white/60">{v.description}</div>
+                          </div>
+                          {v.priceModifier !== 0 && (
+                            <div className={`text-xs font-medium ${v.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                              {v.priceModifier > 0 ? '+' : ''}{v.priceModifier} zł
+                            </div>
+                          )}
+                        </div>
+                      </Label>
+                    ))}
+                  </RadioGroup>
+                </div>
+              </div>
+            )}
+
+            {/* Sekcja 3: Rodzaj dywaników */}
+            {currentSection === 2 && (
               <div className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj dywaników</h3>
@@ -588,8 +655,8 @@ export default function Configurator() {
               </div>
             )}
 
-            {/* Sekcja 3: Rodzaj komórek */}
-            {currentSection === 2 && (
+            {/* Sekcja 4: Rodzaj komórek */}
+            {currentSection === 3 && (
               <div className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj komórek</h3>
@@ -615,8 +682,8 @@ export default function Configurator() {
               </div>
             )}
 
-            {/* Sekcja 4: Kolory */}
-            {currentSection === 3 && (
+            {/* Sekcja 5: Kolory */}
+            {currentSection === 4 && (
               <div className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
@@ -669,8 +736,8 @@ export default function Configurator() {
               </div>
             )}
 
-            {/* Sekcja 5: Dodatki */}
-            {currentSection === 4 && (
+            {/* Sekcja 6: Dodatki */}
+            {currentSection === 5 && (
               <div className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Ochraniacz pod piętę</h3>
@@ -689,9 +756,43 @@ export default function Configurator() {
               </div>
             )}
 
-            {/* Sekcja 6: Podsumowanie */}
-            {currentSection === 5 && (
+            {/* Sekcja 7: Podsumowanie */}
+            {currentSection === 6 && (
               <div className="flex-1 space-y-6">
+                {/* Wybrane auto */}
+                <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
+                  <h3 className="text-sm font-medium mb-3 text-gray-300">Wybrane auto</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden">
+                        <Image
+                          src={brands.find(b => b.name.toLowerCase() === selectedCarBrand)?.logo || "/images/placeholder.png"}
+                          alt={selectedCarBrand}
+                          width={32}
+                          height={32}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                      <div>
+                        <div className="text-white font-semibold">
+                          {(() => {
+                            let brandName = selectedCarBrand.charAt(0).toUpperCase() + selectedCarBrand.slice(1);
+                            const brandMappings: Record<string, string> = {
+                              "Mercedes": "Mercedes-Benz",
+                              "Aston martin": "Aston Martin",
+                              "Alfa romeo": "Alfa Romeo"
+                            };
+                            return brandMappings[brandName] || brandName;
+                          })()} {selectedCarModel}
+                        </div>
+                        <div className="text-sm text-gray-400">
+                          {selectedCarYear} • {bodyTypes.find(bt => bt.id === selectedBodyType)?.name || "Nie wybrano"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="space-y-3">
                   <div className="text-sm">
                     <div className="flex justify-between items-center mb-1">
@@ -787,7 +888,7 @@ export default function Configurator() {
               ) : (
                 <Button
                   onClick={nextSection}
-                  disabled={currentSection === 0 && (!selectedCarModel || !selectedCarYear)}
+                  disabled={currentSection === 0 && (!selectedCarModel || !selectedCarYear || !selectedBodyType)}
                   className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Dalej
