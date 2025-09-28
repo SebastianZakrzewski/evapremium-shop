@@ -41,7 +41,7 @@ export type OrderStatus = 'pending' | 'confirmed' | 'processing' | 'shipped' | '
 export interface Order {
   id: string;
   sessionId: string;
-  product: Product;
+  products: Product[];
   customer: CustomerData;
   shipping: ShippingData;
   payment: PaymentData;

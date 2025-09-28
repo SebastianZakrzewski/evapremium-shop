@@ -6,25 +6,17 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import Link from "next/link"
 import { 
-  Truck, 
-  Package, 
-  Store, 
-  CreditCard, 
-  Smartphone, 
-  Banknote, 
-  Handshake,
-  Shield,
-  Star,
-  RotateCcw,
   ChevronDown,
   ChevronUp,
-  User,
-  MapPin,
-  Building,
-  CreditCard as PaymentIcon,
-  Check,
   ArrowLeft,
-  ArrowRight
+  ArrowRight,
+  Shield,
+  RotateCcw,
+  Star,
+  Truck,
+  CreditCard,
+  Check,
+  CreditCard as PaymentIcon
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -38,6 +30,7 @@ import { HybridSessionManager } from "@/lib/utils/hybrid-session-manager"
 import { useCart } from '@/hooks/useCart';
 import { useOrder } from '@/hooks/useOrder';
 import { CustomerData, ShippingData, PaymentData } from '@/lib/types/order';
+import { Product } from '@/lib/types/product';
 
 // Schema walidacji
 const checkoutSchema = z.object({
@@ -91,14 +84,14 @@ const shippingMethods = [
     name: "Paczkomat InPost",
     price: 12.99,
     description: "Dostawa w ciągu 2-3 dni roboczych",
-    icon: Package,
+    icon: Truck,
   },
   {
     id: "pickup",
     name: "Odbiór osobisty",
     price: 0,
     description: "Odbiór w naszym salonie",
-    icon: Store,
+    icon: Truck,
   },
 ]
 
@@ -114,28 +107,28 @@ const paymentMethods = [
     id: "blik",
     name: "BLIK",
     description: "Płatność przez aplikację bankową",
-    icon: Smartphone,
+    icon: CreditCard,
   },
   {
     id: "p24",
     name: "Przelewy24",
     description: "Przelew online",
-    icon: Banknote,
+    icon: CreditCard,
   },
   {
     id: "cod",
     name: "Płatność przy odbiorze",
     description: "Zapłać kurierowi przy odbiorze",
-    icon: Handshake,
+    icon: CreditCard,
   },
 ]
 
 // Kroki checkout
 const checkoutSteps = [
-  { id: 1, title: "Dane kontaktowe", icon: User, completed: false, description: "Podstawowe informacje" },
-  { id: 2, title: "Adres dostawy", icon: MapPin, completed: false, description: "Gdzie dostarczyć" },
-  { id: 3, title: "Dostawa & Płatność", icon: Truck, completed: false, description: "Jak i czym płacić" },
-  { id: 4, title: "Potwierdzenie", icon: Check, completed: false, description: "Sprawdź i zamów" },
+  { id: 1, title: "Dane kontaktowe", completed: false, description: "Podstawowe informacje" },
+  { id: 2, title: "Adres dostawy", completed: false, description: "Gdzie dostarczyć" },
+  { id: 3, title: "Dostawa & Płatność", completed: false, description: "Jak i czym płacić" },
+  { id: 4, title: "Potwierdzenie", completed: false, description: "Sprawdź i zamów" },
 ]
 
 export function CheckoutSection() {
@@ -206,7 +199,7 @@ export function CheckoutSection() {
   
   // Oblicz total na podstawie koszyka
   const cartTotal = cartProducts.reduce((sum, product) => sum + product.pricing.totalPrice, 0);
-  const subtotal = cartTotal || (productData.price * productData.quantity);
+  const subtotal = cartTotal;
   const total = subtotal + shippingCost
 
   // Watch all form fields for real-time validation
@@ -507,49 +500,33 @@ export function CheckoutSection() {
         {checkoutSteps.map((step, index) => {
           const isActive = currentStep === step.id
           const isCompleted = isStepCompleted(step.id)
-          const Icon = step.icon
           
           return (
             <div key={step.id} className="flex items-center group">
               <div className="flex flex-col items-center">
                 <div className={`
-                  w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 relative
-                  ${isActive ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-lg shadow-red-500/25 scale-110' : 
-                    isCompleted ? 'bg-gradient-to-br from-green-500 to-green-700 text-white shadow-lg shadow-green-500/25' : 
-                    'bg-gray-700 text-gray-400 hover:bg-gray-600 transition-all duration-300'}
+                  w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 relative
+                  ${isActive ? 'bg-red-600 text-white' : 
+                    isCompleted ? 'bg-green-600 text-white' : 
+                    'bg-gray-700 text-gray-400'}
                 `}>
-                  {isCompleted ? (
-                    <Check className="w-6 h-6" />
-                  ) : (
-                    <Icon className="w-6 h-6" />
-                  )}
-                  {isActive && (
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-400 rounded-full animate-pulse"></div>
-                  )}
+                  <span className="text-sm font-bold">{step.id}</span>
                 </div>
-                <div className="text-center mt-3">
+                <div className="text-center mt-2">
                   <span className={`
                     text-sm font-medium block transition-colors
-                    ${isActive ? 'text-red-400' : 
+                    ${isActive ? 'text-white' : 
                       isCompleted ? 'text-green-400' : 
                       'text-gray-400'}
                   `}>
                     {step.title}
                   </span>
-                  <span className={`
-                    text-xs block mt-1 transition-colors
-                    ${isActive ? 'text-red-300' : 
-                      isCompleted ? 'text-green-300' : 
-                      'text-gray-500'}
-                  `}>
-                    {step.description}
-                  </span>
                 </div>
               </div>
               {index < checkoutSteps.length - 1 && (
                 <div className={`
-                  w-20 h-1 mx-6 transition-all duration-500 rounded-full
-                  ${isCompleted ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gray-700'}
+                  w-16 h-0.5 mx-4 transition-all duration-300
+                  ${isCompleted ? 'bg-green-600' : 'bg-gray-700'}
                 `} />
               )}
             </div>
@@ -565,38 +542,36 @@ export function CheckoutSection() {
       <div className="min-h-screen bg-black py-8 flex items-center justify-center">
         <div className="container mx-auto px-4 max-w-2xl text-center">
           <div className="bg-black/40 backdrop-blur border-gray-800 shadow-2xl rounded-2xl p-8 animate-bounce-in">
-            <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce shadow-lg">
-              <Check className="w-12 h-12 text-white" />
+            <div className="w-24 h-24 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="text-white text-2xl font-bold">✓</span>
             </div>
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              🎉 Zamówienie złożone!
+              Zamówienie złożone!
             </h1>
             <p className="text-gray-300 text-lg mb-6">
-              🙏 Dziękujemy za zakup. Potwierdzenie zostało wysłane na adres <span className="text-red-400 font-medium">{watchedFields.email}</span>
+              Dziękujemy za zakup. Potwierdzenie zostało wysłane na adres <span className="text-red-400 font-medium">{watchedFields.email}</span>
             </p>
             <div className="space-y-6">
               <div className="bg-gradient-to-r from-green-900/20 to-green-800/20 rounded-lg p-6 border border-green-500/30">
                 <div className="flex items-center justify-center gap-3 mb-3">
-                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                  <p className="text-white font-bold text-lg">📋 Numer zamówienia: #EVA-{Date.now().toString().slice(-6)}</p>
-                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                  <p className="text-white font-bold text-lg">Numer zamówienia: #EVA-{Date.now().toString().slice(-6)}</p>
                 </div>
-                <p className="text-green-300 text-sm">🚚 Szacowany czas dostawy: 2-3 dni robocze</p>
-                <p className="text-green-300 text-sm mt-1">📱 Śledzenie przesyłki zostanie wysłane SMS-em</p>
+                <p className="text-green-300 text-sm">Szacowany czas dostawy: 2-3 dni robocze</p>
+                <p className="text-green-300 text-sm mt-1">Śledzenie przesyłki zostanie wysłane SMS-em</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
                   onClick={() => window.location.href = '/'}
-                  className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white"
+                  className="bg-red-600 hover:bg-red-700 text-white"
                 >
-                  🏠 Wróć do sklepu
+                  Wróć do sklepu
                 </Button>
                 <Button 
                   variant="outline"
                   onClick={() => window.print()}
                   className="border-gray-600 text-gray-300 hover:bg-gray-600 hover:text-white"
                 >
-                  🖨️ Drukuj potwierdzenie
+                  Drukuj potwierdzenie
                 </Button>
               </div>
             </div>
@@ -612,34 +587,24 @@ export function CheckoutSection() {
         {/* Breadcrumbs */}
         <div className="mb-6">
           <nav className="flex items-center space-x-2 text-sm text-gray-400" aria-label="Nawigacja">
-            <Link href="/" className="hover:text-red-400 transition-colors flex items-center gap-1">
-              <span>🏠</span>
+            <Link href="/" className="hover:text-red-400 transition-colors">
               Strona główna
             </Link>
             <span className="text-gray-600">/</span>
             <span className="text-gray-600">/</span>
-            <span className="text-red-400 flex items-center gap-1">
-              <span>🛒</span>
+            <span className="text-red-400">
               Finalizacja zamówienia
             </span>
           </nav>
         </div>
 
         <div className="mb-8 text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-6 animate-bounce-in">
-            <span className="text-3xl">🛒</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 animate-fade-in">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Finalizacja zamówienia
           </h1>
-          <p className="text-gray-300 text-lg animate-fade-in-delay">
-            Krok {currentStep} z {checkoutSteps.length} • 🎯 Prawie gotowe!
+          <p className="text-gray-300 text-lg">
+            Krok {currentStep} z {checkoutSteps.length} • Prawie gotowe!
           </p>
-          <div className="flex items-center justify-center gap-2 mt-4">
-            <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
-            <span className="text-sm text-gray-400">🛡️ Bezpieczne i szybkie</span>
-            <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
-          </div>
         </div>
 
         {/* Progress Indicator */}
@@ -652,9 +617,8 @@ export function CheckoutSection() {
             {currentStep === 1 && (
               <Card className="bg-black/40 backdrop-blur border-gray-800 shadow-2xl hover:shadow-red-500/10 transition-all duration-300 animate-slide-in-left">
                 <CardHeader className="border-b border-gray-800">
-                  <CardTitle className="text-xl text-white flex items-center gap-3">
-                    <User className="h-6 w-6 text-red-400" />
-                    👤 Dane kontaktowe
+                  <CardTitle className="text-xl text-white">
+                    Dane kontaktowe
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6 pt-6">
@@ -721,9 +685,8 @@ export function CheckoutSection() {
             {currentStep === 2 && (
               <Card className="bg-black/40 backdrop-blur border-gray-800 shadow-2xl hover:shadow-red-500/10 transition-all duration-300 animate-slide-in-right">
                 <CardHeader className="border-b border-gray-800">
-                  <CardTitle className="text-xl text-white flex items-center gap-3">
-                    <MapPin className="h-6 w-6 text-red-400" />
-                    📍 Adres wysyłkowy
+                  <CardTitle className="text-xl text-white">
+                    Adres wysyłkowy
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6 pt-6">
@@ -780,9 +743,8 @@ export function CheckoutSection() {
 
                   {/* Dane do faktury */}
                   <div className="pt-6 border-t border-gray-700">
-                    <CardTitle className="text-lg text-white flex items-center gap-3 mb-4">
-                      <Building className="h-5 w-5 text-red-400" />
-                      🏢 Dane do faktury
+                    <CardTitle className="text-lg text-white mb-4">
+                      Dane do faktury
                     </CardTitle>
                     <div className="flex items-center space-x-3 p-4 bg-gray-900/30 rounded-lg border border-gray-700">
                       <Checkbox
@@ -829,9 +791,8 @@ export function CheckoutSection() {
                 {/* Metoda dostawy */}
                 <Card className="bg-black/40 backdrop-blur border-gray-800 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
                   <CardHeader className="border-b border-gray-800">
-                                      <CardTitle className="text-xl text-white flex items-center gap-3">
-                    <Truck className="h-6 w-6 text-red-400" />
-                    🚚 Metoda dostawy
+                                      <CardTitle className="text-xl text-white">
+                    Metoda dostawy
                   </CardTitle>
                   </CardHeader>
                   <CardContent className="pt-6">
@@ -960,18 +921,16 @@ export function CheckoutSection() {
               <div className="space-y-6 animate-bounce-in">
                 <Card className="bg-black/40 backdrop-blur border-gray-800 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
                   <CardHeader className="border-b border-gray-800">
-                                      <CardTitle className="text-xl text-white flex items-center gap-3">
-                    <Check className="h-6 w-6 text-red-400" />
-                    📋 Podsumowanie zamówienia
+                                      <CardTitle className="text-xl text-white">
+                    Podsumowanie zamówienia
                   </CardTitle>
                   </CardHeader>
                   <CardContent className="pt-6">
                     <div className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="bg-gray-900/30 rounded-lg p-4 border border-gray-700">
-                          <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-                            <User className="h-4 w-4 text-red-400" />
-                            👤 Dane kontaktowe
+                          <h4 className="text-white font-semibold mb-3">
+                            Dane kontaktowe
                           </h4>
                           <div className="text-gray-300 text-sm space-y-1">
                             <p className="font-medium">{watchedFields.firstName} {watchedFields.lastName}</p>
@@ -989,9 +948,8 @@ export function CheckoutSection() {
                           </Button>
                         </div>
                         <div className="bg-gray-900/30 rounded-lg p-4 border border-gray-700">
-                          <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-                            <MapPin className="h-4 w-4 text-red-400" />
-                            📍 Adres dostawy
+                          <h4 className="text-white font-semibold mb-3">
+                            Adres dostawy
                           </h4>
                           <div className="text-gray-300 text-sm space-y-1">
                             <p className="font-medium">{watchedFields.street}</p>
@@ -1205,7 +1163,7 @@ export function CheckoutSection() {
                   {isMobileSummaryVisible && (
                     <CardContent className="pt-2 animate-fade-in">
                       <OrderSummaryContent 
-                        productData={productData}
+                        cartProducts={cartProducts}
                         shippingCost={shippingCost}
                         total={total}
                         discountCode={discountCode}
@@ -1229,7 +1187,7 @@ export function CheckoutSection() {
                   </CardHeader>
                   <CardContent>
                     <OrderSummaryContent 
-                      productData={productData}
+                      cartProducts={cartProducts}
                       shippingCost={shippingCost}
                       total={total}
                       discountCode={discountCode}
@@ -1293,12 +1251,7 @@ export function CheckoutSection() {
 
 // Komponent podsumowania zamówienia
 interface OrderSummaryContentProps {
-  productData: {
-    name: string
-    image: string
-    price: number
-    quantity: number
-  }
+  cartProducts: Product[]
   shippingCost: number
   total: number
   discountCode: string
@@ -1308,7 +1261,7 @@ interface OrderSummaryContentProps {
 }
 
 function OrderSummaryContent({
-  productData,
+  cartProducts,
   shippingCost,
   total,
   discountCode,
@@ -1318,24 +1271,26 @@ function OrderSummaryContent({
 }: OrderSummaryContentProps) {
   return (
     <div className="space-y-6">
-      {/* Produkt */}
-      <div className="flex space-x-4 p-4 bg-gradient-to-r from-gray-900/40 to-gray-800/40 rounded-lg border border-gray-700 hover:border-red-500/50 transition-all duration-300 group">
-        <div className="relative">
-          <img
-            src={productData.image}
-            alt={productData.name}
-            className="w-16 h-16 object-cover rounded-lg border border-gray-600 group-hover:border-red-500 transition-colors"
-          />
-          <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs font-bold">{productData.quantity}</span>
+      {/* Produkty */}
+      {cartProducts.map((product, index) => (
+        <div key={product.id || index} className="flex space-x-4 p-4 bg-gradient-to-r from-gray-900/40 to-gray-800/40 rounded-lg border border-gray-700 hover:border-red-500/50 transition-all duration-300 group">
+          <div className="relative">
+            <img
+              src={product.image || "/images/products/bmw.png"}
+              alt={product.name}
+              className="w-16 h-16 object-cover rounded-lg border border-gray-600 group-hover:border-red-500 transition-colors"
+            />
+            <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-xs font-bold">1</span>
+            </div>
+          </div>
+          <div className="flex-1">
+            <h4 className="font-medium text-sm text-white group-hover:text-red-400 transition-colors">{product.name}</h4>
+            <p className="text-gray-400 text-sm">Wysokiej jakości EVA</p>
+            <p className="font-semibold text-white text-lg">{product.pricing.totalPrice.toFixed(2)} zł</p>
           </div>
         </div>
-        <div className="flex-1">
-          <h4 className="font-medium text-sm text-white group-hover:text-red-400 transition-colors">{productData.name}</h4>
-          <p className="text-gray-400 text-sm">⭐ Wysokiej jakości EVA</p>
-          <p className="font-semibold text-white text-lg">{productData.price.toFixed(2)} zł</p>
-        </div>
-      </div>
+      ))}
 
       <Separator className="bg-gray-700" />
 
@@ -1380,33 +1335,33 @@ function OrderSummaryContent({
         <div className="bg-gray-900/30 rounded-lg p-4 border border-gray-700">
           <div className="space-y-3">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-300">🛍️ Wartość produktów:</span>
-              <span className="text-white font-medium">{productData.price.toFixed(2)} zł</span>
+              <span className="text-gray-300">Wartość produktów:</span>
+              <span className="text-white font-medium">{cartProducts.reduce((sum, product) => sum + product.pricing.totalPrice, 0).toFixed(2)} zł</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-300">🚚 Dostawa:</span>
+              <span className="text-gray-300">Dostawa:</span>
               <span className={`font-medium ${shippingCost === 0 ? 'text-green-400' : 'text-white'}`}>
                 {shippingCost === 0 ? "Darmowa" : `${shippingCost.toFixed(2)} zł`}
               </span>
             </div>
             {discountApplied && (
-                          <div className="flex justify-between text-sm text-red-400 bg-red-900/20 rounded-lg p-2">
-              <span>🎫 Zniżka (10%):</span>
-              <span className="font-medium">-{(total * 0.1).toFixed(2)} zł</span>
-            </div>
+              <div className="flex justify-between text-sm text-red-400 bg-red-900/20 rounded-lg p-2">
+                <span>Zniżka (10%):</span>
+                <span className="font-medium">-{(total * 0.1).toFixed(2)} zł</span>
+              </div>
             )}
           </div>
         </div>
         
         <div className="bg-gradient-to-r from-red-900/20 to-red-800/20 rounded-lg p-4 border border-red-500/30">
           <div className="flex justify-between items-center">
-            <span className="text-white font-semibold text-lg">💰 Łącznie:</span>
+            <span className="text-white font-semibold text-lg">Łącznie:</span>
             <span className="text-red-400 font-bold text-2xl">
               {discountApplied ? (total * 0.9).toFixed(2) : total.toFixed(2)} zł
             </span>
           </div>
           {discountApplied && (
-            <p className="text-red-300 text-sm mt-1">🎉 Oszczędzasz {(total * 0.1).toFixed(2)} zł!</p>
+            <p className="text-red-300 text-sm mt-1">Oszczędzasz {(total * 0.1).toFixed(2)} zł!</p>
           )}
         </div>
       </div>

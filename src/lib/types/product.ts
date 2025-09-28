@@ -22,6 +22,8 @@ export interface CarDetails {
 export interface Product {
   id: string;
   sessionId: string;
+  name: string;
+  image: string;
   configuration: ProductConfiguration;
   pricing: ProductPricing;
   carDetails?: CarDetails;

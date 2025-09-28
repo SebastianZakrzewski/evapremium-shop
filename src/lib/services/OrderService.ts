@@ -22,10 +22,6 @@ export class OrderService {
       throw new Error('Cannot create order with empty cart');
     }
 
-    // Dla uproszczenia, bierzemy pierwszy produkt z koszyka
-    // W przyszłości można rozszerzyć o obsługę wielu produktów
-    const product = cartProducts[0];
-    
     const orderId = this.generateOrderId();
     const sessionId = this.getCurrentSessionId();
     
@@ -38,7 +34,7 @@ export class OrderService {
     const order: Order = {
       id: orderId,
       sessionId,
-      product,
+      products: cartProducts,
       customer: customerData,
       shipping: shippingData,
       payment: paymentData,
@@ -65,7 +61,7 @@ export class OrderService {
       const orderData = {
         id: order.id,
         session_id: order.sessionId,
-        product: order.product,
+        products: order.products,
         customer: order.customer,
         shipping: order.shipping,
         payment: order.payment,
@@ -94,7 +90,7 @@ export class OrderService {
       const savedOrder: Order = {
         id: data.id,
         sessionId: data.session_id,
-        product: data.product,
+        products: data.products,
         customer: data.customer,
         shipping: data.shipping,
         payment: data.payment,
@@ -140,7 +136,7 @@ export class OrderService {
       const order: Order = {
         id: data.id,
         sessionId: data.session_id,
-        product: data.product,
+        products: data.products,
         customer: data.customer,
         shipping: data.shipping,
         payment: data.payment,
@@ -185,7 +181,7 @@ export class OrderService {
       const order: Order = {
         id: data.id,
         sessionId: data.session_id,
-        product: data.product,
+        products: data.products,
         customer: data.customer,
         shipping: data.shipping,
         payment: data.payment,
@@ -227,7 +223,7 @@ export class OrderService {
       const orders: Order[] = data.map(item => ({
         id: item.id,
         sessionId: item.session_id,
-        product: item.product,
+        products: item.products,
         customer: item.customer,
         shipping: item.shipping,
         payment: item.payment,
