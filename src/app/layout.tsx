@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import Chatbot from "@/components/Chatbot";
 import Script from "next/script";
 import { SessionProvider } from "@/lib/contexts/session-context";
 
@@ -154,6 +155,7 @@ export default function RootLayout({
           <Navbar />
           <div className="pt-16 md:pt-20 lg:pt-24">{children}</div>
           <Footer />
+          <Chatbot />
         </SessionProvider>
       </body>
     </html>
