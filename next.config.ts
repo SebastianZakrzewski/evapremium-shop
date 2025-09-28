@@ -8,7 +8,7 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  webpack: (config, { dev, isServer }) => {
+  webpack: (config: any, { dev, isServer }: { dev: boolean; isServer: boolean }) => {
     if (dev && !isServer) {
       // Dodaj polling dla lepszego hot reload w Docker
       config.watchOptions = {

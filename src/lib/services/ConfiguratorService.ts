@@ -87,7 +87,7 @@ export class ConfiguratorService {
    * Oblicza cenę na podstawie konfiguracji
    */
   static calculatePricing(configData: ConfigurationData): ProductPricing {
-    let basePrice = this.BASE_PRICE;
+    const basePrice = this.BASE_PRICE;
     let modifiers = 0;
 
     // Modyfikatory dla rodzaju zestawu

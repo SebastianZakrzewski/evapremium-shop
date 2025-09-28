@@ -10,18 +10,15 @@ interface CartModalProps {
   onClose: () => void;
 }
 
-interface CartItem {
-  id: number;
-  name: string;
-  brand: string;
-  price: string;
-  quantity: number;
-  image: string;
-}
 
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
   const router = useRouter();
   const { cartItems, cartCount, cartTotal, removeFromCart, updateProductQuantity } = useCart();
+
+  // Debug logging
+  console.log('🛒 CartModal: cartItems:', cartItems);
+  console.log('🛒 CartModal: cartCount:', cartCount);
+  console.log('🛒 CartModal: cartTotal:', cartTotal);
 
   const handleCheckout = () => {
     onClose(); // Zamknij modal koszyka
@@ -73,24 +70,29 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
               <div className="space-y-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex items-center gap-4 p-4 bg-neutral-900 rounded-lg border border-neutral-800">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-16 h-16 object-cover rounded-md"
-                    />
+                    <div className="w-16 h-16 bg-neutral-800 rounded-md flex items-center justify-center">
+                      <span className="text-xs text-neutral-400">EVA</span>
+                    </div>
                     <div className="flex-1">
-                      <h3 className="font-medium text-white">{item.brand} {item.name}</h3>
-                      <p className="text-sm text-neutral-400">{item.price}</p>
+                      <h3 className="font-medium text-white">
+                        Dywaniki {item.configuration.setType === '3d-with-rims' ? '3D z rantami' : 'Klasyczne'}
+                      </h3>
+                      <p className="text-sm text-neutral-400">
+                        {item.configuration.materialColor} / {item.configuration.edgeColor}
+                      </p>
+                      <p className="text-sm text-red-400 font-medium">
+                        {item.pricing.totalPrice} zł
+                      </p>
                       <div className="flex items-center gap-2 mt-2">
                         <button 
-                          onClick={() => updateCartItemQuantity(item.id, item.quantity - 1)}
+                          onClick={() => updateProductQuantity(item.id, item.quantity - 1)}
                           className="w-6 h-6 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 transition-colors text-white"
                         >
                           -
                         </button>
                         <span className="w-8 text-center text-sm font-medium text-white">{item.quantity}</span>
                         <button 
-                          onClick={() => updateCartItemQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateProductQuantity(item.id, item.quantity + 1)}
                           className="w-6 h-6 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 transition-colors text-white"
                         >
                           +

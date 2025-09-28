@@ -1,5 +1,6 @@
 import { Product } from '../types/product';
 import { CartItem } from '../types/cart';
+import { HybridSessionManager } from '../utils/hybrid-session-manager';
 
 export class CartService {
   private static readonly CART_PREFIX = 'cart-';
@@ -34,12 +35,19 @@ export class CartService {
 
       this.saveCartToStorage(cartKey, existingCart);
       console.log('🛒 Product added to cart:', product.id);
-      console.log('📦 Cart contents:', existingCart.map(item => ({
+      console.log('📦 Cart contents after save:', existingCart.map(item => ({
         id: item.id,
         configuration: item.configuration,
         pricing: item.pricing,
         quantity: item.quantity
       })));
+      console.log('💾 Cart saved to localStorage with key:', cartKey);
+      
+      // Wyślij custom event aby odświeżyć koszyk w tej samej karcie
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
+        console.log('📡 Cart update event dispatched');
+      }
     } catch (error) {
       console.error('❌ Error adding product to cart:', error);
     }
@@ -68,6 +76,27 @@ export class CartService {
   }
 
   /**
+   * Pobiera elementy koszyka (z quantity)
+   */
+  static getCartItems(sessionId: string): CartItem[] {
+    if (typeof window === 'undefined') {
+      return [];
+    }
+
+    const cartKey = `${this.CART_PREFIX}${sessionId}`;
+    console.log('📦 getCartItems: fetching with key:', cartKey);
+    
+    try {
+      const items = this.getCartFromStorage(cartKey);
+      console.log('📦 getCartItems: retrieved items:', items.length);
+      return items;
+    } catch (error) {
+      console.error('❌ Error getting cart items:', error);
+      return [];
+    }
+  }
+
+  /**
    * Usuwa produkt z koszyka
    */
   static removeProductFromCart(productId: string): void {
@@ -85,6 +114,11 @@ export class CartService {
       
       this.saveCartToStorage(cartKey, filteredCart);
       console.log('🗑️ Product removed from cart:', productId);
+      
+      // Wyślij custom event
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
+      }
     } catch (error) {
       console.error('❌ Error removing product from cart:', error);
     }
@@ -156,6 +190,11 @@ export class CartService {
         existingCart[itemIndex].quantity = quantity;
         this.saveCartToStorage(cartKey, existingCart);
         console.log('📊 Product quantity updated:', productId, quantity);
+        
+        // Wyślij custom event
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('cartUpdated'));
+        }
       }
     } catch (error) {
       console.error('❌ Error updating product quantity:', error);
@@ -197,7 +236,6 @@ export class CartService {
   private static getCurrentSessionId(): string {
     if (typeof window !== 'undefined') {
       // W przeglądarce - użyj HybridSessionManager
-      const { HybridSessionManager } = require('../utils/hybrid-session-manager');
       return HybridSessionManager.getSessionId();
     }
     

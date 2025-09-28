@@ -146,7 +146,7 @@ export default function Configurator() {
         createdAt: product.createdAt
       });
       
-      addToCart(product);
+      await addToCart(product);
 
       console.log('✅ Produkt dodany do koszyka:', product.id);
       console.log('💰 Cena produktu:', `${product.pricing.totalPrice} zł`);

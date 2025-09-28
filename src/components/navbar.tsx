@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import CartModal from "./cart-modal";
-import { useSession } from "@/lib/contexts/session-context";
+import { useCart } from "@/hooks/useCart";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { cartCount } = useSession();
+  const { cartCount } = useCart();
 
   return (
     <>
