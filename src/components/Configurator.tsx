@@ -13,6 +13,18 @@ import { useCart } from "@/hooks/useCart";
 import { ConfiguratorService } from "@/lib/services/ConfiguratorService";
 import { ConfigurationData } from "@/lib/types/product";
 
+// Dodaj event do otwierania modala koszyka
+const openCartModal = () => {
+  // Sprawdź czy to pierwszy produkt w koszyku
+  const cartData = localStorage.getItem('cart-' + (typeof window !== 'undefined' ? window.sessionStorage?.getItem('sessionId') : ''));
+  const isFirstItem = !cartData || JSON.parse(cartData).length === 0;
+  
+  // Otwórz modal tylko przy pierwszym dodaniu lub jeśli użytkownik wyraził zgodę
+  if (isFirstItem || localStorage.getItem('autoOpenCart') === 'true') {
+    window.dispatchEvent(new CustomEvent('openCartModal'));
+  }
+};
+
 // Mapowanie ID na typy dla funkcji getMatImagePath
 const getMatTypeForImage = (setTypeId: string): '3d' | 'classic' => {
   if (setTypeId === 'classic') return 'classic';
@@ -161,8 +173,22 @@ export default function Configurator() {
       console.log('🚗 Dane samochodu:', product.carDetails || 'Brak');
       console.log('🛒 === KONIEC DODAWANIA ===');
       
-      // Opcjonalnie: przekieruj do koszyka
-      // router.push('/cart');
+      // Otwórz modal koszyka po dodaniu produktu
+      openCartModal();
+      
+      // Pokaż powiadomienie o dodaniu do koszyka
+      if (typeof window !== 'undefined') {
+        // Proste powiadomienie toast (można zastąpić lepszym komponentem)
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-20 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300';
+        notification.textContent = '✅ Produkt dodany do koszyka!';
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          setTimeout(() => notification.remove(), 300);
+        }, 2000);
+      }
       
     } catch (error) {
       console.error('❌ Błąd podczas dodawania do koszyka:', error);

@@ -94,7 +94,7 @@ export default function RoznorodnaKolorystykaSection() {
                 <div key={variant.name} className="flex flex-col items-center">
                   <button
                     className={`w-12 h-12 rounded-full border-4 shadow-lg mb-2 transition-transform duration-300 hover:scale-110 focus:outline-none ${
-                      selectedColor === variant.name ? 'border-yellow-400 ring-2 ring-yellow-300' : 'border-yellow-400'
+                      selectedColor === variant.name ? 'border-white ring-2 ring-white/30' : 'border-neutral-700'
                     }`}
                     style={{ background: variant.color }}
                     title={variant.name}

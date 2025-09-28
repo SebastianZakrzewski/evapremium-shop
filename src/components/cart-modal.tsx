@@ -25,6 +25,10 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
     router.push('/checkout'); // Przekieruj do strony checkout
   };
 
+  const handleContinueShopping = () => {
+    onClose(); // Zamknij modal i kontynuuj zakupy
+  };
+
   return (
     <>
       {/* Overlay */}
@@ -37,7 +41,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       
       {/* Modal */}
       <div 
-        className={`fixed top-0 right-0 h-full w-full max-w-md bg-black border-l border-neutral-800 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-black border-l border-neutral-800 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -120,12 +124,15 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
               </div>
               <button 
                 onClick={handleCheckout}
-                className="w-full bg-red-600 text-white py-5 px-6 rounded-lg font-medium hover:bg-red-700 transition-colors shadow-lg"
+                className="w-full bg-red-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow-lg text-lg"
               >
-                Przejdź do kasy
+                🛒 Przejdź do kasy
               </button>
-              <button className="w-full bg-white text-black py-5 px-6 rounded-lg font-medium hover:bg-gray-100 transition-colors shadow-lg border border-neutral-700 mt-3">
-                Realizuj zakup
+              <button 
+                onClick={handleContinueShopping}
+                className="w-full bg-transparent text-white py-3 px-6 rounded-lg font-medium hover:bg-neutral-800 transition-colors border border-neutral-600 mt-3"
+              >
+                Kontynuuj zakupy
               </button>
             </div>
           )}

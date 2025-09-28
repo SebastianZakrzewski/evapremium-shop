@@ -22,7 +22,7 @@ export default function GlebokaStrukturaKomorekSection() {
             <Zap className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 bg-gradient-to-r from-white via-pink-100 to-white bg-clip-text text-transparent">
-            GŁĘBOKA STRUKTURA KOMÓREK BLOKUJĄCA ZABRUDZENIA
+            NOWOCZESNY MATERIAŁ EVA
           </h2>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
             Specjalna struktura materiału EVA skutecznie zatrzymuje brud i wilgoć, zapewniając czystość w Twoim aucie nawet w trudnych warunkach.
@@ -33,8 +33,8 @@ export default function GlebokaStrukturaKomorekSection() {
           <div className="relative w-full md:w-1/2 flex justify-center">
             <div className="relative bg-black rounded-2xl p-6 border-4 border-pink-600/50 shadow-2xl w-full max-w-md">
               <Image
-                src="/images/zalety/plaster.png"
-                alt="Głęboka struktura komórek"
+                src="/images/zalety/pianka.webp"
+                alt="Nowoczesny Materiał EVA"
                 width={400}
                 height={400}
                 className="w-full h-auto rounded-xl object-cover"
@@ -45,7 +45,7 @@ export default function GlebokaStrukturaKomorekSection() {
           <div className="w-full md:w-1/2 flex flex-col items-center">
             <h3 className="text-2xl font-bold text-white mb-6 text-center">Dlaczego to ważne?</h3>
             <p className="text-gray-200 text-lg text-center mb-4">
-              Głęboka struktura komórek działa jak bariera, która blokuje przedostawanie się zabrudzeń i wilgoci do wnętrza samochodu. Dzięki temu dywaniki EVA są nie tylko łatwe w czyszczeniu, ale także skutecznie chronią podłogę auta.
+              Nowoczesny materiał EVA z głęboką strukturą komórek działa jak bariera, która blokuje przedostawanie się zabrudzeń i wilgoci do wnętrza samochodu. Dzięki temu dywaniki EVA są nie tylko łatwe w czyszczeniu, ale także skutecznie chronią podłogę auta.
             </p>
             <ul className="list-disc text-left text-gray-300 pl-6 space-y-2">
               <li>Skuteczne zatrzymywanie błota, piasku i wody</li>

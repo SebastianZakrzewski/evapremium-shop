@@ -173,7 +173,7 @@ export default function ThreeDMatsSection() {
                       key={benefit.id}
                       className={`group cursor-pointer transition-all duration-500 ease-out p-4 rounded-xl border-2 outline-none ${
                         isActive
-                          ? 'border-yellow-400 ring-4 ring-yellow-300/40 scale-105 shadow-yellow-400/30 bg-yellow-400/10'
+                          ? 'border-white ring-4 ring-white/30 scale-105 shadow-white/30 bg-white/10'
                           : hoveredBenefit === benefit.id
                             ? 'border-blue-500/80 bg-gradient-to-br from-blue-500/20 to-purple-500/20 scale-105 shadow-lg shadow-blue-500/30'
                             : 'border-gray-700/50 bg-gray-800/30 hover:border-blue-500/50 hover:bg-gray-800/50'

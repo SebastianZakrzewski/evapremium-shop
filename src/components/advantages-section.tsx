@@ -35,8 +35,8 @@ const advantagesItems = [
   {
     id: 4,
     type: "image" as const,
-    src: "/images/zalety/plaster.png",
-    title: "Głęboka struktura komórek blokująca zabrudzenia",
+    src: "/images/zalety/pianka.webp",
+    title: "Nowoczesny Materiał EVA",
     description: "Specjalna struktura materiału EVA skutecznie zatrzymuje brud i wilgoć",
     icon: Zap,
     color: "from-red-500 to-pink-600"

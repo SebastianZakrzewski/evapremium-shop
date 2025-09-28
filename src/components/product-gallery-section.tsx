@@ -221,13 +221,8 @@ export default function ProductGallerySection() {
       {/* Nagłówek sekcji - z kontenerem */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-6 animate-pulse-glow">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 bg-gradient-to-r from-white via-red-100 to-white bg-clip-text text-transparent">
-            Nasze Produkty Premium
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Nasze Produkty <span className="text-red-500">EVAPREMIUM</span>
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             Odkryj kolekcję najwyższej jakości dywaników samochodowych, 
