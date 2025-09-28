@@ -1,18 +1,18 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import Script from "next/script";
 import { SessionProvider } from "@/lib/contexts/session-context";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
 });
 
@@ -149,7 +149,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} bg-black min-h-screen`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} bg-black min-h-screen`}>
         <SessionProvider>
           <Navbar />
           <div className="pt-16 md:pt-20 lg:pt-24">{children}</div>

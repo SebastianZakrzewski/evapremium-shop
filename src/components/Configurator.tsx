@@ -1,14 +1,17 @@
 "use client";
 import React, { useMemo, useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
 import { getAvailableColors, getColorInfo } from "@/lib/color-mapping";
 import { getMatImagePath } from "@/lib/image-mapping";
+import { useCart } from "@/hooks/useCart";
+import { ConfiguratorService } from "@/lib/services/ConfiguratorService";
+import { ConfigurationData } from "@/lib/types/product";
 
 // Mapowanie ID na typy dla funkcji getMatImagePath
 const getMatTypeForImage = (setTypeId: string): '3d' | 'classic' => {
@@ -70,7 +73,9 @@ const setVariants: SetVariant[] = [
 
 export default function Configurator() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const brandParam = searchParams.get('brand');
+  const { addToCart, isLoading: cartLoading, error: cartError } = useCart();
   
   const [currentSection, setCurrentSection] = useState<number>(0);
   const [selectedMat, setSelectedMat] = useState<string>("black");
@@ -79,6 +84,7 @@ export default function Configurator() {
   const [selectedSetType, setSelectedSetType] = useState<string>(setTypes[0].id);
   const [selectedCellType, setSelectedCellType] = useState<string>(cellTypes[0].id);
   const [selectedSetVariant, setSelectedSetVariant] = useState<string>(setVariants[0].id);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   // Oblicz datę dostawy (2 tygodnie od dzisiaj)
   const deliveryDate = useMemo(() => {
@@ -104,6 +110,64 @@ export default function Configurator() {
   const prevSection = () => {
     if (currentSection > 0) {
       setCurrentSection(currentSection - 1);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    setIsAddingToCart(true);
+    
+    try {
+      const configData: ConfigurationData = {
+        setType: selectedSetType,
+        cellType: selectedCellType,
+        setVariant: selectedSetVariant,
+        materialColor: selectedMat,
+        edgeColor: selectedEdge,
+        heelPad: selectedHeelPad,
+        carDetails: brandParam ? {
+          brand: brandParam,
+          model: 'Unknown',
+          year: '2023'
+        } : undefined
+      };
+
+      console.log('🛒 === DODAWANIE DO KOSZYKA ===');
+      console.log('📋 Dane konfiguracji:', configData);
+      
+      const product = ConfiguratorService.createProductFromConfiguration(configData);
+      
+      console.log('🏗️ Utworzony produkt:', {
+        id: product.id,
+        sessionId: product.sessionId,
+        configuration: product.configuration,
+        pricing: product.pricing,
+        carDetails: product.carDetails,
+        status: product.status,
+        createdAt: product.createdAt
+      });
+      
+      addToCart(product);
+
+      console.log('✅ Produkt dodany do koszyka:', product.id);
+      console.log('💰 Cena produktu:', `${product.pricing.totalPrice} zł`);
+      console.log('🔧 Konfiguracja:', {
+        'Rodzaj zestawu': selectedSetType,
+        'Struktura komórek': selectedCellType,
+        'Wariant': selectedSetVariant,
+        'Kolor materiału': selectedMat,
+        'Kolor obszycia': selectedEdge,
+        'Podkładka pod piętę': selectedHeelPad
+      });
+      console.log('🚗 Dane samochodu:', product.carDetails || 'Brak');
+      console.log('🛒 === KONIEC DODAWANIA ===');
+      
+      // Opcjonalnie: przekieruj do koszyka
+      // router.push('/cart');
+      
+    } catch (error) {
+      console.error('❌ Błąd podczas dodawania do koszyka:', error);
+    } finally {
+      setIsAddingToCart(false);
     }
   };
 
@@ -533,10 +597,21 @@ export default function Configurator() {
               
               {currentSection === totalSections - 1 ? (
                 <Button
-                  onClick={() => {/* TODO: Add to cart logic */}}
-                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 px-8 py-3 text-lg font-semibold min-w-[200px]"
+                  onClick={handleAddToCart}
+                  disabled={isAddingToCart || cartLoading}
+                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 px-8 py-3 text-lg font-semibold min-w-[200px] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Dodaj do Koszyka
+                  {isAddingToCart || cartLoading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Dodawanie...
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-5 h-5" />
+                      Dodaj do Koszyka
+                    </>
+                  )}
                 </Button>
               ) : (
                 <Button
