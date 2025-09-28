@@ -12,6 +12,8 @@ import { getMatImagePath } from "@/lib/image-mapping";
 import { useCart } from "@/hooks/useCart";
 import { ConfiguratorService } from "@/lib/services/ConfiguratorService";
 import { ConfigurationData } from "@/lib/types/product";
+import { brands, getModelsByBrand } from "@/data/carouselData";
+import { Brand, Model } from "@/types/carousel";
 
 // Dodaj event do otwierania modala koszyka
 const openCartModal = () => {
@@ -83,6 +85,7 @@ const setVariants: SetVariant[] = [
   { id: "complete", name: "Mata do Bagażnika", description: "6 dywaników (przód + tył + bagażnik + dodatkowe)", priceModifier: 0 },
 ];
 
+
 export default function Configurator() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -90,6 +93,9 @@ export default function Configurator() {
   const { addToCart, isLoading: cartLoading, error: cartError } = useCart();
   
   const [currentSection, setCurrentSection] = useState<number>(0);
+  const [selectedCarBrand, setSelectedCarBrand] = useState<string>(brandParam || "");
+  const [selectedCarModel, setSelectedCarModel] = useState<string>("");
+  const [selectedCarYear, setSelectedCarYear] = useState<string>("");
   const [selectedMat, setSelectedMat] = useState<string>("black");
   const [selectedEdge, setSelectedEdge] = useState<string>("black");
   const [selectedHeelPad, setSelectedHeelPad] = useState<string>("brak");
@@ -112,6 +118,47 @@ export default function Configurator() {
   }, []);
 
   const totalSections = 6;
+
+  // Pobierz modele na podstawie wybranej marki
+  const availableModels = useMemo(() => {
+    if (!selectedCarBrand) return [];
+    // Konwertuj na format z wielką literą (np. "bmw" -> "BMW")
+    let brandName = selectedCarBrand.charAt(0).toUpperCase() + selectedCarBrand.slice(1);
+    
+    // Obsługa specjalnych przypadków nazw marek
+    const brandMappings: Record<string, string> = {
+      "Mercedes": "Mercedes-Benz",
+      "Aston martin": "Aston Martin",
+      "Alfa romeo": "Alfa Romeo"
+    };
+    
+    brandName = brandMappings[brandName] || brandName;
+    
+    return getModelsByBrand(brandName);
+  }, [selectedCarBrand]);
+
+  // Pobierz roczniki na podstawie wybranego modelu
+  const availableYears = useMemo(() => {
+    if (!selectedCarModel) return [];
+    const model = availableModels.find(m => m.name === selectedCarModel);
+    if (!model) return [];
+    
+    // Generuj roczniki od roku modelu do 10 lat wstecz
+    const modelYear = model.year;
+    const years = [];
+    for (let i = 0; i < 10; i++) {
+      years.push({
+        id: (modelYear - i).toString(),
+        name: (modelYear - i).toString()
+      });
+    }
+    return years;
+  }, [selectedCarModel, availableModels]);
+
+  // Resetuj rocznik przy zmianie modelu
+  useEffect(() => {
+    setSelectedCarYear("");
+  }, [selectedCarModel]);
 
   const nextSection = () => {
     if (currentSection < totalSections - 1) {
@@ -199,6 +246,7 @@ export default function Configurator() {
 
   const getSectionTitle = (section: number) => {
     const titles = [
+      "Wybór modelu",
       "Rodzaj zestawu",
       "Rodzaj dywaników", 
       "Rodzaj komórek",
@@ -377,6 +425,103 @@ export default function Configurator() {
 
             {/* Sekcja 1: Rodzaj zestawu */}
             {currentSection === 0 && (
+              <div className="flex-1 space-y-6">
+                {/* Wyświetl wybraną markę */}
+                {selectedCarBrand && (
+                  <div className="mb-6 p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
+                    <h3 className="text-sm font-medium mb-2 text-gray-300">Wybrana marka</h3>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden">
+                        <Image
+                          src={brands.find(b => b.name.toLowerCase() === selectedCarBrand)?.logo || "/images/placeholder.png"}
+                          alt={selectedCarBrand}
+                          width={40}
+                          height={40}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                      <span className="text-lg font-semibold text-white">
+                        {(() => {
+                          let brandName = selectedCarBrand.charAt(0).toUpperCase() + selectedCarBrand.slice(1);
+                          const brandMappings: Record<string, string> = {
+                            "Mercedes": "Mercedes-Benz",
+                            "Aston martin": "Aston Martin",
+                            "Alfa romeo": "Alfa Romeo"
+                          };
+                          return brandMappings[brandName] || brandName;
+                        })()}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {selectedCarBrand && (
+                  <div>
+                    <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz model</h3>
+                    {availableModels.length > 0 ? (
+                      <div className="relative">
+                        <select
+                          value={selectedCarModel}
+                          onChange={(e) => setSelectedCarModel(e.target.value)}
+                          className="w-full p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer"
+                        >
+                          <option value="" className="bg-neutral-900 text-gray-400">Wybierz model...</option>
+                          {availableModels.map((model) => (
+                            <option key={model.id} value={model.name} className="bg-neutral-900 text-white">
+                              {model.name}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
+                        <p className="text-gray-400 mb-2">Brak dostępnych modeli</p>
+                        <p className="text-sm text-gray-500">Dla wybranej marki nie ma jeszcze dostępnych modeli</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {selectedCarModel && availableYears.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz rocznik</h3>
+                    <div className="relative">
+                      <select
+                        value={selectedCarYear}
+                        onChange={(e) => setSelectedCarYear(e.target.value)}
+                        className="w-full p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer"
+                      >
+                        <option value="" className="bg-neutral-900 text-gray-400">Wybierz rocznik...</option>
+                        {availableYears.map((year) => (
+                          <option key={year.id} value={year.name} className="bg-neutral-900 text-white">
+                            {year.name}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {!selectedCarBrand && (
+                  <div className="text-center py-8">
+                    <p className="text-gray-400 mb-4">Nie wybrano marki auta</p>
+                    <p className="text-sm text-gray-500">Wróć do sekcji "Popularne Marki Samochodów" i wybierz markę swojego auta</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {currentSection === 1 && (
               <div className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj zestawu</h3>
@@ -642,7 +787,8 @@ export default function Configurator() {
               ) : (
                 <Button
                   onClick={nextSection}
-                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700"
+                  disabled={currentSection === 0 && (!selectedCarModel || !selectedCarYear)}
+                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Dalej
                   <ChevronRight className="h-4 w-4" />
