@@ -25,7 +25,7 @@ const colorVariants = [
 
 // Przykładowe mapowanie kolorów na zdjęcia dywaników w autach
 const colorImages: Record<string, string> = {
-  "Czarny": "/images/real/kia-czarny.jpg", // <- tu wstaw ścieżkę do zdjęcia z auta
+  "Czarny": "/images/kolory dywanikow/czarny.jpg", // <- nowe zdjęcie dla czarnego
   "Ciemnoszary": "/images/kolory dywanikow/szare.jpg", // <- nowe zdjęcie dla ciemnoszarego
   "Jasnobeżowy": "/images/kolory dywanikow/jasnobezowy.jpg",
   "Niebieski": "/images/kolory dywanikow/niebieski.jpg", // <- nowe zdjęcie dla niebieskiego
@@ -77,8 +77,8 @@ export default function RoznorodnaKolorystykaSection() {
                 />
               ) : (
                 <Image
-                  src="/images/zalety/kolorystyka.png"
-                  alt="Różnorodna kolorystyka dywaników"
+                  src="/images/kolory dywanikow/czarny.jpg"
+                  alt="Dywaniki w kolorze czarnym - przykład"
                   width={400}
                   height={400}
                   className="w-full h-auto rounded-xl object-cover"
