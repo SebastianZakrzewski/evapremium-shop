@@ -217,20 +217,20 @@ export default function CustomFitSection() {
           <div className="absolute left-0 right-0 top-1/2 transform -translate-y-1/2 z-0 h-2">
             <div className="w-full h-full bg-gradient-to-r from-red-700 via-red-500 to-red-400 opacity-80 rounded-full border-2 border-red-500" />
           </div>
-          <div className="w-full flex flex-col md:flex-row items-center justify-between relative z-10">
+          
+          {/* Timeline na mobile - pionowy układ */}
+          <div className="w-full flex flex-col items-center justify-center space-y-16 md:hidden relative z-10">
             {timelineSteps.map((step, idx) => {
               const Icon = step.icon;
-              const isEven = idx % 2 === 0;
               return (
                 <div
                   key={idx}
-                  className={`relative flex flex-col items-center flex-1 min-w-[120px] max-w-[160px] mx-auto md:mx-0 group gap-6 md:gap-12`}
+                  className="relative flex flex-col items-center group"
                   tabIndex={0}
                 >
-                  {/* Węzeł (ikona) na linii – premium: czerwona obwódka, czarne tło, biała ikona, cień */}
+                  {/* Węzeł (ikona) na linii */}
                   <div
-                    className={`relative z-10 w-16 h-16 flex items-center justify-center rounded-full border-4 border-red-500 bg-black shadow-lg transition-transform duration-300 animate-fade-in
-                      group-hover:scale-110 group-focus:scale-110 group-hover:border-white group-focus:border-white group-hover:bg-red-700 group-focus:bg-red-700'}`}
+                    className="relative z-10 w-16 h-16 flex items-center justify-center rounded-full border-4 border-red-500 bg-black shadow-lg transition-transform duration-300 animate-fade-in group-hover:scale-110 group-focus:scale-110 group-hover:border-white group-focus:border-white group-hover:bg-red-700 group-focus:bg-red-700"
                     style={{animationDelay: `${idx * 120}ms`}}
                   >
                     <Icon className="w-8 h-8 text-white" />
@@ -239,10 +239,52 @@ export default function CustomFitSection() {
                       {step.title}
                     </span>
                   </div>
-                  {/* Zygzakowaty opis */}
-                  <div className={`absolute w-max max-w-[110px] ${isEven ? 'top-24 md:top-20' : 'bottom-24 md:bottom-20'} left-1/2 -translate-x-1/2 text-center md:${isEven ? '' : 'top-auto bottom-20'} ${isEven ? '' : 'md:top-auto md:bottom-20'} ${isEven ? 'sm:top-24' : 'sm:bottom-24'} ${isEven ? 'top-auto' : 'top-auto'} sm:top-auto` + (typeof window !== 'undefined' && window.innerWidth < 768 ? ' top-auto bottom-20' : '')}>
-                    <div className="text-white font-semibold text-base md:text-lg mb-1 animate-fade-in drop-shadow-lg" style={{animationDelay: `${200 + idx * 120}ms`}}>{step.title}</div>
-                    <div className="text-gray-300 text-xs md:text-sm animate-fade-in drop-shadow-lg" style={{animationDelay: `${400 + idx * 120}ms`}}>{step.day}</div>
+                  {/* Opis pod węzłem */}
+                  <div className="mt-4 text-center max-w-[200px]">
+                    <div className="text-white font-semibold text-base mb-1 animate-fade-in drop-shadow-lg" style={{animationDelay: `${200 + idx * 120}ms`}}>
+                      {step.title}
+                    </div>
+                    <div className="text-gray-300 text-sm animate-fade-in drop-shadow-lg" style={{animationDelay: `${400 + idx * 120}ms`}}>
+                      {step.day}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Timeline na desktop - poziomy układ z zygzakiem */}
+          <div className="hidden md:flex w-full items-center justify-between relative z-10">
+            {timelineSteps.map((step, idx) => {
+              const Icon = step.icon;
+              const isEven = idx % 2 === 0;
+              return (
+                <div
+                  key={idx}
+                  className="relative flex flex-col items-center flex-1 min-w-[120px] max-w-[160px] group"
+                  tabIndex={0}
+                >
+                  {/* Węzeł (ikona) na linii */}
+                  <div
+                    className="relative z-10 w-16 h-16 flex items-center justify-center rounded-full border-4 border-red-500 bg-black shadow-lg transition-transform duration-300 animate-fade-in group-hover:scale-110 group-focus:scale-110 group-hover:border-white group-focus:border-white group-hover:bg-red-700 group-focus:bg-red-700"
+                    style={{animationDelay: `${idx * 120}ms`}}
+                  >
+                    <Icon className="w-8 h-8 text-white" />
+                    {/* Tooltip */}
+                    <span className="absolute left-1/2 -translate-x-1/2 -bottom-10 px-3 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20 shadow-lg border border-red-500">
+                      {step.title}
+                    </span>
+                  </div>
+                  {/* Opis w zygzaku - parzyste na górze, nieparzyste na dole */}
+                  <div className={`absolute w-max max-w-[140px] left-1/2 -translate-x-1/2 text-center ${
+                    isEven ? 'top-20' : 'bottom-20'
+                  }`}>
+                    <div className="text-white font-semibold text-base lg:text-lg mb-1 animate-fade-in drop-shadow-lg" style={{animationDelay: `${200 + idx * 120}ms`}}>
+                      {step.title}
+                    </div>
+                    <div className="text-gray-300 text-sm animate-fade-in drop-shadow-lg" style={{animationDelay: `${400 + idx * 120}ms`}}>
+                      {step.day}
+                    </div>
                   </div>
                 </div>
               );
