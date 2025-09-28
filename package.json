@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -58,7 +58,6 @@
     "react-chrono": "^2.9.1",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.59.0",
-    "react-horizontal-timeline": "^1.5.3",
     "react-vertical-timeline-component": "^3.5.3",
     "swiper": "^11.2.8",
     "tailwind-merge": "^3.3.1",

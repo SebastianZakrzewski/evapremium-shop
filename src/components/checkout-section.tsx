@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
+import Link from "next/link"
 import { 
   Truck, 
   Package, 
@@ -34,6 +35,9 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { HybridSessionManager } from "@/lib/utils/hybrid-session-manager"
+import { useCart } from '@/hooks/useCart';
+import { useOrder } from '@/hooks/useOrder';
+import { CustomerData, ShippingData, PaymentData } from '@/lib/types/order';
 
 // Schema walidacji
 const checkoutSchema = z.object({
@@ -144,6 +148,10 @@ export function CheckoutSection() {
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const [configuratorDictionary, setConfiguratorDictionary] = useState<any>(null)
+  
+  // Nowe hooki
+  const { cartProducts, clearCart } = useCart();
+  const { createOrder, saveOrder, isLoading: orderLoading, error: orderError } = useOrder();
 
   // Odczytywanie danych ze słownika konfiguratora używając HybridSessionManager
   useEffect(() => {
@@ -195,7 +203,10 @@ export function CheckoutSection() {
   const sameAsShipping = watch("sameAsShipping")
   const selectedShipping = watch("shippingMethod")
   const shippingCost = shippingMethods.find(m => m.id === selectedShipping)?.price || 0
-  const subtotal = productData.price * productData.quantity
+  
+  // Oblicz total na podstawie koszyka
+  const cartTotal = cartProducts.reduce((sum, product) => sum + product.pricing.totalPrice, 0);
+  const subtotal = cartTotal || (productData.price * productData.quantity);
   const total = subtotal + shippingCost
 
   // Watch all form fields for real-time validation
@@ -339,7 +350,68 @@ export function CheckoutSection() {
     setErrorMessage("")
     
     try {
-      // Aktualizuj słownik z danymi klienta
+      // Sprawdź czy są produkty w koszyku
+      if (cartProducts.length === 0) {
+        setErrorMessage("Koszyk jest pusty. Dodaj produkty przed złożeniem zamówienia.");
+        return;
+      }
+
+      // Przygotuj dane klienta
+      const customerData: CustomerData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        address: data.street,
+        city: data.city,
+        postalCode: data.postalCode,
+        country: data.country || 'Polska'
+      };
+
+      // Przygotuj dane dostawy
+      const selectedShipping = shippingMethods.find(m => m.id === data.shippingMethod);
+      const shippingData: ShippingData = {
+        method: data.shippingMethod,
+        methodName: selectedShipping?.name || '',
+        cost: selectedShipping?.price || 0,
+        estimatedDelivery: selectedShipping?.description || ''
+      };
+
+      // Przygotuj dane płatności
+      const paymentData: PaymentData = {
+        method: data.paymentMethod,
+        methodName: data.paymentMethod === 'card' ? 'Karta kredytowa' : 
+                   data.paymentMethod === 'transfer' ? 'Przelew bankowy' : 
+                   data.paymentMethod === 'blik' ? 'BLIK' : 'Pobranie'
+      };
+
+      // Utwórz zamówienie
+      const order = await createOrder(
+        cartProducts,
+        customerData,
+        shippingData,
+        paymentData,
+        {
+          discountAmount: discountApplied ? (total * 0.1) : 0,
+          company: !data.sameAsShipping ? {
+            name: data.companyName || '',
+            nip: data.nip || '',
+            isInvoice: true
+          } : undefined
+        }
+      );
+
+      // Zapisz zamówienie do Supabase
+      const savedOrder = await saveOrder(order);
+
+      // Wyczyść koszyk po udanym zamówieniu
+      clearCart();
+
+      // Pokaż potwierdzenie
+      setShowConfirmation(true);
+      console.log('✅ Order created successfully:', savedOrder.id);
+
+      // Aktualizuj słownik z danymi klienta (stara logika - do usunięcia w przyszłości)
       if (configuratorDictionary) {
         const updatedDictionary = {
           ...configuratorDictionary,
@@ -540,10 +612,10 @@ export function CheckoutSection() {
         {/* Breadcrumbs */}
         <div className="mb-6">
           <nav className="flex items-center space-x-2 text-sm text-gray-400" aria-label="Nawigacja">
-            <a href="/" className="hover:text-red-400 transition-colors flex items-center gap-1">
+            <Link href="/" className="hover:text-red-400 transition-colors flex items-center gap-1">
               <span>🏠</span>
               Strona główna
-            </a>
+            </Link>
             <span className="text-gray-600">/</span>
             <span className="text-gray-600">/</span>
             <span className="text-red-400 flex items-center gap-1">
@@ -991,7 +1063,7 @@ export function CheckoutSection() {
                       </div>
                       <h3 className="text-xl font-bold text-white mb-2">🎯 Wszystko gotowe!</h3>
                       <p className="text-gray-300 mb-4">
-                        👀 Sprawdź powyższe dane i kliknij "Zamawiam i płacę" aby sfinalizować zamówienie.
+                        👀 Sprawdź powyższe dane i kliknij &quot;Zamawiam i płacę&quot; aby sfinalizować zamówienie.
                       </p>
                       <div className="bg-black/30 rounded-lg p-4 border border-gray-700">
                         <p className="text-white font-medium">💰 Łączna kwota do zapłaty:</p>

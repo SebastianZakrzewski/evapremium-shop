@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Configurator from "@/components/Configurator";
 
 export const metadata: Metadata = {
@@ -15,7 +16,11 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <Configurator />;
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center"><div className="text-white text-xl">Ładowanie konfiguratora...</div></div>}>
+      <Configurator />
+    </Suspense>
+  );
 }
 
 

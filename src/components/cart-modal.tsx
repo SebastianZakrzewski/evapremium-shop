@@ -3,7 +3,7 @@
 import React from "react";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSession } from "@/lib/contexts/session-context";
+import { useCart } from "@/hooks/useCart";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -21,7 +21,7 @@ interface CartItem {
 
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
   const router = useRouter();
-  const { cartItems, cartCount, cartTotal, removeFromCart, updateCartItemQuantity } = useSession();
+  const { cartItems, cartCount, cartTotal, removeFromCart, updateProductQuantity } = useCart();
 
   const handleCheckout = () => {
     onClose(); // Zamknij modal koszyka
