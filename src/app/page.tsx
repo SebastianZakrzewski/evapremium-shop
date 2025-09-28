@@ -11,8 +11,6 @@ import RoznorodnaKolorystykaSection from "@/components/roznorodna-kolorystyka-se
 import GlebokaStrukturaKomorekSection from "@/components/gleboka-struktura-komorek-section";
 import CustomerReviews from "@/components/CustomerReviews";
 import FAQSection from "@/components/FAQSection";
-import CallToActionSection from "@/components/CallToActionSection";
-import PartnersSection from "@/components/PartnersSection";
 
 export default function Home() {
   return (
@@ -27,8 +25,6 @@ export default function Home() {
       <ProductSelection />
       <CustomerReviews />
       <FAQSection />
-      <CallToActionSection />
-      <PartnersSection />
     </div>
   );
 } 

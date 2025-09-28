@@ -253,14 +253,6 @@ export default function AdvantagesSection() {
           })}
         </div>
         
-        {/* Dodatkowy element dekoracyjny - idealnie wyśrodkowany */}
-        <div className={`text-center mt-8 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500/20 to-red-700/20 px-6 py-3 rounded-full border border-red-500/30 hover:scale-105 transition-all duration-300 cursor-pointer group">
-            <Sparkles className="w-5 h-5 text-red-400 animate-pulse" />
-            <span className="text-red-300 font-medium group-hover:text-red-200 transition-colors duration-300">Każdy produkt jest unikalny</span>
-            <Sparkles className="w-5 h-5 text-red-400 animate-pulse" />
-          </div>
-        </div>
       </div>
     </section>
   );
