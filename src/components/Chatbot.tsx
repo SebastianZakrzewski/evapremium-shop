@@ -310,26 +310,26 @@ export default function Chatbot() {
           {/* Input */}
           {!showContactForm && (
             <form onSubmit={handleSendMessage} className="p-4 bg-gray-900 border-t border-gray-700">
-              <div className="flex space-x-2">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Napisz wiadomość..."
-                  className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
-                  disabled={isTyping}
-                />
-                <button
-                  type="submit"
-                  disabled={!inputValue.trim() || isTyping}
-                  className="w-10 h-10 bg-red-500 hover:bg-red-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-full flex items-center justify-center transition-colors"
-                  aria-label="Wyślij wiadomość"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
-              </div>
-            </form>
+            <div className="flex space-x-2">
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Napisz wiadomość..."
+                className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                disabled={isTyping}
+              />
+              <button
+                type="submit"
+                disabled={!inputValue.trim() || isTyping}
+                className="w-10 h-10 bg-red-500 hover:bg-red-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-full flex items-center justify-center transition-colors"
+                aria-label="Wyślij wiadomość"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
+          </form>
           )}
         </div>
       )}
