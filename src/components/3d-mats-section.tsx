@@ -56,10 +56,10 @@ const defaultDescription = "Nasze dywaniki 3D z rantami to najnowocześniejsze r
 export default function ThreeDMatsSection() {
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredBenefit, setHoveredBenefit] = useState<number | null>(null);
-  const [mainImage, setMainImage] = useState<string>(defaultMainImage);
-  const [activeBenefit, setActiveBenefit] = useState<number | null>(null);
-  const [mainTitle, setMainTitle] = useState<string>(defaultTitle);
-  const [mainDescription, setMainDescription] = useState<string>(defaultDescription);
+  const [mainImage, setMainImage] = useState<string>(ochronaImage);
+  const [activeBenefit, setActiveBenefit] = useState<number | null>(1);
+  const [mainTitle, setMainTitle] = useState<string>("DOSKONAŁA OCHRONA");
+  const [mainDescription, setMainDescription] = useState<string>("Ranty 3D o wysokości do 8 cm skutecznie chronią przed wnikaniem brudu, wilgoci i zanieczyszczeń pod dywanik, zapewniając długotrwałą ochronę podłogi Twojego samochodu.");
   const imageRef = useRef<HTMLImageElement>(null);
 
   // Fade animacja przy zmianie obrazka
