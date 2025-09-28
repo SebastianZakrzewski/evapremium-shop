@@ -20,5 +20,6 @@ export const supabaseAdmin = supabaseServiceKey
 export const TABLES = {
   MATS: 'CarMat',
   CAR_BRANDS: 'car_brands',
-  CAR_MODELS: 'car_models'
+  CAR_MODELS: 'car_models',
+  ORDERS: 'orders'
 } as const;

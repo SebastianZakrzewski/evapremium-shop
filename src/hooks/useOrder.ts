@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { Product } from '../types/product';
-import { Order, CustomerData, ShippingData, PaymentData, CompanyData } from '../types/order';
+import { Product } from '../lib/types/product';
+import { Order, CustomerData, ShippingData, PaymentData, CompanyData } from '../lib/types/order';
 import { OrderService, OrderCreationOptions } from '../lib/services/OrderService';
 
 export interface UseOrderReturn {
