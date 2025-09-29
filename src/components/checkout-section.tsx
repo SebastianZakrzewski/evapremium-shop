@@ -1145,7 +1145,7 @@ export function CheckoutSection() {
                           <span className="text-white text-sm font-bold">{currentStep}</span>
                         </div>
                         <div>
-                          <CardTitle className="text-sm text-white">📋 Podsumowanie zamówienia</CardTitle>
+                          <CardTitle className="text-sm text-white">Podsumowanie zamówienia</CardTitle>
                           <p className="text-xs text-gray-400">Krok {currentStep} z {checkoutSteps.length}</p>
                           <p className="text-sm font-semibold text-red-400">{discountApplied ? (total * 0.9).toFixed(2) : total.toFixed(2)} zł</p>
                         </div>
@@ -1181,7 +1181,7 @@ export function CheckoutSection() {
                 <Card className="bg-black/40 backdrop-blur border-gray-800 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
                   <CardHeader className="border-b border-gray-800">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl text-white">📋 Podsumowanie zamówienia</CardTitle>
+                      <CardTitle className="text-xl text-white">Podsumowanie zamówienia</CardTitle>
                       <div className="w-3 h-3 bg-red-400 rounded-full animate-pulse"></div>
                     </div>
                   </CardHeader>
@@ -1297,7 +1297,7 @@ function OrderSummaryContent({
       {/* Kod rabatowy */}
       <div className="space-y-3">
         <div className="flex items-center gap-2">
-          <Label htmlFor="discountCode" className="text-sm text-gray-300">🎫 Kod rabatowy</Label>
+          <Label htmlFor="discountCode" className="text-sm text-gray-300">Kod rabatowy</Label>
           <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
         </div>
         <div className="flex space-x-2">
