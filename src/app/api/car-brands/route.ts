@@ -8,23 +8,38 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function GET(request: NextRequest) {
   try {
-    // Pobierz unikalne marki z tabeli car_models_extended
-    const { data: brands, error } = await supabase
-      .from('car_models_extended')
-      .select('brand_name')
-      .order('brand_name');
-
-    if (error) {
-      console.error('Błąd podczas pobierania marek:', error);
-      return NextResponse.json(
-        { error: 'Nie udało się pobrać marek samochodów' },
-        { status: 500 }
-      );
+    // Pobierz wszystkie marki z tabeli car_models_extended używając paginacji
+    let allBrands = [];
+    let from = 0;
+    const pageSize = 1000;
+    let hasMore = true;
+    
+    while (hasMore) {
+      const { data: brands, error } = await supabase
+        .from('car_models_extended')
+        .select('brand_name')
+        .order('brand_name')
+        .range(from, from + pageSize - 1);
+        
+      if (error) {
+        console.error('Błąd podczas pobierania marek:', error);
+        return NextResponse.json(
+          { error: 'Nie udało się pobrać marek samochodów' },
+          { status: 500 }
+        );
+      }
+      
+      if (brands.length === 0) {
+        hasMore = false;
+      } else {
+        allBrands = allBrands.concat(brands);
+        from += pageSize;
+      }
     }
 
     // Usuń duplikaty i przygotuj dane
     const uniqueBrands = Array.from(
-      new Set(brands.map(brand => brand.brand_name))
+      new Set(allBrands.map(brand => brand.brand_name))
     ).map((brandName, index) => ({
       id: index + 1,
       name: brandName,
@@ -32,7 +47,14 @@ export async function GET(request: NextRequest) {
       description: `Dywaniki samochodowe dla marki ${brandName}`,
     }));
 
-    return NextResponse.json(uniqueBrands);
+    const response = NextResponse.json(uniqueBrands);
+    
+    // Dodaj nagłówki cache-busting
+    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    
+    return response;
   } catch (error) {
     console.error('Błąd API:', error);
     return NextResponse.json(
