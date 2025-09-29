@@ -15,6 +15,7 @@ interface Message {
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -61,6 +62,28 @@ export default function Chatbot() {
       setShowTooltip(false);
     }
   }, [isOpen]);
+
+  // Listen for cart modal state changes
+  useEffect(() => {
+    const handleCartStateChange = (event: CustomEvent) => {
+      setIsCartOpen(event.detail.isOpen);
+    };
+
+    // Listen for custom cart events
+    window.addEventListener('cartModalStateChange', handleCartStateChange as EventListener);
+    
+    // Also listen for the existing openCartModal event
+    const handleOpenCartModal = () => {
+      setIsCartOpen(true);
+    };
+
+    window.addEventListener('openCartModal', handleOpenCartModal);
+    
+    return () => {
+      window.removeEventListener('cartModalStateChange', handleCartStateChange as EventListener);
+      window.removeEventListener('openCartModal', handleOpenCartModal);
+    };
+  }, []);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,10 +179,10 @@ export default function Chatbot() {
   return (
     <>
       {/* Floating Chat Button with Tooltip */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className={`fixed bottom-6 z-50 transition-all duration-300 ${isCartOpen ? 'left-6' : 'right-6'}`}>
         {/* Tooltip */}
         {showTooltip && !isOpen && (
-          <div className="absolute bottom-20 right-0 bg-gradient-to-r from-gray-900 to-gray-800 text-white px-5 py-3 rounded-xl shadow-2xl border border-gray-600 max-w-sm animate-bounce">
+          <div className={`absolute bottom-20 bg-gradient-to-r from-gray-900 to-gray-800 text-white px-5 py-3 rounded-xl shadow-2xl border border-gray-600 max-w-sm animate-bounce ${isCartOpen ? 'left-0' : 'right-0'}`}>
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                 <Image
@@ -176,7 +199,7 @@ export default function Chatbot() {
               </div>
             </div>
             {/* Arrow pointing down */}
-            <div className="absolute top-full right-6 w-0 h-0 border-l-6 border-r-6 border-t-6 border-l-transparent border-r-transparent border-t-gray-800"></div>
+            <div className={`absolute top-full w-0 h-0 border-l-6 border-r-6 border-t-6 border-l-transparent border-r-transparent border-t-gray-800 ${isCartOpen ? 'left-6' : 'right-6'}`}></div>
           </div>
         )}
         
@@ -212,7 +235,7 @@ export default function Chatbot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-28 right-6 z-50 w-96 h-[500px] bg-gradient-to-b from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-gray-600 flex flex-col overflow-hidden backdrop-blur-sm">
+        <div className={`fixed bottom-28 z-50 w-96 h-[500px] bg-gradient-to-b from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-gray-600 flex flex-col overflow-hidden backdrop-blur-sm transition-all duration-300 ${isCartOpen ? 'left-6' : 'right-6'}`}>
           {/* Header */}
           <div className="bg-gradient-to-r from-red-500 via-red-600 to-red-700 px-6 py-4 flex items-center justify-between shadow-lg">
             <div className="flex items-center space-x-4">

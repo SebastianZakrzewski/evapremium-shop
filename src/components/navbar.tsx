@@ -20,6 +20,14 @@ export default function Navbar() {
     return () => window.removeEventListener('openCartModal', handleOpenCartModal);
   }, []);
 
+  // Wysyłaj eventy o zmianie stanu koszyka
+  useEffect(() => {
+    const event = new CustomEvent('cartModalStateChange', {
+      detail: { isOpen: isCartOpen }
+    });
+    window.dispatchEvent(event);
+  }, [isCartOpen]);
+
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-50 bg-black/90 backdrop-blur border-b border-neutral-800">
