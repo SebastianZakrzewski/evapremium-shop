@@ -17,7 +17,7 @@ export default function ProductSelection() {
     const fetchBrands = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/car-brands');
+        const response = await fetch(`/api/car-brands?t=${Date.now()}`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
