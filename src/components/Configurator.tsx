@@ -106,8 +106,67 @@ export default function Configurator() {
   const { addToCart, isLoading: cartLoading, error: cartError } = useCart();
   
   const [currentSection, setCurrentSection] = useState<number>(0);
-  const [selectedCarBrand, setSelectedCarBrand] = useState<string>(brandParam || "");
+  // Mapowanie nazw marek z carousel na nazwy w bazie danych
+  const getBrandNameForAPI = (brandParam: string | null) => {
+    if (!brandParam) return "";
+    
+    const brandMappings: Record<string, string> = {
+      "mercedes": "Mercedes",
+      "bmw": "BMW", 
+      "audi": "Audi",
+      "tesla": "Tesla",
+      "porsche": "Porsche",
+      "volkswagen": "Volkswagen",
+      "ford": "Ford",
+      "opel": "Opel",
+      "peugeot": "Peugeot",
+      "renault": "Renault",
+      "fiat": "Fiat",
+      "alfa romeo": "Alfa Romeo",
+      "aston martin": "Aston Martin",
+      "acura": "Acura",
+      "bentley": "Bentley",
+      "ferrari": "Ferrari",
+      "lamborghini": "Lamborghini",
+      "mclaren": "McLaren",
+      "maserati": "Maserati",
+      "rolls-royce": "Rolls-Royce",
+      "lexus": "Lexus",
+      "infiniti": "Infiniti",
+      "cadillac": "Cadillac",
+      "lincoln": "Lincoln",
+      "jaguar": "Jaguar",
+      "land rover": "Land Rover",
+      "mini": "Mini",
+      "smart": "Smart"
+    };
+    
+    return brandMappings[brandParam.toLowerCase()] || brandParam.charAt(0).toUpperCase() + brandParam.slice(1);
+  };
+
+  const [selectedCarBrand, setSelectedCarBrand] = useState<string>(getBrandNameForAPI(brandParam));
+  
+  // Aktualizuj selectedCarBrand gdy brandParam się zmieni
+  useEffect(() => {
+    if (brandParam) {
+      const newBrand = getBrandNameForAPI(brandParam);
+      setSelectedCarBrand(newBrand);
+      console.log('Aktualizacja marki:', brandParam, '->', newBrand);
+    }
+  }, [brandParam]);
+  
+  // Resetuj modele gdy marka się zmieni
+  useEffect(() => {
+    if (selectedCarBrand) {
+      setAvailableModels([]);
+      setSelectedCarModel("");
+      setSelectedCarYear("");
+      setSelectedBodyType("");
+    }
+  }, [selectedCarBrand]);
+  
   const [selectedCarModel, setSelectedCarModel] = useState<string>("");
+  const [selectedGeneration, setSelectedGeneration] = useState<string>("");
   const [selectedCarYear, setSelectedCarYear] = useState<string>("");
   const [selectedBodyType, setSelectedBodyType] = useState<string>("");
   const [selectedMat, setSelectedMat] = useState<string>("black");
@@ -117,6 +176,23 @@ export default function Configurator() {
   const [selectedCellType, setSelectedCellType] = useState<string>(cellTypes[0].id);
   const [selectedSetVariant, setSelectedSetVariant] = useState<string>(setVariants[0].id);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+
+  // Nowe stany dla danych z Supabase
+  const [availableBrands, setAvailableBrands] = useState<any[]>([]);
+  const [availableModels, setAvailableModels] = useState<any[]>([]);
+  const [availableYears, setAvailableYears] = useState<any[]>([]);
+  const [availableBodyTypes, setAvailableBodyTypes] = useState<any[]>([]);
+  const [loadingBrands, setLoadingBrands] = useState(false);
+  const [loadingModels, setLoadingModels] = useState(false);
+  const [loadingYears, setLoadingYears] = useState(false);
+  const [loadingBodyTypes, setLoadingBodyTypes] = useState(false);
+
+  // Debug: wyświetl informacje o wybranej marce
+  useEffect(() => {
+    console.log('Konfigurator - brandParam:', brandParam);
+    console.log('Konfigurator - selectedCarBrand:', selectedCarBrand);
+    console.log('Konfigurator - availableModels:', availableModels.length);
+  }, [brandParam, selectedCarBrand]);
 
   // Oblicz datę dostawy (2 tygodnie od dzisiaj)
   const deliveryDate = useMemo(() => {
@@ -133,41 +209,105 @@ export default function Configurator() {
 
   const totalSections = 7;
 
-  // Pobierz modele na podstawie wybranej marki
-  const availableModels = useMemo(() => {
-    if (!selectedCarBrand) return [];
-    // Konwertuj na format z wielką literą (np. "bmw" -> "BMW")
-    let brandName = selectedCarBrand.charAt(0).toUpperCase() + selectedCarBrand.slice(1);
-    
-    // Obsługa specjalnych przypadków nazw marek
-    const brandMappings: Record<string, string> = {
-      "Mercedes": "Mercedes-Benz",
-      "Aston martin": "Aston Martin",
-      "Alfa romeo": "Alfa Romeo"
+  // Pobierz modele z nowego API
+  useEffect(() => {
+    const fetchModels = async () => {
+      if (!selectedCarBrand) {
+        console.log('Brak wybranej marki, czyszczę modele');
+        setAvailableModels([]);
+        return;
+      }
+
+      console.log('Pobieranie modeli dla marki:', selectedCarBrand);
+      setLoadingModels(true);
+      try {
+        const response = await fetch(`/api/models/${encodeURIComponent(selectedCarBrand)}`);
+        console.log('Odpowiedź API:', response.status);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Dane modeli:', data);
+          
+          // Konwertuj dane do formatu oczekiwanego przez komponent
+          const models = data.map((model: any) => ({
+            id: model.model,
+            name: model.model
+          }));
+          console.log('Przetworzone modele:', models);
+          setAvailableModels(models);
+        } else {
+          console.error('Błąd podczas pobierania modeli:', response.status);
+          setAvailableModels([]);
+        }
+      } catch (error) {
+        console.error('Błąd podczas pobierania modeli:', error);
+        setAvailableModels([]);
+      } finally {
+        setLoadingModels(false);
+      }
     };
-    
-    brandName = brandMappings[brandName] || brandName;
-    
-    return getModelsByBrand(brandName);
+
+    fetchModels();
   }, [selectedCarBrand]);
 
-  // Pobierz roczniki na podstawie wybranego modelu
-  const availableYears = useMemo(() => {
-    if (!selectedCarModel) return [];
-    const model = availableModels.find(m => m.name === selectedCarModel);
-    if (!model) return [];
-    
-    // Generuj roczniki od roku modelu do 10 lat wstecz
-    const modelYear = model.year;
-    const years = [];
-    for (let i = 0; i < 10; i++) {
-      years.push({
-        id: (modelYear - i).toString(),
-        name: (modelYear - i).toString()
-      });
-    }
-    return years;
-  }, [selectedCarModel, availableModels]);
+  // Pobierz roczniki i typy nadwozia z nowego API generacji
+  useEffect(() => {
+    const fetchModelDetails = async () => {
+      if (!selectedCarBrand || !selectedCarModel) {
+        setAvailableYears([]);
+        setAvailableBodyTypes([]);
+        return;
+      }
+
+      setLoadingYears(true);
+      setLoadingBodyTypes(true);
+      
+      try {
+        const response = await fetch(`/api/generations/${encodeURIComponent(selectedCarBrand)}/${encodeURIComponent(selectedCarModel)}`);
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Przygotuj roczniki z generacji
+          const years = new Set<number>();
+          const bodyTypes = new Set<string>();
+          
+          data.forEach((generation: any) => {
+            if (generation.yearFrom) years.add(generation.yearFrom);
+            if (generation.yearTo) years.add(generation.yearTo);
+            if (generation.bodyTypes) {
+              generation.bodyTypes.forEach((bt: string) => bodyTypes.add(bt));
+            }
+          });
+          
+          const sortedYears = Array.from(years).sort((a, b) => b - a).map(year => ({
+            id: year.toString(),
+            name: year.toString()
+          }));
+          
+          const sortedBodyTypes = Array.from(bodyTypes).sort().map(bt => ({
+            id: bt,
+            name: bt
+          }));
+          
+          setAvailableYears(sortedYears);
+          setAvailableBodyTypes(sortedBodyTypes);
+        } else {
+          console.error('Błąd podczas pobierania szczegółów modelu:', response.status);
+          setAvailableYears([]);
+          setAvailableBodyTypes([]);
+        }
+      } catch (error) {
+        console.error('Błąd podczas pobierania szczegółów modelu:', error);
+        setAvailableYears([]);
+        setAvailableBodyTypes([]);
+      } finally {
+        setLoadingYears(false);
+        setLoadingBodyTypes(false);
+      }
+    };
+
+    fetchModelDetails();
+  }, [selectedCarBrand, selectedCarModel]);
 
   // Resetuj rocznik i typ nadwozia przy zmianie modelu
   useEffect(() => {
@@ -477,7 +617,7 @@ export default function Configurator() {
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden">
                         <Image
-                          src={brands.find(b => b.name.toLowerCase() === selectedCarBrand)?.logo || "/images/placeholder.png"}
+                          src={brands.find(b => b.name.toLowerCase() === selectedCarBrand.toLowerCase())?.logo || "/images/placeholder.png"}
                           alt={selectedCarBrand}
                           width={40}
                           height={40}
@@ -486,23 +626,30 @@ export default function Configurator() {
                       </div>
                       <span className="text-lg font-semibold text-white">
                         {(() => {
-                          const brandName = selectedCarBrand.charAt(0).toUpperCase() + selectedCarBrand.slice(1);
                           const brandMappings: Record<string, string> = {
                             "Mercedes": "Mercedes-Benz",
                             "Aston martin": "Aston Martin",
                             "Alfa romeo": "Alfa Romeo"
                           };
-                          return brandMappings[brandName] || brandName;
+                          return brandMappings[selectedCarBrand] || selectedCarBrand;
                         })()}
                       </span>
                     </div>
+                    <p className="text-sm text-gray-400 mt-2">
+                      Wybierz model samochodu z listy poniżej
+                    </p>
                   </div>
                 )}
 
                 {selectedCarBrand && (
                   <div>
                     <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz model</h3>
-                    {availableModels.length > 0 ? (
+                    {loadingModels ? (
+                      <div className="text-center py-8 text-gray-400">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
+                        <p>Ładowanie modeli...</p>
+                      </div>
+                    ) : availableModels.length > 0 ? (
                       <div className="relative">
                         <select
                           value={selectedCarModel}
@@ -510,8 +657,8 @@ export default function Configurator() {
                           className="w-full p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer"
                         >
                           <option value="" className="bg-neutral-900 text-gray-400">Wybierz model...</option>
-                          {availableModels.map((model) => (
-                            <option key={model.id} value={model.name} className="bg-neutral-900 text-white">
+                          {availableModels.map((model, index) => (
+                            <option key={index} value={model.name} className="bg-neutral-900 text-white">
                               {model.name}
                             </option>
                           ))}
@@ -531,53 +678,77 @@ export default function Configurator() {
                   </div>
                 )}
 
-                {selectedCarModel && availableYears.length > 0 && (
+                {selectedCarModel && (
                   <div>
                     <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz rocznik</h3>
-                    <div className="relative">
-                      <select
-                        value={selectedCarYear}
-                        onChange={(e) => setSelectedCarYear(e.target.value)}
-                        className="w-full p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer"
-                      >
-                        <option value="" className="bg-neutral-900 text-gray-400">Wybierz rocznik...</option>
-                        {availableYears.map((year) => (
-                          <option key={year.id} value={year.name} className="bg-neutral-900 text-white">
-                            {year.name}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
+                    {loadingYears ? (
+                      <div className="text-center py-8 text-gray-400">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
+                        <p>Ładowanie roczników...</p>
                       </div>
-                    </div>
+                    ) : availableYears.length > 0 ? (
+                      <div className="relative">
+                        <select
+                          value={selectedCarYear}
+                          onChange={(e) => setSelectedCarYear(e.target.value)}
+                          className="w-full p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer"
+                        >
+                          <option value="" className="bg-neutral-900 text-gray-400">Wybierz rocznik...</option>
+                          {availableYears.map((year) => (
+                            <option key={year.id} value={year.name} className="bg-neutral-900 text-white">
+                              {year.name}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
+                        <p className="text-gray-400 mb-2">Brak dostępnych roczników</p>
+                        <p className="text-sm text-gray-500">Dla wybranego modelu nie ma jeszcze dostępnych roczników</p>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {selectedCarYear && (
                   <div>
                     <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz typ nadwozia</h3>
-                    <div className="relative">
-                      <select
-                        value={selectedBodyType}
-                        onChange={(e) => setSelectedBodyType(e.target.value)}
-                        className="w-full p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer"
-                      >
-                        <option value="" className="bg-neutral-900 text-gray-400">Wybierz typ nadwozia...</option>
-                        {bodyTypes.map((bodyType) => (
-                          <option key={bodyType.id} value={bodyType.id} className="bg-neutral-900 text-white">
-                            {bodyType.name} - {bodyType.description}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
+                    {loadingBodyTypes ? (
+                      <div className="text-center py-8 text-gray-400">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
+                        <p>Ładowanie typów nadwozia...</p>
                       </div>
-                    </div>
+                    ) : availableBodyTypes.length > 0 ? (
+                      <div className="relative">
+                        <select
+                          value={selectedBodyType}
+                          onChange={(e) => setSelectedBodyType(e.target.value)}
+                          className="w-full p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer"
+                        >
+                          <option value="" className="bg-neutral-900 text-gray-400">Wybierz typ nadwozia...</option>
+                          {availableBodyTypes.map((bodyType) => (
+                            <option key={bodyType.id} value={bodyType.id} className="bg-neutral-900 text-white">
+                              {bodyType.name}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
+                        <p className="text-gray-400 mb-2">Brak dostępnych typów nadwozia</p>
+                        <p className="text-sm text-gray-500">Dla wybranego modelu nie ma jeszcze dostępnych typów nadwozia</p>
+                      </div>
+                    )}
                   </div>
                 )}
 
