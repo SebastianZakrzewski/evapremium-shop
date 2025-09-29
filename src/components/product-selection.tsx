@@ -78,7 +78,7 @@ export default function ProductSelection() {
     setTimeout(() => {
       setClickedCardId(null);
       // Przekierowanie do konfiguratora z parametrem marki
-      window.location.href = `/konfigurator?brand=${brand.name.toLowerCase()}`;
+      window.location.href = `/konfigurator?brand=${encodeURIComponent(brand.name.toLowerCase())}`;
     }, 300);
   };
 

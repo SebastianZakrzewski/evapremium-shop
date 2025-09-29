@@ -1,0 +1,98 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+import { z } from 'zod';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kmepxyervpeujwvgdqtm.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImttZXB4eWVydnBldWp3dmdkcXRtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NzUwOTQyNSwiZXhwIjoyMDczMDg1NDI1fQ.sr3YFtozFZCJpTKTfjX7180oI_fjT0rxG0sx2i0YKlI';
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Schema walidacji parametrów
+const ModelParamsSchema = z.object({
+  brand: z.string().min(1, 'Nazwa marki jest wymagana'),
+  model: z.string().min(1, 'Nazwa modelu jest wymagana')
+});
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { brand: string; model: string } }
+) {
+  try {
+    // Walidacja parametrów
+    const validatedParams = ModelParamsSchema.parse({
+      brand: decodeURIComponent(params.brand),
+      model: decodeURIComponent(params.model)
+    });
+
+    const brandName = validatedParams.brand;
+    const modelName = validatedParams.model;
+
+    // Pobierz wszystkie generacje dla danego modelu
+    const { data: generations, error } = await supabase
+      .from('car_models_extended')
+      .select('generation, body_type, year_from, year_to, is_currently_produced')
+      .eq('brand_name', brandName)
+      .eq('model_name', modelName)
+      .order('generation', { ascending: true });
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return NextResponse.json(
+        { error: 'Błąd podczas pobierania generacji' },
+        { status: 500 }
+      );
+    }
+
+    if (!generations || generations.length === 0) {
+      return NextResponse.json([]);
+    }
+
+    // Grupuj po generacjach
+    const groupedGenerations = generations.reduce((acc: any, item: any) => {
+      const generationKey = item.generation;
+      
+      if (!acc[generationKey]) {
+        acc[generationKey] = {
+          brand: brandName,
+          model: modelName,
+          generation: generationKey,
+          yearFrom: item.year_from,
+          yearTo: item.year_to,
+          isCurrentlyProduced: item.is_currently_produced,
+          bodyTypes: new Set(),
+          years: new Set()
+        };
+      }
+      
+      // Dodaj typ nadwozia
+      if (item.body_type) {
+        acc[generationKey].bodyTypes.add(item.body_type);
+      }
+      
+      // Dodaj lata
+      if (item.year_from) {
+        acc[generationKey].years.add(item.year_from);
+      }
+      if (item.year_to) {
+        acc[generationKey].years.add(item.year_to);
+      }
+      
+      return acc;
+    }, {});
+
+    // Konwersja do formatu odpowiedzi
+    const result = Object.values(groupedGenerations).map((generation: any) => ({
+      ...generation,
+      bodyTypes: Array.from(generation.bodyTypes).sort(),
+      years: Array.from(generation.years).sort((a: number, b: number) => b - a)
+    }));
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error('API error:', error);
+    return NextResponse.json(
+      { error: 'Wystąpił błąd serwera' },
+      { status: 500 }
+    );
+  }
+}
