@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Bot, User, Phone, User as UserIcon } from "lucide-react";
+import Image from "next/image";
 import { ContactInfo, ContactFormData } from "@/types/contact";
 
 interface Message {
@@ -13,6 +14,7 @@ interface Message {
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -45,6 +47,18 @@ export default function Chatbot() {
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
+    }
+  }, [isOpen]);
+
+  // Show tooltip after 3 seconds if chat is not open
+  useEffect(() => {
+    if (!isOpen) {
+      const timer = setTimeout(() => {
+        setShowTooltip(true);
+      }, 3000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowTooltip(false);
     }
   }, [isOpen]);
 
@@ -141,48 +155,96 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Floating Chat Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 ${
-          isOpen
-            ? "bg-red-600 hover:bg-red-700"
-            : "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
-        }`}
-        aria-label={isOpen ? "Zamknij chat" : "Otwórz chat"}
-      >
-        {isOpen ? (
-          <X className="w-6 h-6 text-white mx-auto" />
-        ) : (
-          <MessageCircle className="w-6 h-6 text-white mx-auto" />
+      {/* Floating Chat Button with Tooltip */}
+      <div className="fixed bottom-6 right-6 z-50">
+        {/* Tooltip */}
+        {showTooltip && !isOpen && (
+          <div className="absolute bottom-20 right-0 bg-gradient-to-r from-gray-900 to-gray-800 text-white px-5 py-3 rounded-xl shadow-2xl border border-gray-600 max-w-sm animate-bounce">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                <Image
+                  src="/chat.webp"
+                  alt="EVA Premium Chat"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-white">Potrzebujesz pomocy?</p>
+                <p className="text-xs text-gray-200">Kliknij aby porozmawiać z naszym asystentem EVA</p>
+              </div>
+            </div>
+            {/* Arrow pointing down */}
+            <div className="absolute top-full right-6 w-0 h-0 border-l-6 border-r-6 border-t-6 border-l-transparent border-r-transparent border-t-gray-800"></div>
+          </div>
         )}
-      </button>
+        
+        <button
+          onClick={() => {
+            setIsOpen(!isOpen);
+            setShowTooltip(false);
+          }}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+          className={`w-20 h-20 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 relative overflow-hidden border-2 border-white/20 ${
+            isOpen
+              ? "bg-red-600 hover:bg-red-700 shadow-red-500/50"
+              : "bg-gradient-to-br from-red-500 via-red-600 to-red-700 hover:from-red-600 hover:via-red-700 hover:to-red-800 shadow-red-500/30"
+          }`}
+          aria-label={isOpen ? "Zamknij chat" : "Otwórz chat"}
+        >
+          {isOpen ? (
+            <X className="w-8 h-8 text-white mx-auto drop-shadow-lg" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center p-2">
+              <Image
+                src="/chat.webp"
+                alt="EVA Premium Chat"
+                width={48}
+                height={48}
+                className="rounded-full drop-shadow-lg"
+              />
+            </div>
+          )}
+        </button>
+      </div>
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 w-80 h-96 bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 flex flex-col overflow-hidden">
+        <div className="fixed bottom-28 right-6 z-50 w-96 h-[500px] bg-gradient-to-b from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-gray-600 flex flex-col overflow-hidden backdrop-blur-sm">
           {/* Header */}
-          <div className="bg-gradient-to-r from-red-500 to-red-600 px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                <Bot className="w-5 h-5 text-white" />
+          <div className="bg-gradient-to-r from-red-500 via-red-600 to-red-700 px-6 py-4 flex items-center justify-between shadow-lg">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center overflow-hidden border-2 border-white/30 shadow-lg">
+                <Image
+                  src="/chat.webp"
+                  alt="EVA Premium Chat"
+                  width={48}
+                  height={48}
+                  className="rounded-full"
+                />
               </div>
               <div>
-                <h3 className="text-white font-semibold text-sm">EVA Premium</h3>
-                <p className="text-red-100 text-xs">Asystent online</p>
+                <h3 className="text-white font-bold text-base">EVA Premium</h3>
+                <p className="text-red-100 text-sm font-medium">Asystent online</p>
+                <div className="flex items-center space-x-1 mt-1">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-green-200 text-xs">Dostępny</span>
+                </div>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-white/80 hover:text-white transition-colors"
+              className="text-white/80 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"
               aria-label="Zamknij chat"
             >
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             </button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-800">
+          <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-gray-800 to-gray-900">
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -191,15 +253,23 @@ export default function Chatbot() {
                 }`}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl px-3 py-2 ${
+                  className={`max-w-[85%] rounded-2xl px-4 py-3 shadow-lg ${
                     message.sender === "user"
-                      ? "bg-red-500 text-white rounded-br-md"
-                      : "bg-gray-700 text-gray-100 rounded-bl-md border border-gray-600"
+                      ? "bg-gradient-to-r from-red-500 to-red-600 text-white rounded-br-md"
+                      : "bg-gradient-to-r from-gray-700 to-gray-600 text-gray-100 rounded-bl-md border border-gray-500"
                   }`}
                 >
                   <div className="flex items-start space-x-2">
                     {message.sender === "bot" && (
-                      <Bot className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                      <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 mt-0.5">
+                        <Image
+                          src="/chat.webp"
+                          alt="EVA Premium Chat"
+                          width={24}
+                          height={24}
+                          className="rounded-full"
+                        />
+                      </div>
                     )}
                     {message.sender === "user" && (
                       <User className="w-4 h-4 text-white/80 mt-0.5 flex-shrink-0" />
@@ -224,14 +294,23 @@ export default function Chatbot() {
             {/* Typing Indicator */}
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-gray-700 text-gray-100 rounded-2xl rounded-bl-md border border-gray-600 px-3 py-2">
-                  <div className="flex items-center space-x-2">
-                    <Bot className="w-4 h-4 text-red-500" />
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                <div className="bg-gradient-to-r from-gray-700 to-gray-600 text-gray-100 rounded-2xl rounded-bl-md border border-gray-500 px-4 py-3 shadow-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                      <Image
+                        src="/chat.webp"
+                        alt="EVA Premium Chat"
+                        width={32}
+                        height={32}
+                        className="rounded-full"
+                      />
                     </div>
+                    <div className="flex space-x-1">
+                      <div className="w-3 h-3 bg-red-400 rounded-full animate-bounce"></div>
+                      <div className="w-3 h-3 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                      <div className="w-3 h-3 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                    </div>
+                    <span className="text-xs text-gray-300 ml-2">EVA pisze...</span>
                   </div>
                 </div>
               </div>
@@ -241,54 +320,48 @@ export default function Chatbot() {
 
           {/* Contact Form */}
           {showContactForm && (
-            <div className="p-4 bg-gray-900 border-t border-gray-700">
+            <div className="p-6 bg-gradient-to-r from-gray-900 to-gray-800 border-t border-gray-600">
               <form onSubmit={handleContactSubmit} className="space-y-3">
-                <div className="text-sm text-gray-300 mb-3">
+                <div className="text-sm text-gray-200 mb-4 font-medium">
                   Wypełnij dane kontaktowe:
                 </div>
                 
-                <div className="flex space-x-2">
-                  <div className="flex-1">
-                    <div className="relative">
-                      <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                      <input
-                        ref={nameInputRef}
-                        type="text"
-                        value={contactData.name}
-                        onChange={(e) => handleContactInputChange('name', e.target.value)}
-                        placeholder="Imię"
-                        className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
-                        required
-                      />
-                    </div>
+                <div className="space-y-3">
+                  <div className="relative">
+                    <UserIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <input
+                      ref={nameInputRef}
+                      type="text"
+                      value={contactData.name}
+                      onChange={(e) => handleContactInputChange('name', e.target.value)}
+                      placeholder="Imię"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-all duration-200"
+                      required
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <input
+                      type="tel"
+                      value={contactData.phone}
+                      onChange={(e) => handleContactInputChange('phone', e.target.value)}
+                      placeholder="Numer telefonu"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-all duration-200"
+                      required
+                    />
                   </div>
                 </div>
 
-                <div className="flex space-x-2">
-                  <div className="flex-1">
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                      <input
-                        type="tel"
-                        value={contactData.phone}
-                        onChange={(e) => handleContactInputChange('phone', e.target.value)}
-                        placeholder="Numer telefonu"
-                        className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex space-x-2">
+                <div className="flex space-x-3 pt-2">
                   <button
                     type="submit"
                     disabled={!contactData.name.trim() || !contactData.phone.trim() || isSubmittingContact}
-                    className="flex-1 bg-red-500 hover:bg-red-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-2 px-4 rounded-full text-sm font-medium transition-colors flex items-center justify-center"
+                    className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white py-3 px-6 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-red-500/25"
                   >
                     {isSubmittingContact ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                         Wysyłanie...
                       </>
                     ) : (
@@ -298,7 +371,7 @@ export default function Chatbot() {
                   <button
                     type="button"
                     onClick={() => setShowContactForm(false)}
-                    className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-full text-sm transition-colors"
+                    className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-xl text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-gray-500/25"
                   >
                     Anuluj
                   </button>
@@ -309,24 +382,24 @@ export default function Chatbot() {
 
           {/* Input */}
           {!showContactForm && (
-            <form onSubmit={handleSendMessage} className="p-4 bg-gray-900 border-t border-gray-700">
-            <div className="flex space-x-2">
+            <form onSubmit={handleSendMessage} className="p-6 bg-gradient-to-r from-gray-900 to-gray-800 border-t border-gray-600">
+            <div className="flex space-x-3">
               <input
                 ref={inputRef}
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Napisz wiadomość..."
-                className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-all duration-200"
                 disabled={isTyping}
               />
               <button
                 type="submit"
                 disabled={!inputValue.trim() || isTyping}
-                className="w-10 h-10 bg-red-500 hover:bg-red-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-full flex items-center justify-center transition-colors"
+                className="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white rounded-xl flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-red-500/25"
                 aria-label="Wyślij wiadomość"
               >
-                <Send className="w-4 h-4" />
+                <Send className="w-5 h-5" />
               </button>
             </div>
           </form>
