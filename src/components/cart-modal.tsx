@@ -126,7 +126,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 onClick={handleCheckout}
                 className="w-full bg-red-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow-lg text-lg"
               >
-                🛒 Przejdź do kasy
+                Przejdź do kasy
               </button>
               <button 
                 onClick={handleContinueShopping}

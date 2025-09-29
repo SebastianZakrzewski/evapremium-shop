@@ -272,6 +272,35 @@ export default function Configurator() {
     return titles[section] || "";
   };
 
+  // Funkcja do generowania dynamicznego tytułu
+  const getDynamicTitle = () => {
+    const parts = ["Skonfiguruj dywaniki"];
+    
+    if (selectedCarBrand) {
+      // Formatuj nazwę marki (pierwsza litera wielka)
+      const formattedBrand = selectedCarBrand.charAt(0).toUpperCase() + selectedCarBrand.slice(1);
+      parts.push(`do ${formattedBrand}`);
+      
+      if (selectedCarModel) {
+        parts.push(selectedCarModel);
+        
+        if (selectedCarYear) {
+          parts.push(selectedCarYear);
+          
+          if (selectedBodyType) {
+            // Znajdź nazwę typu nadwozia na podstawie ID
+            const bodyType = bodyTypes.find(bt => bt.id === selectedBodyType);
+            if (bodyType) {
+              parts.push(bodyType.name);
+            }
+          }
+        }
+      }
+    }
+    
+    return parts.join(" ");
+  };
+
   // Dynamiczne kolory na podstawie wybranej struktury komórek
   const availableMaterialColors = useMemo(() => {
     return getAvailableColors(selectedCellType, 'material').map(colorKey => ({
@@ -413,7 +442,7 @@ export default function Configurator() {
             {/* Header z progressem */}
             <div className="mb-6">
               <h2 className="text-xl md:text-2xl font-semibold">
-                Skonfiguruj dywaniki
+                {getDynamicTitle()}
               </h2>
               <p className="text-white/70 text-sm mt-1">
                 {brandParam 
@@ -426,7 +455,7 @@ export default function Configurator() {
               <div className="mt-4 flex items-center gap-2">
                 <div className="flex-1 bg-neutral-800 rounded-full h-2">
                   <div 
-                    className="bg-white rounded-full h-2 transition-all duration-300"
+                    className="bg-red-500 rounded-full h-2 transition-all duration-300"
                     style={{ width: `${((currentSection + 1) / totalSections) * 100}%` }}
                   />
                 </div>
