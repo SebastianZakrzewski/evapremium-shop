@@ -18,7 +18,7 @@ export default function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Cześć! Jestem asystentem EVA Premium. Jak mogę Ci pomóc w wyborze dywaników samochodowych?",
+      text: "Cześć! Jestem Klaudia, konsultantka EVA Premium. Jak mogę Ci pomóc w wyborze dywaników samochodowych?",
       sender: "bot",
       timestamp: new Date(),
     },
@@ -156,10 +156,10 @@ export default function Chatbot() {
   return (
     <>
       {/* Floating Chat Button with Tooltip */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-6 left-6 z-50">
         {/* Tooltip */}
         {showTooltip && !isOpen && (
-          <div className="absolute bottom-20 right-0 bg-gradient-to-r from-gray-900 to-gray-800 text-white px-5 py-3 rounded-xl shadow-2xl border border-gray-600 max-w-sm animate-bounce">
+          <div className="absolute bottom-20 left-0 bg-gradient-to-r from-gray-900 to-gray-800 text-white px-5 py-3 rounded-xl shadow-2xl border border-gray-600 max-w-sm animate-bounce">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                 <Image
@@ -172,11 +172,11 @@ export default function Chatbot() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-white">Potrzebujesz pomocy?</p>
-                <p className="text-xs text-gray-200">Kliknij aby porozmawiać z naszym asystentem EVA</p>
+                <p className="text-xs text-gray-200">Kliknij aby porozmawiać z Klaudią</p>
               </div>
             </div>
             {/* Arrow pointing down */}
-            <div className="absolute top-full right-6 w-0 h-0 border-l-6 border-r-6 border-t-6 border-l-transparent border-r-transparent border-t-gray-800"></div>
+            <div className="absolute top-full left-6 w-0 h-0 border-l-6 border-r-6 border-t-6 border-l-transparent border-r-transparent border-t-gray-800"></div>
           </div>
         )}
         
@@ -212,7 +212,7 @@ export default function Chatbot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-28 right-6 z-50 w-96 h-[500px] bg-gradient-to-b from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-gray-600 flex flex-col overflow-hidden backdrop-blur-sm">
+        <div className="fixed bottom-28 left-6 z-50 w-96 h-[500px] bg-gradient-to-b from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-gray-600 flex flex-col overflow-hidden backdrop-blur-sm">
           {/* Header */}
           <div className="bg-gradient-to-r from-red-500 via-red-600 to-red-700 px-6 py-4 flex items-center justify-between shadow-lg">
             <div className="flex items-center space-x-4">
@@ -226,11 +226,11 @@ export default function Chatbot() {
                 />
               </div>
               <div>
-                <h3 className="text-white font-bold text-base">EVA Premium</h3>
-                <p className="text-red-100 text-sm font-medium">Asystent online</p>
+                <h3 className="text-white font-bold text-base">Klaudia</h3>
+                <p className="text-red-100 text-sm font-medium">Konsultantka EVA Premium</p>
                 <div className="flex items-center space-x-1 mt-1">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-green-200 text-xs">Dostępny</span>
+                  <span className="text-green-200 text-xs">Dostępna</span>
                 </div>
               </div>
             </div>
@@ -310,7 +310,7 @@ export default function Chatbot() {
                       <div className="w-3 h-3 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
                       <div className="w-3 h-3 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
                     </div>
-                    <span className="text-xs text-gray-300 ml-2">EVA pisze...</span>
+                    <span className="text-xs text-gray-300 ml-2">Klaudia pisze...</span>
                   </div>
                 </div>
               </div>
