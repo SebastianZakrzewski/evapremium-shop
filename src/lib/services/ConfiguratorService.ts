@@ -35,6 +35,8 @@ export class ConfiguratorService {
     const product = {
       id: productId,
       sessionId: this.getCurrentSessionId(),
+      name: this.generateProductName(configData),
+      image: this.generateProductImage(configData),
       configuration: {
         setType: configData.setType,
         cellType: configData.cellType,
@@ -142,5 +144,24 @@ export class ConfiguratorService {
     
     // Na serwerze - wygeneruj tymczasowy ID
     return `temp-session-${Date.now()}`;
+  }
+
+  /**
+   * Generuje nazwę produktu na podstawie konfiguracji
+   */
+  private static generateProductName(configData: ConfigurationData): string {
+    const carInfo = configData.carDetails ? 
+      `${configData.carDetails.brand} ${configData.carDetails.model}` : 
+      'Samochód';
+    
+    return `Dywaniki EVA ${carInfo} - ${configData.setType} ${configData.materialColor}`;
+  }
+
+  /**
+   * Generuje ścieżkę do obrazu produktu na podstawie konfiguracji
+   */
+  private static generateProductImage(configData: ConfigurationData): string {
+    // Domyślny obraz - można rozszerzyć o logikę wyboru obrazu na podstawie konfiguracji
+    return '/images/konfigurator/dywaniki/3d/romby/czarne/5os-3d-diamonds-white-black.webp';
   }
 }

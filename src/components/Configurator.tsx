@@ -486,7 +486,7 @@ export default function Configurator() {
                       </div>
                       <span className="text-lg font-semibold text-white">
                         {(() => {
-                          let brandName = selectedCarBrand.charAt(0).toUpperCase() + selectedCarBrand.slice(1);
+                          const brandName = selectedCarBrand.charAt(0).toUpperCase() + selectedCarBrand.slice(1);
                           const brandMappings: Record<string, string> = {
                             "Mercedes": "Mercedes-Benz",
                             "Aston martin": "Aston Martin",
@@ -584,7 +584,7 @@ export default function Configurator() {
                 {!selectedCarBrand && (
                   <div className="text-center py-8">
                     <p className="text-gray-400 mb-4">Nie wybrano marki auta</p>
-                    <p className="text-sm text-gray-500">Wróć do sekcji "Popularne Marki Samochodów" i wybierz markę swojego auta</p>
+                    <p className="text-sm text-gray-500">Wróć do sekcji &quot;Popularne Marki Samochodów&quot; i wybierz markę swojego auta</p>
                   </div>
                 )}
               </div>
@@ -778,7 +778,7 @@ export default function Configurator() {
                       <div>
                         <div className="text-white font-semibold">
                           {(() => {
-                            let brandName = selectedCarBrand.charAt(0).toUpperCase() + selectedCarBrand.slice(1);
+                            const brandName = selectedCarBrand.charAt(0).toUpperCase() + selectedCarBrand.slice(1);
                             const brandMappings: Record<string, string> = {
                               "Mercedes": "Mercedes-Benz",
                               "Aston martin": "Aston Martin",

@@ -40,4 +40,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# prisma
 /src/generated/prisma
+
+# helper scripts
+check-*.ts
+check-*.js
+analyze-*.js
+test-*.js
