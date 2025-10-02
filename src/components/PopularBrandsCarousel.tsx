@@ -80,7 +80,6 @@ export default function PopularBrandsCarousel() {
   const renderBrandCard = (brand: Brand, index: number, position: string) => {
     return (
       <BrandCard
-        key={brand.id}
         brand={brand}
         className={`transition-all duration-700 ease-out ${
           position === 'center' 

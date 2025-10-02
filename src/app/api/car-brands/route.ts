@@ -37,13 +37,20 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Usuń duplikaty i przygotuj dane
+    // Usuń duplikaty i przygotuj dane (normalizuj wielkość liter)
     const brandMap = new Map();
     
     allBrands.forEach(brand => {
-      if (!brandMap.has(brand.brand_name)) {
-        brandMap.set(brand.brand_name, {
-          brand_name: brand.brand_name,
+      // Normalizuj nazwę marki - pierwsza litera wielka, reszta małe
+      const normalizedName = brand.brand_name
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+      
+      if (!brandMap.has(normalizedName)) {
+        brandMap.set(normalizedName, {
+          brand_name: normalizedName,
           brand_image: brand.brand_image
         });
       }
