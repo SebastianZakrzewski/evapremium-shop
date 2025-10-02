@@ -184,7 +184,7 @@ export default function ImageCarousel<T>({
             if (renderItem) {
               return (
                 <div 
-                  key={itemIdx} 
+                  key={`${itemIdx}-${position}`} 
                   className={positionClass}
                   onClick={() => handleCardClick(item)}
                   style={{ cursor: onItemClick ? 'pointer' : 'default' }}

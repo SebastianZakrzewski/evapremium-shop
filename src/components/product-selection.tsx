@@ -133,7 +133,6 @@ export default function ProductSelection() {
             onItemClick={handleBrandClick}
             renderItem={(brand, index, position) => (
               <BrandCard 
-                key={brand.id} 
                 brand={brand} 
                 className={`${position} ${clickedCardId === brand.id ? 'animate-click' : ''}`}
               />
