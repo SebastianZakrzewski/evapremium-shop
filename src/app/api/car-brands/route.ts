@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     while (hasMore) {
       const { data: brands, error } = await supabase
         .from('car_models_extended')
-        .select('brand_name')
+        .select('brand_name, brand_image')
         .order('brand_name')
         .range(from, from + pageSize - 1);
         
@@ -38,13 +38,22 @@ export async function GET(request: NextRequest) {
     }
 
     // Usuń duplikaty i przygotuj dane
-    const uniqueBrands = Array.from(
-      new Set(allBrands.map(brand => brand.brand_name))
-    ).map((brandName, index) => ({
+    const brandMap = new Map();
+    
+    allBrands.forEach(brand => {
+      if (!brandMap.has(brand.brand_name)) {
+        brandMap.set(brand.brand_name, {
+          brand_name: brand.brand_name,
+          brand_image: brand.brand_image
+        });
+      }
+    });
+    
+    const uniqueBrands = Array.from(brandMap.values()).map((brand, index) => ({
       id: index + 1,
-      name: brandName,
-      logo: `/images/brands/${brandName.toLowerCase().replace(/\s+/g, '-')}.png`, // Domyślna ścieżka do logo
-      description: `Dywaniki samochodowe dla marki ${brandName}`,
+      name: brand.brand_name,
+      logo: brand.brand_image || `/images/brands/${brand.brand_name.toLowerCase().replace(/\s+/g, '-')}.png`, // Użyj brand_image lub fallback
+      description: `Dywaniki samochodowe dla marki ${brand.brand_name}`,
     }));
 
     const response = NextResponse.json(uniqueBrands);

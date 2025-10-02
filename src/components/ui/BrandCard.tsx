@@ -12,6 +12,9 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
   // Sprawdź czy to jest zdjęcie czy logo SVG
   const isImage = brand.logo.includes('.jpg') || brand.logo.includes('.png') || brand.logo.includes('.jpeg') || brand.logo.includes('.avif') || brand.logo.includes('.webp');
   
+  // Sprawdź czy to zdjęcie marki z katalogu /modele/
+  const isBrandImage = brand.logo.includes('/modele/');
+  
   return (
     <div
       className={`w-56 h-80 md:w-72 md:h-112 aspect-[9/16] flex flex-col items-center justify-center rounded-2xl shadow-lg overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 transition-all duration-300 cursor-pointer relative group ${className}`}
@@ -24,7 +27,9 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
               src={brand.logo}
               alt={`${brand.name}`}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className={`group-hover:scale-105 transition-transform duration-300 ${
+                isBrandImage ? 'object-cover' : 'object-contain'
+              }`}
               sizes="(max-width: 768px) 224px 320px, 288px 448px"
               priority={true}
               quality={95}
@@ -51,19 +56,31 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
           )}
           
           {/* Overlay dla lepszej czytelności tekstu */}
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
+          <div className={`absolute inset-0 transition-colors duration-300 ${
+            isBrandImage 
+              ? 'bg-black/40 group-hover:bg-black/30' 
+              : 'bg-black/20 group-hover:bg-black/10'
+          }`} />
         </div>
       
       {/* Zawartość tekstowa */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
         {/* Nazwa marki */}
-        <h3 className="text-white text-3xl font-bold text-center mb-3 drop-shadow-lg">
+        <h3 className={`text-center mb-3 font-bold ${
+          isBrandImage 
+            ? 'text-white text-4xl drop-shadow-2xl' 
+            : 'text-white text-3xl drop-shadow-lg'
+        }`}>
           {brand.name}
         </h3>
         
         {/* Opis marki */}
         {brand.description && (
-          <p className="text-white/90 text-base text-center px-6 drop-shadow-lg">
+          <p className={`text-center px-6 ${
+            isBrandImage 
+              ? 'text-white text-lg drop-shadow-2xl' 
+              : 'text-white/90 text-base drop-shadow-lg'
+          }`}>
             {brand.description}
           </p>
         )}
