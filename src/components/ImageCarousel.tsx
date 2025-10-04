@@ -45,33 +45,83 @@ export default function ImageCarousel<T>({
   const [centerIndex, setCenterIndex] = useState(2);
   const [search, setSearch] = useState("");
 
-  // Filtrowanie po nazwie (jeśli obiekt ma pole name)
-  const filteredItems = search.trim().length > 0
-    ? items.filter((item: any) => typeof item === 'object' && 'name' in item && item.name.toLowerCase().includes(search.toLowerCase()))
-    : items;
+  // Inteligentne filtrowanie po nazwie z priorytetyzacją
+  const filteredItems = React.useMemo(() => {
+    if (search.trim().length === 0) return items;
+    
+    const searchTerm = search.toLowerCase().trim();
+    const searchResults = items
+      .filter((item: any) => typeof item === 'object' && 'name' in item)
+      .map((item: any) => {
+        const name = item.name.toLowerCase();
+        let score = 0;
+        
+        // Najwyższy priorytet: nazwa zaczyna się od wyszukiwanej frazy
+        if (name.startsWith(searchTerm)) {
+          score = 1000;
+        }
+        // Wysoki priorytet: nazwa zawiera wyszukiwaną frazę na początku słowa
+        else if (name.includes(` ${searchTerm}`) || name.includes(`-${searchTerm}`)) {
+          score = 500;
+        }
+        // Średni priorytet: nazwa zawiera wyszukiwaną frazę
+        else if (name.includes(searchTerm)) {
+          score = 100;
+        }
+        // Niski priorytet: nazwa zawiera części wyszukiwanej frazy
+        else if (searchTerm.length > 1) {
+          const searchChars = searchTerm.split('');
+          const nameChars = name.split('');
+          let matchCount = 0;
+          let searchIndex = 0;
+          
+          for (let i = 0; i < nameChars.length && searchIndex < searchChars.length; i++) {
+            if (nameChars[i] === searchChars[searchIndex]) {
+              matchCount++;
+              searchIndex++;
+            }
+          }
+          
+          if (matchCount === searchChars.length) {
+            score = 50;
+          }
+        }
+        
+        return { item, score };
+      })
+      .filter(result => result.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map(result => result.item);
+    
+    return searchResults;
+  }, [items, search]);
 
   // Jeśli po wyszukiwaniu zmienia się liczba elementów, ustaw środek
   React.useEffect(() => {
     if (filteredItems.length > 0) {
-      // Znajdź indeks karty z wpisaną marką
       const searchTerm = search.toLowerCase().trim();
       if (searchTerm.length > 0) {
-        const foundIndex = filteredItems.findIndex((item: any) => 
+        // Znajdź najlepsze dopasowanie (pierwsze w posortowanej liście)
+        const bestMatchIndex = filteredItems.findIndex((item: any) => 
           typeof item === 'object' && 'name' in item && 
-          item.name.toLowerCase().includes(searchTerm)
+          item.name.toLowerCase().startsWith(searchTerm)
         );
-        if (foundIndex !== -1) {
-          setCenterIndex(foundIndex);
+        
+        if (bestMatchIndex !== -1) {
+          // Ustaw na najlepsze dopasowanie
+          setCenterIndex(bestMatchIndex);
         } else {
-          setCenterIndex(Math.floor(filteredItems.length / 2));
+          // Jeśli nie ma dokładnego dopasowania, ustaw na pierwszy wynik
+          setCenterIndex(0);
         }
       } else {
+        // Bez wyszukiwania, ustaw na środek
         setCenterIndex(Math.floor(filteredItems.length / 2));
       }
     } else {
       setCenterIndex(0);
     }
-  }, [search, filteredItems.length]);
+  }, [search, filteredItems]);
 
   // Jeśli nie ma elementów, nie renderuj karuzeli
   if (!filteredItems || filteredItems.length === 0) {
