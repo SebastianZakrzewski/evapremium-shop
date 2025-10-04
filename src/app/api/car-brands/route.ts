@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
       const { data: brands, error } = await supabase
         .from('car_models_extended')
         .select('brand_name, brand_image')
-        .order('brand_name')
         .range(from, from + pageSize - 1);
         
       if (error) {
