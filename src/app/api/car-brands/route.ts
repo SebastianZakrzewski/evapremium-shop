@@ -56,7 +56,27 @@ export async function GET(request: NextRequest) {
       }
     });
     
-    const uniqueBrands = Array.from(brandMap.values()).map((brand, index) => ({
+    // Przygotuj listę marek z BMW na pierwszym miejscu
+    const allBrandsList = Array.from(brandMap.values());
+    
+    // Znajdź BMW i usuń z listy (uwzględnij różne warianty nazwy)
+    const bmwBrand = allBrandsList.find(brand => 
+      brand.brand_name.toLowerCase() === 'bmw' || 
+      brand.brand_name.toLowerCase() === 'bwm' ||
+      brand.brand_name.toLowerCase().includes('bmw')
+    );
+    
+    // Usuń BMW z głównej listy jeśli istnieje
+    const otherBrands = allBrandsList.filter(brand => 
+      brand.brand_name.toLowerCase() !== 'bmw' && 
+      brand.brand_name.toLowerCase() !== 'bwm' &&
+      !brand.brand_name.toLowerCase().includes('bmw')
+    );
+    
+    // Utwórz finalną listę z BMW na początku
+    const finalBrandsList = bmwBrand ? [bmwBrand, ...otherBrands] : otherBrands;
+    
+    const uniqueBrands = finalBrandsList.map((brand, index) => ({
       id: index + 1,
       name: brand.brand_name,
       logo: brand.brand_image || `/images/brands/${brand.brand_name.toLowerCase().replace(/\s+/g, '-')}.png`, // Użyj brand_image lub fallback
