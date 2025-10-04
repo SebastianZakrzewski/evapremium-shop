@@ -56,25 +56,27 @@ export async function GET(request: NextRequest) {
       }
     });
     
-    // Przygotuj listę marek z BMW na pierwszym miejscu
+    // Przygotuj listę marek z Mercedes-Benz na pierwszym miejscu
     const allBrandsList = Array.from(brandMap.values());
     
-    // Znajdź BMW i usuń z listy (uwzględnij różne warianty nazwy)
-    const bmwBrand = allBrandsList.find(brand => 
-      brand.brand_name.toLowerCase() === 'bmw' || 
-      brand.brand_name.toLowerCase() === 'bwm' ||
-      brand.brand_name.toLowerCase().includes('bmw')
+    // Znajdź Mercedes-Benz i usuń z listy (uwzględnij różne warianty nazwy)
+    const mercedesBrand = allBrandsList.find(brand => 
+      brand.brand_name.toLowerCase() === 'mercedes-benz' || 
+      brand.brand_name.toLowerCase() === 'mercedes benz' ||
+      brand.brand_name.toLowerCase() === 'mercedes' ||
+      brand.brand_name.toLowerCase().includes('mercedes')
     );
     
-    // Usuń BMW z głównej listy jeśli istnieje
+    // Usuń Mercedes-Benz z głównej listy jeśli istnieje
     const otherBrands = allBrandsList.filter(brand => 
-      brand.brand_name.toLowerCase() !== 'bmw' && 
-      brand.brand_name.toLowerCase() !== 'bwm' &&
-      !brand.brand_name.toLowerCase().includes('bmw')
+      brand.brand_name.toLowerCase() !== 'mercedes-benz' && 
+      brand.brand_name.toLowerCase() !== 'mercedes benz' &&
+      brand.brand_name.toLowerCase() !== 'mercedes' &&
+      !brand.brand_name.toLowerCase().includes('mercedes')
     );
     
-    // Utwórz finalną listę z BMW na początku
-    const finalBrandsList = bmwBrand ? [bmwBrand, ...otherBrands] : otherBrands;
+    // Utwórz finalną listę z Mercedes-Benz na początku
+    const finalBrandsList = mercedesBrand ? [mercedesBrand, ...otherBrands] : otherBrands;
     
     const uniqueBrands = finalBrandsList.map((brand, index) => ({
       id: index + 1,
