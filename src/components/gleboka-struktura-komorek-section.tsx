@@ -11,22 +11,22 @@ export default function GlebokaStrukturaKomorekSection() {
     {
       id: 1,
       icon: Droplets,
-      title: "100% Wodoodporny",
-      description: "Materiał EVA całkowicie odporny na wilgoć i wodę",
+      title: "Niezwykła Elastyczność",
+      description: "Pianka EVA odzyskuje kształt po każdym nacisku - jak nowa przez lata",
       color: "from-red-500 to-red-600"
     },
     {
       id: 2,
       icon: Shield,
-      title: "Ochrona 360°",
-      description: "Kompletna ochrona podłogi przed brudem i zabrudzeniami",
+      title: "Doskonała Izolacja",
+      description: "Zatrzymuje ciepło zimą, chłód latem - komfort w każdych warunkach",
       color: "from-red-600 to-red-700"
     },
     {
       id: 3,
       icon: Sparkles,
-      title: "Łatwe Czyszczenie",
-      description: "Wystarczy woda i mydło - bez chemikaliów",
+      title: "Antybakteryjny",
+      description: "Naturalne właściwości antybakteryjne - brak nieprzyjemnych zapachów",
       color: "from-red-400 to-red-500"
     }
   ];
@@ -54,16 +54,18 @@ export default function GlebokaStrukturaKomorekSection() {
             NOWOCZESNY MATERIAŁ EVA
           </h2>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-            <span className="text-red-400 font-semibold">Najwyższej jakości pianka EVA</span> o grubości 
-            <span className="text-red-300 font-semibold"> 10mm</span> - rewolucja w ochronie wnętrza Twojego auta. 
-            <span className="text-red-200"> Maksymalna ochrona</span> i komfort w jednym.
+            <span className="text-red-400 font-semibold">Pianka EVA</span> - najnowocześniejszy materiał używany w 
+            <span className="text-red-400 font-semibold"> samochodach premium</span>. 
+            <span className="text-red-400 font-semibold"> Niezwykła elastyczność</span>, 
+            <span className="text-red-400 font-semibold"> doskonała izolacja</span> i 
+            <span className="text-red-400 font-semibold"> 100% wodoodporność</span> w jednym materiale.
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-12 items-center justify-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
           {/* Obrazek */}
-          <div className="relative w-full md:w-1/2 flex justify-center">
-            <div className="relative bg-black rounded-2xl p-6 shadow-2xl w-full max-w-md">
+          <div className="relative flex justify-center">
+            <div className="relative bg-black rounded-2xl p-6 shadow-2xl w-full max-w-lg">
               <Image
                 src="/images/zalety/pianka.webp"
                 alt="Nowoczesny Materiał EVA"
@@ -80,14 +82,22 @@ export default function GlebokaStrukturaKomorekSection() {
           </div>
           
           {/* Opis cechy */}
-          <div className="w-full md:w-1/2 flex flex-col items-center">
-            <h3 className="text-2xl font-bold text-white mb-6 text-center">Dlaczego to ważne?</h3>
-            <p className="text-gray-200 text-lg text-center mb-4">
-              Nowoczesny materiał EVA z głęboką strukturą komórek działa jak bariera, która blokuje przedostawanie się zabrudzeń i wilgoci do wnętrza samochodu. Dzięki temu dywaniki EVA są nie tylko łatwe w czyszczeniu, ale także skutecznie chronią podłogę auta.
-            </p>
+          <div className="flex flex-col justify-center space-y-8">
+            <div className="text-center lg:text-left">
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">Dlaczego to ważne?</h3>
+              <p className="text-gray-200 text-lg leading-relaxed">
+                <span className="text-red-400 font-semibold">Pianka EVA</span> to materiał używany w 
+                <span className="text-red-400 font-semibold"> samochodach luksusowych</span> - 
+                <span className="text-red-400 font-semibold"> niezwykle elastyczna</span>, 
+                <span className="text-red-400 font-semibold"> doskonale izolująca</span> i 
+                <span className="text-red-400 font-semibold"> w 100% wodoodporna</span>. 
+                <span className="text-red-400 font-semibold"> Odzyskuje kształt po każdym nacisku</span> i 
+                <span className="text-red-400 font-semibold"> nie traci właściwości przez lata</span>.
+              </p>
+            </div>
             
             {/* Interaktywne karty funkcji */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {features.map((feature) => (
                 <div
                   key={feature.id}
@@ -113,12 +123,34 @@ export default function GlebokaStrukturaKomorekSection() {
               ))}
             </div>
             
-            <ul className="list-disc text-left text-gray-300 pl-6 space-y-2">
-              <li>Skuteczne zatrzymywanie błota, piasku i wody</li>
-              <li>Łatwe opróżnianie i czyszczenie dywaników</li>
-              <li>Ochrona przed nieprzyjemnymi zapachami</li>
-              <li>Wytrzymałość i trwałość na lata</li>
-            </ul>
+            {/* Lista korzyści */}
+            <div className="bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-2xl p-6 border border-gray-700">
+              <h4 className="text-white font-bold text-xl mb-4 text-center lg:text-left">
+                Kluczowe Zalety Pianki EVA
+              </h4>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-300">
+                <li className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-red-400 mr-3 flex-shrink-0" />
+                  <span><span className="text-red-400 font-semibold">Elastyczność</span> - odzyskuje kształt po każdym nacisku</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-red-400 mr-3 flex-shrink-0" />
+                  <span><span className="text-red-400 font-semibold">Izolacja termiczna</span> - komfort w każdych warunkach</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-red-400 mr-3 flex-shrink-0" />
+                  <span><span className="text-red-400 font-semibold">Antybakteryjność</span> - naturalne właściwości higieniczne</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-red-400 mr-3 flex-shrink-0" />
+                  <span><span className="text-red-400 font-semibold">Wodoodporność</span> - 100% ochrona przed wilgocią</span>
+                </li>
+                <li className="flex items-center md:col-span-2">
+                  <CheckCircle className="w-4 h-4 text-red-400 mr-3 flex-shrink-0" />
+                  <span><span className="text-red-400 font-semibold">Trwałość</span> - nie traci właściwości przez lata</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
