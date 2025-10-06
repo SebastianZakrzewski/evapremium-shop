@@ -18,11 +18,11 @@ export default function Home() {
       <HeroSection />
       <ProductGallerySection />
       <AdvantagesSection />
+      <ProductSelection />
       <ThreeDMatsSection />
       <CustomFitSection />
       <RoznorodnaKolorystykaSection />
       <GlebokaStrukturaKomorekSection />
-      <ProductSelection />
       <CustomerReviews />
       <FAQSection />
     </div>
