@@ -129,7 +129,7 @@ export default function CustomerReviews() {
             Opinie naszych klientów
           </h2>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-4">
-            Ponad <span className="text-red-400 font-semibold">5000 zadowolonych klientów</span> już wybrało nasze dywaniki EVA Premium
+            Ponad <span className="text-red-400 font-semibold">2000 zadowolonych klientów</span> już wybrało nasze dywaniki EVA Premium
           </p>
         </div>
 
