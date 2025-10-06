@@ -67,22 +67,22 @@ export default function RoznorodnaKolorystykaSection() {
         <div className="flex flex-col md:flex-row gap-12 items-center justify-center">
           {/* Obrazek */}
           <div className="relative w-full md:w-1/2 flex justify-center">
-            <div className="relative bg-black rounded-2xl p-12 shadow-2xl w-[668px] h-[668px] flex items-center justify-center">
+            <div className="relative bg-black rounded-2xl p-12 shadow-2xl w-full max-w-2xl min-h-[520px] flex items-center justify-center">
               {selectedColor && colorImages[selectedColor] ? (
                 <Image
                   src={colorImages[selectedColor]}
                   alt={`Dywanik w aucie - kolor ${selectedColor}`}
-                  width={668}
-                  height={668}
-                  className="w-[668px] h-[668px] rounded-xl object-cover transition-all duration-500"
+                  width={400}
+                  height={400}
+                  className="w-full h-auto rounded-xl object-cover transition-all duration-500"
                 />
               ) : (
                 <Image
                   src="/images/kolory dywanikow/czarny.jpg"
                   alt="Dywaniki w kolorze czarnym - przykład"
-                  width={668}
-                  height={668}
-                  className="w-[668px] h-[668px] rounded-xl object-cover"
+                  width={400}
+                  height={400}
+                  className="w-full h-auto rounded-xl object-cover"
                 />
               )}
             </div>

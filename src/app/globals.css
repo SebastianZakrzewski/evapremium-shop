@@ -421,6 +421,52 @@ html {
   animation: ring-pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Hero video optimization styles */
+.hero-video-container {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity;
+}
+
+.hero-video {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.hero-slide-transition {
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+/* GPU acceleration for smooth video playback */
+.hero-video-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity;
+}
+
+/* Responsive video optimizations */
+@media (max-width: 767px) {
+  .hero-video {
+    transform: translateZ(0) scale(1.05);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-video {
+    transform: translateZ(0) scale(1.02);
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-video {
+    transform: translateZ(0) scale(1.0);
+  }
+}
+
 /* Custom slider styles */
 .slider {
   -webkit-appearance: none;
