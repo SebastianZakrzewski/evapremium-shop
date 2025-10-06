@@ -50,7 +50,7 @@ export default function RoznorodnaKolorystykaSection() {
       </div>
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="text-center mb-12 transition-all duration-1000 ease-out">
+        <div className="text-center mb-48 transition-all duration-1000 ease-out">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full mb-6 animate-pulse-glow">
             <Star className="w-8 h-8 text-white" />
           </div>
@@ -64,17 +64,17 @@ export default function RoznorodnaKolorystykaSection() {
             Pełna konfiguracja kolorystyczna (materiał + obszycie) dostępna jest podczas personalizacji zamówienia. Poniżej prezentujemy przykładowe kolory materiału dywanika w realnych autach.
           </p>
         </div>
-        <div className="flex flex-col md:flex-row gap-12 items-center justify-center">
+        <div className="flex flex-col xl:flex-row gap-16 items-center justify-center mt-8">
           {/* Obrazek */}
-          <div className="relative w-full md:w-1/2 flex justify-center">
-            <div className="relative bg-black rounded-2xl p-12 shadow-2xl w-full max-w-2xl min-h-[520px] flex items-center justify-center">
+          <div className="relative w-full xl:w-1/2 flex justify-center">
+            <div className="relative bg-black rounded-3xl p-6 shadow-2xl w-full max-w-[500px] h-[350px] flex items-center justify-center">
               {selectedColor && colorImages[selectedColor] ? (
                 <Image
                   src={colorImages[selectedColor]}
                   alt={`Dywanik w aucie - kolor ${selectedColor}`}
                   width={400}
                   height={400}
-                  className="w-full h-auto rounded-xl object-cover transition-all duration-500"
+                  className="w-full h-auto rounded-2xl object-cover transition-all duration-500"
                 />
               ) : (
                 <Image
@@ -82,13 +82,13 @@ export default function RoznorodnaKolorystykaSection() {
                   alt="Dywaniki w kolorze czarnym - przykład"
                   width={400}
                   height={400}
-                  className="w-full h-auto rounded-xl object-cover"
+                  className="w-full h-auto rounded-2xl object-cover"
                 />
               )}
             </div>
           </div>
           {/* Paleta kolorów */}
-          <div className="w-full md:w-1/2 flex flex-col items-center">
+          <div className="w-full xl:w-1/2 flex flex-col items-center">
             <h3 className="text-2xl font-bold text-white mb-6 text-center">Dostępne kolory</h3>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
               {colorVariants.map((variant) => (

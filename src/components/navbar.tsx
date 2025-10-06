@@ -52,8 +52,8 @@ export default function Navbar() {
           </div>
           {/* Desktop Cart Icon and Contact */}
           <div className="hidden md:flex items-center gap-3">
-            <a href="tel:+48533791868" className="text-white/90 hover:text-white transition-colors font-medium text-sm">
-              +48 533 791 868
+            <a href="tel:+48570123635" className="text-white/90 hover:text-white transition-colors font-medium text-sm">
+              +48 570 123 635
             </a>
             <Link href="/wyszukaj" className="text-white/90 hover:text-white transition-colors p-2 group">
               <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

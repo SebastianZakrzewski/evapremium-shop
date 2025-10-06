@@ -219,7 +219,7 @@ export default function FAQSection() {
                 Napisz do nas
               </button>
               <button className="bg-white/10 backdrop-blur border border-white/20 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 hover:bg-white/20">
-                Zadzwoń: +48 123 456 789
+                Zadzwoń: +48 570 123 635
               </button>
             </div>
           </div>
