@@ -242,21 +242,12 @@ export default function AccessoriesSection() {
                     className="flex flex-col items-center text-center transition-all duration-300 transform hover:scale-105"
                   >
                     {/* Accessory Window */}
-                    <div className="mb-4 bg-black rounded-xl p-4 w-40 h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 flex items-center justify-center transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl">
-                      <div className="w-full h-full relative">
-                        <Image
-                          src={accessory.imageSrc}
-                          alt={`${accessory.name} - ${accessory.category} - Akcesoria samochodowe`}
-                          fill
-                          className="object-cover rounded-lg transition-all duration-300 group-hover:scale-110"
-                          sizes="(max-width: 768px) 160px 160px, (max-width: 1024px) 192px 192px, 224px 224px"
-                          priority={accessory.id <= 6}
-                          quality={95}
-                          placeholder="blur"
-                          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                        />
+                    <div className="mb-4 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-4 w-40 h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 flex items-center justify-center transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl">
+                      <div className="w-full h-full relative flex items-center justify-center">
+                        {/* Placeholder icon for missing image */}
+                        <div className="text-6xl text-gray-400 mb-2">📦</div>
                         {/* Overlay for better text readability */}
-                        <div className="absolute inset-0 bg-black/30 rounded-lg" />
+                        <div className="absolute inset-0 bg-black/20 rounded-lg" />
                       </div>
                     </div>
                     
