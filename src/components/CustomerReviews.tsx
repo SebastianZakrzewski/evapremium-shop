@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Star, Quote, ThumbsUp, Award } from "lucide-react";
+import { Star, ThumbsUp, Award, MessageCircle } from "lucide-react";
 
 interface Review {
   id: number;
@@ -162,9 +162,8 @@ export default function CustomerReviews() {
               </div>
 
               {/* Review Text */}
-              <div className="relative mb-4">
-                <Quote className="absolute -top-2 -left-2 w-6 h-6 text-red-400/30" />
-                <p className="text-gray-300 leading-relaxed text-sm pl-4">
+              <div className="mb-4">
+                <p className="text-gray-300 leading-relaxed text-sm">
                   {review.review}
                 </p>
               </div>
@@ -214,7 +213,7 @@ export default function CustomerReviews() {
                 href="#faq"
                 className="inline-flex items-center justify-center px-6 py-3 border border-red-500 text-red-400 font-semibold rounded-lg hover:bg-red-500 hover:text-white transition-all duration-300 hover:scale-105"
               >
-                <Quote className="w-5 h-5 mr-2" />
+                <MessageCircle className="w-5 h-5 mr-2" />
                 Czytaj więcej opinii
               </a>
             </div>
