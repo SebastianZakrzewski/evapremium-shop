@@ -137,6 +137,13 @@ backups/
 *.backup
 *.bak
 
+# large media files
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+
 # temporary files
 *.tmp
 *.temp
