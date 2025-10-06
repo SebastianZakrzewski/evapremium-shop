@@ -203,7 +203,7 @@ export default function CustomerReviews() {
             </p>
             <div className="flex justify-center">
               <a
-                href="#dywaniki"
+                href="#products"
                 className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold rounded-lg hover:from-red-600 hover:to-red-800 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25"
               >
                 <Award className="w-5 h-5 mr-2" />
