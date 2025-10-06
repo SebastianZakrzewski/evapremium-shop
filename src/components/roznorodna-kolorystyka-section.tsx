@@ -32,6 +32,7 @@ const colorImages: Record<string, string> = {
   "Bordowy": "/images/kolory dywanikow/bordowy.jpg", // <- nowe zdjęcie dla bordowego
   "Pomarańczowy": "/images/kolory dywanikow/pomaranczowy.jpg", // <- nowe zdjęcie dla pomarańczowego
   "Kość słoniowa": "/images/kolory dywanikow/kosc_sloniowa.jpg", // <- nowe zdjęcie dla kości słoniowej
+  "Brązowy": "/images/kolory dywanikow/brazowy.jpg", // <- nowe zdjęcie dla brązowego
   // Dodaj kolejne kolory, jeśli masz zdjęcia
 };
 
