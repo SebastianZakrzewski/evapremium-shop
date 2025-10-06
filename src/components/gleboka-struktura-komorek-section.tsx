@@ -54,11 +54,8 @@ export default function GlebokaStrukturaKomorekSection() {
             NOWOCZESNY MATERIAŁ EVA
           </h2>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-            <span className="text-red-400 font-semibold">Pianka EVA</span> - najnowocześniejszy materiał używany w 
-            <span className="text-red-400 font-semibold"> samochodach premium</span>. 
-            <span className="text-red-400 font-semibold"> Niezwykła elastyczność</span>, 
-            <span className="text-red-400 font-semibold"> doskonała izolacja</span> i 
-            <span className="text-red-400 font-semibold"> 100% wodoodporność</span> w jednym materiale.
+            <span className="text-red-400 font-semibold">Pianka EVA</span> - najnowocześniejszy materiał używany w samochodach premium. 
+            Niezwykła elastyczność, doskonała izolacja i 100% wodoodporność w jednym materiale.
           </p>
         </div>
 
@@ -86,13 +83,9 @@ export default function GlebokaStrukturaKomorekSection() {
             <div className="text-center lg:text-left">
               <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">Dlaczego to ważne?</h3>
               <p className="text-gray-200 text-lg leading-relaxed">
-                <span className="text-red-400 font-semibold">Pianka EVA</span> to materiał używany w 
-                <span className="text-red-400 font-semibold"> samochodach luksusowych</span> - 
-                <span className="text-red-400 font-semibold"> niezwykle elastyczna</span>, 
-                <span className="text-red-400 font-semibold"> doskonale izolująca</span> i 
-                <span className="text-red-400 font-semibold"> w 100% wodoodporna</span>. 
-                <span className="text-red-400 font-semibold"> Odzyskuje kształt po każdym nacisku</span> i 
-                <span className="text-red-400 font-semibold"> nie traci właściwości przez lata</span>.
+                <span className="text-red-400 font-semibold">Pianka EVA</span> to materiał używany w samochodach luksusowych - 
+                niezwykle elastyczna, doskonale izolująca i w 100% wodoodporna. 
+                Odzyskuje kształt po każdym nacisku i nie traci właściwości przez lata.
               </p>
             </div>
             
