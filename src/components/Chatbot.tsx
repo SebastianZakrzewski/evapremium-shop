@@ -85,6 +85,19 @@ export default function Chatbot() {
     };
   }, []);
 
+  // Listen for openChatbot event
+  useEffect(() => {
+    const handleOpenChatbot = () => {
+      setIsOpen(true);
+    };
+
+    window.addEventListener('openChatbot', handleOpenChatbot);
+    
+    return () => {
+      window.removeEventListener('openChatbot', handleOpenChatbot);
+    };
+  }, []);
+
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim()) return;

@@ -161,16 +161,18 @@ export default function FAQSection() {
                 href="tel:+48533791868"
                 className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25"
               >
-                <Zap className="w-5 h-5 mr-2" />
                 Zadzwoń: +48 533 791 868
               </a>
-              <a
-                href="mailto:kontakt@evapremium.pl"
+              <button
+                onClick={() => {
+                  // Otwórz chat - wyślij event do komponentu Chatbot
+                  window.dispatchEvent(new CustomEvent('openChatbot'));
+                }}
                 className="inline-flex items-center justify-center px-6 py-3 border border-red-500 text-red-400 font-semibold rounded-lg hover:bg-red-500 hover:text-white transition-all duration-300 hover:scale-105"
               >
                 <HelpCircle className="w-5 h-5 mr-2" />
                 Napisz do nas
-              </a>
+              </button>
             </div>
           </div>
         </div>
