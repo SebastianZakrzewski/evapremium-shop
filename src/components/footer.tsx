@@ -94,6 +94,85 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Opcje płatności */}
+        <div className="border-t border-neutral-800 mt-8 pt-8">
+          <h3 className="text-white font-semibold mb-6 text-center">Akceptowane metody płatności</h3>
+          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6">
+            {/* Visa */}
+            <div className="bg-white rounded-lg p-3 hover:scale-105 transition-transform duration-200">
+              <div className="w-12 h-8 bg-blue-600 rounded flex items-center justify-center">
+                <span className="text-white font-bold text-xs">VISA</span>
+              </div>
+            </div>
+            
+            {/* Mastercard */}
+            <div className="bg-white rounded-lg p-3 hover:scale-105 transition-transform duration-200">
+              <div className="w-12 h-8 bg-red-500 rounded flex items-center justify-center">
+                <div className="flex">
+                  <div className="w-4 h-4 bg-red-500 rounded-full -mr-1"></div>
+                  <div className="w-4 h-4 bg-orange-500 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+            
+            {/* American Express */}
+            <div className="bg-white rounded-lg p-3 hover:scale-105 transition-transform duration-200">
+              <div className="w-12 h-8 bg-blue-600 rounded flex items-center justify-center">
+                <span className="text-white font-bold text-xs">AMEX</span>
+              </div>
+            </div>
+            
+            {/* Discover */}
+            <div className="bg-white rounded-lg p-3 hover:scale-105 transition-transform duration-200">
+              <div className="w-12 h-8 bg-orange-500 rounded flex items-center justify-center">
+                <span className="text-white font-bold text-xs">DISCOVER</span>
+              </div>
+            </div>
+            
+            {/* JCB */}
+            <div className="bg-white rounded-lg p-3 hover:scale-105 transition-transform duration-200">
+              <div className="w-12 h-8 bg-blue-600 rounded flex items-center justify-center">
+                <span className="text-white font-bold text-xs">JCB</span>
+              </div>
+            </div>
+            
+            {/* Diners Club */}
+            <div className="bg-white rounded-lg p-3 hover:scale-105 transition-transform duration-200">
+              <div className="w-12 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-xs">DC</span>
+              </div>
+            </div>
+            
+            {/* Apple Pay */}
+            <div className="bg-white rounded-lg p-3 hover:scale-105 transition-transform duration-200">
+              <div className="w-12 h-8 bg-black rounded flex items-center justify-center">
+                <span className="text-white font-bold text-xs">🍎 Pay</span>
+              </div>
+            </div>
+            
+            {/* Google Pay */}
+            <div className="bg-white rounded-lg p-3 hover:scale-105 transition-transform duration-200">
+              <div className="w-12 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded flex items-center justify-center">
+                <span className="text-white font-bold text-xs">G Pay</span>
+              </div>
+            </div>
+            
+            {/* Przelewy24 */}
+            <div className="bg-white rounded-lg p-3 hover:scale-105 transition-transform duration-200">
+              <div className="w-12 h-8 bg-blue-600 rounded flex items-center justify-center">
+                <span className="text-white font-bold text-xs">P24</span>
+              </div>
+            </div>
+            
+            {/* BLIK */}
+            <div className="bg-white rounded-lg p-3 hover:scale-105 transition-transform duration-200">
+              <div className="w-12 h-8 bg-black rounded flex items-center justify-center">
+                <span className="text-white font-bold text-xs">BLIK</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Dolna linia */}
         <div className="border-t border-neutral-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
