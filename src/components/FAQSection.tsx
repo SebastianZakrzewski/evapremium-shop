@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown, HelpCircle, Shield, Zap, Droplets, Wrench, Truck, Star } from "lucide-react";
+import { ChevronDown, HelpCircle } from "lucide-react";
 
 interface FAQItem {
   id: number;
   question: string;
   answer: string;
-  icon: React.ComponentType<{ className?: string }>;
   category: string;
 }
 
@@ -19,56 +18,48 @@ export default function FAQSection() {
       id: 1,
       question: "Czy dywaniki EVA pasują do każdego modelu auta?",
       answer: "Tak! Produkujemy dywaniki na miarę do ponad 95% popularnych modeli samochodów. Nasze dywaniki są precyzyjnie wycinane na podstawie oryginalnych szablonów, dzięki czemu idealnie dopasowują się do każdego zakamarka podłogi w Twoim aucie.",
-      icon: Wrench,
       category: "Dopasowanie"
     },
     {
       id: 2,
       question: "Jak czyścić dywaniki EVA?",
       answer: "Czyszczenie dywaników EVA to pestka! Wystarczy opłukać je wodą z węża, przetrzeć wilgotną szmatką lub użyć myjki ciśnieniowej. Materiał EVA nie wchłania brudu, więc wszystko spływa z powierzchni. Można je również myć w zmywarce!",
-      icon: Droplets,
       category: "Pielęgnacja"
     },
     {
       id: 3,
       question: "Czy dywaniki EVA są w 100% wodoodporne?",
       answer: "Absolutnie! Materiał EVA jest całkowicie wodoodporny i nie przepuszcza wilgoci. Dzięki temu chroni podłogę auta przed korozją, pleśnią i nieprzyjemnymi zapachami. Idealne na zimę i lato!",
-      icon: Shield,
       category: "Właściwości"
     },
     {
       id: 4,
       question: "Jak długo trwa realizacja zamówienia?",
       answer: "Standardowy czas realizacji to 2-5 dni roboczych. W przypadku nietypowych modeli może to potrwać do 7 dni. Oferujemy również ekspresową realizację w 24h za dodatkową opłatą. Wszystkie zamówienia wysyłamy kurierem z możliwością śledzenia.",
-      icon: Truck,
       category: "Dostawa"
     },
     {
       id: 5,
       question: "Czy dywaniki EVA są trwałe?",
       answer: "Tak! Dywaniki EVA zachowują swoje właściwości przez lata. Materiał nie traci elastyczności, nie kruszy się i nie zmienia koloru pod wpływem słońca. Gwarantujemy 3 lata gwarancji na nasze produkty.",
-      icon: Star,
       category: "Trwałość"
     },
     {
       id: 6,
       question: "Jak montować dywaniki EVA?",
       answer: "Montaż jest bardzo prosty! Wystarczy wyjąć dywaniki z opakowania, rozłożyć je na podłodze auta i delikatnie docisnąć do krawędzi. Materiał EVA jest elastyczny, więc łatwo się dopasowuje. Nie wymagają żadnych dodatkowych elementów montażowych.",
-      icon: Zap,
       category: "Montaż"
     },
     {
       id: 7,
       question: "Czy dywaniki EVA są bezpieczne dla dzieci?",
       answer: "Tak! Materiał EVA jest całkowicie bezpieczny i nietoksyczny. Nie zawiera ftalanów, ołowiu ani innych szkodliwych substancji. Jest hipoalergiczny i może być używany w samochodach z dziećmi bez obaw.",
-      icon: Shield,
       category: "Bezpieczeństwo"
     },
     {
       id: 8,
       question: "Jakie kolory dywaników EVA są dostępne?",
       answer: "Oferujemy szeroką gamę kolorów: czarny, szary, beżowy, brązowy, granatowy, czerwony i wiele innych. Wszystkie kolory są trwałe i nie blakną. Możemy również wykonać dywaniki w niestandardowych kolorach na specjalne zamówienie.",
-      icon: HelpCircle,
       category: "Kolorystyka"
     }
   ];
@@ -116,7 +107,6 @@ export default function FAQSection() {
           <div className="space-y-4">
             {faqData.map((item) => {
               const isOpen = openItems.includes(item.id);
-              const IconComponent = item.icon;
               
               return (
                 <div
@@ -127,18 +117,13 @@ export default function FAQSection() {
                     onClick={() => toggleItem(item.id)}
                     className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-800/30 transition-colors duration-200"
                   >
-                    <div className="flex items-center space-x-4 flex-1">
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center flex-shrink-0">
-                        <IconComponent className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg md:text-xl font-semibold text-white mb-1">
-                          {item.question}
-                        </h3>
-                        <span className="text-sm text-red-400 font-medium">
-                          {item.category}
-                        </span>
-                      </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg md:text-xl font-semibold text-white mb-1">
+                        {item.question}
+                      </h3>
+                      <span className="text-sm text-red-400 font-medium">
+                        {item.category}
+                      </span>
                     </div>
                     <ChevronDown 
                       className={`w-6 h-6 text-gray-400 transition-transform duration-300 ${
@@ -151,11 +136,9 @@ export default function FAQSection() {
                     isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                   }`}>
                     <div className="px-6 pb-6 pt-2">
-                      <div className="pl-14">
-                        <p className="text-gray-300 leading-relaxed text-base md:text-lg">
-                          {item.answer}
-                        </p>
-                      </div>
+                      <p className="text-gray-300 leading-relaxed text-base md:text-lg">
+                        {item.answer}
+                      </p>
                     </div>
                   </div>
                 </div>
