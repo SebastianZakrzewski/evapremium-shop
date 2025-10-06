@@ -22,31 +22,192 @@ const productImages: ProductImage[] = [
   },
   {
     id: 2,
-    src: "/galeria/photo_2025-04-25_16.57.33 (1).webp",
+    src: "/galeria/photo_2025-04-25_16.57.33.webp",
     alt: "Dywaniki samochodowe EVA - widok z góry",
     title: "Dywaniki EVA - Widok Premium",
     description: "Precyzyjnie dopasowane dywaniki EVA z doskonałym wykończeniem"
   },
   {
     id: 3,
-    src: "/galeria/photo_2025-04-25_17.05.47.webp",
+    src: "/galeria/photo_2025-04-25_16.57.37.webp",
     alt: "Dywaniki samochodowe EVA - detal",
     title: "Dywaniki EVA - Detal",
     description: "Szczegółowe wykończenie dywaników EVA Premium"
   },
   {
     id: 4,
-    src: "/galeria/photo_2025-04-25_17.08.33.webp",
+    src: "/galeria/photo_2025-04-25_16.57.43.jpg",
     alt: "Dywaniki samochodowe EVA - montaż",
     title: "Dywaniki EVA - Montaż",
     description: "Łatwy montaż dywaników EVA do każdego modelu samochodu"
   },
   {
     id: 5,
-    src: "/galeria/photo_2025-04-25_17.08.40.webp",
+    src: "/galeria/photo_2025-04-25_17.04.39.webp",
     alt: "Dywaniki samochodowe EVA - gotowy produkt",
     title: "Dywaniki EVA - Gotowy Produkt",
     description: "Gotowe do montażu dywaniki EVA Premium"
+  },
+  {
+    id: 6,
+    src: "/galeria/photo_2025-04-25_17.08.33.webp",
+    alt: "Dywaniki samochodowe EVA - różne kolory",
+    title: "Dywaniki EVA - Różne Kolory",
+    description: "Szeroka gama kolorów dywaników EVA Premium"
+  },
+  {
+    id: 7,
+    src: "/galeria/photo_2025-04-25_17.08.35.webp",
+    alt: "Dywaniki samochodowe EVA - struktura",
+    title: "Dywaniki EVA - Struktura",
+    description: "Głęboka struktura komórek zapewnia doskonałą ochronę"
+  },
+  {
+    id: 8,
+    src: "/galeria/photo_2025-04-25_17.08.38.webp",
+    alt: "Dywaniki samochodowe EVA - wykończenie",
+    title: "Dywaniki EVA - Wykończenie",
+    description: "Precyzyjne wykończenie brzegów dywaników EVA"
+  },
+  {
+    id: 9,
+    src: "/galeria/photo_2025-04-25_17.08.44.webp",
+    alt: "Dywaniki samochodowe EVA - jakość",
+    title: "Dywaniki EVA - Jakość",
+    description: "Najwyższa jakość materiału EVA Premium"
+  },
+  {
+    id: 10,
+    src: "/galeria/photo_2025-04-25_17.10.11.webp",
+    alt: "Dywaniki samochodowe EVA - komplet",
+    title: "Dywaniki EVA - Komplet",
+    description: "Kompletny zestaw dywaników EVA do samochodu"
+  },
+  {
+    id: 11,
+    src: "/galeria/photo_2025-04-25_17.10.12.webp",
+    alt: "Dywaniki samochodowe EVA - montaż w aucie",
+    title: "Dywaniki EVA - Montaż w Aucie",
+    description: "Doskonale dopasowane dywaniki EVA w samochodzie"
+  },
+  {
+    id: 12,
+    src: "/galeria/photo_2025-04-25_17.12.45.webp",
+    alt: "Dywaniki samochodowe EVA - różne modele",
+    title: "Dywaniki EVA - Różne Modele",
+    description: "Dywaniki EVA dopasowane do różnych modeli samochodów"
+  },
+  {
+    id: 13,
+    src: "/galeria/photo_2025-04-25_17.12.47.webp",
+    alt: "Dywaniki samochodowe EVA - porównanie",
+    title: "Dywaniki EVA - Porównanie",
+    description: "Porównanie dywaników EVA z tradycyjnymi dywanikami"
+  },
+  {
+    id: 14,
+    src: "/galeria/photo_2025-04-25_17.12.48.webp",
+    alt: "Dywaniki samochodowe EVA - zestaw",
+    title: "Dywaniki EVA - Zestaw",
+    description: "Kompletny zestaw dywaników EVA Premium"
+  },
+  {
+    id: 15,
+    src: "/galeria/IMG_8951.JPG",
+    alt: "Dywaniki samochodowe EVA - profesjonalny montaż",
+    title: "Dywaniki EVA - Profesjonalny Montaż",
+    description: "Profesjonalny montaż dywaników EVA w warsztacie"
+  },
+  {
+    id: 16,
+    src: "/galeria/IMG_8956.JPG",
+    alt: "Dywaniki samochodowe EVA - różne modele samochodów",
+    title: "Dywaniki EVA - Różne Modele",
+    description: "Dywaniki EVA dopasowane do różnych modeli samochodów"
+  },
+  {
+    id: 17,
+    src: "/galeria/IMAGE 2023-09-11 12_29_54.jpg",
+    alt: "Dywaniki samochodowe EVA - montaż w aucie",
+    title: "Dywaniki EVA - Montaż w Aucie",
+    description: "Doskonale dopasowane dywaniki EVA w samochodzie"
+  },
+  {
+    id: 18,
+    src: "/galeria/IMAGE 2023-09-11 12_30_05.jpg",
+    alt: "Dywaniki samochodowe EVA - różne kolory",
+    title: "Dywaniki EVA - Różne Kolory",
+    description: "Szeroka gama kolorów dywaników EVA Premium"
+  },
+  {
+    id: 19,
+    src: "/galeria/20240719_093045.jpg",
+    alt: "Dywaniki samochodowe EVA - jakość materiału",
+    title: "Dywaniki EVA - Jakość Materiału",
+    description: "Najwyższa jakość materiału EVA Premium"
+  },
+  {
+    id: 20,
+    src: "/galeria/kosc_sloniowa.jpg",
+    alt: "Dywaniki samochodowe EVA - kolor kość słoniowa",
+    title: "Dywaniki EVA - Kość Słoniowa",
+    description: "Elegancki kolor kość słoniowa dywaników EVA"
+  },
+  {
+    id: 21,
+    src: "/galeria/photo_2025-04-25_16.57.46 (1).webp",
+    alt: "Dywaniki samochodowe EVA - struktura komórek",
+    title: "Dywaniki EVA - Struktura Komórek",
+    description: "Głęboka struktura komórek zapewnia doskonałą ochronę"
+  },
+  {
+    id: 22,
+    src: "/galeria/photo_2025-04-25_17.12.48 (1).webp",
+    alt: "Dywaniki samochodowe EVA - zestaw premium",
+    title: "Dywaniki EVA - Zestaw Premium",
+    description: "Kompletny zestaw dywaników EVA Premium"
+  },
+  {
+    id: 23,
+    src: "/galeria/photo_2025-04-25_17.avif",
+    alt: "Dywaniki samochodowe EVA - nowoczesny design",
+    title: "Dywaniki EVA - Nowoczesny Design",
+    description: "Nowoczesny design dywaników EVA Premium"
+  },
+  {
+    id: 24,
+    src: "/galeria/Zdjęcie WhatsApp 2024-07-04 o 12.55.09_e0e51424.jpg",
+    alt: "Dywaniki samochodowe EVA - montaż w warsztacie",
+    title: "Dywaniki EVA - Montaż w Warsztacie",
+    description: "Profesjonalny montaż dywaników EVA w warsztacie"
+  },
+  {
+    id: 25,
+    src: "/galeria/Zdjęcie WhatsApp 2024-07-04 o 12.55.10_17f09e33.jpg",
+    alt: "Dywaniki samochodowe EVA - różne rozmiary",
+    title: "Dywaniki EVA - Różne Rozmiary",
+    description: "Dywaniki EVA w różnych rozmiarach do każdego samochodu"
+  },
+  {
+    id: 26,
+    src: "/galeria/Zdjęcie WhatsApp 2024-07-04 o 12.55.10_6ddf48d0.jpg",
+    alt: "Dywaniki samochodowe EVA - wykończenie brzegów",
+    title: "Dywaniki EVA - Wykończenie Brzegów",
+    description: "Precyzyjne wykończenie brzegów dywaników EVA"
+  },
+  {
+    id: 27,
+    src: "/galeria/Zdjęcie WhatsApp 2024-07-04 o 12.55.11_7814426b.jpg",
+    alt: "Dywaniki samochodowe EVA - kompletny zestaw",
+    title: "Dywaniki EVA - Kompletny Zestaw",
+    description: "Kompletny zestaw dywaników EVA do samochodu"
+  },
+  {
+    id: 28,
+    src: "/galeria/0-04-0a-9ba010c9aff1b9cdca1865a72fc75ebf4d93819c25a86b3373ae05ddcad6f52f_52ef7a6d.jpg",
+    alt: "Dywaniki samochodowe EVA - profesjonalna jakość",
+    title: "Dywaniki EVA - Profesjonalna Jakość",
+    description: "Profesjonalna jakość dywaników EVA Premium"
   }
 ];
 
