@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Star, Quote, ThumbsUp, Award, Shield, Truck } from "lucide-react";
+import { Star, Quote, ThumbsUp, Award } from "lucide-react";
 
 interface Review {
   id: number;
@@ -131,20 +131,6 @@ export default function CustomerReviews() {
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-4">
             Ponad <span className="text-red-400 font-semibold">5000 zadowolonych klientów</span> już wybrało nasze dywaniki EVA Premium
           </p>
-          <div className="flex items-center justify-center space-x-8 text-sm text-gray-400">
-            <div className="flex items-center">
-              <Shield className="w-4 h-4 text-green-400 mr-2" />
-              <span>Gwarancja 3 lata</span>
-            </div>
-            <div className="flex items-center">
-              <Truck className="w-4 h-4 text-blue-400 mr-2" />
-              <span>Dostawa 24h</span>
-            </div>
-            <div className="flex items-center">
-              <ThumbsUp className="w-4 h-4 text-red-400 mr-2" />
-              <span>98% zadowolonych</span>
-            </div>
-          </div>
         </div>
 
         {/* Reviews Grid */}
@@ -165,12 +151,6 @@ export default function CustomerReviews() {
                     <p className="text-gray-400 text-sm">{review.location}</p>
                   </div>
                 </div>
-                {review.verified && (
-                  <div className="flex items-center text-green-400 text-xs">
-                    <Shield className="w-3 h-3 mr-1" />
-                    <span>Zweryfikowany</span>
-                  </div>
-                )}
               </div>
 
               {/* Rating */}
