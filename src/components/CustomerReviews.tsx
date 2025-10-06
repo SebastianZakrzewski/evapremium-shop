@@ -109,27 +109,27 @@ export default function CustomerReviews() {
   return (
     <section id="opinie" className="py-16 md:py-24 bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
       {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-yellow-900/10 via-black to-orange-800/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
       
       {/* Animowane cząsteczki */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-yellow-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-orange-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-orange-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full mb-6 animate-pulse-glow">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-6 animate-pulse-glow">
             <Award className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 bg-gradient-to-r from-white via-yellow-100 to-white bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 bg-gradient-to-r from-white via-red-100 to-white bg-clip-text text-transparent">
             Opinie naszych klientów
           </h2>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-4">
-            Ponad <span className="text-yellow-400 font-semibold">5000 zadowolonych klientów</span> już wybrało nasze dywaniki EVA Premium
+            Ponad <span className="text-red-400 font-semibold">5000 zadowolonych klientów</span> już wybrało nasze dywaniki EVA Premium
           </p>
           <div className="flex items-center justify-center space-x-8 text-sm text-gray-400">
             <div className="flex items-center">
@@ -141,7 +141,7 @@ export default function CustomerReviews() {
               <span>Dostawa 24h</span>
             </div>
             <div className="flex items-center">
-              <ThumbsUp className="w-4 h-4 text-yellow-400 mr-2" />
+              <ThumbsUp className="w-4 h-4 text-red-400 mr-2" />
               <span>98% zadowolonych</span>
             </div>
           </div>
@@ -152,12 +152,12 @@ export default function CustomerReviews() {
           {reviews.map((review) => (
             <div
               key={review.id}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl p-6 border border-gray-700 hover:border-yellow-400/30 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/10 group"
+              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl p-6 border border-gray-700 hover:border-red-400/30 transition-all duration-300 hover:shadow-lg hover:shadow-red-500/10 group"
             >
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center text-white font-bold text-sm">
                     {review.name.split(' ').map(n => n[0]).join('')}
                   </div>
                   <div>
@@ -183,7 +183,7 @@ export default function CustomerReviews() {
 
               {/* Review Text */}
               <div className="relative mb-4">
-                <Quote className="absolute -top-2 -left-2 w-6 h-6 text-yellow-400/30" />
+                <Quote className="absolute -top-2 -left-2 w-6 h-6 text-red-400/30" />
                 <p className="text-gray-300 leading-relaxed text-sm pl-4">
                   {review.review}
                 </p>
@@ -201,7 +201,7 @@ export default function CustomerReviews() {
                   onClick={() => toggleHelpful(review.id)}
                   className={`flex items-center space-x-2 px-3 py-1 rounded-full text-xs transition-all duration-200 ${
                     helpfulReviews.includes(review.id)
-                      ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                      ? 'bg-red-500/20 text-red-400 border border-red-500/30'
                       : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
                   }`}
                 >
@@ -225,14 +225,14 @@ export default function CustomerReviews() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="#dywaniki"
-                className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-600 text-white font-semibold rounded-lg hover:from-yellow-600 hover:to-orange-700 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-yellow-500/25"
+                className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold rounded-lg hover:from-red-600 hover:to-red-800 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25"
               >
                 <Award className="w-5 h-5 mr-2" />
                 Zobacz produkty
               </a>
               <a
                 href="#faq"
-                className="inline-flex items-center justify-center px-6 py-3 border border-yellow-500 text-yellow-400 font-semibold rounded-lg hover:bg-yellow-500 hover:text-white transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center justify-center px-6 py-3 border border-red-500 text-red-400 font-semibold rounded-lg hover:bg-red-500 hover:text-white transition-all duration-300 hover:scale-105"
               >
                 <Quote className="w-5 h-5 mr-2" />
                 Czytaj więcej opinii
