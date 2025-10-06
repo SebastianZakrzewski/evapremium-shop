@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Shield, Zap, Target, Star, CheckCircle, ArrowRight } from "lucide-react";
+import { Shield, Zap, Target, Star, CheckCircle, ArrowRight, Layers } from "lucide-react";
 import Image from "next/image";
 
 const benefits3D = [
@@ -43,6 +43,14 @@ const benefits3D = [
     description: "Innowacyjne rzepy na rogach zapewniają idealne dopasowanie i stabilność",
     color: "from-yellow-500 to-amber-600",
     fullDescription: "Specjalne rzepy umieszczone na każdym rogu dywanika zapewniają idealne dopasowanie do podłogi samochodu. Dzięki temu dywaniki pozostają na swoim miejscu nawet podczas dynamicznej jazdy, zapewniając maksymalną stabilność i bezpieczeństwo."
+  },
+  {
+    id: 6,
+    icon: Layers,
+    title: "Grubość dywanika",
+    description: "Optymalna grubość 10mm zapewnia doskonałą amortyzację i komfort",
+    color: "from-indigo-500 to-blue-600",
+    fullDescription: "Grubość dywanika wynosząca 10mm została starannie dobrana, aby zapewnić doskonałą amortyzację, komfort jazdy oraz skuteczną ochronę wykładziny samochodowej. Ta optymalna grubość gwarantuje trwałość i wytrzymałość przez wiele lat użytkowania."
   }
 ];
 
@@ -215,6 +223,10 @@ export default function ThreeDMatsSection() {
                           image = '/images/zalety/rzepy.png';
                           title = "RZEP NA KAŻDYM ROGU";
                           description = "Innowacyjne rzepy umieszczone na każdym rogu dywanika zapewniają idealne dopasowanie do podłogi samochodu. Dzięki temu dywaniki pozostają na swoim miejscu nawet podczas dynamicznej jazdy, zapewniając maksymalną stabilność i bezpieczeństwo.";
+                        } else if (benefit.id === 6) {
+                          image = '/images/zalety/10mm.png';
+                          title = "GRUBOŚĆ DYWANIKA";
+                          description = "Optymalna grubość 10mm została starannie dobrana, aby zapewnić doskonałą amortyzację, komfort jazdy oraz skuteczną ochronę wykładziny samochodowej. Ta optymalna grubość gwarantuje trwałość i wytrzymałość przez wiele lat użytkowania.";
                         }
                         
                         setMainImage(image);
@@ -248,6 +260,10 @@ export default function ThreeDMatsSection() {
                             image = '/images/zalety/rzepy.png';
                             title = "RZEP NA KAŻDYM ROGU";
                             description = "Innowacyjne rzepy umieszczone na każdym rogu dywanika zapewniają idealne dopasowanie do podłogi samochodu. Dzięki temu dywaniki pozostają na swoim miejscu nawet podczas dynamicznej jazdy, zapewniając maksymalną stabilność i bezpieczeństwo.";
+                          } else if (benefit.id === 6) {
+                            image = '/images/zalety/10mm.png';
+                            title = "GRUBOŚĆ DYWANIKA";
+                            description = "Optymalna grubość 10mm została starannie dobrana, aby zapewnić doskonałą amortyzację, komfort jazdy oraz skuteczną ochronę wykładziny samochodowej. Ta optymalna grubość gwarantuje trwałość i wytrzymałość przez wiele lat użytkowania.";
                           }
                           
                           setMainImage(image);
@@ -277,6 +293,10 @@ export default function ThreeDMatsSection() {
                         ) : benefit.id === 5 ? (
                           <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
                             <Image src="/images/zalety/rzepy.png" alt="Rzep na każdym rogu" width={80} height={80} className="object-cover w-full h-full" />
+                          </div>
+                        ) : benefit.id === 6 ? (
+                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
+                            <Image src="/images/zalety/10mm.png" alt="Grubość dywanika" width={80} height={80} className="object-cover w-full h-full" />
                           </div>
                         ) : (
                           <div className={`p-2 rounded-lg bg-gradient-to-br ${benefit.color} ${
