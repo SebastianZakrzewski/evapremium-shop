@@ -208,6 +208,20 @@ const productImages: ProductImage[] = [
     alt: "Dywaniki samochodowe EVA - profesjonalna jakość",
     title: "Dywaniki EVA - Profesjonalna Jakość",
     description: "Profesjonalna jakość dywaników EVA Premium"
+  },
+  {
+    id: 29,
+    src: "/galeria/photo_2025-09-26_12-01-31 (2).jpg",
+    alt: "Dywaniki samochodowe EVA - nowa kolekcja",
+    title: "Dywaniki EVA - Nowa Kolekcja",
+    description: "Najnowsze modele dywaników EVA Premium"
+  },
+  {
+    id: 30,
+    src: "/galeria/photo_2025-09-26_12-01-32.jpg",
+    alt: "Dywaniki samochodowe EVA - premium quality",
+    title: "Dywaniki EVA - Premium Quality",
+    description: "Najwyższa jakość wykonania dywaników EVA"
   }
 ];
 
