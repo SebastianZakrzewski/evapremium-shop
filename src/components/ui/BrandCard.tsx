@@ -23,23 +23,19 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
         <div className="w-full h-full relative">
           {isImage ? (
             // Dla zdjęć - pełne tło z wysoką jakością
-            <div className={`w-full h-full relative ${
-              isBrandImage ? 'flex items-start justify-center pt-8' : ''
-            }`}>
-              <Image
-                src={brand.logo}
-                alt={`${brand.name}`}
-                fill
-                className={`group-hover:scale-105 transition-transform duration-300 ${
-                  isBrandImage ? 'object-contain' : 'object-contain'
-                }`}
-                sizes="(max-width: 768px) 224px 320px, 288px 448px"
-                priority={true}
-                quality={95}
-                placeholder="blur"
-                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-              />
-            </div>
+            <Image
+              src={brand.logo}
+              alt={`${brand.name}`}
+              fill
+              className={`group-hover:scale-105 transition-transform duration-300 ${
+                isBrandImage ? 'object-cover object-top' : 'object-contain'
+              }`}
+              sizes="(max-width: 768px) 224px 320px, 288px 448px"
+              priority={true}
+              quality={95}
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+            />
           ) : (
             // Dla logo SVG - w centrum
             <div className="w-32 h-32 mb-8 flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
