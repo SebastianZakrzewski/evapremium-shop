@@ -72,16 +72,16 @@ export default function RoznorodnaKolorystykaSection() {
                 <Image
                   src={colorImages[selectedColor]}
                   alt={`Dywanik w aucie - kolor ${selectedColor}`}
-                  width={400}
-                  height={400}
+                  width={668}
+                  height={668}
                   className="w-full h-auto rounded-xl object-cover transition-all duration-500"
                 />
               ) : (
                 <Image
                   src="/images/kolory dywanikow/czarny.jpg"
                   alt="Dywaniki w kolorze czarnym - przykład"
-                  width={400}
-                  height={400}
+                  width={668}
+                  height={668}
                   className="w-full h-auto rounded-xl object-cover"
                 />
               )}
