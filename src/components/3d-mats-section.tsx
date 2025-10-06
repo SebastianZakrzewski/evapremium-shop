@@ -35,6 +35,14 @@ const benefits3D = [
     description: "Specjalna struktura 3D ułatwia szybkie i skuteczne czyszczenie",
     color: "from-orange-500 to-red-600",
     fullDescription: "Głęboka struktura komórek 3D ułatwia szybkie i skuteczne czyszczenie dywaników. Brud i zanieczyszczenia nie wnikają głęboko w materiał, co pozwala na łatwe usunięcie ich za pomocą wody i łagodnego detergentu. Dzięki temu dywaniki zawsze wyglądają jak nowe."
+  },
+  {
+    id: 5,
+    icon: Target,
+    title: "Rzep na każdym rogu",
+    description: "Innowacyjne rzepy na rogach zapewniają idealne dopasowanie i stabilność",
+    color: "from-yellow-500 to-amber-600",
+    fullDescription: "Specjalne rzepy umieszczone na każdym rogu dywanika zapewniają idealne dopasowanie do podłogi samochodu. Dzięki temu dywaniki pozostają na swoim miejscu nawet podczas dynamicznej jazdy, zapewniając maksymalną stabilność i bezpieczeństwo."
   }
 ];
 
@@ -203,6 +211,10 @@ export default function ThreeDMatsSection() {
                           image = '/komorki.png';
                           title = "ŁATWOŚĆ CZYSZCZENIA";
                           description = "Głęboka struktura komórek 3D ułatwia szybkie i skuteczne czyszczenie dywaników. Brud i zanieczyszczenia nie wnikają głęboko w materiał, co pozwala na łatwe usunięcie ich.";
+                        } else if (benefit.id === 5) {
+                          image = '/images/zalety/rzepy.png';
+                          title = "RZEP NA KAŻDYM ROGU";
+                          description = "Innowacyjne rzepy umieszczone na każdym rogu dywanika zapewniają idealne dopasowanie do podłogi samochodu. Dzięki temu dywaniki pozostają na swoim miejscu nawet podczas dynamicznej jazdy, zapewniając maksymalną stabilność i bezpieczeństwo.";
                         }
                         
                         setMainImage(image);
@@ -232,6 +244,10 @@ export default function ThreeDMatsSection() {
                             image = '/komorki.png';
                             title = "ŁATWOŚĆ CZYSZCZENIA";
                             description = "Głęboka struktura komórek 3D ułatwia szybkie i skuteczne czyszczenie dywaników. Brud i zanieczyszczenia nie wnikają głęboko w materiał, co pozwala na łatwe usunięcie ich.";
+                          } else if (benefit.id === 5) {
+                            image = '/images/zalety/rzepy.png';
+                            title = "RZEP NA KAŻDYM ROGU";
+                            description = "Innowacyjne rzepy umieszczone na każdym rogu dywanika zapewniają idealne dopasowanie do podłogi samochodu. Dzięki temu dywaniki pozostają na swoim miejscu nawet podczas dynamicznej jazdy, zapewniając maksymalną stabilność i bezpieczeństwo.";
                           }
                           
                           setMainImage(image);
@@ -257,6 +273,10 @@ export default function ThreeDMatsSection() {
                         ) : benefit.id === 4 ? (
                           <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
                             <Image src="/komorki.png" alt="Łatwość czyszczenia" width={80} height={80} className="object-cover w-full h-full" />
+                          </div>
+                        ) : benefit.id === 5 ? (
+                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
+                            <Image src="/images/zalety/rzepy.png" alt="Rzep na każdym rogu" width={80} height={80} className="object-cover w-full h-full" />
                           </div>
                         ) : (
                           <div className={`p-2 rounded-lg bg-gradient-to-br ${benefit.color} ${
