@@ -7,9 +7,9 @@ export default function Footer() {
   return (
     <footer className="bg-black border-t border-neutral-800">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Logo i opis */}
-          <div className="col-span-1 md:col-span-2">
+          <div className="col-span-1 lg:col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity">
               <Image
                 src="/Logo svg .svg"
@@ -70,9 +70,46 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Informacje */}
+          <div>
+            <h3 className="text-white font-semibold mb-4">Informacje</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href="#kontakt" className="text-gray-400 hover:text-white transition-colors">
+                  Kontakt
+                </Link>
+              </li>
+              <li>
+                <Link href="/polityka-prywatnosci" className="text-gray-400 hover:text-white transition-colors">
+                  Polityka prywatności
+                </Link>
+              </li>
+              <li>
+                <Link href="/zasady-dostawy-platnosci" className="text-gray-400 hover:text-white transition-colors">
+                  Zasady dostawy i płatności
+                </Link>
+              </li>
+              <li>
+                <Link href="/regulamin" className="text-gray-400 hover:text-white transition-colors">
+                  Regulamin
+                </Link>
+              </li>
+              <li>
+                <Link href="/zwroty-wymiany" className="text-gray-400 hover:text-white transition-colors">
+                  Zwroty i wymiany
+                </Link>
+              </li>
+              <li>
+                <Link href="/program-partnerski" className="text-gray-400 hover:text-white transition-colors">
+                  Program partnerski
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Kontakt */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Kontakt</h3>
+            <h3 className="text-white font-semibold mb-4">Dane kontaktowe</h3>
             <ul className="space-y-2">
               <li className="text-gray-400">
                 <span className="block">Email:</span>
@@ -215,14 +252,6 @@ export default function Footer() {
           <p className="text-gray-400 text-sm">
             © 2024 EvaPremium. Wszystkie prawa zastrzeżone.
           </p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-              Polityka Prywatności
-            </Link>
-            <Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-              Regulamin
-            </Link>
-          </div>
         </div>
       </div>
     </footer>
