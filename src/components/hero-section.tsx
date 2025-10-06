@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const heroSlides = [
   {
@@ -10,7 +10,7 @@ const heroSlides = [
     video: "/images/hero/heromat.mp4",
     cta: "Sprawdź Ceny",
     price: "Od 199 zł",
-    benefits: ["Wodoodporne", "Łatwe w czyszczeniu", "Darmowa dostawa"]
+    benefits: ["Wodoodporne", "Łatwe w czyszczeniu", "Gwarancja 2 lata"]
   },
   {
     id: 2,
@@ -35,14 +35,6 @@ const heroSlides = [
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
-
-    return () => clearInterval(timer);
-  }, []);
-
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
@@ -56,7 +48,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative h-[60vh] md:h-[70vh] overflow-hidden">
+    <section className="relative h-[70vh] md:h-[80vh] overflow-hidden">
       {/* Carousel */}
       <div className="container mx-auto px-4 relative h-full">
         {heroSlides.map((slide, index) => (
@@ -108,11 +100,8 @@ export default function HeroSection() {
                   {slide.subtitle}
                 </p>
                 
-                {/* Price and Benefits */}
+                {/* Benefits */}
                 <div className="mb-6 animate-fade-in-delay">
-                  <div className="text-xl md:text-2xl font-bold text-red-400 mb-3">
-                    {slide.price}
-                  </div>
                   <div className="flex flex-wrap justify-center gap-2 mb-4">
                     {slide.benefits.map((benefit, index) => (
                       <span 
