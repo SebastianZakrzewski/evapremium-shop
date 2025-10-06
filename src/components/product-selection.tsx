@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import ImageCarousel from './ImageCarousel';
 import { BrandCard } from './ui/BrandCard';
 import { Brand } from '../types/carousel';
-import { Loader2 } from 'lucide-react';
+import { Car, Loader2 } from 'lucide-react';
 
 export default function ProductSelection() {
   const [brands, setBrands] = useState<Brand[]>([]);
