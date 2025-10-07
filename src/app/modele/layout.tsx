@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: 'Modele Aut - Dywaniki Samochodowe | Eva',
     description: 'Wybierz model swojego auta i spersonalizuj dywaniki samochodowe',
     type: 'website',
-    images: ['/images/hero/heromat-poster.jpg'],
+    images: ['/images/hero/video-poster.jpg'],
   },
   alternates: {
     canonical: 'https://eva-dywaniki.pl/modele',

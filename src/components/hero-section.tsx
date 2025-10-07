@@ -7,7 +7,7 @@ const heroSlides = [
     id: 1,
     title: "Dywaniki Samochodowe EVA Premium",
     subtitle: "Wodoodporne, łatwe w czyszczeniu, precyzyjnie dopasowane do Twojego auta",
-    video: "/images/hero/heromat.mp4",
+    video: "/images/hero/video.mp4",
     cta: "Sprawdź Ceny",
     price: "Od 199 zł",
     benefits: ["Wodoodporne", "Łatwe w czyszczeniu", "Gwarancja 2 lata"]
@@ -16,7 +16,7 @@ const heroSlides = [
     id: 2,
     title: "Najwyższa Jakość Materiałów EVA",
     subtitle: "Profesjonalne dywaniki samochodowe najwyższej jakości",
-    video: "/images/hero/heromat.mp4",
+    video: "/images/hero/video.mp4",
     cta: "Poznaj Materiały",
     price: "Gwarancja 2 lata",
     benefits: ["Materiał EVA", "Odporność na wilgoć", "Trwałość"]
@@ -25,7 +25,7 @@ const heroSlides = [
     id: 3,
     title: "Spersonalizowane Dywaniki Samochodowe",
     subtitle: "Dokładnie dopasowane do modelu Twojego auta",
-    video: "/images/hero/heromat.mp4",
+    video: "/images/hero/video.mp4",
     cta: "Wybierz Model",
     price: "Dostawa 24h",
     benefits: ["Precyzyjne dopasowanie", "Szybka dostawa", "5000+ zadowolonych klientów"]
@@ -67,7 +67,7 @@ export default function HeroSection() {
                   muted
                   playsInline
                   preload="metadata"
-                  poster="/images/hero/heromat-poster.jpg"
+                  poster="/images/hero/video-poster.jpg"
                   className="w-full h-full object-cover object-center rounded-lg"
                   style={{
                     objectPosition: 'center center',
@@ -80,8 +80,8 @@ export default function HeroSection() {
                   }}
                 >
                 <source src={slide.video} type="video/mp4" />
-                <source src="/images/hero/heromat.webm" type="video/webm" />
-                <source src="/images/hero/heromat-4k.mp4" type="video/mp4" />
+                <source src="/images/hero/video.webm" type="video/webm" />
+                <source src="/images/hero/video-4k.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
                 </video>
                 
