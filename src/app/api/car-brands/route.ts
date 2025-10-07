@@ -13,7 +13,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export async function GET(request: NextRequest) {
   try {
     // Pobierz wszystkie marki z tabeli car_models_extended używając paginacji
-    let allBrands = [];
+    let allBrands: any[] = [];
     let from = 0;
     const pageSize = 1000;
     let hasMore = true;
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
       const normalizedName = brand.brand_name
         .toLowerCase()
         .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
       
       if (!brandMap.has(normalizedName)) {

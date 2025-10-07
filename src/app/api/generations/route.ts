@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
     const result = Object.values(groupedGenerations).map((generation: any) => ({
       ...generation,
       bodyTypes: Array.from(generation.bodyTypes).sort(),
-      years: Array.from(generation.years).sort((a: number, b: number) => b - a)
+      years: Array.from(generation.years).sort((a: any, b: any) => b - a)
     }));
 
     return NextResponse.json(result);

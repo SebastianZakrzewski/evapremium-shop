@@ -19,13 +19,16 @@ const ModelParamsSchema = z.object({
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { brand: string; model: string } }
+  { params }: { params: Promise<{ brand: string; model: string }> }
 ) {
   try {
+    // Pobierz parametry asynchronicznie
+    const resolvedParams = await params;
+    
     // Walidacja parametrów
     const validatedParams = ModelParamsSchema.parse({
-      brand: decodeURIComponent(params.brand),
-      model: decodeURIComponent(params.model)
+      brand: decodeURIComponent(resolvedParams.brand),
+      model: decodeURIComponent(resolvedParams.model)
     });
 
     const brandName = validatedParams.brand;
@@ -88,7 +91,7 @@ export async function GET(
     const result = Object.values(groupedGenerations).map((generation: any) => ({
       ...generation,
       bodyTypes: Array.from(generation.bodyTypes).sort(),
-      years: Array.from(generation.years).sort((a: number, b: number) => b - a)
+      years: Array.from(generation.years).sort((a: any, b: any) => b - a)
     }));
 
     return NextResponse.json(result);
