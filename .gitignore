@@ -137,8 +137,8 @@ backups/
 *.backup
 *.bak
 
-# large media files
-*.mp4
+# large media files (only very large ones)
+# *.mp4 - commented out since heromat.mp4 is only 7.9MB
 *.mov
 *.avi
 *.mkv
