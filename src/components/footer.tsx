@@ -125,7 +125,11 @@ export default function Footer() {
               </li>
               <li className="text-gray-400">
                 <span className="block">Adres:</span>
-                <span>ul. Przykładowa 123<br />00-000 Warszawa</span>
+                <span>Klaudia Lewandowska<br />81-198 Pogórze<br />ul. Tadeusza Kościuszki 34/1</span>
+              </li>
+              <li className="text-gray-400">
+                <span className="block">NIP:</span>
+                <span>5871715880</span>
               </li>
             </ul>
           </div>
