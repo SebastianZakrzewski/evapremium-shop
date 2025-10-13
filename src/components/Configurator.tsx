@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
@@ -68,6 +68,24 @@ type SetVariant = {
 };
 
 // Kolory będą generowane dynamicznie na podstawie wybranej struktury komórek
+
+// Struktura cenowa dla dynamicznego systemu cen
+const PRICING = {
+  matTypes: {
+    '3d-with-rims': { modifier: 0, label: '+0 zł' },
+    'classic': { modifier: -40, label: '-40 zł' }
+  },
+  setVariants: {
+    'front': 150,
+    'basic': 300,
+    'premium': 450,
+    'complete': 600
+  },
+  extras: {
+    cellType: { diamonds: 0, honey: 10 },
+    heelPad: 30
+  }
+};
 
 const setTypes: SetType[] = [
   { id: "3d-with-rims", name: "3D z rantami", description: "Dywaniki 3D z obszyciem rantowym", priceModifier: 0 },
@@ -187,6 +205,39 @@ export default function Configurator() {
   const [loadingModels, setLoadingModels] = useState(false);
   const [loadingYears, setLoadingYears] = useState(false);
   const [loadingBodyTypes, setLoadingBodyTypes] = useState(false);
+
+  // Funkcje kalkulacyjne dla dynamicznego systemu cen
+  const getSetVariantPrice = useCallback((
+    variantId: string,
+    matTypeId: string
+  ): number => {
+    const basePrice = PRICING.setVariants[variantId as keyof typeof PRICING.setVariants] || 0;
+    const modifier = PRICING.matTypes[matTypeId as keyof typeof PRICING.matTypes]?.modifier || 0;
+    return basePrice + modifier;
+  }, []);
+
+  const getTotalPrice = useCallback((): number => {
+    let total = 0;
+    
+    // Cena zestawu z modyfikatorem rodzaju dywaników
+    if (selectedSetVariant && selectedSetType) {
+      total = getSetVariantPrice(selectedSetVariant, selectedSetType);
+    }
+    
+    // Modyfikator za komórki
+    if (selectedCellType) {
+      total += PRICING.extras.cellType[
+        selectedCellType as keyof typeof PRICING.extras.cellType
+      ] || 0;
+    }
+    
+    // Ochraniacz pod piętę
+    if (selectedHeelPad === 'yes') {
+      total += PRICING.extras.heelPad;
+    }
+    
+    return total;
+  }, [selectedSetVariant, selectedSetType, selectedCellType, selectedHeelPad, getSetVariantPrice]);
 
   // Debug: wyświetl informacje o wybranej marce
   useEffect(() => {
@@ -822,24 +873,49 @@ export default function Configurator() {
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj dywaników</h3>
                   <RadioGroup value={selectedSetType} onValueChange={setSelectedSetType} className="space-y-3">
-                    {setTypes.map((s) => (
-                      <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
-                        <RadioGroupItem value={s.id} id={`set-${s.id}`} className="sr-only" />
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="text-sm font-medium">{s.name}</div>
-                            <div className="text-xs text-white/60">{s.description}</div>
-                          </div>
-                          {s.priceModifier !== 0 && s.id !== 'classic' && (
-                            <div className={`text-xs font-medium ${s.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                              {s.priceModifier > 0 ? '+' : ''}{s.priceModifier} zł
+                    {setTypes.map((s) => {
+                      const modifier = PRICING.matTypes[s.id as keyof typeof PRICING.matTypes];
+                      
+                      return (
+                        <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                          <RadioGroupItem value={s.id} id={`set-${s.id}`} className="sr-only" />
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <div className="text-sm font-medium">{s.name}</div>
+                              <div className="text-xs text-white/60">{s.description}</div>
                             </div>
-                          )}
-                        </div>
-                      </Label>
-                    ))}
+                            {/* Wyświetl modyfikator ceny */}
+                            {modifier && modifier.modifier !== 0 && (
+                              <div className={`text-sm font-medium ${
+                                modifier.modifier > 0 ? 'text-green-400' : 'text-orange-400'
+                              }`}>
+                                {modifier.label}
+                              </div>
+                            )}
+                          </div>
+                        </Label>
+                      );
+                    })}
                   </RadioGroup>
                 </div>
+                
+                {/* Info box o wpływie na cenę */}
+                {selectedSetType && (
+                  <div className="p-4 bg-blue-900/20 border border-blue-800/50 rounded-lg">
+                    <p className="text-sm text-blue-200">
+                      💡 Wybór rodzaju dywaników wpłynie na końcową cenę zestawu
+                    </p>
+                  </div>
+                )}
+
+                {/* Wskaźnik oszczędności dla 3D bez rantów */}
+                {selectedSetType === 'classic' && (
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-900/20 border border-orange-800/50 rounded-full">
+                    <span className="text-orange-400 text-sm font-medium">
+                      Oszczędzasz 40 zł
+                    </span>
+                  </div>
+                )}
               </div>
             )}
 
@@ -849,36 +925,42 @@ export default function Configurator() {
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj zestawu</h3>
                   <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
-                    {setVariants.map((v) => (
-                      <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
-                        <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="text-sm font-medium">{v.name}</div>
-                            <div className="text-xs text-white/60">{v.description}</div>
-                          </div>
-                          <div className="flex items-center gap-3 flex-shrink-0">
-                            {(v.id === "front" || v.id === "basic" || v.id === "premium" || v.id === "complete") && (
-                              <div className="flex items-center justify-center">
-                                <Image
-                                  src={v.id === "front" ? "/konfigurator/zestaw/przod.png" : v.id === "basic" ? "/konfigurator/zestaw/pt.png" : v.id === "premium" ? "/konfigurator/zestaw/ptb.png" : "/konfigurator/zestaw/mata.png"}
-                                  alt={`Wizualizacja zestawu ${v.name}`}
-                                  width={80}
-                                  height={48}
-                                  className="rounded-lg"
-                                  sizes="80px"
-                                />
+                    {setVariants.map((v) => {
+                      // Oblicz cenę z uwzględnieniem rodzaju dywaników
+                      const displayPrice = selectedSetType 
+                        ? getSetVariantPrice(v.id, selectedSetType)
+                        : PRICING.setVariants[v.id as keyof typeof PRICING.setVariants];
+                      
+                      return (
+                        <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                          <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <div className="text-sm font-medium">{v.name}</div>
+                              <div className="text-xs text-white/60">{v.description}</div>
+                            </div>
+                            <div className="flex items-center gap-3 flex-shrink-0">
+                              {(v.id === "front" || v.id === "basic" || v.id === "premium" || v.id === "complete") && (
+                                <div className="flex items-center justify-center">
+                                  <Image
+                                    src={v.id === "front" ? "/konfigurator/zestaw/przod.png" : v.id === "basic" ? "/konfigurator/zestaw/pt.png" : v.id === "premium" ? "/konfigurator/zestaw/ptb.png" : "/konfigurator/zestaw/mata.png"}
+                                    alt={`Wizualizacja zestawu ${v.name}`}
+                                    width={80}
+                                    height={48}
+                                    className="rounded-lg"
+                                    sizes="80px"
+                                  />
+                                </div>
+                              )}
+                              {/* Cena z uwzględnieniem modyfikatora */}
+                              <div className="text-lg font-bold text-green-400">
+                                {displayPrice} zł
                               </div>
-                            )}
-                            {v.priceModifier !== 0 && v.id !== 'front' && (
-                              <div className={`text-xs font-medium ${v.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                {v.priceModifier > 0 ? '+' : ''}{v.priceModifier} zł
-                              </div>
-                            )}
+                            </div>
                           </div>
-                        </div>
-                      </Label>
-                    ))}
+                        </Label>
+                      );
+                    })}
                   </RadioGroup>
                 </div>
               </div>
@@ -1036,10 +1118,26 @@ export default function Configurator() {
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-white/70 text-xs">Cena wstępna</p>
-                      <p className="text-2xl font-semibold">{price} zł</p>
+                  {/* Breakdown ceny */}
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Zestaw ({setVariant.name})</span>
+                      <span className="text-white">{getSetVariantPrice(selectedSetVariant, selectedSetType)} zł</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Komórki ({cellType.name})</span>
+                      <span className="text-white">+{PRICING.extras.cellType[selectedCellType as keyof typeof PRICING.extras.cellType] || 0} zł</span>
+                    </div>
+                    {selectedHeelPad === 'yes' && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Ochraniacz pod piętę</span>
+                        <span className="text-white">+{PRICING.extras.heelPad} zł</span>
+                      </div>
+                    )}
+                    <Separator className="my-2" />
+                    <div className="flex justify-between text-lg font-bold">
+                      <span>Razem</span>
+                      <span className="text-green-400">{getTotalPrice()} zł</span>
                     </div>
                   </div>
                 </div>
@@ -1084,6 +1182,18 @@ export default function Configurator() {
 
 
             {/* Navigation buttons */}
+            {/* Sticky panel z ceną */}
+            <div className="sticky bottom-0 left-0 right-0 bg-neutral-900/95 backdrop-blur-sm border-t border-neutral-800 p-4 mb-4">
+              <div className="flex items-center justify-between max-w-7xl mx-auto">
+                <div className="text-sm text-gray-400">
+                  Aktualna cena konfiguracji
+                </div>
+                <div className="text-2xl font-bold text-green-400 transition-all duration-300">
+                  {getTotalPrice()} zł
+                </div>
+              </div>
+            </div>
+
             <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
               <Button
                 variant="outline"
