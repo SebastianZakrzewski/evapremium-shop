@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
                   adres do doręczeń: <strong>ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze</strong>, 
                   NIP: <strong>5871715880</strong>, REGON: <strong>380082236</strong>, 
                   adres poczty elektronicznej (e-mail): <strong>evapremium.kontakt@gmail.com</strong> 
-                  numer telefonu: <strong>+48 570 123 635</strong>, zwana dalej „Administratorem" i będąca jednocześnie „Usługodawcą".
+                  numer telefonu: <strong>+48 570 123 635</strong>, zwana dalej &quot;Administratorem&quot; i będąca jednocześnie &quot;Usługodawcą&quot;.
                 </p>
                 <p>
                   <strong>2.</strong> Dane osobowe zbierane przez Administratora za pośrednictwem strony internetowej są
@@ -189,18 +189,18 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">§ 5 PLIKI "COOKIES"</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">§ 5 PLIKI &quot;COOKIES&quot;</h2>
               <div className="text-gray-300 leading-relaxed space-y-4">
-                <p><strong>1.</strong> Strona Administratora używa plików „cookies".</p>
+                <p><strong>1.</strong> Strona Administratora używa plików &quot;cookies&quot;.</p>
                 <p>
-                  <strong>2.</strong> Instalacja plików „cookies" jest konieczna do prawidłowego świadczenia usług na stronie internetowej Sklepu. W plikach „cookies" znajdują się informacje niezbędne do prawidłowego funkcjonowania strony, a także dają one także możliwość opracowywania ogólnych statystyk odwiedzin strony internetowej.
+                  <strong>2.</strong> Instalacja plików &quot;cookies&quot; jest konieczna do prawidłowego świadczenia usług na stronie internetowej Sklepu. W plikach &quot;cookies&quot; znajdują się informacje niezbędne do prawidłowego funkcjonowania strony, a także dają one także możliwość opracowywania ogólnych statystyk odwiedzin strony internetowej.
                 </p>
                 <p>
-                  <strong>3.</strong> W ramach strony stosowane są dwa rodzaje plików „cookies": „sesyjne" oraz „stałe".
+                  <strong>3.</strong> W ramach strony stosowane są dwa rodzaje plików &quot;cookies&quot;: &quot;sesyjne&quot; oraz &quot;stałe&quot;.
                 </p>
                 <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
-                  <li><strong>3.1.</strong> „Cookies" „sesyjne" są plikami tymczasowymi, które przechowywane są w urządzeniu końcowym Usługobiorcy do czasu wylogowania (opuszczenia strony),</li>
-                  <li><strong>3.2.</strong> „Stałe" pliki „cookies" przechowywane są w urządzeniu końcowym Usługobiorcy przez czas określony w parametrach plików „cookies" lub do czasu ich usunięcia przez Usługobiorcę.</li>
+                  <li><strong>3.1.</strong> &quot;Cookies&quot; &quot;sesyjne&quot; są plikami tymczasowymi, które przechowywane są w urządzeniu końcowym Usługobiorcy do czasu wylogowania (opuszczenia strony),</li>
+                  <li><strong>3.2.</strong> &quot;Stałe&quot; pliki &quot;cookies&quot; przechowywane są w urządzeniu końcowym Usługobiorcy przez czas określony w parametrach plików &quot;cookies&quot; lub do czasu ich usunięcia przez Usługobiorcę.</li>
                 </ul>
                 <p>
                   <strong>4.</strong> Administrator wykorzystuje własne pliki cookies w celu lepszego poznania sposobu interakcji Usługobiorców w zakresie zawartości strony. Pliki gromadzą informacje o sposobie korzystania ze strony internetowej przez Usługobiorcę, typie strony z jakiej Usługobiorca został przekierowany oraz liczbie odwiedzin i czasie wizyty Usługobiorcy na stronie internetowej. Informacje te nie rejestrują konkretnych danych osobowych Usługobiorcy, lecz służą do opracowania statystyk korzystania ze strony.
@@ -212,11 +212,11 @@ export default function PrivacyPolicyPage() {
                   <strong>6.</strong> Pliki cookies mogą być również wykorzystywane przez sieci reklamowe (w szczególności sieć Google) w celu wyświetlania reklam dopasowanych do sposobu, w jaki Usługobiorca korzysta ze Sklepu. W tym celu mogą zachować informację o ścieżce nawigacji Usługobiorcy lub czasie pozostawania na danej stronie.
                 </p>
                 <p>
-                  <strong>7.</strong> Usługobiorca ma prawo zadecydowania w zakresie dostępu plików „cookies" do swojego komputera poprzez:
+                  <strong>7.</strong> Usługobiorca ma prawo zadecydowania w zakresie dostępu plików &quot;cookies&quot; do swojego komputera poprzez:
                 </p>
                 <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
                   <li><strong>7.1.</strong> wybór rodzajów plików cookies, na gromadzenie których wyraża zgodę tuż po wejściu na stronę Sklepu i pojawieniu się komunikatu dotyczącego cookies,</li>
-                  <li><strong>7.2.</strong> zmianę ustawień w oknie swojej przeglądarki. Szczegółowe informacje o możliwości i sposobach obsługi plików „cookies" dostępne są również w ustawieniach oprogramowania (przeglądarki internetowej).</li>
+                  <li><strong>7.2.</strong> zmianę ustawień w oknie swojej przeglądarki. Szczegółowe informacje o możliwości i sposobach obsługi plików &quot;cookies&quot; dostępne są również w ustawieniach oprogramowania (przeglądarki internetowej).</li>
                 </ul>
               </div>
             </section>
@@ -225,7 +225,7 @@ export default function PrivacyPolicyPage() {
               <h2 className="text-2xl font-semibold text-white mb-4">§ 6 USŁUGI DODATKOWE ZWIĄZANE Z AKTYWNOŚCIĄ UŻYTKOWNIKA W SKLEPIE</h2>
               <div className="text-gray-300 leading-relaxed space-y-4">
                 <p>
-                  <strong>1.</strong> W Sklepie wykorzystywane są tzw. wtyczki społecznościowe („wtyczki") serwisów społecznościowych. Wyświetlając stronę internetową www.evapremium.pl, zawierającą taką wtyczkę przeglądarka Usługobiorcy nawiąże bezpośrednie połączenie z serwerami Facebook, Meta, Tiktok, Pinterest, Youtube oraz Instagram.
+                  <strong>1.</strong> W Sklepie wykorzystywane są tzw. wtyczki społecznościowe (&quot;wtyczki&quot;) serwisów społecznościowych. Wyświetlając stronę internetową www.evapremium.pl, zawierającą taką wtyczkę przeglądarka Usługobiorcy nawiąże bezpośrednie połączenie z serwerami Facebook, Meta, Tiktok, Pinterest, Youtube oraz Instagram.
                 </p>
                 <p>
                   <strong>2.</strong> Zawartość wtyczki jest przekazywana przez danego usługodawcę bezpośrednio do przeglądarki Usługobiorcy i integrowana ze stroną. Dzięki tej integracji usługodawcy otrzymują informację, że przeglądarka Usługobiorcy wyświetliła stronę www.evapremium.pl, nawet jeśli Usługobiorca nie posiada profilu u danego usługodawcy, czy nie jest u niego akurat zalogowany. Taka informacja (wraz z adresem IP Usługobiorcy) jest przesyłana przez przeglądarkę bezpośrednio do serwera danego usługodawcy (niektóre serwery znajdują się w USA) i tam przechowywana.
@@ -248,7 +248,7 @@ export default function PrivacyPolicyPage() {
                   <li><strong>5.6.</strong> <a href="https://www.tiktok.com/legal/page/eea/privacy-policy/pl-PL" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/legal/page/eea/privacy-policy/pl-PL</a></li>
                 </ul>
                 <p>
-                  <strong>6.</strong> Usługobiorca może uniemożliwić załadowanie na stronie wtyczek stosując odpowiednie rozszerzenia dla przeglądarki np. blokowanie skryptów za pomocą „NoScript".
+                  <strong>6.</strong> Usługobiorca może uniemożliwić załadowanie na stronie wtyczek stosując odpowiednie rozszerzenia dla przeglądarki np. blokowanie skryptów za pomocą &quot;NoScript&quot;.
                 </p>
                 <p>
                   <strong>7.</strong> Administrator wykorzystuje na swojej stronie narzędzia remarketingowe tj. Google Ads, Facebook, Meta, Pinterest, Instagram, TikTok. Ich używanie wiąże się wykorzystywaniem plików cookies firm będących administratorami wymienionych serwisów. W ramach mechanizmu do zarządzania ustawieniami plików cookies Usługobiorca ma możliwość zdecydowania czy Usługodawca będzie mógł korzystać z narzędzi remarketingowych (administrator cookies zewnętrznego: Google LLC. z siedzibą w USA) w stosunku do niego.

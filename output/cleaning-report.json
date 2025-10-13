@@ -1,0 +1,674 @@
+{
+  "totalRecords": 1807,
+  "recordsNeedingCleaning": 886,
+  "recordsAlreadyClean": 921,
+  "cleaningStats": {
+    "Aixam": {
+      "total": 2,
+      "cleaned": 0,
+      "alreadyClean": 2
+    },
+    "Acura": {
+      "total": 2,
+      "cleaned": 0,
+      "alreadyClean": 2
+    },
+    "Alfa romeo": {
+      "total": 13,
+      "cleaned": 1,
+      "alreadyClean": 12
+    },
+    "Aston martin": {
+      "total": 5,
+      "cleaned": 2,
+      "alreadyClean": 3
+    },
+    "Audi": {
+      "total": 62,
+      "cleaned": 55,
+      "alreadyClean": 7
+    },
+    "Baic": {
+      "total": 3,
+      "cleaned": 3,
+      "alreadyClean": 0
+    },
+    "Bentley": {
+      "total": 4,
+      "cleaned": 3,
+      "alreadyClean": 1
+    },
+    "Bmw": {
+      "total": 99,
+      "cleaned": 8,
+      "alreadyClean": 91
+    },
+    "Bobcat": {
+      "total": 2,
+      "cleaned": 0,
+      "alreadyClean": 2
+    },
+    "Buick": {
+      "total": 6,
+      "cleaned": 2,
+      "alreadyClean": 4
+    },
+    "Byd": {
+      "total": 5,
+      "cleaned": 4,
+      "alreadyClean": 1
+    },
+    "Cadillac": {
+      "total": 8,
+      "cleaned": 3,
+      "alreadyClean": 5
+    },
+    "Case": {
+      "total": 7,
+      "cleaned": 5,
+      "alreadyClean": 2
+    },
+    "Cat": {
+      "total": 18,
+      "cleaned": 4,
+      "alreadyClean": 14
+    },
+    "Chevrolet": {
+      "total": 36,
+      "cleaned": 19,
+      "alreadyClean": 17
+    },
+    "Gmc": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "Chrysler": {
+      "total": 15,
+      "cleaned": 5,
+      "alreadyClean": 10
+    },
+    "Citroen": {
+      "total": 48,
+      "cleaned": 16,
+      "alreadyClean": 32
+    },
+    "Claas": {
+      "total": 10,
+      "cleaned": 10,
+      "alreadyClean": 0
+    },
+    "Cupra": {
+      "total": 7,
+      "cleaned": 3,
+      "alreadyClean": 4
+    },
+    "Dacia": {
+      "total": 16,
+      "cleaned": 7,
+      "alreadyClean": 9
+    },
+    "Daewoo": {
+      "total": 3,
+      "cleaned": 1,
+      "alreadyClean": 2
+    },
+    "Daf": {
+      "total": 6,
+      "cleaned": 3,
+      "alreadyClean": 3
+    },
+    "Daihatsu": {
+      "total": 4,
+      "cleaned": 0,
+      "alreadyClean": 4
+    },
+    "Deutz-fahr": {
+      "total": 6,
+      "cleaned": 2,
+      "alreadyClean": 4
+    },
+    "Develon": {
+      "total": 1,
+      "cleaned": 1,
+      "alreadyClean": 0
+    },
+    "Dodge": {
+      "total": 14,
+      "cleaned": 5,
+      "alreadyClean": 9
+    },
+    "Ds": {
+      "total": 7,
+      "cleaned": 3,
+      "alreadyClean": 4
+    },
+    "Fendt": {
+      "total": 11,
+      "cleaned": 6,
+      "alreadyClean": 5
+    },
+    "Ferrari": {
+      "total": 2,
+      "cleaned": 2,
+      "alreadyClean": 0
+    },
+    "Fiat": {
+      "total": 44,
+      "cleaned": 7,
+      "alreadyClean": 37
+    },
+    "Ford": {
+      "total": 109,
+      "cleaned": 57,
+      "alreadyClean": 52
+    },
+    "Forthing": {
+      "total": 2,
+      "cleaned": 1,
+      "alreadyClean": 1
+    },
+    "Gaz": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "Genesis": {
+      "total": 2,
+      "cleaned": 1,
+      "alreadyClean": 1
+    },
+    "Honda": {
+      "total": 55,
+      "cleaned": 30,
+      "alreadyClean": 25
+    },
+    "Hummer": {
+      "total": 2,
+      "cleaned": 0,
+      "alreadyClean": 2
+    },
+    "Hyundai": {
+      "total": 50,
+      "cleaned": 19,
+      "alreadyClean": 31
+    },
+    "Infiniti": {
+      "total": 13,
+      "cleaned": 4,
+      "alreadyClean": 9
+    },
+    "Ineos": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "Isuzu": {
+      "total": 4,
+      "cleaned": 4,
+      "alreadyClean": 0
+    },
+    "Iveco": {
+      "total": 3,
+      "cleaned": 0,
+      "alreadyClean": 3
+    },
+    "Jaecoo": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "Jaguar": {
+      "total": 15,
+      "cleaned": 8,
+      "alreadyClean": 7
+    },
+    "Jeep": {
+      "total": 33,
+      "cleaned": 24,
+      "alreadyClean": 9
+    },
+    "John deere": {
+      "total": 19,
+      "cleaned": 7,
+      "alreadyClean": 12
+    },
+    "Kia": {
+      "total": 53,
+      "cleaned": 16,
+      "alreadyClean": 37
+    },
+    "Komatsu": {
+      "total": 4,
+      "cleaned": 0,
+      "alreadyClean": 4
+    },
+    "Kubota": {
+      "total": 5,
+      "cleaned": 0,
+      "alreadyClean": 5
+    },
+    "Lamborghini": {
+      "total": 3,
+      "cleaned": 0,
+      "alreadyClean": 3
+    },
+    "Lancia": {
+      "total": 6,
+      "cleaned": 1,
+      "alreadyClean": 5
+    },
+    "Land rover": {
+      "total": 25,
+      "cleaned": 25,
+      "alreadyClean": 0
+    },
+    "Lexus": {
+      "total": 34,
+      "cleaned": 19,
+      "alreadyClean": 15
+    },
+    "Lincoln": {
+      "total": 6,
+      "cleaned": 1,
+      "alreadyClean": 5
+    },
+    "Man": {
+      "total": 5,
+      "cleaned": 1,
+      "alreadyClean": 4
+    },
+    "Maserati": {
+      "total": 8,
+      "cleaned": 1,
+      "alreadyClean": 7
+    },
+    "Massey ferguson": {
+      "total": 2,
+      "cleaned": 0,
+      "alreadyClean": 2
+    },
+    "Mazda": {
+      "total": 34,
+      "cleaned": 4,
+      "alreadyClean": 30
+    },
+    "Maxus": {
+      "total": 1,
+      "cleaned": 1,
+      "alreadyClean": 0
+    },
+    "McLaren": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "Mercedes-Maybach": {
+      "total": 3,
+      "cleaned": 2,
+      "alreadyClean": 1
+    },
+    "Mercedes-Benz": {
+      "total": 137,
+      "cleaned": 125,
+      "alreadyClean": 12
+    },
+    "MG": {
+      "total": 7,
+      "cleaned": 0,
+      "alreadyClean": 7
+    },
+    "Microcar": {
+      "total": 1,
+      "cleaned": 1,
+      "alreadyClean": 0
+    },
+    "Mitsubishi": {
+      "total": 36,
+      "cleaned": 27,
+      "alreadyClean": 9
+    },
+    "MITSUBISHI": {
+      "total": 3,
+      "cleaned": 3,
+      "alreadyClean": 0
+    },
+    "Morris Minor": {
+      "total": 1,
+      "cleaned": 1,
+      "alreadyClean": 0
+    },
+    "New Holland": {
+      "total": 8,
+      "cleaned": 6,
+      "alreadyClean": 2
+    },
+    "Nissan": {
+      "total": 43,
+      "cleaned": 23,
+      "alreadyClean": 20
+    },
+    "NiSSAN": {
+      "total": 4,
+      "cleaned": 3,
+      "alreadyClean": 1
+    },
+    "NISSAN": {
+      "total": 2,
+      "cleaned": 2,
+      "alreadyClean": 0
+    },
+    "Omoda": {
+      "total": 2,
+      "cleaned": 0,
+      "alreadyClean": 2
+    },
+    "Opel": {
+      "total": 61,
+      "cleaned": 50,
+      "alreadyClean": 11
+    },
+    "OPEL": {
+      "total": 2,
+      "cleaned": 1,
+      "alreadyClean": 1
+    },
+    "Peugeot": {
+      "total": 38,
+      "cleaned": 10,
+      "alreadyClean": 28
+    },
+    "PEUGEOT": {
+      "total": 12,
+      "cleaned": 2,
+      "alreadyClean": 10
+    },
+    "PLYMOTH": {
+      "total": 1,
+      "cleaned": 1,
+      "alreadyClean": 0
+    },
+    "Porsche": {
+      "total": 20,
+      "cleaned": 9,
+      "alreadyClean": 11
+    },
+    "Pontiac": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "Renault": {
+      "total": 61,
+      "cleaned": 30,
+      "alreadyClean": 31
+    },
+    "RENAULT": {
+      "total": 7,
+      "cleaned": 4,
+      "alreadyClean": 3
+    },
+    "Rolls-Royce": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "Saab": {
+      "total": 3,
+      "cleaned": 0,
+      "alreadyClean": 3
+    },
+    "SAAB": {
+      "total": 4,
+      "cleaned": 0,
+      "alreadyClean": 4
+    },
+    "Scania": {
+      "total": 7,
+      "cleaned": 3,
+      "alreadyClean": 4
+    },
+    "Seat": {
+      "total": 20,
+      "cleaned": 4,
+      "alreadyClean": 16
+    },
+    "SEAT": {
+      "total": 2,
+      "cleaned": 0,
+      "alreadyClean": 2
+    },
+    "Seres": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "Skoda": {
+      "total": 17,
+      "cleaned": 9,
+      "alreadyClean": 8
+    },
+    "SKODA": {
+      "total": 10,
+      "cleaned": 6,
+      "alreadyClean": 4
+    },
+    "Skywell": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "Smart": {
+      "total": 6,
+      "cleaned": 2,
+      "alreadyClean": 4
+    },
+    "SSANG YONG": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "SUBARU": {
+      "total": 12,
+      "cleaned": 1,
+      "alreadyClean": 11
+    },
+    "Subaru": {
+      "total": 18,
+      "cleaned": 4,
+      "alreadyClean": 14
+    },
+    "Suzuki": {
+      "total": 22,
+      "cleaned": 8,
+      "alreadyClean": 14
+    },
+    "SUZUKI": {
+      "total": 2,
+      "cleaned": 0,
+      "alreadyClean": 2
+    },
+    "SUzUKi": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "Tesla": {
+      "total": 9,
+      "cleaned": 9,
+      "alreadyClean": 0
+    },
+    "Terex-Fuchs": {
+      "total": 1,
+      "cleaned": 1,
+      "alreadyClean": 0
+    },
+    "Toyota": {
+      "total": 93,
+      "cleaned": 57,
+      "alreadyClean": 36
+    },
+    "TOYOTA": {
+      "total": 9,
+      "cleaned": 6,
+      "alreadyClean": 3
+    },
+    "Valtra": {
+      "total": 2,
+      "cleaned": 0,
+      "alreadyClean": 2
+    },
+    "Volkswagen": {
+      "total": 97,
+      "cleaned": 57,
+      "alreadyClean": 40
+    },
+    "VOLVO": {
+      "total": 6,
+      "cleaned": 1,
+      "alreadyClean": 5
+    },
+    "Volvo": {
+      "total": 34,
+      "cleaned": 7,
+      "alreadyClean": 27
+    },
+    "XEV": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "Zhidou": {
+      "total": 1,
+      "cleaned": 0,
+      "alreadyClean": 1
+    },
+    "Mini": {
+      "total": 12,
+      "cleaned": 7,
+      "alreadyClean": 5
+    }
+  },
+  "examples": [
+    {
+      "brand": "Aixam",
+      "original": "Crossover",
+      "cleaned": "Crossover",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Aixam",
+      "original": "MINAUTO",
+      "cleaned": "MINAUTO",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Acura",
+      "original": "RSX",
+      "cleaned": "RSX",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Acura",
+      "original": "RL",
+      "cleaned": "RL",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "147",
+      "cleaned": "147",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "159",
+      "cleaned": "159",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "166",
+      "cleaned": "166",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "Brera/Spider",
+      "cleaned": "Brera/Spider",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "Brera/Spider",
+      "cleaned": "Brera/Spider",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "Giulietta",
+      "cleaned": "Giulietta",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "GiuliaVeloce",
+      "cleaned": "GiuliaVeloce",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "GT",
+      "cleaned": "GT",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "Junior",
+      "cleaned": "Junior",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "Spider",
+      "cleaned": "Spider",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "Stelvio Q4",
+      "cleaned": "Stelvio",
+      "needsCleaning": true
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "Tonale",
+      "cleaned": "Tonale",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Alfa romeo",
+      "original": "Mito",
+      "cleaned": "Mito",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Aston martin",
+      "original": "DB9",
+      "cleaned": "DB9",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Aston martin",
+      "original": "DB11",
+      "cleaned": "DB11",
+      "needsCleaning": false
+    },
+    {
+      "brand": "Aston martin",
+      "original": "Rapide",
+      "cleaned": "Rapide",
+      "needsCleaning": false
+    }
+  ]
+}

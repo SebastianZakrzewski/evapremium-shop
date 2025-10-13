@@ -1,0 +1,4511 @@
+{
+  "totalRecords": 1807,
+  "brands": {
+    "Acura": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 1899,
+          "original": "RSX"
+        },
+        {
+          "id": 1900,
+          "original": "RL"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "RSX",
+          "RL"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Aixam": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 1897,
+          "original": "Crossover"
+        },
+        {
+          "id": 1898,
+          "original": "MINAUTO"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Crossover",
+          "MINAUTO"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Alfa romeo": {
+      "count": 13,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 1901,
+          "original": "147"
+        },
+        {
+          "id": 1902,
+          "original": "159"
+        },
+        {
+          "id": 1903,
+          "original": "166"
+        },
+        {
+          "id": 1904,
+          "original": "Brera/Spider"
+        },
+        {
+          "id": 1905,
+          "original": "Brera/Spider"
+        },
+        {
+          "id": 1906,
+          "original": "Giulietta"
+        },
+        {
+          "id": 1907,
+          "original": "GiuliaVeloce"
+        },
+        {
+          "id": 1908,
+          "original": "GT"
+        },
+        {
+          "id": 1909,
+          "original": "Junior"
+        },
+        {
+          "id": 1910,
+          "original": "Spider"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "147",
+          "159",
+          "166",
+          "Brera/Spider",
+          "Brera/Spider"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Aston martin": {
+      "count": 5,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 1915,
+          "original": "DB9"
+        },
+        {
+          "id": 1916,
+          "original": "DB11"
+        },
+        {
+          "id": 1917,
+          "original": "Rapide"
+        },
+        {
+          "id": 1918,
+          "original": "V8 Vantage"
+        },
+        {
+          "id": 1919,
+          "original": "V12 Vantage"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "DB9",
+          "DB11",
+          "Rapide",
+          "V8 Vantage",
+          "V12 Vantage"
+        ],
+        "commonSuffixes": [
+          "Vantage"
+        ]
+      }
+    },
+    "Audi": {
+      "count": 62,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 1920,
+          "original": "80 B3"
+        },
+        {
+          "id": 1921,
+          "original": "80 B4"
+        },
+        {
+          "id": 1922,
+          "original": "80 B4"
+        },
+        {
+          "id": 1923,
+          "original": "A4 B5 /S4/RS4"
+        },
+        {
+          "id": 1924,
+          "original": "A4 B6/S4"
+        },
+        {
+          "id": 1925,
+          "original": "A4 B6/S4"
+        },
+        {
+          "id": 1926,
+          "original": "A4 B7 /S4/RS4"
+        },
+        {
+          "id": 1927,
+          "original": "A4 B7 /S4/RS4"
+        },
+        {
+          "id": 1928,
+          "original": "A4 B8 /S4/RS4"
+        },
+        {
+          "id": 1929,
+          "original": "A4 B9/S4"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [
+          "A5 Sportback (8T)/S5/RS5"
+        ],
+        "withoutGenerationCodes": [
+          "80 B3",
+          "80 B4",
+          "80 B4",
+          "A4 B5 /S4/RS4",
+          "A4 B6/S4"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Baic": {
+      "count": 3,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 1986,
+          "original": "Beijing 3"
+        },
+        {
+          "id": 1987,
+          "original": "Beijing 5"
+        },
+        {
+          "id": 1988,
+          "original": "Beijing 7"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Beijing 3",
+          "Beijing 5",
+          "Beijing 7"
+        ],
+        "commonSuffixes": [
+          "3",
+          "5",
+          "7"
+        ]
+      }
+    },
+    "Bentley": {
+      "count": 4,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 1989,
+          "original": "Continental GT"
+        },
+        {
+          "id": 1990,
+          "original": "Continental"
+        },
+        {
+          "id": 1991,
+          "original": "Flying Spur 2"
+        },
+        {
+          "id": 1992,
+          "original": "Flying Spur 3"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Continental GT",
+          "Continental",
+          "Flying Spur 2",
+          "Flying Spur 3"
+        ],
+        "commonSuffixes": [
+          "2",
+          "3",
+          "GT",
+          "Spur"
+        ]
+      }
+    },
+    "Bmw": {
+      "count": 99,
+      "hasGenerationCodes": true,
+      "examples": [
+        {
+          "id": 1993,
+          "original": "1 (E-87)"
+        },
+        {
+          "id": 1994,
+          "original": "1 (E-81)"
+        },
+        {
+          "id": 1995,
+          "original": "1 (E-88)"
+        },
+        {
+          "id": 1996,
+          "original": "1 (F-20)"
+        },
+        {
+          "id": 1997,
+          "original": "1 (F-21)"
+        },
+        {
+          "id": 1998,
+          "original": "1 (F40)"
+        },
+        {
+          "id": 1999,
+          "original": "1 (F70)"
+        },
+        {
+          "id": 2000,
+          "original": "2 (F22)"
+        },
+        {
+          "id": 2001,
+          "original": "2 (F23)"
+        },
+        {
+          "id": 2002,
+          "original": "M2 (F87)"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [
+          "1 (E-87)",
+          "1 (E-88)",
+          "1 (F-21)",
+          "1 (F40)",
+          "1 (F70)"
+        ],
+        "withoutGenerationCodes": [
+          "1 (E-81)",
+          "1 (F-20)",
+          "2 (F44)",
+          "3 (E-36)",
+          "3 (E-46)"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Bobcat": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2093,
+          "original": "E19"
+        },
+        {
+          "id": 2094,
+          "original": "E20Z"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "E19",
+          "E20Z"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Buick": {
+      "count": 6,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2095,
+          "original": "Enclave"
+        },
+        {
+          "id": 2096,
+          "original": "Enclave"
+        },
+        {
+          "id": 2097,
+          "original": "Encore"
+        },
+        {
+          "id": 2098,
+          "original": "Buick Regal"
+        },
+        {
+          "id": 2099,
+          "original": "Park Avenue"
+        },
+        {
+          "id": 2100,
+          "original": "Verano?/Excelle!"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Enclave",
+          "Enclave",
+          "Encore",
+          "Buick Regal",
+          "Park Avenue"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Byd": {
+      "count": 5,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2101,
+          "original": "Atto 2"
+        },
+        {
+          "id": 2102,
+          "original": "Dolphin Surf"
+        },
+        {
+          "id": 2103,
+          "original": "Seal"
+        },
+        {
+          "id": 2104,
+          "original": "Seal U DM-i"
+        },
+        {
+          "id": 2105,
+          "original": "Sealion 7"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Atto 2",
+          "Dolphin Surf",
+          "Seal",
+          "Seal U DM-i",
+          "Sealion 7"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Cadillac": {
+      "count": 8,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2106,
+          "original": "Eldorado"
+        },
+        {
+          "id": 2107,
+          "original": "Escalade 2gen."
+        },
+        {
+          "id": 2108,
+          "original": "Escalade 4"
+        },
+        {
+          "id": 2109,
+          "original": "SRX"
+        },
+        {
+          "id": 2110,
+          "original": "SRX 2"
+        },
+        {
+          "id": 2111,
+          "original": "XT5"
+        },
+        {
+          "id": 2112,
+          "original": "XT6"
+        },
+        {
+          "id": 2113,
+          "original": "XTS"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Eldorado",
+          "Escalade 2gen.",
+          "Escalade 4",
+          "SRX",
+          "SRX 2"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Case": {
+      "count": 7,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2115,
+          "original": "7220"
+        },
+        {
+          "id": 2116,
+          "original": "580 ST"
+        },
+        {
+          "id": 2117,
+          "original": "844"
+        },
+        {
+          "id": 2118,
+          "original": "Farmall 75A"
+        },
+        {
+          "id": 2119,
+          "original": "Optum 340"
+        },
+        {
+          "id": 2120,
+          "original": "Magnum MX230"
+        },
+        {
+          "id": 2121,
+          "original": "Puma 200"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "7220",
+          "580 ST",
+          "844",
+          "Farmall 75A",
+          "Optum 340"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Cat": {
+      "count": 18,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2122,
+          "original": "313"
+        },
+        {
+          "id": 2123,
+          "original": "318"
+        },
+        {
+          "id": 2124,
+          "original": "432"
+        },
+        {
+          "id": 2125,
+          "original": "906"
+        },
+        {
+          "id": 2126,
+          "original": "301.8"
+        },
+        {
+          "id": 2127,
+          "original": "302 CR"
+        },
+        {
+          "id": 2128,
+          "original": "304C R"
+        },
+        {
+          "id": 2129,
+          "original": "305C R"
+        },
+        {
+          "id": 2130,
+          "original": "320E"
+        },
+        {
+          "id": 2131,
+          "original": "323F"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "313",
+          "318",
+          "432",
+          "906",
+          "301.8"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Chevrolet": {
+      "count": 36,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2140,
+          "original": "Aveo T250"
+        },
+        {
+          "id": 2141,
+          "original": "Aveo T255"
+        },
+        {
+          "id": 2142,
+          "original": "Aveo T300"
+        },
+        {
+          "id": 2143,
+          "original": "Astro"
+        },
+        {
+          "id": 2144,
+          "original": "Blazer S-10"
+        },
+        {
+          "id": 2145,
+          "original": "Camaro"
+        },
+        {
+          "id": 2146,
+          "original": "Camaro"
+        },
+        {
+          "id": 2147,
+          "original": "Captiva"
+        },
+        {
+          "id": 2148,
+          "original": "Corvette C3"
+        },
+        {
+          "id": 2149,
+          "original": "Corvette C4"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Aveo T250",
+          "Aveo T255",
+          "Aveo T300",
+          "Astro",
+          "Blazer S-10"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Chrysler": {
+      "count": 15,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2177,
+          "original": "200"
+        },
+        {
+          "id": 2178,
+          "original": "300C krótki"
+        },
+        {
+          "id": 2179,
+          "original": "300C"
+        },
+        {
+          "id": 2180,
+          "original": "300M"
+        },
+        {
+          "id": 2181,
+          "original": "Aspen"
+        },
+        {
+          "id": 2182,
+          "original": "Crossfire"
+        },
+        {
+          "id": 2183,
+          "original": "Pacifica"
+        },
+        {
+          "id": 2184,
+          "original": "Pacifica"
+        },
+        {
+          "id": 2185,
+          "original": "PT Cruiser"
+        },
+        {
+          "id": 2186,
+          "original": "Sebring/Stratus JX ()"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "200",
+          "300C krótki",
+          "300C",
+          "300M",
+          "Aspen"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Citroen": {
+      "count": 48,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2192,
+          "original": "Berlingo"
+        },
+        {
+          "id": 2193,
+          "original": "Berlingo"
+        },
+        {
+          "id": 2194,
+          "original": "Berlingo"
+        },
+        {
+          "id": 2195,
+          "original": "C1"
+        },
+        {
+          "id": 2196,
+          "original": "C1"
+        },
+        {
+          "id": 2197,
+          "original": "C2"
+        },
+        {
+          "id": 2198,
+          "original": "C3"
+        },
+        {
+          "id": 2199,
+          "original": "C3"
+        },
+        {
+          "id": 2200,
+          "original": "C3"
+        },
+        {
+          "id": 2201,
+          "original": "E-C3"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Berlingo",
+          "Berlingo",
+          "Berlingo",
+          "C1",
+          "C1"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Claas": {
+      "count": 10,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2242,
+          "original": "Arion 440"
+        },
+        {
+          "id": 2243,
+          "original": "Arion 450"
+        },
+        {
+          "id": 2244,
+          "original": "Arion 630"
+        },
+        {
+          "id": 2245,
+          "original": "Arion 650"
+        },
+        {
+          "id": 2246,
+          "original": "Axion 830"
+        },
+        {
+          "id": 2247,
+          "original": "Axion 920"
+        },
+        {
+          "id": 2248,
+          "original": "Axion 950"
+        },
+        {
+          "id": 2249,
+          "original": "Axion 960"
+        },
+        {
+          "id": 2250,
+          "original": "Lexion 760"
+        },
+        {
+          "id": 2251,
+          "original": "Medion 310"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Arion 440",
+          "Arion 450",
+          "Arion 630",
+          "Arion 650",
+          "Axion 830"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Cupra": {
+      "count": 7,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2252,
+          "original": "Born"
+        },
+        {
+          "id": 2253,
+          "original": "Formentor przedlift"
+        },
+        {
+          "id": 2254,
+          "original": "Formentor polift"
+        },
+        {
+          "id": 2255,
+          "original": "Leon"
+        },
+        {
+          "id": 2256,
+          "original": "Leon Sportwagon"
+        },
+        {
+          "id": 2257,
+          "original": "Tavascan"
+        },
+        {
+          "id": 2258,
+          "original": "Terramar"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Born",
+          "Formentor przedlift",
+          "Formentor polift",
+          "Leon",
+          "Leon Sportwagon"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Dacia": {
+      "count": 16,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2259,
+          "original": "Bigster"
+        },
+        {
+          "id": 2260,
+          "original": "Dokker"
+        },
+        {
+          "id": 2261,
+          "original": "Duster"
+        },
+        {
+          "id": 2262,
+          "original": "Duster 2"
+        },
+        {
+          "id": 2263,
+          "original": "Duster 3"
+        },
+        {
+          "id": 2264,
+          "original": "Duster 3 napęd przód"
+        },
+        {
+          "id": 2265,
+          "original": "Jogger"
+        },
+        {
+          "id": 2266,
+          "original": "LODGY"
+        },
+        {
+          "id": 2267,
+          "original": "Logan MCV"
+        },
+        {
+          "id": 2268,
+          "original": "Sandero"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Bigster",
+          "Dokker",
+          "Duster",
+          "Duster 2",
+          "Duster 3"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Daewoo": {
+      "count": 3,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2275,
+          "original": "FSO Polonez Caro Plus"
+        },
+        {
+          "id": 2276,
+          "original": "Lanos"
+        },
+        {
+          "id": 2277,
+          "original": "Tico"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "FSO Polonez Caro Plus",
+          "Lanos",
+          "Tico"
+        ],
+        "commonSuffixes": [
+          "Polonez",
+          "Caro",
+          "Plus"
+        ]
+      }
+    },
+    "Daf": {
+      "count": 6,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2278,
+          "original": "CF 85"
+        },
+        {
+          "id": 2279,
+          "original": "CF 370 FA"
+        },
+        {
+          "id": 2280,
+          "original": "XD"
+        },
+        {
+          "id": 2281,
+          "original": "XF 106"
+        },
+        {
+          "id": 2282,
+          "original": "XG"
+        },
+        {
+          "id": 2284,
+          "original": "LF"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "CF 85",
+          "CF 370 FA",
+          "XD",
+          "XF 106",
+          "XG"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Daihatsu": {
+      "count": 4,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2285,
+          "original": "Feroza"
+        },
+        {
+          "id": 2286,
+          "original": "Materia"
+        },
+        {
+          "id": 2287,
+          "original": "Terios"
+        },
+        {
+          "id": 2288,
+          "original": "Terios"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Feroza",
+          "Materia",
+          "Terios",
+          "Terios"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Deutz-fahr": {
+      "count": 6,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2290,
+          "original": "3050"
+        },
+        {
+          "id": 2291,
+          "original": "5095"
+        },
+        {
+          "id": 2292,
+          "original": "Agrotron 165.7"
+        },
+        {
+          "id": 2293,
+          "original": "5075 keyline"
+        },
+        {
+          "id": 2294,
+          "original": "6125C"
+        },
+        {
+          "id": 2295,
+          "original": "6135C"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "3050",
+          "5095",
+          "Agrotron 165.7",
+          "5075 keyline",
+          "6125C"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Develon": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2296,
+          "original": "DX 140W"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "DX 140W"
+        ],
+        "commonSuffixes": [
+          "140W"
+        ]
+      }
+    },
+    "Dodge": {
+      "count": 14,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2297,
+          "original": "Caliber"
+        },
+        {
+          "id": 2298,
+          "original": "Challenger"
+        },
+        {
+          "id": 2300,
+          "original": "Charger"
+        },
+        {
+          "id": 2301,
+          "original": "Charger Daytona"
+        },
+        {
+          "id": 2302,
+          "original": "Durango"
+        },
+        {
+          "id": 2303,
+          "original": "Durango 3"
+        },
+        {
+          "id": 2304,
+          "original": "Grand Caravan"
+        },
+        {
+          "id": 2305,
+          "original": "Journey"
+        },
+        {
+          "id": 2306,
+          "original": "Ram"
+        },
+        {
+          "id": 2307,
+          "original": "Ram Daytona"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Caliber",
+          "Challenger",
+          "Charger",
+          "Charger Daytona",
+          "Durango"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Ds": {
+      "count": 7,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2316,
+          "original": "4"
+        },
+        {
+          "id": 2317,
+          "original": "3"
+        },
+        {
+          "id": 2318,
+          "original": "3 elektro"
+        },
+        {
+          "id": 2319,
+          "original": "4"
+        },
+        {
+          "id": 2320,
+          "original": "54x4"
+        },
+        {
+          "id": 2321,
+          "original": "7 Crossback"
+        },
+        {
+          "id": 2322,
+          "original": "7 Crossback"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "4",
+          "3",
+          "3 elektro",
+          "4",
+          "54x4"
+        ],
+        "commonSuffixes": [
+          "Crossback"
+        ]
+      }
+    },
+    "Fendt": {
+      "count": 11,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2323,
+          "original": "275"
+        },
+        {
+          "id": 2324,
+          "original": "716"
+        },
+        {
+          "id": 2325,
+          "original": "818"
+        },
+        {
+          "id": 2326,
+          "original": "826"
+        },
+        {
+          "id": 2327,
+          "original": "930"
+        },
+        {
+          "id": 2328,
+          "original": "820 vario"
+        },
+        {
+          "id": 2329,
+          "original": "828 vario"
+        },
+        {
+          "id": 2330,
+          "original": "718 S4"
+        },
+        {
+          "id": 2331,
+          "original": "724 Profiplus"
+        },
+        {
+          "id": 2332,
+          "original": "936 Vario"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "275",
+          "716",
+          "818",
+          "826",
+          "930"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Ferrari": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2334,
+          "original": "360 Modena"
+        },
+        {
+          "id": 2335,
+          "original": "296 GTS"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "360 Modena",
+          "296 GTS"
+        ],
+        "commonSuffixes": [
+          "Modena",
+          "GTS"
+        ]
+      }
+    },
+    "Fiat": {
+      "count": 44,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2336,
+          "original": "126"
+        },
+        {
+          "id": 2337,
+          "original": "500"
+        },
+        {
+          "id": 2338,
+          "original": "600"
+        },
+        {
+          "id": 2339,
+          "original": "125p 9os"
+        },
+        {
+          "id": 2340,
+          "original": "500E"
+        },
+        {
+          "id": 2341,
+          "original": "500L"
+        },
+        {
+          "id": 2342,
+          "original": "500X"
+        },
+        {
+          "id": 2343,
+          "original": "600e"
+        },
+        {
+          "id": 2344,
+          "original": "Abarth 500/595"
+        },
+        {
+          "id": 2345,
+          "original": "Albea"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "126",
+          "500",
+          "600",
+          "125p 9os",
+          "500E"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Ford": {
+      "count": 109,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2380,
+          "original": "B-Max"
+        },
+        {
+          "id": 2381,
+          "original": "Bronco Outer Banks"
+        },
+        {
+          "id": 2382,
+          "original": "Bronco Sport"
+        },
+        {
+          "id": 2383,
+          "original": "Cougar"
+        },
+        {
+          "id": 2384,
+          "original": "Kuga"
+        },
+        {
+          "id": 2385,
+          "original": "Escape/ Kuga"
+        },
+        {
+          "id": 2386,
+          "original": "Escape(Kuga)"
+        },
+        {
+          "id": 2387,
+          "original": "Escort"
+        },
+        {
+          "id": 2388,
+          "original": "Expedition"
+        },
+        {
+          "id": 2389,
+          "original": "Expedition"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "B-Max",
+          "Bronco Outer Banks",
+          "Bronco Sport",
+          "Cougar",
+          "Kuga"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Forthing": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2492,
+          "original": "T-five Evo"
+        },
+        {
+          "id": 2493,
+          "original": "U-Tour"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "T-five Evo",
+          "U-Tour"
+        ],
+        "commonSuffixes": [
+          "Evo"
+        ]
+      }
+    },
+    "Gaz": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2494,
+          "original": "53"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "53"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Genesis": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2495,
+          "original": "G70"
+        },
+        {
+          "id": 2497,
+          "original": "GV 80"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "G70",
+          "GV 80"
+        ],
+        "commonSuffixes": [
+          "80"
+        ]
+      }
+    },
+    "Gmc": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2176,
+          "original": "Express"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Express"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Honda": {
+      "count": 55,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2499,
+          "original": "Accord 4"
+        },
+        {
+          "id": 2500,
+          "original": "Accord 5"
+        },
+        {
+          "id": 2501,
+          "original": "Accord 6"
+        },
+        {
+          "id": 2502,
+          "original": "Accord 6"
+        },
+        {
+          "id": 2503,
+          "original": "Accord 7"
+        },
+        {
+          "id": 2504,
+          "original": "Accord 8"
+        },
+        {
+          "id": 2505,
+          "original": "Accord 8"
+        },
+        {
+          "id": 2506,
+          "original": "Accord 8"
+        },
+        {
+          "id": 2507,
+          "original": "Accord 9"
+        },
+        {
+          "id": 2508,
+          "original": "Accord 10"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Accord 4",
+          "Accord 5",
+          "Accord 6",
+          "Accord 6",
+          "Accord 7"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Hummer": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2555,
+          "original": "H1"
+        },
+        {
+          "id": 2556,
+          "original": "H2"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "H1",
+          "H2"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Hyundai": {
+      "count": 50,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2557,
+          "original": "Bayon"
+        },
+        {
+          "id": 2558,
+          "original": "Elantra"
+        },
+        {
+          "id": 2560,
+          "original": "Elantra"
+        },
+        {
+          "id": 2561,
+          "original": "Galloper"
+        },
+        {
+          "id": 2562,
+          "original": "Genesis"
+        },
+        {
+          "id": 2563,
+          "original": "Getz"
+        },
+        {
+          "id": 2564,
+          "original": "H1"
+        },
+        {
+          "id": 2565,
+          "original": "H1"
+        },
+        {
+          "id": 2566,
+          "original": "H100"
+        },
+        {
+          "id": 2567,
+          "original": "Ioniq"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Bayon",
+          "Elantra",
+          "Elantra",
+          "Galloper",
+          "Genesis"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Ineos": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2624,
+          "original": "Grenadier"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Grenadier"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Infiniti": {
+      "count": 13,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2611,
+          "original": "EX30/QX50"
+        },
+        {
+          "id": 2612,
+          "original": "FX 30d"
+        },
+        {
+          "id": 2613,
+          "original": "M37"
+        },
+        {
+          "id": 2614,
+          "original": "Q30S"
+        },
+        {
+          "id": 2615,
+          "original": "Q50S/Q50"
+        },
+        {
+          "id": 2616,
+          "original": "Q60 / G V37"
+        },
+        {
+          "id": 2617,
+          "original": "Q70S"
+        },
+        {
+          "id": 2618,
+          "original": "QX30"
+        },
+        {
+          "id": 2619,
+          "original": "QX50"
+        },
+        {
+          "id": 2620,
+          "original": "QX56"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "EX30/QX50",
+          "FX 30d",
+          "M37",
+          "Q30S",
+          "Q50S/Q50"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Isuzu": {
+      "count": 4,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2625,
+          "original": "D-Max"
+        },
+        {
+          "id": 2626,
+          "original": "D-Max"
+        },
+        {
+          "id": 2627,
+          "original": "D-Max"
+        },
+        {
+          "id": 2628,
+          "original": "D-Max"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "D-Max",
+          "D-Max",
+          "D-Max",
+          "D-Max"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Iveco": {
+      "count": 3,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2630,
+          "original": "Daily"
+        },
+        {
+          "id": 2631,
+          "original": "Daily"
+        },
+        {
+          "id": 2632,
+          "original": "Eurocargo"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Daily",
+          "Daily",
+          "Eurocargo"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Jaecoo": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2633,
+          "original": "7/J7"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "7/J7"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Jaguar": {
+      "count": 15,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2635,
+          "original": "E-Pace"
+        },
+        {
+          "id": 2636,
+          "original": "F-Pace przedlift"
+        },
+        {
+          "id": 2637,
+          "original": "F-Pace polift"
+        },
+        {
+          "id": 2638,
+          "original": "I-Pace"
+        },
+        {
+          "id": 2639,
+          "original": "S-Type"
+        },
+        {
+          "id": 2640,
+          "original": "F-Type"
+        },
+        {
+          "id": 2641,
+          "original": "XE"
+        },
+        {
+          "id": 2642,
+          "original": "XF X250"
+        },
+        {
+          "id": 2643,
+          "original": "XF X260"
+        },
+        {
+          "id": 2644,
+          "original": "XJ"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "E-Pace",
+          "F-Pace przedlift",
+          "F-Pace polift",
+          "I-Pace",
+          "S-Type"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Jeep": {
+      "count": 33,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2660,
+          "original": "Avenger"
+        },
+        {
+          "id": 2661,
+          "original": "Avenger napęd przód"
+        },
+        {
+          "id": 2662,
+          "original": "Avenger"
+        },
+        {
+          "id": 2663,
+          "original": "CommanderEurope"
+        },
+        {
+          "id": 2664,
+          "original": "Commander Europe"
+        },
+        {
+          "id": 2665,
+          "original": "Cherokee XJ przed lifting"
+        },
+        {
+          "id": 2666,
+          "original": "Cherokee XJ"
+        },
+        {
+          "id": 2667,
+          "original": "Cherokee KJ"
+        },
+        {
+          "id": 2668,
+          "original": "Cherokee"
+        },
+        {
+          "id": 2669,
+          "original": "Cherokee"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Avenger",
+          "Avenger napęd przód",
+          "Avenger",
+          "CommanderEurope",
+          "Commander Europe"
+        ],
+        "commonSuffixes": [
+          "Cherokee"
+        ]
+      }
+    },
+    "John deere": {
+      "count": 19,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2693,
+          "original": "6910"
+        },
+        {
+          "id": 2694,
+          "original": "8130"
+        },
+        {
+          "id": 2695,
+          "original": "8230"
+        },
+        {
+          "id": 2696,
+          "original": "8320"
+        },
+        {
+          "id": 2697,
+          "original": "9630"
+        },
+        {
+          "id": 2698,
+          "original": "R4140i"
+        },
+        {
+          "id": 2699,
+          "original": "6120M"
+        },
+        {
+          "id": 2700,
+          "original": "6130M"
+        },
+        {
+          "id": 2701,
+          "original": "6155M"
+        },
+        {
+          "id": 2702,
+          "original": "6195M"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "6910",
+          "8130",
+          "8230",
+          "8320",
+          "9630"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Kia": {
+      "count": 53,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2712,
+          "original": "Cadenza"
+        },
+        {
+          "id": 2713,
+          "original": "Carens"
+        },
+        {
+          "id": 2714,
+          "original": "Carens"
+        },
+        {
+          "id": 2715,
+          "original": "Carens"
+        },
+        {
+          "id": 2716,
+          "original": "Carnival"
+        },
+        {
+          "id": 2717,
+          "original": "Carnival"
+        },
+        {
+          "id": 2718,
+          "original": "Carnival"
+        },
+        {
+          "id": 2719,
+          "original": "Ceed"
+        },
+        {
+          "id": 2720,
+          "original": "Ceed"
+        },
+        {
+          "id": 2721,
+          "original": "Ceed"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Cadenza",
+          "Carens",
+          "Carens",
+          "Carens",
+          "Carnival"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Komatsu": {
+      "count": 4,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2767,
+          "original": "PC210LC"
+        },
+        {
+          "id": 2768,
+          "original": "PC240LC"
+        },
+        {
+          "id": 2769,
+          "original": "PC290LC"
+        },
+        {
+          "id": 2770,
+          "original": "PC360LC-11"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "PC210LC",
+          "PC240LC",
+          "PC290LC",
+          "PC360LC-11"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Kubota": {
+      "count": 5,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2771,
+          "original": "KX016-4"
+        },
+        {
+          "id": 2772,
+          "original": "KX018-4"
+        },
+        {
+          "id": 2773,
+          "original": "KX019-4"
+        },
+        {
+          "id": 2774,
+          "original": "U27-4"
+        },
+        {
+          "id": 2775,
+          "original": "U36-4"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "KX016-4",
+          "KX018-4",
+          "KX019-4",
+          "U27-4",
+          "U36-4"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Lamborghini": {
+      "count": 3,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2776,
+          "original": "Aventador"
+        },
+        {
+          "id": 2777,
+          "original": "Huracan"
+        },
+        {
+          "id": 2778,
+          "original": "Urus"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Aventador",
+          "Huracan",
+          "Urus"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Lancia": {
+      "count": 6,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2779,
+          "original": "Delta 3"
+        },
+        {
+          "id": 2780,
+          "original": "Lybra"
+        },
+        {
+          "id": 2781,
+          "original": "Musa"
+        },
+        {
+          "id": 2782,
+          "original": "Thema"
+        },
+        {
+          "id": 2783,
+          "original": "Phedra"
+        },
+        {
+          "id": 2784,
+          "original": "Ypsilon"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Delta 3",
+          "Lybra",
+          "Musa",
+          "Thema",
+          "Phedra"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Land rover": {
+      "count": 25,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2785,
+          "original": "Defender 110"
+        },
+        {
+          "id": 2786,
+          "original": "Defender 110"
+        },
+        {
+          "id": 2787,
+          "original": "Defender 90"
+        },
+        {
+          "id": 2788,
+          "original": "Defender 130"
+        },
+        {
+          "id": 2789,
+          "original": "Discovery 2"
+        },
+        {
+          "id": 2790,
+          "original": "Discovery 3"
+        },
+        {
+          "id": 2791,
+          "original": "Discovery 4"
+        },
+        {
+          "id": 2792,
+          "original": "Discovery 4"
+        },
+        {
+          "id": 2793,
+          "original": "Discovery 5"
+        },
+        {
+          "id": 2794,
+          "original": "Discovery Sport"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Defender 110",
+          "Defender 110",
+          "Defender 90",
+          "Defender 130",
+          "Discovery 2"
+        ],
+        "commonSuffixes": [
+          "Rover"
+        ]
+      }
+    },
+    "Lexus": {
+      "count": 34,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2810,
+          "original": "CT 200H"
+        },
+        {
+          "id": 2811,
+          "original": "ES"
+        },
+        {
+          "id": 2812,
+          "original": "ES"
+        },
+        {
+          "id": 2813,
+          "original": "ES"
+        },
+        {
+          "id": 2814,
+          "original": "ES"
+        },
+        {
+          "id": 2815,
+          "original": "ES"
+        },
+        {
+          "id": 2816,
+          "original": "GS"
+        },
+        {
+          "id": 2817,
+          "original": "GS"
+        },
+        {
+          "id": 2818,
+          "original": "GS 300H"
+        },
+        {
+          "id": 2819,
+          "original": "GX-460"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "CT 200H",
+          "ES",
+          "ES",
+          "ES",
+          "ES"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Lincoln": {
+      "count": 6,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2848,
+          "original": "Aviator 7os"
+        },
+        {
+          "id": 2849,
+          "original": "Continental"
+        },
+        {
+          "id": 2850,
+          "original": "Corsair"
+        },
+        {
+          "id": 2851,
+          "original": "Navigator"
+        },
+        {
+          "id": 2852,
+          "original": "MKT"
+        },
+        {
+          "id": 2853,
+          "original": "MKZ"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Aviator 7os",
+          "Continental",
+          "Corsair",
+          "Navigator",
+          "MKT"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "MG": {
+      "count": 7,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3055,
+          "original": "3"
+        },
+        {
+          "id": 3056,
+          "original": "4"
+        },
+        {
+          "id": 3057,
+          "original": "F"
+        },
+        {
+          "id": 3058,
+          "original": "HS"
+        },
+        {
+          "id": 3059,
+          "original": "HS"
+        },
+        {
+          "id": 3062,
+          "original": "ZS"
+        },
+        {
+          "id": 3063,
+          "original": "ZS"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "3",
+          "4",
+          "F",
+          "HS",
+          "HS"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "MITSUBISHI": {
+      "count": 3,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3115,
+          "original": "L200 polift"
+        },
+        {
+          "id": 3116,
+          "original": "L200 Triton"
+        },
+        {
+          "id": 3117,
+          "original": "LANCER 9"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "L200 polift",
+          "L200 Triton",
+          "LANCER 9"
+        ],
+        "commonSuffixes": [
+          "9",
+          "polift",
+          "Triton"
+        ]
+      }
+    },
+    "Man": {
+      "count": 5,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2854,
+          "original": "TGE"
+        },
+        {
+          "id": 2855,
+          "original": "TGS"
+        },
+        {
+          "id": 2856,
+          "original": "TGS polift"
+        },
+        {
+          "id": 2857,
+          "original": "TGX"
+        },
+        {
+          "id": 2858,
+          "original": "TGX"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "TGE",
+          "TGS",
+          "TGS polift",
+          "TGX",
+          "TGX"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Maserati": {
+      "count": 8,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2859,
+          "original": "Coupe"
+        },
+        {
+          "id": 2860,
+          "original": "Ghibli"
+        },
+        {
+          "id": 2861,
+          "original": "Ghibli"
+        },
+        {
+          "id": 2862,
+          "original": "GranTurismo"
+        },
+        {
+          "id": 2863,
+          "original": "Grecale"
+        },
+        {
+          "id": 2864,
+          "original": "Levante"
+        },
+        {
+          "id": 2866,
+          "original": "Quattroporte"
+        },
+        {
+          "id": 2867,
+          "original": "Quattroporte S Q4"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Coupe",
+          "Ghibli",
+          "Ghibli",
+          "GranTurismo",
+          "Grecale"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Massey ferguson": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2868,
+          "original": "5445"
+        },
+        {
+          "id": 2869,
+          "original": "374V"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "5445",
+          "374V"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Maxus": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2904,
+          "original": "Euniq 6"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Euniq 6"
+        ],
+        "commonSuffixes": [
+          "6"
+        ]
+      }
+    },
+    "Mazda": {
+      "count": 34,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2870,
+          "original": "2"
+        },
+        {
+          "id": 2871,
+          "original": "2"
+        },
+        {
+          "id": 2872,
+          "original": "3"
+        },
+        {
+          "id": 2873,
+          "original": "3"
+        },
+        {
+          "id": 2874,
+          "original": "3"
+        },
+        {
+          "id": 2875,
+          "original": "3"
+        },
+        {
+          "id": 2876,
+          "original": "5"
+        },
+        {
+          "id": 2877,
+          "original": "5"
+        },
+        {
+          "id": 2878,
+          "original": "5"
+        },
+        {
+          "id": 2879,
+          "original": "2"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "2",
+          "2",
+          "3",
+          "3",
+          "3"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "McLaren": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2905,
+          "original": "720S"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "720S"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Mercedes-Benz": {
+      "count": 137,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2909,
+          "original": "A-class W168 zwykła"
+        },
+        {
+          "id": 2910,
+          "original": "A-class W169"
+        },
+        {
+          "id": 2911,
+          "original": "A-class W176"
+        },
+        {
+          "id": 2912,
+          "original": "AMG A35 V177"
+        },
+        {
+          "id": 2913,
+          "original": "AMG A45 W177"
+        },
+        {
+          "id": 2914,
+          "original": "AMG GT C190"
+        },
+        {
+          "id": 2915,
+          "original": "AMG GT 63 C192"
+        },
+        {
+          "id": 2916,
+          "original": "AMG GT 4-Door X290"
+        },
+        {
+          "id": 2917,
+          "original": "Actros"
+        },
+        {
+          "id": 2918,
+          "original": "Actros"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [
+          "GLA (AMG) H247"
+        ],
+        "withoutGenerationCodes": [
+          "A-class W168 zwykła",
+          "A-class W169",
+          "A-class W176",
+          "AMG A35 V177",
+          "AMG A45 W177"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Mercedes-Maybach": {
+      "count": 3,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 2906,
+          "original": "GLS"
+        },
+        {
+          "id": 2907,
+          "original": "S-class X222"
+        },
+        {
+          "id": 2908,
+          "original": "S-class X223"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "GLS",
+          "S-class X222",
+          "S-class X223"
+        ],
+        "commonSuffixes": [
+          "X222",
+          "X223"
+        ]
+      }
+    },
+    "Microcar": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3064,
+          "original": "Belier S8"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Belier S8"
+        ],
+        "commonSuffixes": [
+          "S8"
+        ]
+      }
+    },
+    "Mini": {
+      "count": 12,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3793,
+          "original": "JCW"
+        },
+        {
+          "id": 3794,
+          "original": "Cooper 3 drz"
+        },
+        {
+          "id": 3795,
+          "original": "Cooper S 3drzwi"
+        },
+        {
+          "id": 3796,
+          "original": "Cooper 5 drz"
+        },
+        {
+          "id": 3797,
+          "original": "Cooper SE"
+        },
+        {
+          "id": 3798,
+          "original": "Clubman"
+        },
+        {
+          "id": 3799,
+          "original": "Cooper S Clubman"
+        },
+        {
+          "id": 3800,
+          "original": "Cabrio"
+        },
+        {
+          "id": 3801,
+          "original": "Countryman Cooper S"
+        },
+        {
+          "id": 3802,
+          "original": "Countryman"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "JCW",
+          "Cooper 3 drz",
+          "Cooper S 3drzwi",
+          "Cooper 5 drz",
+          "Cooper SE"
+        ],
+        "commonSuffixes": [
+          "S"
+        ]
+      }
+    },
+    "Mitsubishi": {
+      "count": 36,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3079,
+          "original": "ASX"
+        },
+        {
+          "id": 3080,
+          "original": "ASX"
+        },
+        {
+          "id": 3081,
+          "original": "Carisma"
+        },
+        {
+          "id": 3082,
+          "original": "Colt 3 drzwiowy"
+        },
+        {
+          "id": 3083,
+          "original": "Colt 5drzwi"
+        },
+        {
+          "id": 3084,
+          "original": "Colt 7"
+        },
+        {
+          "id": 3085,
+          "original": "Eclipse"
+        },
+        {
+          "id": 3086,
+          "original": "Eclipse"
+        },
+        {
+          "id": 3087,
+          "original": "Eclipse"
+        },
+        {
+          "id": 3088,
+          "original": "Eclipse Spyder"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "ASX",
+          "ASX",
+          "Carisma",
+          "Colt 3 drzwiowy",
+          "Colt 5drzwi"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Morris Minor": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3118,
+          "original": "seria 2"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "seria 2"
+        ],
+        "commonSuffixes": [
+          "2"
+        ]
+      }
+    },
+    "NISSAN": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3175,
+          "original": "QASHQAI 1"
+        },
+        {
+          "id": 3177,
+          "original": "QASHQAI 12 ()"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "QASHQAI 1",
+          "QASHQAI 12 ()"
+        ],
+        "commonSuffixes": [
+          "1",
+          "12",
+          "()"
+        ]
+      }
+    },
+    "New Holland": {
+      "count": 8,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3119,
+          "original": "8560"
+        },
+        {
+          "id": 3120,
+          "original": "B115 D"
+        },
+        {
+          "id": 3121,
+          "original": "Boomer 50"
+        },
+        {
+          "id": 3122,
+          "original": "T3 F"
+        },
+        {
+          "id": 3123,
+          "original": "T4"
+        },
+        {
+          "id": 3124,
+          "original": "T5 90s"
+        },
+        {
+          "id": 3125,
+          "original": "T5 140"
+        },
+        {
+          "id": 3126,
+          "original": "T6 160"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "8560",
+          "B115 D",
+          "Boomer 50",
+          "T3 F",
+          "T4"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "NiSSAN": {
+      "count": 4,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3171,
+          "original": "Micra K13"
+        },
+        {
+          "id": 3172,
+          "original": "Micra 5 K14"
+        },
+        {
+          "id": 3173,
+          "original": "Primastar"
+        },
+        {
+          "id": 3174,
+          "original": "QASHQAI 3"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Micra K13",
+          "Micra 5 K14",
+          "Primastar",
+          "QASHQAI 3"
+        ],
+        "commonSuffixes": [
+          "3",
+          "5",
+          "K13",
+          "K14"
+        ]
+      }
+    },
+    "Nissan": {
+      "count": 43,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3127,
+          "original": "350Z"
+        },
+        {
+          "id": 3128,
+          "original": "370Z"
+        },
+        {
+          "id": 3129,
+          "original": "Almera N16"
+        },
+        {
+          "id": 3130,
+          "original": "Almera Tino"
+        },
+        {
+          "id": 3131,
+          "original": "Altima"
+        },
+        {
+          "id": 3132,
+          "original": "Ariya"
+        },
+        {
+          "id": 3133,
+          "original": "D21 king cab"
+        },
+        {
+          "id": 3134,
+          "original": "Datsun 280Z"
+        },
+        {
+          "id": 3135,
+          "original": "Leaf"
+        },
+        {
+          "id": 3136,
+          "original": "Maxima"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "350Z",
+          "370Z",
+          "Almera N16",
+          "Almera Tino",
+          "Altima"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "OPEL": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3243,
+          "original": "Antara"
+        },
+        {
+          "id": 3244,
+          "original": "MOKKA A"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Antara",
+          "MOKKA A"
+        ],
+        "commonSuffixes": [
+          "A"
+        ]
+      }
+    },
+    "Omoda": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3179,
+          "original": "5"
+        },
+        {
+          "id": 3180,
+          "original": "9"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "5",
+          "9"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Opel": {
+      "count": 61,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3181,
+          "original": "Agila B"
+        },
+        {
+          "id": 3182,
+          "original": "Adam"
+        },
+        {
+          "id": 3183,
+          "original": "Astra F"
+        },
+        {
+          "id": 3184,
+          "original": "Astra F"
+        },
+        {
+          "id": 3185,
+          "original": "Astra G"
+        },
+        {
+          "id": 3186,
+          "original": "Astra G 3drz Kabriolet"
+        },
+        {
+          "id": 3187,
+          "original": "Astra H TwinTop"
+        },
+        {
+          "id": 3188,
+          "original": "Astra H"
+        },
+        {
+          "id": 3189,
+          "original": "Astra H GTC"
+        },
+        {
+          "id": 3190,
+          "original": "Astra J"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [
+          "ZAFIRA LIFE (BUS)"
+        ],
+        "withoutGenerationCodes": [
+          "Agila B",
+          "Adam",
+          "Astra F",
+          "Astra F",
+          "Astra G"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "PEUGEOT": {
+      "count": 12,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3283,
+          "original": "407"
+        },
+        {
+          "id": 3284,
+          "original": "408"
+        },
+        {
+          "id": 3285,
+          "original": "508"
+        },
+        {
+          "id": 3286,
+          "original": "5008"
+        },
+        {
+          "id": 3287,
+          "original": "508 SW"
+        },
+        {
+          "id": 3288,
+          "original": "Boxter"
+        },
+        {
+          "id": 3289,
+          "original": "Boxter"
+        },
+        {
+          "id": 3290,
+          "original": "Bipper"
+        },
+        {
+          "id": 3291,
+          "original": "Partner"
+        },
+        {
+          "id": 3292,
+          "original": "PartnerTepee"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "407",
+          "408",
+          "508",
+          "5008",
+          "508 SW"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "PLYMOTH": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3295,
+          "original": "FURY 3"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "FURY 3"
+        ],
+        "commonSuffixes": [
+          "3"
+        ]
+      }
+    },
+    "Peugeot": {
+      "count": 38,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3245,
+          "original": "206"
+        },
+        {
+          "id": 3246,
+          "original": "207"
+        },
+        {
+          "id": 3247,
+          "original": "208"
+        },
+        {
+          "id": 3248,
+          "original": "301"
+        },
+        {
+          "id": 3249,
+          "original": "406"
+        },
+        {
+          "id": 3250,
+          "original": "407"
+        },
+        {
+          "id": 3251,
+          "original": "605"
+        },
+        {
+          "id": 3252,
+          "original": "607"
+        },
+        {
+          "id": 3253,
+          "original": "807"
+        },
+        {
+          "id": 3254,
+          "original": "1007"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "206",
+          "207",
+          "208",
+          "301",
+          "406"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Pontiac": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3316,
+          "original": "Firebird"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Firebird"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Porsche": {
+      "count": 20,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3296,
+          "original": "911"
+        },
+        {
+          "id": 3297,
+          "original": "911"
+        },
+        {
+          "id": 3298,
+          "original": "924"
+        },
+        {
+          "id": 3299,
+          "original": "911 Carrera 4S 991"
+        },
+        {
+          "id": 3300,
+          "original": "911 Carrera 992"
+        },
+        {
+          "id": 3301,
+          "original": "Boxster S986"
+        },
+        {
+          "id": 3302,
+          "original": "718 Boxster 982"
+        },
+        {
+          "id": 3303,
+          "original": "CAYENNE"
+        },
+        {
+          "id": 3304,
+          "original": "Cayenne"
+        },
+        {
+          "id": 3305,
+          "original": "Cayenne"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "911",
+          "911",
+          "924",
+          "911 Carrera 4S 991",
+          "911 Carrera 992"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "RENAULT": {
+      "count": 7,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3380,
+          "original": "Espace 5"
+        },
+        {
+          "id": 3381,
+          "original": "Kadjar"
+        },
+        {
+          "id": 3382,
+          "original": "MASTER 2"
+        },
+        {
+          "id": 3383,
+          "original": "MASTER 3"
+        },
+        {
+          "id": 3384,
+          "original": "MASTER 3 lift"
+        },
+        {
+          "id": 3385,
+          "original": "Trafic"
+        },
+        {
+          "id": 3386,
+          "original": "Trafic"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Espace 5",
+          "Kadjar",
+          "MASTER 2",
+          "MASTER 3",
+          "MASTER 3 lift"
+        ],
+        "commonSuffixes": [
+          "3"
+        ]
+      }
+    },
+    "Renault": {
+      "count": 61,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3317,
+          "original": "5 E-Tech Electrik"
+        },
+        {
+          "id": 3318,
+          "original": "Arkana"
+        },
+        {
+          "id": 3319,
+          "original": "Austral"
+        },
+        {
+          "id": 3320,
+          "original": "Avantime"
+        },
+        {
+          "id": 3321,
+          "original": "Captur"
+        },
+        {
+          "id": 3322,
+          "original": "Captur"
+        },
+        {
+          "id": 3323,
+          "original": "Captur E-Tech"
+        },
+        {
+          "id": 3324,
+          "original": "Clio Staria"
+        },
+        {
+          "id": 3325,
+          "original": "Clio"
+        },
+        {
+          "id": 3326,
+          "original": "Clio Campus"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "5 E-Tech Electrik",
+          "Arkana",
+          "Austral",
+          "Avantime",
+          "Captur"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Rolls-Royce": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3388,
+          "original": "Cullinan"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Cullinan"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "SAAB": {
+      "count": 4,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3394,
+          "original": "9-5"
+        },
+        {
+          "id": 3395,
+          "original": "9-3"
+        },
+        {
+          "id": 3396,
+          "original": "9-3"
+        },
+        {
+          "id": 3397,
+          "original": "9-3"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "9-5",
+          "9-3",
+          "9-3",
+          "9-3"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "SEAT": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3425,
+          "original": "LEON"
+        },
+        {
+          "id": 3426,
+          "original": "LEON"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "LEON",
+          "LEON"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "SKODA": {
+      "count": 10,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3445,
+          "original": "Fabia 4"
+        },
+        {
+          "id": 3446,
+          "original": "Kamiq"
+        },
+        {
+          "id": 3447,
+          "original": "Kodiaq"
+        },
+        {
+          "id": 3448,
+          "original": "OCTAViA -III, A-7 (pasuje do Octavia A8 IV)"
+        },
+        {
+          "id": 3449,
+          "original": "OCTAViA - 4, A-8 to samo co Octavia A7"
+        },
+        {
+          "id": 3450,
+          "original": "RAPID"
+        },
+        {
+          "id": 3451,
+          "original": "ROOMSTER"
+        },
+        {
+          "id": 3452,
+          "original": "SUPERB 1"
+        },
+        {
+          "id": 3453,
+          "original": "SUPERB 2"
+        },
+        {
+          "id": 3454,
+          "original": "SUPERB 3"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Fabia 4",
+          "Kamiq",
+          "Kodiaq",
+          "OCTAViA -III, A-7 (pasuje do Octavia A8 IV)",
+          "OCTAViA - 4, A-8 to samo co Octavia A7"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "SSANG YONG": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3462,
+          "original": "Rexton"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Rexton"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "SUBARU": {
+      "count": 12,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3476,
+          "original": "BRZ"
+        },
+        {
+          "id": 3477,
+          "original": "Forester"
+        },
+        {
+          "id": 3479,
+          "original": "FORESTERa"
+        },
+        {
+          "id": 3480,
+          "original": "Forestera"
+        },
+        {
+          "id": 3481,
+          "original": "Impreza"
+        },
+        {
+          "id": 3482,
+          "original": "IMPREZA"
+        },
+        {
+          "id": 3483,
+          "original": "IMPREZA"
+        },
+        {
+          "id": 3484,
+          "original": "Outback"
+        },
+        {
+          "id": 3485,
+          "original": "Outback"
+        },
+        {
+          "id": 3486,
+          "original": "XV"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "BRZ",
+          "Forester",
+          "FORESTERa",
+          "Forestera",
+          "Impreza"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "SUZUKI": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3529,
+          "original": "Swift"
+        },
+        {
+          "id": 3530,
+          "original": "SX4"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Swift",
+          "SX4"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "SUzUKi": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3531,
+          "original": "SX4"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "SX4"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Saab": {
+      "count": 3,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3391,
+          "original": "900"
+        },
+        {
+          "id": 3392,
+          "original": "9-5"
+        },
+        {
+          "id": 3393,
+          "original": "9-3"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "900",
+          "9-5",
+          "9-3"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Scania": {
+      "count": 7,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3398,
+          "original": "G420"
+        },
+        {
+          "id": 3399,
+          "original": "G450 XT"
+        },
+        {
+          "id": 3400,
+          "original": "P230"
+        },
+        {
+          "id": 3401,
+          "original": "P420"
+        },
+        {
+          "id": 3402,
+          "original": "P450"
+        },
+        {
+          "id": 3403,
+          "original": "R450 przedlift"
+        },
+        {
+          "id": 3404,
+          "original": "R450 polift"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "G420",
+          "G450 XT",
+          "P230",
+          "P420",
+          "P450"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Seat": {
+      "count": 20,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3405,
+          "original": "Arona"
+        },
+        {
+          "id": 3406,
+          "original": "Ateca"
+        },
+        {
+          "id": 3407,
+          "original": "Cordoba"
+        },
+        {
+          "id": 3408,
+          "original": "Ibiza"
+        },
+        {
+          "id": 3409,
+          "original": "Ibiza"
+        },
+        {
+          "id": 3410,
+          "original": "Ibiza"
+        },
+        {
+          "id": 3411,
+          "original": "Ibiza"
+        },
+        {
+          "id": 3412,
+          "original": "Leon 3"
+        },
+        {
+          "id": 3413,
+          "original": "Leon 4"
+        },
+        {
+          "id": 3414,
+          "original": "Mii"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Arona",
+          "Ateca",
+          "Cordoba",
+          "Ibiza",
+          "Ibiza"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Seres": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3427,
+          "original": "3"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "3"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Skoda": {
+      "count": 17,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3428,
+          "original": "Citigo"
+        },
+        {
+          "id": 3429,
+          "original": "Enyaq Sportline 80x maxx"
+        },
+        {
+          "id": 3430,
+          "original": "Enyaq RS"
+        },
+        {
+          "id": 3431,
+          "original": "Elroq"
+        },
+        {
+          "id": 3432,
+          "original": "Fabia"
+        },
+        {
+          "id": 3433,
+          "original": "Fabia 2"
+        },
+        {
+          "id": 3434,
+          "original": "Fabia 3"
+        },
+        {
+          "id": 3435,
+          "original": "Karoq"
+        },
+        {
+          "id": 3436,
+          "original": "Kodiaq"
+        },
+        {
+          "id": 3437,
+          "original": "Octavia 4 e-Tec"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Citigo",
+          "Enyaq Sportline 80x maxx",
+          "Enyaq RS",
+          "Elroq",
+          "Fabia"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Skywell": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3455,
+          "original": "ET5"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "ET5"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Smart": {
+      "count": 6,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3456,
+          "original": "Fortwo 450"
+        },
+        {
+          "id": 3457,
+          "original": "Fortwo 450"
+        },
+        {
+          "id": 3458,
+          "original": "Forfour"
+        },
+        {
+          "id": 3459,
+          "original": "Forfour"
+        },
+        {
+          "id": 3460,
+          "original": "Fortwo"
+        },
+        {
+          "id": 3461,
+          "original": "Forfour"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Fortwo 450",
+          "Fortwo 450",
+          "Forfour",
+          "Forfour",
+          "Fortwo"
+        ],
+        "commonSuffixes": [
+          "450"
+        ]
+      }
+    },
+    "Subaru": {
+      "count": 18,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3489,
+          "original": "Forester"
+        },
+        {
+          "id": 3490,
+          "original": "Forester przed lifting"
+        },
+        {
+          "id": 3491,
+          "original": "Forester"
+        },
+        {
+          "id": 3492,
+          "original": "Forester Europe"
+        },
+        {
+          "id": 3493,
+          "original": "Forester 6"
+        },
+        {
+          "id": 3494,
+          "original": "Impreza"
+        },
+        {
+          "id": 3495,
+          "original": "Impreza"
+        },
+        {
+          "id": 3496,
+          "original": "Outback"
+        },
+        {
+          "id": 3497,
+          "original": "Outback"
+        },
+        {
+          "id": 3498,
+          "original": "Legacy"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Forester",
+          "Forester przed lifting",
+          "Forester",
+          "Forester Europe",
+          "Forester 6"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Suzuki": {
+      "count": 22,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3507,
+          "original": "Alto"
+        },
+        {
+          "id": 3508,
+          "original": "Baleno 2"
+        },
+        {
+          "id": 3509,
+          "original": "Celerio"
+        },
+        {
+          "id": 3510,
+          "original": "Ignis"
+        },
+        {
+          "id": 3511,
+          "original": "Ignis"
+        },
+        {
+          "id": 3512,
+          "original": "Jimny"
+        },
+        {
+          "id": 3513,
+          "original": "Jimny"
+        },
+        {
+          "id": 3514,
+          "original": "Jimny"
+        },
+        {
+          "id": 3515,
+          "original": "JIMNY 2os wersja ciężarowa"
+        },
+        {
+          "id": 3516,
+          "original": "Liana / Aerio"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Alto",
+          "Baleno 2",
+          "Celerio",
+          "Ignis",
+          "Ignis"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "TOYOTA": {
+      "count": 9,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3637,
+          "original": "Avensis T-250"
+        },
+        {
+          "id": 3638,
+          "original": "BZ4X EA10"
+        },
+        {
+          "id": 3639,
+          "original": "CAMRY XV70"
+        },
+        {
+          "id": 3640,
+          "original": "Corolla Cross"
+        },
+        {
+          "id": 3641,
+          "original": "RAV4"
+        },
+        {
+          "id": 3642,
+          "original": "RAV4"
+        },
+        {
+          "id": 3643,
+          "original": "RAV4 Hybrid"
+        },
+        {
+          "id": 3644,
+          "original": "YARIS CROSS"
+        },
+        {
+          "id": 3646,
+          "original": "YARIS"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Avensis T-250",
+          "BZ4X EA10",
+          "CAMRY XV70",
+          "Corolla Cross",
+          "RAV4"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Terex-Fuchs": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3541,
+          "original": "MHL 350"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "MHL 350"
+        ],
+        "commonSuffixes": [
+          "350"
+        ]
+      }
+    },
+    "Tesla": {
+      "count": 9,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3532,
+          "original": "Model S"
+        },
+        {
+          "id": 3533,
+          "original": "Model S"
+        },
+        {
+          "id": 3534,
+          "original": "Model 3"
+        },
+        {
+          "id": 3535,
+          "original": "Model 3Dual Motor"
+        },
+        {
+          "id": 3536,
+          "original": "Model X"
+        },
+        {
+          "id": 3537,
+          "original": "Model X"
+        },
+        {
+          "id": 3538,
+          "original": "Model YDual Motor"
+        },
+        {
+          "id": 3539,
+          "original": "Model Y Juniper"
+        },
+        {
+          "id": 3540,
+          "original": "Model Y Performance"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Model S",
+          "Model S",
+          "Model 3",
+          "Model 3Dual Motor",
+          "Model X"
+        ],
+        "commonSuffixes": [
+          "S",
+          "Motor",
+          "X",
+          "Y"
+        ]
+      }
+    },
+    "Toyota": {
+      "count": 93,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3542,
+          "original": "4Runner"
+        },
+        {
+          "id": 3543,
+          "original": "4Runner"
+        },
+        {
+          "id": 3544,
+          "original": "AURIS"
+        },
+        {
+          "id": 3545,
+          "original": "AURIS"
+        },
+        {
+          "id": 3546,
+          "original": "Avalon"
+        },
+        {
+          "id": 3547,
+          "original": "Avalon"
+        },
+        {
+          "id": 3548,
+          "original": "Avalon"
+        },
+        {
+          "id": 3549,
+          "original": "Avensis T22"
+        },
+        {
+          "id": 3550,
+          "original": "Avensis Т270"
+        },
+        {
+          "id": 3551,
+          "original": "Avensis Т270 drugi polift"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [
+          "Corolla (E-100)"
+        ],
+        "withoutGenerationCodes": [
+          "4Runner",
+          "4Runner",
+          "AURIS",
+          "AURIS",
+          "Avalon"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "VOLVO": {
+      "count": 6,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3747,
+          "original": "740"
+        },
+        {
+          "id": 3748,
+          "original": "C-30"
+        },
+        {
+          "id": 3749,
+          "original": "C-70"
+        },
+        {
+          "id": 3750,
+          "original": "S80 TS"
+        },
+        {
+          "id": 3751,
+          "original": "XC-60a."
+        },
+        {
+          "id": 3752,
+          "original": "XC-60ahybryd"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "740",
+          "C-30",
+          "C-70",
+          "S80 TS",
+          "XC-60a."
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Valtra": {
+      "count": 2,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3648,
+          "original": "T225"
+        },
+        {
+          "id": 3649,
+          "original": "T144"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "T225",
+          "T144"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Volkswagen": {
+      "count": 97,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3650,
+          "original": "Amarok"
+        },
+        {
+          "id": 3651,
+          "original": "Amarok"
+        },
+        {
+          "id": 3652,
+          "original": "Arteon"
+        },
+        {
+          "id": 3653,
+          "original": "Atlas"
+        },
+        {
+          "id": 3654,
+          "original": "Bora"
+        },
+        {
+          "id": 3655,
+          "original": "CADDYa."
+        },
+        {
+          "id": 3656,
+          "original": "CADDY \"Maxi\"a."
+        },
+        {
+          "id": 3657,
+          "original": "Crafter"
+        },
+        {
+          "id": 3658,
+          "original": "Crafter MAN TGE"
+        },
+        {
+          "id": 3659,
+          "original": "Caravelle T6California"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Amarok",
+          "Amarok",
+          "Arteon",
+          "Atlas",
+          "Bora"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Volvo": {
+      "count": 34,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3753,
+          "original": "850"
+        },
+        {
+          "id": 3754,
+          "original": "C40 Recharge"
+        },
+        {
+          "id": 3755,
+          "original": "C-70"
+        },
+        {
+          "id": 3756,
+          "original": "EC 18E electric"
+        },
+        {
+          "id": 3757,
+          "original": "ECR 25D"
+        },
+        {
+          "id": 3758,
+          "original": "EC 220EL"
+        },
+        {
+          "id": 3759,
+          "original": "EW140"
+        },
+        {
+          "id": 3760,
+          "original": "EW 160E"
+        },
+        {
+          "id": 3761,
+          "original": "EWR150E"
+        },
+        {
+          "id": 3762,
+          "original": "EX30"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "850",
+          "C40 Recharge",
+          "C-70",
+          "EC 18E electric",
+          "ECR 25D"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "XEV": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3788,
+          "original": "Yoyo"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "Yoyo"
+        ],
+        "commonSuffixes": []
+      }
+    },
+    "Zhidou": {
+      "count": 1,
+      "hasGenerationCodes": false,
+      "examples": [
+        {
+          "id": 3790,
+          "original": "D2S"
+        }
+      ],
+      "patterns": {
+        "withGenerationCodes": [],
+        "withoutGenerationCodes": [
+          "D2S"
+        ],
+        "commonSuffixes": []
+      }
+    }
+  },
+  "summary": {
+    "brandsWithGenerationCodes": [
+      "Bmw"
+    ],
+    "brandsWithoutGenerationCodes": [
+      "Acura",
+      "Aixam",
+      "Alfa romeo",
+      "Aston martin",
+      "Audi",
+      "Baic",
+      "Bentley",
+      "Bobcat",
+      "Buick",
+      "Byd",
+      "Cadillac",
+      "Case",
+      "Cat",
+      "Chevrolet",
+      "Chrysler",
+      "Citroen",
+      "Claas",
+      "Cupra",
+      "Dacia",
+      "Daewoo",
+      "Daf",
+      "Daihatsu",
+      "Deutz-fahr",
+      "Develon",
+      "Dodge",
+      "Ds",
+      "Fendt",
+      "Ferrari",
+      "Fiat",
+      "Ford",
+      "Forthing",
+      "Gaz",
+      "Genesis",
+      "Gmc",
+      "Honda",
+      "Hummer",
+      "Hyundai",
+      "Ineos",
+      "Infiniti",
+      "Isuzu",
+      "Iveco",
+      "Jaecoo",
+      "Jaguar",
+      "Jeep",
+      "John deere",
+      "Kia",
+      "Komatsu",
+      "Kubota",
+      "Lamborghini",
+      "Lancia",
+      "Land rover",
+      "Lexus",
+      "Lincoln",
+      "MG",
+      "MITSUBISHI",
+      "Man",
+      "Maserati",
+      "Massey ferguson",
+      "Maxus",
+      "Mazda",
+      "McLaren",
+      "Mercedes-Benz",
+      "Mercedes-Maybach",
+      "Microcar",
+      "Mini",
+      "Mitsubishi",
+      "Morris Minor",
+      "NISSAN",
+      "New Holland",
+      "NiSSAN",
+      "Nissan",
+      "OPEL",
+      "Omoda",
+      "Opel",
+      "PEUGEOT",
+      "PLYMOTH",
+      "Peugeot",
+      "Pontiac",
+      "Porsche",
+      "RENAULT",
+      "Renault",
+      "Rolls-Royce",
+      "SAAB",
+      "SEAT",
+      "SKODA",
+      "SSANG YONG",
+      "SUBARU",
+      "SUZUKI",
+      "SUzUKi",
+      "Saab",
+      "Scania",
+      "Seat",
+      "Seres",
+      "Skoda",
+      "Skywell",
+      "Smart",
+      "Subaru",
+      "Suzuki",
+      "TOYOTA",
+      "Terex-Fuchs",
+      "Tesla",
+      "Toyota",
+      "VOLVO",
+      "Valtra",
+      "Volkswagen",
+      "Volvo",
+      "XEV",
+      "Zhidou"
+    ],
+    "totalBrands": 109
+  }
+}
