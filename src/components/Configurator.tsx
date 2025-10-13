@@ -884,14 +884,6 @@ export default function Configurator() {
                               <div className="text-sm font-medium">{s.name}</div>
                               <div className="text-xs text-white/60">{s.description}</div>
                             </div>
-                            {/* Wyświetl modyfikator ceny */}
-                            {modifier && modifier.modifier !== 0 && (
-                              <div className={`text-sm font-medium ${
-                                modifier.modifier > 0 ? 'text-green-400' : 'text-orange-400'
-                              }`}>
-                                {modifier.label}
-                              </div>
-                            )}
                           </div>
                         </Label>
                       );
@@ -901,19 +893,10 @@ export default function Configurator() {
                 
                 {/* Info box o wpływie na cenę */}
                 {selectedSetType && (
-                  <div className="p-4 bg-blue-900/20 border border-blue-800/50 rounded-lg">
-                    <p className="text-sm text-blue-200">
-                      💡 Wybór rodzaju dywaników wpłynie na końcową cenę zestawu
+                  <div className="p-4 bg-neutral-800/50 border border-neutral-700 rounded-lg">
+                    <p className="text-sm text-gray-300">
+                      Wybór rodzaju dywaników wpłynie na końcową cenę zestawu
                     </p>
-                  </div>
-                )}
-
-                {/* Wskaźnik oszczędności dla 3D bez rantów */}
-                {selectedSetType === 'classic' && (
-                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-900/20 border border-orange-800/50 rounded-full">
-                    <span className="text-orange-400 text-sm font-medium">
-                      Oszczędzasz 40 zł
-                    </span>
                   </div>
                 )}
               </div>
@@ -952,10 +935,6 @@ export default function Configurator() {
                                   />
                                 </div>
                               )}
-                              {/* Cena z uwzględnieniem modyfikatora */}
-                              <div className="text-lg font-bold text-green-400">
-                                {displayPrice} zł
-                              </div>
                             </div>
                           </div>
                         </Label>
@@ -1182,17 +1161,19 @@ export default function Configurator() {
 
 
             {/* Navigation buttons */}
-            {/* Sticky panel z ceną */}
-            <div className="sticky bottom-0 left-0 right-0 bg-neutral-900/95 backdrop-blur-sm border-t border-neutral-800 p-4 mb-4">
-              <div className="flex items-center justify-between max-w-7xl mx-auto">
-                <div className="text-sm text-gray-400">
-                  Aktualna cena konfiguracji
-                </div>
-                <div className="text-2xl font-bold text-green-400 transition-all duration-300">
-                  {getTotalPrice()} zł
+            {/* Sticky panel z ceną - widoczny od sekcji 2 (wybór rodzaju zestawu) */}
+            {currentSection >= 2 && (
+              <div className="sticky bottom-0 left-0 right-0 bg-neutral-900/95 backdrop-blur-sm border-t border-neutral-800 p-4 mb-4">
+                <div className="flex items-center justify-between max-w-7xl mx-auto">
+                  <div className="text-sm text-gray-400">
+                    Aktualna cena konfiguracji
+                  </div>
+                  <div className="text-2xl font-bold text-green-400 transition-all duration-300">
+                    {getTotalPrice()} zł
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
               <Button
