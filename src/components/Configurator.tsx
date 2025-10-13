@@ -446,8 +446,8 @@ export default function Configurator() {
   const getSectionTitle = (section: number) => {
     const titles = [
       "Wybór modelu",
-      "Rodzaj zestawu",
-      "Rodzaj dywaników", 
+      "Rodzaj dywaników",
+      "Rodzaj zestawu", 
       "Rodzaj komórek",
       "Kolory",
       "Dodatki",
@@ -816,7 +816,35 @@ export default function Configurator() {
               </div>
             )}
 
+            {/* Sekcja 1: Rodzaj dywaników */}
             {currentSection === 1 && (
+              <div className="flex-1 space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj dywaników</h3>
+                  <RadioGroup value={selectedSetType} onValueChange={setSelectedSetType} className="space-y-3">
+                    {setTypes.map((s) => (
+                      <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                        <RadioGroupItem value={s.id} id={`set-${s.id}`} className="sr-only" />
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="text-sm font-medium">{s.name}</div>
+                            <div className="text-xs text-white/60">{s.description}</div>
+                          </div>
+                          {s.priceModifier !== 0 && s.id !== 'classic' && (
+                            <div className={`text-xs font-medium ${s.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                              {s.priceModifier > 0 ? '+' : ''}{s.priceModifier} zł
+                            </div>
+                          )}
+                        </div>
+                      </Label>
+                    ))}
+                  </RadioGroup>
+                </div>
+              </div>
+            )}
+
+            {/* Sekcja 2: Rodzaj zestawu */}
+            {currentSection === 2 && (
               <div className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj zestawu</h3>
@@ -848,33 +876,6 @@ export default function Configurator() {
                               </div>
                             )}
                           </div>
-                        </div>
-                      </Label>
-                    ))}
-                  </RadioGroup>
-                </div>
-              </div>
-            )}
-
-            {/* Sekcja 2: Rodzaj dywaników */}
-            {currentSection === 2 && (
-              <div className="flex-1 space-y-6">
-                <div>
-                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj dywaników</h3>
-                  <RadioGroup value={selectedSetType} onValueChange={setSelectedSetType} className="space-y-3">
-                    {setTypes.map((s) => (
-                      <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
-                        <RadioGroupItem value={s.id} id={`set-${s.id}`} className="sr-only" />
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="text-sm font-medium">{s.name}</div>
-                            <div className="text-xs text-white/60">{s.description}</div>
-                          </div>
-                          {s.priceModifier !== 0 && s.id !== 'classic' && (
-                            <div className={`text-xs font-medium ${s.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                              {s.priceModifier > 0 ? '+' : ''}{s.priceModifier} zł
-                            </div>
-                          )}
                         </div>
                       </Label>
                     ))}
