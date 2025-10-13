@@ -14,6 +14,7 @@ import { ConfiguratorService } from "@/lib/services/ConfiguratorService";
 import { ConfigurationData } from "@/lib/types/product";
 import { brands, getModelsByBrand } from "@/data/carouselData";
 import { Brand, Model } from "@/types/carousel";
+import { getYearsForModel, getModelData, findGenerationByYear, getAvailableModels, getBodyTypesForYear, getBodyTypesForModel } from "@/data/car-model-years.utils";
 
 // Dodaj event do otwierania modala koszyka
 const openCartModal = () => {
@@ -111,8 +112,8 @@ export default function Configurator() {
     if (!brandParam) return "";
     
     const brandMappings: Record<string, string> = {
-      "mercedes": "Mercedes",
-      "bmw": "BMW", 
+      "mercedes": "Mercedes-Benz",
+      "bmw": "Bmw", 
       "audi": "Audi",
       "tesla": "Tesla",
       "porsche": "Porsche",
@@ -122,8 +123,8 @@ export default function Configurator() {
       "peugeot": "Peugeot",
       "renault": "Renault",
       "fiat": "Fiat",
-      "alfa romeo": "Alfa Romeo",
-      "aston martin": "Aston Martin",
+      "alfa romeo": "Alfa romeo",
+      "aston martin": "Aston martin",
       "acura": "Acura",
       "bentley": "Bentley",
       "ferrari": "Ferrari",
@@ -136,7 +137,7 @@ export default function Configurator() {
       "cadillac": "Cadillac",
       "lincoln": "Lincoln",
       "jaguar": "Jaguar",
-      "land rover": "Land Rover",
+      "land rover": "Land rover",
       "mini": "Mini",
       "smart": "Smart"
     };
@@ -209,50 +210,46 @@ export default function Configurator() {
 
   const totalSections = 7;
 
-  // Pobierz modele z nowego API
+  // Pobierz modele z nowych danych JSON
   useEffect(() => {
-    const fetchModels = async () => {
+    const loadModels = () => {
       if (!selectedCarBrand) {
         console.log('Brak wybranej marki, czyszczę modele');
         setAvailableModels([]);
         return;
       }
 
-      console.log('Pobieranie modeli dla marki:', selectedCarBrand);
+      console.log('Ładowanie modeli dla marki:', selectedCarBrand);
       setLoadingModels(true);
+      
       try {
-        const response = await fetch(`/api/models/${encodeURIComponent(selectedCarBrand)}`);
-        console.log('Odpowiedź API:', response.status);
+        // Użyj nowych funkcji pomocniczych
+        const modelNames = getAvailableModels(selectedCarBrand);
+        console.log('Dostępne modele:', modelNames);
         
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Dane modeli:', data);
-          
-          // Konwertuj dane do formatu oczekiwanego przez komponent
-          const models = data.map((model: any) => ({
-            id: model.model,
-            name: model.model
-          }));
-          console.log('Przetworzone modele:', models);
-          setAvailableModels(models);
-        } else {
-          console.error('Błąd podczas pobierania modeli:', response.status);
-          setAvailableModels([]);
-        }
+        // Konwertuj do formatu oczekiwanego przez komponent
+        const models = modelNames.map(modelName => ({
+          id: modelName,
+          name: modelName
+        }));
+        
+        console.log('Przetworzone modele:', models);
+        setAvailableModels(models);
+        
       } catch (error) {
-        console.error('Błąd podczas pobierania modeli:', error);
+        console.error('Błąd podczas ładowania modeli:', error);
         setAvailableModels([]);
       } finally {
         setLoadingModels(false);
       }
     };
 
-    fetchModels();
+    loadModels();
   }, [selectedCarBrand]);
 
-  // Pobierz roczniki i typy nadwozia z nowego API generacji
+  // Pobierz roczniki z nowych danych JSON
   useEffect(() => {
-    const fetchModelDetails = async () => {
+    const loadModelYears = () => {
       if (!selectedCarBrand || !selectedCarModel) {
         setAvailableYears([]);
         setAvailableBodyTypes([]);
@@ -263,41 +260,51 @@ export default function Configurator() {
       setLoadingBodyTypes(true);
       
       try {
-        const response = await fetch(`/api/generations/${encodeURIComponent(selectedCarBrand)}/${encodeURIComponent(selectedCarModel)}`);
-        if (response.ok) {
-          const data = await response.json();
-          
-          // Przygotuj roczniki z generacji
-          const years = new Set<number>();
-          const bodyTypes = new Set<string>();
-          
-          data.forEach((generation: any) => {
-            if (generation.yearFrom) years.add(generation.yearFrom);
-            if (generation.yearTo) years.add(generation.yearTo);
-            if (generation.bodyTypes) {
-              generation.bodyTypes.forEach((bt: string) => bodyTypes.add(bt));
-            }
-          });
-          
-          const sortedYears = Array.from(years).sort((a, b) => b - a).map(year => ({
+        // Użyj nowych funkcji pomocniczych
+        const availableYears = getYearsForModel(selectedCarBrand, selectedCarModel);
+        const modelData = getModelData(selectedCarBrand, selectedCarModel);
+        
+        console.log('Dostępne roczniki dla', selectedCarBrand, selectedCarModel, ':', availableYears);
+        
+        // Konwertuj roczniki do formatu oczekiwanego przez komponent
+        const yearsData = availableYears
+          .sort((a, b) => b - a) // Sortuj malejąco (najnowsze pierwsze)
+          .map(year => ({
             id: year.toString(),
             name: year.toString()
           }));
-          
-          const sortedBodyTypes = Array.from(bodyTypes).sort().map(bt => ({
-            id: bt,
-            name: bt
+        
+        setAvailableYears(yearsData);
+        
+        // Pobierz rzeczywiste typy nadwozia dla modelu
+        const allBodyTypes = getBodyTypesForModel(selectedCarBrand, selectedCarModel);
+        
+        if (allBodyTypes.length > 0) {
+          // Konwertuj typy nadwozia do formatu komponentu
+          const bodyTypesData = allBodyTypes.map(type => ({
+            id: type.toLowerCase().replace(/\s+/g, '-'),
+            name: type
           }));
           
-          setAvailableYears(sortedYears);
-          setAvailableBodyTypes(sortedBodyTypes);
+          setAvailableBodyTypes(bodyTypesData);
+          console.log('Dostępne typy nadwozia:', allBodyTypes);
         } else {
-          console.error('Błąd podczas pobierania szczegółów modelu:', response.status);
-          setAvailableYears([]);
-          setAvailableBodyTypes([]);
+          // Fallback: domyślne typy jeśli brak danych
+          const defaultBodyTypes = [
+            { id: 'sedan', name: 'Sedan' },
+            { id: 'hatchback', name: 'Hatchback' },
+            { id: 'suv', name: 'SUV' },
+            { id: 'kombi', name: 'Kombi' },
+            { id: 'coupe', name: 'Coupe' }
+          ];
+          setAvailableBodyTypes(defaultBodyTypes);
+          console.log('Używam domyślnych typów nadwozia (brak danych)');
         }
+        
+        console.log('Załadowano roczniki:', yearsData.length, 'lat');
+        
       } catch (error) {
-        console.error('Błąd podczas pobierania szczegółów modelu:', error);
+        console.error('Błąd podczas ładowania roczników:', error);
         setAvailableYears([]);
         setAvailableBodyTypes([]);
       } finally {
@@ -306,7 +313,7 @@ export default function Configurator() {
       }
     };
 
-    fetchModelDetails();
+    loadModelYears();
   }, [selectedCarBrand, selectedCarModel]);
 
   // Resetuj rocznik i typ nadwozia przy zmianie modelu
@@ -314,6 +321,43 @@ export default function Configurator() {
     setSelectedCarYear("");
     setSelectedBodyType("");
   }, [selectedCarModel]);
+
+  // Aktualizuj typy nadwozia po wybraniu rocznika
+  useEffect(() => {
+    if (selectedCarBrand && selectedCarModel && selectedCarYear) {
+      const year = parseInt(selectedCarYear);
+      const bodyTypesForYear = getBodyTypesForYear(selectedCarBrand, selectedCarModel, year);
+      
+      if (bodyTypesForYear.length > 0) {
+        // Konwertuj typy nadwozia do formatu komponentu
+        const bodyTypesData = bodyTypesForYear.map(type => ({
+          id: type.toLowerCase().replace(/\s+/g, '-'),
+          name: type
+        }));
+        
+        setAvailableBodyTypes(bodyTypesData);
+        console.log(`Typy nadwozia dla ${selectedCarBrand} ${selectedCarModel} ${year}:`, bodyTypesForYear);
+        
+        // Resetuj wybrany typ nadwozia jeśli nie jest dostępny
+        if (selectedBodyType && !bodyTypesForYear.some(type => 
+          type.toLowerCase().replace(/\s+/g, '-') === selectedBodyType
+        )) {
+          setSelectedBodyType("");
+        }
+      } else {
+        // Fallback: użyj wszystkich typów dla modelu
+        const allBodyTypes = getBodyTypesForModel(selectedCarBrand, selectedCarModel);
+        if (allBodyTypes.length > 0) {
+          const bodyTypesData = allBodyTypes.map(type => ({
+            id: type.toLowerCase().replace(/\s+/g, '-'),
+            name: type
+          }));
+          setAvailableBodyTypes(bodyTypesData);
+          console.log(`Używam wszystkich typów nadwozia dla ${selectedCarBrand} ${selectedCarModel}`);
+        }
+      }
+    }
+  }, [selectedCarBrand, selectedCarModel, selectedCarYear, selectedBodyType]);
 
   const nextSection = () => {
     if (currentSection < totalSections - 1) {
@@ -717,6 +761,17 @@ export default function Configurator() {
 
                 {selectedCarYear && (
                   <div>
+                    {/* Wyświetl informację o generacji */}
+                    {(() => {
+                      const generation = findGenerationByYear(selectedCarBrand, selectedCarModel, parseInt(selectedCarYear));
+                      return generation ? (
+                        <div className="mb-4 p-3 bg-blue-900/20 border border-blue-800/50 rounded-lg">
+                          <h4 className="text-sm font-medium text-blue-300 mb-1">Generacja</h4>
+                          <p className="text-sm text-blue-200">{generation}</p>
+                        </div>
+                      ) : null;
+                    })()}
+                    
                     <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz typ nadwozia</h3>
                     {loadingBodyTypes ? (
                       <div className="text-center py-8 text-gray-400">

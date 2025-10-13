@@ -1,0 +1,2853 @@
+{
+  "totalRecords": 1000,
+  "recordsWithBodyType": 1000,
+  "recordsWithoutBodyType": 0,
+  "uniqueBodyTypes": [
+    "SUV 5/7os.",
+    "hatchback",
+    "cabrio/ hatchback 3drzwi",
+    "mikrovan",
+    "kombivan 7os.",
+    "SUV",
+    "sedan",
+    "roadster",
+    "hatchback 3drzwi",
+    "kombi",
+    "kombivan",
+    "bus",
+    "minivan",
+    "VAN",
+    "kamper",
+    "dostawczak/ kombivan",
+    "SUV 7os.",
+    "Liftback",
+    "crossover",
+    "minivan 5os.",
+    "minivan 7os.",
+    "hatchback 5drzwi",
+    "Brak informacji",
+    "liftback/kombi",
+    "sedan, kombi",
+    "hatchback 3 drzwi",
+    "dostawczak",
+    "van 4drzwi",
+    "SUV 5os.",
+    "liftback",
+    "coupe",
+    "cabrio",
+    "SUV 5os",
+    "SUVcoupe",
+    "koparka",
+    "Minivan 5/7os.",
+    "Ładowarka",
+    "SUV 3drzwi",
+    "SUV 7os./5os",
+    "SUV 3 drzwi",
+    "SUV 5 drzwi",
+    "SUV 7os",
+    "SUV 5/7os",
+    "SUV Coupe",
+    "fastback",
+    "hatchback \n5 drzwi",
+    "Minivan  5/7os.",
+    "coupe-cabrio 2 drzwi",
+    "coupe-cabrio",
+    "kombi/hatchback 3/5drzwi",
+    "hatchback 5drzwi/kombi",
+    "hatchback/kombi",
+    "minivan 6/7os",
+    "kabriolet",
+    "brygadówka",
+    "auto ciężarowe / TIR",
+    "BUS",
+    "autobus",
+    "minibus",
+    "crossover 7os.",
+    "pickup",
+    "kombi/hatchback 5drzwi",
+    "laweta",
+    "auto ciężarowe",
+    "coupe/ cabrio",
+    "SUV 5drzwi",
+    "targa",
+    "minivan 5os",
+    "minivan 7os",
+    "minivan 5/7os",
+    "SUV 6/7os.",
+    "ciężarówka",
+    "hatchback 5/3drzwi/ kombi",
+    "hatchabck 5drzwi/3drzwi / sedan",
+    "kabriolet/ coupe",
+    "hatchabck 5 drzwi/kombi",
+    "hatchabck 3 drzwi",
+    "Hatchback 5drzwi/ Kombi",
+    "Hatchback 5drzwi",
+    "kombivan 5os.",
+    "Hatchback 5 drzwi",
+    "hatchback 3/5drzwi",
+    "SUV coupe",
+    "BUS 9os.",
+    "SUV 6os./ 7os.",
+    "minivan 3 drzwi",
+    "hatchback 5/3 drzwi",
+    "hatchback 5 drzwi",
+    "Coupe",
+    "SUV 6os.",
+    "Kombi/sedan, liftaback",
+    "kombi/liftback",
+    "pick-up",
+    "hatchback/ kombi/sedan",
+    "sedan/kombi/ liftback",
+    "SuV 7os",
+    "kombi , sedan",
+    "liftback/kombi/sedan",
+    "Sedan",
+    "minivan 5/7os.",
+    "Hatchback 5drzwi/kombi",
+    "SUV 5os/7os.",
+    "SUV 5os/6os./7os.",
+    "kombi/liftback/ sedan",
+    "kombi, liftback",
+    "sedan/kombi",
+    "hatchback, kombi",
+    "hatchback 3/5 drzwi",
+    "kombi, liftback, sedan",
+    "kombi 4drzwi",
+    "hatchback 3 drz",
+    "hatchback 5 drz",
+    "hatchback/sedan",
+    "hatchback/Sedan",
+    "kombi/sedan",
+    "BUS 9os",
+    "Bus camper",
+    "hatchback\n3 drzwi/ sedan",
+    "kombi/coupe/ sedan",
+    "cabriolet",
+    "hatchback / kombi",
+    "hatchback 3/5drzwi/kombi",
+    "hatchback 5drzwi/liftback/kombi",
+    "kombi (touring)",
+    "pickup 2drzwi",
+    "SUV 6/7os",
+    "coupe 2 drzwi",
+    "BUS 8os.",
+    "ciągnik",
+    "coupe/cabrio",
+    "SUV 5/6os.",
+    "SUV 2drzwi",
+    "SUV 4drzwi",
+    "SUV 7/5os",
+    "SUV  5os.",
+    "kombi, sedan",
+    "hatchback 5drzwi/sedan",
+    "pickup 3os.",
+    "minivan 5,7 os",
+    "SUV 6os",
+    "BUS 8os",
+    "BUS 9 os",
+    "Furgon/ Brygadówka",
+    "Bus",
+    "bus camper",
+    "SUV 5/6/7os.",
+    "sedan,kombi",
+    "sedan/hatchback",
+    "SUV 5drzwi 7os.",
+    "brygadówka 5os.",
+    "SUV 5/3 drzwi",
+    "hatchabck 5drzwi",
+    "kombi / hatchback/liftback",
+    "furgon",
+    "SUV 5",
+    "kombi/hatchback 5/3drzwi",
+    "kombi/sedan/hatchback 5drzwi",
+    "kombi / hatchback 5 drzwi",
+    "minivan 8os."
+  ],
+  "bodyTypeCounts": {
+    "SUV 5/7os.": 13,
+    "hatchback": 44,
+    "cabrio/ hatchback 3drzwi": 1,
+    "mikrovan": 1,
+    "kombivan 7os.": 2,
+    "SUV": 149,
+    "sedan": 107,
+    "roadster": 10,
+    "hatchback 3drzwi": 11,
+    "kombi": 33,
+    "kombivan": 5,
+    "bus": 1,
+    "minivan": 43,
+    "VAN": 9,
+    "kamper": 3,
+    "dostawczak/ kombivan": 1,
+    "SUV 7os.": 20,
+    "Liftback": 4,
+    "crossover": 4,
+    "minivan 5os.": 8,
+    "minivan 7os.": 8,
+    "hatchback 5drzwi": 21,
+    "Brak informacji": 29,
+    "liftback/kombi": 4,
+    "sedan, kombi": 5,
+    "hatchback 3 drzwi": 10,
+    "dostawczak": 10,
+    "van 4drzwi": 3,
+    "SUV 5os.": 32,
+    "liftback": 16,
+    "coupe": 42,
+    "cabrio": 15,
+    "SUV 5os": 26,
+    "SUVcoupe": 3,
+    "koparka": 7,
+    "Minivan 5/7os.": 1,
+    "Ładowarka": 1,
+    "SUV 3drzwi": 5,
+    "SUV 7os./5os": 1,
+    "SUV 3 drzwi": 2,
+    "SUV 5 drzwi": 2,
+    "SUV 7os": 12,
+    "SUV 5/7os": 2,
+    "SUV Coupe": 6,
+    "fastback": 3,
+    "hatchback \n5 drzwi": 4,
+    "Minivan  5/7os.": 1,
+    "coupe-cabrio 2 drzwi": 2,
+    "coupe-cabrio": 9,
+    "kombi/hatchback 3/5drzwi": 1,
+    "hatchback 5drzwi/kombi": 4,
+    "hatchback/kombi": 4,
+    "minivan 6/7os": 1,
+    "kabriolet": 2,
+    "brygadówka": 3,
+    "auto ciężarowe / TIR": 1,
+    "BUS": 21,
+    "autobus": 1,
+    "minibus": 1,
+    "crossover 7os.": 2,
+    "pickup": 20,
+    "kombi/hatchback 5drzwi": 2,
+    "laweta": 1,
+    "auto ciężarowe": 2,
+    "coupe/ cabrio": 2,
+    "SUV 5drzwi": 5,
+    "targa": 2,
+    "minivan 5os": 3,
+    "minivan 7os": 4,
+    "minivan 5/7os": 2,
+    "SUV 6/7os.": 1,
+    "ciężarówka": 4,
+    "hatchback 5/3drzwi/ kombi": 1,
+    "hatchabck 5drzwi/3drzwi / sedan": 1,
+    "kabriolet/ coupe": 1,
+    "hatchabck 5 drzwi/kombi": 1,
+    "hatchabck 3 drzwi": 2,
+    "Hatchback 5drzwi/ Kombi": 1,
+    "Hatchback 5drzwi": 1,
+    "kombivan 5os.": 5,
+    "Hatchback 5 drzwi": 2,
+    "hatchback 3/5drzwi": 2,
+    "SUV coupe": 9,
+    "BUS 9os.": 1,
+    "SUV 6os./ 7os.": 1,
+    "minivan 3 drzwi": 1,
+    "hatchback 5/3 drzwi": 1,
+    "hatchback 5 drzwi": 18,
+    "Coupe": 3,
+    "SUV 6os.": 3,
+    "Kombi/sedan, liftaback": 1,
+    "kombi/liftback": 4,
+    "pick-up": 1,
+    "hatchback/ kombi/sedan": 1,
+    "sedan/kombi/ liftback": 1,
+    "SuV 7os": 1,
+    "kombi , sedan": 1,
+    "liftback/kombi/sedan": 1,
+    "Sedan": 1,
+    "minivan 5/7os.": 4,
+    "Hatchback 5drzwi/kombi": 1,
+    "SUV 5os/7os.": 2,
+    "SUV 5os/6os./7os.": 1,
+    "kombi/liftback/ sedan": 1,
+    "kombi, liftback": 1,
+    "sedan/kombi": 6,
+    "hatchback, kombi": 1,
+    "hatchback 3/5 drzwi": 2,
+    "kombi, liftback, sedan": 1,
+    "kombi 4drzwi": 2,
+    "hatchback 3 drz": 3,
+    "hatchback 5 drz": 1,
+    "hatchback/sedan": 4,
+    "hatchback/Sedan": 1,
+    "kombi/sedan": 2,
+    "BUS 9os": 1,
+    "Bus camper": 1,
+    "hatchback\n3 drzwi/ sedan": 1,
+    "kombi/coupe/ sedan": 1,
+    "cabriolet": 2,
+    "hatchback / kombi": 1,
+    "hatchback 3/5drzwi/kombi": 1,
+    "hatchback 5drzwi/liftback/kombi": 1,
+    "kombi (touring)": 1,
+    "pickup 2drzwi": 1,
+    "SUV 6/7os": 2,
+    "coupe 2 drzwi": 1,
+    "BUS 8os.": 1,
+    "ciągnik": 10,
+    "coupe/cabrio": 1,
+    "SUV 5/6os.": 1,
+    "SUV 2drzwi": 3,
+    "SUV 4drzwi": 2,
+    "SUV 7/5os": 1,
+    "SUV  5os.": 2,
+    "kombi, sedan": 1,
+    "hatchback 5drzwi/sedan": 1,
+    "pickup 3os.": 1,
+    "minivan 5,7 os": 1,
+    "SUV 6os": 1,
+    "BUS 8os": 1,
+    "BUS 9 os": 1,
+    "Furgon/ Brygadówka": 1,
+    "Bus": 2,
+    "bus camper": 2,
+    "SUV 5/6/7os.": 1,
+    "sedan,kombi": 1,
+    "sedan/hatchback": 1,
+    "SUV 5drzwi 7os.": 1,
+    "brygadówka 5os.": 1,
+    "SUV 5/3 drzwi": 1,
+    "hatchabck 5drzwi": 1,
+    "kombi / hatchback/liftback": 1,
+    "furgon": 1,
+    "SUV 5": 1,
+    "kombi/hatchback 5/3drzwi": 1,
+    "kombi/sedan/hatchback 5drzwi": 1,
+    "kombi / hatchback 5 drzwi": 1,
+    "minivan 8os.": 1
+  },
+  "brandBodyTypes": {
+    "Chevrolet": [
+      "SUV 5/7os.",
+      "SUV",
+      "SUV 5os.",
+      "liftback",
+      "targa",
+      "roadster",
+      "sedan",
+      "hatchback 5drzwi",
+      "SUV 7os.",
+      "SUV 6os.",
+      "VAN",
+      "hatchback",
+      "kombi",
+      "minivan",
+      "pickup 2drzwi",
+      "pickup"
+    ],
+    "Citroen": [
+      "hatchback",
+      "SUV",
+      "minivan",
+      "crossover",
+      "minivan 5os.",
+      "minivan 7os.",
+      "hatchback 5drzwi",
+      "sedan",
+      "liftback/kombi",
+      "sedan, kombi",
+      "hatchback 3 drzwi",
+      "VAN",
+      "Brak informacji",
+      "dostawczak",
+      "van 4drzwi",
+      "fastback",
+      "SUV 7os."
+    ],
+    "Fiat": [
+      "hatchback",
+      "cabrio/ hatchback 3drzwi",
+      "mikrovan",
+      "kombivan 7os.",
+      "SUV",
+      "sedan",
+      "roadster",
+      "hatchback 3drzwi",
+      "kombi",
+      "kombivan",
+      "bus",
+      "minivan",
+      "VAN",
+      "kamper",
+      "dostawczak/ kombivan",
+      "SUV 7os.",
+      "Brak informacji",
+      "hatchback 5 drzwi",
+      "hatchback 3 drzwi",
+      "van 4drzwi",
+      "pick-up",
+      "BUS",
+      "hatchback/ kombi/sedan"
+    ],
+    "Bmw": [
+      "Liftback",
+      "hatchback 3drzwi",
+      "sedan, kombi",
+      "cabrio",
+      "hatchback 5drzwi",
+      "minivan",
+      "coupe",
+      "sedan",
+      "hatchback 3 drzwi",
+      "kombi/coupe/ sedan",
+      "kombi",
+      "cabriolet",
+      "liftback",
+      "kombi (touring)",
+      "hatchback",
+      "SUVcoupe",
+      "SUV coupe",
+      "SUV",
+      "SUV 5/7os.",
+      "SUV 6/7os",
+      "roadster"
+    ],
+    "Mercedes-Benz": [
+      "sedan",
+      "hatchback 3drzwi",
+      "kombi",
+      "coupe",
+      "cabrio",
+      "SUV 5os",
+      "SUV 5os.",
+      "liftback",
+      "kombivan",
+      "SUV 7os./5os",
+      "SUV 3 drzwi",
+      "SUV 5 drzwi",
+      "SUV",
+      "SUV 7os",
+      "SUV 5/7os",
+      "SUV Coupe",
+      "SUV 5/7os.",
+      "BUS",
+      "autobus",
+      "Brak informacji",
+      "minibus",
+      "coupe-cabrio",
+      "crossover 7os.",
+      "laweta",
+      "auto ciężarowe",
+      "pickup",
+      "dostawczak",
+      "ciężarówka"
+    ],
+    "Byd": [
+      "SUVcoupe"
+    ],
+    "Dacia": [
+      "SUV",
+      "kombivan",
+      "Minivan 5/7os.",
+      "minivan",
+      "kombi",
+      "hatchback",
+      "hatchback 5drzwi"
+    ],
+    "Cat": [
+      "koparka",
+      "Ładowarka"
+    ],
+    "Land rover": [
+      "SUV 3drzwi",
+      "SUV 7os.",
+      "SUV 5os",
+      "SUV 7/5os",
+      "SUV 7os",
+      "SUV 5/7os",
+      "SUV 5drzwi",
+      "SUV",
+      "SUV 5os/7os.",
+      "SUV  5os."
+    ],
+    "Lexus": [
+      "SUV 5os",
+      "sedan",
+      "SUV",
+      "SUV 7os",
+      "Brak informacji",
+      "coupe",
+      "SUV 5os.",
+      "coupe-cabrio"
+    ],
+    "Peugeot": [
+      "SUV",
+      "hatchback \n5 drzwi",
+      "hatchback 5drzwi",
+      "sedan",
+      "coupe",
+      "minivan",
+      "SUV Coupe",
+      "Minivan  5/7os.",
+      "SUV 7os.",
+      "coupe-cabrio 2 drzwi",
+      "coupe-cabrio",
+      "Brak informacji",
+      "kombi",
+      "kombi/hatchback 3/5drzwi",
+      "hatchback 5drzwi/kombi",
+      "hatchback/kombi",
+      "van 4drzwi",
+      "brygadówka",
+      "BUS"
+    ],
+    "Ford": [
+      "coupe",
+      "cabrio",
+      "SUV 5os",
+      "auto ciężarowe / TIR",
+      "SUV 5os.",
+      "kombi",
+      "kombi/hatchback 5drzwi",
+      "coupe-cabrio",
+      "SUV",
+      "sedan",
+      "minivan",
+      "minivan 5os",
+      "minivan 7os",
+      "minivan 5/7os",
+      "Brak informacji",
+      "SUV 7os.",
+      "hatchback",
+      "pickup",
+      "sedan/kombi/ liftback",
+      "hatchback 5drzwi/kombi",
+      "hatchback 3 drzwi",
+      "minivan 5/7os.",
+      "hatchback 5drzwi",
+      "kombi, liftback",
+      "hatchback 3/5 drzwi",
+      "hatchback 5 drzwi",
+      "kombi, liftback, sedan",
+      "dostawczak",
+      "kamper",
+      "BUS 9os",
+      "BUS",
+      "Bus camper",
+      "coupe 2 drzwi",
+      "BUS 8os.",
+      "coupe/cabrio",
+      "SUV 6os.",
+      "SUV 7os",
+      "pickup 3os.",
+      "SUV 6/7os",
+      "minivan 5,7 os",
+      "kombivan 5os.",
+      "liftback",
+      "SUV 6os",
+      "BUS 8os",
+      "BUS 9 os",
+      "Furgon/ Brygadówka",
+      "Bus",
+      "bus camper"
+    ],
+    "Chrysler": [
+      "minivan 6/7os",
+      "minivan",
+      "kabriolet",
+      "coupe/ cabrio",
+      "SUV 7os.",
+      "sedan"
+    ],
+    "Honda": [
+      "SUV",
+      "hatchback",
+      "sedan",
+      "liftback",
+      "coupe",
+      "minivan",
+      "SUV 5drzwi",
+      "roadster",
+      "SUV 7os.",
+      "pickup",
+      "SUV 5os",
+      "kombi",
+      "hatchback\n3 drzwi/ sedan",
+      "hatchback 5drzwi",
+      "hatchback 3drzwi",
+      "hatchback 3/5drzwi",
+      "hatchback/sedan"
+    ],
+    "Dodge": [
+      "pickup",
+      "SUV"
+    ],
+    "Ferrari": [
+      "targa"
+    ],
+    "Hyundai": [
+      "coupe",
+      "SUV",
+      "SUV 5/7os.",
+      "Brak informacji",
+      "SUV 7os.",
+      "SUV 6/7os.",
+      "SUV 5os.",
+      "sedan",
+      "BUS 9os.",
+      "hatchback",
+      "liftback",
+      "VAN",
+      "brygadówka",
+      "hatchback 5 drzwi",
+      "SUV 5os/6os./7os.",
+      "minivan",
+      "hatchback 5drzwi",
+      "hatchback / kombi",
+      "hatchback 3/5drzwi/kombi",
+      "hatchback 5drzwi/liftback/kombi",
+      "sedan, kombi"
+    ],
+    "Mazda": [
+      "SUV 5os.",
+      "SUV 7os.",
+      "roadster",
+      "SUV 5os",
+      "SUV",
+      "SUV 6os./ 7os.",
+      "coupe",
+      "kombi/liftback/ sedan",
+      "kombi/liftback",
+      "sedan/kombi",
+      "hatchback 5drzwi",
+      "Brak informacji",
+      "hatchback/sedan",
+      "hatchback/Sedan",
+      "minivan 5os.",
+      "minivan 7os.",
+      "fastback",
+      "sedan"
+    ],
+    "Opel": [
+      "sedan",
+      "dostawczak",
+      "hatchabck 5drzwi/3drzwi / sedan",
+      "Brak informacji",
+      "kabriolet/ coupe",
+      "kabriolet",
+      "hatchabck 5 drzwi/kombi",
+      "hatchabck 3 drzwi",
+      "Hatchback 5drzwi/ Kombi",
+      "Hatchback 5drzwi",
+      "hatchback/kombi",
+      "cabrio",
+      "kombivan 5os.",
+      "minivan",
+      "Hatchback 5 drzwi",
+      "hatchback",
+      "SUV",
+      "SUV 5os",
+      "SUV 5drzwi",
+      "SUV 3drzwi",
+      "Kombi/sedan, liftaback",
+      "kombi",
+      "kombi/liftback",
+      "BUS",
+      "kombi , sedan",
+      "coupe",
+      "liftback/kombi/sedan",
+      "hatchback 3drzwi",
+      "hatchback 5 drzwi",
+      "Coupe",
+      "Sedan",
+      "minivan 5/7os."
+    ],
+    "Renault": [
+      "SUV 5os.",
+      "hatchback 5/3drzwi/ kombi",
+      "hatchback 3/5drzwi",
+      "SUV coupe",
+      "minivan 3 drzwi",
+      "hatchback 3drzwi",
+      "sedan",
+      "minivan",
+      "SUV 5/7os.",
+      "dostawczak",
+      "minivan 5os.",
+      "kombivan 5os.",
+      "brygadówka 5os.",
+      "kombivan 7os.",
+      "SUV",
+      "hatchback 5drzwi/kombi",
+      "hatchback 5drzwi",
+      "kombi/liftback",
+      "kombi / hatchback/liftback",
+      "liftback",
+      "Bus",
+      "furgon",
+      "ciężarówka",
+      "Brak informacji",
+      "kombi/hatchback 5drzwi",
+      "coupe-cabrio",
+      "kombi/hatchback 5/3drzwi",
+      "kombi/sedan/hatchback 5drzwi",
+      "SUV Coupe",
+      "kombi/sedan",
+      "BUS",
+      "brygadówka",
+      "minivan 7os.",
+      "hatchback 5 drzwi",
+      "hatchback 3 drzwi"
+    ],
+    "Audi": [
+      "hatchback",
+      "hatchback 5/3 drzwi",
+      "sedan",
+      "hatchback 3 drzwi",
+      "hatchback 5 drzwi",
+      "coupe",
+      "Coupe",
+      "sedan/kombi",
+      "kombi",
+      "liftback",
+      "coupe/ cabrio",
+      "liftback/kombi",
+      "kombi, sedan",
+      "SUV coupe",
+      "hatchback 5drzwi/sedan"
+    ],
+    "Kia": [
+      "SUV",
+      "Brak informacji",
+      "sedan",
+      "crossover",
+      "SUV 6os.",
+      "SUV 5os.",
+      "SUV 7os.",
+      "SUV 5/7os.",
+      "SUV 5/6/7os.",
+      "minivan",
+      "liftback",
+      "sedan, kombi",
+      "hatchback",
+      "hatchback 5drzwi",
+      "minivan 8os."
+    ],
+    "Nissan": [
+      "SuV 7os",
+      "VAN",
+      "SUV 5/3 drzwi",
+      "SUV 5os",
+      "SUV",
+      "BUS",
+      "Brak informacji",
+      "liftback",
+      "SUV 5/7os.",
+      "SUV 7os.",
+      "hatchabck 5drzwi",
+      "SUV 5os."
+    ],
+    "Skoda": [
+      "Hatchback 5drzwi/kombi",
+      "SUV 5os",
+      "SUV 5os/7os.",
+      "SUV",
+      "sedan",
+      "Brak informacji",
+      "hatchback, kombi",
+      "kombi",
+      "liftback/kombi",
+      "hatchback 5drzwi",
+      "kombi/liftback"
+    ],
+    "Mini": [
+      "cabrio",
+      "kombi 4drzwi",
+      "hatchback 3 drz",
+      "hatchback 5 drz",
+      "hatchback 3drzwi",
+      "SUV",
+      "hatchback"
+    ],
+    "Toyota": [
+      "sedan",
+      "SUV",
+      "hatchback 5 drzwi",
+      "kombi / hatchback 5 drzwi",
+      "crossover",
+      "hatchback 3drzwi"
+    ],
+    "Seat": [
+      "minivan",
+      "liftback",
+      "minivan 5/7os.",
+      "kombi/sedan",
+      "Brak informacji"
+    ],
+    "John deere": [
+      "ciągnik"
+    ],
+    "Jeep": [
+      "SUV",
+      "SUV 5/6os.",
+      "SUV 7os.",
+      "SUV 2drzwi",
+      "SUV 4drzwi"
+    ],
+    "Mitsubishi": [
+      "cabriolet",
+      "SUV 5os",
+      "SUV",
+      "ciężarówka",
+      "sedan",
+      "SUV 5os.",
+      "Brak informacji",
+      "minivan",
+      "pickup",
+      "SUV 5/7os.",
+      "SUV 7os.",
+      "hatchback",
+      "sedan,kombi",
+      "sedan/hatchback",
+      "SUV 3drzwi",
+      "SUV 5drzwi 7os.",
+      "SUV 5drzwi",
+      "SUV 7os"
+    ],
+    "Smart": [
+      "hatchback 5 drzwi",
+      "hatchback 3 drzwi",
+      "hatchback"
+    ],
+    "Pontiac": [
+      "cabrio"
+    ],
+    "Subaru": [
+      "SUV",
+      "kombi",
+      "hatchback 5drzwi",
+      "sedan/kombi",
+      "sedan",
+      "SUV 5/7os.",
+      "Brak informacji",
+      "SUV 5os.",
+      "SUV 5"
+    ],
+    "Suzuki": [
+      "hatchback 5 drzwi",
+      "SUV 3drzwi",
+      "SUV",
+      "Brak informacji",
+      "SUV 5 drzwi",
+      "SUV 5os."
+    ]
+  },
+  "modelBodyTypes": {
+    "Chevrolet - TrailBlazer/TrailBlazer": [
+      "SUV 5/7os."
+    ],
+    "Citroen - C3": [
+      "hatchback",
+      "SUV",
+      "minivan"
+    ],
+    "Fiat - 500": [
+      "hatchback"
+    ],
+    "Fiat - 500E": [
+      "cabrio/ hatchback 3drzwi"
+    ],
+    "Fiat - 500L": [
+      "mikrovan"
+    ],
+    "Fiat - Doblo": [
+      "kombivan 7os.",
+      "kombivan",
+      "minivan"
+    ],
+    "Fiat - 600e": [
+      "SUV"
+    ],
+    "Fiat - Albea": [
+      "sedan"
+    ],
+    "Fiat - Barchetta": [
+      "roadster"
+    ],
+    "Fiat - Bravo": [
+      "hatchback"
+    ],
+    "Fiat - Cinquecento": [
+      "hatchback 3drzwi"
+    ],
+    "Fiat - Croma": [
+      "kombi"
+    ],
+    "Fiat - DUCATOa": [
+      "bus"
+    ],
+    "Fiat - Ducato": [
+      "VAN",
+      "kamper"
+    ],
+    "Chevrolet - Equinoxa": [
+      "SUV"
+    ],
+    "Fiat - Fiorino": [
+      "dostawczak/ kombivan"
+    ],
+    "Fiat - Freemont": [
+      "SUV 7os."
+    ],
+    "Bmw - 3 (F34)": [
+      "Liftback"
+    ],
+    "Citroen - E-C3": [
+      "SUV",
+      "hatchback"
+    ],
+    "Fiat - 500X": [
+      "SUV"
+    ],
+    "Citroen - C4": [
+      "crossover",
+      "SUV",
+      "minivan 5os.",
+      "minivan 7os.",
+      "hatchback 5drzwi",
+      "hatchback"
+    ],
+    "Citroen - e-C4": [
+      "hatchback"
+    ],
+    "Citroen - e-C4X": [
+      "sedan"
+    ],
+    "Citroen - DS": [
+      "hatchback"
+    ],
+    "Citroen - C5": [
+      "SUV",
+      "liftback/kombi",
+      "sedan, kombi"
+    ],
+    "Fiat - 125p": [
+      "Brak informacji"
+    ],
+    "Citroen - DS3": [
+      "hatchback 3 drzwi"
+    ],
+    "Citroen - DS4": [
+      "hatchback"
+    ],
+    "Citroen - Jumper": [
+      "VAN"
+    ],
+    "Citroen - JUMPY": [
+      "Brak informacji"
+    ],
+    "Citroen - Jumpy": [
+      "dostawczak",
+      "van 4drzwi"
+    ],
+    "Citroen - Nemo": [
+      "dostawczak"
+    ],
+    "Fiat - Abarth": [
+      "hatchback"
+    ],
+    "Citroen - C4X": [
+      "sedan"
+    ],
+    "Chevrolet - Trax": [
+      "SUV 5os."
+    ],
+    "Chevrolet - Volt": [
+      "liftback"
+    ],
+    "Mercedes-Benz - C-class": [
+      "sedan",
+      "hatchback 3drzwi",
+      "kombi",
+      "coupe"
+    ],
+    "Bmw - 1 (E-81)": [
+      "hatchback 3drzwi"
+    ],
+    "Mercedes-Benz - CL": [
+      "coupe"
+    ],
+    "Mercedes-Benz - CLA": [
+      "sedan",
+      "kombi"
+    ],
+    "Mercedes-Benz - CLC": [
+      "hatchback 3drzwi"
+    ],
+    "Mercedes-Benz - CLE": [
+      "cabrio",
+      "coupe"
+    ],
+    "Mercedes-Benz - CLK": [
+      "coupe"
+    ],
+    "Mercedes-Benz - CLS": [
+      "sedan",
+      "kombi"
+    ],
+    "Mercedes-Benz - E-class": [
+      "coupe",
+      "kombi",
+      "sedan",
+      "cabrio"
+    ],
+    "Mercedes-Benz - W123": [
+      "sedan"
+    ],
+    "Mercedes-Benz - W124": [
+      "sedan"
+    ],
+    "Mercedes-Benz - EQA": [
+      "SUV 5os"
+    ],
+    "Mercedes-Benz - EQB": [
+      "SUV 5os"
+    ],
+    "Mercedes-Benz - EQC": [
+      "SUV 5os"
+    ],
+    "Mercedes-Benz - EQE": [
+      "sedan",
+      "SUV 5os."
+    ],
+    "Mercedes-Benz - EQS": [
+      "liftback",
+      "SUV 7os./5os"
+    ],
+    "Byd - Sealion": [
+      "SUVcoupe"
+    ],
+    "Dacia - Bigster": [
+      "SUV"
+    ],
+    "Dacia - Dokker": [
+      "kombivan"
+    ],
+    "Dacia - Duster": [
+      "SUV"
+    ],
+    "Cat - 302": [
+      "koparka"
+    ],
+    "Dacia - Jogger": [
+      "Minivan 5/7os."
+    ],
+    "Dacia - LODGY": [
+      "minivan"
+    ],
+    "Cat - 304C": [
+      "koparka"
+    ],
+    "Cat - 318": [
+      "koparka"
+    ],
+    "Cat - 432": [
+      "koparka"
+    ],
+    "Cat - 906": [
+      "Ładowarka"
+    ],
+    "Cat - 301.8": [
+      "koparka"
+    ],
+    "Cat - 320E": [
+      "koparka"
+    ],
+    "Cat - 305C": [
+      "koparka"
+    ],
+    "Mercedes-Benz - EQT": [
+      "kombivan"
+    ],
+    "Dacia - Logan": [
+      "kombi"
+    ],
+    "Land rover - Defender": [
+      "SUV 3drzwi",
+      "SUV 7os."
+    ],
+    "Land rover - Discovery": [
+      "SUV 5os",
+      "SUV 7/5os",
+      "SUV 7os",
+      "SUV 5/7os"
+    ],
+    "Lexus - NX": [
+      "SUV 5os"
+    ],
+    "Mercedes-Benz - G-class": [
+      "SUV 3 drzwi",
+      "SUV 5 drzwi",
+      "SUV"
+    ],
+    "Mercedes-Benz - GL": [
+      "SUV 7os"
+    ],
+    "Mercedes-Benz - GLA": [
+      "SUV"
+    ],
+    "Mercedes-Benz - GLB": [
+      "SUV 5/7os"
+    ],
+    "Mercedes-Benz - GLC": [
+      "SUV Coupe",
+      "SUV"
+    ],
+    "Fiat - Seicento": [
+      "hatchback"
+    ],
+    "Citroen - C5X": [
+      "fastback"
+    ],
+    "Citroen - SpaceTourer/": [
+      "VAN"
+    ],
+    "Citroen - Xsara": [
+      "minivan",
+      "hatchback"
+    ],
+    "Mercedes-Benz - GLE": [
+      "SUV Coupe",
+      "SUV",
+      "SUV 5/7os."
+    ],
+    "Mercedes-Benz - GLK-class": [
+      "SUV"
+    ],
+    "Peugeot - 2008": [
+      "SUV"
+    ],
+    "Mercedes-Benz - GLS": [
+      "SUV 7os"
+    ],
+    "Peugeot - 208": [
+      "hatchback \n5 drzwi"
+    ],
+    "Mercedes-Benz - ML": [
+      "SUV 5os.",
+      "SUV"
+    ],
+    "Ford - Mustang": [
+      "coupe",
+      "cabrio",
+      "SUV",
+      "coupe 2 drzwi"
+    ],
+    "Citroen - C8": [
+      "minivan"
+    ],
+    "Citroen - C-Crosser": [
+      "SUV 7os."
+    ],
+    "Citroen - C-Elysse": [
+      "sedan"
+    ],
+    "Peugeot - 206": [
+      "hatchback 5drzwi"
+    ],
+    "Peugeot - 207": [
+      "hatchback 5drzwi",
+      "kombi"
+    ],
+    "Peugeot - 406": [
+      "sedan"
+    ],
+    "Peugeot - 407": [
+      "coupe"
+    ],
+    "Peugeot - 605": [
+      "sedan"
+    ],
+    "Peugeot - 607": [
+      "sedan"
+    ],
+    "Peugeot - 807": [
+      "minivan"
+    ],
+    "Peugeot - 1007": [
+      "minivan"
+    ],
+    "Peugeot - 3008": [
+      "SUV",
+      "SUV Coupe"
+    ],
+    "Peugeot - 4007": [
+      "SUV"
+    ],
+    "Peugeot - 5008": [
+      "Minivan  5/7os.",
+      "SUV 7os."
+    ],
+    "Peugeot - e2008": [
+      "SUV"
+    ],
+    "Peugeot - 206+": [
+      "hatchback 5drzwi"
+    ],
+    "Peugeot - 206CC": [
+      "coupe-cabrio 2 drzwi"
+    ],
+    "Peugeot - 207CC": [
+      "coupe-cabrio 2 drzwi"
+    ],
+    "Mercedes-Benz - -class": [
+      "sedan",
+      "Brak informacji"
+    ],
+    "Peugeot - e-208": [
+      "hatchback \n5 drzwi"
+    ],
+    "Peugeot - 307CC": [
+      "coupe-cabrio"
+    ],
+    "Peugeot - 308CC": [
+      "coupe-cabrio"
+    ],
+    "Peugeot - 107": [
+      "Brak informacji"
+    ],
+    "Peugeot - 307": [
+      "kombi/hatchback 3/5drzwi"
+    ],
+    "Peugeot - 308": [
+      "hatchback 5drzwi/kombi",
+      "hatchback/kombi"
+    ],
+    "Chrysler - Pacifica": [
+      "minivan 6/7os",
+      "SUV 7os."
+    ],
+    "Chrysler - PT": [
+      "minivan"
+    ],
+    "Chrysler - Sebring/Stratus": [
+      "kabriolet"
+    ],
+    "Chrysler - Town/Country": [
+      "minivan"
+    ],
+    "Peugeot - Expert": [
+      "van 4drzwi",
+      "brygadówka"
+    ],
+    "Ford - EdgeEdge": [
+      "SUV 5os"
+    ],
+    "Ford - F-": [
+      "auto ciężarowe / TIR"
+    ],
+    "Mercedes-Benz - T1": [
+      "BUS"
+    ],
+    "Mercedes-Benz - Tourismo": [
+      "autobus"
+    ],
+    "Honda - HR-V": [
+      "SUV",
+      "SUV 5drzwi"
+    ],
+    "Honda - Jazz": [
+      "hatchback"
+    ],
+    "Mercedes-Benz - W907/W910": [
+      "minibus",
+      "BUS"
+    ],
+    "Mercedes-Benz - SLK": [
+      "coupe-cabrio"
+    ],
+    "Mercedes-Benz - Sprinter": [
+      "BUS",
+      "laweta"
+    ],
+    "Mercedes-Benz - R-class": [
+      "crossover 7os."
+    ],
+    "Dodge - Ram": [
+      "pickup"
+    ],
+    "Ford - Explorer": [
+      "SUV 5os.",
+      "SUV 7os",
+      "SUV 5os",
+      "SUV 6os"
+    ],
+    "Ford - Focus": [
+      "kombi",
+      "kombi/hatchback 5drzwi",
+      "coupe-cabrio",
+      "minivan"
+    ],
+    "Honda - Legend": [
+      "sedan"
+    ],
+    "Honda - CR-V": [
+      "SUV",
+      "SUV 5os"
+    ],
+    "Honda - Insight": [
+      "liftback"
+    ],
+    "Dodge - Nitro": [
+      "SUV"
+    ],
+    "Mercedes-Benz - Unimog": [
+      "auto ciężarowe"
+    ],
+    "Ford - Escape": [
+      "SUV"
+    ],
+    "Peugeot - Traveller/": [
+      "BUS"
+    ],
+    "Chrysler - Crossfire": [
+      "coupe/ cabrio"
+    ],
+    "Chrysler - Voyager": [
+      "minivan"
+    ],
+    "Honda - CR-Z": [
+      "coupe"
+    ],
+    "Honda - Element": [
+      "SUV"
+    ],
+    "Honda - FR-V": [
+      "minivan"
+    ],
+    "Ford - Fusion": [
+      "sedan",
+      "minivan"
+    ],
+    "Ferrari - 296": [
+      "targa"
+    ],
+    "Ford - Galaxy/": [
+      "minivan 5os",
+      "minivan 7os",
+      "minivan 5/7os"
+    ],
+    "Hyundai - Tiburon": [
+      "coupe"
+    ],
+    "Ford - C-": [
+      "minivan",
+      "minivan 5os"
+    ],
+    "Mercedes-Benz - X": [
+      "pickup"
+    ],
+    "Chrysler - Sebring": [
+      "sedan"
+    ],
+    "Hyundai - Tuscani/Tiburon": [
+      "coupe"
+    ],
+    "Ford - Grand": [
+      "minivan 5os",
+      "minivan 7os",
+      "minivan 5,7 os",
+      "minivan 5/7os."
+    ],
+    "Ford - TRANSIT": [
+      "Brak informacji"
+    ],
+    "Honda - Accord": [
+      "coupe",
+      "sedan",
+      "kombi"
+    ],
+    "Honda - 2000": [
+      "roadster"
+    ],
+    "Hyundai - SANTA": [
+      "SUV",
+      "SUV 5/7os.",
+      "Brak informacji"
+    ],
+    "Honda - Odyssey": [
+      "minivan"
+    ],
+    "Hyundai - Grand": [
+      "SUV 7os."
+    ],
+    "Hyundai - Santa": [
+      "SUV 5/7os.",
+      "SUV 6/7os.",
+      "SUV 5os.",
+      "SUV 7os.",
+      "SUV 5os/6os./7os."
+    ],
+    "Mercedes-Benz - V-class": [
+      "BUS",
+      "dostawczak"
+    ],
+    "Mercedes-Benz - Vaneo": [
+      "kombivan"
+    ],
+    "Honda - Pilota": [
+      "SUV 7os."
+    ],
+    "Honda - Ridgeline": [
+      "pickup"
+    ],
+    "Honda - Prelude": [
+      "coupe"
+    ],
+    "Honda - ZR-V": [
+      "SUV"
+    ],
+    "Fiat - 600": [
+      "SUV"
+    ],
+    "Ford - Flex": [
+      "SUV 7os.",
+      "Brak informacji"
+    ],
+    "Ford - Galaxy": [
+      "minivan 7os"
+    ],
+    "Mercedes-Benz - W447": [
+      "BUS"
+    ],
+    "Mercedes-Benz - V-Class": [
+      "BUS"
+    ],
+    "Mercedes-Benz - W": [
+      "sedan"
+    ],
+    "Mercedes-Benz - Zetros": [
+      "ciężarówka"
+    ],
+    "Ford - KA": [
+      "hatchback",
+      "hatchback 5drzwi"
+    ],
+    "Mazda - CX-5": [
+      "SUV 5os.",
+      "SUV 5os"
+    ],
+    "Mazda - CX-9a": [
+      "SUV 7os."
+    ],
+    "Mazda - MX-5": [
+      "roadster"
+    ],
+    "Opel - Astra": [
+      "sedan",
+      "hatchabck 5drzwi/3drzwi / sedan",
+      "kabriolet/ coupe",
+      "kabriolet",
+      "hatchabck 5 drzwi/kombi",
+      "hatchabck 3 drzwi",
+      "Hatchback 5drzwi/ Kombi",
+      "Hatchback 5drzwi",
+      "hatchback/kombi"
+    ],
+    "Opel - Combo": [
+      "dostawczak",
+      "kombivan 5os."
+    ],
+    "Renault - Austral": [
+      "SUV 5os."
+    ],
+    "Renault - Clio": [
+      "hatchback 5/3drzwi/ kombi",
+      "hatchback 3/5drzwi",
+      "hatchback 3drzwi",
+      "hatchback 5drzwi/kombi",
+      "hatchback 5drzwi"
+    ],
+    "Opel - Calibra": [
+      "Brak informacji"
+    ],
+    "Opel - Cascada": [
+      "cabrio"
+    ],
+    "Opel - COMBO": [
+      "minivan"
+    ],
+    "Opel - CORSA": [
+      "Hatchback 5 drzwi",
+      "hatchback"
+    ],
+    "Renault - Captur": [
+      "SUV 5os."
+    ],
+    "Renault - Arkana": [
+      "SUV coupe"
+    ],
+    "Hyundai - Sonata": [
+      "sedan"
+    ],
+    "Hyundai - Staria": [
+      "BUS 9os."
+    ],
+    "Hyundai - Terracan": [
+      "SUV"
+    ],
+    "Hyundai - Veloster": [
+      "hatchback"
+    ],
+    "Mazda - CX-7": [
+      "SUV"
+    ],
+    "Mazda - CX-9": [
+      "SUV 7os."
+    ],
+    "Mazda - CX-30": [
+      "SUV 5os."
+    ],
+    "Mazda - CX-60": [
+      "SUV 5os."
+    ],
+    "Mazda - CX-80": [
+      "SUV 6os./ 7os."
+    ],
+    "Mazda - CX-90": [
+      "SUV"
+    ],
+    "Mazda - MX-3": [
+      "coupe"
+    ],
+    "Renault - Avantime": [
+      "minivan 3 drzwi"
+    ],
+    "Hyundai - Genesis": [
+      "coupe"
+    ],
+    "Audi - A1": [
+      "hatchback",
+      "hatchback 5 drzwi"
+    ],
+    "Audi - A2": [
+      "hatchback"
+    ],
+    "Audi - A3": [
+      "hatchback 5/3 drzwi",
+      "sedan",
+      "hatchback 3 drzwi",
+      "hatchback 5 drzwi",
+      "hatchback 5drzwi/sedan"
+    ],
+    "Chevrolet - Corvette": [
+      "targa",
+      "roadster"
+    ],
+    "Opel - Mokka-e": [
+      "SUV"
+    ],
+    "Audi - TT": [
+      "coupe",
+      "Coupe"
+    ],
+    "Chevrolet - Cruze": [
+      "sedan"
+    ],
+    "Chevrolet - Kalos": [
+      "hatchback 5drzwi"
+    ],
+    "Chevrolet - Suburban": [
+      "SUV 7os.",
+      "SUV 6os."
+    ],
+    "Opel - Karl": [
+      "Brak informacji"
+    ],
+    "Fiat - Punto": [
+      "hatchback",
+      "hatchback 5 drzwi",
+      "hatchback 3 drzwi"
+    ],
+    "Hyundai - Ioniq": [
+      "SUV",
+      "sedan",
+      "liftback"
+    ],
+    "Opel - Crossland": [
+      "SUV 5os"
+    ],
+    "Chevrolet - Epica": [
+      "sedan"
+    ],
+    "Chevrolet - Express": [
+      "VAN"
+    ],
+    "Chevrolet - Lacetti": [
+      "hatchback"
+    ],
+    "Chevrolet - Malibu": [
+      "sedan"
+    ],
+    "Chevrolet - Nubira": [
+      "kombi"
+    ],
+    "Opel - Frontera": [
+      "SUV 5drzwi",
+      "SUV 3drzwi",
+      "SUV 5os"
+    ],
+    "Chevrolet - Tahoe": [
+      "SUV 5os.",
+      "SUV 7os."
+    ],
+    "Fiat - Panda": [
+      "hatchback 3 drzwi",
+      "hatchback"
+    ],
+    "Hyundai - Getz": [
+      "hatchback"
+    ],
+    "Hyundai - H1": [
+      "VAN",
+      "brygadówka"
+    ],
+    "Hyundai - H100": [
+      "VAN"
+    ],
+    "Opel - Insignia": [
+      "Kombi/sedan, liftaback",
+      "kombi",
+      "kombi/liftback"
+    ],
+    "Hyundai - Inster": [
+      "SUV"
+    ],
+    "Opel - Meriva": [
+      "minivan"
+    ],
+    "Hyundai - I10": [
+      "hatchback 5 drzwi",
+      "hatchback",
+      "hatchback 5drzwi"
+    ],
+    "Opel - Mokka": [
+      "SUV"
+    ],
+    "Opel - Movano": [
+      "BUS",
+      "Brak informacji",
+      "dostawczak"
+    ],
+    "Fiat - Scudo": [
+      "van 4drzwi"
+    ],
+    "Fiat - Sedici": [
+      "SUV"
+    ],
+    "Fiat - Stilo": [
+      "hatchback 3 drzwi"
+    ],
+    "Fiat - Strada": [
+      "pick-up"
+    ],
+    "Fiat - Talento": [
+      "BUS"
+    ],
+    "Fiat - Tipo": [
+      "hatchback/ kombi/sedan",
+      "SUV"
+    ],
+    "Fiat - Ulysse": [
+      "minivan"
+    ],
+    "Ford - Kuga": [
+      "SUV"
+    ],
+    "Ford - Maverick": [
+      "pickup"
+    ],
+    "Kia - Nirohybryd": [
+      "SUV"
+    ],
+    "Ford - Mondeo": [
+      "sedan/kombi/ liftback",
+      "kombi, liftback",
+      "kombi",
+      "kombi, liftback, sedan"
+    ],
+    "Kia - Niro": [
+      "SUV"
+    ],
+    "Kia - XCeed": [
+      "SUV"
+    ],
+    "Nissan - Pathfinder": [
+      "SuV 7os",
+      "SUV"
+    ],
+    "Fiat - Qubo": [
+      "kombivan"
+    ],
+    "Kia - XCeedGT": [
+      "SUV"
+    ],
+    "Fiat - Scudo,": [
+      "VAN"
+    ],
+    "Ford - FocusFocus": [
+      "hatchback 5drzwi/kombi"
+    ],
+    "Opel - Signum": [
+      "Brak informacji"
+    ],
+    "Kia - SPORTAGE": [
+      "Brak informacji"
+    ],
+    "Opel - Vivaro": [
+      "Brak informacji"
+    ],
+    "Opel - Omega": [
+      "Brak informacji",
+      "kombi , sedan"
+    ],
+    "Opel - Tigra": [
+      "coupe",
+      "Coupe"
+    ],
+    "Opel - Vectra": [
+      "liftback/kombi/sedan",
+      "Sedan",
+      "sedan"
+    ],
+    "Opel - ZAFIRA": [
+      "minivan",
+      "BUS"
+    ],
+    "Opel - Corsa": [
+      "Hatchback 5 drzwi",
+      "hatchback 5 drzwi",
+      "hatchback 3drzwi"
+    ],
+    "Opel - Corca": [
+      "hatchback 3drzwi"
+    ],
+    "Kia - Cerato": [
+      "sedan"
+    ],
+    "Kia - EV3": [
+      "crossover"
+    ],
+    "Kia - EV6": [
+      "crossover"
+    ],
+    "Kia - EV9": [
+      "SUV 6os."
+    ],
+    "Kia - K5": [
+      "sedan"
+    ],
+    "Opel - Zafira": [
+      "minivan",
+      "minivan 5/7os."
+    ],
+    "Skoda - Fabia": [
+      "Hatchback 5drzwi/kombi",
+      "hatchback, kombi",
+      "Brak informacji"
+    ],
+    "Ford - F": [
+      "pickup",
+      "pickup 3os."
+    ],
+    "Ford - Fiesta": [
+      "hatchback 3 drzwi",
+      "hatchback 3/5 drzwi",
+      "hatchback 5 drzwi"
+    ],
+    "Skoda - Karoq": [
+      "SUV 5os"
+    ],
+    "Skoda - Kodiaq": [
+      "SUV 5os/7os."
+    ],
+    "Ford - Tourneo": [
+      "minivan 5/7os.",
+      "BUS 8os.",
+      "minivan 7os",
+      "kombivan 5os."
+    ],
+    "Lexus - GS": [
+      "sedan"
+    ],
+    "Mazda - 6": [
+      "kombi/liftback/ sedan",
+      "kombi/liftback",
+      "sedan/kombi",
+      "Brak informacji"
+    ],
+    "Skoda - Yeti": [
+      "SUV"
+    ],
+    "Skoda - 100s": [
+      "sedan"
+    ],
+    "Skoda - Scala": [
+      "Brak informacji"
+    ],
+    "Skoda - Octavia": [
+      "kombi",
+      "liftback/kombi"
+    ],
+    "Ford - Fiestaa": [
+      "hatchback 3/5 drzwi"
+    ],
+    "Ford - F650": [
+      "pickup"
+    ],
+    "Mini - JCW": [
+      "cabrio"
+    ],
+    "Toyota - Corolla": [
+      "sedan",
+      "hatchback 3drzwi"
+    ],
+    "Mazda - 2": [
+      "hatchback 5drzwi"
+    ],
+    "Skoda - Rapid": [
+      "hatchback 5drzwi"
+    ],
+    "Skoda - Superb": [
+      "kombi/liftback"
+    ],
+    "Mini - Clubman": [
+      "kombi 4drzwi"
+    ],
+    "Mini - Cooper": [
+      "hatchback 3 drz",
+      "hatchback 5 drz",
+      "hatchback 3drzwi",
+      "kombi 4drzwi"
+    ],
+    "Toyota - Rav4": [
+      "SUV"
+    ],
+    "Lexus - GX-460": [
+      "SUV"
+    ],
+    "Lexus - GX-470": [
+      "SUV 7os"
+    ],
+    "Lexus - LBX": [
+      "SUV"
+    ],
+    "Mazda - 3": [
+      "hatchback/sedan",
+      "hatchback/Sedan"
+    ],
+    "Mazda - 5": [
+      "minivan 5os.",
+      "minivan 7os."
+    ],
+    "Mazda - CX-3": [
+      "SUV 5os"
+    ],
+    "Seat - ALTEAALTEA": [
+      "minivan"
+    ],
+    "Seat - Toledo": [
+      "liftback",
+      "Brak informacji"
+    ],
+    "Seat - Alhambra": [
+      "minivan",
+      "minivan 5/7os."
+    ],
+    "Ford - Transit": [
+      "dostawczak",
+      "kamper",
+      "BUS 9os",
+      "BUS",
+      "Bus camper",
+      "minivan",
+      "minivan 5/7os",
+      "BUS 8os",
+      "BUS 9 os",
+      "Furgon/ Brygadówka",
+      "Bus",
+      "bus camper"
+    ],
+    "Seat - Exeo": [
+      "kombi/sedan"
+    ],
+    "Mini - Cabrio": [
+      "cabrio"
+    ],
+    "Mini - Countryman": [
+      "SUV"
+    ],
+    "Mini - One": [
+      "hatchback"
+    ],
+    "Ford - EcoSport": [
+      "SUV"
+    ],
+    "Honda - Civic": [
+      "hatchback\n3 drzwi/ sedan",
+      "liftback",
+      "hatchback 5drzwi",
+      "hatchback 3drzwi",
+      "sedan",
+      "coupe",
+      "hatchback 3/5drzwi",
+      "hatchback",
+      "hatchback/sedan"
+    ],
+    "Seat - Cupra": [
+      "Brak informacji"
+    ],
+    "Honda - City": [
+      "sedan"
+    ],
+    "Mini - One/": [
+      "hatchback 3 drz"
+    ],
+    "Bmw - 5 (F10)": [
+      "sedan, kombi",
+      "sedan"
+    ],
+    "Hyundai - IX": [
+      "minivan",
+      "SUV"
+    ],
+    "Hyundai - Kona": [
+      "SUV"
+    ],
+    "Bmw - 1 (E-88)": [
+      "cabrio"
+    ],
+    "Bmw - 1 (F-20)": [
+      "hatchback 5drzwi"
+    ],
+    "Bmw - 1 (F-21)": [
+      "hatchback 3drzwi"
+    ],
+    "Bmw - 1 (F40)": [
+      "hatchback 5drzwi"
+    ],
+    "Bmw - 1 (F70)": [
+      "hatchback 5drzwi"
+    ],
+    "Bmw - 2 (F45)": [
+      "minivan"
+    ],
+    "Bmw - 2 (U06)": [
+      "minivan"
+    ],
+    "Bmw - 2 (F22)": [
+      "coupe"
+    ],
+    "Bmw - 2 (F23)": [
+      "cabrio"
+    ],
+    "Bmw - 2 (G42)": [
+      "coupe"
+    ],
+    "Bmw - 2 (F44)": [
+      "sedan"
+    ],
+    "Bmw - 2 (F74)": [
+      "sedan"
+    ],
+    "Bmw - 2 (F46)": [
+      "minivan"
+    ],
+    "Bmw - 3 (E-46)": [
+      "hatchback 3 drzwi",
+      "kombi/coupe/ sedan",
+      "cabrio"
+    ],
+    "Bmw - 3 (E-36)": [
+      "coupe",
+      "cabrio",
+      "sedan"
+    ],
+    "Bmw - 3 (E-90)": [
+      "sedan"
+    ],
+    "Bmw - 3 (E-91)": [
+      "kombi"
+    ],
+    "Bmw - 3 (E-92)": [
+      "coupe"
+    ],
+    "Bmw - 3 (E-93)": [
+      "cabrio"
+    ],
+    "Bmw - 3 (F30)": [
+      "sedan"
+    ],
+    "Bmw - 3 (F31)": [
+      "kombi"
+    ],
+    "Bmw - 3 (G20)": [
+      "sedan"
+    ],
+    "Bmw - 4 (F32)": [
+      "coupe"
+    ],
+    "Bmw - 4 (F33)": [
+      "cabriolet"
+    ],
+    "Bmw - 4 (G22)": [
+      "coupe"
+    ],
+    "Bmw - 4 (G26)": [
+      "liftback"
+    ],
+    "Bmw - 4 (F36)": [
+      "Liftback"
+    ],
+    "Bmw - 5 (E39)": [
+      "sedan, kombi"
+    ],
+    "Bmw - 5 (E60)": [
+      "sedan"
+    ],
+    "Bmw - 5 (E61)": [
+      "kombi"
+    ],
+    "Bmw - 5 (F07)": [
+      "Liftback"
+    ],
+    "Bmw - 5 (G30)": [
+      "sedan"
+    ],
+    "Bmw - 5 (G31)": [
+      "kombi"
+    ],
+    "Bmw - 5 (G60)": [
+      "sedan"
+    ],
+    "Bmw - 5 (G61)": [
+      "kombi"
+    ],
+    "Bmw - 6 (E63)": [
+      "coupe"
+    ],
+    "Bmw - 6 (F12)": [
+      "cabrio"
+    ],
+    "Hyundai - I20": [
+      "hatchback 5 drzwi"
+    ],
+    "Hyundai - I30": [
+      "hatchback / kombi",
+      "hatchback 3/5drzwi/kombi",
+      "hatchback 5drzwi/liftback/kombi"
+    ],
+    "Hyundai - I40": [
+      "sedan, kombi"
+    ],
+    "Bmw - 6 (F13)": [
+      "coupe"
+    ],
+    "Bmw - i4 (G26)": [
+      "liftback"
+    ],
+    "Bmw - M2 (F87)": [
+      "coupe"
+    ],
+    "Bmw - M3 (G80)": [
+      "sedan"
+    ],
+    "Bmw - M3 (G81)": [
+      "kombi (touring)"
+    ],
+    "Bmw - I3 (I01)": [
+      "hatchback"
+    ],
+    "Bmw - IX2": [
+      "SUVcoupe"
+    ],
+    "Audi - A6": [
+      "sedan/kombi",
+      "kombi",
+      "kombi, sedan"
+    ],
+    "Audi - A80,": [
+      "sedan"
+    ],
+    "Bmw - 7 (F01)": [
+      "sedan"
+    ],
+    "Bmw - X4 (F26)": [
+      "SUV coupe"
+    ],
+    "Bmw - 6 (F06)": [
+      "sedan"
+    ],
+    "Bmw - 6 (G32)": [
+      "Liftback"
+    ],
+    "Bmw - 7 (E32)": [
+      "sedan"
+    ],
+    "Bmw - X4 (G02)": [
+      "SUV coupe"
+    ],
+    "Bmw - 7 (G11)": [
+      "sedan"
+    ],
+    "Chevrolet - Orlando": [
+      "minivan"
+    ],
+    "Chevrolet - Silverado": [
+      "pickup 2drzwi",
+      "pickup"
+    ],
+    "Audi - 6": [
+      "kombi"
+    ],
+    "Bmw - 7 (E38)": [
+      "sedan"
+    ],
+    "Audi - A7/": [
+      "liftback"
+    ],
+    "Bmw - 7 (E65)": [
+      "sedan"
+    ],
+    "Lexus - LX": [
+      "Brak informacji",
+      "SUV 5os",
+      "SUV"
+    ],
+    "Lexus - RC": [
+      "coupe"
+    ],
+    "Lexus - RX": [
+      "SUV"
+    ],
+    "Lexus - RX-200T,": [
+      "SUV 5os."
+    ],
+    "Bmw - 7 (E66)": [
+      "sedan"
+    ],
+    "Lexus - RZ": [
+      "SUV"
+    ],
+    "Lexus - UX": [
+      "SUV"
+    ],
+    "Mazda - 323F": [
+      "fastback"
+    ],
+    "Chevrolet - Spark": [
+      "hatchback 5drzwi"
+    ],
+    "Lexus - NX-400": [
+      "Brak informacji"
+    ],
+    "Mazda - MX-30": [
+      "SUV"
+    ],
+    "Mazda - RX-8": [
+      "coupe"
+    ],
+    "Mazda - Tribute": [
+      "SUV"
+    ],
+    "Mazda - Xedos": [
+      "sedan"
+    ],
+    "Bmw - 7 (F02)": [
+      "sedan"
+    ],
+    "Bmw - 7 (G12)": [
+      "sedan"
+    ],
+    "Bmw - M4 (G82)": [
+      "coupe"
+    ],
+    "Bmw - M6 (F06)": [
+      "sedan"
+    ],
+    "Bmw - X2 (F39)": [
+      "SUV"
+    ],
+    "Bmw - X2 (U10)": [
+      "SUVcoupe"
+    ],
+    "Bmw - X3 (E83)": [
+      "SUV"
+    ],
+    "Bmw - X3 (F25)": [
+      "SUV"
+    ],
+    "Bmw - X3 (G01)": [
+      "SUV"
+    ],
+    "Bmw - X3 (G45)": [
+      "SUV"
+    ],
+    "Bmw - X5 (E53)": [
+      "SUV"
+    ],
+    "Bmw - X5 (E70)": [
+      "SUV 5/7os."
+    ],
+    "Bmw - X5 (F15)": [
+      "SUV 5/7os."
+    ],
+    "Bmw - X5 (G05)": [
+      "SUV 5/7os."
+    ],
+    "Bmw - X6 (E71)": [
+      "SUV coupe"
+    ],
+    "Bmw - X6 (F16)": [
+      "SUV coupe"
+    ],
+    "Bmw - X6/X6M (G06)": [
+      "SUV coupe"
+    ],
+    "Lexus - SC430": [
+      "coupe-cabrio"
+    ],
+    "Bmw - X7 (G07)": [
+      "SUV 6/7os"
+    ],
+    "Bmw - XM (G09)": [
+      "SUV"
+    ],
+    "Bmw - 8 (G16)": [
+      "sedan"
+    ],
+    "Bmw - i7": [
+      "sedan"
+    ],
+    "Bmw - IX-1": [
+      "SUV"
+    ],
+    "Bmw - IX": [
+      "SUV"
+    ],
+    "Fiat - Grande": [
+      "hatchback"
+    ],
+    "Bmw - 7 (G70)": [
+      "sedan"
+    ],
+    "Ford - Puma": [
+      "SUV"
+    ],
+    "Ford - Ranger": [
+      "pickup"
+    ],
+    "Bmw - Z3": [
+      "roadster"
+    ],
+    "John deere - 6R": [
+      "ciągnik"
+    ],
+    "John deere - 6195M": [
+      "ciągnik"
+    ],
+    "John deere - 8R": [
+      "ciągnik"
+    ],
+    "Bmw - 8 (G15)": [
+      "coupe"
+    ],
+    "John deere - 8RX": [
+      "ciągnik"
+    ],
+    "Bmw - iX3 (G08)": [
+      "SUV"
+    ],
+    "Bmw - M4 (F82)": [
+      "coupe"
+    ],
+    "Bmw - X1 (E84)": [
+      "SUV"
+    ],
+    "Bmw - X1 (F48)": [
+      "SUV"
+    ],
+    "Bmw - X1 (U11)": [
+      "SUV"
+    ],
+    "Bmw - Z4 (E85)": [
+      "roadster"
+    ],
+    "Bmw - Z4 (G29)": [
+      "roadster"
+    ],
+    "John deere - 8345R": [
+      "ciągnik"
+    ],
+    "John deere - 8360R": [
+      "ciągnik"
+    ],
+    "Ford - Mustanga": [
+      "coupe",
+      "cabrio",
+      "coupe/cabrio"
+    ],
+    "Ford - Taurus": [
+      "sedan"
+    ],
+    "Fiat - Linea": [
+      "sedan"
+    ],
+    "Fiat - Multipla": [
+      "minivan"
+    ],
+    "Ford - LTD": [
+      "sedan"
+    ],
+    "Ford - Thunderbird": [
+      "coupe"
+    ],
+    "Jeep - Grand": [
+      "SUV",
+      "SUV 5/6os.",
+      "SUV 7os."
+    ],
+    "Lexus - LS": [
+      "sedan"
+    ],
+    "Lexus - IS200": [
+      "sedan"
+    ],
+    "Jeep - Renegade": [
+      "SUV"
+    ],
+    "Jeep - Wrangler": [
+      "SUV 2drzwi",
+      "SUV",
+      "SUV 4drzwi"
+    ],
+    "Jeep - Compass": [
+      "SUV"
+    ],
+    "Jeep - Patriot": [
+      "SUV"
+    ],
+    "Land rover - Freelander": [
+      "SUV 5os"
+    ],
+    "Land rover - Evoque": [
+      "SUV 5drzwi"
+    ],
+    "Land rover - Range": [
+      "SUV",
+      "SUV 5os",
+      "SUV 5os/7os.",
+      "SUV  5os.",
+      "SUV 5drzwi"
+    ],
+    "Lexus - IS": [
+      "sedan"
+    ],
+    "Audi - A5": [
+      "coupe/ cabrio",
+      "liftback/kombi",
+      "liftback"
+    ],
+    "Audi - Q8": [
+      "SUV coupe"
+    ],
+    "Audi - S3": [
+      "sedan"
+    ],
+    "Ford - Expedition": [
+      "SUV 6os.",
+      "SUV 7os",
+      "SUV 6/7os"
+    ],
+    "Ford - Edge": [
+      "SUV"
+    ],
+    "Ford - Escort": [
+      "liftback"
+    ],
+    "Hyundai - Tucson": [
+      "SUV"
+    ],
+    "Ford - F150": [
+      "pickup"
+    ],
+    "Hyundai - Palisade": [
+      "SUV 7os."
+    ],
+    "Kia - Sorento": [
+      "SUV 5os.",
+      "SUV 7os.",
+      "SUV 5/7os.",
+      "SUV 5/6/7os."
+    ],
+    "Mitsubishi - Eclipse": [
+      "cabriolet",
+      "SUV 5os",
+      "SUV"
+    ],
+    "Mitsubishi - Outlandera": [
+      "SUV"
+    ],
+    "Mitsubishi - Fuso": [
+      "ciężarówka"
+    ],
+    "Mitsubishi - Galant": [
+      "sedan"
+    ],
+    "Mitsubishi - Outlander": [
+      "SUV 5os.",
+      "Brak informacji",
+      "SUV 5/7os.",
+      "SUV 7os."
+    ],
+    "Mitsubishi - Grandis": [
+      "minivan"
+    ],
+    "Mitsubishi - L200": [
+      "pickup"
+    ],
+    "Mitsubishi - PAJERO": [
+      "SUV 5os.",
+      "SUV 7os"
+    ],
+    "Mitsubishi - Space": [
+      "minivan",
+      "hatchback"
+    ],
+    "Mitsubishi - Lancer": [
+      "sedan,kombi",
+      "sedan/hatchback",
+      "sedan"
+    ],
+    "Mitsubishi - Pajero": [
+      "SUV 3drzwi",
+      "SUV 5drzwi 7os.",
+      "SUV 5drzwi",
+      "SUV"
+    ],
+    "Renault - Fluence": [
+      "sedan"
+    ],
+    "Renault - Espace": [
+      "minivan",
+      "SUV 5/7os."
+    ],
+    "Renault - Express": [
+      "dostawczak"
+    ],
+    "Renault - Kangoo": [
+      "minivan",
+      "minivan 5os.",
+      "dostawczak",
+      "kombivan 5os.",
+      "brygadówka 5os."
+    ],
+    "Renault - Grand": [
+      "kombivan 7os.",
+      "minivan",
+      "minivan 7os."
+    ],
+    "Renault - Koleos": [
+      "SUV"
+    ],
+    "Renault - Koleosa": [
+      "SUV"
+    ],
+    "Nissan - e-NV": [
+      "VAN"
+    ],
+    "Nissan - Patrol": [
+      "SUV 5/3 drzwi",
+      "SUV 5os"
+    ],
+    "Nissan - QASHQAI": [
+      "SUV"
+    ],
+    "Nissan - Qashqai": [
+      "SUV"
+    ],
+    "Nissan - Rogue": [
+      "SUV"
+    ],
+    "Nissan - Primstar": [
+      "BUS"
+    ],
+    "Nissan - Pulsar": [
+      "Brak informacji"
+    ],
+    "Nissan - Primera": [
+      "liftback"
+    ],
+    "Nissan - X-Trail": [
+      "SUV",
+      "SUV 5/7os."
+    ],
+    "Nissan - Juke": [
+      "SUV"
+    ],
+    "Smart - Forfour": [
+      "hatchback 5 drzwi"
+    ],
+    "Nissan - Terrano": [
+      "SUV 7os."
+    ],
+    "Nissan - Tiida": [
+      "hatchabck 5drzwi"
+    ],
+    "Nissan - Xterra": [
+      "SUV 5os."
+    ],
+    "Pontiac - Firebird": [
+      "cabrio"
+    ],
+    "Renault - Laguna": [
+      "kombi/liftback",
+      "kombi / hatchback/liftback",
+      "liftback"
+    ],
+    "Smart - Fortwo": [
+      "hatchback 3 drzwi",
+      "hatchback"
+    ],
+    "Subaru - Forester": [
+      "SUV",
+      "SUV 5os."
+    ],
+    "Subaru - Impreza": [
+      "kombi",
+      "hatchback 5drzwi"
+    ],
+    "Subaru - Outback": [
+      "sedan/kombi",
+      "kombi"
+    ],
+    "Subaru - Legacy": [
+      "kombi",
+      "sedan"
+    ],
+    "Subaru - Tribeca": [
+      "SUV 5/7os."
+    ],
+    "Subaru - Justy": [
+      "Brak informacji"
+    ],
+    "Suzuki - Swift": [
+      "hatchback 5 drzwi"
+    ],
+    "Suzuki - Vitara": [
+      "SUV 3drzwi"
+    ],
+    "Renault - Master": [
+      "Bus"
+    ],
+    "Renault - Megane": [
+      "hatchback 5drzwi",
+      "kombi/hatchback 5drzwi",
+      "coupe-cabrio",
+      "kombi/hatchback 5/3drzwi",
+      "kombi/sedan/hatchback 5drzwi"
+    ],
+    "Renault - Latitude": [
+      "sedan"
+    ],
+    "Renault - Mascott": [
+      "furgon"
+    ],
+    "Subaru - XV": [
+      "SUV 5",
+      "SUV 5os."
+    ],
+    "Suzuki - SX4": [
+      "SUV",
+      "Brak informacji"
+    ],
+    "Suzuki - VitaraVitara": [
+      "SUV"
+    ],
+    "Suzuki - Grand": [
+      "SUV",
+      "SUV 5 drzwi"
+    ],
+    "Dacia - Sandero": [
+      "hatchback",
+      "hatchback 5drzwi"
+    ],
+    "Kia - Sportage": [
+      "SUV"
+    ],
+    "Renault - Midlum": [
+      "ciężarówka"
+    ],
+    "Renault - Modus": [
+      "minivan"
+    ],
+    "Renault - Premium": [
+      "ciężarówka"
+    ],
+    "Renault - Safrane": [
+      "Brak informacji"
+    ],
+    "Renault - Scenic": [
+      "minivan 5os.",
+      "Brak informacji",
+      "SUV 5os."
+    ],
+    "Renault - Megan": [
+      "SUV 5os."
+    ],
+    "Renault - Symbioz": [
+      "SUV 5os."
+    ],
+    "Renault - Rafale": [
+      "SUV Coupe"
+    ],
+    "Renault - Talisman": [
+      "kombi/sedan"
+    ],
+    "Renault - Trafic": [
+      "BUS",
+      "brygadówka"
+    ],
+    "Renault - Zoe": [
+      "hatchback 5 drzwi"
+    ],
+    "Kia - СARNIVAL(Sedona)": [
+      "minivan"
+    ],
+    "Dacia - Spring": [
+      "hatchback"
+    ],
+    "Renault - Thalia": [
+      "sedan"
+    ],
+    "Kia - Stinger": [
+      "liftback"
+    ],
+    "Suzuki - -7": [
+      "SUV 5os."
+    ],
+    "Renault - Twingo": [
+      "hatchback 3 drzwi",
+      "hatchback 5 drzwi"
+    ],
+    "Renault - Vel": [
+      "hatchback 5 drzwi"
+    ],
+    "Kia - Stonic": [
+      "SUV"
+    ],
+    "Toyota - AURIS": [
+      "hatchback 5 drzwi",
+      "kombi / hatchback 5 drzwi"
+    ],
+    "Kia - Opirus": [
+      "sedan"
+    ],
+    "Kia - Optima": [
+      "sedan",
+      "sedan, kombi"
+    ],
+    "Kia - Venga": [
+      "minivan"
+    ],
+    "Toyota - C-HR": [
+      "crossover"
+    ],
+    "Kia - Picanto": [
+      "hatchback",
+      "hatchback 5drzwi"
+    ],
+    "Kia - Rio": [
+      "hatchback"
+    ],
+    "Kia - Soul": [
+      "SUV"
+    ],
+    "Kia - Sedona": [
+      "minivan 8os."
+    ]
+  },
+  "sampleRecords": [
+    {
+      "brand": "Chevrolet",
+      "model": "TrailBlazer/TrailBlazer",
+      "bodyType": "SUV 5/7os.",
+      "generation": "2001-2008"
+    },
+    {
+      "brand": "Citroen",
+      "model": "C3",
+      "bodyType": "hatchback",
+      "generation": "2024+"
+    },
+    {
+      "brand": "Fiat",
+      "model": "500",
+      "bodyType": "hatchback",
+      "generation": "2007-2024"
+    },
+    {
+      "brand": "Fiat",
+      "model": "500E",
+      "bodyType": "cabrio/ hatchback 3drzwi",
+      "generation": "2020+"
+    },
+    {
+      "brand": "Fiat",
+      "model": "500L",
+      "bodyType": "mikrovan",
+      "generation": "2012-2022"
+    },
+    {
+      "brand": "Fiat",
+      "model": "Doblo",
+      "bodyType": "kombivan 7os.",
+      "generation": "2000-2010"
+    },
+    {
+      "brand": "Fiat",
+      "model": "600e",
+      "bodyType": "SUV",
+      "generation": "2023+"
+    },
+    {
+      "brand": "Citroen",
+      "model": "C3",
+      "bodyType": "SUV",
+      "generation": "2017-2024"
+    },
+    {
+      "brand": "Fiat",
+      "model": "Albea",
+      "bodyType": "sedan",
+      "generation": "2002-2010"
+    },
+    {
+      "brand": "Fiat",
+      "model": "Barchetta",
+      "bodyType": "roadster",
+      "generation": "1995-2005"
+    },
+    {
+      "brand": "Fiat",
+      "model": "Bravo",
+      "bodyType": "hatchback",
+      "generation": "2007-2014"
+    },
+    {
+      "brand": "Fiat",
+      "model": "Cinquecento",
+      "bodyType": "hatchback 3drzwi",
+      "generation": "1991-1998"
+    },
+    {
+      "brand": "Fiat",
+      "model": "Croma",
+      "bodyType": "kombi",
+      "generation": "2005-2011"
+    },
+    {
+      "brand": "Fiat",
+      "model": "Doblo",
+      "bodyType": "kombivan",
+      "generation": "2010-2022"
+    },
+    {
+      "brand": "Fiat",
+      "model": "DUCATOa",
+      "bodyType": "bus",
+      "generation": "1994-2006"
+    },
+    {
+      "brand": "Fiat",
+      "model": "Doblo",
+      "bodyType": "minivan",
+      "generation": "2022+"
+    },
+    {
+      "brand": "Fiat",
+      "model": "Ducato",
+      "bodyType": "VAN",
+      "generation": "2006+"
+    },
+    {
+      "brand": "Fiat",
+      "model": "Ducato",
+      "bodyType": "kamper",
+      "generation": "1994-2006"
+    },
+    {
+      "brand": "Fiat",
+      "model": "Ducato",
+      "bodyType": "kamper",
+      "generation": "2006+"
+    },
+    {
+      "brand": "Chevrolet",
+      "model": "Equinoxa",
+      "bodyType": "SUV",
+      "generation": "2009-2017"
+    }
+  ],
+  "commaSeparatedCount": 13,
+  "commaSeparatedExamples": [
+    {
+      "brand": "Citroen",
+      "model": "C5",
+      "bodyType": "sedan, kombi"
+    },
+    {
+      "brand": "Opel",
+      "model": "Insignia",
+      "bodyType": "Kombi/sedan, liftaback"
+    },
+    {
+      "brand": "Opel",
+      "model": "Omega",
+      "bodyType": "kombi , sedan"
+    },
+    {
+      "brand": "Ford",
+      "model": "Mondeo",
+      "bodyType": "kombi, liftback"
+    },
+    {
+      "brand": "Skoda",
+      "model": "Fabia",
+      "bodyType": "hatchback, kombi"
+    },
+    {
+      "brand": "Ford",
+      "model": "Mondeo",
+      "bodyType": "kombi, liftback, sedan"
+    },
+    {
+      "brand": "Bmw",
+      "model": "5 (F10)",
+      "bodyType": "sedan, kombi"
+    },
+    {
+      "brand": "Bmw",
+      "model": "5 (E39)",
+      "bodyType": "sedan, kombi"
+    },
+    {
+      "brand": "Hyundai",
+      "model": "I40",
+      "bodyType": "sedan, kombi"
+    },
+    {
+      "brand": "Audi",
+      "model": "A6",
+      "bodyType": "kombi, sedan"
+    }
+  ]
+}
