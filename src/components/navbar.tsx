@@ -45,10 +45,10 @@ export default function Navbar() {
           </Link>
           {/* Desktop Links - Centered */}
           <div className="hidden md:flex gap-6 items-center absolute left-1/2 transform -translate-x-1/2">
-            <Link href="#dywaniki" className="text-white/90 hover:text-white transition font-medium" title="Dywaniki Samochodowe EVA Premium">Dywaniki Samochodowe</Link>
+            <Link href="#products" className="text-white/90 hover:text-white transition font-medium" title="Dywaniki Samochodowe EVA Premium">Dywaniki Samochodowe</Link>
             <Link href="/akcesoria" className="text-white/90 hover:text-white transition font-medium" title="Akcesoria Samochodowe - Kompletna Oferta">Akcesoria</Link>
             <Link href="/o-nas" className="text-white/90 hover:text-white transition font-medium" title="O Firmie EvaPremium">O Nas</Link>
-            <Link href="#kontakt" className="text-white/90 hover:text-white transition font-medium" title="Kontakt - EvaPremium">Kontakt</Link>
+            <Link href="/kontakt" className="text-white/90 hover:text-white transition font-medium" title="Kontakt - EvaPremium">Kontakt</Link>
           </div>
           {/* Desktop Cart Icon and Contact */}
           <div className="hidden md:flex items-center gap-3">
@@ -112,10 +112,10 @@ export default function Navbar() {
           className={`md:hidden fixed top-16 left-0 w-full bg-black/95 backdrop-blur border-b border-neutral-800 z-40 transition-all duration-300 ${open ? "max-h-96 opacity-100" : "max-h-0 opacity-0 overflow-hidden"}`}
         >
           <div className="flex flex-col gap-4 py-6 px-8">
-            <Link href="#dywaniki" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Dywaniki Samochodowe</Link>
+            <Link href="#products" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Dywaniki Samochodowe</Link>
             <Link href="/akcesoria" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Akcesoria</Link>
             <Link href="/o-nas" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>O Nas</Link>
-            <Link href="#kontakt" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Kontakt</Link>
+            <Link href="/kontakt" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Kontakt</Link>
             <a href="tel:+48505401233" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>
               +48 505 401 233
             </a>
