@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Accessory, AccessoryCategory, AccessoryFilterState } from "@/types/accessory";
-import { getAllAccessories, accessoryCategories, getAccessoriesByCategory } from "@/data/accessoriesData";
+import { Accessory } from "@/lib/types/accessory";
+import { useAccessories } from "@/hooks/useAccessories";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
@@ -20,8 +20,14 @@ export default function AccessoriesSection() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
   
-  // Stan dla akcesoriów
-  const [accessories, setAccessories] = useState<Accessory[]>(getAllAccessories());
+  // Hook do pobierania danych z bazy
+  const { 
+    accessories, 
+    categories, 
+    isLoading, 
+    error,
+    getAccessoriesByCategory: getAccessoriesByCategorySlug 
+  } = useAccessories();
   
   // Stan filtrów
   const [filters, setFilters] = useState<FilterState>({
@@ -30,11 +36,10 @@ export default function AccessoriesSection() {
     inStock: false
   });
 
-  // Dostępne kategorie
+  // Dostępne kategorie z bazy danych
   const availableCategories = useMemo(() => {
-    const categories = [...new Set(accessories.map(accessory => accessory.category))];
-    return categories.sort();
-  }, [accessories]);
+    return categories.map(cat => cat.name).sort();
+  }, [categories]);
 
   // Filtrowanie akcesoriów
   const filteredAccessories = useMemo(() => {
@@ -43,15 +48,14 @@ export default function AccessoriesSection() {
     // Filtrowanie według kategorii
     if (filters.categories.length > 0) {
       filtered = filtered.filter(accessory => 
-        filters.categories.includes(accessory.category)
+        accessory.category && filters.categories.includes(accessory.category.name)
       );
     }
 
     // Filtrowanie według ceny
     const [minPrice, maxPrice] = filters.priceRange;
     filtered = filtered.filter(accessory => {
-      const price = parseFloat(accessory.price.replace(/[^\d.]/g, ''));
-      return price >= minPrice && price <= maxPrice;
+      return accessory.price >= minPrice && accessory.price <= maxPrice;
     });
 
     // Filtrowanie według dostępności
@@ -94,10 +98,54 @@ export default function AccessoriesSection() {
     });
   };
 
+  // Stan dla akcesoriów z konkretnej kategorii
+  const [categoryAccessories, setCategoryAccessories] = useState<Accessory[]>([]);
+  const [loadingCategory, setLoadingCategory] = useState(false);
+
   // Pobierz akcesoria dla konkretnej kategorii jeśli podano parametr
-  const currentAccessories = categoryParam 
-    ? getAccessoriesByCategory(categoryParam)
-    : filteredAccessories;
+  useEffect(() => {
+    if (categoryParam) {
+      setLoadingCategory(true);
+      getAccessoriesByCategorySlug(categoryParam).then(accessories => {
+        setCategoryAccessories(accessories);
+        setLoadingCategory(false);
+      }).catch(() => {
+        setCategoryAccessories([]);
+        setLoadingCategory(false);
+      });
+    }
+  }, [categoryParam, getAccessoriesByCategorySlug]);
+
+  const currentAccessories = categoryParam ? categoryAccessories : filteredAccessories;
+
+  // Obsługa stanu ładowania
+  if (isLoading || loadingCategory) {
+    return (
+      <section className="py-8 md:py-12 bg-black">
+        <div className="container mx-auto px-4">
+          <div className="min-h-screen bg-black flex items-center justify-center">
+            <div className="text-white text-xl">Ładowanie akcesoriów...</div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Obsługa błędów
+  if (error) {
+    return (
+      <section className="py-8 md:py-12 bg-black">
+        <div className="container mx-auto px-4">
+          <div className="min-h-screen bg-black flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-red-400 text-xl mb-4">Błąd ładowania akcesoriów</div>
+              <div className="text-gray-400">{error}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-8 md:py-12 bg-black">
@@ -238,17 +286,26 @@ export default function AccessoriesSection() {
                   className="flex items-center justify-center group cursor-pointer"
                 >
                   <Link 
-                    href={`/akcesoria/${accessory.category.toLowerCase().replace(/\s+/g, '-')}`}
+                    href={`/akcesoria/${accessory.category?.slug || 'all'}`}
                     className="flex flex-col items-center text-center transition-all duration-300 transform hover:scale-105"
                   >
                     {/* Accessory Window */}
-                    <div className="mb-4 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-4 w-40 h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 flex items-center justify-center transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl">
-                      <div className="w-full h-full relative flex items-center justify-center">
-                        {/* Placeholder icon for missing image */}
-                        <div className="text-6xl text-gray-400 mb-2">📦</div>
-                        {/* Overlay for better text readability */}
-                        <div className="absolute inset-0 bg-black/20 rounded-lg" />
-                      </div>
+                    <div className="mb-4 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl w-40 h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 relative overflow-hidden transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl">
+                      {/* Image or placeholder */}
+                      {accessory.imageSrc ? (
+                        <Image
+                          src={accessory.imageSrc}
+                          alt={accessory.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <div className="text-6xl text-gray-400">📦</div>
+                        </div>
+                      )}
+                      {/* Overlay for better text readability */}
+                      <div className="absolute inset-0 bg-black/20" />
                     </div>
                     
                     {/* Accessory Info */}
@@ -257,13 +314,13 @@ export default function AccessoriesSection() {
                         {accessory.name}
                       </h3>
                       <p className="text-sm md:text-base text-gray-300 transition-all duration-300 group-hover:text-white mb-2">
-                        {accessory.category}
+                        {accessory.category?.name || 'Brak kategorii'}
                       </p>
                       <p className="text-red-400 font-semibold text-base md:text-lg transition-all duration-300 group-hover:text-red-300">
-                        {accessory.price}
+                        {accessory.price.toLocaleString('pl-PL')} PLN
                       </p>
                       <p className="text-xs md:text-sm text-gray-400 mt-2 max-w-xs transition-all duration-300 group-hover:text-gray-300">
-                        {accessory.description}
+                        {accessory.description || 'Brak opisu'}
                       </p>
                     </div>
                   </Link>

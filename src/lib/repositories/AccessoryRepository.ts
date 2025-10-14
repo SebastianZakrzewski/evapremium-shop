@@ -18,7 +18,27 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
       throw new Error(`Error finding accessories by category: ${error.message}`);
     }
 
-    return data || [];
+    // Mapuj dane z Supabase na typ Accessory
+    const mappedData = (data || []).map(item => ({
+      ...item,
+      imageSrc: item.image_src, // Mapuj image_src na imageSrc
+      category: item.accessory_categories ? {
+        id: item.accessory_categories.id,
+        name: item.accessory_categories.name,
+        slug: item.accessory_categories.slug,
+        description: item.accessory_categories.description,
+        icon: item.accessory_categories.icon,
+        isActive: item.accessory_categories.is_active,
+        sortOrder: item.accessory_categories.sort_order,
+        parentId: item.accessory_categories.parent_id,
+        createdAt: new Date(item.accessory_categories.created_at),
+        updatedAt: new Date(item.accessory_categories.updated_at)
+      } : null,
+      // Usuń accessory_categories z obiektu
+      accessory_categories: undefined
+    }));
+
+    return mappedData;
   }
 
   async findBySlug(slug: string): Promise<Accessory | null> {
@@ -38,7 +58,27 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
       throw new Error(`Error finding accessory by slug: ${error.message}`);
     }
 
-    return data;
+    // Mapuj dane z Supabase na typ Accessory
+    const mappedData = {
+      ...data,
+      imageSrc: data.image_src, // Mapuj image_src na imageSrc
+      category: data.accessory_categories ? {
+        id: data.accessory_categories.id,
+        name: data.accessory_categories.name,
+        slug: data.accessory_categories.slug,
+        description: data.accessory_categories.description,
+        icon: data.accessory_categories.icon,
+        isActive: data.accessory_categories.is_active,
+        sortOrder: data.accessory_categories.sort_order,
+        parentId: data.accessory_categories.parent_id,
+        createdAt: new Date(data.accessory_categories.created_at),
+        updatedAt: new Date(data.accessory_categories.updated_at)
+      } : null,
+      // Usuń accessory_categories z obiektu
+      accessory_categories: undefined
+    };
+
+    return mappedData;
   }
 
   async findMany(filters?: AccessoryFilters): Promise<Accessory[]> {
@@ -50,7 +90,7 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
       `);
 
     if (filters?.categories && filters.categories.length > 0) {
-      query = query.in('accessory_categories.slug', filters.categories);
+      query = query.in('accessory_categories.name', filters.categories);
     }
 
     if (filters?.inStock !== undefined) {
@@ -76,7 +116,27 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
       throw new Error(`Error finding accessories: ${error.message}`);
     }
 
-    return data || [];
+    // Mapuj dane z Supabase na typ Accessory
+    const mappedData = (data || []).map(item => ({
+      ...item,
+      imageSrc: item.image_src, // Mapuj image_src na imageSrc
+      category: item.accessory_categories ? {
+        id: item.accessory_categories.id,
+        name: item.accessory_categories.name,
+        slug: item.accessory_categories.slug,
+        description: item.accessory_categories.description,
+        icon: item.accessory_categories.icon,
+        isActive: item.accessory_categories.is_active,
+        sortOrder: item.accessory_categories.sort_order,
+        parentId: item.accessory_categories.parent_id,
+        createdAt: new Date(item.accessory_categories.created_at),
+        updatedAt: new Date(item.accessory_categories.updated_at)
+      } : null,
+      // Usuń accessory_categories z obiektu
+      accessory_categories: undefined
+    }));
+
+    return mappedData;
   }
 
   async findBySku(sku: string): Promise<Accessory | null> {

@@ -111,7 +111,8 @@ export function useAccessories(filters?: AccessoryFilters): UseAccessoriesReturn
 
   useEffect(() => {
     fetchAllAccessories();
-  }, [fetchAllAccessories]);
+    getAllCategories(); // Automatycznie ładuj kategorie przy inicjalizacji
+  }, [fetchAllAccessories, getAllCategories]);
 
   const refetch = useCallback(() => {
     fetchAllAccessories();
