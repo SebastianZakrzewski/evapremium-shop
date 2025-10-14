@@ -21,14 +21,7 @@ import { getYearsForModel, getModelData, findGenerationByYear, getAvailableModel
 
 // Dodaj event do otwierania modala koszyka
 const openCartModal = () => {
-  // Sprawdź czy to pierwszy produkt w koszyku
-  const cartData = localStorage.getItem('cart-' + (typeof window !== 'undefined' ? window.sessionStorage?.getItem('sessionId') : ''));
-  const isFirstItem = !cartData || JSON.parse(cartData).length === 0;
-  
-  // Otwórz modal tylko przy pierwszym dodaniu lub jeśli użytkownik wyraził zgodę
-  if (isFirstItem || localStorage.getItem('autoOpenCart') === 'true') {
-    window.dispatchEvent(new CustomEvent('openCartModal'));
-  }
+  window.dispatchEvent(new CustomEvent('openCartModal'));
 };
 
 // Mapowanie ID na typy dla funkcji getMatImagePath
@@ -536,9 +529,6 @@ export default function Configurator() {
         }
       };
 
-      console.log('🛒 === DODAWANIE DO KOSZYKA V2 ===');
-      console.log('📋 Dane konfiguracji:', configData);
-      console.log('💰 Cena bazowa z bazy:', baseMatPrice);
       
       // Oblicz cenę końcową używając PricingService
       const finalPrice = getTotalPrice();
@@ -555,15 +545,7 @@ export default function Configurator() {
         selectedEdge
       );
       
-      console.log('🔧 Dane produktu V2:', {
-        productId,
-        productName: `Dywaniki EVA Premium - ${selectedCarBrand} ${selectedCarModel}`,
-        productSku: `EVA-${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`,
-        unitPrice: finalPrice,
-        configuration: configData
-      });
-      
-      await addToCart({
+      const result = await addToCart({
         productType: 'mat',
         productId: productId,
         quantity: 1,
@@ -574,21 +556,12 @@ export default function Configurator() {
         unitPrice: finalPrice
       });
 
-      console.log('✅ Produkt dodany do koszyka V2:', productId);
-      console.log('💰 Cena produktu:', `${finalPrice} zł`);
-      console.log('📊 Konfiguracja:', {
-        'Rodzaj zestawu': selectedSetType,
-        'Struktura komórek': selectedCellType,
-        'Wariant': selectedSetVariant,
-        'Kolor materiału': selectedMat,
-        'Kolor obszycia': selectedEdge,
-        'Podkładka pod piętę': selectedHeelPad
-      });
-      console.log('🚗 Dane samochodu:', configData.carDetails);
-      console.log('🛒 === KONIEC DODAWANIA V2 ===');
+      console.log('✅ Produkt dodany do koszyka:', productId);
       
       // Otwórz modal koszyka po dodaniu produktu
-      openCartModal();
+      setTimeout(() => {
+        openCartModal();
+      }, 500);
       
       // Pokaż powiadomienie o dodaniu do koszyka
       if (typeof window !== 'undefined') {

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { CartItem } from '../lib/types/cart';
+import { CartItem } from '../lib/types/cart-new';
 import { Order, CustomerData, ShippingData, PaymentData, CompanyData } from '../lib/types/order';
 import { CreateOrderDTO } from '../lib/types';
 import { OrderService } from '../lib/services/OrderService';
@@ -47,13 +47,13 @@ export function useOrder(): UseOrderReturn {
       // Konwertuj cartProducts na CreateOrderItemDTO[]
       const orderItems = cartProducts.map(product => ({
         quantity: product.quantity || 1,
-        unitPrice: product.pricing?.totalPrice || 0,
-        subtotal: (product.pricing?.totalPrice || 0) * (product.quantity || 1),
-        productType: 'mat' as const, // Domyślnie mat, można rozszerzyć logikę
-        productId: product.id,
-        productName: product.name,
-        productSku: product.id, // Używamy ID jako SKU
-        productImage: product.image,
+        unitPrice: product.unitPrice || 0,
+        subtotal: product.subtotal || 0,
+        productType: product.productType || 'mat' as const,
+        productId: product.productId,
+        productName: product.productName,
+        productSku: product.productSku || product.productId,
+        productImage: product.productImage,
         configuration: product.configuration || {}
       }));
 
@@ -90,11 +90,15 @@ export function useOrder(): UseOrderReturn {
         products: cartProducts.map(item => ({
           id: item.id,
           sessionId: '',
-          name: item.name,
-          image: item.image,
+          name: item.productName,
+          image: item.productImage || "/images/products/placeholder.png",
           configuration: item.configuration,
-          pricing: item.pricing,
-          carDetails: item.carDetails,
+          pricing: { 
+            basePrice: item.unitPrice,
+            totalPrice: item.subtotal,
+            modifiers: 0
+          },
+          carDetails: item.configuration?.carDetails || {},
           status: 'cached' as const,
           createdAt: new Date()
         })),

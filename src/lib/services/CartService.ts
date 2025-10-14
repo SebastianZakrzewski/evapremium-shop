@@ -39,7 +39,7 @@ export class CartService {
     }
     
     // Przelicz ceny koszyka
-    return this.recalculateCart(cart);
+    return await this.recalculateCart(cart);
   }
 
   /**

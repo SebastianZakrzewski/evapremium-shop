@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { X, ShoppingBag } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/hooks/useCart.new";
@@ -35,10 +35,18 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
     clearCart 
   } = useCart();
 
-  // Debug logging
-  debugLog('CartModal: items:', items);
-  debugLog('CartModal: total:', total);
-  debugLog('CartModal: itemCount:', itemCount);
+  // Listen for cart updates
+  useEffect(() => {
+    const handleCartUpdate = (event: CustomEvent) => {
+      // Cart will be updated automatically via useCart hook
+    };
+
+    window.addEventListener('cartUpdated', handleCartUpdate as EventListener);
+    
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate as EventListener);
+    };
+  }, []);
 
   const handleCheckout = () => {
     onClose(); // Zamknij modal koszyka

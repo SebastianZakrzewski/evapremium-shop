@@ -65,6 +65,25 @@ export function useCart(): UseCartReturn {
   // Użyj useRef aby uniknąć tworzenia nowej instancji w każdym renderze
   const cartServiceRef = useRef<CartService | null>(null);
   const cartService = cartServiceRef.current || (cartServiceRef.current = new CartService());
+  
+  // Ref do śledzenia czy to pierwszy mount
+  const isFirstMountRef = useRef(true);
+
+  /**
+   * Refresh cart (useful after external changes)
+   */
+  const refreshCart = useCallback(() => {
+    const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+    if (savedCart) {
+      try {
+        const parsed = JSON.parse(savedCart);
+        setCart(parsed);
+        debugLog('useCart: Cart refreshed', parsed);
+      } catch (err) {
+        console.error('useCart: Error refreshing cart:', err);
+      }
+    }
+  }, []);
 
   /**
    * Load cart from localStorage on mount
@@ -97,18 +116,42 @@ export function useCart(): UseCartReturn {
    * Save cart to localStorage whenever it changes
    */
   useEffect(() => {
+    // Guard: nie zapisuj pustego koszyka TYLKO przy pierwszym mount
+    if (isFirstMountRef.current && cart.items.length === 0 && cart.subtotal === 0 && cart.total === 0) {
+      console.log('🛒 useCart: Skipping save of empty cart on first mount');
+      isFirstMountRef.current = false; // Oznacz że pierwszy mount się skończył
+      return;
+    }
+
+    // Po pierwszym mount, zapisuj wszystkie zmiany
+    if (isFirstMountRef.current) {
+      isFirstMountRef.current = false;
+    }
+
     try {
-      console.log('🛒 useCart: Saving cart to localStorage:', cart);
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
-      console.log('🛒 useCart: Cart saved successfully');
       debugLog('useCart: Saved cart to localStorage', cart);
-      
-      // Dispatch custom event for other components
-      window.dispatchEvent(new CustomEvent('cartUpdated', { detail: cart }));
     } catch (err) {
       console.error('useCart: Error saving cart to localStorage:', err);
     }
   }, [cart]);
+
+  /**
+   * Listen for cart updates from other components
+   * Monitoruj localStorage co 500ms aby wychwycić zmiany
+   */
+  // Event-based synchronization instead of polling
+  useEffect(() => {
+    const handleCartUpdate = (event: CustomEvent) => {
+      setCart(event.detail);
+    };
+
+    window.addEventListener('cartUpdated', handleCartUpdate as EventListener);
+    
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate as EventListener);
+    };
+  }, []);
 
   /**
    * Add item to cart
@@ -121,6 +164,12 @@ export function useCart(): UseCartReturn {
     try {
       const updatedCart = await cartService.addToCart(cart, item);
       setCart(updatedCart);
+      
+      // Dispatch event only after successful addToCart and setCart
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('cartUpdated', { detail: updatedCart }));
+      }, 0);
+      
       debugLog('useCart: Item added successfully', updatedCart);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Nie udało się dodać produktu do koszyka';
@@ -143,6 +192,12 @@ export function useCart(): UseCartReturn {
     try {
       const updatedCart = await cartService.removeFromCart(cart, itemId);
       setCart(updatedCart);
+      
+      // Dispatch event to notify other components
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('cartUpdated', { detail: updatedCart }));
+      }, 0);
+      
       debugLog('useCart: Item removed successfully', updatedCart);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Nie udało się usunąć produktu';
@@ -183,22 +238,11 @@ export function useCart(): UseCartReturn {
     debugLog('useCart: Clearing cart');
     setCart(emptyCart);
     localStorage.removeItem(CART_STORAGE_KEY);
-  }, []);
-
-  /**
-   * Refresh cart (useful after external changes)
-   */
-  const refreshCart = useCallback(() => {
-    const savedCart = localStorage.getItem(CART_STORAGE_KEY);
-    if (savedCart) {
-      try {
-        const parsed = JSON.parse(savedCart);
-        setCart(parsed);
-        debugLog('useCart: Cart refreshed', parsed);
-      } catch (err) {
-        console.error('useCart: Error refreshing cart:', err);
-      }
-    }
+    
+    // Dispatch event to notify other components
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('cartUpdated', { detail: emptyCart }));
+    }, 0);
   }, []);
 
   return {

@@ -27,11 +27,11 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { HybridSessionManager } from "@/lib/utils/hybrid-session-manager"
-import { useCart } from '@/hooks/useCart';
+import { useCart } from '@/hooks/useCart.new';
 import { useOrder } from '@/hooks/useOrder';
 import { CustomerData, ShippingData, PaymentData } from '@/lib/types/order';
 import { Product } from '@/lib/types/product';
-import { CartItem } from '@/lib/types/cart';
+import { CartItem } from '@/lib/types/cart-new';
 
 // Schema walidacji
 const checkoutSchema = z.object({
@@ -144,7 +144,7 @@ export function CheckoutSection() {
   const [configuratorDictionary, setConfiguratorDictionary] = useState<any>(null)
   
   // Nowe hooki
-  const { cartItems, clearCart } = useCart();
+  const { items: cartItems, clearCart } = useCart();
   const { createOrder, saveOrder, isLoading: orderLoading, error: orderError } = useOrder();
 
   // Odczytywanie danych ze słownika konfiguratora używając HybridSessionManager
@@ -199,7 +199,7 @@ export function CheckoutSection() {
   const shippingCost = shippingMethods.find(m => m.id === selectedShipping)?.price || 0
   
   // Oblicz total na podstawie koszyka
-  const cartTotal = cartItems.reduce((sum, product) => sum + product.pricing.totalPrice, 0);
+  const cartTotal = cartItems.reduce((sum, product) => sum + product.subtotal, 0);
   const subtotal = cartTotal;
   const total = subtotal + shippingCost
 
@@ -1269,8 +1269,8 @@ function OrderSummaryContent({
         <div key={product.id || index} className="flex space-x-4 p-4 bg-gradient-to-r from-gray-900/40 to-gray-800/40 rounded-lg border border-gray-700 hover:border-red-500/50 transition-all duration-300 group">
           <div className="relative">
             <img
-              src={product.image || "/images/products/bmw.png"}
-              alt={product.name}
+              src={product.productImage || "/images/products/bmw.png"}
+              alt={product.productName}
               className="w-16 h-16 object-cover rounded-lg border border-gray-600 group-hover:border-red-500 transition-colors"
             />
             <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
@@ -1278,9 +1278,9 @@ function OrderSummaryContent({
             </div>
           </div>
           <div className="flex-1">
-            <h4 className="font-medium text-sm text-white group-hover:text-red-400 transition-colors">{product.name}</h4>
+            <h4 className="font-medium text-sm text-white group-hover:text-red-400 transition-colors">{product.productName}</h4>
             <p className="text-gray-400 text-sm">Wysokiej jakości EVA</p>
-            <p className="font-semibold text-white text-lg">{product.pricing.totalPrice.toFixed(2)} zł</p>
+            <p className="font-semibold text-white text-lg">{product.subtotal.toFixed(2)} zł</p>
           </div>
         </div>
       ))}
@@ -1329,7 +1329,7 @@ function OrderSummaryContent({
           <div className="space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-gray-300">Wartość produktów:</span>
-              <span className="text-white font-medium">{cartItems.reduce((sum, product) => sum + product.pricing.totalPrice, 0).toFixed(2)} zł</span>
+              <span className="text-white font-medium">{cartItems.reduce((sum, product) => sum + product.subtotal, 0).toFixed(2)} zł</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-300">Dostawa:</span>
