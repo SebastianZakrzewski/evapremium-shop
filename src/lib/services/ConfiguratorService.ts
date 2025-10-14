@@ -1,23 +1,18 @@
 import { ConfigurationData, Product, ProductPricing } from '../types/product';
 
 export class ConfiguratorService {
-  private static readonly BASE_PRICE = 219;
-  private static readonly HEEL_PAD_PRICE = 29;
-  private static readonly RED_EDGE_PRICE = 10;
-
-  private static readonly PRICE_MODIFIERS = {
-    setType: {
-      '3d-with-rims': 0,
-      'classic': -40
+  private static readonly PRICING_CONFIG = {
+    basePrice: {
+      'classic': { front: 290, basic: 510, premium: 710 },
+      '3d-with-rims': { front: 550, basic: 910, premium: 1210 }
     },
-    cellType: {
-      'diamonds': 0,
-      'honey': 10
+    // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł
+    getDiscount: (basePrice: number) => {
+      return basePrice >= 910 ? 0.30 : 0.20;
     },
-    setVariant: {
-      'front': -30,
-      'basic': 0,
-      'premium': 0
+    shipping: {
+      cost: 27,
+      freeForVariants: ['basic', 'premium'] as const
     }
   };
 
@@ -89,36 +84,28 @@ export class ConfiguratorService {
    * Oblicza cenę na podstawie konfiguracji
    */
   static calculatePricing(configData: ConfigurationData): ProductPricing {
-    const basePrice = this.BASE_PRICE;
-    let modifiers = 0;
-
-    // Modyfikatory dla rodzaju zestawu
-    const setTypeModifier = this.PRICE_MODIFIERS.setType[configData.setType as keyof typeof this.PRICE_MODIFIERS.setType] || 0;
-    modifiers += setTypeModifier;
-
-    // Modyfikatory dla struktury komórek
-    const cellTypeModifier = this.PRICE_MODIFIERS.cellType[configData.cellType as keyof typeof this.PRICE_MODIFIERS.cellType] || 0;
-    modifiers += cellTypeModifier;
-
-    // Modyfikatory dla wariantu zestawu
-    const setVariantModifier = this.PRICE_MODIFIERS.setVariant[configData.setVariant as keyof typeof this.PRICE_MODIFIERS.setVariant] || 0;
-    modifiers += setVariantModifier;
-
-    // Dodatkowa opłata za podkładkę pod piętę
-    if (configData.heelPad === 'tak') {
-      modifiers += this.HEEL_PAD_PRICE;
-    }
-
-    // Dodatkowa opłata za czerwone obszycie
-    if (configData.edgeColor === 'red') {
-      modifiers += this.RED_EDGE_PRICE;
-    }
-
-    const totalPrice = Math.max(basePrice + modifiers, 99); // Minimalna cena 99 zł
+    const setType = configData.setType;
+    const setVariant = configData.setVariant;
+    
+    // Bazowa cena kompletu
+    const basePrice = this.PRICING_CONFIG.basePrice[setType as keyof typeof this.PRICING_CONFIG.basePrice]?.[setVariant as 'front' | 'basic' | 'premium'] || 0;
+    
+    // Rabat zależny od wartości
+    const discount = this.PRICING_CONFIG.getDiscount(basePrice);
+    const discountAmount = basePrice * discount;
+    const priceAfterDiscount = basePrice - discountAmount;
+    
+    // Koszt wysyłki
+    const shippingCost = this.PRICING_CONFIG.shipping.freeForVariants.includes(setVariant as any)
+      ? 0
+      : this.PRICING_CONFIG.shipping.cost;
+    
+    const totalPrice = Math.round(priceAfterDiscount + shippingCost);
 
     return {
       basePrice,
-      modifiers,
+      discount: discountAmount,
+      shippingCost,
       totalPrice
     };
   }

@@ -21,7 +21,39 @@ export class PricingService {
   }
 
   /**
-   * Oblicza cenę dywaników z konfiguracją
+   * Oblicza cenę dywaników z konfiguracją (nowy system cenowy)
+   */
+  static calculateConfiguratorPrice(
+    setType: 'classic' | '3d-with-rims',
+    setVariant: 'front' | 'basic' | 'premium'
+  ): { basePrice: number; discount: number; shippingCost: number; totalPrice: number } {
+    const basePrices = {
+      'classic': { front: 290, basic: 510, premium: 710 },
+      '3d-with-rims': { front: 550, basic: 910, premium: 1210 }
+    };
+
+    const basePrice = basePrices[setType]?.[setVariant] || 0;
+    
+    // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł
+    const discount = basePrice >= 910 ? 0.30 : 0.20;
+    const discountAmount = basePrice * discount;
+    const priceAfterDiscount = basePrice - discountAmount;
+    
+    // Koszt wysyłki (27 zł tylko dla 'front', darmowa dla 'basic' i 'premium')
+    const shippingCost = ['basic', 'premium'].includes(setVariant) ? 0 : 27;
+    
+    const totalPrice = Math.round(priceAfterDiscount + shippingCost);
+
+    return {
+      basePrice,
+      discount: discountAmount,
+      shippingCost,
+      totalPrice
+    };
+  }
+
+  /**
+   * Oblicza cenę dywaników z konfiguracją (stary system - zachowany dla kompatybilności)
    */
   static calculateMatPrice(basePrice: number, configuration: any): number {
     let totalPrice = basePrice;
@@ -39,10 +71,10 @@ export class PricingService {
       totalPrice += setTypeModifiers[setType as keyof typeof setTypeModifiers];
     }
 
-    // Modyfikatory dla rodzaju komórek
+    // Modyfikatory dla rodzaju komórek (wyzerowane)
     const cellTypeModifiers = {
       'diamonds': 0,
-      'honey': 10
+      'honey': 0  // Wyzerowane - nie doliczamy za personalizację
     };
 
     const cellType = configuration?.cellType;
@@ -50,9 +82,9 @@ export class PricingService {
       totalPrice += cellTypeModifiers[cellType as keyof typeof cellTypeModifiers];
     }
 
-    // Modyfikator dla ochraniacza pod piętę
+    // Modyfikator dla ochraniacza pod piętę (wyzerowany)
     if (configuration?.heelPad === 'yes') {
-      totalPrice += 30;
+      totalPrice += 0;  // Wyzerowane - nie doliczamy za personalizację
     }
 
     return Math.round(totalPrice * 100) / 100;

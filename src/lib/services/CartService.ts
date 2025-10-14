@@ -99,9 +99,9 @@ export class CartService {
   private async recalculateCart(cart: Cart): Promise<Cart> {
     cart.subtotal = cart.items.reduce((sum, item) => sum + item.subtotal, 0);
     cart.shippingCost = PricingService.calculateShippingCost(cart.subtotal);
-    cart.tax = PricingService.calculateTax(cart.subtotal + cart.shippingCost);
+    cart.tax = 0; // VAT wyłączony
     cart.discount = 0; // TODO: Kody rabatowe
-    cart.total = cart.subtotal + cart.shippingCost + cart.tax - cart.discount;
+    cart.total = cart.subtotal + cart.shippingCost - cart.discount; // Bez VAT
     cart.itemCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
     
     return cart;

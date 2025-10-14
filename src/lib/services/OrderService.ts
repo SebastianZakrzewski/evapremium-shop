@@ -220,9 +220,9 @@ export class OrderService {
     }
     
     const shippingCost = PricingService.calculateShippingCost(subtotal);
-    const tax = PricingService.calculateTax(subtotal + shippingCost);
+    const tax = 0; // VAT wyłączony
     const discount = 0; // TODO: Kody rabatowe
-    const total = subtotal + shippingCost + tax - discount;
+    const total = subtotal + shippingCost - discount; // Bez VAT
     
     return { subtotal, shippingCost, tax, discount, total };
   }

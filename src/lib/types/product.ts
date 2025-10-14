@@ -9,7 +9,8 @@ export interface ProductConfiguration {
 
 export interface ProductPricing {
   basePrice: number;
-  modifiers: number;
+  discount?: number;      // Kwota rabatu
+  shippingCost?: number;  // Koszt wysyłki
   totalPrice: number;
 }
 

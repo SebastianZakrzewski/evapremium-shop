@@ -65,36 +65,34 @@ type SetVariant = {
 
 // Kolory będą generowane dynamicznie na podstawie wybranej struktury komórek
 
-// Struktura cenowa dla dynamicznego systemu cen
+// Struktura cenowa - sztywne ceny za komplety + rabaty
 const PRICING = {
-  matTypes: {
-    '3d-with-rims': { modifier: 0, label: '+0 zł' },
-    'classic': { modifier: -40, label: '-40 zł' }
+  basePrice: {
+    'classic': { front: 290, basic: 510, premium: 710 },
+    '3d-with-rims': { front: 550, basic: 910, premium: 1210 }
   },
-  setVariants: {
-    'front': 150,
-    'basic': 300,
-    'premium': 450,
-    'complete': 600
+  // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł
+  getDiscount: (basePrice: number) => {
+    return basePrice >= 910 ? 0.30 : 0.20;
   },
-  extras: {
-    cellType: { diamonds: 0, honey: 10 },
-    heelPad: 30
+  shipping: {
+    cost: 27,
+    freeForVariants: ['basic', 'premium'] as const  // Darmowa dla basic i premium
   }
 };
 
 const setTypes: SetType[] = [
   { id: "3d-with-rims", name: "3D z rantami", description: "Dywaniki 3D z obszyciem rantowym", priceModifier: 0 },
-  { id: "classic", name: "3D bez rantów", description: "Klasyczne dywaniki płaskie", priceModifier: -40 },
+  { id: "classic", name: "3D bez rantów", description: "Klasyczne dywaniki płaskie", priceModifier: 0 },
 ];
 
 const cellTypes: CellType[] = [
   { id: "diamonds", name: "Romby", description: "Struktura rombowa", priceModifier: 0 },
-  { id: "honey", name: "Plaster miodu", description: "Struktura plastra miodu", priceModifier: 10 },
+  { id: "honey", name: "Plaster miodu", description: "Struktura plastra miodu", priceModifier: 0 },
 ];
 
 const setVariants: SetVariant[] = [
-  { id: "front", name: "Starter", description: "2 dywaniki (tylko przód)", priceModifier: -30 },
+  { id: "front", name: "Starter", description: "2 dywaniki (tylko przód)", priceModifier: 0 },
   { id: "basic", name: "Podstawowy", description: "5 dywaników (przód + tył + ochrona na tunel środkowy)", priceModifier: 0 },
   { id: "premium", name: "Premium", description: "5 dywaników (przód + tył + bagażnik)", priceModifier: 0 },
   { id: "complete", name: "Mata do Bagażnika", description: "6 dywaników (przód + tył + bagażnik + dodatkowe)", priceModifier: 0 },
@@ -205,39 +203,17 @@ export default function Configurator() {
   const [baseMatPrice, setBaseMatPrice] = useState<number>(0);
   const [isPriceLoading, setIsPriceLoading] = useState(false);
 
-  // Funkcje kalkulacyjne dla dynamicznego systemu cen z V2 backend
-  const getSetVariantPrice = useCallback((
-    variantId: string,
-    matTypeId: string
+  // Funkcja do obliczania ceny dla konkretnego wariantu (do wyświetlania w UI)
+  const getVariantPrice = useCallback((
+    setType: string,
+    setVariant: string
   ): number => {
-    // Użyj ceny bazowej z bazy danych lub fallback do lokalnych cen
-    const basePrice = baseMatPrice > 0 ? baseMatPrice : (PRICING.setVariants[variantId as keyof typeof PRICING.setVariants] || 0);
-    const modifier = PRICING.matTypes[matTypeId as keyof typeof PRICING.matTypes]?.modifier || 0;
-    return basePrice + modifier;
-  }, [baseMatPrice]);
-
-  const getTotalPrice = useCallback((): number => {
-    let total = 0;
-    
-    // Cena zestawu z modyfikatorem rodzaju dywaników
-    if (selectedSetVariant && selectedSetType) {
-      total = getSetVariantPrice(selectedSetVariant, selectedSetType);
-    }
-    
-    // Modyfikator za komórki
-    if (selectedCellType) {
-      total += PRICING.extras.cellType[
-        selectedCellType as keyof typeof PRICING.extras.cellType
-      ] || 0;
-    }
-    
-    // Ochraniacz pod piętę
-    if (selectedHeelPad === 'yes') {
-      total += PRICING.extras.heelPad;
-    }
-    
-    return total;
-  }, [selectedSetVariant, selectedSetType, selectedCellType, selectedHeelPad, getSetVariantPrice]);
+    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium'] || 0;
+    const discount = PRICING.getDiscount(basePrice);
+    const priceAfterDiscount = basePrice * (1 - discount);
+    const shippingCost = PRICING.shipping.freeForVariants.includes(setVariant as any) ? 0 : PRICING.shipping.cost;
+    return Math.round(priceAfterDiscount + shippingCost);
+  }, []);
 
   // Debug: wyświetl informacje o wybranej marce
   useEffect(() => {
@@ -423,8 +399,8 @@ export default function Configurator() {
           basePrice = availableMat.basePrice;
           debugLog('💰 Używam ceny z bazy danych:', basePrice);
         } else {
-          // Użyj domyślnej ceny bazowej
-          basePrice = PRICING.setVariants[selectedSetVariant as keyof typeof PRICING.setVariants] || 300;
+          // Użyj domyślnej ceny bazowej z nowego systemu
+          basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium'] || 300;
           debugLog('💰 Używam domyślnej ceny bazowej:', basePrice);
         }
 
@@ -434,8 +410,8 @@ export default function Configurator() {
 
       } catch (error) {
         console.error('❌ Błąd podczas pobierania dywaników:', error);
-        // W przypadku błędu, użyj domyślnej ceny
-        const basePrice = PRICING.setVariants[selectedSetVariant as keyof typeof PRICING.setVariants] || 300;
+        // W przypadku błędu, użyj domyślnej ceny z nowego systemu
+        const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium'] || 300;
         setBaseMatPrice(basePrice);
         debugLog('💰 Używam domyślnej ceny po błędzie:', basePrice);
       } finally {
@@ -510,7 +486,7 @@ export default function Configurator() {
       if (baseMatPrice === 0) {
         console.warn('⚠️ Używam domyślnej ceny');
         // Użyj domyślnej ceny zamiast blokować
-        const defaultPrice = PRICING.setVariants[selectedSetVariant as keyof typeof PRICING.setVariants] || 300;
+        const defaultPrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium'] || 300;
         setBaseMatPrice(defaultPrice);
       }
 
@@ -530,8 +506,8 @@ export default function Configurator() {
       };
 
       
-      // Oblicz cenę końcową używając PricingService
-      const finalPrice = getTotalPrice();
+      // Oblicz cenę końcową używając nowego systemu cenowego
+      const finalPrice = price;
       
       // Generuj unikalny UUID dla produktu
       const productId = crypto.randomUUID();
@@ -612,8 +588,8 @@ export default function Configurator() {
     const titles = [
       "Wybór modelu",
       "Rodzaj dywaników",
-      "Rodzaj zestawu", 
       "Rodzaj komórek",
+      "Rodzaj zestawu",
       "Kolory",
       "Dodatki",
       "Podsumowanie"
@@ -678,21 +654,34 @@ export default function Configurator() {
   }, [selectedCellType, availableMaterialColors, availableEdgeColors, selectedMat, selectedEdge]);
 
   const price = useMemo(() => {
-    let base = 219; // PLN, starter price
-    if (selectedHeelPad !== "brak") base += 29;
-    if (selectedEdge === "red") base += 10; // small premium for contrast edge
+    if (!selectedSetType || !selectedSetVariant) return 0;
     
-    // Dodaj modyfikatory cenowe dla nowych opcji
-    const setType = setTypes.find(s => s.id === selectedSetType);
-    const cellType = cellTypes.find(c => c.id === selectedCellType);
-    const setVariant = setVariants.find(v => v.id === selectedSetVariant);
+    // 1. Pobierz bazową cenę kompletu
+    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium'] || 0;
     
-    if (setType) base += setType.priceModifier;
-    if (cellType) base += cellType.priceModifier;
-    if (setVariant) base += setVariant.priceModifier;
+    // 2. Oblicz rabat (zależny od wartości: ≥910 zł = -30%, <910 zł = -20%)
+    const discount = PRICING.getDiscount(basePrice);
+    const priceAfterDiscount = basePrice * (1 - discount);
     
-    return Math.max(base, 99); // Minimalna cena 99 zł
-  }, [selectedEdge, selectedHeelPad, selectedSetType, selectedCellType, selectedSetVariant]);
+    // 3. Dodaj koszt wysyłki (27 zł tylko dla 'front', darmowa dla 'basic' i 'premium')
+    const shippingCost = PRICING.shipping.freeForVariants.includes(selectedSetVariant as any) 
+      ? 0 
+      : PRICING.shipping.cost;
+    
+    const totalPrice = Math.round(priceAfterDiscount + shippingCost);
+    
+    console.log('💰 Kalkulacja ceny:', {
+      setType: selectedSetType,
+      setVariant: selectedSetVariant,
+      basePrice,
+      discount: `${discount * 100}%`,
+      priceAfterDiscount: Math.round(priceAfterDiscount),
+      shippingCost,
+      totalPrice
+    });
+    
+    return totalPrice;
+  }, [selectedSetType, selectedSetVariant]);
 
   const mat = useMemo(() => availableMaterialColors.find(m => m.id === selectedMat)!, [selectedMat, availableMaterialColors]);
   const edge = useMemo(() => availableEdgeColors.find(e => e.id === selectedEdge)!, [selectedEdge, availableEdgeColors]);
@@ -988,7 +977,8 @@ export default function Configurator() {
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj dywaników</h3>
                   <RadioGroup value={selectedSetType} onValueChange={setSelectedSetType} className="space-y-3">
                     {setTypes.map((s) => {
-                      const modifier = PRICING.matTypes[s.id as keyof typeof PRICING.matTypes];
+                      // W nowym systemie nie ma modyfikatorów za typ zestawu
+                      const modifier = { modifier: 0, label: '+0 zł' };
                       
                       return (
                         <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
@@ -1016,17 +1006,17 @@ export default function Configurator() {
               </div>
             )}
 
-            {/* Sekcja 2: Rodzaj zestawu */}
-            {currentSection === 2 && (
+            {/* Sekcja 3: Rodzaj zestawu */}
+            {currentSection === 3 && (
               <div className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj zestawu</h3>
                   <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
                     {setVariants.map((v) => {
-                      // Oblicz cenę z uwzględnieniem rodzaju dywaników
+                      // Oblicz cenę z nowym systemem cenowym
                       const displayPrice = selectedSetType 
-                        ? getSetVariantPrice(v.id, selectedSetType)
-                        : PRICING.setVariants[v.id as keyof typeof PRICING.setVariants];
+                        ? getVariantPrice(selectedSetType, v.id)
+                        : 0;
                       
                       return (
                         <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
@@ -1049,6 +1039,16 @@ export default function Configurator() {
                                   />
                                 </div>
                               )}
+                              {displayPrice > 0 && (
+                                <div className="text-right">
+                                  <div className="text-lg font-bold text-green-400">
+                                    {displayPrice} zł
+                                  </div>
+                                  <div className="text-xs text-white/60">
+                                    {selectedSetType === '3d-with-rims' ? 'z rantami' : 'bez rantów'}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </Label>
@@ -1059,8 +1059,8 @@ export default function Configurator() {
               </div>
             )}
 
-            {/* Sekcja 4: Rodzaj komórek */}
-            {currentSection === 3 && (
+            {/* Sekcja 2: Rodzaj komórek */}
+            {currentSection === 2 && (
               <div className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj komórek</h3>
@@ -1073,11 +1073,7 @@ export default function Configurator() {
                             <div className="text-sm font-medium">{c.name}</div>
                             <div className="text-xs text-white/60">{c.description}</div>
                           </div>
-                          {c.priceModifier !== 0 && c.id !== 'honey' && (
-                            <div className={`text-xs font-medium ${c.priceModifier > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                              {c.priceModifier > 0 ? '+' : ''}{c.priceModifier} zł
-                            </div>
-                          )}
+                          {/* W nowym systemie nie ma modyfikatorów cenowych za personalizację */}
                         </div>
                       </Label>
                     ))}
@@ -1086,7 +1082,7 @@ export default function Configurator() {
               </div>
             )}
 
-            {/* Sekcja 5: Kolory */}
+            {/* Sekcja 4: Kolory */}
             {currentSection === 4 && (
               <div className="flex-1 space-y-6">
                 <div>
@@ -1140,7 +1136,7 @@ export default function Configurator() {
               </div>
             )}
 
-            {/* Sekcja 6: Dodatki */}
+            {/* Sekcja 5: Dodatki */}
             {currentSection === 5 && (
               <div className="flex-1 space-y-6">
                 <div>
@@ -1160,7 +1156,7 @@ export default function Configurator() {
               </div>
             )}
 
-            {/* Sekcja 7: Podsumowanie */}
+            {/* Sekcja 6: Podsumowanie */}
             {currentSection === 6 && (
               <div className="flex-1 space-y-6">
                 {/* Wybrane auto */}
@@ -1215,18 +1211,8 @@ export default function Configurator() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Zestaw ({setVariant.name})</span>
-                      <span className="text-white">{getSetVariantPrice(selectedSetVariant, selectedSetType)} zł</span>
+                      <span className="text-white">{price} zł</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Komórki ({cellType.name})</span>
-                      <span className="text-white">+{PRICING.extras.cellType[selectedCellType as keyof typeof PRICING.extras.cellType] || 0} zł</span>
-                    </div>
-                    {selectedHeelPad === 'yes' && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Ochraniacz pod piętę</span>
-                        <span className="text-white">+{PRICING.extras.heelPad} zł</span>
-                      </div>
-                    )}
                     <Separator className="my-2" />
                     <div className="flex justify-between text-lg font-bold">
                       <span>Razem</span>
@@ -1237,7 +1223,7 @@ export default function Configurator() {
                             Ładowanie...
                           </span>
                         ) : (
-                          `${getTotalPrice()} zł`
+                          `${price} zł`
                         )}
                       </span>
                     </div>
@@ -1298,7 +1284,7 @@ export default function Configurator() {
                         Ładowanie...
                       </span>
                     ) : (
-                      `${getTotalPrice()} zł`
+                      `${price} zł`
                     )}
                   </div>
                 </div>

@@ -134,14 +134,19 @@ export default function CheckoutSectionNew() {
     
     switch (currentStep) {
       case 1:
-        // Dane kontaktowe - tylko email jest wymagany w nowym układzie
-        const step1Valid = watchedValues.email;
+        // Dane kontaktowe
+        const step1Valid = watchedValues.firstName && 
+               watchedValues.lastName && 
+               watchedValues.email && 
+               watchedValues.phone;
         console.log('🛒 CheckoutSection: Step 1 validation:', step1Valid);
         return step1Valid;
       case 2:
-        // Adres - sprawdź czy są wypełnione podstawowe pola
-        const step2Valid = watchedValues.firstName && 
-               watchedValues.lastName;
+        // Adres
+        const step2Valid = watchedValues.street && 
+               watchedValues.city && 
+               watchedValues.postalCode && 
+               watchedValues.country;
         console.log('🛒 CheckoutSection: Step 2 validation:', step2Valid);
         return step2Valid;
       case 3:
@@ -273,35 +278,46 @@ export default function CheckoutSectionNew() {
   // Strona sukcesu
   if (orderSuccess && orderNumber) {
     return (
-      <div className="min-h-screen bg-gray-900 py-12">
-        <div className="max-w-2xl mx-auto px-4">
-          <Card className="text-center bg-gray-800 border-gray-700">
+      <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 py-12 relative overflow-hidden">
+        {/* Animowane tło z gradientem */}
+        <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-slate-900 to-red-800/5"></div>
+        
+        {/* Animowane cząsteczki */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
+          <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
+          <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+        </div>
+
+        <div className="max-w-2xl mx-auto px-4 relative z-10">
+          <Card className="text-center bg-slate-800/40 backdrop-blur border-slate-700 shadow-2xl">
             <CardContent className="pt-8 pb-8">
-              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
-                <Check className="w-8 h-8 text-gray-900" />
+              <div className="w-16 h-16 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-red-500/30">
+                <Check className="w-8 h-8 text-red-500" />
               </div>
               
-              <h1 className="text-2xl font-semibold text-white mb-4">
+              <h1 className="text-3xl font-bold text-white mb-4 drop-shadow-lg">
                 Zamówienie zostało złożone!
               </h1>
               
-              <p className="text-gray-400 mb-6">
+              <p className="text-slate-400 mb-6">
                 Dziękujemy za zakup. Twoje zamówienie zostało przyjęte do realizacji.
               </p>
               
-              <div className="bg-gray-700 rounded-lg p-4 mb-6">
-                <p className="text-sm text-gray-400 mb-1">Numer zamówienia:</p>
-                <p className="text-xl font-bold text-white">{orderNumber}</p>
+              <div className="bg-slate-900/50 border border-red-500/30 rounded-lg p-4 mb-6">
+                <p className="text-sm text-slate-400 mb-1">Numer zamówienia:</p>
+                <p className="text-xl font-bold text-red-400">{orderNumber}</p>
               </div>
               
               <div className="space-y-3">
-                <Button asChild className="w-full bg-white text-gray-900 hover:bg-gray-100 rounded-lg font-medium">
+                <Button asChild className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105">
                   <Link href="/">
                     Powrót do strony głównej
                   </Link>
                 </Button>
                 
-                <Button variant="outline" asChild className="w-full bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">
+                <Button variant="outline" asChild className="w-full bg-slate-800 border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white">
                   <Link href={`/order/${orderNumber}`}>
                     Zobacz szczegóły zamówienia
                   </Link>
@@ -315,43 +331,51 @@ export default function CheckoutSectionNew() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 py-8">
-      {/* Subtelny wzór heksagonalny w tle */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}></div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 py-12 relative overflow-hidden">
+      {/* Animowane tło z gradientem */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-slate-900 to-red-800/5"></div>
+      
+      {/* Animowane cząsteczki */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 relative z-10">
-        {/* Header - bardziej minimalistyczny */}
+      <div className="max-w-5xl mx-auto px-6 relative z-10">
+        {/* Header z większym spacing */}
         <div className="text-center mb-12">
-          <h1 className="text-2xl font-semibold text-white mb-2">
+          <h1 className="text-3xl font-bold text-white mb-3 drop-shadow-lg">
             Finalizacja zamówienia
           </h1>
+          <p className="text-slate-300 text-lg">
+            Uzupełnij dane, aby dokończyć zakup
+          </p>
+          <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-red-500 to-transparent mx-auto mt-6"></div>
         </div>
 
-        {/* Progress Steps - uproszczone */}
-        <div className="flex items-center justify-center mb-12">
+        {/* Progress Steps */}
+        <div className="flex items-center justify-center mb-8">
           {[1, 2, 3].map((step) => (
             <React.Fragment key={step}>
-              <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
+              <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-300 hover:scale-105 ${
                 currentStep >= step 
-                  ? 'bg-white text-gray-900' 
-                  : 'bg-gray-700 text-gray-400'
+                  ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-500/30' 
+                  : 'border-slate-600 text-slate-400 bg-slate-800/50 hover:border-red-500/50'
               }`}>
                 {step}
               </div>
               {step < 3 && (
-                <div className={`w-12 h-px mx-3 ${
-                  currentStep > step ? 'bg-white' : 'bg-gray-700'
+                <div className={`w-16 h-0.5 mx-4 transition-all duration-300 ${
+                  currentStep > step ? 'bg-red-600' : 'bg-slate-700'
                 }`} />
               )}
             </React.Fragment>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Form */}
           <div className="lg:col-span-2">
             <form onSubmit={handleSubmit(
@@ -363,70 +387,82 @@ export default function CheckoutSectionNew() {
                 console.log('🛒 CheckoutSection: Form validation failed with errors:', errors);
                 console.log('🛒 CheckoutSection: Please fix the form errors before submitting');
               }
-            )} className="space-y-6">
+            )} className="space-y-8">
               {/* Step 1: Dane kontaktowe */}
               {currentStep === 1 && (
-                <Card className="bg-gray-800 border-gray-700">
-                  <CardHeader>
-                    <CardTitle className="text-white text-lg">
-                      Kontakt
+                <Card className="bg-slate-800/40 backdrop-blur border-slate-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
+                  <CardHeader className="border-l-4 border-red-500 px-8 py-6">
+                    <CardTitle className="flex items-center text-white text-xl">
+                      <Shield className="w-6 h-6 mr-3 text-red-400" />
+                      Dane kontaktowe
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div>
-                      <Label htmlFor="email" className="text-white text-sm font-medium">E-mail</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        {...register("email")}
-                        className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-white focus:ring-0 rounded-lg mt-1"
-                      />
-                      {errors.email && (
-                        <p className="text-red-400 text-sm mt-1">
-                          {errors.email.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="marketingAccepted"
-                        {...register("marketingAccepted")}
-                        className="border-gray-600 data-[state=checked]:bg-white data-[state=checked]:border-white"
-                      />
-                      <Label htmlFor="marketingAccepted" className="text-gray-300 text-sm">
-                        Chcę otrzymywać informacje o statusie zamówienia oraz wyjątkowe oferty i rabaty
-                      </Label>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="firstName" className="text-white text-sm font-medium">Imię</Label>
+                  <CardContent className="space-y-6 px-8 pb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="firstName" className="text-slate-200 font-medium text-base">Imię *</Label>
                         <Input
                           id="firstName"
                           {...register("firstName")}
-                          className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-white focus:ring-0 rounded-lg mt-1"
+                          className={`h-12 bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
+                            errors.firstName ? "border-red-500 bg-red-900/10" : ""
+                          }`}
                         />
                         {errors.firstName && (
-                          <p className="text-red-400 text-sm mt-1">
+                          <p className="text-red-400 text-sm mt-2">
                             {errors.firstName.message}
                           </p>
                         )}
                       </div>
                       
-                      <div>
-                        <Label htmlFor="lastName" className="text-white text-sm font-medium">Nazwisko</Label>
+                      <div className="space-y-2">
+                        <Label htmlFor="lastName" className="text-slate-200 font-medium text-base">Nazwisko *</Label>
                         <Input
                           id="lastName"
                           {...register("lastName")}
-                          className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-white focus:ring-0 rounded-lg mt-1"
+                          className={`h-12 bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
+                            errors.lastName ? "border-red-500 bg-red-900/10" : ""
+                          }`}
                         />
                         {errors.lastName && (
-                          <p className="text-red-400 text-sm mt-1">
+                          <p className="text-red-400 text-sm mt-2">
                             {errors.lastName.message}
                           </p>
                         )}
                       </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-slate-200 font-medium text-base">Email *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        {...register("email")}
+                        className={`h-12 bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
+                          errors.email ? "border-red-500 bg-red-900/10" : ""
+                        }`}
+                      />
+                      {errors.email && (
+                        <p className="text-red-400 text-sm mt-2">
+                          {errors.email.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-slate-200 font-medium text-base">Telefon *</Label>
+                      <Input
+                        id="phone"
+                        {...register("phone")}
+                        className={`h-12 bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
+                          errors.phone ? "border-red-500 bg-red-900/10" : ""
+                        }`}
+                      />
+                      {errors.phone && (
+                        <p className="text-red-400 text-sm mt-2">
+                          {errors.phone.message}
+                        </p>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -434,86 +470,78 @@ export default function CheckoutSectionNew() {
 
               {/* Step 2: Adres */}
               {currentStep === 2 && (
-                <Card className="bg-gray-800 border-gray-700">
-                  <CardHeader>
-                    <CardTitle className="text-white text-lg">
-                      Dostawa
+                <Card className="bg-slate-800/40 backdrop-blur border-slate-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
+                  <CardHeader className="border-l-4 border-red-500 px-8 py-6">
+                    <CardTitle className="flex items-center text-white text-xl">
+                      <Truck className="w-6 h-6 mr-3 text-red-400" />
+                      Adres wysyłkowy
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div>
-                      <Label htmlFor="country" className="text-white text-sm font-medium">Kraj/region</Label>
-                      <Input
-                        id="country"
-                        {...register("country")}
-                        className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-white focus:ring-0 rounded-lg mt-1"
-                        value="Polska"
-                        readOnly
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="firstName" className="text-white text-sm font-medium">Imię</Label>
-                        <Input
-                          id="firstName"
-                          {...register("firstName")}
-                          className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-white focus:ring-0 rounded-lg mt-1"
-                        />
-                        {errors.firstName && (
-                          <p className="text-red-400 text-sm mt-1">
-                            {errors.firstName.message}
-                          </p>
-                        )}
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="lastName" className="text-white text-sm font-medium">Nazwisko</Label>
-                        <Input
-                          id="lastName"
-                          {...register("lastName")}
-                          className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-white focus:ring-0 rounded-lg mt-1"
-                        />
-                        {errors.lastName && (
-                          <p className="text-red-400 text-sm mt-1">
-                            {errors.lastName.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="companyName" className="text-white text-sm font-medium">Firma (opcjonalnie)</Label>
-                      <Input
-                        id="companyName"
-                        {...register("companyName")}
-                        className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-white focus:ring-0 rounded-lg mt-1"
-                        placeholder="Nazwa firmy"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="street" className="text-white text-sm font-medium">Adres</Label>
+                  <CardContent className="space-y-6 px-8 pb-8">
+                    <div className="space-y-2">
+                      <Label htmlFor="street" className="text-slate-200 font-medium text-base">Ulica i numer *</Label>
                       <Input
                         id="street"
                         {...register("street")}
-                        className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-white focus:ring-0 rounded-lg mt-1"
+                        className={`h-12 bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
+                          errors.street ? "border-red-500 bg-red-900/10" : ""
+                        }`}
                       />
                       {errors.street && (
-                        <p className="text-red-400 text-sm mt-1">
+                        <p className="text-red-400 text-sm mt-2">
                           {errors.street.message}
                         </p>
                       )}
                     </div>
 
-                    <div>
-                      <Label htmlFor="nip" className="text-white text-sm font-medium">NIP</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="postalCode" className="text-slate-200 font-medium text-base">Kod pocztowy *</Label>
+                        <Input
+                          id="postalCode"
+                          {...register("postalCode")}
+                          className={`h-12 bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
+                            errors.postalCode ? "border-red-500 bg-red-900/10" : ""
+                          }`}
+                        />
+                        {errors.postalCode && (
+                          <p className="text-red-400 text-sm mt-2">
+                            {errors.postalCode.message}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="md:col-span-2 space-y-2">
+                        <Label htmlFor="city" className="text-slate-200 font-medium text-base">Miasto *</Label>
+                        <Input
+                          id="city"
+                          {...register("city")}
+                          className={`h-12 bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
+                            errors.city ? "border-red-500 bg-red-900/10" : ""
+                          }`}
+                        />
+                        {errors.city && (
+                          <p className="text-red-400 text-sm mt-2">
+                            {errors.city.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="country" className="text-slate-200 font-medium text-base">Kraj *</Label>
                       <Input
-                        id="nip"
-                        {...register("nip")}
-                        className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-white focus:ring-0 rounded-lg mt-1"
-                        placeholder="Numer NIP (opcjonalnie)"
+                        id="country"
+                        {...register("country")}
+                        className={`h-12 bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
+                          errors.country ? "border-red-500 bg-red-900/10" : ""
+                        }`}
                       />
+                      {errors.country && (
+                        <p className="text-red-400 text-sm mt-2">
+                          {errors.country.message}
+                        </p>
+                      )}
                     </div>
 
                     {/* Billing address */}
@@ -567,84 +595,84 @@ export default function CheckoutSectionNew() {
 
               {/* Step 3: Płatność */}
               {currentStep === 3 && (
-                <Card className="bg-black/40 backdrop-blur border-gray-800 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-                  <CardHeader className="border-l-4 border-red-500">
-                    <CardTitle className="flex items-center text-white">
-                      <CreditCard className="w-5 h-5 mr-2 text-red-400" />
+                <Card className="bg-slate-800/40 backdrop-blur border-slate-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
+                  <CardHeader className="border-l-4 border-red-500 px-8 py-6">
+                    <CardTitle className="flex items-center text-white text-xl">
+                      <CreditCard className="w-6 h-6 mr-3 text-red-400" />
                       Metoda płatności
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-8 px-8 pb-8">
                     <RadioGroup
                       value={paymentMethod}
                       onValueChange={(value) => setValue("paymentMethod", value as any)}
                       className="space-y-4"
                     >
-                      <div className={`flex items-center space-x-3 p-4 rounded-lg border transition-all duration-300 cursor-pointer ${
+                      <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
                         paymentMethod === "card" 
                           ? 'border-red-500 bg-red-900/20' 
-                          : 'bg-gray-900/30 border-gray-700 hover:border-red-500/50'
+                          : 'bg-slate-900/30 border-slate-600 hover:border-red-500/50'
                       }`}
                       onClick={() => setValue("paymentMethod", "card")}>
                         <RadioGroupItem value="card" id="card" className={paymentMethod === "card" ? 'border-red-500' : ''} />
-                        <Label htmlFor="card" className="flex items-center space-x-3 flex-1 cursor-pointer">
-                          <CreditCard className={`w-5 h-5 ${paymentMethod === "card" ? 'text-red-400' : 'text-gray-400'}`} />
+                        <Label htmlFor="card" className="flex items-center space-x-4 flex-1 cursor-pointer">
+                          <CreditCard className={`w-6 h-6 ${paymentMethod === "card" ? 'text-red-400' : 'text-slate-400'}`} />
                           <div>
-                            <div className={`font-medium ${paymentMethod === "card" ? 'text-white' : 'text-gray-300'}`}>
+                            <div className={`font-medium text-base ${paymentMethod === "card" ? 'text-white' : 'text-slate-200'}`}>
                               Karta płatnicza
                             </div>
-                            <div className={`text-sm ${paymentMethod === "card" ? 'text-gray-400' : 'text-gray-500'}`}>
+                            <div className={`text-sm ${paymentMethod === "card" ? 'text-slate-400' : 'text-slate-500'}`}>
                               Visa, Mastercard, American Express
                             </div>
                           </div>
                           {paymentMethod === "card" && (
-                            <Check className="w-4 h-4 text-red-400 ml-auto" />
+                            <Check className="w-5 h-5 text-red-400 ml-auto" />
                           )}
                         </Label>
                       </div>
                       
-                      <div className={`flex items-center space-x-3 p-4 rounded-lg border transition-all duration-300 cursor-pointer ${
+                      <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
                         paymentMethod === "transfer" 
                           ? 'border-red-500 bg-red-900/20' 
-                          : 'bg-gray-900/30 border-gray-700 hover:border-red-500/50'
+                          : 'bg-slate-900/30 border-slate-600 hover:border-red-500/50'
                       }`}
                       onClick={() => setValue("paymentMethod", "transfer")}>
                         <RadioGroupItem value="transfer" id="transfer" className={paymentMethod === "transfer" ? 'border-red-500' : ''} />
-                        <Label htmlFor="transfer" className="flex items-center space-x-3 flex-1 cursor-pointer">
-                          <Truck className={`w-5 h-5 ${paymentMethod === "transfer" ? 'text-red-400' : 'text-gray-400'}`} />
+                        <Label htmlFor="transfer" className="flex items-center space-x-4 flex-1 cursor-pointer">
+                          <Truck className={`w-6 h-6 ${paymentMethod === "transfer" ? 'text-red-400' : 'text-slate-400'}`} />
                           <div>
-                            <div className={`font-medium ${paymentMethod === "transfer" ? 'text-white' : 'text-gray-300'}`}>
+                            <div className={`font-medium text-base ${paymentMethod === "transfer" ? 'text-white' : 'text-slate-200'}`}>
                               Przelew bankowy
                             </div>
-                            <div className={`text-sm ${paymentMethod === "transfer" ? 'text-gray-400' : 'text-gray-500'}`}>
+                            <div className={`text-sm ${paymentMethod === "transfer" ? 'text-slate-400' : 'text-slate-500'}`}>
                               Przelew online lub tradycyjny
                             </div>
                           </div>
                           {paymentMethod === "transfer" && (
-                            <Check className="w-4 h-4 text-red-400 ml-auto" />
+                            <Check className="w-5 h-5 text-red-400 ml-auto" />
                           )}
                         </Label>
                       </div>
                       
-                      <div className={`flex items-center space-x-3 p-4 rounded-lg border transition-all duration-300 cursor-pointer ${
+                      <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
                         paymentMethod === "blik" 
                           ? 'border-red-500 bg-red-900/20' 
-                          : 'bg-gray-900/30 border-gray-700 hover:border-red-500/50'
+                          : 'bg-slate-900/30 border-slate-600 hover:border-red-500/50'
                       }`}
                       onClick={() => setValue("paymentMethod", "blik")}>
                         <RadioGroupItem value="blik" id="blik" className={paymentMethod === "blik" ? 'border-red-500' : ''} />
-                        <Label htmlFor="blik" className="flex items-center space-x-3 flex-1 cursor-pointer">
-                          <Shield className={`w-5 h-5 ${paymentMethod === "blik" ? 'text-red-400' : 'text-gray-400'}`} />
+                        <Label htmlFor="blik" className="flex items-center space-x-4 flex-1 cursor-pointer">
+                          <Shield className={`w-6 h-6 ${paymentMethod === "blik" ? 'text-red-400' : 'text-slate-400'}`} />
                           <div>
-                            <div className={`font-medium ${paymentMethod === "blik" ? 'text-white' : 'text-gray-300'}`}>
+                            <div className={`font-medium text-base ${paymentMethod === "blik" ? 'text-white' : 'text-slate-200'}`}>
                               BLIK
                             </div>
-                            <div className={`text-sm ${paymentMethod === "blik" ? 'text-gray-400' : 'text-gray-500'}`}>
+                            <div className={`text-sm ${paymentMethod === "blik" ? 'text-slate-400' : 'text-slate-500'}`}>
                               Płatność przez aplikację bankową
                             </div>
                           </div>
                           {paymentMethod === "blik" && (
-                            <Check className="w-4 h-4 text-red-400 ml-auto" />
+                            <Check className="w-5 h-5 text-red-400 ml-auto" />
                           )}
                         </Label>
                       </div>
@@ -667,8 +695,8 @@ export default function CheckoutSectionNew() {
                       />
                     </div>
 
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-2">
+                    <div className="space-y-6">
+                      <div className="flex items-center space-x-3">
                         <Controller
                           name="termsAccepted"
                           control={control}
@@ -677,11 +705,11 @@ export default function CheckoutSectionNew() {
                               id="termsAccepted"
                               checked={field.value}
                               onCheckedChange={field.onChange}
-                              className="border-gray-700 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                              className="border-slate-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                             />
                           )}
                         />
-                        <Label htmlFor="termsAccepted" className="text-sm text-gray-300">
+                        <Label htmlFor="termsAccepted" className="text-sm text-slate-300 leading-relaxed">
                           Akceptuję <Link href="/regulamin" className="text-red-400 hover:text-red-300 hover:underline">regulamin</Link> *
                         </Label>
                       </div>
@@ -691,13 +719,13 @@ export default function CheckoutSectionNew() {
                         </p>
                       )}
 
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3">
                         <Checkbox
                           id="marketingAccepted"
                           {...register("marketingAccepted")}
-                          className="border-gray-700 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                          className="border-slate-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                         />
-                        <Label htmlFor="marketingAccepted" className="text-sm text-gray-400">
+                        <Label htmlFor="marketingAccepted" className="text-sm text-slate-300 leading-relaxed">
                           Chcę otrzymywać informacje o nowościach i promocjach
                         </Label>
                       </div>
@@ -707,15 +735,15 @@ export default function CheckoutSectionNew() {
               )}
 
               {/* Navigation */}
-              <div className="flex justify-between pt-6">
+              <div className="flex justify-between pt-8">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={prevStep}
                   disabled={currentStep === 1}
-                  className="bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
+                  className="bg-slate-800 border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-8 py-4 text-base"
                 >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  <ArrowLeft className="w-5 h-5 mr-3" />
                   Wstecz
                 </Button>
 
@@ -724,16 +752,16 @@ export default function CheckoutSectionNew() {
                     type="button"
                     onClick={nextStep}
                     disabled={!isCurrentStepValid()}
-                    className="bg-white text-gray-900 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-medium"
+                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-10 py-4 text-base"
                   >
                     Dalej
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    <ArrowRight className="w-5 h-5 ml-3" />
                   </Button>
                 ) : (
                   <Button
                     type="submit"
                     disabled={isSubmitting || orderLoading}
-                    className="bg-white text-gray-900 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-medium"
+                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-10 py-4 text-base"
                     onClick={() => {
                       console.log('🛒 CheckoutSection: Submit button clicked');
                       console.log('🛒 CheckoutSection: isSubmitting:', isSubmitting);
@@ -743,12 +771,12 @@ export default function CheckoutSectionNew() {
                   >
                     {isSubmitting || orderLoading ? (
                       <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 mr-2" />
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3" />
                         Przetwarzanie...
                       </>
                     ) : (
                       <>
-                        <Check className="w-4 h-4 mr-2" />
+                        <Check className="w-5 h-5 mr-3" />
                         Złóż zamówienie
                       </>
                     )}
@@ -768,7 +796,13 @@ export default function CheckoutSectionNew() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <Card className="sticky top-4 bg-gray-800 border-gray-700">
+            <Card className="sticky top-4 bg-slate-800/40 backdrop-blur border-slate-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
+              <CardHeader className="border-b border-slate-700">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl text-white">Podsumowanie zamówienia</CardTitle>
+                  <div className="w-3 h-3 bg-red-400 rounded-full animate-pulse"></div>
+                </div>
+              </CardHeader>
               <CardContent className="p-6">
                 <div className="space-y-6">
                   {/* Items */}
@@ -777,7 +811,7 @@ export default function CheckoutSectionNew() {
                       <div key={item.id} className="flex space-x-3">
                         {/* Product Image */}
                         <div className="flex-shrink-0">
-                          <div className="w-16 h-16 bg-gray-700 rounded-lg border border-gray-600 flex items-center justify-center">
+                          <div className="w-16 h-16 bg-slate-700 rounded-lg border border-slate-600 flex items-center justify-center">
                             {item.productImage ? (
                               <img 
                                 src={item.productImage} 
@@ -785,7 +819,7 @@ export default function CheckoutSectionNew() {
                                 className="w-full h-full object-cover rounded-lg"
                               />
                             ) : (
-                              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                              <div className="w-8 h-8 bg-slate-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
                                 {index + 1}
                               </div>
                             )}
@@ -800,24 +834,24 @@ export default function CheckoutSectionNew() {
                           {item.configuration && (
                             <div className="mt-1 space-y-1">
                               {item.configuration.carDetails?.bodyType && (
-                                <p className="text-gray-400 text-xs">
+                                <p className="text-slate-400 text-xs">
                                   {item.configuration.carDetails.bodyType}
                                 </p>
                               )}
                               {item.configuration.materialColor && (
-                                <p className="text-gray-400 text-xs">
+                                <p className="text-slate-400 text-xs">
                                   Kolor: {item.configuration.materialColor}
                                 </p>
                               )}
                               {item.configuration.borderColor && (
-                                <p className="text-gray-400 text-xs">
+                                <p className="text-slate-400 text-xs">
                                   Obszycie: {item.configuration.borderColor}
                                 </p>
                               )}
                             </div>
                           )}
                           <div className="mt-2 flex items-center justify-between">
-                            <span className="text-gray-400 text-xs">Ilość: {item.quantity}</span>
+                            <span className="text-slate-400 text-xs">Ilość: {item.quantity}</span>
                             <span className="text-white font-semibold text-sm">
                               {PricingService.formatPrice(item.subtotal)}
                             </span>
@@ -827,7 +861,7 @@ export default function CheckoutSectionNew() {
                     ))}
                   </div>
 
-                  <Separator className="bg-gray-700" />
+                  <Separator className="bg-slate-700" />
 
                   {/* Discount Code */}
                   <div className="space-y-2">
@@ -835,11 +869,11 @@ export default function CheckoutSectionNew() {
                     <div className="flex space-x-2">
                       <Input 
                         placeholder="Wprowadź kod"
-                        className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-white focus:ring-0 rounded-lg"
+                        className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-red-500 focus:ring-red-500/20 rounded-lg"
                       />
                       <Button 
                         type="button"
-                        className="bg-gray-700 border-gray-600 text-white hover:bg-gray-600 rounded-lg px-4"
+                        className="bg-slate-700 border-slate-600 text-white hover:bg-slate-600 rounded-lg px-4"
                       >
                         Zastosuj
                       </Button>
@@ -849,22 +883,22 @@ export default function CheckoutSectionNew() {
                   {/* Totals */}
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-300">Suma częściowa - pozycje: {items.length}</span>
+                      <span className="text-slate-300">Suma częściowa - pozycje: {items.length}</span>
                       <span className="text-white font-medium">{PricingService.formatPrice(total)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-300">Wysyłka</span>
+                      <span className="text-slate-300">Wysyłka</span>
                       <span className="text-white font-medium">27,00 zł</span>
                     </div>
                     
-                    <div className="pt-2 border-t border-gray-700">
+                    <div className="pt-2 border-t border-slate-700">
                       <div className="flex justify-between items-center">
                         <span className="text-white font-semibold text-lg">Razem do zapłaty</span>
                         <span className="text-white font-bold text-xl">
                           PLN {PricingService.formatPrice(total + 27)}
                         </span>
                       </div>
-                      <p className="text-gray-400 text-sm mt-1">
+                      <p className="text-slate-400 text-sm mt-1">
                         W tym podatki: {((total + 27) * 0.23).toFixed(2)} zł
                       </p>
                     </div>
