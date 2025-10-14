@@ -1,245 +1,218 @@
-import { Product } from '../types/product';
-import { CartItem } from '../types/cart';
-import { HybridSessionManager } from '../utils/hybrid-session-manager';
+import { AccessoryService } from './AccessoryService';
+import { MatService } from './MatService';
+import { PricingService } from './PricingService';
+import { CartItem, Cart, AddToCartDTO, UpdateCartItemDTO } from '../types/cart-new';
 
 export class CartService {
-  private static readonly CART_PREFIX = 'cart-';
+  private accessoryService: AccessoryService;
+  private matService: MatService;
+  private pricingService: PricingService;
+
+  constructor() {
+    this.accessoryService = new AccessoryService();
+    this.matService = new MatService();
+    this.pricingService = new PricingService();
+  }
 
   /**
-   * Dodaje produkt do koszyka
+   * Dodaj produkt do koszyka
    */
-  static addProductToCart(product: Product): void {
-    if (typeof window === 'undefined') {
-      console.warn('CartService: Cannot access localStorage on server side');
-      return;
-    }
-
-    const sessionId = this.getCurrentSessionId();
-    const cartKey = `${this.CART_PREFIX}${sessionId}`;
+  async addToCart(cart: Cart, item: AddToCartDTO): Promise<Cart> {
+    // Waliduj produkt
+    await this.validateCartItem(item);
     
-    try {
-      const existingCart = this.getCartFromStorage(cartKey);
-      const existingItemIndex = existingCart.findIndex(item => item.id === product.id);
+    // Sprawdź czy produkt już jest w koszyku
+    const existingIndex = cart.items.findIndex(
+      i => i.productId === item.productId && 
+           JSON.stringify(i.configuration) === JSON.stringify(item.configuration)
+    );
+    
+    if (existingIndex >= 0) {
+      // Zwiększ ilość
+      cart.items[existingIndex].quantity += item.quantity;
+      cart.items[existingIndex].subtotal = 
+        cart.items[existingIndex].quantity * cart.items[existingIndex].unitPrice;
+    } else {
+      // Dodaj nowy item
+      const cartItem = await this.createCartItem(item);
+      cart.items.push(cartItem);
+    }
+    
+    // Przelicz ceny koszyka
+    return this.recalculateCart(cart);
+  }
 
-      if (existingItemIndex >= 0) {
-        // Zwiększ ilość istniejącego produktu
-        existingCart[existingItemIndex].quantity += 1;
-      } else {
-        // Dodaj nowy produkt z ilością 1
-        const cartItem: CartItem = {
-          ...product,
-          quantity: 1
-        };
-        existingCart.push(cartItem);
-      }
+  /**
+   * Usuń produkt z koszyka
+   */
+  async removeFromCart(cart: Cart, itemId: string): Promise<Cart> {
+    cart.items = cart.items.filter(item => item.id !== itemId);
+    return this.recalculateCart(cart);
+  }
 
-      this.saveCartToStorage(cartKey, existingCart);
-      console.log('🛒 Product added to cart:', product.id);
-      console.log('📦 Cart contents after save:', existingCart.map(item => ({
-        id: item.id,
-        configuration: item.configuration,
-        pricing: item.pricing,
-        quantity: item.quantity
-      })));
-      console.log('💾 Cart saved to localStorage with key:', cartKey);
+  /**
+   * Zaktualizuj ilość
+   */
+  async updateQuantity(cart: Cart, itemId: string, quantity: number): Promise<Cart> {
+    const item = cart.items.find(i => i.id === itemId);
+    
+    if (!item) {
+      throw new Error('Item not found in cart');
+    }
+    
+    // Waliduj dostępność
+    if (item.productType === 'accessory') {
+      const available = await this.accessoryService.checkAvailability(
+        item.productId,
+        quantity
+      );
       
-      // Wyślij custom event aby odświeżyć koszyk w tej samej karcie
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('cartUpdated'));
-        console.log('📡 Cart update event dispatched');
+      if (!available) {
+        throw new Error('Product not available in requested quantity');
       }
-    } catch (error) {
-      console.error('❌ Error adding product to cart:', error);
     }
+    
+    item.quantity = quantity;
+    item.subtotal = item.quantity * item.unitPrice;
+    
+    return this.recalculateCart(cart);
   }
 
   /**
-   * Pobiera produkty z koszyka
+   * Wyczyść koszyk
    */
-  static getCartProducts(sessionId: string): Product[] {
-    if (typeof window === 'undefined') {
-      return [];
-    }
-
-    const cartKey = `${this.CART_PREFIX}${sessionId}`;
-    
-    try {
-      const cartItems = this.getCartFromStorage(cartKey);
-      return cartItems.map(item => {
-        const { quantity, ...product } = item;
-        return product;
-      });
-    } catch (error) {
-      console.error('❌ Error getting cart products:', error);
-      return [];
-    }
+  clearCart(): Cart {
+    return {
+      items: [],
+      subtotal: 0,
+      shippingCost: 0,
+      tax: 0,
+      discount: 0,
+      total: 0,
+      itemCount: 0
+    };
   }
 
   /**
-   * Pobiera elementy koszyka (z quantity)
+   * Przelicz koszyk
    */
-  static getCartItems(sessionId: string): CartItem[] {
-    if (typeof window === 'undefined') {
-      return [];
-    }
-
-    const cartKey = `${this.CART_PREFIX}${sessionId}`;
-    console.log('📦 getCartItems: fetching with key:', cartKey);
+  private async recalculateCart(cart: Cart): Promise<Cart> {
+    cart.subtotal = cart.items.reduce((sum, item) => sum + item.subtotal, 0);
+    cart.shippingCost = PricingService.calculateShippingCost(cart.subtotal);
+    cart.tax = PricingService.calculateTax(cart.subtotal + cart.shippingCost);
+    cart.discount = 0; // TODO: Kody rabatowe
+    cart.total = cart.subtotal + cart.shippingCost + cart.tax - cart.discount;
+    cart.itemCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
     
-    try {
-      const items = this.getCartFromStorage(cartKey);
-      console.log('📦 getCartItems: retrieved items:', items.length);
-      return items;
-    } catch (error) {
-      console.error('❌ Error getting cart items:', error);
-      return [];
-    }
+    return cart;
   }
 
   /**
-   * Usuwa produkt z koszyka
+   * Waliduj pozycję koszyka
    */
-  static removeProductFromCart(productId: string): void {
-    if (typeof window === 'undefined') {
-      console.warn('CartService: Cannot access localStorage on server side');
-      return;
-    }
-
-    const sessionId = this.getCurrentSessionId();
-    const cartKey = `${this.CART_PREFIX}${sessionId}`;
-    
-    try {
-      const existingCart = this.getCartFromStorage(cartKey);
-      const filteredCart = existingCart.filter(item => item.id !== productId);
+  private async validateCartItem(item: AddToCartDTO): Promise<void> {
+    if (item.productType === 'accessory') {
+      const accessory = await this.accessoryService.getAccessoryById(item.productId);
       
-      this.saveCartToStorage(cartKey, filteredCart);
-      console.log('🗑️ Product removed from cart:', productId);
-      
-      // Wyślij custom event
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('cartUpdated'));
-      }
-    } catch (error) {
-      console.error('❌ Error removing product from cart:', error);
-    }
-  }
-
-  /**
-   * Czyści cały koszyk
-   */
-  static clearCart(sessionId: string): void {
-    if (typeof window === 'undefined') {
-      console.warn('CartService: Cannot access localStorage on server side');
-      return;
-    }
-
-    const cartKey = `${this.CART_PREFIX}${sessionId}`;
-    
-    try {
-      localStorage.removeItem(cartKey);
-      console.log('🧹 Cart cleared for session:', sessionId);
-    } catch (error) {
-      console.error('❌ Error clearing cart:', error);
-    }
-  }
-
-  /**
-   * Oblicza całkowitą wartość koszyka
-   */
-  static getCartTotal(sessionId: string): number {
-    if (typeof window === 'undefined') {
-      return 0;
-    }
-
-    const cartKey = `${this.CART_PREFIX}${sessionId}`;
-    
-    try {
-      const cartItems = this.getCartFromStorage(cartKey);
-      return cartItems.reduce((total, item) => {
-        return total + (item.pricing.totalPrice * item.quantity);
-      }, 0);
-    } catch (error) {
-      console.error('❌ Error calculating cart total:', error);
-      return 0;
-    }
-  }
-
-  /**
-   * Aktualizuje ilość produktu w koszyku
-   */
-  static updateProductQuantity(productId: string, quantity: number): void {
-    if (typeof window === 'undefined') {
-      console.warn('CartService: Cannot access localStorage on server side');
-      return;
-    }
-
-    const sessionId = this.getCurrentSessionId();
-    const cartKey = `${this.CART_PREFIX}${sessionId}`;
-    
-    try {
-      const existingCart = this.getCartFromStorage(cartKey);
-      
-      if (quantity <= 0) {
-        // Usuń produkt jeśli ilość <= 0
-        this.removeProductFromCart(productId);
-        return;
-      }
-
-      const itemIndex = existingCart.findIndex(item => item.id === productId);
-      if (itemIndex >= 0) {
-        existingCart[itemIndex].quantity = quantity;
-        this.saveCartToStorage(cartKey, existingCart);
-        console.log('📊 Product quantity updated:', productId, quantity);
-        
-        // Wyślij custom event
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('cartUpdated'));
-        }
-      }
-    } catch (error) {
-      console.error('❌ Error updating product quantity:', error);
-    }
-  }
-
-  /**
-   * Pobiera koszyk z localStorage
-   */
-  private static getCartFromStorage(cartKey: string): CartItem[] {
-    try {
-      const cartData = localStorage.getItem(cartKey);
-      if (!cartData) {
-        return [];
+      if (!accessory) {
+        throw new Error('Accessory not found');
       }
       
-      const parsed = JSON.parse(cartData);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (error) {
-      console.error('❌ Error parsing cart data:', error);
-      return [];
+      const available = await this.accessoryService.checkAvailability(
+        item.productId,
+        item.quantity
+      );
+      
+      if (!available) {
+        throw new Error('Accessory not available');
+      }
+    } else if (item.productType === 'mat') {
+      const mat = await this.matService.findMatForCar(item.configuration.carDetails);
+      
+      if (!mat) {
+        throw new Error('Mat not found for this car');
+      }
+      
+      this.matService.validateConfiguration(mat, item.configuration);
     }
   }
 
   /**
-   * Zapisuje koszyk do localStorage
+   * Utwórz pozycję koszyka
    */
-  private static saveCartToStorage(cartKey: string, cartItems: CartItem[]): void {
-    try {
-      localStorage.setItem(cartKey, JSON.stringify(cartItems));
-    } catch (error) {
-      console.error('❌ Error saving cart to storage:', error);
+  private async createCartItem(item: AddToCartDTO): Promise<CartItem> {
+    let productName = '';
+    let productSku = '';
+    let productImage = '';
+    let unitPrice = 0;
+
+    if (item.productType === 'accessory') {
+      const accessory = await this.accessoryService.getAccessoryById(item.productId);
+      if (!accessory) {
+        throw new Error('Accessory not found');
+      }
+      
+      productName = accessory.name;
+      productSku = accessory.sku;
+      productImage = accessory.imageSrc || '';
+      unitPrice = accessory.price;
+    } else if (item.productType === 'mat') {
+      const mat = await this.matService.findMatForCar(item.configuration.carDetails);
+      if (!mat) {
+        throw new Error('Mat not found for this car');
+      }
+      
+      productName = `Dywaniki ${item.configuration.carDetails.brand} ${item.configuration.carDetails.model}`;
+      productSku = `MAT-${item.configuration.carDetails.brand.toUpperCase()}-${item.configuration.carDetails.model.toUpperCase()}`;
+      unitPrice = this.matService.calculatePrice(mat, item.configuration);
     }
+
+    return {
+      id: `${item.productType}-${item.productId}-${Date.now()}`,
+      quantity: item.quantity,
+      unitPrice,
+      subtotal: unitPrice * item.quantity,
+      productType: item.productType,
+      productId: item.productId,
+      productName,
+      productSku,
+      productImage,
+      configuration: item.configuration
+    };
   }
 
   /**
-   * Pobiera aktualny session ID
+   * Pobierz podsumowanie koszyka
    */
-  private static getCurrentSessionId(): string {
-    if (typeof window !== 'undefined') {
-      // W przeglądarce - użyj HybridSessionManager
-      return HybridSessionManager.getSessionId();
-    }
-    
-    // Na serwerze - wygeneruj tymczasowy ID
-    return `temp-session-${Date.now()}`;
+  getCartSummary(cart: Cart): {
+    itemCount: number;
+    subtotal: number;
+    shippingCost: number;
+    tax: number;
+    discount: number;
+    total: number;
+  } {
+    return {
+      itemCount: cart.itemCount,
+      subtotal: cart.subtotal,
+      shippingCost: cart.shippingCost,
+      tax: cart.tax,
+      discount: cart.discount,
+      total: cart.total
+    };
+  }
+
+  /**
+   * Sprawdź czy koszyk jest pusty
+   */
+  isEmpty(cart: Cart): boolean {
+    return cart.items.length === 0;
+  }
+
+  /**
+   * Pobierz liczbę pozycji w koszyku
+   */
+  getItemCount(cart: Cart): number {
+    return cart.itemCount;
   }
 }

@@ -1,0 +1,174 @@
+export class PricingService {
+  private static readonly SHIPPING_THRESHOLD = 300; // Free shipping above 300 PLN
+  private static readonly SHIPPING_COST = 15; // Standard shipping cost
+  private static readonly TAX_RATE = 0.23; // 23% VAT
+
+  /**
+   * Oblicza koszt dostawy na podstawie wartości zamówienia
+   */
+  static calculateShippingCost(subtotal: number): number {
+    if (subtotal >= this.SHIPPING_THRESHOLD) {
+      return 0; // Free shipping
+    }
+    return this.SHIPPING_COST;
+  }
+
+  /**
+   * Oblicza podatek VAT
+   */
+  static calculateTax(amount: number): number {
+    return Math.round(amount * this.TAX_RATE * 100) / 100;
+  }
+
+  /**
+   * Oblicza cenę dywaników z konfiguracją
+   */
+  static calculateMatPrice(basePrice: number, configuration: any): number {
+    let totalPrice = basePrice;
+
+    // Modyfikatory dla rodzaju zestawu
+    const setTypeModifiers = {
+      'front': 0,
+      'basic': 150,
+      'premium': 300,
+      'complete': 450
+    };
+
+    const setType = configuration?.setType;
+    if (setType && setTypeModifiers[setType as keyof typeof setTypeModifiers] !== undefined) {
+      totalPrice += setTypeModifiers[setType as keyof typeof setTypeModifiers];
+    }
+
+    // Modyfikatory dla rodzaju komórek
+    const cellTypeModifiers = {
+      'diamonds': 0,
+      'honey': 10
+    };
+
+    const cellType = configuration?.cellType;
+    if (cellType && cellTypeModifiers[cellType as keyof typeof cellTypeModifiers] !== undefined) {
+      totalPrice += cellTypeModifiers[cellType as keyof typeof cellTypeModifiers];
+    }
+
+    // Modyfikator dla ochraniacza pod piętę
+    if (configuration?.heelPad === 'yes') {
+      totalPrice += 30;
+    }
+
+    return Math.round(totalPrice * 100) / 100;
+  }
+
+  /**
+   * Oblicza cenę zestawu z modyfikatorem rodzaju dywaników
+   */
+  static calculateSetVariantPrice(
+    variantId: string, 
+    matTypeId: string, 
+    basePrice: number
+  ): number {
+    const setVariantPrices = {
+      'front': 150,
+      'basic': 300,
+      'premium': 450,
+      'complete': 600
+    };
+
+    const matTypeModifiers = {
+      '3d-with-rims': 0,
+      'classic': -40
+    };
+
+    const variantPrice = setVariantPrices[variantId as keyof typeof setVariantPrices] || 0;
+    const modifier = matTypeModifiers[matTypeId as keyof typeof matTypeModifiers] || 0;
+
+    return variantPrice + modifier;
+  }
+
+  /**
+   * Oblicza całkowitą cenę zamówienia
+   */
+  static calculateOrderTotal(
+    subtotal: number,
+    shippingCost: number = 0,
+    discount: number = 0
+  ): {
+    subtotal: number;
+    shippingCost: number;
+    tax: number;
+    discount: number;
+    total: number;
+  } {
+    const calculatedShippingCost = shippingCost || this.calculateShippingCost(subtotal);
+    const amountBeforeTax = subtotal + calculatedShippingCost - discount;
+    const tax = this.calculateTax(amountBeforeTax);
+    const total = amountBeforeTax + tax;
+
+    return {
+      subtotal,
+      shippingCost: calculatedShippingCost,
+      tax,
+      discount,
+      total: Math.round(total * 100) / 100
+    };
+  }
+
+  /**
+   * Waliduje kod rabatowy
+   */
+  static validateDiscountCode(code: string, subtotal: number): {
+    isValid: boolean;
+    discountAmount: number;
+    message?: string;
+  } {
+    const validCodes = {
+      'WELCOME10': { type: 'percentage', value: 10, minAmount: 100 },
+      'SAVE50': { type: 'fixed', value: 50, minAmount: 200 },
+      'FREESHIP': { type: 'shipping', value: 15, minAmount: 150 }
+    };
+
+    const discount = validCodes[code as keyof typeof validCodes];
+    
+    if (!discount) {
+      return {
+        isValid: false,
+        discountAmount: 0,
+        message: 'Nieprawidłowy kod rabatowy'
+      };
+    }
+
+    if (subtotal < discount.minAmount) {
+      return {
+        isValid: false,
+        discountAmount: 0,
+        message: `Minimalna wartość zamówienia: ${discount.minAmount} PLN`
+      };
+    }
+
+    let discountAmount = 0;
+    if (discount.type === 'percentage') {
+      discountAmount = Math.round(subtotal * (discount.value / 100) * 100) / 100;
+    } else if (discount.type === 'fixed') {
+      discountAmount = Math.min(discount.value, subtotal);
+    }
+
+    return {
+      isValid: true,
+      discountAmount,
+      message: `Rabat: ${discountAmount} PLN`
+    };
+  }
+
+  /**
+   * Formatuje cenę do wyświetlenia
+   */
+  static formatPrice(price: number): string {
+    return `${price.toFixed(2)} PLN`;
+  }
+
+  /**
+   * Formatuje cenę z walutą
+   */
+  static formatPriceWithCurrency(price: number, currency: string = 'PLN'): string {
+    return `${price.toFixed(2)} ${currency}`;
+  }
+}

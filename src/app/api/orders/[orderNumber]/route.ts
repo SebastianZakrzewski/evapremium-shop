@@ -1,0 +1,87 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { OrderService } from '@/lib/services/OrderService';
+
+const orderService = new OrderService();
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { orderNumber: string } }
+) {
+  try {
+    const { orderNumber } = params;
+    
+    const order = await orderService.getOrderByNumber(orderNumber);
+    
+    if (!order) {
+      return NextResponse.json(
+        { success: false, error: 'Order not found' },
+        { status: 404 }
+      );
+    }
+    
+    return NextResponse.json({
+      success: true,
+      data: order
+    });
+  } catch (error) {
+    console.error('Error fetching order:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { orderNumber: string } }
+) {
+  try {
+    const { orderNumber } = params;
+    const body = await request.json();
+    
+    const { status, trackingNumber } = body;
+    
+    if (!status) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Missing required field: status' 
+        },
+        { status: 400 }
+      );
+    }
+    
+    // Find order by number first
+    const order = await orderService.getOrderByNumber(orderNumber);
+    if (!order) {
+      return NextResponse.json(
+        { success: false, error: 'Order not found' },
+        { status: 404 }
+      );
+    }
+    
+    const updatedOrder = await orderService.updateOrderStatus(
+      order.id,
+      status,
+      trackingNumber
+    );
+    
+    return NextResponse.json({
+      success: true,
+      data: updatedOrder
+    });
+  } catch (error) {
+    console.error('Error updating order:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      },
+      { status: 400 }
+    );
+  }
+}

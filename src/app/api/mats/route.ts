@@ -1,72 +1,109 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CarMatService } from '@/lib/services/carmat-service';
+import { MatService } from '@/lib/services/MatService';
+import { MatFilters } from '@/lib/types/mat';
 
-// GET /api/mats
+const matService = new MatService();
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type');
-    const color = searchParams.get('color');
-    const cellType = searchParams.get('cellType');
-    const edgeColor = searchParams.get('edgeColor');
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const offset = (page - 1) * limit;
-
-    const result = await CarMatService.getAllMats({
-      type: type || undefined,
-      color: color || undefined,
-      cellType: cellType || undefined,
-      edgeColor: edgeColor || undefined,
-      limit,
-      offset
-    });
-
-    if (!result.success) {
-      return NextResponse.json(
-        { success: false, error: result.error || 'Błąd serwera' },
-        { status: 500 }
-      );
+    
+    // Parse filters from query parameters
+    const filters: MatFilters = {};
+    
+    const brandSlug = searchParams.get('brandSlug');
+    if (brandSlug) {
+      filters.carBrandSlug = brandSlug;
     }
-
+    
+    const modelSlug = searchParams.get('modelSlug');
+    if (modelSlug) {
+      filters.carModelSlug = modelSlug;
+    }
+    
+    const generation = searchParams.get('generation');
+    if (generation) {
+      filters.generation = generation;
+    }
+    
+    const bodyType = searchParams.get('bodyType');
+    if (bodyType) {
+      filters.bodyType = bodyType;
+    }
+    
+    const yearFrom = searchParams.get('yearFrom');
+    if (yearFrom) {
+      filters.yearFrom = parseInt(yearFrom);
+    }
+    
+    const yearTo = searchParams.get('yearTo');
+    if (yearTo) {
+      filters.yearTo = parseInt(yearTo);
+    }
+    
+    const isActive = searchParams.get('isActive');
+    if (isActive !== null) {
+      filters.isActive = isActive === 'true';
+    }
+    
+    const orderBy = searchParams.get('orderBy') as any;
+    if (orderBy) {
+      filters.orderBy = orderBy;
+    }
+    
+    const orderDirection = searchParams.get('orderDirection') as any;
+    if (orderDirection) {
+      filters.orderDirection = orderDirection;
+    }
+    
+    const mats = await matService.getAvailableMats(filters);
+    
     return NextResponse.json({
       success: true,
-      data: result.data,
-      count: result.count,
-      filtered: !!(type || color || cellType || edgeColor)
+      data: mats,
+      count: mats.length
     });
   } catch (error) {
     console.error('Error fetching mats:', error);
     return NextResponse.json(
-      { success: false, error: 'Błąd serwera' },
+      { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      },
       { status: 500 }
     );
   }
 }
 
-// POST /api/mats
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const result = await CarMatService.createMat(body);
-    
-    if (!result.success) {
+    // Validate required fields
+    if (!body.carBrandSlug || !body.carModelSlug || !body.basePrice) {
       return NextResponse.json(
-        { success: false, error: result.error || 'Nieprawidłowe dane dywanika' },
+        { 
+          success: false, 
+          error: 'Missing required fields: carBrandSlug, carModelSlug, basePrice' 
+        },
         { status: 400 }
       );
     }
     
+    const mat = await matService.createMat(body);
+    
     return NextResponse.json({
       success: true,
-      data: result.data
-    });
+      data: mat
+    }, { status: 201 });
   } catch (error) {
-    console.error('Error creating mats:', error);
+    console.error('Error creating mat:', error);
     return NextResponse.json(
-      { success: false, error: 'Błąd podczas tworzenia dywanika' },
-      { status: 500 }
+      { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      },
+      { status: 400 }
     );
   }
-} 
+}

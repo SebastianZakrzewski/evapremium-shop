@@ -53,3 +53,135 @@ model CarModel {
 
   @@unique([name, carBrandId, yearFrom])
 }
+
+model AccessoryCategory {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  slug        String      @unique
+  description String?
+  icon        String?     // emoji or icon name
+  isActive    Boolean     @default(true)
+  sortOrder   Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Self-referencing for hierarchical categories
+  parentId    Int?
+  parent      AccessoryCategory? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    AccessoryCategory[] @relation("CategoryHierarchy")
+
+  // Relations
+  accessories Accessory[]
+
+  @@map("accessory_categories")
+}
+
+model Accessory {
+  id            String   @id @default(uuid())
+  name          String
+  slug          String   @unique
+  description   String?
+  price         Decimal  @db.Decimal(10, 2)
+  sku           String   @unique
+  imageSrc      String?
+  features      String[] // array of feature strings
+  inStock       Boolean  @default(true)
+  stockQuantity Int?     // null = unlimited
+  isActive      Boolean  @default(true)
+  rating        Float?   // 1-5 stars
+  reviewCount   Int      @default(0)
+  weight        Decimal? @db.Decimal(8, 2) // in grams
+  dimensions    Json?    // {length, width, height} in cm
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  categoryId    Int
+  category      AccessoryCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("accessories")
+}
+
+model Mat {
+  id                String   @id @default(uuid())
+  carBrandSlug      String   // e.g., "bmw", "audi"
+  carModelSlug      String   // e.g., "3-series", "a4"
+  generation        String?  // e.g., "F30", "B9"
+  bodyType          String?  // e.g., "sedan", "wagon"
+  yearFrom          Int?
+  yearTo            Int?
+  basePrice         Decimal  @db.Decimal(10, 2)
+  availableSetTypes String[] // ["front", "basic", "premium", "complete"]
+  availableCellTypes String[] // ["diamonds", "honey"]
+  availableColors   String[] // material colors
+  availableEdgeColors String[] // edge colors
+  hasHeelPad        Boolean  @default(false)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+
+  @@unique([carBrandSlug, carModelSlug, generation, bodyType])
+  @@map("mats")
+}
+
+model Order {
+  id              String   @id @default(uuid())
+  orderNumber     String   @unique
+  status          String   @default("pending") // pending, confirmed, processing, shipped, delivered, cancelled
+  paymentStatus   String   @default("pending") // pending, paid, failed, refunded
+  paymentMethod   String?  // card, transfer, blik, etc.
+  trackingNumber  String?
+  
+  // Customer data as JSON
+  customer        Json     // {name, email, phone, company?}
+  shippingAddress Json     // {street, city, postalCode, country}
+  billingAddress  Json?    // if different from shipping
+  
+  // Pricing
+  subtotal        Decimal  @db.Decimal(10, 2)
+  shippingCost    Decimal  @db.Decimal(10, 2) @default(0)
+  tax             Decimal  @db.Decimal(10, 2) @default(0)
+  discount        Decimal  @db.Decimal(10, 2) @default(0)
+  total           Decimal  @db.Decimal(10, 2)
+  
+  // Timestamps
+  notes           String?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  items           OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String   @id @default(uuid())
+  quantity    Int
+  unitPrice   Decimal  @db.Decimal(10, 2)
+  subtotal    Decimal  @db.Decimal(10, 2)
+  
+  // Product identification
+  productType String   // "accessory" or "mat"
+  productId   String   // ID from accessories or mats table
+  
+  // Product snapshot (preserves data even if product is deleted)
+  productName String
+  productSku  String?
+  productImage String?
+  
+  // Configuration for mats
+  configuration Json?  // {carDetails, setType, cellType, colors, heelPad}
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  orderId     String
+  order       Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_items")
+}

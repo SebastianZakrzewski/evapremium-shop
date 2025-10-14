@@ -1,266 +1,174 @@
-import { Product } from '../types/product';
-import { Order, CustomerData, ShippingData, PaymentData, CompanyData, OrderStatus } from '../types/order';
-import { supabaseAdmin, TABLES } from '../database/supabase';
-
-export interface OrderCreationOptions {
-  discountAmount?: number;
-  company?: CompanyData;
-}
+import { OrderRepository } from '../repositories/OrderRepository';
+import { AccessoryService } from './AccessoryService';
+import { MatService } from './MatService';
+import { PricingService } from './PricingService';
+import { Order, CreateOrderDTO, OrderItem, OrderStatus } from '../types/order-new';
 
 export class OrderService {
+  private repository: OrderRepository;
+  private accessoryService: AccessoryService;
+  private matService: MatService;
+  private pricingService: PricingService;
+
+  constructor() {
+    this.repository = new OrderRepository();
+    this.accessoryService = new AccessoryService();
+    this.matService = new MatService();
+    this.pricingService = new PricingService();
+  }
+
   /**
-   * Tworzy zamówienie z produktów w koszyku
+   * Utwórz nowe zamówienie
    */
-  static createOrder(
-    cartProducts: Product[],
-    customerData: CustomerData,
-    shippingData: ShippingData,
-    paymentData: PaymentData,
-    options: OrderCreationOptions = {}
-  ): Order {
-    if (cartProducts.length === 0) {
-      throw new Error('Cannot create order with empty cart');
-    }
-
-    const orderId = this.generateOrderId();
-    const sessionId = this.getCurrentSessionId();
+  async createOrder(data: CreateOrderDTO): Promise<Order> {
+    // 1. Walidacja pozycji
+    await this.validateOrderItems(data.items);
     
-    // Oblicz ceny
-    const subtotal = cartProducts.reduce((sum, p) => sum + p.pricing.totalPrice, 0);
-    const shippingCost = shippingData.cost;
-    const discountAmount = options.discountAmount || 0;
-    const totalAmount = subtotal + shippingCost - discountAmount;
-
-    const order: Order = {
-      id: orderId,
-      sessionId,
-      products: cartProducts,
-      customer: customerData,
-      shipping: shippingData,
-      payment: paymentData,
-      company: options.company,
-      pricing: {
-        subtotal,
-        shippingCost,
-        discountAmount,
-        totalAmount
-      },
-      status: 'pending',
-      createdAt: new Date(),
-      updatedAt: new Date()
+    // 2. Oblicz ceny
+    const pricing = await this.calculateOrderPricing(data.items);
+    
+    // 3. Generuj numer zamówienia
+    const orderNumber = await this.generateOrderNumber();
+    
+    // 4. Przygotuj dane do zapisu
+    const orderData = {
+      orderNumber,
+      status: 'pending' as OrderStatus,
+      paymentStatus: 'pending' as const,
+      customer: data.customer,
+      shippingAddress: data.shippingAddress,
+      billingAddress: data.billingAddress,
+      subtotal: pricing.subtotal,
+      shippingCost: pricing.shippingCost,
+      tax: pricing.tax,
+      discount: pricing.discount,
+      total: pricing.total,
+      paymentMethod: data.paymentMethod,
+      notes: data.notes,
+      items: data.items
     };
+    
+    // 5. Zapisz zamówienie
+    const order = await this.repository.create(orderData);
+    
+    // 6. Zaktualizuj stan magazynowy (dla akcesoriów)
+    await this.updateInventory(data.items);
 
     return order;
   }
 
   /**
-   * Zapisuje zamówienie do Supabase
+   * Pobierz zamówienie po numerze
    */
-  static async saveOrderToSupabase(order: Order): Promise<Order> {
-    try {
-      const orderData = {
-        id: order.id,
-        session_id: order.sessionId,
-        products: order.products,
-        customer: order.customer,
-        shipping: order.shipping,
-        payment: order.payment,
-        company: order.company,
-        pricing: order.pricing,
-        status: order.status,
-        created_at: order.createdAt,
-        updated_at: order.updatedAt
-      };
-
-      const { data, error } = await supabaseAdmin
-        .from(TABLES.ORDERS)
-        .insert([orderData])
-        .select()
-        .single();
-
-      if (error) {
-        throw new Error(`Failed to save order to Supabase: ${error.message}`);
-      }
-
-      if (!data) {
-        throw new Error('No data returned from Supabase');
-      }
-
-      // Konwertuj z powrotem na format Order
-      const savedOrder: Order = {
-        id: data.id,
-        sessionId: data.session_id,
-        products: data.products,
-        customer: data.customer,
-        shipping: data.shipping,
-        payment: data.payment,
-        company: data.company,
-        pricing: data.pricing,
-        status: data.status,
-        createdAt: new Date(data.created_at),
-        updatedAt: new Date(data.updated_at)
-      };
-
-      console.log('✅ Order saved to Supabase:', order.id);
-      return savedOrder;
-    } catch (error) {
-      console.error('❌ Error saving order to Supabase:', error);
-      throw error;
-    }
+  async getOrderByNumber(orderNumber: string): Promise<Order | null> {
+    return await this.repository.findByOrderNumber(orderNumber);
   }
 
   /**
-   * Pobiera zamówienie z Supabase
+   * Pobierz zamówienia klienta (po email)
    */
-  static async getOrder(orderId: string): Promise<Order | null> {
-    try {
-      const { data, error } = await supabaseAdmin
-        .from(TABLES.ORDERS)
-        .select('*')
-        .eq('id', orderId)
-        .single();
+  async getCustomerOrders(email: string): Promise<Order[]> {
+    return await this.repository.findByCustomerEmail(email);
+  }
 
-      if (error) {
-        if (error.code === 'PGRST116') {
-          // Order not found
-          return null;
+  /**
+   * Pobierz zamówienia według statusu
+   */
+  async getOrdersByStatus(status: OrderStatus): Promise<Order[]> {
+    return await this.repository.findByStatus(status);
+  }
+
+  /**
+   * Zaktualizuj status zamówienia
+   */
+  async updateOrderStatus(
+    orderId: string,
+    status: OrderStatus,
+    trackingNumber?: string
+  ): Promise<Order> {
+    return await this.repository.updateStatus(orderId, status, trackingNumber);
+  }
+
+  /**
+   * Pobierz statystyki zamówień
+   */
+  async getOrderStats(): Promise<{
+    total: number;
+    pending: number;
+    processing: number;
+    shipped: number;
+    delivered: number;
+    cancelled: number;
+  }> {
+    return await this.repository.getOrderStats();
+  }
+
+  /**
+   * Waliduj pozycje zamówienia
+   */
+  private async validateOrderItems(items: any[]): Promise<void> {
+    for (const item of items) {
+      if (item.productType === 'accessory') {
+        // Sprawdź dostępność akcesoriów
+        const available = await this.accessoryService.checkAvailability(
+          item.productId,
+          item.quantity
+        );
+        
+        if (!available) {
+          throw new Error(`Product ${item.productName} is not available`);
         }
-        throw new Error(`Failed to retrieve order from Supabase: ${error.message}`);
+      } else if (item.productType === 'mat') {
+        // Dla dywaników: waliduj konfigurację
+        const mat = await this.matService.findMatForCar(item.configuration.carDetails);
+        
+        if (!mat) {
+          throw new Error('Mat not found for this car');
+        }
+        
+        this.matService.validateConfiguration(mat, item.configuration);
       }
-
-      if (!data) {
-        return null;
-      }
-
-      // Konwertuj na format Order
-      const order: Order = {
-        id: data.id,
-        sessionId: data.session_id,
-        products: data.products,
-        customer: data.customer,
-        shipping: data.shipping,
-        payment: data.payment,
-        company: data.company,
-        pricing: data.pricing,
-        status: data.status,
-        createdAt: new Date(data.created_at),
-        updatedAt: new Date(data.updated_at)
-      };
-
-      return order;
-    } catch (error) {
-      console.error('❌ Error retrieving order from Supabase:', error);
-      throw error;
     }
   }
 
   /**
-   * Aktualizuje status zamówienia
+   * Oblicz ceny zamówienia
    */
-  static async updateOrderStatus(orderId: string, status: OrderStatus): Promise<Order> {
-    try {
-      const { data, error } = await supabaseAdmin
-        .from(TABLES.ORDERS)
-        .update({ 
-          status,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', orderId)
-        .select()
-        .single();
-
-      if (error) {
-        throw new Error(`Failed to update order status: ${error.message}`);
-      }
-
-      if (!data) {
-        throw new Error('Order not found');
-      }
-
-      // Konwertuj na format Order
-      const order: Order = {
-        id: data.id,
-        sessionId: data.session_id,
-        products: data.products,
-        customer: data.customer,
-        shipping: data.shipping,
-        payment: data.payment,
-        company: data.company,
-        pricing: data.pricing,
-        status: data.status,
-        createdAt: new Date(data.created_at),
-        updatedAt: new Date(data.updated_at)
-      };
-
-      console.log('✅ Order status updated:', orderId, status);
-      return order;
-    } catch (error) {
-      console.error('❌ Error updating order status:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Pobiera zamówienia dla sesji
-   */
-  static async getOrdersBySession(sessionId: string): Promise<Order[]> {
-    try {
-      const { data, error } = await supabaseAdmin
-        .from(TABLES.ORDERS)
-        .select('*')
-        .eq('session_id', sessionId)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        throw new Error(`Failed to retrieve orders for session: ${error.message}`);
-      }
-
-      if (!data) {
-        return [];
-      }
-
-      // Konwertuj na format Order[]
-      const orders: Order[] = data.map(item => ({
-        id: item.id,
-        sessionId: item.session_id,
-        products: item.products,
-        customer: item.customer,
-        shipping: item.shipping,
-        payment: item.payment,
-        company: item.company,
-        pricing: item.pricing,
-        status: item.status,
-        createdAt: new Date(item.created_at),
-        updatedAt: new Date(item.updated_at)
-      }));
-
-      return orders;
-    } catch (error) {
-      console.error('❌ Error retrieving orders for session:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Generuje unikalny ID zamówienia
-   */
-  private static generateOrderId(): string {
-    const timestamp = Date.now();
-    const random = Math.random().toString(36).substr(2, 9);
-    return `order-${timestamp}-${random}`;
-  }
-
-  /**
-   * Pobiera aktualny session ID
-   */
-  private static getCurrentSessionId(): string {
-    if (typeof window !== 'undefined') {
-      // W przeglądarce - użyj HybridSessionManager
-      const { HybridSessionManager } = require('../utils/hybrid-session-manager');
-      return HybridSessionManager.getSessionId();
+  private async calculateOrderPricing(items: any[]) {
+    let subtotal = 0;
+    
+    for (const item of items) {
+      subtotal += item.subtotal;
     }
     
-    // Na serwerze - wygeneruj tymczasowy ID
-    return `temp-session-${Date.now()}`;
+    const shippingCost = PricingService.calculateShippingCost(subtotal);
+    const tax = PricingService.calculateTax(subtotal + shippingCost);
+    const discount = 0; // TODO: Kody rabatowe
+    const total = subtotal + shippingCost + tax - discount;
+    
+    return { subtotal, shippingCost, tax, discount, total };
+  }
+
+  /**
+   * Generuj unikalny numer zamówienia
+   */
+  private async generateOrderNumber(): Promise<string> {
+    const year = new Date().getFullYear();
+    const count = await this.repository.countOrdersThisYear();
+    const number = String(count + 1).padStart(6, '0');
+    return `ORD-${year}-${number}`;
+  }
+
+  /**
+   * Zaktualizuj stan magazynowy
+   */
+  private async updateInventory(items: any[]): Promise<void> {
+    for (const item of items) {
+      if (item.productType === 'accessory') {
+        // Zmniejsz stockQuantity
+        await this.accessoryService.decrementStock(item.productId, item.quantity);
+      }
+      // Dywaniki są produkowane na zamówienie - brak inventory
+    }
   }
 }
