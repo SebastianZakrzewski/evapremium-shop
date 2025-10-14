@@ -17,8 +17,10 @@ export interface Accessory {
   slug: string;
   description?: string;
   price: number;
+  originalPrice?: number;
   sku: string;
   imageSrc?: string;
+  imageUrl?: string; // Alias for imageSrc for compatibility
   features: string[];
   inStock: boolean;
   stockQuantity?: number;
@@ -33,6 +35,7 @@ export interface Accessory {
   };
   categoryId: number;
   category?: AccessoryCategory;
+  categorySlug?: string; // For easier filtering
   createdAt: Date;
   updatedAt: Date;
 }

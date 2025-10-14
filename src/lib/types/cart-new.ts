@@ -26,6 +26,10 @@ export interface AddToCartDTO {
   productId: string;
   quantity: number;
   configuration?: any;
+  productName?: string;
+  productSku?: string;
+  productImage?: string;
+  unitPrice?: number;
 }
 
 export interface UpdateCartItemDTO {

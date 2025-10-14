@@ -1,25 +1,27 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Accessory, AccessoryFilters } from '@/lib/types/accessory';
+import { Accessory, AccessoryCategory, AccessoryFilters } from '@/lib/types/accessory';
+import { AccessoryService } from '@/lib/services';
 import { debugLog } from '@/lib/config/features';
 
 export interface UseAccessoriesReturn {
   accessories: Accessory[];
-  loading: boolean;
+  categories: AccessoryCategory[];
+  isLoading: boolean;
   error: string | null;
+  getAccessoriesByCategory: (categorySlug: string) => Promise<Accessory[]>;
+  getAccessoryBySlug: (slug: string) => Promise<Accessory | null>;
+  getAllCategories: () => Promise<AccessoryCategory[]>;
   refetch: () => void;
 }
 
 /**
- * Hook do pobierania listy akcesoriów
+ * Hook do pobierania listy akcesoriów i kategorii
  * 
  * @example
  * ```tsx
- * const { accessories, loading, error } = useAccessories({
- *   category: 'organizery',
- *   inStock: true
- * });
+ * const { accessories, categories, isLoading, error } = useAccessories();
  * 
- * if (loading) return <Spinner />;
+ * if (isLoading) return <Spinner />;
  * if (error) return <Error message={error} />;
  * 
  * return accessories.map(acc => <AccessoryCard key={acc.id} accessory={acc} />);
@@ -27,172 +29,100 @@ export interface UseAccessoriesReturn {
  */
 export function useAccessories(filters?: AccessoryFilters): UseAccessoriesReturn {
   const [accessories, setAccessories] = useState<Accessory[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState<AccessoryCategory[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAccessories = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    debugLog('useAccessories: Fetching accessories', filters);
-
+  const fetchAllAccessories = useCallback(async () => {
     try {
-      // Build query string
-      const queryParams = new URLSearchParams();
+      setIsLoading(true);
+      setError(null);
       
-      if (filters?.categories && filters.categories.length > 0) {
-        queryParams.set('category', filters.categories[0]); // API supports single category
-      }
+      debugLog('useAccessories: Fetching all accessories');
       
-      if (filters?.inStock !== undefined) {
-        queryParams.set('inStock', String(filters.inStock));
-      }
+      const fetchedAccessories = await AccessoryService.getAllAccessories();
+      setAccessories(fetchedAccessories);
       
-      if (filters?.priceRange) {
-        queryParams.set('priceMin', String(filters.priceRange[0]));
-        queryParams.set('priceMax', String(filters.priceRange[1]));
-      }
-      
-      if (filters?.orderBy) {
-        queryParams.set('orderBy', filters.orderBy);
-      }
-      
-      if (filters?.orderDirection) {
-        queryParams.set('orderDirection', filters.orderDirection);
-      }
-
-      const queryString = queryParams.toString();
-      const url = `/api/accessories${queryString ? `?${queryString}` : ''}`;
-
-      const response = await fetch(url);
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to fetch accessories');
-      }
-
-      if (result.success) {
-        debugLog('useAccessories: Accessories fetched', result.data);
-        setAccessories(result.data || []);
-      } else {
-        throw new Error('Invalid response format');
-      }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Nieznany błąd';
-      console.error('useAccessories: Error fetching accessories:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch accessories';
       setError(errorMessage);
-      setAccessories([]);
+      console.error('useAccessories: Error fetching accessories:', err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  }, [filters]);
+  }, []);
+
+  const getAllCategories = useCallback(async (): Promise<AccessoryCategory[]> => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const fetchedCategories = await AccessoryService.getAllCategories();
+      setCategories(fetchedCategories);
+      return fetchedCategories;
+      
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch categories';
+      setError(errorMessage);
+      console.error('useAccessories: Error fetching categories:', err);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const getAccessoriesByCategory = useCallback(async (categorySlug: string): Promise<Accessory[]> => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const fetchedAccessories = await AccessoryService.getAccessoriesByCategory(categorySlug);
+      return fetchedAccessories;
+      
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch accessories by category';
+      setError(errorMessage);
+      console.error('useAccessories: Error fetching accessories by category:', err);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const getAccessoryBySlug = useCallback(async (slug: string): Promise<Accessory | null> => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const fetchedAccessory = await AccessoryService.getAccessoryBySlug(slug);
+      return fetchedAccessory;
+      
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch accessory by slug';
+      setError(errorMessage);
+      console.error('useAccessories: Error fetching accessory by slug:', err);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    fetchAccessories();
-  }, [fetchAccessories]);
+    fetchAllAccessories();
+  }, [fetchAllAccessories]);
+
+  const refetch = useCallback(() => {
+    fetchAllAccessories();
+  }, [fetchAllAccessories]);
 
   return {
     accessories,
-    loading,
+    categories,
+    isLoading,
     error,
-    refetch: fetchAccessories,
+    getAccessoriesByCategory,
+    getAccessoryBySlug,
+    getAllCategories,
+    refetch,
   };
 }
-
-/**
- * Hook do pobierania pojedynczego akcesorium po ID
- */
-export function useAccessory(id?: string) {
-  const [accessory, setAccessory] = useState<Accessory | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!id) {
-      setAccessory(null);
-      return;
-    }
-
-    const fetchAccessory = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await fetch(`/api/accessories/${id}`);
-        const result = await response.json();
-
-        if (!response.ok) {
-          if (response.status === 404) {
-            setAccessory(null);
-            return;
-          }
-          throw new Error(result.error || 'Failed to fetch accessory');
-        }
-
-        if (result.success && result.data) {
-          debugLog('useAccessory: Accessory fetched', result.data);
-          setAccessory(result.data);
-        }
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Nieznany błąd';
-        console.error('useAccessory: Error fetching accessory:', err);
-        setError(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAccessory();
-  }, [id]);
-
-  return { accessory, loading, error };
-}
-
-/**
- * Hook do pobierania akcesorium po slug (SEO URL)
- */
-export function useAccessoryBySlug(slug?: string) {
-  const [accessory, setAccessory] = useState<Accessory | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!slug) {
-      setAccessory(null);
-      return;
-    }
-
-    const fetchAccessory = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await fetch(`/api/accessories/slug/${slug}`);
-        const result = await response.json();
-
-        if (!response.ok) {
-          if (response.status === 404) {
-            setAccessory(null);
-            return;
-          }
-          throw new Error(result.error || 'Failed to fetch accessory');
-        }
-
-        if (result.success && result.data) {
-          debugLog('useAccessoryBySlug: Accessory fetched', result.data);
-          setAccessory(result.data);
-        }
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Nieznany błąd';
-        console.error('useAccessoryBySlug: Error fetching accessory:', err);
-        setError(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAccessory();
-  }, [slug]);
-
-  return { accessory, loading, error };
-}
-
