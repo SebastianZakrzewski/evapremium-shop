@@ -8,33 +8,33 @@
 export const FEATURES = {
   /**
    * Użyj nowej wersji backendu (V2)
-   * @default false - Domyślnie wyłączone, włączymy po pełnej implementacji
+   * @default true - Włączone po pełnej implementacji
    */
-  USE_V2_BACKEND: false,
+  USE_V2_BACKEND: true,
 
   /**
    * Użyj nowego hooka useCart
-   * @default false
+   * @default true
    */
-  USE_V2_CART: false,
+  USE_V2_CART: true,
 
   /**
    * Użyj nowego hooka useOrder  
-   * @default false
+   * @default true
    */
-  USE_V2_ORDER: false,
+  USE_V2_ORDER: true,
 
   /**
    * Pobieraj dywaniki z API zamiast hardcoded
-   * @default false
+   * @default true
    */
-  USE_MAT_API: false,
+  USE_MAT_API: true,
 
   /**
    * Pobieraj akcesoria z API
-   * @default false
+   * @default true
    */
-  USE_ACCESSORIES_API: false,
+  USE_ACCESSORIES_API: true,
 
   /**
    * Włącz automatyczną migrację localStorage z V1 do V2

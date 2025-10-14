@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Order, CreateOrderDTO, OrderStatus } from '@/lib/types/order-new';
+import { OrderV2 as Order, CreateOrderDTO, OrderStatusV2 as OrderStatus } from '@/lib/types';
 import { debugLog } from '@/lib/config/features';
 
 export interface UseOrderReturn {

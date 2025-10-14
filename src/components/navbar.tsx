@@ -2,13 +2,13 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import CartModal from "./cart-modal";
-import { useCart } from "@/hooks/useCart";
+import CartModalWrapper from "./cart-modal-wrapper";
+import { useCart } from "@/hooks/useCart.new";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { cartCount } = useCart();
+  const { itemCount } = useCart();
 
   // Nasłuchuj na event otwierania modala koszyka
   useEffect(() => {
@@ -68,9 +68,9 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {/* Cart Badge */}
-              {cartCount > 0 && (
+              {itemCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-medium rounded-full h-5 w-5 flex items-center justify-center shadow-lg group-hover:bg-red-400 transition-colors">
-                  {cartCount}
+                  {itemCount}
                 </span>
               )}
             </button>
@@ -90,9 +90,9 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {/* Cart Badge */}
-              {cartCount > 0 && (
+              {itemCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-medium rounded-full h-5 w-5 flex items-center justify-center shadow-lg group-hover:bg-red-400 transition-colors">
-                  {cartCount}
+                  {itemCount}
                 </span>
               )}
             </button>
@@ -124,7 +124,7 @@ export default function Navbar() {
       </nav>
 
       {/* Cart Modal */}
-      <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <CartModalWrapper isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 } 

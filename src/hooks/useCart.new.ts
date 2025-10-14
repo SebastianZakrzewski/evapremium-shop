@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Cart, CartItem, AddToCartDTO } from '@/lib/types/cart-new';
+import { CartV2 as Cart, CartItemV2 as CartItem, AddToCartDTO } from '@/lib/types';
 import { CartService } from '@/lib/services/CartService';
 import { debugLog } from '@/lib/config/features';
 

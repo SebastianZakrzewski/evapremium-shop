@@ -1,11 +1,14 @@
 import { AccessoryRepository } from '../repositories/AccessoryRepository';
-import { Accessory, AccessoryFilters, CreateAccessoryDTO, UpdateAccessoryDTO } from '../types/accessory';
+import { AccessoryCategoryRepository } from '../repositories/AccessoryCategoryRepository';
+import { Accessory, AccessoryCategory, AccessoryFilters, CreateAccessoryDTO, UpdateAccessoryDTO } from '../types/accessory';
 
 export class AccessoryService {
   private repository: AccessoryRepository;
+  private categoryRepository: AccessoryCategoryRepository;
 
   constructor() {
     this.repository = new AccessoryRepository();
+    this.categoryRepository = new AccessoryCategoryRepository();
   }
 
   /**
@@ -146,6 +149,13 @@ export class AccessoryService {
       orderBy: 'createdAt',
       orderDirection: 'desc'
     });
+  }
+
+  /**
+   * Pobierz wszystkie kategorie akcesoriów
+   */
+  async getAllCategories(): Promise<AccessoryCategory[]> {
+    return await this.categoryRepository.findActive();
   }
 
   /**

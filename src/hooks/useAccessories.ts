@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Accessory, AccessoryCategory, AccessoryFilters } from '@/lib/types/accessory';
+import { Accessory, AccessoryCategory, AccessoryFilters } from '@/lib/types';
 import { AccessoryService } from '@/lib/services';
 import { debugLog } from '@/lib/config/features';
+
+const accessoryService = new AccessoryService();
 
 export interface UseAccessoriesReturn {
   accessories: Accessory[];
@@ -40,7 +42,7 @@ export function useAccessories(filters?: AccessoryFilters): UseAccessoriesReturn
       
       debugLog('useAccessories: Fetching all accessories');
       
-      const fetchedAccessories = await AccessoryService.getAllAccessories();
+      const fetchedAccessories = await accessoryService.getAccessories();
       setAccessories(fetchedAccessories);
       
     } catch (err) {
@@ -57,7 +59,7 @@ export function useAccessories(filters?: AccessoryFilters): UseAccessoriesReturn
       setIsLoading(true);
       setError(null);
       
-      const fetchedCategories = await AccessoryService.getAllCategories();
+      const fetchedCategories = await accessoryService.getAllCategories();
       setCategories(fetchedCategories);
       return fetchedCategories;
       
@@ -76,7 +78,7 @@ export function useAccessories(filters?: AccessoryFilters): UseAccessoriesReturn
       setIsLoading(true);
       setError(null);
       
-      const fetchedAccessories = await AccessoryService.getAccessoriesByCategory(categorySlug);
+      const fetchedAccessories = await accessoryService.getAccessoriesByCategory(categorySlug);
       return fetchedAccessories;
       
     } catch (err) {
@@ -94,7 +96,7 @@ export function useAccessories(filters?: AccessoryFilters): UseAccessoriesReturn
       setIsLoading(true);
       setError(null);
       
-      const fetchedAccessory = await AccessoryService.getAccessoryBySlug(slug);
+      const fetchedAccessory = await accessoryService.getAccessoryBySlug(slug);
       return fetchedAccessory;
       
     } catch (err) {

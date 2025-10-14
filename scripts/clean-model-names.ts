@@ -209,7 +209,9 @@ async function cleanAllModelNames(): Promise<void> {
       totalRecords,
       recordsNeedingCleaning,
       recordsAlreadyClean,
-      cleaningStats,
+      cleaningStats: {
+        byBrand: cleaningStats
+      },
       examples
     };
 

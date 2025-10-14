@@ -1,10 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
 export abstract class BaseRepository<T> {
-  protected supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  protected get supabase() {
+    return createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+  }
 
   protected abstract tableName: string;
 

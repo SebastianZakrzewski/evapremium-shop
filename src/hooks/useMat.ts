@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Mat } from '@/lib/types/mat';
+import { Mat } from '@/lib/types';
 import { debugLog } from '@/lib/config/features';
 
 interface UseMatParams {

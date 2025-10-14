@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import AccessoriesSection from "@/components/accessories-section";
+import AccessoriesSection from "@/components/AccessoriesSection.new";
 
 export default function AkcesoriaPage() {
   return (

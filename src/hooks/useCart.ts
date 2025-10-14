@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Product } from '../lib/types/product';
 import { CartItem } from '../lib/types/cart';
-import { CartService } from '../lib/services/CartService';
 import { HybridSessionManager } from '../lib/utils/hybrid-session-manager';
 
 export interface UseCartReturn {
@@ -44,7 +43,6 @@ export function useCart(sessionId?: string): UseCartReturn {
 
   // Odśwież koszyk
   const refreshCart = useCallback(() => {
-    // Użyj świeżego sessionId z HybridSessionManager
     const freshSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : currentSessionId;
     console.log('🔄 useCart: refreshCart called, currentSessionId:', currentSessionId);
     console.log('🔄 useCart: freshSessionId:', freshSessionId);
@@ -55,9 +53,10 @@ export function useCart(sessionId?: string): UseCartReturn {
     setError(null);
 
     try {
-      console.log('🔄 useCart: calling CartService.getCartItems with sessionId:', freshSessionId);
-      const cartItems = CartService.getCartItems(freshSessionId);
-      console.log('🔄 useCart: cartItems from CartService:', cartItems);
+      console.log('🔄 useCart: loading cart from localStorage');
+      const cartData = localStorage.getItem(`cart_${freshSessionId}`);
+      const cartItems = cartData ? JSON.parse(cartData) : [];
+      console.log('🔄 useCart: cartItems from localStorage:', cartItems);
 
       console.log('🔄 useCart: setting cartItems state');
       setCartItems(cartItems);
@@ -75,13 +74,13 @@ export function useCart(sessionId?: string): UseCartReturn {
     if (currentSessionId) {
       refreshCart();
     }
-  }, [currentSessionId]);
+  }, [currentSessionId, refreshCart]);
 
   // Nasłuchuj na zmiany w localStorage (między kartami)
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
       const freshSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : currentSessionId;
-      if (e.key === `cart-${freshSessionId}`) {
+      if (e.key === `cart_${freshSessionId}`) {
         console.log('🔄 useCart: localStorage changed (cross-tab), refreshing cart...');
         refreshCart();
       }
@@ -107,15 +106,8 @@ export function useCart(sessionId?: string): UseCartReturn {
     console.log('🛒 useCart: addToCart called with product:', product.id);
     console.log('🛒 useCart: currentSessionId:', currentSessionId);
     
-    // Walidacja sessionId
     const freshSessionId = HybridSessionManager.getSessionId();
     console.log('🛒 useCart: freshSessionId from HybridSessionManager:', freshSessionId);
-    
-    if (freshSessionId !== currentSessionId) {
-      console.warn('⚠️ SessionId mismatch! Refreshing sessionId...');
-      console.log('🛒 useCart: old sessionId:', currentSessionId);
-      console.log('🛒 useCart: new sessionId:', freshSessionId);
-    }
     
     if (!freshSessionId) {
       setError('No session ID available');
@@ -124,24 +116,37 @@ export function useCart(sessionId?: string): UseCartReturn {
 
     try {
       setError(null);
-      console.log('🛒 useCart: calling CartService.addProductToCart');
-      CartService.addProductToCart(product);
+      console.log('🛒 useCart: adding product to localStorage');
       
-      console.log('🛒 useCart: product added, custom event will trigger refreshCart');
-      // refreshCart zostanie wywołane przez custom event 'cartUpdated'
+      const cartData = localStorage.getItem(`cart_${freshSessionId}`);
+      const existingCart = cartData ? JSON.parse(cartData) : [];
       
-      // Backup: wywołaj refreshCart po krótkim opóźnieniu na wypadek gdyby custom event nie zadziałał
-      setTimeout(() => {
-        console.log('🔄 useCart: backup refreshCart call');
-        refreshCart();
-      }, 50);
+      // Sprawdź czy produkt już istnieje
+      const existingIndex = existingCart.findIndex(
+        (item: any) => item.id === product.id
+      );
+
+      if (existingIndex >= 0) {
+        existingCart[existingIndex].quantity += 1;
+      } else {
+        const cartItem: CartItem = {
+          ...product,
+          quantity: 1
+        };
+        existingCart.push(cartItem);
+      }
+
+      localStorage.setItem(`cart_${freshSessionId}`, JSON.stringify(existingCart));
+      
+      // Wyślij custom event
+      window.dispatchEvent(new CustomEvent('cartUpdated'));
       
       console.log('✅ Product added to cart:', product.id);
     } catch (err) {
       console.error('❌ useCart: error in addToCart:', err);
       setError(err instanceof Error ? err.message : 'Failed to add product to cart');
     }
-  }, [currentSessionId, refreshCart]);
+  }, [currentSessionId]);
 
   // Usuń produkt z koszyka
   const removeFromCart = useCallback((productId: string) => {
@@ -154,16 +159,22 @@ export function useCart(sessionId?: string): UseCartReturn {
 
     try {
       setError(null);
-      CartService.removeProductFromCart(productId);
+      console.log('🛒 useCart: removing product from localStorage');
       
-      // Odśwież koszyk
-      refreshCart();
+      const cartData = localStorage.getItem(`cart_${freshSessionId}`);
+      const existingCart = cartData ? JSON.parse(cartData) : [];
+      
+      const updatedCart = existingCart.filter((item: any) => item.id !== productId);
+      localStorage.setItem(`cart_${freshSessionId}`, JSON.stringify(updatedCart));
+      
+      // Wyślij custom event
+      window.dispatchEvent(new CustomEvent('cartUpdated'));
       
       console.log('✅ Product removed from cart:', productId);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to remove product from cart');
     }
-  }, [currentSessionId, refreshCart]);
+  }, [currentSessionId]);
 
   // Aktualizuj ilość produktu
   const updateProductQuantity = useCallback((productId: string, quantity: number) => {
@@ -176,16 +187,24 @@ export function useCart(sessionId?: string): UseCartReturn {
 
     try {
       setError(null);
-      CartService.updateProductQuantity(productId, quantity);
+      console.log('🛒 useCart: updating product quantity in localStorage');
       
-      // Odśwież koszyk
-      refreshCart();
+      const cartData = localStorage.getItem(`cart_${freshSessionId}`);
+      const existingCart = cartData ? JSON.parse(cartData) : [];
+      
+      const updatedCart = existingCart.map((item: any) => 
+        item.id === productId ? { ...item, quantity } : item
+      );
+      localStorage.setItem(`cart_${freshSessionId}`, JSON.stringify(updatedCart));
+      
+      // Wyślij custom event
+      window.dispatchEvent(new CustomEvent('cartUpdated'));
       
       console.log('✅ Product quantity updated:', productId, quantity);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update product quantity');
     }
-  }, [currentSessionId, refreshCart]);
+  }, [currentSessionId]);
 
   // Wyczyść koszyk
   const clearCart = useCallback(() => {
@@ -198,9 +217,13 @@ export function useCart(sessionId?: string): UseCartReturn {
 
     try {
       setError(null);
-      CartService.clearCart(freshSessionId);
+      console.log('🛒 useCart: clearing cart in localStorage');
       
+      localStorage.removeItem(`cart_${freshSessionId}`);
       setCartItems([]);
+      
+      // Wyślij custom event
+      window.dispatchEvent(new CustomEvent('cartUpdated'));
       
       console.log('✅ Cart cleared');
     } catch (err) {

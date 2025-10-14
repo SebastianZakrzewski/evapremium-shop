@@ -31,6 +31,7 @@ import { useCart } from '@/hooks/useCart';
 import { useOrder } from '@/hooks/useOrder';
 import { CustomerData, ShippingData, PaymentData } from '@/lib/types/order';
 import { Product } from '@/lib/types/product';
+import { CartItem } from '@/lib/types/cart';
 
 // Schema walidacji
 const checkoutSchema = z.object({
@@ -143,7 +144,7 @@ export function CheckoutSection() {
   const [configuratorDictionary, setConfiguratorDictionary] = useState<any>(null)
   
   // Nowe hooki
-  const { cartProducts, clearCart } = useCart();
+  const { cartItems, clearCart } = useCart();
   const { createOrder, saveOrder, isLoading: orderLoading, error: orderError } = useOrder();
 
   // Odczytywanie danych ze słownika konfiguratora używając HybridSessionManager
@@ -198,7 +199,7 @@ export function CheckoutSection() {
   const shippingCost = shippingMethods.find(m => m.id === selectedShipping)?.price || 0
   
   // Oblicz total na podstawie koszyka
-  const cartTotal = cartProducts.reduce((sum, product) => sum + product.pricing.totalPrice, 0);
+  const cartTotal = cartItems.reduce((sum, product) => sum + product.pricing.totalPrice, 0);
   const subtotal = cartTotal;
   const total = subtotal + shippingCost
 
@@ -344,7 +345,7 @@ export function CheckoutSection() {
     
     try {
       // Sprawdź czy są produkty w koszyku
-      if (cartProducts.length === 0) {
+      if (cartItems.length === 0) {
         setErrorMessage("Koszyk jest pusty. Dodaj produkty przed złożeniem zamówienia.");
         return;
       }
@@ -380,18 +381,10 @@ export function CheckoutSection() {
 
       // Utwórz zamówienie
       const order = await createOrder(
-        cartProducts,
+        cartItems,
         customerData,
         shippingData,
-        paymentData,
-        {
-          discountAmount: discountApplied ? (total * 0.1) : 0,
-          company: !data.sameAsShipping ? {
-            name: data.companyName || '',
-            nip: data.nip || '',
-            isInvoice: true
-          } : undefined
-        }
+        paymentData
       );
 
       // Zapisz zamówienie do Supabase
@@ -1163,7 +1156,7 @@ export function CheckoutSection() {
                   {isMobileSummaryVisible && (
                     <CardContent className="pt-2 animate-fade-in">
                       <OrderSummaryContent 
-                        cartProducts={cartProducts}
+                        cartProducts={cartItems}
                         shippingCost={shippingCost}
                         total={total}
                         discountCode={discountCode}
@@ -1187,7 +1180,7 @@ export function CheckoutSection() {
                   </CardHeader>
                   <CardContent>
                     <OrderSummaryContent 
-                      cartProducts={cartProducts}
+                      cartProducts={cartItems}
                       shippingCost={shippingCost}
                       total={total}
                       discountCode={discountCode}
@@ -1251,7 +1244,7 @@ export function CheckoutSection() {
 
 // Komponent podsumowania zamówienia
 interface OrderSummaryContentProps {
-  cartProducts: Product[]
+  cartProducts: CartItem[]
   shippingCost: number
   total: number
   discountCode: string
@@ -1261,7 +1254,7 @@ interface OrderSummaryContentProps {
 }
 
 function OrderSummaryContent({
-  cartProducts,
+  cartProducts: cartItems,
   shippingCost,
   total,
   discountCode,
@@ -1272,7 +1265,7 @@ function OrderSummaryContent({
   return (
     <div className="space-y-6">
       {/* Produkty */}
-      {cartProducts.map((product, index) => (
+      {cartItems.map((product, index) => (
         <div key={product.id || index} className="flex space-x-4 p-4 bg-gradient-to-r from-gray-900/40 to-gray-800/40 rounded-lg border border-gray-700 hover:border-red-500/50 transition-all duration-300 group">
           <div className="relative">
             <img
@@ -1336,7 +1329,7 @@ function OrderSummaryContent({
           <div className="space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-gray-300">Wartość produktów:</span>
-              <span className="text-white font-medium">{cartProducts.reduce((sum, product) => sum + product.pricing.totalPrice, 0).toFixed(2)} zł</span>
+              <span className="text-white font-medium">{cartItems.reduce((sum, product) => sum + product.pricing.totalPrice, 0).toFixed(2)} zł</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-300">Dostawa:</span>

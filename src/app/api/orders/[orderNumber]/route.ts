@@ -5,10 +5,10 @@ const orderService = new OrderService();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { orderNumber: string } }
+  { params }: { params: Promise<{ orderNumber: string }> }
 ) {
   try {
-    const { orderNumber } = params;
+    const { orderNumber } = await params;
     
     const order = await orderService.getOrderByNumber(orderNumber);
     
@@ -37,10 +37,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { orderNumber: string } }
+  { params }: { params: Promise<{ orderNumber: string }> }
 ) {
   try {
-    const { orderNumber } = params;
+    const { orderNumber } = await params;
     const body = await request.json();
     
     const { status, trackingNumber } = body;
