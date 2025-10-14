@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { CartV2 as Cart, CartItemV2 as CartItem, AddToCartDTO } from '@/lib/types';
 import { CartService } from '@/lib/services/CartService';
 import { debugLog } from '@/lib/config/features';
@@ -62,7 +62,9 @@ export function useCart(): UseCartReturn {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const cartService = new CartService();
+  // Użyj useRef aby uniknąć tworzenia nowej instancji w każdym renderze
+  const cartServiceRef = useRef<CartService | null>(null);
+  const cartService = cartServiceRef.current || (cartServiceRef.current = new CartService());
 
   /**
    * Load cart from localStorage on mount
@@ -71,11 +73,15 @@ export function useCart(): UseCartReturn {
     const loadCart = () => {
       try {
         const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+        console.log('🛒 useCart: Loading cart from localStorage, key:', CART_STORAGE_KEY);
+        console.log('🛒 useCart: Saved cart data:', savedCart);
         if (savedCart) {
           const parsed = JSON.parse(savedCart);
+          console.log('🛒 useCart: Parsed cart:', parsed);
           debugLog('useCart: Loaded cart from localStorage', parsed);
           setCart(parsed);
         } else {
+          console.log('🛒 useCart: No cart in localStorage, using empty cart');
           debugLog('useCart: No cart in localStorage, using empty cart');
         }
       } catch (err) {
@@ -92,7 +98,9 @@ export function useCart(): UseCartReturn {
    */
   useEffect(() => {
     try {
+      console.log('🛒 useCart: Saving cart to localStorage:', cart);
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+      console.log('🛒 useCart: Cart saved successfully');
       debugLog('useCart: Saved cart to localStorage', cart);
       
       // Dispatch custom event for other components

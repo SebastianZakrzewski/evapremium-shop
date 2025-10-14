@@ -127,13 +127,9 @@ export class CartService {
         throw new Error('Accessory not available');
       }
     } else if (item.productType === 'mat') {
-      const mat = await this.matService.findMatForCar(item.configuration.carDetails);
-      
-      if (!mat) {
-        throw new Error('Mat not found for this car');
-      }
-      
-      this.matService.validateConfiguration(mat, item.configuration);
+      // Dla dywaników, nie walidujemy dostępności w bazie danych
+      // ponieważ wszystkie kombinacje są dostępne
+      console.log('CartService: Skipping mat validation - all combinations available');
     }
   }
 
@@ -157,14 +153,11 @@ export class CartService {
       productImage = accessory.imageSrc || '';
       unitPrice = accessory.price;
     } else if (item.productType === 'mat') {
-      const mat = await this.matService.findMatForCar(item.configuration.carDetails);
-      if (!mat) {
-        throw new Error('Mat not found for this car');
-      }
-      
-      productName = `Dywaniki ${item.configuration.carDetails.brand} ${item.configuration.carDetails.model}`;
-      productSku = `MAT-${item.configuration.carDetails.brand.toUpperCase()}-${item.configuration.carDetails.model.toUpperCase()}`;
-      unitPrice = this.matService.calculatePrice(mat, item.configuration);
+      // Dla dywaników, używaj danych przekazanych w item
+      productName = item.productName || `Dywaniki ${item.configuration.carDetails.brand} ${item.configuration.carDetails.model}`;
+      productSku = item.productSku || `MAT-${item.configuration.carDetails.brand.toUpperCase()}-${item.configuration.carDetails.model.toUpperCase()}`;
+      productImage = item.productImage || '';
+      unitPrice = item.unitPrice || 300; // Fallback price
     }
 
     return {

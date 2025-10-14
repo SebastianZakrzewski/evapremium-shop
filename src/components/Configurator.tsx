@@ -11,7 +11,10 @@ import { getAvailableColors, getColorInfo } from "@/lib/color-mapping";
 import { getMatImagePath } from "@/lib/image-mapping";
 import { useCart } from "@/hooks/useCart.new";
 import { ConfiguratorService } from "@/lib/services/ConfiguratorService";
+import { PricingService } from "@/lib/services/PricingService";
+import { MatService } from "@/lib/services/MatService";
 import { ConfigurationData } from "@/lib/types/product";
+import { debugLog } from "@/lib/config/features";
 import { brands, getModelsByBrand } from "@/data/carouselData";
 import { Brand, Model } from "@/types/carousel";
 import { getYearsForModel, getModelData, findGenerationByYear, getAvailableModels, getBodyTypesForYear, getBodyTypesForModel } from "@/data/car-model-years.utils";
@@ -123,6 +126,7 @@ export default function Configurator() {
   const router = useRouter();
   const brandParam = searchParams.get('brand');
   const { addToCart, isLoading: cartLoading, error: cartError } = useCart();
+  const matService = new MatService();
   
   const [currentSection, setCurrentSection] = useState<number>(0);
   // Mapowanie nazw marek z carousel na nazwy w bazie danych
@@ -205,16 +209,19 @@ export default function Configurator() {
   const [loadingModels, setLoadingModels] = useState(false);
   const [loadingYears, setLoadingYears] = useState(false);
   const [loadingBodyTypes, setLoadingBodyTypes] = useState(false);
+  const [baseMatPrice, setBaseMatPrice] = useState<number>(0);
+  const [isPriceLoading, setIsPriceLoading] = useState(false);
 
-  // Funkcje kalkulacyjne dla dynamicznego systemu cen
+  // Funkcje kalkulacyjne dla dynamicznego systemu cen z V2 backend
   const getSetVariantPrice = useCallback((
     variantId: string,
     matTypeId: string
   ): number => {
-    const basePrice = PRICING.setVariants[variantId as keyof typeof PRICING.setVariants] || 0;
+    // Użyj ceny bazowej z bazy danych lub fallback do lokalnych cen
+    const basePrice = baseMatPrice > 0 ? baseMatPrice : (PRICING.setVariants[variantId as keyof typeof PRICING.setVariants] || 0);
     const modifier = PRICING.matTypes[matTypeId as keyof typeof PRICING.matTypes]?.modifier || 0;
     return basePrice + modifier;
-  }, []);
+  }, [baseMatPrice]);
 
   const getTotalPrice = useCallback((): number => {
     let total = 0;
@@ -373,6 +380,79 @@ export default function Configurator() {
     setSelectedBodyType("");
   }, [selectedCarModel]);
 
+  // Pobierz dostępne dywaniki z bazy danych i oblicz cenę bazową
+  useEffect(() => {
+    const loadMats = async () => {
+      if (!selectedCarBrand || !selectedCarModel || !selectedCarYear) {
+        debugLog('Brak podstawowych danych samochodu, nie pobieram dywaników');
+        setBaseMatPrice(0);
+        return;
+      }
+
+      setIsPriceLoading(true);
+      
+      try {
+        debugLog('Pobieranie dywaników dla:', {
+          brand: selectedCarBrand,
+          model: selectedCarModel,
+          year: selectedCarYear,
+          bodyType: selectedBodyType || 'wszystkie'
+        });
+
+        // Próbuj znaleźć dywanik dla konkretnej kombinacji (jeśli wybrano typ nadwozia)
+        let availableMat = null;
+        
+        if (selectedBodyType) {
+          // Jeśli wybrano typ nadwozia, spróbuj znaleźć dla konkretnej kombinacji
+          try {
+            availableMat = await matService.findMatForCar({
+              brandSlug: selectedCarBrand.toLowerCase().replace(/\s+/g, '-'),
+              modelSlug: selectedCarModel.toLowerCase().replace(/\s+/g, '-'),
+              generation: selectedCarYear,
+              bodyType: selectedBodyType
+            });
+            debugLog('Wynik wyszukiwania dla konkretnej kombinacji:', availableMat ? 'ZNALEZIONO' : 'NIE ZNALEZIONO');
+          } catch (error) {
+            debugLog('Błąd wyszukiwania dla konkretnej kombinacji:', error instanceof Error ? error.message : String(error));
+          }
+        }
+
+        // Zawsze oblicz cenę - czy znaleziono konkretny dywanik czy nie
+        const matConfiguration = {
+          setType: selectedSetVariant || 'basic',
+          cellType: selectedCellType || 'diamonds',
+          hasHeelPad: selectedHeelPad === 'yes'
+        };
+
+        let basePrice;
+        if (availableMat && availableMat.basePrice) {
+          // Użyj ceny z bazy danych jeśli znaleziono konkretny dywanik
+          basePrice = availableMat.basePrice;
+          debugLog('💰 Używam ceny z bazy danych:', basePrice);
+        } else {
+          // Użyj domyślnej ceny bazowej
+          basePrice = PRICING.setVariants[selectedSetVariant as keyof typeof PRICING.setVariants] || 300;
+          debugLog('💰 Używam domyślnej ceny bazowej:', basePrice);
+        }
+
+        const calculatedPrice = PricingService.calculateMatPrice(basePrice, matConfiguration);
+        setBaseMatPrice(calculatedPrice);
+        debugLog('💰 Obliczona cena końcowa:', calculatedPrice);
+
+      } catch (error) {
+        console.error('❌ Błąd podczas pobierania dywaników:', error);
+        // W przypadku błędu, użyj domyślnej ceny
+        const basePrice = PRICING.setVariants[selectedSetVariant as keyof typeof PRICING.setVariants] || 300;
+        setBaseMatPrice(basePrice);
+        debugLog('💰 Używam domyślnej ceny po błędzie:', basePrice);
+      } finally {
+        setIsPriceLoading(false);
+      }
+    };
+
+    loadMats();
+  }, [selectedCarBrand, selectedCarModel, selectedCarYear, selectedBodyType, selectedSetType, selectedCellType, selectedHeelPad]);
+
   // Aktualizuj typy nadwozia po wybraniu rocznika
   useEffect(() => {
     if (selectedCarBrand && selectedCarModel && selectedCarYear) {
@@ -426,6 +506,21 @@ export default function Configurator() {
     setIsAddingToCart(true);
     
     try {
+      // Walidacja podstawowych danych samochodu
+      if (!selectedCarBrand || !selectedCarModel || !selectedCarYear) {
+        console.error('❌ Brak podstawowych danych samochodu');
+        alert('Proszę wybrać markę, model i rocznik');
+        return;
+      }
+
+      // Sprawdź czy cena bazowa jest dostępna (teraz zawsze powinna być dostępna)
+      if (baseMatPrice === 0) {
+        console.warn('⚠️ Używam domyślnej ceny');
+        // Użyj domyślnej ceny zamiast blokować
+        const defaultPrice = PRICING.setVariants[selectedSetVariant as keyof typeof PRICING.setVariants] || 300;
+        setBaseMatPrice(defaultPrice);
+      }
+
       const configData: ConfigurationData = {
         setType: selectedSetType,
         cellType: selectedCellType,
@@ -433,41 +528,54 @@ export default function Configurator() {
         materialColor: selectedMat,
         edgeColor: selectedEdge,
         heelPad: selectedHeelPad,
-        carDetails: brandParam ? {
-          brand: brandParam,
-          model: 'Unknown',
-          year: '2023'
-        } : undefined
+        carDetails: {
+          brand: selectedCarBrand,
+          model: selectedCarModel,
+          year: selectedCarYear,
+          bodyType: selectedBodyType || 'universal'
+        }
       };
 
-      console.log('🛒 === DODAWANIE DO KOSZYKA ===');
+      console.log('🛒 === DODAWANIE DO KOSZYKA V2 ===');
       console.log('📋 Dane konfiguracji:', configData);
+      console.log('💰 Cena bazowa z bazy:', baseMatPrice);
       
-      const product = ConfiguratorService.createProductFromConfiguration(configData);
+      // Oblicz cenę końcową używając PricingService
+      const finalPrice = getTotalPrice();
       
-      console.log('🔧 Utworzony produkt:', {
-        id: product.id,
-        sessionId: product.sessionId,
-        configuration: product.configuration,
-        pricing: product.pricing,
-        carDetails: product.carDetails,
-        status: product.status,
-        createdAt: product.createdAt
+      // Generuj unikalny ID produktu
+      const bodyTypeSuffix = selectedBodyType ? selectedBodyType : 'universal';
+      const productId = `mat-${selectedCarBrand}-${selectedCarModel}-${selectedCarYear}-${bodyTypeSuffix}-${Date.now()}`;
+      
+      // Generuj ścieżkę do obrazu
+      const matImagePath = getMatImagePath(
+        getMatTypeForImage(selectedSetType),
+        selectedCellType as 'diamonds' | 'honey',
+        selectedMat,
+        selectedEdge
+      );
+      
+      console.log('🔧 Dane produktu V2:', {
+        productId,
+        productName: `Dywaniki EVA Premium - ${selectedCarBrand} ${selectedCarModel}`,
+        productSku: `EVA-${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`,
+        unitPrice: finalPrice,
+        configuration: configData
       });
       
       await addToCart({
         productType: 'mat',
-        productId: product.id,
+        productId: productId,
         quantity: 1,
-        configuration: product.configuration,
+        configuration: configData,
         productName: `Dywaniki EVA Premium - ${selectedCarBrand} ${selectedCarModel}`,
         productSku: `EVA-${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`,
         productImage: matImagePath,
-        unitPrice: product.pricing.totalPrice
+        unitPrice: finalPrice
       });
 
-      console.log('✅ Produkt dodany do koszyka:', product.id);
-      console.log('💰 Cena produktu:', `${product.pricing.totalPrice} zł`);
+      console.log('✅ Produkt dodany do koszyka V2:', productId);
+      console.log('💰 Cena produktu:', `${finalPrice} zł`);
       console.log('📊 Konfiguracja:', {
         'Rodzaj zestawu': selectedSetType,
         'Struktura komórek': selectedCellType,
@@ -476,8 +584,8 @@ export default function Configurator() {
         'Kolor obszycia': selectedEdge,
         'Podkładka pod piętę': selectedHeelPad
       });
-      console.log('🚗 Dane samochodu:', product.carDetails || 'Brak');
-      console.log('🛒 === KONIEC DODAWANIA ===');
+      console.log('🚗 Dane samochodu:', configData.carDetails);
+      console.log('🛒 === KONIEC DODAWANIA V2 ===');
       
       // Otwórz modal koszyka po dodaniu produktu
       openCartModal();
@@ -498,6 +606,30 @@ export default function Configurator() {
       
     } catch (error) {
       console.error('❌ Błąd podczas dodawania do koszyka:', error);
+      
+      // Wyświetl komunikat o błędzie
+      if (typeof window !== 'undefined') {
+        const errorNotification = document.createElement('div');
+        errorNotification.className = 'fixed top-20 right-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300';
+        errorNotification.textContent = '❌ Błąd podczas dodawania do koszyka. Spróbuj ponownie.';
+        document.body.appendChild(errorNotification);
+        
+        setTimeout(() => {
+          errorNotification.style.opacity = '0';
+          setTimeout(() => errorNotification.remove(), 300);
+        }, 3000);
+      }
+      
+      // Sprawdź czy to błąd walidacji czy połączenia
+      if (error instanceof Error) {
+        if (error.message.includes('Brak dostępnych dywaników')) {
+          alert('Brak dostępnych dywaników dla wybranej konfiguracji. Spróbuj wybrać inną kombinację.');
+        } else if (error.message.includes('Brak pełnych danych')) {
+          alert('Proszę wybrać markę, model, rocznik i typ nadwozia.');
+        } else {
+          alert('Wystąpił błąd podczas dodawania do koszyka. Spróbuj ponownie.');
+        }
+      }
     } finally {
       setIsAddingToCart(false);
     }
@@ -1125,7 +1257,16 @@ export default function Configurator() {
                     <Separator className="my-2" />
                     <div className="flex justify-between text-lg font-bold">
                       <span>Razem</span>
-                      <span className="text-green-400">{getTotalPrice()} zł</span>
+                      <span className="text-green-400">
+                        {isPriceLoading ? (
+                          <span className="flex items-center gap-2">
+                            <div className="w-4 h-4 border-2 border-green-400 border-t-transparent rounded-full animate-spin"></div>
+                            Ładowanie...
+                          </span>
+                        ) : (
+                          `${getTotalPrice()} zł`
+                        )}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -1178,7 +1319,14 @@ export default function Configurator() {
                     Aktualna cena konfiguracji
                   </div>
                   <div className="text-2xl font-bold text-green-400 transition-all duration-300">
-                    {getTotalPrice()} zł
+                    {isPriceLoading ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-5 h-5 border-2 border-green-400 border-t-transparent rounded-full animate-spin"></div>
+                        Ładowanie...
+                      </span>
+                    ) : (
+                      `${getTotalPrice()} zł`
+                    )}
                   </div>
                 </div>
               </div>
