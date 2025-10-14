@@ -6,6 +6,29 @@ import { Button } from '@/components/ui/button';
 import { Trash2, Minus, Plus } from 'lucide-react';
 import { PricingService } from '@/lib/services/PricingService';
 
+// Funkcje tłumaczące angielskie opisy na polskie
+function getPolishSetType(setType: string): string {
+  const translations: Record<string, string> = {
+    '3d': '3D',
+    'classic': 'Klasyczne',
+    'premium': 'Premium',
+    'standard': 'Standardowe'
+  };
+  return translations[setType] || setType;
+}
+
+function getPolishCellType(cellType: string): string {
+  const translations: Record<string, string> = {
+    'diamonds': 'Diamenty',
+    'squares': 'Kwadraty',
+    'hexagons': 'Sześciokąty',
+    'circles': 'Koła',
+    'waves': 'Fale',
+    'dots': 'Kropki'
+  };
+  return translations[cellType] || cellType;
+}
+
 interface CartItemProps {
   item: CartItemType;
   onRemove: (itemId: string) => void;
@@ -55,10 +78,10 @@ function MatCartItem({
   const carDetails = config?.carDetails;
 
   return (
-    <div className="flex items-center space-x-4 p-4 border rounded-lg bg-white">
+    <div className="flex items-center space-x-4 p-4 border border-gray-600 rounded-lg bg-gray-800/40 backdrop-blur">
       {/* Obraz produktu */}
       <div className="flex-shrink-0">
-        <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
+        <div className="w-20 h-20 bg-gray-700 rounded-lg flex items-center justify-center">
           {item.productImage ? (
             <Image
               src={item.productImage}
@@ -68,7 +91,7 @@ function MatCartItem({
               className="rounded-lg object-cover"
             />
           ) : (
-            <div className="text-gray-400 text-xs text-center">
+            <div className="text-gray-300 text-xs text-center">
               Dywaniki
             </div>
           )}
@@ -77,20 +100,20 @@ function MatCartItem({
 
       {/* Szczegóły produktu */}
       <div className="flex-1 min-w-0">
-        <h3 className="text-lg font-semibold text-gray-900 truncate">
+        <h3 className="text-lg font-semibold text-white leading-tight">
           {item.productName}
         </h3>
         
         {/* Szczegóły samochodu */}
         {carDetails && (
-          <div className="text-sm text-gray-600 mt-1">
+          <div className="text-sm text-gray-300 mt-1">
             <p>
               {carDetails.brand} {carDetails.model}
               {carDetails.generation && ` ${carDetails.generation}`}
               {carDetails.year && ` (${carDetails.year})`}
             </p>
             {carDetails.bodyType && (
-              <p className="text-xs text-gray-500 capitalize">
+              <p className="text-xs text-gray-400 capitalize">
                 {carDetails.bodyType}
               </p>
             )}
@@ -101,20 +124,20 @@ function MatCartItem({
         {config && (
           <div className="mt-2 space-y-1">
             <div className="flex flex-wrap gap-2 text-xs">
-              <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded">
-                {config.setType}
+              <span className="px-2 py-1 bg-blue-900/50 text-blue-300 rounded border border-blue-700">
+                {getPolishSetType(config.setType)}
               </span>
-              <span className="px-2 py-1 bg-green-100 text-green-800 rounded">
-                {config.cellType}
+              <span className="px-2 py-1 bg-green-900/50 text-green-300 rounded border border-green-700">
+                {getPolishCellType(config.cellType)}
               </span>
-              <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded">
-                {config.materialColor}
+              <span className="px-2 py-1 bg-gray-700/50 text-gray-300 rounded border border-gray-600">
+                Kolor: {config.materialColor}
               </span>
-              <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded">
-                {config.edgeColor}
+              <span className="px-2 py-1 bg-gray-700/50 text-gray-300 rounded border border-gray-600">
+                Obszycie: {config.edgeColor}
               </span>
               {config.heelPad === 'yes' && (
-                <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded">
+                <span className="px-2 py-1 bg-orange-900/50 text-orange-300 rounded border border-orange-700">
                   Ochraniacze pięt
                 </span>
               )}
@@ -124,7 +147,7 @@ function MatCartItem({
 
         {/* SKU */}
         {item.productSku && (
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-400 mt-1">
             SKU: {item.productSku}
           </p>
         )}
@@ -138,12 +161,12 @@ function MatCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity - 1)}
-            className="h-8 w-8 p-0"
+            className="h-8 w-8 p-0 border-gray-600 text-gray-300 hover:bg-gray-700"
           >
             <Minus className="h-4 w-4" />
           </Button>
           
-          <span className="w-8 text-center font-medium">
+          <span className="w-8 text-center font-medium text-white">
             {item.quantity}
           </span>
           
@@ -151,7 +174,7 @@ function MatCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity + 1)}
-            className="h-8 w-8 p-0"
+            className="h-8 w-8 p-0 border-gray-600 text-gray-300 hover:bg-gray-700"
           >
             <Plus className="h-4 w-4" />
           </Button>
@@ -159,10 +182,10 @@ function MatCartItem({
 
         {/* Cena */}
         <div className="text-right">
-          <p className="text-lg font-semibold text-gray-900">
+          <p className="text-lg font-semibold text-white">
             {PricingService.formatPrice(item.subtotal)}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-400">
             {PricingService.formatPrice(item.unitPrice)} × {item.quantity}
           </p>
         </div>
@@ -172,7 +195,7 @@ function MatCartItem({
           variant="ghost"
           size="sm"
           onClick={onRemove}
-          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
         >
           <Trash2 className="h-4 w-4" />
         </Button>
@@ -194,10 +217,10 @@ function AccessoryCartItem({
   onUpdateQuantity: (quantity: number) => void; 
 }) {
   return (
-    <div className="flex items-center space-x-4 p-4 border rounded-lg bg-white">
+    <div className="flex items-center space-x-4 p-4 border border-gray-600 rounded-lg bg-gray-800/40 backdrop-blur">
       {/* Obraz produktu */}
       <div className="flex-shrink-0">
-        <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
+        <div className="w-20 h-20 bg-gray-700 rounded-lg flex items-center justify-center">
           {item.productImage ? (
             <Image
               src={item.productImage}
@@ -207,7 +230,7 @@ function AccessoryCartItem({
               className="rounded-lg object-cover"
             />
           ) : (
-            <div className="text-gray-400 text-xs text-center">
+            <div className="text-gray-300 text-xs text-center">
               Akcesorium
             </div>
           )}
@@ -216,7 +239,7 @@ function AccessoryCartItem({
 
       {/* Szczegóły produktu */}
       <div className="flex-1 min-w-0">
-        <h3 className="text-lg font-semibold text-gray-900 truncate">
+        <h3 className="text-lg font-semibold text-white leading-tight">
           {item.productName}
         </h3>
         
@@ -236,12 +259,12 @@ function AccessoryCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity - 1)}
-            className="h-8 w-8 p-0"
+            className="h-8 w-8 p-0 border-gray-600 text-gray-300 hover:bg-gray-700"
           >
             <Minus className="h-4 w-4" />
           </Button>
           
-          <span className="w-8 text-center font-medium">
+          <span className="w-8 text-center font-medium text-white">
             {item.quantity}
           </span>
           
@@ -249,7 +272,7 @@ function AccessoryCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity + 1)}
-            className="h-8 w-8 p-0"
+            className="h-8 w-8 p-0 border-gray-600 text-gray-300 hover:bg-gray-700"
           >
             <Plus className="h-4 w-4" />
           </Button>
@@ -257,10 +280,10 @@ function AccessoryCartItem({
 
         {/* Cena */}
         <div className="text-right">
-          <p className="text-lg font-semibold text-gray-900">
+          <p className="text-lg font-semibold text-white">
             {PricingService.formatPrice(item.subtotal)}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-400">
             {PricingService.formatPrice(item.unitPrice)} × {item.quantity}
           </p>
         </div>
@@ -270,7 +293,7 @@ function AccessoryCartItem({
           variant="ghost"
           size="sm"
           onClick={onRemove}
-          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
         >
           <Trash2 className="h-4 w-4" />
         </Button>

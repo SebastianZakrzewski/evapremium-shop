@@ -173,7 +173,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
               <div className="space-y-3">
                 <button
                   onClick={handleCheckout}
-                  className="w-full bg-white text-black py-3 px-6 rounded-lg font-semibold hover:bg-neutral-200 transition-colors"
+                  className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-red-500/25"
                 >
                   Przejdź do kasy
                 </button>
