@@ -2,10 +2,17 @@ import { createClient } from '@supabase/supabase-js';
 
 export abstract class BaseRepository<T> {
   protected get supabase() {
-    return createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    console.log('🔧 BaseRepository: SUPABASE_URL:', supabaseUrl);
+    console.log('🔧 BaseRepository: SUPABASE_KEY:', supabaseKey ? '***' : 'undefined');
+    
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error(`Missing Supabase environment variables: URL=${!!supabaseUrl}, KEY=${!!supabaseKey}`);
+    }
+    
+    return createClient(supabaseUrl, supabaseKey);
   }
 
   protected abstract tableName: string;

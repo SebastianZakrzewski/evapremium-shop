@@ -533,9 +533,9 @@ export default function Configurator() {
       // Oblicz cenę końcową używając PricingService
       const finalPrice = getTotalPrice();
       
-      // Generuj unikalny ID produktu
-      const bodyTypeSuffix = selectedBodyType ? selectedBodyType : 'universal';
-      const productId = `mat-${selectedCarBrand}-${selectedCarModel}-${selectedCarYear}-${bodyTypeSuffix}-${Date.now()}`;
+      // Generuj unikalny UUID dla produktu
+      const productId = crypto.randomUUID();
+      console.log('🆔 Configurator: Generated UUID productId:', productId);
       
       // Generuj ścieżkę do obrazu
       const matImagePath = getMatImagePath(

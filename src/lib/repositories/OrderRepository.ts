@@ -4,6 +4,11 @@ import { Order, OrderStatus, PaymentStatus } from '../types/order-new';
 export class OrderRepository extends BaseRepository<Order> {
   protected tableName = 'orders';
 
+  // Publiczny getter do supabase dla OrderService
+  get supabase() {
+    return super.supabase;
+  }
+
   async findByOrderNumber(orderNumber: string): Promise<Order | null> {
     const { data, error } = await this.supabase
       .from(this.tableName)

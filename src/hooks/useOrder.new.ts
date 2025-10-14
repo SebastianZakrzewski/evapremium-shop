@@ -7,6 +7,7 @@ export interface UseOrderReturn {
   isLoading: boolean;
   error: string | null;
   createOrder: (orderData: CreateOrderDTO) => Promise<Order>;
+  saveOrder: (order: Order) => Promise<Order>;
   getOrder: (orderNumber: string) => Promise<Order | null>;
   getCustomerOrders: (email: string) => Promise<Order[]>;
   clearError: () => void;
@@ -161,11 +162,20 @@ export function useOrder(): UseOrderReturn {
     }
   }, []);
 
+  // Zapisz zamówienie (alias dla createOrder)
+  const saveOrder = useCallback(async (order: Order): Promise<Order> => {
+    // W nowym systemie zamówienie jest już zapisane przez createOrder
+    // Ta funkcja jest tylko dla kompatybilności ze starym kodem
+    console.log('✅ Order already saved in createOrder:', order.id);
+    return order;
+  }, []);
+
   return {
     order,
     isLoading,
     error,
     createOrder,
+    saveOrder,
     getOrder,
     getCustomerOrders,
     clearError,

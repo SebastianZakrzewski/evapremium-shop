@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS order_items (
     
     -- Product identification
     product_type VARCHAR(50) NOT NULL, -- "accessory" or "mat"
-    product_id UUID NOT NULL, -- ID from accessories or mats table
+    product_id UUID NOT NULL, -- ID from accessories or mats table (UUID for all products)
     
     -- Product snapshot (preserves data even if product is deleted)
     product_name VARCHAR(255) NOT NULL,

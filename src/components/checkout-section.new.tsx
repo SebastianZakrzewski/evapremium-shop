@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
@@ -28,7 +28,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from '@/hooks/useCart.new';
-import { useOrder } from '@/hooks/useOrder.new';
+import { useOrder } from '@/hooks/useOrder';
 import { CreateOrderDTO } from '@/lib/types/order-new';
 import { PricingService } from '@/lib/services/PricingService';
 import { debugLog } from '@/lib/config/features';
@@ -82,7 +82,7 @@ type CheckoutFormData = z.infer<typeof checkoutSchema>;
 export default function CheckoutSectionNew() {
   const router = useRouter();
   const { items, total, itemCount, clearCart } = useCart();
-  const { createOrder, isLoading: orderLoading, error: orderError } = useOrder();
+  const { createOrder, saveOrder, isLoading: orderLoading, error: orderError } = useOrder();
   
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -94,6 +94,7 @@ export default function CheckoutSectionNew() {
     handleSubmit,
     watch,
     setValue,
+    control,
     formState: { errors, isValid }
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
@@ -109,17 +110,65 @@ export default function CheckoutSectionNew() {
   const sameAsShipping = watch("sameAsShipping");
   const paymentMethod = watch("paymentMethod");
 
-  // Redirect jeśli koszyk pusty
+  // Redirect jeśli koszyk pusty (z opóźnieniem żeby dać czas na załadowanie)
   useEffect(() => {
-    if (itemCount === 0 && !orderSuccess) {
-      debugLog('CheckoutSection: Empty cart, redirecting to home');
-      router.push('/');
-    }
+    const timer = setTimeout(() => {
+      console.log('🛒 CheckoutSection: itemCount:', itemCount, 'orderSuccess:', orderSuccess);
+      if (itemCount === 0 && !orderSuccess) {
+        console.log('🛒 CheckoutSection: Empty cart, redirecting to home');
+        debugLog('CheckoutSection: Empty cart, redirecting to home');
+        router.push('/');
+      }
+    }, 1000); // 1 sekunda opóźnienia
+
+    return () => clearTimeout(timer);
   }, [itemCount, orderSuccess, router]);
 
+  // Sprawdź walidację dla aktualnego kroku
+  const isCurrentStepValid = () => {
+    const watchedValues = watch();
+    console.log('🛒 CheckoutSection: Checking step validation, currentStep:', currentStep);
+    console.log('🛒 CheckoutSection: watchedValues:', watchedValues);
+    console.log('🛒 CheckoutSection: form errors:', errors);
+    console.log('🛒 CheckoutSection: form isValid:', isValid);
+    
+    switch (currentStep) {
+      case 1:
+        // Dane kontaktowe
+        const step1Valid = watchedValues.firstName && 
+               watchedValues.lastName && 
+               watchedValues.email && 
+               watchedValues.phone;
+        console.log('🛒 CheckoutSection: Step 1 validation:', step1Valid);
+        return step1Valid;
+      case 2:
+        // Adres
+        const step2Valid = watchedValues.street && 
+               watchedValues.city && 
+               watchedValues.postalCode && 
+               watchedValues.country;
+        console.log('🛒 CheckoutSection: Step 2 validation:', step2Valid);
+        return step2Valid;
+      case 3:
+        // Płatność
+        const step3Valid = watchedValues.paymentMethod && 
+               watchedValues.termsAccepted;
+        console.log('🛒 CheckoutSection: Step 3 validation:', step3Valid);
+        return step3Valid;
+      default:
+        return false;
+    }
+  };
+
   const nextStep = () => {
-    if (currentStep < 3) {
+    console.log('🛒 CheckoutSection: nextStep called, currentStep:', currentStep, 'isValid:', isValid);
+    console.log('🛒 CheckoutSection: form errors:', errors);
+    console.log('🛒 CheckoutSection: isCurrentStepValid:', isCurrentStepValid());
+    
+    if (currentStep < 3 && isCurrentStepValid()) {
       setCurrentStep(currentStep + 1);
+    } else if (!isCurrentStepValid()) {
+      console.log('🛒 CheckoutSection: Current step validation failed');
     }
   };
 
@@ -130,51 +179,82 @@ export default function CheckoutSectionNew() {
   };
 
   const onSubmit = async (data: CheckoutFormData) => {
+    console.log('🛒 CheckoutSection: onSubmit called with data:', data);
+    console.log('🛒 CheckoutSection: items.length:', items.length);
+    console.log('🛒 CheckoutSection: form isValid:', isValid);
+    console.log('🛒 CheckoutSection: form errors:', errors);
+    
     if (items.length === 0) {
-      console.error('Cannot submit empty cart');
+      console.error('❌ Cannot submit empty cart');
       return;
     }
 
+    console.log('🛒 CheckoutSection: Starting order submission...');
     setIsSubmitting(true);
     debugLog('CheckoutSection: Submitting order', data);
 
     try {
-      // Przygotuj dane zamówienia w nowym formacie
-      const orderData: CreateOrderDTO = {
-        customer: {
-          name: `${data.firstName} ${data.lastName}`,
-          email: data.email,
-          phone: data.phone,
-        },
-        shippingAddress: {
-          street: data.street,
-          city: data.city,
-          postalCode: data.postalCode,
-          country: data.country,
-        },
-        billingAddress: sameAsShipping ? undefined : {
-          street: data.billingStreet!,
-          city: data.billingCity!,
-          postalCode: data.billingPostalCode!,
-          country: data.billingCountry!,
-        },
-        paymentMethod: data.paymentMethod,
-        notes: data.notes,
-        items: items.map(item => ({
-          quantity: item.quantity,
-          unitPrice: item.unitPrice,
-          subtotal: item.subtotal,
-          productType: item.productType,
-          productId: item.productId,
-          productName: item.productName,
-          productSku: item.productSku,
-          productImage: item.productImage,
-          configuration: item.configuration,
-        }))
+      console.log('🛒 CheckoutSection: Preparing customer data...');
+      // Przygotuj dane w starym formacie dla kompatybilności
+      const customerData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        address: data.street,
+        city: data.city,
+        postalCode: data.postalCode,
+        country: data.country,
       };
+      console.log('🛒 CheckoutSection: customerData:', customerData);
 
+      const shippingData = {
+        method: 'standard',
+        methodName: 'Standardowa dostawa',
+        cost: 0,
+        estimatedDelivery: '2-3 dni robocze',
+      };
+      console.log('🛒 CheckoutSection: shippingData:', shippingData);
+
+      const paymentData = {
+        method: data.paymentMethod,
+        methodName: data.paymentMethod === 'card' ? 'Karta kredytowa' : 
+                   data.paymentMethod === 'transfer' ? 'Przelew bankowy' : 
+                   data.paymentMethod === 'blik' ? 'BLIK' : 'Pobranie',
+      };
+      console.log('🛒 CheckoutSection: paymentData:', paymentData);
+
+      console.log('🛒 CheckoutSection: Converting cart items...');
+      // Konwertuj items z nowego formatu na stary format
+      const cartProducts = items.map(item => ({
+        id: item.id,
+        quantity: item.quantity,
+        name: item.productName,
+        image: item.productImage || "/images/products/placeholder.png",
+        pricing: {
+          basePrice: item.unitPrice,
+          totalPrice: item.subtotal,
+          modifiers: 0
+        },
+        configuration: item.configuration,
+        carDetails: item.configuration?.carDetails || {},
+        status: 'cached' as const,
+        createdAt: new Date(),
+        // Dodaj brakujące pola dla kompatybilności
+        productType: item.productType,
+        productId: item.productId,
+        productName: item.productName,
+        productSku: item.productSku,
+        productImage: item.productImage,
+        unitPrice: item.unitPrice,
+        subtotal: item.subtotal,
+      }));
+      console.log('🛒 CheckoutSection: cartProducts:', cartProducts);
+
+      console.log('🛒 CheckoutSection: Calling createOrder...');
       // Utwórz zamówienie
-      const order = await createOrder(orderData);
+      const order = await createOrder(cartProducts, customerData, shippingData, paymentData);
+      console.log('🛒 CheckoutSection: createOrder completed, order:', order);
       
       debugLog('CheckoutSection: Order created successfully', order);
       
@@ -182,12 +262,15 @@ export default function CheckoutSectionNew() {
       clearCart();
       
       // Pokaż sukces
-      setOrderNumber(order.orderNumber);
+      setOrderNumber(order.id);
       setOrderSuccess(true);
       
     } catch (error) {
-      console.error('CheckoutSection: Error creating order:', error);
+      console.error('❌ CheckoutSection: Error creating order:', error);
+      console.error('❌ CheckoutSection: Error details:', error);
+      alert('Wystąpił błąd podczas składania zamówienia. Sprawdź konsolę przeglądarki.');
     } finally {
+      console.log('🛒 CheckoutSection: Setting isSubmitting to false');
       setIsSubmitting(false);
     }
   };
@@ -272,7 +355,16 @@ export default function CheckoutSectionNew() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Form */}
           <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={handleSubmit(
+              (data) => {
+                console.log('🛒 CheckoutSection: onSubmit called with valid data:', data);
+                onSubmit(data);
+              },
+              (errors) => {
+                console.log('🛒 CheckoutSection: Form validation failed with errors:', errors);
+                console.log('🛒 CheckoutSection: Please fix the form errors before submitting');
+              }
+            )} className="space-y-6">
               {/* Step 1: Dane kontaktowe */}
               {currentStep === 1 && (
                 <Card>
@@ -518,9 +610,16 @@ export default function CheckoutSectionNew() {
 
                     <div className="space-y-4">
                       <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="termsAccepted"
-                          {...register("termsAccepted")}
+                        <Controller
+                          name="termsAccepted"
+                          control={control}
+                          render={({ field }) => (
+                            <Checkbox
+                              id="termsAccepted"
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          )}
                         />
                         <Label htmlFor="termsAccepted" className="text-sm">
                           Akceptuję <Link href="/regulamin" className="text-blue-600 hover:underline">regulamin</Link> *
@@ -562,7 +661,7 @@ export default function CheckoutSectionNew() {
                   <Button
                     type="button"
                     onClick={nextStep}
-                    disabled={!isValid}
+                    disabled={!isCurrentStepValid()}
                   >
                     Dalej
                     <ArrowRight className="w-4 h-4 ml-2" />
@@ -572,6 +671,12 @@ export default function CheckoutSectionNew() {
                     type="submit"
                     disabled={isSubmitting || orderLoading}
                     className="bg-green-600 hover:bg-green-700"
+                    onClick={() => {
+                      console.log('🛒 CheckoutSection: Submit button clicked');
+                      console.log('🛒 CheckoutSection: isSubmitting:', isSubmitting);
+                      console.log('🛒 CheckoutSection: orderLoading:', orderLoading);
+                      console.log('🛒 CheckoutSection: disabled:', isSubmitting || orderLoading);
+                    }}
                   >
                     {isSubmitting || orderLoading ? (
                       <>
