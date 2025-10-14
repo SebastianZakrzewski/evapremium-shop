@@ -1,247 +1,168 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Product } from '../lib/types/product';
-import { CartItem } from '../lib/types/cart';
-import { HybridSessionManager } from '../lib/utils/hybrid-session-manager';
+import { useState, useEffect } from 'react';
+import { Accessory } from '@/lib/types/accessory';
 
-export interface UseCartReturn {
-  cartItems: CartItem[];
-  cartProducts: Product[];
-  cartTotal: number;
-  cartCount: number;
-  isLoading: boolean;
-  error: string | null;
-  addToCart: (product: Product) => void;
-  removeFromCart: (productId: string) => void;
-  updateProductQuantity: (productId: string, quantity: number) => void;
-  clearCart: () => void;
-  refreshCart: () => void;
+export interface CartItem {
+  accessory: Accessory;
+  quantity: number;
+  addedAt: Date;
 }
 
-export function useCart(sessionId?: string): UseCartReturn {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export interface Cart {
+  items: CartItem[];
+  totalItems: number;
+  totalPrice: number;
+}
 
-  // Pobierz sessionId z HybridSessionManager jeśli nie podano
-  const currentSessionId = useMemo(() => {
-    return sessionId || (typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : '');
-  }, [sessionId]);
-
-  // Oblicz produkty bez quantity
-  const cartProducts = cartItems.map(item => {
-    const { quantity, ...product } = item;
-    return product;
+export function useCart() {
+  const [cart, setCart] = useState<Cart>({
+    items: [],
+    totalItems: 0,
+    totalPrice: 0
   });
 
-  // Oblicz całkowitą wartość koszyka
-  const cartTotal = cartItems.reduce((total, item) => {
-    return total + (item.pricing.totalPrice * item.quantity);
-  }, 0);
-
-  // Oblicz liczbę przedmiotów w koszyku
-  const cartCount = cartItems.reduce((count, item) => count + item.quantity, 0);
-
-  // Odśwież koszyk
-  const refreshCart = useCallback(() => {
-    const freshSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : currentSessionId;
-    console.log('🔄 useCart: refreshCart called, currentSessionId:', currentSessionId);
-    console.log('🔄 useCart: freshSessionId:', freshSessionId);
-    
-    if (!freshSessionId) return;
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      console.log('🔄 useCart: loading cart from localStorage');
-      const cartData = localStorage.getItem(`cart_${freshSessionId}`);
-      const cartItems = cartData ? JSON.parse(cartData) : [];
-      console.log('🔄 useCart: cartItems from localStorage:', cartItems);
-
-      console.log('🔄 useCart: setting cartItems state');
-      setCartItems(cartItems);
-    } catch (err) {
-      console.error('❌ useCart: error loading cart:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load cart');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [currentSessionId]);
-
-  // Załaduj koszyk przy inicjalizacji
+  // Ładuj koszyk z localStorage przy inicjalizacji
   useEffect(() => {
-    console.log('🔄 useCart: useEffect triggered, currentSessionId:', currentSessionId);
-    if (currentSessionId) {
-      refreshCart();
-    }
-  }, [currentSessionId, refreshCart]);
-
-  // Nasłuchuj na zmiany w localStorage (między kartami)
-  useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      const freshSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : currentSessionId;
-      if (e.key === `cart_${freshSessionId}`) {
-        console.log('🔄 useCart: localStorage changed (cross-tab), refreshing cart...');
-        refreshCart();
+    const savedCart = localStorage.getItem('eva-cart');
+    if (savedCart) {
+      try {
+        const parsedCart = JSON.parse(savedCart);
+        // Konwertuj addedAt z string na Date
+        const cartWithDates = {
+          ...parsedCart,
+          items: parsedCart.items.map((item: any) => ({
+            ...item,
+            addedAt: new Date(item.addedAt)
+          }))
+        };
+        setCart(cartWithDates);
+      } catch (error) {
+        console.error('Błąd ładowania koszyka z localStorage:', error);
       }
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, [currentSessionId, refreshCart]);
+    }
+  }, []);
 
-  // Nasłuchuj na custom event dla tej samej karty
+  // Zapisz koszyk do localStorage przy każdej zmianie
   useEffect(() => {
-    const handleCartUpdate = () => {
-      console.log('🔄 useCart: custom cart update event received, refreshing cart...');
-      refreshCart();
-    };
-    
-    window.addEventListener('cartUpdated', handleCartUpdate);
-    return () => window.removeEventListener('cartUpdated', handleCartUpdate);
-  }, [refreshCart]);
+    localStorage.setItem('eva-cart', JSON.stringify(cart));
+  }, [cart]);
 
   // Dodaj produkt do koszyka
-  const addToCart = useCallback(async (product: Product) => {
-    console.log('🛒 useCart: addToCart called with product:', product.id);
-    console.log('🛒 useCart: currentSessionId:', currentSessionId);
-    
-    const freshSessionId = HybridSessionManager.getSessionId();
-    console.log('🛒 useCart: freshSessionId from HybridSessionManager:', freshSessionId);
-    
-    if (!freshSessionId) {
-      setError('No session ID available');
-      return;
-    }
-
-    try {
-      setError(null);
-      console.log('🛒 useCart: adding product to localStorage');
-      
-      const cartData = localStorage.getItem(`cart_${freshSessionId}`);
-      const existingCart = cartData ? JSON.parse(cartData) : [];
-      
-      // Sprawdź czy produkt już istnieje
-      const existingIndex = existingCart.findIndex(
-        (item: any) => item.id === product.id
+  const addToCart = (accessory: Accessory, quantity: number = 1) => {
+    setCart(prevCart => {
+      const existingItemIndex = prevCart.items.findIndex(
+        item => item.accessory.id === accessory.id
       );
 
-      if (existingIndex >= 0) {
-        existingCart[existingIndex].quantity += 1;
+      let newItems: CartItem[];
+
+      if (existingItemIndex > -1) {
+        // Produkt już istnieje w koszyku - zwiększ ilość
+        newItems = prevCart.items.map((item, index) =>
+          index === existingItemIndex
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
       } else {
-        const cartItem: CartItem = {
-          ...product,
-          quantity: 1
+        // Nowy produkt - dodaj do koszyka
+        const newItem: CartItem = {
+          accessory,
+          quantity,
+          addedAt: new Date()
         };
-        existingCart.push(cartItem);
+        newItems = [...prevCart.items, newItem];
       }
 
-      localStorage.setItem(`cart_${freshSessionId}`, JSON.stringify(existingCart));
-      
-      // Wyślij custom event
-      window.dispatchEvent(new CustomEvent('cartUpdated'));
-      
-      console.log('✅ Product added to cart:', product.id);
-    } catch (err) {
-      console.error('❌ useCart: error in addToCart:', err);
-      setError(err instanceof Error ? err.message : 'Failed to add product to cart');
-    }
-  }, [currentSessionId]);
+      // Oblicz nowe sumy
+      const totalItems = newItems.reduce((sum, item) => sum + item.quantity, 0);
+      const totalPrice = newItems.reduce(
+        (sum, item) => sum + (item.accessory.price * item.quantity),
+        0
+      );
+
+      return {
+        items: newItems,
+        totalItems,
+        totalPrice
+      };
+    });
+  };
 
   // Usuń produkt z koszyka
-  const removeFromCart = useCallback((productId: string) => {
-    const freshSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : currentSessionId;
-    
-    if (!freshSessionId) {
-      setError('No session ID available');
-      return;
-    }
-
-    try {
-      setError(null);
-      console.log('🛒 useCart: removing product from localStorage');
-      
-      const cartData = localStorage.getItem(`cart_${freshSessionId}`);
-      const existingCart = cartData ? JSON.parse(cartData) : [];
-      
-      const updatedCart = existingCart.filter((item: any) => item.id !== productId);
-      localStorage.setItem(`cart_${freshSessionId}`, JSON.stringify(updatedCart));
-      
-      // Wyślij custom event
-      window.dispatchEvent(new CustomEvent('cartUpdated'));
-      
-      console.log('✅ Product removed from cart:', productId);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to remove product from cart');
-    }
-  }, [currentSessionId]);
-
-  // Aktualizuj ilość produktu
-  const updateProductQuantity = useCallback((productId: string, quantity: number) => {
-    const freshSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : currentSessionId;
-    
-    if (!freshSessionId) {
-      setError('No session ID available');
-      return;
-    }
-
-    try {
-      setError(null);
-      console.log('🛒 useCart: updating product quantity in localStorage');
-      
-      const cartData = localStorage.getItem(`cart_${freshSessionId}`);
-      const existingCart = cartData ? JSON.parse(cartData) : [];
-      
-      const updatedCart = existingCart.map((item: any) => 
-        item.id === productId ? { ...item, quantity } : item
+  const removeFromCart = (accessoryId: string) => {
+    setCart(prevCart => {
+      const newItems = prevCart.items.filter(
+        item => item.accessory.id !== accessoryId
       );
-      localStorage.setItem(`cart_${freshSessionId}`, JSON.stringify(updatedCart));
-      
-      // Wyślij custom event
-      window.dispatchEvent(new CustomEvent('cartUpdated'));
-      
-      console.log('✅ Product quantity updated:', productId, quantity);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update product quantity');
-    }
-  }, [currentSessionId]);
 
-  // Wyczyść koszyk
-  const clearCart = useCallback(() => {
-    const freshSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : currentSessionId;
-    
-    if (!freshSessionId) {
-      setError('No session ID available');
+      const totalItems = newItems.reduce((sum, item) => sum + item.quantity, 0);
+      const totalPrice = newItems.reduce(
+        (sum, item) => sum + (item.accessory.price * item.quantity),
+        0
+      );
+
+      return {
+        items: newItems,
+        totalItems,
+        totalPrice
+      };
+    });
+  };
+
+  // Zaktualizuj ilość produktu w koszyku
+  const updateQuantity = (accessoryId: string, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(accessoryId);
       return;
     }
 
-    try {
-      setError(null);
-      console.log('🛒 useCart: clearing cart in localStorage');
-      
-      localStorage.removeItem(`cart_${freshSessionId}`);
-      setCartItems([]);
-      
-      // Wyślij custom event
-      window.dispatchEvent(new CustomEvent('cartUpdated'));
-      
-      console.log('✅ Cart cleared');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to clear cart');
-    }
-  }, [currentSessionId]);
+    setCart(prevCart => {
+      const newItems = prevCart.items.map(item =>
+        item.accessory.id === accessoryId
+          ? { ...item, quantity }
+          : item
+      );
+
+      const totalItems = newItems.reduce((sum, item) => sum + item.quantity, 0);
+      const totalPrice = newItems.reduce(
+        (sum, item) => sum + (item.accessory.price * item.quantity),
+        0
+      );
+
+      return {
+        items: newItems,
+        totalItems,
+        totalPrice
+      };
+    });
+  };
+
+  // Wyczyść cały koszyk
+  const clearCart = () => {
+    setCart({
+      items: [],
+      totalItems: 0,
+      totalPrice: 0
+    });
+  };
+
+  // Sprawdź czy produkt jest w koszyku
+  const isInCart = (accessoryId: string): boolean => {
+    return cart.items.some(item => item.accessory.id === accessoryId);
+  };
+
+  // Pobierz ilość produktu w koszyku
+  const getQuantity = (accessoryId: string): number => {
+    const item = cart.items.find(item => item.accessory.id === accessoryId);
+    return item ? item.quantity : 0;
+  };
 
   return {
-    cartItems,
-    cartProducts,
-    cartTotal,
-    cartCount,
-    isLoading,
-    error,
+    cart,
     addToCart,
     removeFromCart,
-    updateProductQuantity,
+    updateQuantity,
     clearCart,
-    refreshCart
+    isInCart,
+    getQuantity
   };
 }

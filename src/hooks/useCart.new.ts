@@ -130,6 +130,7 @@ export function useCart(): UseCartReturn {
 
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+      console.log('💾 useCart: Saved cart to localStorage', { key: CART_STORAGE_KEY, cart });
       debugLog('useCart: Saved cart to localStorage', cart);
     } catch (err) {
       console.error('useCart: Error saving cart to localStorage:', err);
@@ -187,10 +188,12 @@ export function useCart(): UseCartReturn {
   const removeFromCart = useCallback(async (itemId: string) => {
     setIsLoading(true);
     setError(null);
-    debugLog('useCart: Removing item from cart', itemId);
+    console.log('🗑️ useCart: Removing item from cart', itemId);
+    console.log('🗑️ useCart: Current cart before removal:', cart);
 
     try {
       const updatedCart = await cartService.removeFromCart(cart, itemId);
+      console.log('🗑️ useCart: Updated cart after removal:', updatedCart);
       setCart(updatedCart);
       
       // Dispatch event to notify other components

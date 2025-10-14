@@ -95,18 +95,36 @@ export class AccessoryService {
   async checkAvailability(id: string, quantity: number): Promise<boolean> {
     const accessory = await this.repository.findById(id);
     
-    if (!accessory || !accessory.isActive) {
+    console.log('🔍 checkAvailability:', { id, quantity, accessory: accessory ? {
+      name: accessory.name,
+      isActive: accessory.isActive,
+      inStock: accessory.inStock,
+      stockQuantity: accessory.stockQuantity
+    } : null });
+    
+    if (!accessory) {
+      console.log('❌ Accessory not found');
       return false;
     }
     
-    if (!accessory.inStock) {
+    if (!accessory.isActive) {
+      console.log('❌ Accessory not active');
       return false;
     }
     
+    // Dla akcesoriów, jeśli inStock nie jest ustawione, domyślnie zwracaj true
+    if (accessory.inStock === false) {
+      console.log('❌ Accessory not in stock');
+      return false;
+    }
+    
+    // Sprawdź stockQuantity tylko jeśli jest ustawione
     if (accessory.stockQuantity !== null && accessory.stockQuantity! < quantity) {
+      console.log('❌ Insufficient stock quantity');
       return false;
     }
     
+    console.log('✅ Accessory available');
     return true;
   }
 

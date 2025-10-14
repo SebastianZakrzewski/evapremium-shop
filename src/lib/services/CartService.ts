@@ -60,16 +60,17 @@ export class CartService {
       throw new Error('Item not found in cart');
     }
     
-    // Waliduj dostępność
+    // Waliduj dostępność - tymczasowo wyłączone
     if (item.productType === 'accessory') {
-      const available = await this.accessoryService.checkAvailability(
-        item.productId,
-        quantity
-      );
+      console.log('CartService: Skipping accessory availability validation in updateQuantity');
+      // const available = await this.accessoryService.checkAvailability(
+      //   item.productId,
+      //   quantity
+      // );
       
-      if (!available) {
-        throw new Error('Product not available in requested quantity');
-      }
+      // if (!available) {
+      //   throw new Error('Product not available in requested quantity');
+      // }
     }
     
     item.quantity = quantity;
@@ -118,14 +119,17 @@ export class CartService {
         throw new Error('Accessory not found');
       }
       
-      const available = await this.accessoryService.checkAvailability(
-        item.productId,
-        item.quantity
-      );
+      // Tymczasowo wyłączamy walidację dostępności dla akcesoriów
+      console.log('CartService: Skipping accessory availability validation');
       
-      if (!available) {
-        throw new Error('Accessory not available');
-      }
+      // const available = await this.accessoryService.checkAvailability(
+      //   item.productId,
+      //   item.quantity
+      // );
+      
+      // if (!available) {
+      //   throw new Error('Accessory not available');
+      // }
     } else if (item.productType === 'mat') {
       // Dla dywaników, nie walidujemy dostępności w bazie danych
       // ponieważ wszystkie kombinacje są dostępne

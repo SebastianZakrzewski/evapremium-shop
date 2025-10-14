@@ -6,9 +6,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Accessory } from "@/lib/types/accessory";
 import { useAccessories } from "@/hooks/useAccessories";
+import { useCart } from "@/hooks/useCart.new";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
+import { Button } from "./ui/button";
 
 interface FilterState {
   categories: string[];
@@ -28,6 +30,9 @@ export default function AccessoriesSection() {
     error,
     getAccessoriesByCategory: getAccessoriesByCategorySlug 
   } = useAccessories();
+
+  // Hook do zarządzania koszykiem
+  const { addToCart } = useCart();
   
   // Stan filtrów
   const [filters, setFilters] = useState<FilterState>({
@@ -96,6 +101,27 @@ export default function AccessoriesSection() {
       priceRange: [0, 1000],
       inStock: false
     });
+  };
+
+  // Funkcja obsługi dodawania do koszyka
+  const handleAddToCart = async (accessory: Accessory, event: React.MouseEvent) => {
+    event.preventDefault(); // Zapobiegaj nawigacji do linku
+    event.stopPropagation(); // Zapobiegaj propagacji eventu
+    
+    try {
+      // Dodaj produkt do koszyka używając nowego API
+      await addToCart({
+        productType: 'accessory',
+        productId: accessory.id,
+        quantity: 1
+      });
+      
+      // Produkt został dodany do koszyka - bez alertu
+      console.log(`Dodano "${accessory.name}" do koszyka za ${accessory.price} PLN`);
+    } catch (error) {
+      console.error('Błąd dodawania do koszyka:', error);
+      alert('Nie udało się dodać produktu do koszyka');
+    }
   };
 
   // Stan dla akcesoriów z konkretnej kategorii
@@ -316,12 +342,21 @@ export default function AccessoriesSection() {
                       <p className="text-sm md:text-base text-gray-300 transition-all duration-300 group-hover:text-white mb-2">
                         {accessory.category?.name || 'Brak kategorii'}
                       </p>
-                      <p className="text-red-400 font-semibold text-base md:text-lg transition-all duration-300 group-hover:text-red-300">
+                      <p className="text-red-400 font-semibold text-base md:text-lg transition-all duration-300 group-hover:text-red-300 mb-3">
                         {accessory.price.toLocaleString('pl-PL')} PLN
                       </p>
-                      <p className="text-xs md:text-sm text-gray-400 mt-2 max-w-xs transition-all duration-300 group-hover:text-gray-300">
+                      <p className="text-xs md:text-sm text-gray-400 mb-4 max-w-xs transition-all duration-300 group-hover:text-gray-300">
                         {accessory.description || 'Brak opisu'}
                       </p>
+                      
+                      {/* Add to Cart Button */}
+                      <Button
+                        onClick={(e) => handleAddToCart(accessory, e)}
+                        className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                        size="sm"
+                      >
+                        Dodaj do koszyka
+                      </Button>
                     </div>
                   </Link>
                 </article>

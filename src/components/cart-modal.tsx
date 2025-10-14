@@ -13,12 +13,13 @@ interface CartModalProps {
 
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
   const router = useRouter();
-  const { cartItems, cartCount, cartTotal, removeFromCart, updateProductQuantity } = useCart();
+  const { cart, removeFromCart, updateQuantity } = useCart();
 
   // Debug logging
-  console.log('🛒 CartModal: cartItems:', cartItems);
-  console.log('🛒 CartModal: cartCount:', cartCount);
-  console.log('🛒 CartModal: cartTotal:', cartTotal);
+  console.log('🛒 CartModal: cart:', cart);
+  console.log('🛒 CartModal: cart.items:', cart.items);
+  console.log('🛒 CartModal: cart.totalItems:', cart.totalItems);
+  console.log('🛒 CartModal: cart.totalPrice:', cart.totalPrice);
 
   const handleCheckout = () => {
     onClose(); // Zamknij modal koszyka
@@ -60,7 +61,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
         <div className="flex flex-col h-full">
           {/* Items */}
           <div className="flex-1 overflow-y-auto p-6">
-            {cartItems.length === 0 ? (
+            {cart.items.length === 0 ? (
               <div className="text-center py-12">
                 <div className="w-16 h-16 mx-auto mb-4 bg-neutral-800 rounded-full flex items-center justify-center">
                   <svg className="w-8 h-8 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,31 +73,39 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
               </div>
             ) : (
               <div className="space-y-4">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="flex items-center gap-4 p-4 bg-neutral-900 rounded-lg border border-neutral-800">
-                    <div className="w-16 h-16 bg-neutral-800 rounded-md flex items-center justify-center">
-                      <span className="text-xs text-neutral-400">EVA</span>
+                {cart.items.map((item) => (
+                  <div key={item.accessory.id} className="flex items-center gap-4 p-4 bg-neutral-900 rounded-lg border border-neutral-800">
+                    <div className="w-16 h-16 bg-neutral-800 rounded-md flex items-center justify-center overflow-hidden">
+                      {item.accessory.imageSrc ? (
+                        <img 
+                          src={item.accessory.imageSrc} 
+                          alt={item.accessory.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-xs text-neutral-400">📦</span>
+                      )}
                     </div>
                     <div className="flex-1">
                       <h3 className="font-medium text-white">
-                        Dywaniki {item.configuration.setType === '3d-with-rims' ? '3D z rantami' : 'Klasyczne'}
+                        {item.accessory.name}
                       </h3>
                       <p className="text-sm text-neutral-400">
-                        {item.configuration.materialColor} / {item.configuration.edgeColor}
+                        {item.accessory.category?.name || 'Brak kategorii'}
                       </p>
                       <p className="text-sm text-red-400 font-medium">
-                        {item.pricing.totalPrice} zł
+                        {item.accessory.price.toLocaleString('pl-PL')} PLN
                       </p>
                       <div className="flex items-center gap-2 mt-2">
                         <button 
-                          onClick={() => updateProductQuantity(item.id, item.quantity - 1)}
+                          onClick={() => updateQuantity(item.accessory.id, item.quantity - 1)}
                           className="w-6 h-6 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 transition-colors text-white"
                         >
                           -
                         </button>
                         <span className="w-8 text-center text-sm font-medium text-white">{item.quantity}</span>
                         <button 
-                          onClick={() => updateProductQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.accessory.id, item.quantity + 1)}
                           className="w-6 h-6 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 transition-colors text-white"
                         >
                           +
@@ -104,7 +113,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                       </div>
                     </div>
                     <button 
-                      onClick={() => removeFromCart(item.id)}
+                      onClick={() => removeFromCart(item.accessory.id)}
                       className="text-red-500 hover:text-red-400 transition-colors"
                     >
                       <X className="w-5 h-5" />
@@ -116,11 +125,11 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
           </div>
 
           {/* Footer */}
-          {cartItems.length > 0 && (
+          {cart.items.length > 0 && (
             <div className="border-t border-neutral-800 p-6">
               <div className="flex justify-between items-center mb-4">
-                <span className="text-lg font-medium text-white">Razem ({cartCount} produktów):</span>
-                <span className="text-2xl font-bold text-white">{cartTotal.toLocaleString()} PLN</span>
+                <span className="text-lg font-medium text-white">Razem ({cart.totalItems} produktów):</span>
+                <span className="text-2xl font-bold text-white">{cart.totalPrice.toLocaleString('pl-PL')} PLN</span>
               </div>
               <button 
                 onClick={handleCheckout}
