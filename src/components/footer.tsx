@@ -53,11 +53,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/modele" className="text-gray-400 hover:text-white transition-colors">
-                  Modele Aut
-                </Link>
-              </li>
-              <li>
                 <Link href="#o-nas" className="text-gray-400 hover:text-white transition-colors">
                   O Nas
                 </Link>
@@ -97,11 +92,6 @@ export default function Footer() {
               <li>
                 <Link href="/zwroty-wymiany" className="text-gray-400 hover:text-white transition-colors">
                   Zwroty i wymiany
-                </Link>
-              </li>
-              <li>
-                <Link href="/program-partnerski" className="text-gray-400 hover:text-white transition-colors">
-                  Program partnerski
                 </Link>
               </li>
             </ul>

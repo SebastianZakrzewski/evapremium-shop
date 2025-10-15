@@ -18,6 +18,25 @@ const emptyCart: Cart = {
   itemCount: 0,
 };
 
+/**
+ * Validates and normalizes cart data to ensure all required properties exist
+ */
+function validateCartData(cartData: any): Cart {
+  if (!cartData || typeof cartData !== 'object') {
+    return emptyCart;
+  }
+
+  return {
+    items: Array.isArray(cartData.items) ? cartData.items : [],
+    subtotal: typeof cartData.subtotal === 'number' && !isNaN(cartData.subtotal) ? cartData.subtotal : 0,
+    shippingCost: typeof cartData.shippingCost === 'number' && !isNaN(cartData.shippingCost) ? cartData.shippingCost : 0,
+    tax: typeof cartData.tax === 'number' && !isNaN(cartData.tax) ? cartData.tax : 0,
+    discount: typeof cartData.discount === 'number' && !isNaN(cartData.discount) ? cartData.discount : 0,
+    total: typeof cartData.total === 'number' && !isNaN(cartData.total) ? cartData.total : 0,
+    itemCount: typeof cartData.itemCount === 'number' && !isNaN(cartData.itemCount) ? cartData.itemCount : 0,
+  };
+}
+
 export interface UseCartReturn {
   cart: Cart;
   items: CartItem[];
@@ -77,11 +96,15 @@ export function useCart(): UseCartReturn {
     if (savedCart) {
       try {
         const parsed = JSON.parse(savedCart);
-        setCart(parsed);
-        debugLog('useCart: Cart refreshed', parsed);
+        const validatedCart = validateCartData(parsed);
+        setCart(validatedCart);
+        debugLog('useCart: Cart refreshed', validatedCart);
       } catch (err) {
         console.error('useCart: Error refreshing cart:', err);
+        setCart(emptyCart);
       }
+    } else {
+      setCart(emptyCart);
     }
   }, []);
 
@@ -97,15 +120,19 @@ export function useCart(): UseCartReturn {
         if (savedCart) {
           const parsed = JSON.parse(savedCart);
           console.log('🛒 useCart: Parsed cart:', parsed);
-          debugLog('useCart: Loaded cart from localStorage', parsed);
-          setCart(parsed);
+          const validatedCart = validateCartData(parsed);
+          console.log('🛒 useCart: Validated cart:', validatedCart);
+          debugLog('useCart: Loaded cart from localStorage', validatedCart);
+          setCart(validatedCart);
         } else {
           console.log('🛒 useCart: No cart in localStorage, using empty cart');
           debugLog('useCart: No cart in localStorage, using empty cart');
+          setCart(emptyCart);
         }
       } catch (err) {
         console.error('useCart: Error loading cart from localStorage:', err);
         setError('Błąd ładowania koszyka');
+        setCart(emptyCart);
       }
     };
 
@@ -144,7 +171,8 @@ export function useCart(): UseCartReturn {
   // Event-based synchronization instead of polling
   useEffect(() => {
     const handleCartUpdate = (event: CustomEvent) => {
-      setCart(event.detail);
+      const validatedCart = validateCartData(event.detail);
+      setCart(validatedCart);
     };
 
     window.addEventListener('cartUpdated', handleCartUpdate as EventListener);

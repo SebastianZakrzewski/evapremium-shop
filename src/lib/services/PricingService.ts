@@ -193,14 +193,20 @@ export class PricingService {
   /**
    * Formatuje cenę do wyświetlenia
    */
-  static formatPrice(price: number): string {
+  static formatPrice(price: number | null | undefined): string {
+    if (price === null || price === undefined || isNaN(price)) {
+      return '0.00 PLN';
+    }
     return `${price.toFixed(2)} PLN`;
   }
 
   /**
    * Formatuje cenę z walutą
    */
-  static formatPriceWithCurrency(price: number, currency: string = 'PLN'): string {
+  static formatPriceWithCurrency(price: number | null | undefined, currency: string = 'PLN'): string {
+    if (price === null || price === undefined || isNaN(price)) {
+      return `0.00 ${currency}`;
+    }
     return `${price.toFixed(2)} ${currency}`;
   }
 }
