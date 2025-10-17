@@ -12,7 +12,7 @@ export class ConfiguratorService {
     },
     shipping: {
       cost: 27,
-      freeForVariants: ['basic', 'premium', 'complete'] as const
+      freeForVariants: ['basic', 'premium'] as const
     }
   };
 

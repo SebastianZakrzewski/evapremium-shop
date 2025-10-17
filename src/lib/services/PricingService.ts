@@ -39,8 +39,8 @@ export class PricingService {
     const discountAmount = basePrice * discount;
     const priceAfterDiscount = basePrice - discountAmount;
     
-    // Koszt wysyłki (27 zł tylko dla 'front', darmowa dla 'basic', 'premium' i 'complete')
-    const shippingCost = ['basic', 'premium', 'complete'].includes(setVariant) ? 0 : 27;
+    // Koszt wysyłki (27 zł dla 'front' i 'complete', darmowa dla 'basic' i 'premium')
+    const shippingCost = ['basic', 'premium'].includes(setVariant) ? 0 : 27;
     
     const totalPrice = Math.round(priceAfterDiscount + shippingCost);
 

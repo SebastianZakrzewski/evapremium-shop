@@ -77,7 +77,7 @@ const PRICING = {
   },
   shipping: {
     cost: 27,
-    freeForVariants: ['basic', 'premium', 'complete'] as const  // Darmowa dla basic, premium i complete
+    freeForVariants: ['basic', 'premium'] as const  // Darmowa dla basic i premium (przód+tył i przód+tył+bagażnik)
   }
 };
 
