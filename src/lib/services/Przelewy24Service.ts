@@ -48,7 +48,10 @@ export class Przelewy24Service {
    * Format: posId:reportKey (nie merchantId:apiKey!)
    */
   private getBasicAuthHeader(): string {
-    const credentials = Buffer.from(`${this.config.posId}:${this.config.reportKey}`).toString('base64')
+    // Użyj btoa dla kompatybilności z przeglądarką i Node.js
+    const credentials = typeof window !== 'undefined' 
+      ? btoa(`${this.config.posId}:${this.config.reportKey}`)
+      : Buffer.from(`${this.config.posId}:${this.config.reportKey}`).toString('base64')
     return `Basic ${credentials}`
   }
 
