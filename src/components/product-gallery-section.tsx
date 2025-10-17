@@ -2,6 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ProductImage {
   id: number;
@@ -343,6 +344,7 @@ ImageModal.displayName = 'ImageModal';
 
 export default function ProductGallerySection() {
   const [selectedImage, setSelectedImage] = useState<ProductImage | null>(null);
+  const [animationSpeed, setAnimationSpeed] = useState(60); // Domyślna prędkość animacji
 
   // Zoptymalizowane funkcje z useCallback
   const openModal = useCallback((image: ProductImage) => {
@@ -351,6 +353,21 @@ export default function ProductGallerySection() {
 
   const closeModal = useCallback(() => {
     setSelectedImage(null);
+  }, []);
+
+  // Funkcje nawigacji karuzeli - przyspieszają automatyczną animację
+  const goToPrevious = useCallback(() => {
+    // Przyspiesz animację (zmniejsz duration)
+    setAnimationSpeed(10);
+    // Resetuj po 2 sekundach
+    setTimeout(() => setAnimationSpeed(60), 2000);
+  }, []);
+
+  const goToNext = useCallback(() => {
+    // Przyspiesz animację (zmniejsz duration)
+    setAnimationSpeed(10);
+    // Resetuj po 2 sekundach
+    setTimeout(() => setAnimationSpeed(60), 2000);
   }, []);
 
   // Zoptymalizowane zestawy obrazów z useMemo
@@ -408,25 +425,45 @@ export default function ProductGallerySection() {
 
       {/* Kontener galerii - pełna szerokość */}
       <div className="w-full overflow-hidden relative z-10">
-        {/* Główny kontener z Framer Motion infinite loop */}
-        <motion.div 
-          className="flex"
-          style={{ width: 'max-content' }}
-          animate={{
-            x: [0, -1500]
-          }}
-          transition={{
-            x: {
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 60,
-              ease: "linear"
-            }
-          }}
+        {/* Strzałka w lewo */}
+        <button
+          onClick={goToPrevious}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
+          aria-label="Przewiń w lewo"
         >
-          {/* Zoptymalizowane zestawy obrazów */}
-          {imageSets}
-        </motion.div>
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+
+        {/* Strzałka w prawo */}
+        <button
+          onClick={goToNext}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
+          aria-label="Przewiń w prawo"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+
+        {/* Główny kontener z automatyczną animacją */}
+        <div className="carousel-container overflow-hidden">
+          <motion.div 
+            className="flex"
+            style={{ width: 'max-content' }}
+            animate={{
+              x: [0, -1500]
+            }}
+            transition={{
+              x: {
+                repeat: Infinity,
+                repeatType: "loop",
+                duration: animationSpeed,
+                ease: "linear"
+              }
+            }}
+          >
+            {/* Zoptymalizowane zestawy obrazów */}
+            {imageSets}
+          </motion.div>
+        </div>
       </div>
 
       {/* Modal dla powiększonego obrazu */}

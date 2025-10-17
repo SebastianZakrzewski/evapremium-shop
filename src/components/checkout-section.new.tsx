@@ -423,7 +423,7 @@ export default function CheckoutSectionNew() {
             )} className="space-y-8">
               {/* Step 1: Dane kontaktowe */}
               {currentStep === 1 && (
-                <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
+                <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
                   <CardHeader className="border-l-4 border-red-500 px-8 py-6">
                     <CardTitle className="flex items-center text-white text-xl">
                       <CreditCard className="w-6 h-6 mr-3 text-red-500" />
@@ -433,11 +433,11 @@ export default function CheckoutSectionNew() {
                   <CardContent className="space-y-6 px-8 pb-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="firstName" className="text-gray-200 font-medium text-base">Imię *</Label>
+                        <Label htmlFor="firstName" className="text-neutral-200 font-medium text-base">Imię *</Label>
                         <Input
                           id="firstName"
                           {...register("firstName")}
-                          className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.firstName ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -449,11 +449,11 @@ export default function CheckoutSectionNew() {
                       </div>
                       
                       <div className="space-y-2">
-                        <Label htmlFor="lastName" className="text-gray-200 font-medium text-base">Nazwisko *</Label>
+                        <Label htmlFor="lastName" className="text-neutral-200 font-medium text-base">Nazwisko *</Label>
                         <Input
                           id="lastName"
                           {...register("lastName")}
-                          className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.lastName ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -466,12 +466,12 @@ export default function CheckoutSectionNew() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-200 font-medium text-base">Email *</Label>
+                      <Label htmlFor="email" className="text-neutral-200 font-medium text-base">Email *</Label>
                       <Input
                         id="email"
                         type="email"
                         {...register("email")}
-                        className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.email ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -483,11 +483,11 @@ export default function CheckoutSectionNew() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-gray-200 font-medium text-base">Telefon *</Label>
+                      <Label htmlFor="phone" className="text-neutral-200 font-medium text-base">Telefon *</Label>
                       <Input
                         id="phone"
                         {...register("phone")}
-                        className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.phone ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -503,7 +503,7 @@ export default function CheckoutSectionNew() {
 
               {/* Step 2: Adres */}
               {currentStep === 2 && (
-                <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
+                <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
                   <CardHeader className="border-l-4 border-red-500 px-8 py-6">
                     <CardTitle className="flex items-center text-white text-xl">
                       <Truck className="w-6 h-6 mr-3 text-red-500" />
@@ -512,11 +512,11 @@ export default function CheckoutSectionNew() {
                   </CardHeader>
                   <CardContent className="space-y-6 px-8 pb-8">
                     <div className="space-y-2">
-                      <Label htmlFor="street" className="text-gray-200 font-medium text-base">Ulica i numer *</Label>
+                      <Label htmlFor="street" className="text-neutral-200 font-medium text-base">Ulica i numer *</Label>
                       <Input
                         id="street"
                         {...register("street")}
-                        className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.street ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -529,11 +529,11 @@ export default function CheckoutSectionNew() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="postalCode" className="text-gray-200 font-medium text-base">Kod pocztowy *</Label>
+                        <Label htmlFor="postalCode" className="text-neutral-200 font-medium text-base">Kod pocztowy *</Label>
                         <Input
                           id="postalCode"
                           {...register("postalCode")}
-                          className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.postalCode ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -545,11 +545,11 @@ export default function CheckoutSectionNew() {
                       </div>
                       
                       <div className="md:col-span-2 space-y-2">
-                        <Label htmlFor="city" className="text-gray-200 font-medium text-base">Miasto *</Label>
+                        <Label htmlFor="city" className="text-neutral-200 font-medium text-base">Miasto *</Label>
                         <Input
                           id="city"
                           {...register("city")}
-                          className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.city ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -562,11 +562,11 @@ export default function CheckoutSectionNew() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="country" className="text-gray-200 font-medium text-base">Kraj *</Label>
+                      <Label htmlFor="country" className="text-neutral-200 font-medium text-base">Kraj *</Label>
                       <Input
                         id="country"
                         {...register("country")}
-                        className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.country ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -585,37 +585,43 @@ export default function CheckoutSectionNew() {
                           checked={sameAsShipping}
                           onCheckedChange={(checked) => setValue("sameAsShipping", !!checked)}
                         />
-                        <Label htmlFor="sameAsShipping">
+                        <Label htmlFor="sameAsShipping" className="text-neutral-200">
                           Adres do faktury taki sam jak adres wysyłkowy
                         </Label>
                       </div>
 
                       {!sameAsShipping && (
                         <div className="space-y-4">
-                          <h4 className="font-medium">Adres do faktury</h4>
+                          <h4 className="font-medium text-neutral-200">Adres do faktury</h4>
                           <div>
-                            <Label htmlFor="billingStreet">Ulica i numer *</Label>
+                            <Label htmlFor="billingStreet" className="text-neutral-200">Ulica i numer *</Label>
                             <Input
                               id="billingStreet"
                               {...register("billingStreet")}
-                              className={errors.billingStreet ? "border-red-500" : ""}
+                              className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                                errors.billingStreet ? "border-red-500 bg-red-900/20" : ""
+                              }`}
                             />
                           </div>
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                              <Label htmlFor="billingPostalCode">Kod pocztowy *</Label>
+                              <Label htmlFor="billingPostalCode" className="text-neutral-200">Kod pocztowy *</Label>
                               <Input
                                 id="billingPostalCode"
                                 {...register("billingPostalCode")}
-                                className={errors.billingPostalCode ? "border-red-500" : ""}
+                                className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                                  errors.billingPostalCode ? "border-red-500 bg-red-900/20" : ""
+                                }`}
                               />
                             </div>
                             <div className="md:col-span-2">
-                              <Label htmlFor="billingCity">Miasto *</Label>
+                              <Label htmlFor="billingCity" className="text-neutral-200">Miasto *</Label>
                               <Input
                                 id="billingCity"
                                 {...register("billingCity")}
-                                className={errors.billingCity ? "border-red-500" : ""}
+                                className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                                  errors.billingCity ? "border-red-500 bg-red-900/20" : ""
+                                }`}
                               />
                             </div>
                           </div>
@@ -628,7 +634,7 @@ export default function CheckoutSectionNew() {
 
               {/* Step 3: Płatność */}
               {currentStep === 3 && (
-                <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
+                <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
                   <CardHeader className="border-l-4 border-red-500 px-8 py-6">
                     <CardTitle className="flex items-center text-white text-xl">
                       <CreditCard className="w-6 h-6 mr-3 text-red-500" />
@@ -640,7 +646,7 @@ export default function CheckoutSectionNew() {
                       <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
                         paymentMethod === "card" 
                           ? 'border-red-500 bg-red-900/30' 
-                          : 'bg-black/40 border-red-800/30 hover:border-red-500/70 hover:bg-red-900/10'
+                          : 'bg-neutral-800/40 border-neutral-700 hover:border-red-500/70 hover:bg-red-900/10'
                       }`}
                       onClick={() => setValue("paymentMethod", "card")}>
                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === "card" ? 'border-red-500 bg-red-500' : 'border-gray-400'}`}>
@@ -681,7 +687,7 @@ export default function CheckoutSectionNew() {
                       <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
                         paymentMethod === "transfer" 
                           ? 'border-red-500 bg-red-900/30' 
-                          : 'bg-black/40 border-red-800/30 hover:border-red-500/70 hover:bg-red-900/10'
+                          : 'bg-neutral-800/40 border-neutral-700 hover:border-red-500/70 hover:bg-red-900/10'
                       }`}
                       onClick={() => setValue("paymentMethod", "transfer")}>
                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === "transfer" ? 'border-red-500 bg-red-500' : 'border-gray-400'}`}>
@@ -743,21 +749,21 @@ export default function CheckoutSectionNew() {
 
                     {/* Formularz danych karty - pokazuje się tylko gdy wybrano kartę płatniczą */}
                     {paymentMethod === "card" && (
-                      <div className="mt-6 p-6 bg-gray-800/50 rounded-lg border border-gray-700 animate-in slide-in-from-top-2 duration-300">
+                      <div className="mt-6 p-6 bg-neutral-800/50 rounded-lg border border-neutral-700 animate-in slide-in-from-top-2 duration-300">
                         <h4 className="text-lg font-medium text-white mb-4 flex items-center">
                           <CreditCard className="w-5 h-5 mr-2 text-red-400" />
                           Dane karty płatniczej
                         </h4>
                         <div className="space-y-4">
                           <div>
-                            <Label htmlFor="cardNumber" className="text-gray-200 font-medium text-sm">
+                            <Label htmlFor="cardNumber" className="text-neutral-200 font-medium text-sm">
                               Numer karty *
                             </Label>
                             <Input
                               id="cardNumber"
                               {...register("cardNumber")}
                               placeholder="1234 5678 9012 3456"
-                              className="h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base"
+                              className="h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base"
                             />
                             {errors.cardNumber && (
                               <p className="text-red-400 text-sm mt-1">
@@ -768,14 +774,14 @@ export default function CheckoutSectionNew() {
 
                           <div className="grid grid-cols-2 gap-4">
                             <div>
-                              <Label htmlFor="cardExpiry" className="text-gray-200 font-medium text-sm">
+                              <Label htmlFor="cardExpiry" className="text-neutral-200 font-medium text-sm">
                                 Data ważności *
                               </Label>
                               <Input
                                 id="cardExpiry"
                                 {...register("cardExpiry")}
                                 placeholder="MM/RR"
-                                className="h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base"
+                                className="h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base"
                               />
                               {errors.cardExpiry && (
                                 <p className="text-red-400 text-sm mt-1">
@@ -785,14 +791,14 @@ export default function CheckoutSectionNew() {
                             </div>
 
                             <div>
-                              <Label htmlFor="cardCvv" className="text-gray-200 font-medium text-sm">
+                              <Label htmlFor="cardCvv" className="text-neutral-200 font-medium text-sm">
                                 CVV *
                               </Label>
                               <Input
                                 id="cardCvv"
                                 {...register("cardCvv")}
                                 placeholder="123"
-                                className="h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base"
+                                className="h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base"
                               />
                               {errors.cardCvv && (
                                 <p className="text-red-400 text-sm mt-1">
@@ -803,14 +809,14 @@ export default function CheckoutSectionNew() {
                           </div>
 
                           <div>
-                            <Label htmlFor="cardholderName" className="text-gray-200 font-medium text-sm">
+                            <Label htmlFor="cardholderName" className="text-neutral-200 font-medium text-sm">
                               Imię i nazwisko na karcie *
                             </Label>
                             <Input
                               id="cardholderName"
                               {...register("cardholderName")}
                               placeholder="Jan Kowalski"
-                              className="h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base"
+                              className="h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base"
                             />
                             {errors.cardholderName && (
                               <p className="text-red-400 text-sm mt-1">
@@ -819,7 +825,7 @@ export default function CheckoutSectionNew() {
                             )}
                           </div>
 
-                          <div className="flex items-center space-x-2 text-sm text-gray-400">
+                          <div className="flex items-center space-x-2 text-sm text-neutral-400">
                             <CheckCircle className="w-4 h-4 text-green-400" />
                             <span>Twoje dane są szyfrowane i bezpieczne</span>
                           </div>
@@ -828,11 +834,11 @@ export default function CheckoutSectionNew() {
                     )}
 
                     <div>
-                      <Label htmlFor="notes" className="text-gray-300 font-medium">Notatki (opcjonalnie)</Label>
+                      <Label htmlFor="notes" className="text-neutral-300 font-medium">Notatki (opcjonalnie)</Label>
                       <textarea
                         id="notes"
                         {...register("notes")}
-                        className="w-full p-3 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 rounded-lg resize-none"
+                        className="w-full p-3 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 rounded-lg resize-none"
                         rows={3}
                         placeholder="Dodatkowe informacje do zamówienia..."
                       />
@@ -848,11 +854,11 @@ export default function CheckoutSectionNew() {
                               id="termsAccepted"
                               checked={field.value}
                               onCheckedChange={field.onChange}
-                              className="border-gray-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                              className="border-neutral-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                             />
                           )}
                         />
-                        <Label htmlFor="termsAccepted" className="text-sm text-gray-300 leading-relaxed">
+                        <Label htmlFor="termsAccepted" className="text-sm text-neutral-300 leading-relaxed">
                           Akceptuję <Link href="/regulamin" className="text-red-400 hover:text-red-300 hover:underline">regulamin</Link> *
                         </Label>
                       </div>
@@ -866,9 +872,9 @@ export default function CheckoutSectionNew() {
                         <Checkbox
                           id="marketingAccepted"
                           {...register("marketingAccepted")}
-                          className="border-gray-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                          className="border-neutral-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                         />
-                        <Label htmlFor="marketingAccepted" className="text-sm text-gray-300 leading-relaxed">
+                        <Label htmlFor="marketingAccepted" className="text-sm text-neutral-300 leading-relaxed">
                           Chcę otrzymywać informacje o nowościach i promocjach
                         </Label>
                       </div>
@@ -939,8 +945,8 @@ export default function CheckoutSectionNew() {
 
           {/* Order Summary */}
           <div className="lg:col-span-2">
-            <Card className="sticky top-4 bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-              <CardHeader className="border-b border-gray-700 px-8 py-6">
+            <Card className="sticky top-4 bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
+              <CardHeader className="border-b border-neutral-700 px-8 py-6">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl text-white">Podsumowanie zamówienia</CardTitle>
                   <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
@@ -1081,7 +1087,7 @@ export default function CheckoutSectionNew() {
                     ))}
                   </div>
 
-                  <Separator className="bg-gray-700 my-6" />
+                  <Separator className="bg-neutral-700 my-6" />
 
                   {/* Discount Code */}
                   <div className="space-y-4">
@@ -1089,7 +1095,7 @@ export default function CheckoutSectionNew() {
                     <div className="flex space-x-3">
                       <Input 
                         placeholder="Wprowadź kod"
-                        className="h-12 bg-gray-800/60 border-gray-700 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-base"
+                        className="h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-base"
                       />
                       <Button 
                         type="button"
@@ -1103,22 +1109,22 @@ export default function CheckoutSectionNew() {
                   {/* Totals */}
                   <div className="space-y-5 pt-6">
                     <div className="flex justify-between text-lg">
-                      <span className="text-gray-300">Suma częściowa - pozycje: {items.length}</span>
+                      <span className="text-neutral-300">Suma częściowa - pozycje: {items.length}</span>
                       <span className="text-white font-medium">{PricingService.formatPrice(total)}</span>
                     </div>
                     <div className="flex justify-between text-lg">
-                      <span className="text-gray-300">Wysyłka</span>
+                      <span className="text-neutral-300">Wysyłka</span>
                       <span className="text-white font-medium">27,00 zł</span>
                     </div>
                     
-                    <div className="pt-6 border-t border-gray-700 bg-gray-800/40 p-6 rounded-lg">
+                    <div className="pt-6 border-t border-neutral-700 bg-neutral-800/40 p-6 rounded-lg">
                       <div className="flex justify-between items-center">
                         <span className="text-white font-semibold text-2xl">Razem do zapłaty</span>
                         <span className="text-white font-bold text-3xl">
                           PLN {PricingService.formatPrice(total + 27)}
                         </span>
                       </div>
-                      <p className="text-gray-400 text-lg mt-3">
+                      <p className="text-neutral-400 text-lg mt-3">
                         W tym podatki: {((total + 27) * 0.23).toFixed(2)} zł
                       </p>
                     </div>
