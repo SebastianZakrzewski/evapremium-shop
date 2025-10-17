@@ -9,6 +9,29 @@ export class OrderRepository extends BaseRepository<Order> {
     return super.supabase;
   }
 
+  // Mapuj dane z bazy (snake_case) na camelCase
+  private mapOrderFromDB(data: any): Order {
+    return {
+      ...data,
+      orderNumber: data.order_number,
+      paymentStatus: data.payment_status,
+      paymentMethod: data.payment_method,
+      trackingNumber: data.tracking_number,
+      shippingAddress: data.shipping_address,
+      billingAddress: data.billing_address,
+      shippingCost: data.shipping_cost,
+      shippedAt: data.shipped_at,
+      deliveredAt: data.delivered_at,
+      createdAt: data.created_at,
+      updatedAt: data.updated_at,
+      p24SessionId: data.p24_session_id,
+      p24OrderId: data.p24_order_id,
+      p24TransactionId: data.p24_transaction_id,
+      p24Token: data.p24_token,
+      p24MethodId: data.p24_method_id
+    };
+  }
+
   async findById(id: string): Promise<Order | null> {
     const { data, error } = await this.supabase
       .from(this.tableName)
@@ -26,7 +49,7 @@ export class OrderRepository extends BaseRepository<Order> {
       throw new Error(`Error finding order by id: ${error.message}`);
     }
 
-    return data;
+    return data ? this.mapOrderFromDB(data) : null;
   }
 
   async findByOrderNumber(orderNumber: string): Promise<Order | null> {
