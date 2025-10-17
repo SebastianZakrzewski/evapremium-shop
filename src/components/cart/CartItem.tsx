@@ -19,7 +19,8 @@ function getPolishSetType(setType: string): string {
 
 function getPolishCellType(cellType: string): string {
   const translations: Record<string, string> = {
-    'diamonds': 'Diamenty',
+    'diamonds': 'Romby',
+    'honey': 'Plaster miodu',
     'squares': 'Kwadraty',
     'hexagons': 'Sześciokąty',
     'circles': 'Koła',
@@ -42,13 +43,51 @@ function getPolishSetVariant(setVariant: string): string {
 
 function getPolishColor(color: string): string {
   const translations: Record<string, string> = {
+    // Kolory podstawowe
     'black': 'Czarny',
+    'white': 'Biały',
+    'grey': 'Szary',
     'gray': 'Szary',
     'brown': 'Brązowy',
     'beige': 'Beżowy',
     'red': 'Czerwony',
     'blue': 'Niebieski',
-    'green': 'Zielony'
+    'green': 'Zielony',
+    'yellow': 'Żółty',
+    'pink': 'Różowy',
+    'purple': 'Fioletowy',
+    'orange': 'Pomarańczowy',
+    'lime': 'Limonkowy',
+    
+    // Kolory z polskimi nazwami
+    'niebieski': 'Niebieski',
+    'czerwony': 'Czerwony',
+    'żółty': 'Żółty',
+    'kość słoniowa': 'Kość słoniowa',
+    'ciemnoniebieski': 'Ciemnoniebieski',
+    'bordowy': 'Bordowy',
+    'pomarańczowy': 'Pomarańczowy',
+    'jasnobeżowy': 'Jasnobeżowy',
+    'ciemnoszary': 'Ciemnoszary',
+    'fioletowy': 'Fioletowy',
+    'limonkowy': 'Limonkowy',
+    'beżowy': 'Beżowy',
+    'różowy': 'Różowy',
+    'czarny': 'Czarny',
+    'ciemnozielony': 'Ciemnozielony',
+    'brązowy': 'Brązowy',
+    'biały': 'Biały',
+    'jasnoszary': 'Jasnoszary',
+    'zielony': 'Zielony',
+    
+    // Kolory angielskie z mapowaniem
+    'ivory': 'Kość słoniowa',
+    'darkblue': 'Ciemnoniebieski',
+    'maroon': 'Bordowy',
+    'lightbeige': 'Jasnobeżowy',
+    'darkgrey': 'Ciemnoszary',
+    'lightgrey': 'Jasnoszary',
+    'darkgreen': 'Ciemnozielony'
   };
   return translations[color] || color;
 }
