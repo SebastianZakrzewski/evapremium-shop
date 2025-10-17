@@ -9,8 +9,8 @@ import { PricingService } from '@/lib/services/PricingService';
 // Funkcje tłumaczące angielskie opisy na polskie
 function getPolishSetType(setType: string): string {
   const translations: Record<string, string> = {
-    '3d': '3D',
-    'classic': 'Klasyczne',
+    '3d-with-rims': '3D z rantami',
+    'classic': '3D bez rantów',
     'premium': 'Premium',
     'standard': 'Standardowe'
   };
@@ -24,9 +24,33 @@ function getPolishCellType(cellType: string): string {
     'hexagons': 'Sześciokąty',
     'circles': 'Koła',
     'waves': 'Fale',
-    'dots': 'Kropki'
+    'dots': 'Kropki',
+    'rombs': 'Romby'
   };
   return translations[cellType] || cellType;
+}
+
+function getPolishSetVariant(setVariant: string): string {
+  const translations: Record<string, string> = {
+    'front': 'Starter (przód)',
+    'basic': 'Podstawowy (przód + tył)',
+    'premium': 'Premium (przód + tył + bagażnik)',
+    'complete': 'Mata do bagażnika'
+  };
+  return translations[setVariant] || setVariant;
+}
+
+function getPolishColor(color: string): string {
+  const translations: Record<string, string> = {
+    'black': 'Czarny',
+    'gray': 'Szary',
+    'brown': 'Brązowy',
+    'beige': 'Beżowy',
+    'red': 'Czerwony',
+    'blue': 'Niebieski',
+    'green': 'Zielony'
+  };
+  return translations[color] || color;
 }
 
 interface CartItemProps {
@@ -78,95 +102,114 @@ function MatCartItem({
   const carDetails = config?.carDetails;
 
   return (
-    <div className="flex items-center space-x-4 p-4 border border-gray-600 rounded-lg bg-gray-800/40 backdrop-blur">
-      {/* Obraz produktu */}
-      <div className="flex-shrink-0">
-        <div className="w-20 h-20 bg-gray-700 rounded-lg flex items-center justify-center">
-          {item.productImage ? (
-            <Image
-              src={item.productImage}
-              alt={item.productName}
-              width={80}
-              height={80}
-              className="rounded-lg object-cover"
-            />
-          ) : (
-            <div className="text-gray-300 text-xs text-center">
-              Dywaniki
+    <div className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700 rounded-xl p-5 shadow-lg hover:shadow-xl transition-all duration-300">
+      {/* Header z nazwą produktu */}
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex-1">
+          <h3 className="text-xl font-bold text-white mb-2">
+            Dywaniki samochodowe
+          </h3>
+          
+          {/* Szczegóły samochodu */}
+          {carDetails && (
+            <div className="text-sm text-neutral-300">
+              <p className="font-medium">
+                {carDetails.brand} {carDetails.model}
+                {carDetails.generation && ` ${carDetails.generation}`}
+                {carDetails.year && ` (${carDetails.year})`}
+              </p>
+              {carDetails.bodyType && (
+                <p className="text-xs text-neutral-400 capitalize mt-1">
+                  {carDetails.bodyType}
+                </p>
+              )}
             </div>
           )}
         </div>
-      </div>
 
-      {/* Szczegóły produktu */}
-      <div className="flex-1 min-w-0">
-        <h3 className="text-lg font-semibold text-white leading-tight">
-          {item.productName}
-        </h3>
-        
-        {/* Szczegóły samochodu */}
-        {carDetails && (
-          <div className="text-sm text-gray-300 mt-1">
-            <p>
-              {carDetails.brand} {carDetails.model}
-              {carDetails.generation && ` ${carDetails.generation}`}
-              {carDetails.year && ` (${carDetails.year})`}
-            </p>
-            {carDetails.bodyType && (
-              <p className="text-xs text-gray-400 capitalize">
-                {carDetails.bodyType}
-              </p>
+        {/* Obraz produktu */}
+        <div className="ml-4">
+          <div className="w-16 h-16 bg-neutral-700 rounded-lg flex items-center justify-center overflow-hidden">
+            {item.productImage ? (
+              <Image
+                src={item.productImage}
+                alt="Dywaniki samochodowe"
+                width={64}
+                height={64}
+                className="rounded-lg object-cover"
+              />
+            ) : (
+              <div className="text-neutral-400 text-xs text-center">
+                🚗
+              </div>
             )}
           </div>
-        )}
-
-        {/* Konfiguracja dywaników */}
-        {config && (
-          <div className="mt-2 space-y-1">
-            <div className="flex flex-wrap gap-2 text-xs">
-              <span className="px-2 py-1 bg-blue-900/50 text-blue-300 rounded border border-blue-700">
-                {getPolishSetType(config.setType)}
-              </span>
-              <span className="px-2 py-1 bg-green-900/50 text-green-300 rounded border border-green-700">
-                {getPolishCellType(config.cellType)}
-              </span>
-              <span className="px-2 py-1 bg-gray-700/50 text-gray-300 rounded border border-gray-600">
-                Kolor: {config.materialColor}
-              </span>
-              <span className="px-2 py-1 bg-gray-700/50 text-gray-300 rounded border border-gray-600">
-                Obszycie: {config.edgeColor}
-              </span>
-              {config.heelPad === 'yes' && (
-                <span className="px-2 py-1 bg-orange-900/50 text-orange-300 rounded border border-orange-700">
-                  Ochraniacze pięt
-                </span>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* SKU */}
-        {item.productSku && (
-          <p className="text-xs text-gray-400 mt-1">
-            SKU: {item.productSku}
-          </p>
-        )}
+        </div>
       </div>
 
-      {/* Kontrolki ilości i cena */}
-      <div className="flex flex-col items-end space-y-2">
+      {/* Konfiguracja dywaników */}
+      {config && (
+        <div className="mb-4">
+          <div className="grid grid-cols-1 gap-3">
+            {/* Wariant zestawu */}
+            <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
+              <span className="text-sm text-neutral-300">Zestaw:</span>
+              <span className="text-sm font-medium text-white">
+                {getPolishSetVariant(config.setVariant)}
+              </span>
+            </div>
+
+            {/* Typ dywaników */}
+            <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
+              <span className="text-sm text-neutral-300">Typ:</span>
+              <span className="text-sm font-medium text-white">
+                {getPolishSetType(config.setType)}
+              </span>
+            </div>
+
+            {/* Struktura komórek */}
+            <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
+              <span className="text-sm text-neutral-300">Struktura:</span>
+              <span className="text-sm font-medium text-white">
+                {getPolishCellType(config.cellType)}
+              </span>
+            </div>
+
+            {/* Kolory */}
+            <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
+              <span className="text-sm text-neutral-300">Kolor:</span>
+              <span className="text-sm font-medium text-white">
+                {getPolishColor(config.materialColor)} + {getPolishColor(config.edgeColor)} obszycie
+              </span>
+            </div>
+
+            {/* Ochraniacze pięt */}
+            {config.heelPad === 'yes' && (
+              <div className="flex items-center justify-between py-2 px-3 bg-orange-900/20 border border-orange-700/30 rounded-lg">
+                <span className="text-sm text-orange-300">Dodatki:</span>
+                <span className="text-sm font-medium text-orange-200">
+                  Ochraniacze pod piętę
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Footer z kontrolkami i ceną */}
+      <div className="flex items-center justify-between pt-4 border-t border-neutral-700">
         {/* Kontrolki ilości */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
           <Button
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity - 1)}
-            className="h-8 w-8 p-0 border-gray-600 text-gray-300 hover:bg-gray-700"
+            className="h-9 w-9 p-0 border-neutral-600 text-neutral-300 hover:bg-neutral-700 hover:text-white"
           >
             <Minus className="h-4 w-4" />
           </Button>
           
-          <span className="w-8 text-center font-medium text-white">
+          <span className="w-8 text-center font-semibold text-white text-lg">
             {item.quantity}
           </span>
           
@@ -174,31 +217,32 @@ function MatCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity + 1)}
-            className="h-8 w-8 p-0 border-gray-600 text-gray-300 hover:bg-gray-700"
+            className="h-9 w-9 p-0 border-neutral-600 text-neutral-300 hover:bg-neutral-700 hover:text-white"
           >
             <Plus className="h-4 w-4" />
           </Button>
         </div>
 
-        {/* Cena */}
-        <div className="text-right">
-          <p className="text-lg font-semibold text-white">
-            {PricingService.formatPrice(item.subtotal)}
-          </p>
-          <p className="text-sm text-gray-400">
-            {PricingService.formatPrice(item.unitPrice)} × {item.quantity}
-          </p>
-        </div>
+        {/* Cena i przycisk usuwania */}
+        <div className="flex items-center space-x-4">
+          <div className="text-right">
+            <p className="text-xl font-bold text-white">
+              {PricingService.formatPrice(item.subtotal)}
+            </p>
+            <p className="text-sm text-neutral-400">
+              {PricingService.formatPrice(item.unitPrice)} × {item.quantity}
+            </p>
+          </div>
 
-        {/* Przycisk usuwania */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onRemove}
-          className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onRemove}
+            className="text-red-400 hover:text-red-300 hover:bg-red-900/20 p-2"
+          >
+            <Trash2 className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -242,13 +286,6 @@ function AccessoryCartItem({
         <h3 className="text-lg font-semibold text-white leading-tight">
           {item.productName}
         </h3>
-        
-        {/* SKU */}
-        {item.productSku && (
-          <p className="text-sm text-gray-500 mt-1">
-            SKU: {item.productSku}
-          </p>
-        )}
       </div>
 
       {/* Kontrolki ilości i cena */}
