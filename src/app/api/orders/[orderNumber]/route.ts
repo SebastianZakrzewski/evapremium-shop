@@ -10,7 +10,17 @@ export async function GET(
   try {
     const { orderNumber } = await params;
     
-    const order = await orderService.getOrderByNumber(orderNumber);
+    // Sprawdź czy to UUID (ID) czy orderNumber
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderNumber);
+    
+    let order;
+    if (isUuid) {
+      // Wyszukaj po ID
+      order = await orderService.getOrderById(orderNumber);
+    } else {
+      // Wyszukaj po numerze zamówienia
+      order = await orderService.getOrderByNumber(orderNumber);
+    }
     
     if (!order) {
       return NextResponse.json(

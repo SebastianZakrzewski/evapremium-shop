@@ -1,18 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
+import { env } from '@/config/env';
 
 export abstract class BaseRepository<T> {
   protected get supabase() {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    console.log('🔧 BaseRepository: SUPABASE_URL:', env.supabase.url);
+    console.log('🔧 BaseRepository: SUPABASE_KEY:', env.supabase.anonKey ? '***' : 'undefined');
     
-    console.log('🔧 BaseRepository: SUPABASE_URL:', supabaseUrl);
-    console.log('🔧 BaseRepository: SUPABASE_KEY:', supabaseKey ? '***' : 'undefined');
-    
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error(`Missing Supabase environment variables: URL=${!!supabaseUrl}, KEY=${!!supabaseKey}`);
-    }
-    
-    return createClient(supabaseUrl, supabaseKey);
+    return createClient(env.supabase.url, env.supabase.anonKey);
   }
 
   protected abstract tableName: string;

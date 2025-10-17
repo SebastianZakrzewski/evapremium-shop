@@ -1,12 +1,13 @@
 import { Pool } from 'pg';
+import { env } from '@/config/env';
 
 const pool = new Pool({
-  host: process.env.PGHOST || 'localhost',
-  port: Number(process.env.PGPORT) || 5432,
-  user: process.env.PGUSER || 'eva_user',
-  password: process.env.PGPASSWORD || 'eva_password',
-  database: process.env.PGDATABASE || 'eva_db',
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  host: env.postgresql.host,
+  port: env.postgresql.port,
+  user: env.postgresql.user,
+  password: env.postgresql.password,
+  database: env.postgresql.database,
+  ssl: env.nodeEnv === 'production' ? { rejectUnauthorized: false } : false,
 });
 
 // Test connection

@@ -146,9 +146,10 @@ model Order {
   total           Decimal  @db.Decimal(10, 2)
   
   // Przelewy24 fields
-  p24SessionId    String?  // ID sesji P24
-  p24OrderId      Int?     // ID zamówienia w P24
-  p24TransactionId Int?    // ID transakcji po opłaceniu
+  p24SessionId    String?  // Session ID dla P24
+  p24Token        String?  // Token transakcji P24
+  p24OrderId      Int?     // Order ID z P24 (po weryfikacji)
+  p24MethodId     Int?     // Metoda płatności wybrana w P24
   
   // Timestamps
   notes           String?

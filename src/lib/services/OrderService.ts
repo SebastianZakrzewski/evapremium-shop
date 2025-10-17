@@ -178,36 +178,6 @@ export class OrderService {
     return await this.repository.updateStatus(orderId, status, trackingNumber);
   }
 
-  /**
-   * Zaktualizuj status płatności
-   */
-  async updatePaymentStatus(
-    orderId: string,
-    paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded'
-  ): Promise<Order> {
-    return await this.repository.updatePaymentStatus(orderId, paymentStatus);
-  }
-
-  /**
-   * Zaktualizuj dane Przelewy24
-   */
-  async updateP24Data(
-    orderId: string,
-    p24Data: {
-      p24SessionId?: string;
-      p24OrderId?: number | null;
-      p24TransactionId?: number | null;
-    }
-  ): Promise<Order> {
-    return await this.repository.updateP24Data(orderId, p24Data);
-  }
-
-  /**
-   * Znajdź zamówienie po sessionId P24
-   */
-  async getOrderBySessionId(sessionId: string): Promise<Order | null> {
-    return await this.repository.findBySessionId(sessionId);
-  }
 
   /**
    * Pobierz statystyki zamówień
@@ -285,6 +255,72 @@ export class OrderService {
         await this.accessoryService.decrementStock(item.productId, item.quantity);
       }
       // Dywaniki są produkowane na zamówienie - brak inventory
+    }
+  }
+
+  /**
+   * Pobierz zamówienie po sessionId (orderNumber)
+   */
+  async getOrderBySessionId(sessionId: string): Promise<Order | null> {
+    try {
+      console.log('🛒 OrderService: getOrderBySessionId', sessionId);
+      return await this.repository.findByOrderNumber(sessionId);
+    } catch (error) {
+      console.error('❌ OrderService: Błąd pobierania zamówienia po sessionId', error);
+      return null;
+    }
+  }
+
+  /**
+   * Zaktualizuj dane P24 w zamówieniu
+   */
+  async updateOrderP24Data(orderId: string, p24Data: {
+    p24SessionId?: string;
+    p24Token?: string;
+  }): Promise<void> {
+    try {
+      console.log('🛒 OrderService: updateOrderP24Data', { orderId, p24Data });
+      await this.repository.updateP24Data(orderId, p24Data);
+    } catch (error) {
+      console.error('❌ OrderService: Błąd aktualizacji danych P24', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Zaktualizuj status płatności
+   */
+  async updatePaymentStatus(orderId: string, status: 'pending' | 'paid' | 'failed' | 'refunded', p24Data?: {
+    p24OrderId?: number;
+    p24MethodId?: number;
+    error?: string;
+  }): Promise<void> {
+    try {
+      console.log('🛒 OrderService: updatePaymentStatus', { orderId, status, p24Data });
+      
+      const updateData: any = {
+        paymentStatus: status,
+        updatedAt: new Date()
+      };
+
+      if (p24Data) {
+        if (p24Data.p24OrderId) updateData.p24OrderId = p24Data.p24OrderId;
+        if (p24Data.p24MethodId) updateData.p24MethodId = p24Data.p24MethodId;
+        if (p24Data.error) updateData.notes = p24Data.error;
+      }
+
+      await this.repository.update(orderId, updateData);
+      
+      // Jeśli płatność została opłacona, zaktualizuj status zamówienia
+      if (status === 'paid') {
+        await this.repository.update(orderId, {
+          status: 'confirmed',
+          updatedAt: new Date()
+        });
+      }
+    } catch (error) {
+      console.error('❌ OrderService: Błąd aktualizacji statusu płatności', error);
+      throw error;
     }
   }
 }

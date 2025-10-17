@@ -240,6 +240,7 @@ export default function Chatbot() {
                 width={48}
                 height={48}
                 className="rounded-full drop-shadow-lg"
+                style={{ width: "auto", height: "auto" }}
               />
             </div>
           )}

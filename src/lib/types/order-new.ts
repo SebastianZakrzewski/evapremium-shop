@@ -13,16 +13,17 @@ export interface Order {
   tax: number;
   discount: number;
   total: number;
-  // Przelewy24 fields
-  p24SessionId?: string;
-  p24OrderId?: number;
-  p24TransactionId?: number;
   notes?: string;
   shippedAt?: Date;
   deliveredAt?: Date;
   items: OrderItem[];
   createdAt: Date;
   updatedAt: Date;
+  // Przelewy24 fields
+  p24SessionId?: string;
+  p24Token?: string;
+  p24OrderId?: number;
+  p24MethodId?: number;
 }
 
 export interface OrderItem {

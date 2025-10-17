@@ -19,7 +19,8 @@ import {
   Check,
   CreditCard as PaymentIcon,
   Banknote,
-  CheckCircle
+  CheckCircle,
+  AlertCircle
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -57,7 +58,7 @@ const checkoutSchema = z.object({
   billingCountry: z.string().optional(),
   
   // Metoda płatności
-  paymentMethod: z.enum(["card", "transfer"], {
+  paymentMethod: z.enum(["card", "transfer", "p24"], {
     required_error: "Wybierz metodę płatności"
   }),
   
@@ -116,6 +117,7 @@ export default function CheckoutSectionNew() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
     register,
@@ -129,7 +131,7 @@ export default function CheckoutSectionNew() {
     defaultValues: {
       country: "Polska",
       sameAsShipping: true,
-      paymentMethod: "card",
+      paymentMethod: "p24",
       termsAccepted: false,
       marketingAccepted: false,
     }
@@ -246,8 +248,7 @@ export default function CheckoutSectionNew() {
 
       const paymentData = {
         method: data.paymentMethod,
-        methodName: data.paymentMethod === 'card' ? 'Karta kredytowa' : 
-                   data.paymentMethod === 'transfer' ? 'Przelewy24' : 'Pobranie',
+        methodName: data.paymentMethod === 'card' ? 'Karta kredytowa' : 'Pobranie',
       };
       console.log('🛒 CheckoutSection: paymentData:', paymentData);
 
@@ -285,43 +286,47 @@ export default function CheckoutSectionNew() {
       
       debugLog('CheckoutSection: Order created successfully', order);
       
-      // Wyczyść koszyk
-      clearCart();
-      
-      // Inicjalizuj płatność Przelewy24
-      try {
-        console.log('🔄 Initiating P24 payment for order:', order.id);
-        console.log('🔄 Calling API endpoint...');
-        
-        const paymentResponse = await fetch('/api/payments/przelewy24/init', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            orderId: order.id
-          })
-        });
+      console.log('🔄 Order created successfully:', order.id);
 
-        console.log('🔄 Payment response status:', paymentResponse.status);
+      // Sprawdź metodę płatności
+      if (data.paymentMethod === 'p24') {
+        try {
+          console.log('🔄 Starting P24 payment registration...');
+          
+          // Zarejestruj płatność w P24
+          const response = await fetch('/api/payments/p24/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ orderId: order.id })
+          });
 
-        if (!paymentResponse.ok) {
-          const errorData = await paymentResponse.json();
-          console.error('❌ Payment API error:', errorData);
-          throw new Error(errorData.error || 'Payment initialization failed');
+          const result = await response.json();
+
+          if (!result.success) {
+            throw new Error(result.error || 'Błąd rejestracji płatności');
+          }
+
+          console.log('✅ P24 payment registered:', result.paymentUrl);
+          
+          // Wyczyść koszyk po udanej rejestracji
+          clearCart();
+          
+          // Przekieruj do P24
+          window.location.href = result.paymentUrl;
+          return;
+
+        } catch (error) {
+          console.error('❌ P24 payment error:', error);
+          setErrorMessage(`Błąd płatności: ${error instanceof Error ? error.message : 'Nieznany błąd'}`);
+          return;
         }
-
-        const paymentData = await paymentResponse.json();
-        console.log('✅ P24 payment initialized:', paymentData.data);
-
-        // Przekieruj do Przelewy24
-        console.log('🔄 Redirecting to P24:', paymentData.data.paymentUrl);
-        window.location.href = paymentData.data.paymentUrl;
-        return; // Zatrzymaj dalsze wykonywanie
-
-      } catch (paymentError) {
-        console.error('❌ Payment initialization error:', paymentError);
-        alert('Wystąpił błąd podczas inicjalizacji płatności. Spróbuj ponownie.');
+      } else {
+        // Dla innych metod płatności - wyczyść koszyk i przekieruj do sukcesu
+        clearCart();
+        console.log('🔄 Redirecting to success page...');
+        window.location.href = `/payment/success?orderId=${order.id}`;
         return;
       }
       
@@ -734,14 +739,14 @@ export default function CheckoutSectionNew() {
                           <Banknote className={`w-6 h-6 ${paymentMethod === "transfer" ? 'text-red-400' : 'text-gray-400'}`} />
                           <div>
                             <div className={`font-medium text-base ${paymentMethod === "transfer" ? 'text-white' : 'text-gray-200'}`}>
-                              Przelewy24
+                              Przelew bankowy
                             </div>
                             <div className={`text-sm ${paymentMethod === "transfer" ? 'text-gray-400' : 'text-gray-500'} flex items-center gap-2`}>
                               <span>Płać szybkimi przelewami, BLIK</span>
                               <div className="flex items-center gap-3 ml-3">
                                 <Image 
-                                  src="/formy_platnosci/przelewy.png" 
-                                  alt="Przelewy24" 
+                                  src="/formy_platnosci/bank.png" 
+                                  alt="Przelew bankowy" 
                                   width={40} 
                                   height={26} 
                                   className="object-contain"
@@ -775,6 +780,68 @@ export default function CheckoutSectionNew() {
                           )}
                         </div>
                       </div>
+
+                      <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
+                        paymentMethod === "p24" 
+                          ? 'border-red-500 bg-red-900/30' 
+                          : 'bg-neutral-800/40 border-neutral-700 hover:border-red-500/70 hover:bg-red-900/10'
+                      }`}
+                      onClick={() => setValue("paymentMethod", "p24")}>
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === "p24" ? 'border-red-500 bg-red-500' : 'border-gray-400'}`}>
+                          {paymentMethod === "p24" && <div className="w-2 h-2 bg-white rounded-full"></div>}
+                        </div>
+                        <div className="flex items-center space-x-4 flex-1 cursor-pointer">
+                          <CreditCard className={`w-6 h-6 ${paymentMethod === "p24" ? 'text-red-400' : 'text-gray-400'}`} />
+                          <div>
+                            <div className={`font-medium text-base ${paymentMethod === "p24" ? 'text-white' : 'text-gray-200'}`}>
+                              Przelewy24
+                            </div>
+                            <div className={`text-sm ${paymentMethod === "p24" ? 'text-gray-400' : 'text-gray-500'} flex items-center gap-2`}>
+                              <span>Karty, BLIK, przelewy, Apple Pay, Google Pay</span>
+                              <div className="flex items-center gap-3 ml-3">
+                                <Image 
+                                  src="/formy_platnosci/visa.png" 
+                                  alt="Visa" 
+                                  width={40} 
+                                  height={26} 
+                                  className="object-contain"
+                                />
+                                <Image 
+                                  src="/formy_platnosci/mastercard.png" 
+                                  alt="Mastercard" 
+                                  width={40} 
+                                  height={26} 
+                                  className="object-contain"
+                                />
+                                <Image 
+                                  src="/formy_platnosci/blik.png" 
+                                  alt="BLIK" 
+                                  width={40} 
+                                  height={26} 
+                                  className="object-contain"
+                                />
+                                <Image 
+                                  src="/formy_platnosci/apple.jpg" 
+                                  alt="Apple Pay" 
+                                  width={40} 
+                                  height={26} 
+                                  className="object-contain"
+                                />
+                                <Image 
+                                  src="/formy_platnosci/google.png" 
+                                  alt="Google Pay" 
+                                  width={40} 
+                                  height={26} 
+                                  className="object-contain"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          {paymentMethod === "p24" && (
+                            <Check className="w-5 h-5 text-red-400 ml-auto" />
+                          )}
+                        </div>
+                      </div>
                       
                     </div>
 
@@ -782,6 +849,15 @@ export default function CheckoutSectionNew() {
                       <p className="text-red-400 text-sm">
                         {errors.paymentMethod.message}
                       </p>
+                    )}
+
+                    {errorMessage && (
+                      <div className="mt-4 p-4 bg-red-900/20 border border-red-500/50 rounded-lg">
+                        <div className="flex items-center space-x-2">
+                          <AlertCircle className="w-5 h-5 text-red-400" />
+                          <p className="text-red-400 text-sm">{errorMessage}</p>
+                        </div>
+                      </div>
                     )}
 
                     {/* Formularz danych karty - pokazuje się tylko gdy wybrano kartę płatniczą */}

@@ -4,6 +4,7 @@
  * Kontroluje włączanie/wyłączanie nowych funkcjonalności.
  * Pozwala na stopniowe wdrażanie zmian i łatwe cofnięcie w razie problemów.
  */
+import { env } from '@/config/env';
 
 export const FEATURES = {
   /**
@@ -46,7 +47,7 @@ export const FEATURES = {
    * Tryb debug - dodatkowe logi w konsoli
    * @default true w development
    */
-  DEBUG_MODE: process.env.NODE_ENV === 'development',
+  DEBUG_MODE: env.nodeEnv === 'development',
 } as const;
 
 /**

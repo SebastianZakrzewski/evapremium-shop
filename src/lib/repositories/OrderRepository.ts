@@ -155,42 +155,6 @@ export class OrderRepository extends BaseRepository<Order> {
     return data;
   }
 
-  async updateP24Data(
-    id: string,
-    p24Data: {
-      p24SessionId?: string;
-      p24OrderId?: number | null;
-      p24TransactionId?: number | null;
-    }
-  ): Promise<Order> {
-    const updateData: any = {};
-    
-    if (p24Data.p24SessionId !== undefined) {
-      updateData.p24_session_id = p24Data.p24SessionId;
-    }
-    if (p24Data.p24OrderId !== undefined) {
-      updateData.p24_order_id = p24Data.p24OrderId;
-    }
-    if (p24Data.p24TransactionId !== undefined) {
-      updateData.p24_transaction_id = p24Data.p24TransactionId;
-    }
-
-    const { data, error } = await this.supabase
-      .from(this.tableName)
-      .update(updateData)
-      .eq('id', id)
-      .select(`
-        *,
-        order_items(*)
-      `)
-      .single();
-
-    if (error) {
-      throw new Error(`Error updating P24 data: ${error.message}`);
-    }
-
-    return data;
-  }
 
   async findBySessionId(sessionId: string): Promise<Order | null> {
     const { data, error } = await this.supabase
@@ -199,7 +163,7 @@ export class OrderRepository extends BaseRepository<Order> {
         *,
         order_items(*)
       `)
-      .eq('p24_session_id', sessionId)
+      .eq('session_id', sessionId)
       .single();
 
     if (error) {
@@ -258,5 +222,26 @@ export class OrderRepository extends BaseRepository<Order> {
     });
 
     return stats;
+  }
+
+  /**
+   * Zaktualizuj dane P24 w zamówieniu
+   */
+  async updateP24Data(orderId: string, p24Data: {
+    p24SessionId?: string;
+    p24Token?: string;
+  }): Promise<void> {
+    const { error } = await this.supabase
+      .from(this.tableName)
+      .update({
+        p24_session_id: p24Data.p24SessionId,
+        p24_token: p24Data.p24Token,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', orderId);
+
+    if (error) {
+      throw new Error(`Error updating P24 data: ${error.message}`);
+    }
   }
 }

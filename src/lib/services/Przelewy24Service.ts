@@ -1,266 +1,265 @@
-import crypto from 'crypto';
-import { P24_CONFIG } from '@/lib/config/przelewy24';
-import {
-  P24TransactionRequest,
-  P24TransactionResponse,
-  P24VerifyRequest,
-  P24VerifyResponse,
-  P24StatusResponse,
-  PaymentStatus
-} from '@/lib/types/przelewy24';
+/**
+ * Serwis Przelewy24
+ * 
+ * Obsługuje komunikację z API Przelewy24:
+ * - Rejestracja transakcji
+ * - Weryfikacja płatności
+ * - Generowanie podpisów
+ * 
+ * Na podstawie testów połączenia i dokumentacji P24 API 3.2
+ */
+
+import crypto from 'crypto'
+import { P24Config, P24TransactionData, P24PaymentResult, P24VerificationResult, P24Error } from '@/lib/types/przelewy24'
+import { P24RegisterRequest, P24VerifyRequest, P24RegisterResponse, P24VerifyResponse, P24WebhookData } from '@/lib/types/przelewy24'
+import { getP24Config } from '@/lib/config/przelewy24'
 
 export class Przelewy24Service {
-  private baseUrl: string;
-  private merchantId: number;
-  private posId: number;
-  private apiKey: string;
-  private crcKey: string;
+  private config: P24Config
 
   constructor() {
-    this.baseUrl = P24_CONFIG.baseUrl;
-    this.merchantId = P24_CONFIG.merchantId;
-    this.posId = P24_CONFIG.posId;
-    this.apiKey = P24_CONFIG.apiKey;
-    this.crcKey = P24_CONFIG.crcKey;
-    
-    console.log('🔧 P24 Service initialized:', {
-      baseUrl: this.baseUrl,
-      merchantId: this.merchantId,
-      posId: this.posId,
-      apiKey: this.apiKey ? '***' : 'MISSING',
-      crcKey: this.crcKey ? '***' : 'MISSING'
-    });
+    this.config = getP24Config()
   }
 
   /**
-   * Generuje podpis CRC dla danych
+   * Generuje podpis zgodny z P24 API 3.2
+   * Format: SHA384(JSON.stringify({sessionId, merchantId, amount, currency, crc}))
    */
-  private generateSign(data: Record<string, any>): string {
-    const sortedKeys = Object.keys(data).sort();
-    const dataString = sortedKeys
-      .map(key => `${key}=${data[key]}`)
-      .join('&');
-    
-    return crypto
-      .createHash('sha384')
-      .update(dataString + this.crcKey)
-      .digest('hex');
+  private generateSign(data: {
+    sessionId: string
+    merchantId: number
+    amount: number
+    currency: string
+  }): string {
+    const signData = {
+      sessionId: data.sessionId,
+      merchantId: data.merchantId,
+      amount: data.amount,
+      currency: data.currency,
+      crc: this.config.crcKey
+    }
+
+    const jsonString = JSON.stringify(signData)
+    return crypto.createHash('sha384').update(jsonString).digest('hex')
   }
 
   /**
-   * Rejestruje transakcję w Przelewy24
+   * Generuje nagłówek Basic Auth dla P24 API
+   * Format: posId:reportKey (nie merchantId:apiKey!)
    */
-  async registerTransaction(params: {
-    sessionId: string;
-    amount: number; // w groszach
-    currency: string;
-    description: string;
-    email: string;
-    urlReturn: string;
-    urlStatus: string;
-  }): Promise<{ token: string; sessionId: string }> {
-    const requestData: P24TransactionRequest = {
-      merchantId: this.merchantId,
-      posId: this.posId,
-      sessionId: params.sessionId,
-      amount: params.amount,
-      currency: params.currency,
-      description: params.description,
-      email: params.email,
-      country: 'PL',
-      language: 'pl',
-      urlReturn: params.urlReturn,
-      urlStatus: params.urlStatus,
-      timeLimit: 15, // 15 minut
-      channel: 16, // wszystkie kanały
-      waitForResult: true,
-      regulationAccept: true,
-      mobileLib: false,
-      sig: '' // będzie ustawiony po wygenerowaniu
-    };
+  private getBasicAuthHeader(): string {
+    const credentials = Buffer.from(`${this.config.posId}:${this.config.reportKey}`).toString('base64')
+    return `Basic ${credentials}`
+  }
 
-    // Generuj podpis
-    const { sig, ...dataForSign } = requestData;
-    requestData.sig = this.generateSign(dataForSign);
-
-    console.log('🔄 P24: Registering transaction:', {
-      sessionId: params.sessionId,
-      amount: params.amount,
-      merchantId: this.merchantId,
-      posId: this.posId,
-      apiKey: this.apiKey ? '***' : 'MISSING',
-      crcKey: this.crcKey ? '***' : 'MISSING'
-    });
-
-    console.log('🔧 P24: Auth header:', {
-      merchantId: this.merchantId,
-      apiKey: this.apiKey ? '***' : 'MISSING',
-      authString: `${this.merchantId}:${this.apiKey}`,
-      base64Auth: Buffer.from(`${this.merchantId}:${this.apiKey}`).toString('base64')
-    });
-
+  /**
+   * Rejestruje transakcję w P24
+   */
+  async registerTransaction(transactionData: P24TransactionData): Promise<P24PaymentResult> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/v1/transaction/register`, {
+      console.log('🔄 P24Service: Rejestracja transakcji', transactionData)
+      console.log('🔄 P24Service: Konfiguracja P24', {
+        merchantId: this.config.merchantId,
+        posId: this.config.posId,
+        environment: this.config.environment,
+        apiUrl: this.config.apiUrl
+      })
+
+      // Konwertuj kwotę na grosze (P24 wymaga)
+      const amountInCents = Math.round(transactionData.amount * 100)
+      console.log('🔄 P24Service: Kwota w groszach', amountInCents)
+
+      // Generuj podpis
+      const sign = this.generateSign({
+        sessionId: transactionData.sessionId,
+        merchantId: this.config.merchantId,
+        amount: amountInCents,
+        currency: transactionData.currency
+      })
+      console.log('🔄 P24Service: Wygenerowany podpis', sign)
+
+      // Przygotuj dane żądania
+      const requestData: P24RegisterRequest = {
+        merchantId: this.config.merchantId,
+        posId: this.config.posId,
+        sessionId: transactionData.sessionId,
+        amount: amountInCents,
+        currency: transactionData.currency,
+        description: transactionData.description,
+        email: transactionData.email,
+        country: transactionData.country,
+        urlReturn: this.config.urlReturn,
+        urlStatus: this.config.urlStatus,
+        sign
+      }
+
+      console.log('🔄 P24Service: Dane żądania', requestData)
+
+      // Wyślij żądanie do P24
+      const response = await fetch(`${this.config.apiUrl}/transaction/register`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${Buffer.from(`${this.merchantId}:${this.apiKey}`).toString('base64')}`
+          'Authorization': this.getBasicAuthHeader(),
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(requestData)
-      });
+      })
+
+      const responseData = await response.json()
+      console.log('🔄 P24Service: Odpowiedź P24', responseData)
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ P24: Register transaction failed:', {
-          status: response.status,
-          statusText: response.statusText,
-          error: errorText
-        });
-        throw new Error(`P24 register failed: ${response.status} ${errorText}`);
+        throw new P24Error(
+          `Błąd rejestracji P24: ${responseData.error || response.statusText}`,
+          'REGISTER_ERROR',
+          response.status
+        )
       }
 
-      const result: P24TransactionResponse = await response.json();
-      
-      if (result.responseCode !== '0') {
-        throw new Error(`P24 register error: ${result.responseCode}`);
+      if (responseData.responseCode !== 0) {
+        throw new P24Error(
+          `P24 zwróciło błąd: ${responseData.error}`,
+          'P24_ERROR',
+          responseData.responseCode
+        )
       }
 
-      console.log('✅ P24: Transaction registered successfully:', result.data.token);
+      // Zwróć URL płatności
+      const paymentUrl = `${this.config.apiUrl.replace('/api/v1', '')}/trnRequest/${responseData.data.token}`
+
+      return {
+        success: true,
+        token: responseData.data.token,
+        paymentUrl
+      }
+
+    } catch (error) {
+      console.error('❌ P24Service: Błąd rejestracji', error)
       
       return {
-        token: result.data.token,
-        sessionId: params.sessionId
-      };
-    } catch (error) {
-      console.error('❌ P24: Register transaction error:', error);
-      throw error;
+        success: false,
+        error: error instanceof Error ? error.message : 'Nieznany błąd rejestracji'
+      }
     }
   }
 
   /**
-   * Weryfikuje transakcję po callback
+   * Weryfikuje transakcję po webhook
    */
-  async verifyTransaction(params: {
-    sessionId: string;
-    orderId: number;
-    amount: number;
-    currency: string;
-  }): Promise<{ status: string; error?: string }> {
-    const requestData: P24VerifyRequest = {
-      merchantId: this.merchantId,
-      posId: this.posId,
-      sessionId: params.sessionId,
-      amount: params.amount,
-      currency: params.currency,
-      orderId: params.orderId,
-      sig: '' // będzie ustawiony po wygenerowaniu
-    };
-
-    // Generuj podpis
-    const { sig, ...dataForSign } = requestData;
-    requestData.sig = this.generateSign(dataForSign);
-
-    console.log('🔄 P24: Verifying transaction:', {
-      sessionId: params.sessionId,
-      orderId: params.orderId,
-      amount: params.amount
-    });
-
+  async verifyTransaction(sessionId: string, orderId: number, amount: number): Promise<P24VerificationResult> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/v1/transaction/verify`, {
+      console.log('🔄 P24Service: Weryfikacja transakcji', { sessionId, orderId, amount })
+
+      // Konwertuj kwotę na grosze
+      const amountInCents = Math.round(amount * 100)
+
+      // Generuj podpis
+      const sign = this.generateSign({
+        sessionId,
+        merchantId: this.config.merchantId,
+        amount: amountInCents,
+        currency: 'PLN'
+      })
+
+      // Przygotuj dane żądania
+      const requestData: P24VerifyRequest = {
+        merchantId: this.config.merchantId,
+        posId: this.config.posId,
+        sessionId,
+        amount: amountInCents,
+        currency: 'PLN',
+        orderId,
+        sign
+      }
+
+      console.log('🔄 P24Service: Dane weryfikacji', requestData)
+
+      // Wyślij żądanie do P24
+      const response = await fetch(`${this.config.apiUrl}/transaction/verify`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${Buffer.from(`${this.merchantId}:${this.apiKey}`).toString('base64')}`
+          'Authorization': this.getBasicAuthHeader(),
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(requestData)
-      });
+      })
+
+      const responseData = await response.json()
+      console.log('🔄 P24Service: Odpowiedź weryfikacji', responseData)
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ P24: Verify transaction failed:', {
-          status: response.status,
-          statusText: response.statusText,
-          error: errorText
-        });
-        throw new Error(`P24 verify failed: ${response.status} ${errorText}`);
+        throw new P24Error(
+          `Błąd weryfikacji P24: ${responseData.error || response.statusText}`,
+          'VERIFY_ERROR',
+          response.status
+        )
       }
 
-      const result: P24VerifyResponse = await response.json();
-      
-      console.log('✅ P24: Transaction verified:', result.data);
+      if (responseData.responseCode !== 0) {
+        throw new P24Error(
+          `P24 zwróciło błąd weryfikacji: ${responseData.error}`,
+          'P24_VERIFY_ERROR',
+          responseData.responseCode
+        )
+      }
+
+      return {
+        success: true,
+        verified: true,
+        orderId: responseData.data.orderId,
+        methodId: responseData.data.methodId
+      }
+
+    } catch (error) {
+      console.error('❌ P24Service: Błąd weryfikacji', error)
       
       return {
-        status: result.data.status,
-        error: result.data.error
-      };
-    } catch (error) {
-      console.error('❌ P24: Verify transaction error:', error);
-      throw error;
+        success: false,
+        verified: false,
+        error: error instanceof Error ? error.message : 'Nieznany błąd weryfikacji'
+      }
     }
   }
 
   /**
-   * Sprawdza status transakcji
+   * Weryfikuje podpis webhook (zabezpieczenie)
    */
-  async getTransactionStatus(sessionId: string): Promise<PaymentStatus> {
-    console.log('🔄 P24: Getting transaction status:', sessionId);
-
+  verifyWebhookSignature(webhookData: P24WebhookData): boolean {
     try {
-      const response = await fetch(`${this.baseUrl}/api/v1/transaction/by/sessionId/${sessionId}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Basic ${Buffer.from(`${this.merchantId}:${this.apiKey}`).toString('base64')}`
-        }
-      });
+      const expectedSign = this.generateSign({
+        sessionId: webhookData.sessionId,
+        merchantId: webhookData.merchantId,
+        amount: webhookData.amount,
+        currency: webhookData.currency
+      })
 
-      if (!response.ok) {
-        console.error('❌ P24: Get status failed:', response.status);
-        return 'failed';
-      }
-
-      const result: P24StatusResponse = await response.json();
-      
-      if (result.responseCode !== '0') {
-        console.error('❌ P24: Status check error:', result.responseCode);
-        return 'failed';
-      }
-
-      console.log('✅ P24: Transaction status:', result.data.status);
-      
-      // Mapuj statusy P24 na nasze statusy
-      switch (result.data.status) {
-        case 'PENDING':
-          return 'pending';
-        case 'SUCCESS':
-          return 'paid';
-        case 'ERROR':
-        case 'CANCELLED':
-          return 'failed';
-        default:
-          return 'pending';
-      }
+      return expectedSign === webhookData.sign
     } catch (error) {
-      console.error('❌ P24: Get status error:', error);
-      return 'failed';
+      console.error('❌ P24Service: Błąd weryfikacji podpisu webhook', error)
+      return false
     }
   }
 
   /**
-   * Buduje URL do płatności
+   * Pobiera URL płatności na podstawie tokenu
    */
-  buildPaymentUrl(token: string): string {
-    return `${this.baseUrl}/trnRequest/${token}`;
+  getPaymentUrl(token: string): string {
+    return `${this.config.apiUrl.replace('/api/v1', '')}/trnRequest/${token}`
   }
 
   /**
-   * Waliduje podpis CRC z callback
+   * Sprawdza czy konfiguracja jest poprawna
    */
-  validateCallbackSignature(data: Record<string, any>): boolean {
-    const receivedSig = data.sig;
-    const { sig, ...dataForSign } = data;
-    const expectedSig = this.generateSign(dataForSign);
-    
-    return receivedSig === expectedSig;
+  validateConfig(): boolean {
+    try {
+      getP24Config()
+      return true
+    } catch (error) {
+      console.error('❌ P24Service: Nieprawidłowa konfiguracja', error)
+      return false
+    }
   }
 }
+
+// Eksportuj instancję singleton
+export const p24Service = new Przelewy24Service()

@@ -96,30 +96,12 @@ const shippingMethods = [
   },
 ]
 
-// Metody płatności
+// Metody płatności - wszystkie przez Przelewy24
 const paymentMethods = [
   {
-    id: "card",
-    name: "Karta płatnicza",
-    description: "Visa, Mastercard, American Express",
-    icon: CreditCard,
-  },
-  {
-    id: "blik",
-    name: "BLIK",
-    description: "Płatność przez aplikację bankową",
-    icon: CreditCard,
-  },
-  {
     id: "p24",
-    name: "Przelewy24",
-    description: "Przelew online",
-    icon: CreditCard,
-  },
-  {
-    id: "cod",
-    name: "Płatność przy odbiorze",
-    description: "Zapłać kurierowi przy odbiorze",
+    name: "Przelew Bankowy",
+    description: "Karty, BLIK, przelewy, Apple Pay, Google Pay",
     icon: CreditCard,
   },
 ]
@@ -190,9 +172,30 @@ export function CheckoutSection() {
       sameAsShipping: true,
       termsAccepted: false,
       newsletter: false,
+      paymentMethod: 'p24', // Domyślnie P24 (jedyna opcja)
     },
     mode: "onBlur", // Lepsze UX - walidacja przy blur
   })
+
+  // Wymuś ustawienie paymentMethod na p24 natychmiast
+  React.useEffect(() => {
+    console.log('🔄 Force setting paymentMethod to p24')
+    setValue('paymentMethod', 'p24')
+    // Wyczyść localStorage z starymi danymi płatności
+    try {
+      const savedData = localStorage.getItem('checkout-data')
+      if (savedData) {
+        const parsedData = JSON.parse(savedData)
+        if (parsedData.paymentMethod && parsedData.paymentMethod !== 'p24') {
+          console.log('🧹 Force cleaning old paymentMethod from localStorage:', parsedData.paymentMethod)
+          delete parsedData.paymentMethod
+          localStorage.setItem('checkout-data', JSON.stringify(parsedData))
+        }
+      }
+    } catch (error) {
+      console.log('Error cleaning localStorage:', error)
+    }
+  }, [])
 
   const sameAsShipping = watch("sameAsShipping")
   const selectedShipping = watch("shippingMethod")
@@ -205,6 +208,31 @@ export function CheckoutSection() {
 
   // Watch all form fields for real-time validation
   const watchedFields = watch()
+  
+  // Debug log dla paymentMethod
+  useEffect(() => {
+    console.log('🔄 Payment method changed:', watchedFields.paymentMethod);
+  }, [watchedFields.paymentMethod])
+
+  // Ustaw paymentMethod na P24 (jedyna opcja) - na początku
+  useEffect(() => {
+    console.log('🔄 Setting paymentMethod to p24')
+    setValue('paymentMethod', 'p24')
+    // Wyczyść localStorage z starymi danymi płatności
+    const savedData = localStorage.getItem('checkout-data')
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData)
+        if (parsedData.paymentMethod && parsedData.paymentMethod !== 'p24') {
+          console.log('🧹 Cleaning old paymentMethod from localStorage:', parsedData.paymentMethod)
+          delete parsedData.paymentMethod
+          localStorage.setItem('checkout-data', JSON.stringify(parsedData))
+        }
+      } catch (error) {
+        console.log('Error cleaning localStorage:', error)
+      }
+    }
+  }, [setValue])
 
   // Auto-save functionality
   useEffect(() => {
@@ -212,9 +240,19 @@ export function CheckoutSection() {
     if (savedData && currentStep === 1) {
       try {
         const parsedData = JSON.parse(savedData)
+        console.log('🔄 Loading data from localStorage:', parsedData)
         Object.keys(parsedData).forEach(key => {
-          setValue(key as keyof CheckoutFormData, parsedData[key])
+          // Nie nadpisuj paymentMethod jeśli jest tylko jedna opcja (P24)
+          if (key !== 'paymentMethod') {
+            console.log('🔄 Setting field from localStorage:', key, parsedData[key])
+            setValue(key as keyof CheckoutFormData, parsedData[key])
+          } else {
+            console.log('🔄 Skipping paymentMethod from localStorage:', parsedData[key])
+          }
         })
+        // Wymuś ustawienie paymentMethod na p24 po załadowaniu danych
+        console.log('🔄 Force setting paymentMethod to p24 after localStorage load')
+        setValue('paymentMethod', 'p24')
       } catch (error) {
         console.log('No saved data found')
       }
@@ -341,6 +379,8 @@ export function CheckoutSection() {
 
   const onSubmit = async (data: CheckoutFormData) => {
     console.log('🚀 onSubmit called with data:', data);
+    console.log('🚀 Payment method in onSubmit:', data.paymentMethod);
+    console.log('🚀 Current watched payment method:', watchedFields.paymentMethod);
     console.log('🚀 cartItems:', cartItems);
     setIsLoading(true)
     setErrorMessage("")
@@ -377,9 +417,7 @@ export function CheckoutSection() {
       // Przygotuj dane płatności
       const paymentData: PaymentData = {
         method: data.paymentMethod,
-        methodName: data.paymentMethod === 'card' ? 'Karta kredytowa' : 
-                   data.paymentMethod === 'transfer' ? 'Przelew bankowy' : 
-                   data.paymentMethod === 'blik' ? 'BLIK' : 'Pobranie'
+        methodName: 'Przelew Bankowy (Przelewy24)'
       };
 
       // Utwórz i zapisz zamówienie (createOrder już zapisuje do bazy)
@@ -390,45 +428,52 @@ export function CheckoutSection() {
         paymentData
       );
 
-      // Wyczyść koszyk po udanym zamówieniu
-      clearCart();
+      console.log('🔄 Order created successfully:', savedOrder.id);
 
-      // Inicjalizuj płatność Przelewy24
-      try {
-        console.log('🔄 Initiating P24 payment for order:', savedOrder.id);
-        console.log('🔄 Calling API endpoint...');
-        
-        const paymentResponse = await fetch('/api/payments/przelewy24/init', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            orderId: savedOrder.id
-          })
-        });
+      // Integracja z Przelewy24
+      console.log('🔄 Payment method:', data.paymentMethod);
+      if (data.paymentMethod === 'p24') {
+        try {
+          console.log('🔄 Starting P24 payment registration...');
+          
+          // Zarejestruj płatność w P24
+          const response = await fetch('/api/payments/p24/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ orderId: savedOrder.id })
+          });
 
-        console.log('🔄 Payment response status:', paymentResponse.status);
+          const result = await response.json();
 
-        if (!paymentResponse.ok) {
-          const errorData = await paymentResponse.json();
-          console.error('❌ Payment API error:', errorData);
-          throw new Error(errorData.error || 'Payment initialization failed');
+          if (!result.success) {
+            throw new Error(result.error || 'Błąd rejestracji płatności');
+          }
+
+          console.log('✅ P24 payment registered:', result.paymentUrl);
+          
+          // Wyczyść koszyk po udanej rejestracji
+          clearCart();
+          
+          // Przekieruj do P24
+          window.location.href = result.paymentUrl;
+          return;
+
+        } catch (error) {
+          console.error('❌ P24 payment error:', error);
+          setErrorMessage(`Błąd płatności: ${error instanceof Error ? error.message : 'Nieznany błąd'}`);
+          return;
         }
-
-        const paymentData = await paymentResponse.json();
-        console.log('✅ P24 payment initialized:', paymentData.data);
-
-        // Przekieruj do Przelewy24
-        console.log('🔄 Redirecting to P24:', paymentData.data.paymentUrl);
-        window.location.href = paymentData.data.paymentUrl;
-        return; // Zatrzymaj dalsze wykonywanie
-
-      } catch (paymentError) {
-        console.error('❌ Payment initialization error:', paymentError);
-        setErrorMessage("Wystąpił błąd podczas inicjalizacji płatności. Spróbuj ponownie.");
+      } else {
+        console.log('❌ Payment method is not p24:', data.paymentMethod);
+        setErrorMessage(`Nieprawidłowa metoda płatności: ${data.paymentMethod}`);
         return;
       }
+
+      // Fallback - nie powinno się zdarzyć
+      console.log('⚠️ Unknown payment method:', data.paymentMethod);
+      setErrorMessage('Nieznana metoda płatności');
 
       // Aktualizuj słownik z danymi klienta (stara logika - do usunięcia w przyszłości)
       if (configuratorDictionary) {
@@ -454,7 +499,8 @@ export function CheckoutSection() {
           },
           payment: {
             method: data.paymentMethod,
-            methodName: data.paymentMethod === 'card' ? 'Karta kredytowa' : 
+            methodName: data.paymentMethod === 'p24' ? 'Przelew Bankowy (P24)' : 
+                       data.paymentMethod === 'card' ? 'Karta kredytowa' : 
                        data.paymentMethod === 'transfer' ? 'Przelew bankowy' : 
                        data.paymentMethod === 'blik' ? 'BLIK' : 'Pobranie',
             isComplete: true,
@@ -485,8 +531,8 @@ export function CheckoutSection() {
         
         // Zapisz dane używając HybridSessionManager
         const sessionIdParam = new URLSearchParams(window.location.search).get('sessionId');
-        if (sessionIdParam && HybridSessionManager.isValidSession(sessionIdParam)) {
-          await HybridSessionManager.saveData(sessionIdParam, updatedDictionary, 'order');
+        if (sessionIdParam && HybridSessionManager.isValidSession(sessionIdParam as string)) {
+          await HybridSessionManager.saveData(sessionIdParam as string, updatedDictionary, 'order');
           console.log('💾 Zapisano dane zamówienia w HybridSessionManager');
         }
         
@@ -1055,7 +1101,7 @@ export function CheckoutSection() {
                       </div>
                       <h3 className="text-xl font-bold text-white mb-2">🎯 Wszystko gotowe!</h3>
                       <p className="text-gray-300 mb-4">
-                        👀 Sprawdź powyższe dane i kliknij &quot;Zamawiam i płacę&quot; aby sfinalizować zamówienie.
+                        👀 Sprawdź powyższe dane i kliknij &quot;Zapłać teraz&quot; aby sfinalizować zamówienie.
                       </p>
                       <div className="bg-black/30 rounded-lg p-4 border border-gray-700">
                         <p className="text-white font-medium">💰 Łączna kwota do zapłaty:</p>
@@ -1150,7 +1196,7 @@ export function CheckoutSection() {
                       </>
                     ) : (
                                           <>
-                      💳 Zamawiam i płacę
+                      💳 Zapłać teraz
                       <CreditCard className="w-4 h-4 ml-2" />
                     </>
                     )}

@@ -1,50 +1,51 @@
-import { z } from 'zod';
+/**
+ * Konfiguracja Przelewy24
+ * 
+ * Ładuje zmienne środowiskowe i przygotowuje konfigurację dla P24 API
+ */
 
-// Schema walidacji zmiennych środowiskowych Przelewy24
-const przelewy24ConfigSchema = z.object({
-  P24_MERCHANT_ID: z.string().min(1, 'P24_MERCHANT_ID is required'),
-  P24_POS_ID: z.string().min(1, 'P24_POS_ID is required'),
-  P24_API_KEY: z.string().min(1, 'P24_API_KEY is required'),
-  P24_CRC_KEY: z.string().min(1, 'P24_CRC_KEY is required'),
-  P24_ENVIRONMENT: z.enum(['sandbox', 'production']).default('sandbox'),
-  P24_WEBHOOK_SECRET: z.string().optional(),
-});
+import { P24Config } from '@/lib/types/przelewy24'
 
-// Walidacja i eksport konfiguracji
-const config = przelewy24ConfigSchema.parse({
-  P24_MERCHANT_ID: process.env.P24_MERCHANT_ID || 'ef0b16e0',
-  P24_POS_ID: process.env.P24_POS_ID || 'ef0b16e0',
-  P24_API_KEY: process.env.P24_API_KEY || '1522d8628486e9e78a320967921470bc',
-  P24_CRC_KEY: process.env.P24_CRC_KEY || 'c99c68557cffe9f8',
-  P24_ENVIRONMENT: process.env.P24_ENVIRONMENT || 'sandbox',
-  P24_WEBHOOK_SECRET: process.env.P24_WEBHOOK_SECRET || 'test_webhook_secret',
-});
+// Walidacja zmiennych środowiskowych
+function validateEnvVars() {
+  const required = [
+    'P24_MERCHANT_ID',
+    'P24_POS_ID', 
+    'P24_CRC_KEY',
+    'P24_API_KEY',
+    'P24_REPORT_KEY',
+    'P24_ENVIRONMENT',
+    'P24_URL_RETURN',
+    'P24_URL_STATUS'
+  ]
 
-// Debug: sprawdź czy dane są prawidłowo ładowane
-console.log('🔧 P24 Config Debug:', {
-  P24_MERCHANT_ID: process.env.P24_MERCHANT_ID ? 'LOADED' : 'FALLBACK',
-  P24_POS_ID: process.env.P24_POS_ID ? 'LOADED' : 'FALLBACK',
-  P24_API_KEY: process.env.P24_API_KEY ? 'LOADED' : 'FALLBACK',
-  P24_CRC_KEY: process.env.P24_CRC_KEY ? 'LOADED' : 'FALLBACK',
-  P24_ENVIRONMENT: process.env.P24_ENVIRONMENT ? 'LOADED' : 'FALLBACK',
-});
+  const missing = required.filter(key => !process.env[key])
+  
+  if (missing.length > 0) {
+    throw new Error(`Brakujące zmienne środowiskowe P24: ${missing.join(', ')}`)
+  }
+}
 
-// URL-e API w zależności od środowiska
-export const P24_URLS = {
-  sandbox: 'https://sandbox.przelewy24.pl',
-  production: 'https://secure.przelewy24.pl',
-} as const;
+// Pobierz konfigurację P24
+export function getP24Config(): P24Config {
+  validateEnvVars()
 
-export const P24_CONFIG = {
-  merchantId: parseInt(config.P24_MERCHANT_ID, 16), // Hex string -> decimal
-  posId: parseInt(config.P24_POS_ID, 16), // Hex string -> decimal
-  apiKey: config.P24_API_KEY,
-  crcKey: config.P24_CRC_KEY,
-  environment: config.P24_ENVIRONMENT,
-  webhookSecret: config.P24_WEBHOOK_SECRET,
-  baseUrl: P24_URLS[config.P24_ENVIRONMENT],
-} as const;
+  const environment = process.env.P24_ENVIRONMENT as 'sandbox' | 'production'
+  
+  return {
+    merchantId: parseInt(process.env.P24_MERCHANT_ID!),
+    posId: parseInt(process.env.P24_POS_ID!),
+    crcKey: process.env.P24_CRC_KEY!,
+    apiKey: process.env.P24_API_KEY!,
+    reportKey: process.env.P24_REPORT_KEY!,
+    environment,
+    urlReturn: process.env.P24_URL_RETURN!,
+    urlStatus: process.env.P24_URL_STATUS!,
+    apiUrl: environment === 'sandbox' 
+      ? 'https://sandbox.przelewy24.pl/api/v1'
+      : 'https://secure.przelewy24.pl/api/v1'
+  }
+}
 
-// Typy dla konfiguracji
-export type Przelewy24Config = typeof P24_CONFIG;
-export type Przelewy24Environment = keyof typeof P24_URLS;
+// Eksportuj domyślną konfigurację
+export const P24_CONFIG = getP24Config()

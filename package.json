@@ -25,6 +25,7 @@
     "backup:create": "node scripts/backup.js",
     "backup:list": "node scripts/backup.js --list",
     "backup:restore": "node scripts/backup.js --restore",
+    "test:p24": "tsx scripts/test-p24-connection.ts",
     "docker:dev": "docker-compose up -d",
     "docker:build": "docker build -t eva-website .",
     "docker:stop": "docker-compose down",
@@ -93,6 +94,7 @@
     "postcss": "^8.5.6",
     "prisma": "^5.7.1",
     "tailwindcss": "^4.1.10",
+    "tsx": "^4.7.0",
     "typescript": "^5",
     "vite": "^5.0.8",
     "vitest": "^1.0.4"

@@ -1,104 +1,139 @@
-// Typy dla Przelewy24 API
+/**
+ * Typy TypeScript dla integracji z Przelewy24 API
+ * 
+ * Na podstawie dokumentacji P24 API 3.2 i testów połączenia
+ */
 
-export interface P24TransactionRequest {
-  merchantId: number;
-  posId: number;
-  sessionId: string;
-  amount: number; // w groszach
-  currency: string;
-  description: string;
-  email: string;
-  country: string;
-  language: string;
-  urlReturn: string;
-  urlStatus: string;
-  timeLimit?: number;
-  channel?: number;
-  waitForResult?: boolean;
-  regulationAccept?: boolean;
-  shipping?: number;
-  transferLabel?: string;
-  mobileLib?: boolean;
-  sig: string; // podpis CRC
-}
+// ===========================================
+// REQUEST TYPES
+// ===========================================
 
-export interface P24TransactionResponse {
-  data: {
-    token: string;
-  };
-  responseCode: string;
+export interface P24RegisterRequest {
+  merchantId: number
+  posId: number
+  sessionId: string
+  amount: number
+  currency: string
+  description: string
+  email: string
+  country: string
+  urlReturn: string
+  urlStatus: string
+  sign: string
 }
 
 export interface P24VerifyRequest {
-  merchantId: number;
-  posId: number;
-  sessionId: string;
-  amount: number;
-  currency: string;
-  orderId: number;
-  sig: string;
+  merchantId: number
+  posId: number
+  sessionId: string
+  amount: number
+  currency: string
+  orderId: number
+  sign: string
+}
+
+// ===========================================
+// RESPONSE TYPES
+// ===========================================
+
+export interface P24RegisterResponse {
+  data: {
+    token: string
+  }
+  responseCode: number
 }
 
 export interface P24VerifyResponse {
   data: {
-    status: string;
-    error: string;
-  };
-  responseCode: string;
+    status: string
+    orderId: number
+    sessionId: string
+    amount: number
+    currency: string
+    methodId: number
+    statement: string
+  }
+  responseCode: number
 }
 
-export interface P24CallbackPayload {
-  merchantId: number;
-  posId: number;
-  sessionId: string;
-  amount: number;
-  currency: string;
-  orderId: number;
-  method: number;
-  statement: string;
-  sig: string;
+// ===========================================
+// WEBHOOK TYPES
+// ===========================================
+
+export interface P24WebhookData {
+  merchantId: number
+  posId: number
+  sessionId: string
+  amount: number
+  originAmount: number
+  currency: string
+  orderId: number
+  methodId: number
+  statement: string
+  sign: string
 }
 
-export interface P24StatusResponse {
-  data: {
-    orderId: number;
-    sessionId: string;
-    status: string;
-    amount: number;
-    currency: string;
-    date: string;
-  };
-  responseCode: string;
+// ===========================================
+// CONFIGURATION TYPES
+// ===========================================
+
+export interface P24Config {
+  merchantId: number
+  posId: number
+  crcKey: string
+  apiKey: string
+  reportKey: string
+  environment: 'sandbox' | 'production'
+  urlReturn: string
+  urlStatus: string
+  apiUrl: string
 }
 
-// Typy dla naszego API
-export interface InitPaymentRequest {
-  orderId: string;
+// ===========================================
+// SERVICE TYPES
+// ===========================================
+
+export interface P24TransactionData {
+  sessionId: string
+  amount: number
+  currency: string
+  description: string
+  email: string
+  country: string
 }
 
-export interface InitPaymentResponse {
-  paymentUrl: string;
-  sessionId: string;
+export interface P24PaymentResult {
+  success: boolean
+  token?: string
+  paymentUrl?: string
+  error?: string
 }
 
-export interface PaymentStatusResponse {
-  status: 'pending' | 'paid' | 'failed' | 'cancelled';
-  orderId?: string;
-  transactionId?: number;
+export interface P24VerificationResult {
+  success: boolean
+  verified: boolean
+  orderId?: number
+  methodId?: number
+  error?: string
 }
 
-// Statusy płatności
-export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'cancelled';
+// ===========================================
+// ERROR TYPES
+// ===========================================
 
-// Walidacja callback payload
-export const P24CallbackSchema = {
-  merchantId: 'number',
-  posId: 'number', 
-  sessionId: 'string',
-  amount: 'number',
-  currency: 'string',
-  orderId: 'number',
-  method: 'number',
-  statement: 'string',
-  sig: 'string'
-} as const;
+export class P24Error extends Error {
+  constructor(
+    message: string,
+    public code?: string,
+    public statusCode?: number
+  ) {
+    super(message)
+    this.name = 'P24Error'
+  }
+}
+
+export interface P24ApiError {
+  error: string
+  errorMessage: string
+  responseCode: number
+}

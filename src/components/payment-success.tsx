@@ -11,42 +11,61 @@ import Link from 'next/link';
 interface PaymentStatus {
   status: 'pending' | 'paid' | 'failed' | 'cancelled';
   orderId?: string;
+  orderNumber?: string;
   transactionId?: number;
+  p24OrderId?: number;
+  p24MethodId?: number;
+  total?: number;
+  customer?: any;
+  items?: any[];
 }
 
 export function PaymentSuccess() {
   const searchParams = useSearchParams();
+  const orderId = searchParams.get('orderId');
   const sessionId = searchParams.get('sessionId');
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!sessionId) {
-      setError('Brak identyfikatora sesji płatności');
+    // Sprawdź czy mamy orderId lub sessionId
+    if (!orderId && !sessionId) {
+      setError('Brak identyfikatora zamówienia');
       setLoading(false);
       return;
     }
 
     checkPaymentStatus();
-  }, [sessionId]);
+  }, [orderId, sessionId]);
 
   const checkPaymentStatus = async () => {
     try {
       setLoading(true);
       
-      const response = await fetch(`/api/payments/przelewy24/status?sessionId=${sessionId}`);
+      // Pobierz szczegóły zamówienia
+      const response = await fetch(`/api/orders/${orderId || sessionId}`);
       
       if (!response.ok) {
-        throw new Error('Nie udało się sprawdzić statusu płatności');
+        throw new Error('Nie udało się pobrać szczegółów zamówienia');
       }
 
       const data = await response.json();
       
       if (data.success) {
-        setPaymentStatus(data.data);
+        const order = data.data;
+        setPaymentStatus({
+          status: order.paymentStatus,
+          orderId: order.id,
+          orderNumber: order.orderNumber,
+          p24OrderId: order.p24OrderId,
+          p24MethodId: order.p24MethodId,
+          total: Number(order.total),
+          customer: order.customer,
+          items: order.items
+        });
       } else {
-        throw new Error(data.error || 'Błąd podczas sprawdzania statusu');
+        throw new Error(data.error || 'Błąd podczas pobierania zamówienia');
       }
     } catch (err) {
       console.error('Error checking payment status:', err);
@@ -202,13 +221,31 @@ export function PaymentSuccess() {
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <h4 className="font-semibold text-gray-800 mb-2">Szczegóły zamówienia</h4>
               <div className="space-y-1 text-sm text-gray-600">
+                <p><strong>Numer zamówienia:</strong> {paymentStatus.orderNumber}</p>
                 <p><strong>ID zamówienia:</strong> {paymentStatus.orderId}</p>
-                {paymentStatus.transactionId && (
-                  <p><strong>ID transakcji:</strong> {paymentStatus.transactionId}</p>
+                {paymentStatus.p24OrderId && (
+                  <p><strong>ID transakcji P24:</strong> {paymentStatus.p24OrderId}</p>
                 )}
-                {sessionId && (
-                  <p><strong>ID sesji:</strong> {sessionId}</p>
+                {paymentStatus.total && (
+                  <p><strong>Kwota:</strong> {paymentStatus.total.toFixed(2)} zł</p>
                 )}
+                {paymentStatus.customer && (
+                  <p><strong>Email:</strong> {paymentStatus.customer.email}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {paymentStatus.items && paymentStatus.items.length > 0 && (
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <h4 className="font-semibold text-gray-800 mb-2">Produkty</h4>
+              <div className="space-y-2">
+                {paymentStatus.items.map((item: any, index: number) => (
+                  <div key={index} className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">{item.productName}</span>
+                    <span className="font-medium">{item.subtotal.toFixed(2)} zł</span>
+                  </div>
+                ))}
               </div>
             </div>
           )}

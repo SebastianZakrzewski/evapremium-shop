@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { env } from '@/config/env';
 
 // Security middleware
 export function securityMiddleware(request: NextRequest) {
@@ -23,7 +24,7 @@ export function securityMiddleware(request: NextRequest) {
 
 // CORS configuration
 export const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
+  origin: env.nodeEnv === 'production' 
     ? ['https://yourdomain.com'] 
     : ['http://localhost:3000'],
   credentials: true,

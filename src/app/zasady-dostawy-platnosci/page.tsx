@@ -128,7 +128,7 @@ export default function DeliveryAndPaymentTermsPage() {
                   <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-lg">
                     <h3 className="text-xl font-semibold text-white mb-4">1.2. Płatność online</h3>
                     <p className="text-gray-300 mb-4">
-                      za pośrednictwem systemów płatności elektronicznych (Stripe, BLIK, Przelewy24, karta płatnicza).
+                      za pośrednictwem systemów płatności elektronicznych (Stripe, BLIK, karta płatnicza).
                     </p>
                     <div className="flex flex-wrap gap-4">
                       <div className="bg-white rounded-lg p-3 w-20 h-16 flex items-center justify-center">
@@ -138,7 +138,7 @@ export default function DeliveryAndPaymentTermsPage() {
                         <span className="text-xs font-semibold text-black">BLIK</span>
                       </div>
                       <div className="bg-white rounded-lg p-3 w-20 h-16 flex items-center justify-center">
-                        <span className="text-xs font-semibold text-black">Przelewy24</span>
+                        <span className="text-xs font-semibold text-black">Bank</span>
                       </div>
                       <div className="bg-white rounded-lg p-3 w-20 h-16 flex items-center justify-center">
                         <span className="text-xs font-semibold text-black">Karty</span>

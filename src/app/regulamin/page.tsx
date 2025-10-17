@@ -140,7 +140,7 @@ export default function TermsOfServicePage() {
                 <p>Sprzedawca udostępnia następujące sposoby płatności:</p>
                 <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
                   <li>przelew tradycyjny,</li>
-                  <li>płatność online (Stripe, BLIK, Przelewy24, PayPal),</li>
+                  <li>płatność online (Stripe, BLIK, PayPal),</li>
                   <li>płatność przy odbiorze (za pobraniem).</li>
                 </ul>
                 <p>W przypadku przelewu tradycyjnego, wpłat należy dokonywać na rachunek bankowy:<br />

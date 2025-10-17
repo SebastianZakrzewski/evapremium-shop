@@ -148,6 +148,7 @@ export default function Footer() {
                 width={48}
                 height={32}
                 className="object-contain"
+                style={{ width: "auto", height: "auto" }}
               />
             </div>
             
@@ -170,6 +171,7 @@ export default function Footer() {
                 width={48}
                 height={32}
                 className="object-contain"
+                style={{ width: "auto", height: "auto" }}
               />
             </div>
             
@@ -181,6 +183,7 @@ export default function Footer() {
                 width={48}
                 height={32}
                 className="object-contain"
+                style={{ width: "auto", height: "auto" }}
               />
             </div>
             
@@ -192,6 +195,7 @@ export default function Footer() {
                 width={48}
                 height={32}
                 className="object-contain"
+                style={{ width: "auto", height: "auto" }}
               />
             </div>
             
@@ -203,6 +207,7 @@ export default function Footer() {
                 width={48}
                 height={32}
                 className="object-contain"
+                style={{ width: "auto", height: "auto" }}
               />
             </div>
             
@@ -214,14 +219,15 @@ export default function Footer() {
                 width={48}
                 height={32}
                 className="object-contain"
+                style={{ width: "auto", height: "auto" }}
               />
             </div>
             
-            {/* Przelewy24 */}
+            {/* Bank Transfer */}
             <div className="bg-white rounded-lg p-3 hover:scale-105 transition-transform duration-200 shadow-lg hover:shadow-xl w-20 h-16 flex items-center justify-center">
               <Image
-                src="/formy_platnosci/przelewy.png"
-                alt="Przelewy24"
+                src="/formy_platnosci/bank.png"
+                alt="Przelew bankowy"
                 width={48}
                 height={32}
                 className="object-contain"
@@ -236,6 +242,7 @@ export default function Footer() {
                 width={48}
                 height={32}
                 className="object-contain"
+                style={{ width: "auto", height: "auto" }}
               />
             </div>
           </div>
