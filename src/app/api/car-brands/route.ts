@@ -10,6 +10,18 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Lista marek aut osobowych - tylko te marki będą wyświetlane w karuzeli
+const PASSENGER_CAR_BRANDS = [
+  'Acura', 'Alfa Romeo', 'Aston Martin', 'Audi', 'BAIC', 'Bentley', 'BMW', 'Bugatti', 'Buick', 'BYD',
+  'Cadillac', 'Chevrolet', 'Chrysler', 'Citroen', 'Cupra', 'Dacia', 'Daewoo', 'Daihatsu', 'Dodge', 'DS',
+  'Ferrari', 'Fiat', 'Ford', 'Forthing', 'Genesis', 'GMC', 'Honda', 'Hyundai', 'Ineos', 'Infiniti',
+  'Jaguar', 'Jeep', 'Kia', 'Lamborghini', 'Lancia', 'Land Rover', 'Lexus', 'Lincoln', 'Maserati',
+  'Maxus', 'Mazda', 'McLaren', 'Mercedes-Benz', 'Mercedes-Maybach', 'MG', 'Mini', 'Mitsubishi',
+  'Nissan', 'Omoda', 'Opel', 'Peugeot', 'Plymouth', 'Pontiac', 'Porsche', 'Renault', 'Rolls-Royce',
+  'Saab', 'Seat', 'Seres', 'Skoda', 'Skywell', 'Smart', 'SsangYong', 'Subaru', 'Suzuki', 'Tesla',
+  'Toyota', 'Volkswagen', 'Volvo', 'XEV', 'Zhidou', 'Jaecoo'
+];
+
 export async function GET(request: NextRequest) {
   try {
     // Pobierz wszystkie marki z tabeli car_models_extended używając paginacji
@@ -81,39 +93,34 @@ export async function GET(request: NextRequest) {
     // Utwórz finalną listę z Mercedes-Benz na początku
     const finalBrandsList = mercedesBrand ? [mercedesBrand, ...otherBrands] : otherBrands;
     
+    // Filtruj tylko marki aut osobowych
+    const passengerCarBrands = finalBrandsList.filter(brand => {
+      const brandName = brand.brand_name;
+      return PASSENGER_CAR_BRANDS.some(passengerBrand => 
+        brandName.toLowerCase() === passengerBrand.toLowerCase() ||
+        brandName.toLowerCase().includes(passengerBrand.toLowerCase()) ||
+        passengerBrand.toLowerCase().includes(brandName.toLowerCase())
+      );
+    });
+    
     // Debug - sprawdź czy Zhidou jest w danych
-    const zhidouBrand = finalBrandsList.find(brand => 
+    const zhidouBrand = passengerCarBrands.find(brand => 
       brand.brand_name.toLowerCase().includes('zhidou')
     );
     if (zhidouBrand) {
-      console.log('Zhidou found in database:', zhidouBrand);
+      console.log('Zhidou found in passenger cars:', zhidouBrand);
     } else {
-      console.log('Zhidou NOT found in database');
-      // Sprawdź wszystkie marki zawierające 'zhi'
-      const zhiBrands = finalBrandsList.filter(brand => 
-        brand.brand_name.toLowerCase().includes('zhi')
-      );
-      console.log('Brands containing "zhi":', zhiBrands);
-      
-      // Sprawdź wszystkie marki zawierające 'zhidou' (case insensitive)
-      const zhidouBrands = finalBrandsList.filter(brand => 
-        brand.brand_name.toLowerCase().includes('zhidou')
-      );
-      console.log('Brands containing "zhidou":', zhidouBrands);
-      
-      // Sprawdź wszystkie marki zawierające 'zhidou' (case insensitive)
-      const zhidouBrands2 = allBrandsList.filter(brand => 
-        brand.brand_name.toLowerCase().includes('zhidou')
-      );
-      console.log('Brands containing "zhidou" in allBrandsList:', zhidouBrands2);
+      console.log('Zhidou NOT found in passenger cars');
     }
+    
+    console.log(`Filtrowanie: ${finalBrandsList.length} wszystkich marek -> ${passengerCarBrands.length} aut osobowych`);
     
     // Lista plików graficznych, które istnieją w katalogu /modele/
     const existingImageFiles = [
       'acura.avif', 'Aixam.png', 'alfa_romeo.jpg', 'aston_martin.avif', 'audi.avif', 'baic.webp', 'bentley.webp', 'bmw.png', 'Bobcat.jpg', 'bugatti.jpg', 'buick.avif', 'byd.webp', 'cadillac.jpeg', 'Case.webp', 'cat.jpg', 'chevrolet.jpg', 'chrysler.jpg', 'citroen.jpg', 'Claas.webp', 'cupra.jpg', 'dacia.jpg', 'DAEWOO.jpg', 'daf.jpg', 'Daihatsu.jpeg', 'deuhtz-far.jpg', 'dodge.avif', 'ds.jpg', 'fendt.webp', 'ferrari.avif', 'fiat.png', 'ford.avif', 'forthing.png', 'forthing.webp', 'genesis.jpeg', 'gmc.jpg', 'hammer.jpeg', 'honda.jpg', 'hyundai.webp', 'ineos.webp', 'infiniti.jpg', 'Isuzu.webp', 'Iveco.jpg', 'Jaecoo.jpg', 'jaguar.avif', 'jeep.avif', 'john-deere.jpg', 'kia.jpg', 'komatsu.webp', 'kubota.jpg', 'lamborghini.webp', 'lancia.jpg', 'land_rover.webp', 'lexus.jpeg', 'lincoln.jpg', 'man.jpg', 'maserati.jpg', 'massey_ferguson.jpg', 'maxus.webp', 'mazda.jpg', 'mclaren.avif', 'mercedes_benz.jpg', 'mercedes_maybach.webp', 'mg.jpg', 'microcar.jpg', 'mini.avif', 'mitsubishi.avif', 'moris-minor.webp', 'new-holland.webp', 'nissan.jpeg', 'nissan.jpg', 'omoda.jpg', 'opel.webp', 'peugeot.webp', 'plymouth.jpg', 'pontiac.avif', 'porsche.jpg', 'renault.jpeg', 'rolls-royce.jpg', 'saab.jpg', 'scania.jpeg', 'seat.webp', 'seres.jpg', 'skoda.jpg', 'skywell.jpg', 'smart.avif', 'ssangyong.avif', 'subaru.webp', 'suzuki.avif', 'tesla.avif', 'toyota.png', 'toyota.webp', 'valtra.jpg', 'volkswagen.jpg', 'volvo.webp', 'XEV.webp', 'Zhidou.webp'
     ];
 
-    const uniqueBrands = finalBrandsList
+    const uniqueBrands = passengerCarBrands
       .map((brand, index) => ({
         id: index + 1,
         name: brand.brand_name,

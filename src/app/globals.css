@@ -1,5 +1,25 @@
 @import "tailwindcss";
 
+/* Touch optimizations */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Remove tap highlight on all interactive elements */
+button, a, input, select, textarea, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Improve touch targets */
+@media (hover: none) and (pointer: coarse) {
+  button, a, input, select, textarea, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
 @theme {
   --color-background: 0 0% 100%;
   --color-foreground: 222.2 84% 4.9%;
@@ -491,6 +511,85 @@ html {
 .slider::-webkit-slider-thumb:hover {
   background: #dc2626;
   transform: scale(1.1);
+}
+
+/* Hover states only for devices that support hover */
+@media (hover: hover) {
+  .hover\:opacity-80:hover {
+    opacity: 0.8;
+  }
+  
+  .hover\:scale-105:hover {
+    transform: scale(1.05);
+  }
+  
+  .hover\:bg-white\/20:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Active states for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .active\:opacity-70:active {
+    opacity: 0.7;
+  }
+  
+  .active\:scale-95:active {
+    transform: scale(0.95);
+  }
+  
+  .active\:bg-white\/30:active {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Fluid typography */
+.fluid-text-xs {
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+}
+
+.fluid-text-sm {
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+.fluid-text-base {
+  font-size: clamp(1rem, 3vw, 1.125rem);
+}
+
+.fluid-text-lg {
+  font-size: clamp(1.125rem, 3.5vw, 1.25rem);
+}
+
+.fluid-text-xl {
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.fluid-text-2xl {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+}
+
+.fluid-text-3xl {
+  font-size: clamp(1.875rem, 6vw, 2.5rem);
+}
+
+.fluid-text-4xl {
+  font-size: clamp(2.25rem, 7vw, 3rem);
+}
+
+.fluid-text-5xl {
+  font-size: clamp(3rem, 8vw, 4rem);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .slider::-moz-range-track {

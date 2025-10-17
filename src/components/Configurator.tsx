@@ -15,7 +15,7 @@ import { PricingService } from "@/lib/services/PricingService";
 import { MatService } from "@/lib/services/MatService";
 import { ConfigurationData } from "@/lib/types/product";
 import { debugLog } from "@/lib/config/features";
-import { brands, getModelsByBrand } from "@/data/carouselData";
+import { getModelsByBrand } from "@/data/carouselData";
 import { Brand, Model } from "@/types/carousel";
 import { getYearsForModel, getModelData, findGenerationByYear, getAvailableModels, getBodyTypesForYear, getBodyTypesForModel } from "@/data/car-model-years.utils";
 
@@ -68,8 +68,8 @@ type SetVariant = {
 // Struktura cenowa - sztywne ceny za komplety + rabaty
 const PRICING = {
   basePrice: {
-    'classic': { front: 290, basic: 510, premium: 710 },
-    '3d-with-rims': { front: 550, basic: 910, premium: 1210 }
+    'classic': { front: 290, basic: 510, premium: 710, complete: 350 },
+    '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350 }
   },
   // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł
   getDiscount: (basePrice: number) => {
@@ -77,7 +77,7 @@ const PRICING = {
   },
   shipping: {
     cost: 27,
-    freeForVariants: ['basic', 'premium'] as const  // Darmowa dla basic i premium
+    freeForVariants: ['basic', 'premium', 'complete'] as const  // Darmowa dla basic, premium i complete
   }
 };
 
@@ -95,7 +95,7 @@ const setVariants: SetVariant[] = [
   { id: "front", name: "Starter", description: "2 dywaniki (tylko przód)", priceModifier: 0 },
   { id: "basic", name: "Podstawowy", description: "5 dywaników (przód + tył + ochrona na tunel środkowy)", priceModifier: 0 },
   { id: "premium", name: "Premium", description: "5 dywaników (przód + tył + bagażnik)", priceModifier: 0 },
-  { id: "complete", name: "Mata do Bagażnika", description: "6 dywaników (przód + tył + bagażnik + dodatkowe)", priceModifier: 0 },
+  { id: "complete", name: "Mata do Bagażnika", description: "1 dywanik - Mata do Bagażnika", priceModifier: 0 },
 ];
 
 const bodyTypes = [
@@ -118,6 +118,32 @@ export default function Configurator() {
   const brandParam = searchParams.get('brand');
   const { addToCart, isLoading: cartLoading, error: cartError } = useCart();
   const matService = new MatService();
+  
+  // Stan dla marek pobieranych z API
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [brandsLoading, setBrandsLoading] = useState(true);
+  
+  // Pobierz marki z API
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        setBrandsLoading(true);
+        const response = await fetch('/api/car-brands');
+        if (response.ok) {
+          const data = await response.json();
+          setBrands(data);
+        } else {
+          console.error('Failed to fetch brands');
+        }
+      } catch (error) {
+        console.error('Error fetching brands:', error);
+      } finally {
+        setBrandsLoading(false);
+      }
+    };
+
+    fetchBrands();
+  }, []);
   
   const [currentSection, setCurrentSection] = useState<number>(0);
   // Mapowanie nazw marek z carousel na nazwy w bazie danych
@@ -208,12 +234,54 @@ export default function Configurator() {
     setType: string,
     setVariant: string
   ): number => {
-    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium'] || 0;
+    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
     const discount = PRICING.getDiscount(basePrice);
     const priceAfterDiscount = basePrice * (1 - discount);
     const shippingCost = PRICING.shipping.freeForVariants.includes(setVariant as any) ? 0 : PRICING.shipping.cost;
     return Math.round(priceAfterDiscount + shippingCost);
   }, []);
+
+  // Funkcja do obliczania ceny bazowej bez wysyłki (do wyświetlania w sekcji wyboru zestawu)
+  const getVariantBasePrice = useCallback((
+    setType: string,
+    setVariant: string
+  ): number => {
+    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
+    const discount = PRICING.getDiscount(basePrice);
+    const priceAfterDiscount = basePrice * (1 - discount);
+    return Math.round(priceAfterDiscount);
+  }, []);
+
+  // Funkcja do pobierania opisu ilości dywaników na podstawie wariantu zestawu
+  const getVariantMatsDescription = useCallback((variantId: string): string => {
+    const descriptions: Record<string, string> = {
+      'front': 'przód',
+      'basic': 'przód + tył',
+      'premium': 'przód + tył + bagażnik',
+      'complete': 'mata do bagażnika'
+    };
+    return descriptions[variantId] || variantId;
+  }, []);
+
+  // Funkcje do obliczania składowych ceny
+  const priceBreakdown = useMemo(() => {
+    if (!selectedSetType || !selectedSetVariant) return { basePrice: 0, discount: 0, priceAfterDiscount: 0, shippingCost: 0, totalPrice: 0 };
+    
+    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
+    const discount = PRICING.getDiscount(basePrice);
+    const discountAmount = basePrice * discount;
+    const priceAfterDiscount = basePrice - discountAmount;
+    const shippingCost = PRICING.shipping.freeForVariants.includes(selectedSetVariant as any) ? 0 : PRICING.shipping.cost;
+    const totalPrice = Math.round(priceAfterDiscount + shippingCost);
+    
+    return {
+      basePrice: Math.round(basePrice),
+      discount: Math.round(discountAmount),
+      priceAfterDiscount: Math.round(priceAfterDiscount),
+      shippingCost,
+      totalPrice
+    };
+  }, [selectedSetType, selectedSetVariant]);
 
   // Debug: wyświetl informacje o wybranej marce
   useEffect(() => {
@@ -400,7 +468,7 @@ export default function Configurator() {
           debugLog('💰 Używam ceny z bazy danych:', basePrice);
         } else {
           // Użyj domyślnej ceny bazowej z nowego systemu
-          basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium'] || 300;
+          basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
           debugLog('💰 Używam domyślnej ceny bazowej:', basePrice);
         }
 
@@ -411,7 +479,7 @@ export default function Configurator() {
       } catch (error) {
         console.error('❌ Błąd podczas pobierania dywaników:', error);
         // W przypadku błędu, użyj domyślnej ceny z nowego systemu
-        const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium'] || 300;
+        const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
         setBaseMatPrice(basePrice);
         debugLog('💰 Używam domyślnej ceny po błędzie:', basePrice);
       } finally {
@@ -486,7 +554,7 @@ export default function Configurator() {
       if (baseMatPrice === 0) {
         console.warn('⚠️ Używam domyślnej ceny');
         // Użyj domyślnej ceny zamiast blokować
-        const defaultPrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium'] || 300;
+        const defaultPrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
         setBaseMatPrice(defaultPrice);
       }
 
@@ -657,7 +725,7 @@ export default function Configurator() {
     if (!selectedSetType || !selectedSetVariant) return 0;
     
     // 1. Pobierz bazową cenę kompletu
-    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium'] || 0;
+    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
     
     // 2. Oblicz rabat (zależny od wartości: ≥910 zł = -30%, <910 zł = -20%)
     const discount = PRICING.getDiscount(basePrice);
@@ -715,10 +783,10 @@ export default function Configurator() {
   return (
     <section className="w-full bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 md:py-16">
-        <div className="flex flex-col lg:flex-row gap-10">
+        <div className="flex flex-col md:flex-row gap-6 lg:gap-10">
           {/* Lewa strona - wizualizacja */}
           <div className="w-full lg:w-[900px] xl:w-[1000px]">
-            <div className="relative w-full h-[700px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
+            <div className="relative w-full h-[350px] sm:h-[450px] md:h-[550px] lg:h-[650px] xl:h-[700px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
               {/* Rzeczywisty obraz dywanika */}
               <Image
                 key={`${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`}
@@ -776,7 +844,7 @@ export default function Configurator() {
           </div>
 
           {/* Prawa strona - konfigurator z sekcjami */}
-          <div className="w-full lg:w-[700px] xl:w-[780px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-8 md:p-10 h-[900px] flex flex-col overflow-y-auto pb-24">
+          <div className="w-full lg:w-[700px] xl:w-[780px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 min-h-[600px] md:h-auto flex flex-col pb-24">
             {/* Header z progressem */}
             <div className="mb-6">
               <h2 className="text-xl md:text-2xl font-semibold">
@@ -813,14 +881,20 @@ export default function Configurator() {
                   <div className="mb-6 p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
                     <h3 className="text-sm font-medium mb-2 text-gray-300">Wybrana marka</h3>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden">
-                        <Image
-                          src={brands.find(b => b.name.toLowerCase() === selectedCarBrand.toLowerCase())?.logo || "/images/placeholder.png"}
-                          alt={selectedCarBrand}
-                          width={40}
-                          height={40}
-                          className="object-cover w-full h-full"
-                        />
+                      <div className="relative w-24 h-24 bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
+                        {brandsLoading ? (
+                          <div className="w-full h-full bg-neutral-700 animate-pulse rounded"></div>
+                        ) : (
+                          <Image
+                            src={brands.find(b => b.name.toLowerCase() === selectedCarBrand.toLowerCase())?.logo || "/images/placeholder.png"}
+                            alt={selectedCarBrand}
+                            className="object-cover"
+                            quality={100}
+                            priority={true}
+                            unoptimized={false}
+                            fill
+                          />
+                        )}
                       </div>
                       <span className="text-lg font-semibold text-white">
                         {(() => {
@@ -1013,9 +1087,9 @@ export default function Configurator() {
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj zestawu</h3>
                   <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
                     {setVariants.map((v) => {
-                      // Oblicz cenę z nowym systemem cenowym
+                      // Oblicz cenę bazową bez wysyłki (do wyświetlania w sekcji wyboru zestawu)
                       const displayPrice = selectedSetType 
-                        ? getVariantPrice(selectedSetType, v.id)
+                        ? getVariantBasePrice(selectedSetType, v.id)
                         : 0;
                       
                       return (
@@ -1087,9 +1161,9 @@ export default function Configurator() {
               <div className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
-                  <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-7 gap-1.5">
+                  <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-2 md:gap-3">
                     {availableMaterialColors.map((c) => (
-                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden`}>
+                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden min-w-[48px] min-h-[48px]`}>
                         <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
                         <div
                           className="absolute inset-0"
@@ -1118,12 +1192,12 @@ export default function Configurator() {
 
                 <div>
                   <h3 className="text-sm font-medium mb-3">Kolor obszycia</h3>
-                  <div className="grid grid-cols-7 gap-1.5">
+                  <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-2 md:gap-3">
                     {availableEdgeColors.map((e) => (
                       <button
                         key={e.id}
                         onClick={() => setSelectedEdge(e.id)}
-                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 transition-all duration-200 aspect-square cursor-pointer`}
+                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 transition-all duration-200 aspect-square cursor-pointer min-w-[48px] min-h-[48px]`}
                         style={{ backgroundColor: e.hex }}
                         aria-pressed={selectedEdge === e.id}
                       >
@@ -1164,14 +1238,20 @@ export default function Configurator() {
                   <h3 className="text-sm font-medium mb-3 text-gray-300">Wybrane auto</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden">
-                        <Image
-                          src={brands.find(b => b.name.toLowerCase() === selectedCarBrand)?.logo || "/images/placeholder.png"}
-                          alt={selectedCarBrand}
-                          width={32}
-                          height={32}
-                          className="object-cover w-full h-full"
-                        />
+                      <div className="relative w-16 h-16 bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
+                        {brandsLoading ? (
+                          <div className="w-full h-full bg-neutral-700 animate-pulse rounded"></div>
+                        ) : (
+                          <Image
+                            src={brands.find(b => b.name.toLowerCase() === selectedCarBrand.toLowerCase())?.logo || "/images/placeholder.png"}
+                            alt={selectedCarBrand}
+                            className="object-cover"
+                            quality={100}
+                            priority={true}
+                            unoptimized={false}
+                            fill
+                          />
+                        )}
                       </div>
                       <div>
                         <div className="text-white font-semibold">
@@ -1199,7 +1279,7 @@ export default function Configurator() {
                       <span className="text-white/70">Wybrana konfiguracja:</span>
                     </div>
                     <div className="text-xs text-white/60 space-y-1">
-                      <div>• {setVariant.name}</div>
+                      <div>• {getVariantMatsDescription(selectedSetVariant)}</div>
                       <div>• {setType.name}</div>
                       <div>• {cellType.name}</div>
                       <div>• {mat.name} + {edge.name} obszycie</div>
@@ -1211,8 +1291,26 @@ export default function Configurator() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Zestaw ({setVariant.name})</span>
-                      <span className="text-white">{price} zł</span>
+                      <span className="text-white">{priceBreakdown.basePrice} zł</span>
                     </div>
+                    {priceBreakdown.discount > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Rabat ({Math.round((priceBreakdown.discount / priceBreakdown.basePrice) * 100)}%)</span>
+                        <span className="text-red-400">-{priceBreakdown.discount} zł</span>
+                      </div>
+                    )}
+                    {priceBreakdown.shippingCost > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Wysyłka</span>
+                        <span className="text-white">{priceBreakdown.shippingCost} zł</span>
+                      </div>
+                    )}
+                    {priceBreakdown.shippingCost === 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Wysyłka</span>
+                        <span className="text-green-400">Darmowa</span>
+                      </div>
+                    )}
                     <Separator className="my-2" />
                     <div className="flex justify-between text-lg font-bold">
                       <span>Razem</span>
@@ -1223,7 +1321,7 @@ export default function Configurator() {
                             Ładowanie...
                           </span>
                         ) : (
-                          `${price} zł`
+                          `${priceBreakdown.totalPrice} zł`
                         )}
                       </span>
                     </div>
@@ -1270,26 +1368,6 @@ export default function Configurator() {
 
 
             {/* Navigation buttons */}
-            {/* Sticky panel z ceną - widoczny od sekcji 2 (wybór rodzaju zestawu) */}
-            {currentSection >= 2 && (
-              <div className="sticky bottom-0 left-0 right-0 bg-neutral-900/95 backdrop-blur-sm border-t border-neutral-800 p-4 mb-4">
-                <div className="flex items-center justify-between max-w-7xl mx-auto">
-                  <div className="text-sm text-gray-400">
-                    Aktualna cena konfiguracji
-                  </div>
-                  <div className="text-2xl font-bold text-green-400 transition-all duration-300">
-                    {isPriceLoading ? (
-                      <span className="flex items-center gap-2">
-                        <div className="w-5 h-5 border-2 border-green-400 border-t-transparent rounded-full animate-spin"></div>
-                        Ładowanie...
-                      </span>
-                    ) : (
-                      `${price} zł`
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
 
             <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
               <Button

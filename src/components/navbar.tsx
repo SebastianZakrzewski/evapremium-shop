@@ -33,13 +33,13 @@ export default function Navbar() {
       <nav className="fixed top-0 left-0 w-full z-50 bg-black/90 backdrop-blur border-b border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 md:h-20 lg:h-24 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-end justify-center gap-2 text-white font-bold text-lg hover:opacity-80 transition-opacity -mb-2">
+          <Link href="/" className="flex items-center justify-center gap-2 text-white font-bold text-lg hover:opacity-80 transition-opacity">
             <Image
               src="/Logo svg .svg"
               alt="EvaPremium Logo"
               width={450}
               height={180}
-              className="object-contain h-22 md:h-26 lg:h-30"
+              className="object-contain h-14 md:h-16 lg:h-20"
               priority
             />
           </Link>
@@ -52,8 +52,8 @@ export default function Navbar() {
           </div>
           {/* Desktop Cart Icon and Contact */}
           <div className="hidden md:flex items-center gap-3">
-            <a href="tel:+48570123635" className="text-white/90 hover:text-white transition-colors font-medium text-sm">
-              +48 570 123 635
+            <a href="tel:+48505401233" className="text-white/90 hover:text-white transition-colors font-medium text-sm">
+              +48 505 401 233
             </a>
             <Link href="/wyszukaj" className="text-white/90 hover:text-white transition-colors p-2 group">
               <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,7 +109,7 @@ export default function Navbar() {
         </div>
         {/* Mobile Menu */}
         <div
-          className={`md:hidden fixed top-16 left-0 w-full bg-black/95 backdrop-blur border-b border-neutral-800 z-40 transition-all duration-300 ${open ? "max-h-96 opacity-100" : "max-h-0 opacity-0 overflow-hidden"}`}
+          className={`md:hidden fixed top-16 md:top-20 lg:top-24 left-0 w-full bg-black/95 backdrop-blur border-b border-neutral-800 z-40 transition-all duration-300 ease-in-out ${open ? "max-h-96 opacity-100" : "max-h-0 opacity-0 overflow-hidden"}`}
         >
           <div className="flex flex-col gap-4 py-6 px-8">
             <Link href="#products" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Dywaniki Samochodowe</Link>

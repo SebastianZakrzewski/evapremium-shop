@@ -7,9 +7,9 @@ export default function Footer() {
   return (
     <footer className="bg-black border-t border-neutral-800">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Logo i opis */}
-          <div className="col-span-1 lg:col-span-2">
+          <div className="col-span-1 lg:col-span-1">
             <Link href="/" className="flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity">
               <Image
                 src="/Logo svg .svg"
@@ -128,7 +128,7 @@ export default function Footer() {
         {/* Opcje płatności */}
         <div className="border-t border-neutral-800 mt-8 pt-8">
           <h3 className="text-white font-semibold mb-6 text-center">Akceptowane metody płatności</h3>
-          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6">
+          <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8">
             {/* Visa */}
             <div className="bg-white rounded-lg p-3 hover:scale-105 transition-transform duration-200 shadow-lg hover:shadow-xl w-20 h-16 flex items-center justify-center">
               <Image

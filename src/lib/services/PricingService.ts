@@ -25,11 +25,11 @@ export class PricingService {
    */
   static calculateConfiguratorPrice(
     setType: 'classic' | '3d-with-rims',
-    setVariant: 'front' | 'basic' | 'premium'
+    setVariant: 'front' | 'basic' | 'premium' | 'complete'
   ): { basePrice: number; discount: number; shippingCost: number; totalPrice: number } {
     const basePrices = {
-      'classic': { front: 290, basic: 510, premium: 710 },
-      '3d-with-rims': { front: 550, basic: 910, premium: 1210 }
+      'classic': { front: 290, basic: 510, premium: 710, complete: 350 },
+      '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350 }
     };
 
     const basePrice = basePrices[setType]?.[setVariant] || 0;
@@ -39,8 +39,8 @@ export class PricingService {
     const discountAmount = basePrice * discount;
     const priceAfterDiscount = basePrice - discountAmount;
     
-    // Koszt wysyłki (27 zł tylko dla 'front', darmowa dla 'basic' i 'premium')
-    const shippingCost = ['basic', 'premium'].includes(setVariant) ? 0 : 27;
+    // Koszt wysyłki (27 zł tylko dla 'front', darmowa dla 'basic', 'premium' i 'complete')
+    const shippingCost = ['basic', 'premium', 'complete'].includes(setVariant) ? 0 : 27;
     
     const totalPrice = Math.round(priceAfterDiscount + shippingCost);
 

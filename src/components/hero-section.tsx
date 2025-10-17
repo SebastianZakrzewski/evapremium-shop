@@ -48,7 +48,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative h-[70vh] md:h-[80vh] overflow-hidden">
+    <section className="relative min-h-[500px] h-[70vh] md:h-[80vh] overflow-hidden">
       {/* Carousel */}
       <div className="container mx-auto px-4 relative h-full">
         {heroSlides.map((slide, index) => (
@@ -114,7 +114,7 @@ export default function HeroSection() {
                   </div>
                 </div>
                 
-                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center animate-fade-in-delay-2">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center animate-fade-in-delay-2">
                   <button 
                     onClick={() => {
                       const element = document.getElementById('products');
@@ -125,7 +125,7 @@ export default function HeroSection() {
                         });
                       }
                     }}
-                    className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full text-base font-semibold transition-all duration-300 shadow-xl hover:shadow-red-500/25 hover:scale-105"
+                    className="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white px-6 py-3 rounded-full text-base font-semibold transition-all duration-300 shadow-xl hover:shadow-red-500/25 hover:scale-105 active:scale-95 touch-manipulation min-h-[44px]"
                   >
                     {slide.cta}
                   </button>
@@ -139,7 +139,7 @@ export default function HeroSection() {
                         });
                       }
                     }}
-                    className="bg-white/10 backdrop-blur border border-white/20 text-white px-6 py-3 rounded-full text-base font-semibold transition-all duration-300 hover:bg-white/20"
+                    className="bg-white/10 backdrop-blur border border-white/20 text-white px-6 py-3 rounded-full text-base font-semibold transition-all duration-300 hover:bg-white/20 active:bg-white/30 touch-manipulation min-h-[44px]"
                   >
                     Dowiedz się więcej
                   </button>
@@ -153,7 +153,7 @@ export default function HeroSection() {
       {/* Navigation Arrows */}
       <button
         onClick={goToPrev}
-        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition-colors z-20"
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 active:bg-white/40 text-white p-3 rounded-full transition-colors z-20 touch-manipulation min-w-[44px] min-h-[44px]"
         aria-label="Poprzedni slajd"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,7 +163,7 @@ export default function HeroSection() {
       
       <button
         onClick={goToNext}
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition-colors z-20"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 active:bg-white/40 text-white p-3 rounded-full transition-colors z-20 touch-manipulation min-w-[44px] min-h-[44px]"
         aria-label="Następny slajd"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -177,9 +177,9 @@ export default function HeroSection() {
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-2 h-2 rounded-full transition-colors ${
+            className={`w-3 h-3 sm:w-2 sm:h-2 rounded-full transition-colors ${
               index === currentSlide ? "bg-white" : "bg-white/50"
-            }`}
+            } p-2`}
             aria-label={`Przejdź do slajdu ${index + 1}`}
           />
         ))}

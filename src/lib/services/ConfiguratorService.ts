@@ -3,8 +3,8 @@ import { ConfigurationData, Product, ProductPricing } from '../types/product';
 export class ConfiguratorService {
   private static readonly PRICING_CONFIG = {
     basePrice: {
-      'classic': { front: 290, basic: 510, premium: 710 },
-      '3d-with-rims': { front: 550, basic: 910, premium: 1210 }
+      'classic': { front: 290, basic: 510, premium: 710, complete: 350 },
+      '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350 }
     },
     // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł
     getDiscount: (basePrice: number) => {
@@ -12,7 +12,7 @@ export class ConfiguratorService {
     },
     shipping: {
       cost: 27,
-      freeForVariants: ['basic', 'premium'] as const
+      freeForVariants: ['basic', 'premium', 'complete'] as const
     }
   };
 
@@ -88,7 +88,7 @@ export class ConfiguratorService {
     const setVariant = configData.setVariant;
     
     // Bazowa cena kompletu
-    const basePrice = this.PRICING_CONFIG.basePrice[setType as keyof typeof this.PRICING_CONFIG.basePrice]?.[setVariant as 'front' | 'basic' | 'premium'] || 0;
+    const basePrice = this.PRICING_CONFIG.basePrice[setType as keyof typeof this.PRICING_CONFIG.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
     
     // Rabat zależny od wartości
     const discount = this.PRICING_CONFIG.getDiscount(basePrice);

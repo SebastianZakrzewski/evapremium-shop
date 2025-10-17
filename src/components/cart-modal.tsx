@@ -60,7 +60,11 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
         {/* Content */}
         <div className="flex flex-col h-full">
           {/* Items */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto p-6 relative">
+            {/* Scroll indicator - top gradient */}
+            <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-black/50 to-transparent z-10 pointer-events-none" />
+            {/* Scroll indicator - bottom gradient */}
+            <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-black/50 to-transparent z-10 pointer-events-none" />
             {cart.items.length === 0 ? (
               <div className="text-center py-12">
                 <div className="w-16 h-16 mx-auto mb-4 bg-neutral-800 rounded-full flex items-center justify-center">
@@ -99,14 +103,16 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                       <div className="flex items-center gap-2 mt-2">
                         <button 
                           onClick={() => updateQuantity(item.accessory.id, item.quantity - 1)}
-                          className="w-6 h-6 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 transition-colors text-white"
+                          className="w-10 h-10 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 active:bg-neutral-600 transition-colors text-white touch-manipulation"
+                          aria-label="Zmniejsz ilość"
                         >
                           -
                         </button>
                         <span className="w-8 text-center text-sm font-medium text-white">{item.quantity}</span>
                         <button 
                           onClick={() => updateQuantity(item.accessory.id, item.quantity + 1)}
-                          className="w-6 h-6 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 transition-colors text-white"
+                          className="w-10 h-10 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 active:bg-neutral-600 transition-colors text-white touch-manipulation"
+                          aria-label="Zwiększ ilość"
                         >
                           +
                         </button>

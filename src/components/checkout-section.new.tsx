@@ -5,19 +5,21 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { 
   ChevronDown,
   ChevronUp,
   ArrowLeft,
   ArrowRight,
-  Shield,
   RotateCcw,
   Star,
   Truck,
   CreditCard,
   Check,
-  CreditCard as PaymentIcon
+  CreditCard as PaymentIcon,
+  Banknote,
+  CheckCircle
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -55,9 +57,15 @@ const checkoutSchema = z.object({
   billingCountry: z.string().optional(),
   
   // Metoda płatności
-  paymentMethod: z.enum(["card", "transfer", "blik"], {
+  paymentMethod: z.enum(["card", "transfer"], {
     required_error: "Wybierz metodę płatności"
   }),
+  
+  // Dane karty płatniczej (opcjonalne, tylko gdy wybrano kartę)
+  cardNumber: z.string().optional(),
+  cardExpiry: z.string().optional(),
+  cardCvv: z.string().optional(),
+  cardholderName: z.string().optional(),
   
   // Zgody
   termsAccepted: z.boolean().refine(val => val === true, "Musisz zaakceptować regulamin"),
@@ -65,6 +73,26 @@ const checkoutSchema = z.object({
   
   // Notatki
   notes: z.string().optional(),
+}).refine((data) => {
+  // Walidacja pól karty tylko gdy wybrano kartę płatniczą
+  if (data.paymentMethod === "card") {
+    if (!data.cardNumber || data.cardNumber.length < 16) {
+      return false;
+    }
+    if (!data.cardExpiry || !/^\d{2}\/\d{2}$/.test(data.cardExpiry)) {
+      return false;
+    }
+    if (!data.cardCvv || data.cardCvv.length < 3) {
+      return false;
+    }
+    if (!data.cardholderName || data.cardholderName.length < 2) {
+      return false;
+    }
+  }
+  return true;
+}, {
+  message: "Wypełnij wszystkie wymagane pola karty płatniczej",
+  path: ["cardNumber"]
 });
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
@@ -219,8 +247,7 @@ export default function CheckoutSectionNew() {
       const paymentData = {
         method: data.paymentMethod,
         methodName: data.paymentMethod === 'card' ? 'Karta kredytowa' : 
-                   data.paymentMethod === 'transfer' ? 'Przelew bankowy' : 
-                   data.paymentMethod === 'blik' ? 'BLIK' : 'Pobranie',
+                   data.paymentMethod === 'transfer' ? 'Przelewy24' : 'Pobranie',
       };
       console.log('🛒 CheckoutSection: paymentData:', paymentData);
 
@@ -278,20 +305,22 @@ export default function CheckoutSectionNew() {
   // Strona sukcesu
   if (orderSuccess && orderNumber) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 py-12 relative overflow-hidden">
-        {/* Animowane tło z gradientem */}
-        <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-gray-900 to-red-800/5"></div>
+      <div className="min-h-screen bg-black py-12 relative overflow-hidden">
+        {/* Animowane tło z gradientem - ciemniejszy motyw */}
+        <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
         
-        {/* Animowane cząsteczki */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-          <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-          <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+        {/* Animowane cząsteczki - więcej czerwieni */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-20 left-10 w-2 h-2 bg-red-600 rounded-full animate-float-hover"></div>
+          <div className="absolute top-40 right-20 w-1 h-1 bg-red-500 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
+          <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-700 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+          <div className="absolute top-60 left-1/3 w-1 h-1 bg-red-500 rounded-full animate-float-hover" style={{animationDelay: '1.5s'}}></div>
+          <div className="absolute bottom-60 right-1/4 w-1.5 h-1.5 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.8s'}}></div>
         </div>
 
         <div className="max-w-2xl mx-auto px-4 relative z-10">
-          <Card className="text-center bg-gray-800/60 backdrop-blur border-gray-600 shadow-2xl shadow-gray-900/50 shadow-2xl">
+          <Card className="text-center bg-gray-900 backdrop-blur border-gray-700 shadow-2xl">
             <CardContent className="pt-8 pb-8">
               <div className="w-16 h-16 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-red-500/30">
                 <Check className="w-8 h-8 text-red-500" />
@@ -305,7 +334,7 @@ export default function CheckoutSectionNew() {
                 Dziękujemy za zakup. Twoje zamówienie zostało przyjęte do realizacji.
               </p>
               
-              <div className="bg-gray-900/50 border border-red-500/30 rounded-lg p-4 mb-6">
+              <div className="bg-gray-800/60 border border-gray-700 rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-400 mb-1">Numer zamówienia:</p>
                 <p className="text-xl font-bold text-red-400">{orderNumber}</p>
               </div>
@@ -317,7 +346,7 @@ export default function CheckoutSectionNew() {
                   </Link>
                 </Button>
                 
-                <Button variant="outline" asChild className="w-full bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white">
+                <Button variant="outline" asChild className="w-full bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700 hover:text-white">
                   <Link href={`/order/${orderNumber}`}>
                     Zobacz szczegóły zamówienia
                   </Link>
@@ -331,16 +360,18 @@ export default function CheckoutSectionNew() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 py-12 relative overflow-hidden">
-      {/* Animowane tło z gradientem */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-gray-900 to-red-800/5"></div>
+    <div className="min-h-screen bg-black py-12 relative overflow-hidden">
+      {/* Animowane tło z gradientem - ciemniejszy motyw */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
       
-      {/* Animowane cząsteczki */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+      {/* Animowane cząsteczki - więcej czerwieni */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-20 left-10 w-2 h-2 bg-red-600 rounded-full animate-float-hover"></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-red-500 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-700 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+        <div className="absolute top-60 left-1/3 w-1 h-1 bg-red-500 rounded-full animate-float-hover" style={{animationDelay: '1.5s'}}></div>
+        <div className="absolute bottom-60 right-1/4 w-1.5 h-1.5 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.8s'}}></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -355,24 +386,26 @@ export default function CheckoutSectionNew() {
           <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-red-500 to-transparent mx-auto mt-6"></div>
         </div>
 
-        {/* Progress Steps */}
-        <div className="flex items-center justify-center mb-8">
+        {/* Progress Steps - Sticky on mobile - ciemniejszy motyw */}
+        <div className="sticky top-0 z-20 bg-black/95 backdrop-blur border-b border-red-900/30 mb-8 -mx-6 px-6 py-4">
+          <div className="flex items-center justify-center">
           {[1, 2, 3].map((step) => (
             <React.Fragment key={step}>
-              <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-300 hover:scale-105 ${
+              <div className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation ${
                 currentStep >= step 
-                  ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-500/30' 
-                  : 'border-gray-600 text-gray-400 bg-gray-800/50 hover:border-red-500/50'
+                  ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-500/50' 
+                  : 'border-red-800/50 text-gray-500 bg-black/80 hover:border-red-600/70 hover:bg-red-900/20'
               }`}>
                 {step}
               </div>
               {step < 3 && (
                 <div className={`w-16 h-0.5 mx-4 transition-all duration-300 ${
-                  currentStep > step ? 'bg-red-600' : 'bg-gray-700'
+                  currentStep > step ? 'bg-red-600' : 'bg-red-800/30'
                 }`} />
               )}
             </React.Fragment>
           ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
@@ -390,10 +423,10 @@ export default function CheckoutSectionNew() {
             )} className="space-y-8">
               {/* Step 1: Dane kontaktowe */}
               {currentStep === 1 && (
-                <Card className="bg-gray-800/60 backdrop-blur border-gray-600 shadow-2xl shadow-gray-900/50 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
+                <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
                   <CardHeader className="border-l-4 border-red-500 px-8 py-6">
                     <CardTitle className="flex items-center text-white text-xl">
-                      <Shield className="w-6 h-6 mr-3 text-red-400" />
+                      <CreditCard className="w-6 h-6 mr-3 text-red-500" />
                       Dane kontaktowe
                     </CardTitle>
                   </CardHeader>
@@ -404,8 +437,8 @@ export default function CheckoutSectionNew() {
                         <Input
                           id="firstName"
                           {...register("firstName")}
-                          className={`h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
-                            errors.firstName ? "border-red-500 bg-red-900/10" : ""
+                          className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                            errors.firstName ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
                         {errors.firstName && (
@@ -420,8 +453,8 @@ export default function CheckoutSectionNew() {
                         <Input
                           id="lastName"
                           {...register("lastName")}
-                          className={`h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
-                            errors.lastName ? "border-red-500 bg-red-900/10" : ""
+                          className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                            errors.lastName ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
                         {errors.lastName && (
@@ -438,8 +471,8 @@ export default function CheckoutSectionNew() {
                         id="email"
                         type="email"
                         {...register("email")}
-                        className={`h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
-                          errors.email ? "border-red-500 bg-red-900/10" : ""
+                        className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          errors.email ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
                       {errors.email && (
@@ -454,8 +487,8 @@ export default function CheckoutSectionNew() {
                       <Input
                         id="phone"
                         {...register("phone")}
-                        className={`h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
-                          errors.phone ? "border-red-500 bg-red-900/10" : ""
+                        className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          errors.phone ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
                       {errors.phone && (
@@ -470,10 +503,10 @@ export default function CheckoutSectionNew() {
 
               {/* Step 2: Adres */}
               {currentStep === 2 && (
-                <Card className="bg-gray-800/60 backdrop-blur border-gray-600 shadow-2xl shadow-gray-900/50 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
+                <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
                   <CardHeader className="border-l-4 border-red-500 px-8 py-6">
                     <CardTitle className="flex items-center text-white text-xl">
-                      <Truck className="w-6 h-6 mr-3 text-red-400" />
+                      <Truck className="w-6 h-6 mr-3 text-red-500" />
                       Adres wysyłkowy
                     </CardTitle>
                   </CardHeader>
@@ -483,8 +516,8 @@ export default function CheckoutSectionNew() {
                       <Input
                         id="street"
                         {...register("street")}
-                        className={`h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
-                          errors.street ? "border-red-500 bg-red-900/10" : ""
+                        className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          errors.street ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
                       {errors.street && (
@@ -500,8 +533,8 @@ export default function CheckoutSectionNew() {
                         <Input
                           id="postalCode"
                           {...register("postalCode")}
-                          className={`h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
-                            errors.postalCode ? "border-red-500 bg-red-900/10" : ""
+                          className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                            errors.postalCode ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
                         {errors.postalCode && (
@@ -516,8 +549,8 @@ export default function CheckoutSectionNew() {
                         <Input
                           id="city"
                           {...register("city")}
-                          className={`h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
-                            errors.city ? "border-red-500 bg-red-900/10" : ""
+                          className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                            errors.city ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
                         {errors.city && (
@@ -533,8 +566,8 @@ export default function CheckoutSectionNew() {
                       <Input
                         id="country"
                         {...register("country")}
-                        className={`h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 text-base ${
-                          errors.country ? "border-red-500 bg-red-900/10" : ""
+                        className={`h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          errors.country ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
                       {errors.country && (
@@ -595,88 +628,112 @@ export default function CheckoutSectionNew() {
 
               {/* Step 3: Płatność */}
               {currentStep === 3 && (
-                <Card className="bg-gray-800/60 backdrop-blur border-gray-600 shadow-2xl shadow-gray-900/50 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
+                <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
                   <CardHeader className="border-l-4 border-red-500 px-8 py-6">
                     <CardTitle className="flex items-center text-white text-xl">
-                      <CreditCard className="w-6 h-6 mr-3 text-red-400" />
+                      <CreditCard className="w-6 h-6 mr-3 text-red-500" />
                       Metoda płatności
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-8 px-8 pb-8">
-                    <RadioGroup
-                      value={paymentMethod}
-                      onValueChange={(value) => setValue("paymentMethod", value as any)}
-                      className="space-y-4"
-                    >
+                    <div className="space-y-4">
                       <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
                         paymentMethod === "card" 
-                          ? 'border-red-500 bg-red-900/20' 
-                          : 'bg-gray-900/30 border-gray-600 hover:border-red-500/50'
+                          ? 'border-red-500 bg-red-900/30' 
+                          : 'bg-black/40 border-red-800/30 hover:border-red-500/70 hover:bg-red-900/10'
                       }`}
                       onClick={() => setValue("paymentMethod", "card")}>
-                        <RadioGroupItem value="card" id="card" className={paymentMethod === "card" ? 'border-red-500' : ''} />
-                        <Label htmlFor="card" className="flex items-center space-x-4 flex-1 cursor-pointer">
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === "card" ? 'border-red-500 bg-red-500' : 'border-gray-400'}`}>
+                          {paymentMethod === "card" && <div className="w-2 h-2 bg-white rounded-full"></div>}
+                        </div>
+                        <div className="flex items-center space-x-4 flex-1 cursor-pointer">
                           <CreditCard className={`w-6 h-6 ${paymentMethod === "card" ? 'text-red-400' : 'text-gray-400'}`} />
                           <div>
                             <div className={`font-medium text-base ${paymentMethod === "card" ? 'text-white' : 'text-gray-200'}`}>
                               Karta płatnicza
                             </div>
-                            <div className={`text-sm ${paymentMethod === "card" ? 'text-gray-400' : 'text-gray-500'}`}>
-                              Visa, Mastercard, American Express
+                            <div className={`text-sm ${paymentMethod === "card" ? 'text-gray-400' : 'text-gray-500'} flex items-center gap-2`}>
+                              <span>Visa, Mastercard, American Express</span>
+                              <div className="flex items-center gap-3 ml-3">
+                                <Image 
+                                  src="/formy_platnosci/visa.png" 
+                                  alt="Visa" 
+                                  width={40} 
+                                  height={26} 
+                                  className="object-contain"
+                                />
+                                <Image 
+                                  src="/formy_platnosci/mastercard.png" 
+                                  alt="Mastercard" 
+                                  width={40} 
+                                  height={26} 
+                                  className="object-contain"
+                                />
+                              </div>
                             </div>
                           </div>
                           {paymentMethod === "card" && (
                             <Check className="w-5 h-5 text-red-400 ml-auto" />
                           )}
-                        </Label>
+                        </div>
                       </div>
                       
                       <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
                         paymentMethod === "transfer" 
-                          ? 'border-red-500 bg-red-900/20' 
-                          : 'bg-gray-900/30 border-gray-600 hover:border-red-500/50'
+                          ? 'border-red-500 bg-red-900/30' 
+                          : 'bg-black/40 border-red-800/30 hover:border-red-500/70 hover:bg-red-900/10'
                       }`}
                       onClick={() => setValue("paymentMethod", "transfer")}>
-                        <RadioGroupItem value="transfer" id="transfer" className={paymentMethod === "transfer" ? 'border-red-500' : ''} />
-                        <Label htmlFor="transfer" className="flex items-center space-x-4 flex-1 cursor-pointer">
-                          <Truck className={`w-6 h-6 ${paymentMethod === "transfer" ? 'text-red-400' : 'text-gray-400'}`} />
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === "transfer" ? 'border-red-500 bg-red-500' : 'border-gray-400'}`}>
+                          {paymentMethod === "transfer" && <div className="w-2 h-2 bg-white rounded-full"></div>}
+                        </div>
+                        <div className="flex items-center space-x-4 flex-1 cursor-pointer">
+                          <Banknote className={`w-6 h-6 ${paymentMethod === "transfer" ? 'text-red-400' : 'text-gray-400'}`} />
                           <div>
                             <div className={`font-medium text-base ${paymentMethod === "transfer" ? 'text-white' : 'text-gray-200'}`}>
-                              Przelew bankowy
+                              Przelewy24
                             </div>
-                            <div className={`text-sm ${paymentMethod === "transfer" ? 'text-gray-400' : 'text-gray-500'}`}>
-                              Przelew online lub tradycyjny
+                            <div className={`text-sm ${paymentMethod === "transfer" ? 'text-gray-400' : 'text-gray-500'} flex items-center gap-2`}>
+                              <span>Płać szybkimi przelewami, BLIK</span>
+                              <div className="flex items-center gap-3 ml-3">
+                                <Image 
+                                  src="/formy_platnosci/przelewy.png" 
+                                  alt="Przelewy24" 
+                                  width={40} 
+                                  height={26} 
+                                  className="object-contain"
+                                />
+                                <Image 
+                                  src="/formy_platnosci/blik.png" 
+                                  alt="BLIK" 
+                                  width={40} 
+                                  height={26} 
+                                  className="object-contain"
+                                />
+                                <Image 
+                                  src="/formy_platnosci/visa.png" 
+                                  alt="Visa" 
+                                  width={40} 
+                                  height={26} 
+                                  className="object-contain"
+                                />
+                                <Image 
+                                  src="/formy_platnosci/mastercard.png" 
+                                  alt="Mastercard" 
+                                  width={40} 
+                                  height={26} 
+                                  className="object-contain"
+                                />
+                              </div>
                             </div>
                           </div>
                           {paymentMethod === "transfer" && (
                             <Check className="w-5 h-5 text-red-400 ml-auto" />
                           )}
-                        </Label>
+                        </div>
                       </div>
                       
-                      <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
-                        paymentMethod === "blik" 
-                          ? 'border-red-500 bg-red-900/20' 
-                          : 'bg-gray-900/30 border-gray-600 hover:border-red-500/50'
-                      }`}
-                      onClick={() => setValue("paymentMethod", "blik")}>
-                        <RadioGroupItem value="blik" id="blik" className={paymentMethod === "blik" ? 'border-red-500' : ''} />
-                        <Label htmlFor="blik" className="flex items-center space-x-4 flex-1 cursor-pointer">
-                          <Shield className={`w-6 h-6 ${paymentMethod === "blik" ? 'text-red-400' : 'text-gray-400'}`} />
-                          <div>
-                            <div className={`font-medium text-base ${paymentMethod === "blik" ? 'text-white' : 'text-gray-200'}`}>
-                              BLIK
-                            </div>
-                            <div className={`text-sm ${paymentMethod === "blik" ? 'text-gray-400' : 'text-gray-500'}`}>
-                              Płatność przez aplikację bankową
-                            </div>
-                          </div>
-                          {paymentMethod === "blik" && (
-                            <Check className="w-5 h-5 text-red-400 ml-auto" />
-                          )}
-                        </Label>
-                      </div>
-                    </RadioGroup>
+                    </div>
 
                     {errors.paymentMethod && (
                       <p className="text-red-400 text-sm">
@@ -684,12 +741,98 @@ export default function CheckoutSectionNew() {
                       </p>
                     )}
 
+                    {/* Formularz danych karty - pokazuje się tylko gdy wybrano kartę płatniczą */}
+                    {paymentMethod === "card" && (
+                      <div className="mt-6 p-6 bg-gray-800/50 rounded-lg border border-gray-700 animate-in slide-in-from-top-2 duration-300">
+                        <h4 className="text-lg font-medium text-white mb-4 flex items-center">
+                          <CreditCard className="w-5 h-5 mr-2 text-red-400" />
+                          Dane karty płatniczej
+                        </h4>
+                        <div className="space-y-4">
+                          <div>
+                            <Label htmlFor="cardNumber" className="text-gray-200 font-medium text-sm">
+                              Numer karty *
+                            </Label>
+                            <Input
+                              id="cardNumber"
+                              {...register("cardNumber")}
+                              placeholder="1234 5678 9012 3456"
+                              className="h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base"
+                            />
+                            {errors.cardNumber && (
+                              <p className="text-red-400 text-sm mt-1">
+                                {errors.cardNumber.message}
+                              </p>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <Label htmlFor="cardExpiry" className="text-gray-200 font-medium text-sm">
+                                Data ważności *
+                              </Label>
+                              <Input
+                                id="cardExpiry"
+                                {...register("cardExpiry")}
+                                placeholder="MM/RR"
+                                className="h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base"
+                              />
+                              {errors.cardExpiry && (
+                                <p className="text-red-400 text-sm mt-1">
+                                  {errors.cardExpiry.message}
+                                </p>
+                              )}
+                            </div>
+
+                            <div>
+                              <Label htmlFor="cardCvv" className="text-gray-200 font-medium text-sm">
+                                CVV *
+                              </Label>
+                              <Input
+                                id="cardCvv"
+                                {...register("cardCvv")}
+                                placeholder="123"
+                                className="h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base"
+                              />
+                              {errors.cardCvv && (
+                                <p className="text-red-400 text-sm mt-1">
+                                  {errors.cardCvv.message}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div>
+                            <Label htmlFor="cardholderName" className="text-gray-200 font-medium text-sm">
+                              Imię i nazwisko na karcie *
+                            </Label>
+                            <Input
+                              id="cardholderName"
+                              {...register("cardholderName")}
+                              placeholder="Jan Kowalski"
+                              className="h-12 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 text-base"
+                            />
+                            {errors.cardholderName && (
+                              <p className="text-red-400 text-sm mt-1">
+                                {errors.cardholderName.message}
+                              </p>
+                            )}
+                          </div>
+
+                          <div className="flex items-center space-x-2 text-sm text-gray-400">
+                            <CheckCircle className="w-4 h-4 text-green-400" />
+                            <span>Twoje dane są szyfrowane i bezpieczne</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     <div>
                       <Label htmlFor="notes" className="text-gray-300 font-medium">Notatki (opcjonalnie)</Label>
                       <textarea
                         id="notes"
                         {...register("notes")}
-                        className="w-full p-3 bg-gray-900/50 border-gray-700 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/20 rounded-lg resize-none"
+                        className="w-full p-3 bg-black/60 border-red-800/50 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500/30 rounded-lg resize-none"
                         rows={3}
                         placeholder="Dodatkowe informacje do zamówienia..."
                       />
@@ -796,11 +939,11 @@ export default function CheckoutSectionNew() {
 
           {/* Order Summary */}
           <div className="lg:col-span-2">
-            <Card className="sticky top-4 bg-gray-800/60 backdrop-blur border-gray-600 shadow-2xl shadow-gray-900/50 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
+            <Card className="sticky top-4 bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
               <CardHeader className="border-b border-gray-700 px-8 py-6">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl text-white">Podsumowanie zamówienia</CardTitle>
-                  <div className="w-4 h-4 bg-red-400 rounded-full animate-pulse"></div>
+                  <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
                 </div>
               </CardHeader>
               <CardContent className="p-8">
@@ -808,10 +951,10 @@ export default function CheckoutSectionNew() {
                   {/* Items */}
                   <div className="space-y-6">
                     {items.map((item, index) => (
-                      <div key={item.id} className="flex space-x-6 p-6 bg-gray-700/30 rounded-lg border border-gray-600/50">
+                      <div key={item.id} className="flex space-x-6 p-6 bg-gray-800/50 rounded-lg border border-gray-700/50">
                         {/* Product Image */}
                         <div className="flex-shrink-0">
-                          <div className="w-24 h-24 bg-gray-700 rounded-lg border border-gray-600 flex items-center justify-center">
+                          <div className="w-24 h-24 bg-gray-700/60 rounded-lg border border-gray-600/50 flex items-center justify-center">
                             {item.productImage ? (
                               <img 
                                 src={item.productImage} 
@@ -819,7 +962,7 @@ export default function CheckoutSectionNew() {
                                 className="w-full h-full object-cover rounded-lg"
                               />
                             ) : (
-                              <div className="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center text-white text-xl font-medium">
+                              <div className="w-12 h-12 bg-gray-600/60 rounded-full flex items-center justify-center text-white text-xl font-medium">
                                 {index + 1}
                               </div>
                             )}
@@ -869,11 +1012,11 @@ export default function CheckoutSectionNew() {
                     <div className="flex space-x-3">
                       <Input 
                         placeholder="Wprowadź kod"
-                        className="h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 rounded-lg text-base"
+                        className="h-12 bg-gray-800/60 border-gray-700 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-base"
                       />
                       <Button 
                         type="button"
-                        className="h-12 bg-gray-700 border-gray-600 text-white hover:bg-gray-600 rounded-lg px-6 text-base"
+                        className="h-12 bg-red-600 border-red-500 text-white hover:bg-red-700 rounded-lg px-6 text-base"
                       >
                         Zastosuj
                       </Button>
@@ -891,7 +1034,7 @@ export default function CheckoutSectionNew() {
                       <span className="text-white font-medium">27,00 zł</span>
                     </div>
                     
-                    <div className="pt-6 border-t border-gray-700 bg-gray-700/30 p-6 rounded-lg">
+                    <div className="pt-6 border-t border-gray-700 bg-gray-800/40 p-6 rounded-lg">
                       <div className="flex justify-between items-center">
                         <span className="text-white font-semibold text-2xl">Razem do zapłaty</span>
                         <span className="text-white font-bold text-3xl">
