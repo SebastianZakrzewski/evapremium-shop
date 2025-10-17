@@ -437,7 +437,7 @@ export default function CheckoutSectionNew() {
                         <Input
                           id="firstName"
                           {...register("firstName")}
-                          className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.firstName ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -453,7 +453,7 @@ export default function CheckoutSectionNew() {
                         <Input
                           id="lastName"
                           {...register("lastName")}
-                          className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.lastName ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -471,7 +471,7 @@ export default function CheckoutSectionNew() {
                         id="email"
                         type="email"
                         {...register("email")}
-                        className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.email ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -487,7 +487,7 @@ export default function CheckoutSectionNew() {
                       <Input
                         id="phone"
                         {...register("phone")}
-                        className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.phone ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -516,7 +516,7 @@ export default function CheckoutSectionNew() {
                       <Input
                         id="street"
                         {...register("street")}
-                        className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.street ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -533,7 +533,7 @@ export default function CheckoutSectionNew() {
                         <Input
                           id="postalCode"
                           {...register("postalCode")}
-                          className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.postalCode ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -549,7 +549,7 @@ export default function CheckoutSectionNew() {
                         <Input
                           id="city"
                           {...register("city")}
-                          className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.city ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -566,7 +566,7 @@ export default function CheckoutSectionNew() {
                       <Input
                         id="country"
                         {...register("country")}
-                        className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.country ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -598,7 +598,7 @@ export default function CheckoutSectionNew() {
                             <Input
                               id="billingStreet"
                               {...register("billingStreet")}
-                              className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                              className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                                 errors.billingStreet ? "border-red-500 bg-red-900/20" : ""
                               }`}
                             />
@@ -609,7 +609,7 @@ export default function CheckoutSectionNew() {
                               <Input
                                 id="billingPostalCode"
                                 {...register("billingPostalCode")}
-                                className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                                className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                                   errors.billingPostalCode ? "border-red-500 bg-red-900/20" : ""
                                 }`}
                               />
@@ -619,7 +619,7 @@ export default function CheckoutSectionNew() {
                               <Input
                                 id="billingCity"
                                 {...register("billingCity")}
-                                className={`h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                                className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                                   errors.billingCity ? "border-red-500 bg-red-900/20" : ""
                                 }`}
                               />
@@ -763,7 +763,7 @@ export default function CheckoutSectionNew() {
                               id="cardNumber"
                               {...register("cardNumber")}
                               placeholder="1234 5678 9012 3456"
-                              className="h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base"
+                              className="h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base"
                             />
                             {errors.cardNumber && (
                               <p className="text-red-400 text-sm mt-1">
@@ -781,7 +781,7 @@ export default function CheckoutSectionNew() {
                                 id="cardExpiry"
                                 {...register("cardExpiry")}
                                 placeholder="MM/RR"
-                                className="h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base"
+                                className="h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base"
                               />
                               {errors.cardExpiry && (
                                 <p className="text-red-400 text-sm mt-1">
@@ -798,7 +798,7 @@ export default function CheckoutSectionNew() {
                                 id="cardCvv"
                                 {...register("cardCvv")}
                                 placeholder="123"
-                                className="h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base"
+                                className="h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base"
                               />
                               {errors.cardCvv && (
                                 <p className="text-red-400 text-sm mt-1">
@@ -816,7 +816,7 @@ export default function CheckoutSectionNew() {
                               id="cardholderName"
                               {...register("cardholderName")}
                               placeholder="Jan Kowalski"
-                              className="h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 text-base"
+                              className="h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base"
                             />
                             {errors.cardholderName && (
                               <p className="text-red-400 text-sm mt-1">
@@ -838,7 +838,7 @@ export default function CheckoutSectionNew() {
                       <textarea
                         id="notes"
                         {...register("notes")}
-                        className="w-full p-3 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 rounded-lg resize-none"
+                        className="w-full p-3 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg resize-none"
                         rows={3}
                         placeholder="Dodatkowe informacje do zamówienia..."
                       />
@@ -1095,7 +1095,7 @@ export default function CheckoutSectionNew() {
                     <div className="flex space-x-3">
                       <Input 
                         placeholder="Wprowadź kod"
-                        className="h-12 bg-neutral-800/60 border-neutral-700 text-white placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-base"
+                        className="h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-base"
                       />
                       <Button 
                         type="button"
