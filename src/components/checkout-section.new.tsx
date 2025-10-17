@@ -288,7 +288,44 @@ export default function CheckoutSectionNew() {
       // Wyczyść koszyk
       clearCart();
       
-      // Pokaż sukces
+      // Inicjalizuj płatność Przelewy24
+      try {
+        console.log('🔄 Initiating P24 payment for order:', order.id);
+        console.log('🔄 Calling API endpoint...');
+        
+        const paymentResponse = await fetch('/api/payments/przelewy24/init', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            orderId: order.id
+          })
+        });
+
+        console.log('🔄 Payment response status:', paymentResponse.status);
+
+        if (!paymentResponse.ok) {
+          const errorData = await paymentResponse.json();
+          console.error('❌ Payment API error:', errorData);
+          throw new Error(errorData.error || 'Payment initialization failed');
+        }
+
+        const paymentData = await paymentResponse.json();
+        console.log('✅ P24 payment initialized:', paymentData.data);
+
+        // Przekieruj do Przelewy24
+        console.log('🔄 Redirecting to P24:', paymentData.data.paymentUrl);
+        window.location.href = paymentData.data.paymentUrl;
+        return; // Zatrzymaj dalsze wykonywanie
+
+      } catch (paymentError) {
+        console.error('❌ Payment initialization error:', paymentError);
+        alert('Wystąpił błąd podczas inicjalizacji płatności. Spróbuj ponownie.');
+        return;
+      }
+      
+      // Pokaż sukces (tylko jeśli nie było przekierowania)
       setOrderNumber(order.id);
       setOrderSuccess(true);
       

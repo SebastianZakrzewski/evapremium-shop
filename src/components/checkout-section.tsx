@@ -340,12 +340,15 @@ export function CheckoutSection() {
   }
 
   const onSubmit = async (data: CheckoutFormData) => {
+    console.log('🚀 onSubmit called with data:', data);
+    console.log('🚀 cartItems:', cartItems);
     setIsLoading(true)
     setErrorMessage("")
     
     try {
       // Sprawdź czy są produkty w koszyku
       if (cartItems.length === 0) {
+        console.log('❌ Cart is empty');
         setErrorMessage("Koszyk jest pusty. Dodaj produkty przed złożeniem zamówienia.");
         return;
       }
@@ -379,23 +382,53 @@ export function CheckoutSection() {
                    data.paymentMethod === 'blik' ? 'BLIK' : 'Pobranie'
       };
 
-      // Utwórz zamówienie
-      const order = await createOrder(
+      // Utwórz i zapisz zamówienie (createOrder już zapisuje do bazy)
+      const savedOrder = await createOrder(
         cartItems,
         customerData,
         shippingData,
         paymentData
       );
 
-      // Zapisz zamówienie do Supabase
-      const savedOrder = await saveOrder(order);
-
       // Wyczyść koszyk po udanym zamówieniu
       clearCart();
 
-      // Pokaż potwierdzenie
-      setShowConfirmation(true);
-      console.log('✅ Order created successfully:', savedOrder.id);
+      // Inicjalizuj płatność Przelewy24
+      try {
+        console.log('🔄 Initiating P24 payment for order:', savedOrder.id);
+        console.log('🔄 Calling API endpoint...');
+        
+        const paymentResponse = await fetch('/api/payments/przelewy24/init', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            orderId: savedOrder.id
+          })
+        });
+
+        console.log('🔄 Payment response status:', paymentResponse.status);
+
+        if (!paymentResponse.ok) {
+          const errorData = await paymentResponse.json();
+          console.error('❌ Payment API error:', errorData);
+          throw new Error(errorData.error || 'Payment initialization failed');
+        }
+
+        const paymentData = await paymentResponse.json();
+        console.log('✅ P24 payment initialized:', paymentData.data);
+
+        // Przekieruj do Przelewy24
+        console.log('🔄 Redirecting to P24:', paymentData.data.paymentUrl);
+        window.location.href = paymentData.data.paymentUrl;
+        return; // Zatrzymaj dalsze wykonywanie
+
+      } catch (paymentError) {
+        console.error('❌ Payment initialization error:', paymentError);
+        setErrorMessage("Wystąpił błąd podczas inicjalizacji płatności. Spróbuj ponownie.");
+        return;
+      }
 
       // Aktualizuj słownik z danymi klienta (stara logika - do usunięcia w przyszłości)
       if (configuratorDictionary) {
@@ -603,7 +636,15 @@ export function CheckoutSection() {
         {/* Progress Indicator */}
         <ProgressIndicator />
 
-        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <form onSubmit={handleSubmit(
+          (data) => {
+            console.log('📝 Form submitted with valid data:', data);
+            onSubmit(data);
+          },
+          (errors) => {
+            console.log('❌ Form validation errors:', errors);
+          }
+        )} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Formularz klienta */}
           <div className="lg:col-span-2 space-y-8">
             {/* Step 1: Dane kontaktowe */}
@@ -1099,6 +1140,7 @@ export function CheckoutSection() {
                   <Button
                     type="submit"
                     disabled={isLoading}
+                    onClick={() => console.log('🔘 Submit button clicked')}
                     className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white border-0 shadow-2xl hover:shadow-red-500/25 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading ? (

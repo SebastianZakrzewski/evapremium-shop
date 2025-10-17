@@ -145,6 +145,11 @@ model Order {
   discount        Decimal  @db.Decimal(10, 2) @default(0)
   total           Decimal  @db.Decimal(10, 2)
   
+  // Przelewy24 fields
+  p24SessionId    String?  // ID sesji P24
+  p24OrderId      Int?     // ID zamówienia w P24
+  p24TransactionId Int?    // ID transakcji po opłaceniu
+  
   // Timestamps
   notes           String?
   shippedAt       DateTime?

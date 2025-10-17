@@ -147,6 +147,13 @@ export class OrderService {
   }
 
   /**
+   * Pobierz zamówienie po ID
+   */
+  async getOrderById(orderId: string): Promise<Order | null> {
+    return await this.repository.findById(orderId);
+  }
+
+  /**
    * Pobierz zamówienia klienta (po email)
    */
   async getCustomerOrders(email: string): Promise<Order[]> {
@@ -169,6 +176,37 @@ export class OrderService {
     trackingNumber?: string
   ): Promise<Order> {
     return await this.repository.updateStatus(orderId, status, trackingNumber);
+  }
+
+  /**
+   * Zaktualizuj status płatności
+   */
+  async updatePaymentStatus(
+    orderId: string,
+    paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded'
+  ): Promise<Order> {
+    return await this.repository.updatePaymentStatus(orderId, paymentStatus);
+  }
+
+  /**
+   * Zaktualizuj dane Przelewy24
+   */
+  async updateP24Data(
+    orderId: string,
+    p24Data: {
+      p24SessionId?: string;
+      p24OrderId?: number | null;
+      p24TransactionId?: number | null;
+    }
+  ): Promise<Order> {
+    return await this.repository.updateP24Data(orderId, p24Data);
+  }
+
+  /**
+   * Znajdź zamówienie po sessionId P24
+   */
+  async getOrderBySessionId(sessionId: string): Promise<Order | null> {
+    return await this.repository.findBySessionId(sessionId);
   }
 
   /**
