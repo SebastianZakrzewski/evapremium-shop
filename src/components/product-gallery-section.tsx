@@ -344,7 +344,8 @@ ImageModal.displayName = 'ImageModal';
 
 export default function ProductGallerySection() {
   const [selectedImage, setSelectedImage] = useState<ProductImage | null>(null);
-  const [animationSpeed, setAnimationSpeed] = useState(60); // Domyślna prędkość animacji
+  const [isPaused, setIsPaused] = useState(false);
+  const [carouselOffset, setCarouselOffset] = useState(0);
 
   // Zoptymalizowane funkcje z useCallback
   const openModal = useCallback((image: ProductImage) => {
@@ -355,19 +356,19 @@ export default function ProductGallerySection() {
     setSelectedImage(null);
   }, []);
 
-  // Funkcje nawigacji karuzeli - przyspieszają automatyczną animację
+  // Funkcje nawigacji karuzeli - używają stanu zamiast manipulacji DOM
   const goToPrevious = useCallback(() => {
-    // Przyspiesz animację (zmniejsz duration)
-    setAnimationSpeed(10);
-    // Resetuj po 2 sekundach
-    setTimeout(() => setAnimationSpeed(60), 2000);
+    setIsPaused(true);
+    setCarouselOffset(prev => prev + 400); // Zmieniono na +400 dla lewej strzałki
+    // Wznów animację po 2 sekundach
+    setTimeout(() => setIsPaused(false), 2000);
   }, []);
 
   const goToNext = useCallback(() => {
-    // Przyspiesz animację (zmniejsz duration)
-    setAnimationSpeed(10);
-    // Resetuj po 2 sekundach
-    setTimeout(() => setAnimationSpeed(60), 2000);
+    setIsPaused(true);
+    setCarouselOffset(prev => prev - 400); // Zmieniono na -400 dla prawej strzałki
+    // Wznów animację po 2 sekundach
+    setTimeout(() => setIsPaused(false), 2000);
   }, []);
 
   // Zoptymalizowane zestawy obrazów z useMemo
@@ -446,16 +447,23 @@ export default function ProductGallerySection() {
         {/* Główny kontener z automatyczną animacją */}
         <div className="carousel-container overflow-hidden">
           <motion.div 
-            className="flex"
+            className="flex carousel-motion"
             style={{ width: 'max-content' }}
-            animate={{
-              x: [0, -1500]
+            animate={isPaused ? {
+              x: carouselOffset
+            } : {
+              x: [carouselOffset, carouselOffset - 1500]
             }}
-            transition={{
+            transition={isPaused ? {
+              x: {
+                duration: 0.5,
+                ease: "easeOut"
+              }
+            } : {
               x: {
                 repeat: Infinity,
                 repeatType: "loop",
-                duration: animationSpeed,
+                duration: 60,
                 ease: "linear"
               }
             }}
