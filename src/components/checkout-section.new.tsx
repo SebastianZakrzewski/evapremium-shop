@@ -951,53 +951,130 @@ export default function CheckoutSectionNew() {
                   {/* Items */}
                   <div className="space-y-6">
                     {items.map((item, index) => (
-                      <div key={item.id} className="flex space-x-6 p-6 bg-gray-800/50 rounded-lg border border-gray-700/50">
-                        {/* Product Image */}
-                        <div className="flex-shrink-0">
-                          <div className="w-24 h-24 bg-gray-700/60 rounded-lg border border-gray-600/50 flex items-center justify-center">
-                            {item.productImage ? (
-                              <img 
-                                src={item.productImage} 
-                                alt={item.productName}
-                                className="w-full h-full object-cover rounded-lg"
-                              />
-                            ) : (
-                              <div className="w-12 h-12 bg-gray-600/60 rounded-full flex items-center justify-center text-white text-xl font-medium">
-                                {index + 1}
+                      <div key={item.id} className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                        {/* Header z nazwą produktu */}
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex-1">
+                            <h3 className="text-xl font-bold text-white mb-2">
+                              {item.productType === 'mat' ? 'Dywaniki samochodowe' : item.productName}
+                            </h3>
+                            
+                            {/* Szczegóły samochodu */}
+                            {item.configuration?.carDetails && (
+                              <div className="text-sm text-neutral-300">
+                                <p className="font-medium">
+                                  {item.configuration.carDetails.brand} {item.configuration.carDetails.model}
+                                  {item.configuration.carDetails.generation && ` ${item.configuration.carDetails.generation}`}
+                                  {item.configuration.carDetails.year && ` (${item.configuration.carDetails.year})`}
+                                </p>
+                                {item.configuration.carDetails.bodyType && (
+                                  <p className="text-xs text-neutral-400 capitalize mt-1">
+                                    {item.configuration.carDetails.bodyType}
+                                  </p>
+                                )}
                               </div>
                             )}
                           </div>
-                        </div>
-                        
-                        {/* Product Details */}
-                        <div className="flex-1 min-w-0 space-y-4">
-                          <p className="text-white text-lg font-medium leading-tight">
-                            {item.productName}
-                          </p>
-                          {item.configuration && (
-                            <div className="space-y-3">
-                              {item.configuration.carDetails?.bodyType && (
-                                <p className="text-gray-400 text-base">
-                                  {item.configuration.carDetails.bodyType}
-                                </p>
-                              )}
-                              {item.configuration.materialColor && (
-                                <p className="text-gray-400 text-base">
-                                  Kolor: {item.configuration.materialColor}
-                                </p>
-                              )}
-                              {item.configuration.borderColor && (
-                                <p className="text-gray-400 text-base">
-                                  Obszycie: {item.configuration.borderColor}
-                                </p>
+
+                          {/* Obraz produktu */}
+                          <div className="ml-4">
+                            <div className="w-16 h-16 bg-neutral-700 rounded-lg flex items-center justify-center overflow-hidden">
+                              {item.productImage ? (
+                                <img 
+                                  src={item.productImage} 
+                                  alt={item.productName}
+                                  className="w-full h-full object-cover rounded-lg"
+                                />
+                              ) : (
+                                <div className="text-neutral-400 text-xs text-center">
+                                  {item.productType === 'mat' ? '🚗' : '📦'}
+                                </div>
                               )}
                             </div>
-                          )}
-                          <div className="flex items-center justify-between">
-                            <span className="text-gray-400 text-base">Ilość: {item.quantity}</span>
-                            <span className="text-white font-semibold text-lg">
-                              {PricingService.formatPrice(item.subtotal)}
+                          </div>
+                        </div>
+
+                        {/* Konfiguracja dywaników */}
+                        {item.configuration && item.productType === 'mat' && (
+                          <div className="mb-4">
+                            <div className="grid grid-cols-1 gap-3">
+                              {/* Wariant zestawu */}
+                              {item.configuration.setVariant && (
+                                <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
+                                  <span className="text-sm text-neutral-300">Zestaw:</span>
+                                  <span className="text-sm font-medium text-white">
+                                    {item.configuration.setVariant === 'front' ? 'Starter (przód)' :
+                                     item.configuration.setVariant === 'basic' ? 'Podstawowy (przód + tył)' :
+                                     item.configuration.setVariant === 'premium' ? 'Premium (przód + tył + bagażnik)' :
+                                     item.configuration.setVariant === 'complete' ? 'Mata do bagażnika' :
+                                     item.configuration.setVariant}
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* Typ dywaników */}
+                              {item.configuration.setType && (
+                                <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
+                                  <span className="text-sm text-neutral-300">Typ:</span>
+                                  <span className="text-sm font-medium text-white">
+                                    {item.configuration.setType === '3d-with-rims' ? '3D z rantami' :
+                                     item.configuration.setType === 'classic' ? '3D bez rantów' :
+                                     item.configuration.setType}
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* Struktura komórek */}
+                              {item.configuration.cellType && (
+                                <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
+                                  <span className="text-sm text-neutral-300">Struktura:</span>
+                                  <span className="text-sm font-medium text-white">
+                                    {item.configuration.cellType === 'diamonds' ? 'Romby' :
+                                     item.configuration.cellType === 'honey' ? 'Plaster miodu' :
+                                     item.configuration.cellType}
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* Kolory */}
+                              {(item.configuration.materialColor || item.configuration.edgeColor) && (
+                                <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
+                                  <span className="text-sm text-neutral-300">Kolor:</span>
+                                  <span className="text-sm font-medium text-white">
+                                    {item.configuration.materialColor} + {item.configuration.edgeColor} obszycie
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* Ochraniacze pięt */}
+                              {item.configuration.heelPad === 'yes' && (
+                                <div className="flex items-center justify-between py-2 px-3 bg-orange-900/20 border border-orange-700/30 rounded-lg">
+                                  <span className="text-sm text-orange-300">Dodatki:</span>
+                                  <span className="text-sm font-medium text-orange-200">
+                                    Ochraniacze pod piętę
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Footer z ilością i ceną */}
+                        <div className="flex items-center justify-between pt-4 border-t border-neutral-700">
+                          <div className="flex items-center space-x-3">
+                            <span className="text-neutral-300 text-sm">Ilość:</span>
+                            <span className="w-8 text-center font-semibold text-white text-lg bg-neutral-800 rounded px-2 py-1">
+                              {item.quantity}
                             </span>
+                          </div>
+
+                          <div className="text-right">
+                            <p className="text-xl font-bold text-white">
+                              {PricingService.formatPrice(item.subtotal)}
+                            </p>
+                            <p className="text-sm text-neutral-400">
+                              {PricingService.formatPrice(item.unitPrice)} × {item.quantity}
+                            </p>
                           </div>
                         </div>
                       </div>
