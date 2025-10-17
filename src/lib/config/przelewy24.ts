@@ -39,8 +39,12 @@ export function getP24Config(): P24Config {
     apiKey: process.env.P24_API_KEY!,
     reportKey: process.env.P24_REPORT_KEY!,
     environment,
-    urlReturn: process.env.P24_URL_RETURN!,
-    urlStatus: process.env.P24_URL_STATUS!,
+    urlReturn: process.env.NODE_ENV === 'development' 
+      ? process.env.P24_URL_RETURN_LOCAL || process.env.P24_URL_RETURN!
+      : process.env.P24_URL_RETURN!,
+    urlStatus: process.env.NODE_ENV === 'development'
+      ? process.env.P24_URL_STATUS_LOCAL || process.env.P24_URL_STATUS!
+      : process.env.P24_URL_STATUS!,
     apiUrl: environment === 'sandbox' 
       ? 'https://sandbox.przelewy24.pl/api/v1'
       : 'https://secure.przelewy24.pl/api/v1'
