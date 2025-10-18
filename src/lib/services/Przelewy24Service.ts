@@ -51,7 +51,7 @@ export class Przelewy24Service {
     // Debug: sprawdź wartości
     console.log('🔍 P24Service: posId:', this.config.posId, 'type:', typeof this.config.posId)
     console.log('🔍 P24Service: reportKey:', this.config.reportKey, 'type:', typeof this.config.reportKey)
-    console.log('🔍 P24Service: posId length:', this.config.posId?.length)
+    console.log('🔍 P24Service: posId length:', this.config.posId?.toString().length)
     console.log('🔍 P24Service: reportKey length:', this.config.reportKey?.length)
     
     // Usuń \r\n jeśli istnieją
