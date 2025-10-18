@@ -31,7 +31,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from '@/hooks/useCart.new';
-import { useOrder } from '@/hooks/useOrder';
+import { useOrder } from '@/hooks/useOrder.new';
 import { CreateOrderDTO } from '@/lib/types/order-new';
 import { PricingService } from '@/lib/services/PricingService';
 import { debugLog } from '@/lib/config/features';
@@ -280,8 +280,36 @@ export default function CheckoutSectionNew() {
       console.log('🛒 CheckoutSection: cartProducts:', cartProducts);
 
       console.log('🛒 CheckoutSection: Calling createOrder...');
+      
+      // Przygotuj dane zamówienia w nowym formacie
+      const orderData: CreateOrderDTO = {
+        customer: {
+          name: `${customerData.firstName} ${customerData.lastName}`,
+          email: customerData.email,
+          phone: customerData.phone
+        },
+        shippingAddress: {
+          street: customerData.address,
+          city: customerData.city,
+          postalCode: customerData.postalCode,
+          country: customerData.country
+        },
+        paymentMethod: paymentData.method,
+        items: cartProducts.map(item => ({
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          subtotal: item.subtotal,
+          productType: item.productType,
+          productId: item.productId,
+          productName: item.productName,
+          productSku: item.productSku,
+          productImage: item.productImage,
+          configuration: item.configuration
+        }))
+      };
+      
       // Utwórz zamówienie
-      const order = await createOrder(cartProducts, customerData, shippingData, paymentData);
+      const order = await createOrder(orderData);
       console.log('🛒 CheckoutSection: createOrder completed, order:', order);
       
       debugLog('CheckoutSection: Order created successfully', order);
@@ -292,6 +320,14 @@ export default function CheckoutSectionNew() {
       if (data.paymentMethod === 'p24') {
         try {
           console.log('🔄 Starting P24 payment registration...');
+          console.log('🔍 P24 Payment Debug Info:');
+          console.log('🔍 Order ID:', order.id);
+          console.log('🔍 Order Total:', order.total);
+          console.log('🔍 Customer Email:', data.email);
+          console.log('🔍 Payment Method:', data.paymentMethod);
+          console.log('🔍 Environment:', process.env.NODE_ENV);
+          console.log('🔍 Vercel:', process.env.VERCEL);
+          console.log('🔍 Vercel Env:', process.env.VERCEL_ENV);
           
           // Zarejestruj płatność w P24
           const response = await fetch('/api/payments/p24/register', {

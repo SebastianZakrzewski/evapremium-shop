@@ -76,12 +76,16 @@ export class Przelewy24Service {
   async registerTransaction(transactionData: P24TransactionData): Promise<P24PaymentResult> {
     try {
       console.log('🔄 P24Service: Rejestracja transakcji', transactionData)
-      console.log('🔄 P24Service: Konfiguracja P24', {
-        merchantId: this.config.merchantId,
-        posId: this.config.posId,
-        environment: this.config.environment,
-        apiUrl: this.config.apiUrl
-      })
+      console.log('🔍 P24Service: Szczegółowa konfiguracja P24:')
+      console.log('🔍 merchantId:', this.config.merchantId, '(type:', typeof this.config.merchantId, ')')
+      console.log('🔍 posId:', this.config.posId, '(type:', typeof this.config.posId, ')')
+      console.log('🔍 crcKey:', this.config.crcKey, '(length:', this.config.crcKey?.length, ')')
+      console.log('🔍 apiKey:', this.config.apiKey, '(length:', this.config.apiKey?.length, ')')
+      console.log('🔍 reportKey:', this.config.reportKey, '(length:', this.config.reportKey?.length, ')')
+      console.log('🔍 environment:', this.config.environment)
+      console.log('🔍 urlReturn:', this.config.urlReturn)
+      console.log('🔍 urlStatus:', this.config.urlStatus)
+      console.log('🔍 apiUrl:', this.config.apiUrl)
 
       // Konwertuj kwotę na grosze (P24 wymaga)
       const amountInCents = Math.round(transactionData.amount * 100)
@@ -112,6 +116,13 @@ export class Przelewy24Service {
       }
 
       console.log('🔄 P24Service: Dane żądania', requestData)
+      console.log('🔍 P24Service: Szczegóły żądania HTTP:')
+      console.log('🔍 URL:', `${this.config.apiUrl}/transaction/register`)
+      console.log('🔍 Method: POST')
+      console.log('🔍 Headers:')
+      console.log('🔍   Authorization:', this.getBasicAuthHeader())
+      console.log('🔍   Content-Type: application/json')
+      console.log('🔍 Body (JSON):', JSON.stringify(requestData, null, 2))
 
       // Wyślij żądanie do P24
       const response = await fetch(`${this.config.apiUrl}/transaction/register`, {

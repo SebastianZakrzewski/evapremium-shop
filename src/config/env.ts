@@ -38,6 +38,20 @@ export const env = {
     user: process.env.PGUSER || 'eva_user',
     password: process.env.PGPASSWORD || 'eva_password',
     database: process.env.PGDATABASE || 'eva_db'
+  },
+
+  // Przelewy24 Configuration
+  przelewy24: {
+    merchantId: parseInt(process.env.P24_MERCHANT_ID || '352557'),
+    posId: parseInt(process.env.P24_POS_ID || '352557'),
+    crcKey: process.env.P24_CRC_KEY || '9325080ce772326e',
+    apiKey: process.env.P24_API_KEY || 'ef0b16e0',
+    reportKey: process.env.P24_REPORT_KEY || '1522d8628486e9e78a320967921470bc',
+    environment: (process.env.P24_ENVIRONMENT as 'sandbox' | 'production') || 'sandbox',
+    urlReturn: process.env.P24_URL_RETURN || 'https://evapremium.pl/payment/success',
+    urlStatus: process.env.P24_URL_STATUS || 'https://evapremium.pl/api/payments/p24/callback',
+    urlReturnLocal: process.env.P24_URL_RETURN_LOCAL || 'http://localhost:3000/payment/success',
+    urlStatusLocal: process.env.P24_URL_STATUS_LOCAL || 'http://localhost:3000/api/payments/p24/callback'
   }
 } as const;
 
@@ -46,7 +60,15 @@ export function validateEnv() {
   const required = [
     'NEXT_PUBLIC_SUPABASE_URL',
     'NEXT_PUBLIC_SUPABASE_ANON_KEY',
-    'SUPABASE_SERVICE_ROLE_KEY'
+    'SUPABASE_SERVICE_ROLE_KEY',
+    'P24_MERCHANT_ID',
+    'P24_POS_ID',
+    'P24_CRC_KEY',
+    'P24_API_KEY',
+    'P24_REPORT_KEY',
+    'P24_ENVIRONMENT',
+    'P24_URL_RETURN',
+    'P24_URL_STATUS'
   ];
 
   const missing = required.filter(key => !process.env[key]);

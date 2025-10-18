@@ -16,6 +16,18 @@ const orderService = new OrderService()
 export async function POST(request: NextRequest) {
   try {
     console.log('🔄 P24 Register API: Rozpoczęcie rejestracji płatności')
+    console.log('🔍 P24 Register API: Environment Variables Debug:')
+    console.log('🔍 NODE_ENV:', process.env.NODE_ENV)
+    console.log('🔍 VERCEL:', process.env.VERCEL)
+    console.log('🔍 VERCEL_ENV:', process.env.VERCEL_ENV)
+    console.log('🔍 P24_MERCHANT_ID:', process.env.P24_MERCHANT_ID)
+    console.log('🔍 P24_POS_ID:', process.env.P24_POS_ID)
+    console.log('🔍 P24_CRC_KEY:', process.env.P24_CRC_KEY)
+    console.log('🔍 P24_API_KEY:', process.env.P24_API_KEY)
+    console.log('🔍 P24_REPORT_KEY:', process.env.P24_REPORT_KEY)
+    console.log('🔍 P24_ENVIRONMENT:', process.env.P24_ENVIRONMENT)
+    console.log('🔍 P24_URL_RETURN:', process.env.P24_URL_RETURN)
+    console.log('🔍 P24_URL_STATUS:', process.env.P24_URL_STATUS)
 
     // Parsuj dane żądania
     const body = await request.json()
