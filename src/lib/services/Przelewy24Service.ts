@@ -86,6 +86,11 @@ export class Przelewy24Service {
       console.log('🔍 urlReturn:', this.config.urlReturn)
       console.log('🔍 urlStatus:', this.config.urlStatus)
       console.log('🔍 apiUrl:', this.config.apiUrl)
+      
+      // Debug: sprawdź szczegółowo environment i apiUrl
+      console.log('🔍 P24Service: environment raw:', `"${this.config.environment}"`, 'length:', this.config.environment.length)
+      console.log('🔍 P24Service: environment === "sandbox":', this.config.environment === 'sandbox')
+      console.log('🔍 P24Service: apiUrl:', this.config.apiUrl)
 
       // Konwertuj kwotę na grosze (P24 wymaga)
       const amountInCents = Math.round(transactionData.amount * 100)

@@ -35,15 +35,24 @@ export function getP24Config(): P24Config {
   console.log('🔍 P24Config: P24_MERCHANT_ID:', process.env.P24_MERCHANT_ID, 'length:', process.env.P24_MERCHANT_ID?.length)
   console.log('🔍 P24Config: P24_POS_ID:', process.env.P24_POS_ID, 'length:', process.env.P24_POS_ID?.length)
   console.log('🔍 P24Config: P24_CRC_KEY:', process.env.P24_CRC_KEY, 'length:', process.env.P24_CRC_KEY?.length)
+  console.log('🔍 P24Config: P24_CRC_KEY raw:', `"${process.env.P24_CRC_KEY}"`)
+  console.log('🔍 P24Config: P24_CRC_KEY po czyszczeniu:', `"${process.env.P24_CRC_KEY?.replace(/[\r\n]/g, '').trim()}"`)
   console.log('🔍 P24Config: P24_API_KEY:', process.env.P24_API_KEY, 'length:', process.env.P24_API_KEY?.length)
   console.log('🔍 P24Config: P24_REPORT_KEY:', process.env.P24_REPORT_KEY, 'length:', process.env.P24_REPORT_KEY?.length)
+  console.log('🔍 P24Config: P24_REPORT_KEY raw:', `"${process.env.P24_REPORT_KEY}"`)
+  console.log('🔍 P24Config: P24_REPORT_KEY po czyszczeniu:', `"${process.env.P24_REPORT_KEY?.replace(/[\r\n]/g, '').trim()}"`)
   console.log('🔍 P24Config: P24_ENVIRONMENT:', process.env.P24_ENVIRONMENT, 'length:', process.env.P24_ENVIRONMENT?.length)
   
   validateEnvVars()
 
   const environment = (process.env.P24_ENVIRONMENT?.replace(/[\r\n]/g, '').trim() || 'sandbox') as 'sandbox' | 'production'
   
-  return {
+  // Debug: sprawdź wyczyszczoną wartość environment
+  console.log('🔍 P24Config: environment po czyszczeniu:', `"${environment}"`, 'length:', environment.length)
+  console.log('🔍 P24Config: environment === "sandbox":', environment === 'sandbox')
+  console.log('🔍 P24Config: environment === "production":', environment === 'production')
+  
+  const config = {
     merchantId: parseInt(process.env.P24_MERCHANT_ID!),
     posId: parseInt(process.env.P24_POS_ID!),
     crcKey: process.env.P24_CRC_KEY?.replace(/[\r\n]/g, '').trim()!,
@@ -60,6 +69,11 @@ export function getP24Config(): P24Config {
       ? 'https://sandbox.przelewy24.pl/api/v1'
       : 'https://secure.przelewy24.pl/api/v1'
   }
+  
+  // Debug: sprawdź finalny URL
+  console.log('🔍 P24Config: Finalny apiUrl:', config.apiUrl)
+  
+  return config
 }
 
 // Eksportuj domyślną konfigurację
