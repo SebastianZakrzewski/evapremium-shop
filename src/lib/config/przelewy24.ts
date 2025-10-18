@@ -45,33 +45,48 @@ export function getP24Config(): P24Config {
   
   validateEnvVars()
 
-  const environment = (process.env.P24_ENVIRONMENT?.replace(/[\r\n]/g, '').trim() || 'sandbox') as 'sandbox' | 'production'
+  // Usuń wszystkie znaki \r\n i spacje z początku i końca
+  const environment = (process.env.P24_ENVIRONMENT?.replace(/[\r\n\s]/g, '').trim() || 'sandbox') as 'sandbox' | 'production'
   
   // Debug: sprawdź wyczyszczoną wartość environment
   console.log('🔍 P24Config: environment po czyszczeniu:', `"${environment}"`, 'length:', environment.length)
   console.log('🔍 P24Config: environment === "sandbox":', environment === 'sandbox')
   console.log('🔍 P24Config: environment === "production":', environment === 'production')
   
+  // Funkcja do czyszczenia zmiennych środowiskowych
+  const cleanEnvVar = (value: string | undefined): string => {
+    return value?.replace(/[\r\n\s]/g, '').trim() || ''
+  }
+
   const config = {
-    merchantId: parseInt(process.env.P24_MERCHANT_ID!),
-    posId: parseInt(process.env.P24_POS_ID!),
-    crcKey: process.env.P24_CRC_KEY?.replace(/[\r\n]/g, '').trim()!,
-    apiKey: process.env.P24_API_KEY?.replace(/[\r\n]/g, '').trim()!,
-    reportKey: (process.env.P24_REPORT_KEY?.replace(/[\r\n]/g, '').trim() || 'ef0b16e0'), // Domyślna wartość jeśli nie ustawiona
+    merchantId: parseInt(cleanEnvVar(process.env.P24_MERCHANT_ID)),
+    posId: parseInt(cleanEnvVar(process.env.P24_POS_ID)),
+    crcKey: cleanEnvVar(process.env.P24_CRC_KEY) || '9325080ce772326e', // Domyślny klucz z test skryptu
+    apiKey: cleanEnvVar(process.env.P24_API_KEY) || 'ef0b16e0',
+    reportKey: cleanEnvVar(process.env.P24_REPORT_KEY) || '1522d8628486e9e78a320967921470bc',
     environment,
-    urlReturn: (process.env.NODE_ENV === 'development' 
-      ? process.env.P24_URL_RETURN_LOCAL || process.env.P24_URL_RETURN!
-      : process.env.P24_URL_RETURN!).replace(/[\r\n]/g, '').trim(),
-    urlStatus: (process.env.NODE_ENV === 'development'
-      ? process.env.P24_URL_STATUS_LOCAL || process.env.P24_URL_STATUS!
-      : process.env.P24_URL_STATUS!).replace(/[\r\n]/g, '').trim(),
+    urlReturn: cleanEnvVar(process.env.NODE_ENV === 'development' 
+      ? process.env.P24_URL_RETURN_LOCAL || process.env.P24_URL_RETURN
+      : process.env.P24_URL_RETURN) || 'https://evapremium.pl/payment/success',
+    urlStatus: cleanEnvVar(process.env.NODE_ENV === 'development'
+      ? process.env.P24_URL_STATUS_LOCAL || process.env.P24_URL_STATUS
+      : process.env.P24_URL_STATUS) || 'https://evapremium.pl/api/payments/p24/callback',
     apiUrl: environment === 'sandbox' 
       ? 'https://sandbox.przelewy24.pl/api/v1'
       : 'https://secure.przelewy24.pl/api/v1'
   }
   
-  // Debug: sprawdź finalny URL
-  console.log('🔍 P24Config: Finalny apiUrl:', config.apiUrl)
+  // Debug: sprawdź finalną konfigurację
+  console.log('🔍 P24Config: Finalna konfiguracja:')
+  console.log('🔍 P24Config: merchantId:', config.merchantId)
+  console.log('🔍 P24Config: posId:', config.posId)
+  console.log('🔍 P24Config: crcKey:', config.crcKey, 'length:', config.crcKey.length)
+  console.log('🔍 P24Config: apiKey:', config.apiKey, 'length:', config.apiKey.length)
+  console.log('🔍 P24Config: reportKey:', config.reportKey, 'length:', config.reportKey.length)
+  console.log('🔍 P24Config: environment:', config.environment)
+  console.log('🔍 P24Config: apiUrl:', config.apiUrl)
+  console.log('🔍 P24Config: urlReturn:', config.urlReturn)
+  console.log('🔍 P24Config: urlStatus:', config.urlStatus)
   
   return config
 }
