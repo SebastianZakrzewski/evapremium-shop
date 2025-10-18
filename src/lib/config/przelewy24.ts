@@ -13,7 +13,6 @@ function validateEnvVars() {
     'P24_POS_ID', 
     'P24_CRC_KEY',
     'P24_API_KEY',
-    'P24_REPORT_KEY',
     'P24_ENVIRONMENT',
     'P24_URL_RETURN',
     'P24_URL_STATUS'
@@ -47,7 +46,7 @@ export function getP24Config(): P24Config {
     posId: parseInt(process.env.P24_POS_ID!),
     crcKey: process.env.P24_CRC_KEY!,
     apiKey: process.env.P24_API_KEY!,
-    reportKey: process.env.P24_REPORT_KEY!,
+    reportKey: process.env.P24_REPORT_KEY || 'ef0b16e0', // Domyślna wartość jeśli nie ustawiona
     environment,
     urlReturn: process.env.NODE_ENV === 'development' 
       ? process.env.P24_URL_RETURN_LOCAL || process.env.P24_URL_RETURN!
