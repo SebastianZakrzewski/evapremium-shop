@@ -41,14 +41,14 @@ export function getP24Config(): P24Config {
   
   validateEnvVars()
 
-  const environment = process.env.P24_ENVIRONMENT as 'sandbox' | 'production'
+  const environment = (process.env.P24_ENVIRONMENT?.replace(/[\r\n]/g, '').trim() || 'sandbox') as 'sandbox' | 'production'
   
   return {
     merchantId: parseInt(process.env.P24_MERCHANT_ID!),
     posId: parseInt(process.env.P24_POS_ID!),
-    crcKey: process.env.P24_CRC_KEY!,
-    apiKey: process.env.P24_API_KEY!,
-    reportKey: process.env.P24_REPORT_KEY || 'ef0b16e0', // Domyślna wartość jeśli nie ustawiona
+    crcKey: process.env.P24_CRC_KEY?.replace(/[\r\n]/g, '').trim()!,
+    apiKey: process.env.P24_API_KEY?.replace(/[\r\n]/g, '').trim()!,
+    reportKey: (process.env.P24_REPORT_KEY?.replace(/[\r\n]/g, '').trim() || 'ef0b16e0'), // Domyślna wartość jeśli nie ustawiona
     environment,
     urlReturn: (process.env.NODE_ENV === 'development' 
       ? process.env.P24_URL_RETURN_LOCAL || process.env.P24_URL_RETURN!
