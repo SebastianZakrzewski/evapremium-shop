@@ -54,9 +54,9 @@ export class Przelewy24Service {
     console.log('🔍 P24Service: posId length:', this.config.posId?.toString().length)
     console.log('🔍 P24Service: reportKey length:', this.config.reportKey?.length)
     
-    // Usuń \r\n jeśli istnieją
-    const cleanPosId = this.config.posId?.toString().replace(/\r\n/g, '').trim()
-    const cleanReportKey = this.config.reportKey?.toString().replace(/\r\n/g, '').trim()
+    // Usuń \r\n i \n jeśli istnieją
+    const cleanPosId = this.config.posId?.toString().replace(/[\r\n]/g, '').trim()
+    const cleanReportKey = this.config.reportKey?.toString().replace(/[\r\n]/g, '').trim()
     
     console.log('🔍 P24Service: clean posId:', cleanPosId, 'length:', cleanPosId?.length)
     console.log('🔍 P24Service: clean reportKey:', cleanReportKey, 'length:', cleanReportKey?.length)
