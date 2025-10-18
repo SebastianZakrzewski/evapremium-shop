@@ -45,8 +45,8 @@ export function getP24Config(): P24Config {
   
   validateEnvVars()
 
-  // Usuń wszystkie znaki \r\n i spacje z początku i końca
-  const environment = (process.env.P24_ENVIRONMENT?.replace(/[\r\n\s]/g, '').trim() || 'sandbox') as 'sandbox' | 'production'
+  // Usuń znaki \r\n z początku i końca, potem trim spacje
+  const environment = (process.env.P24_ENVIRONMENT?.replace(/[\r\n]/g, '').trim() || 'sandbox') as 'sandbox' | 'production'
   
   // Debug: sprawdź wyczyszczoną wartość environment
   console.log('🔍 P24Config: environment po czyszczeniu:', `"${environment}"`, 'length:', environment.length)
@@ -55,7 +55,7 @@ export function getP24Config(): P24Config {
   
   // Funkcja do czyszczenia zmiennych środowiskowych
   const cleanEnvVar = (value: string | undefined): string => {
-    return value?.replace(/[\r\n\s]/g, '').trim() || ''
+    return value?.replace(/[\r\n]/g, '').trim() || ''
   }
 
   const config = {
