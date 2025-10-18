@@ -28,6 +28,16 @@ function validateEnvVars() {
 
 // Pobierz konfigurację P24
 export function getP24Config(): P24Config {
+  // Debug: sprawdź wszystkie zmienne P24
+  console.log('🔍 P24Config: Wszystkie zmienne P24:')
+  console.log('🔍 P24Config: P24_MERCHANT_ID:', process.env.P24_MERCHANT_ID, 'length:', process.env.P24_MERCHANT_ID?.length)
+  console.log('🔍 P24Config: P24_POS_ID:', process.env.P24_POS_ID, 'length:', process.env.P24_POS_ID?.length)
+  console.log('🔍 P24Config: P24_CRC_KEY:', process.env.P24_CRC_KEY, 'length:', process.env.P24_CRC_KEY?.length)
+  console.log('🔍 P24Config: P24_API_KEY:', process.env.P24_API_KEY, 'length:', process.env.P24_API_KEY?.length)
+  console.log('🔍 P24Config: P24_REPORT_KEY:', process.env.P24_REPORT_KEY, 'length:', process.env.P24_REPORT_KEY?.length)
+  console.log('🔍 P24Config: P24_ENVIRONMENT:', process.env.P24_ENVIRONMENT, 'length:', process.env.P24_ENVIRONMENT?.length)
+  console.log('🔍 P24Config: NODE_ENV:', process.env.NODE_ENV)
+  
   validateEnvVars()
 
   const environment = process.env.P24_ENVIRONMENT as 'sandbox' | 'production'
