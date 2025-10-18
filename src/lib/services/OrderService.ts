@@ -3,6 +3,11 @@ import { AccessoryService } from './AccessoryService';
 import { MatService } from './MatService';
 import { PricingService } from './PricingService';
 import { Order, CreateOrderDTO, OrderItem, OrderStatus } from '../types/order-new';
+import { bitrix24Config } from '../integrations/bitrix24/config';
+import { contactService } from '../integrations/bitrix24/services/ContactService';
+import { dealService } from '../integrations/bitrix24/services/DealService';
+import { mapOrderToContact } from '../integrations/bitrix24/mappers/orderToContact';
+import { mapOrderToDeal, createDealProducts } from '../integrations/bitrix24/mappers/orderToDeal';
 
 export class OrderService {
   private repository: OrderRepository;
@@ -92,6 +97,18 @@ export class OrderService {
       console.log('🛒 OrderService: Updating inventory...');
       await this.updateInventory(data.items);
       console.log('🛒 OrderService: Inventory updated');
+
+      // 8. Synchronizuj z Bitrix24 (jeśli włączone)
+      if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders) {
+        console.log('🛒 OrderService: Syncing order to Bitrix24...');
+        try {
+          await this.syncOrderToBitrix24(order);
+          console.log('✅ OrderService: Order synced to Bitrix24 successfully');
+        } catch (error) {
+          console.error('❌ OrderService: Failed to sync order to Bitrix24:', error);
+          // Nie blokujemy procesu zamówienia w przypadku błędu integracji
+        }
+      }
 
       return order;
     } catch (error) {
@@ -318,9 +335,157 @@ export class OrderService {
           updatedAt: new Date()
         });
       }
+
+      // Synchronizuj zmiany z Bitrix24
+      if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders) {
+        try {
+          const order = await this.getOrderById(orderId);
+          if (order) {
+            await this.syncOrderToBitrix24(order);
+            console.log('✅ OrderService: Payment status synced to Bitrix24');
+          }
+        } catch (error) {
+          console.error('❌ OrderService: Failed to sync payment status to Bitrix24:', error);
+        }
+      }
     } catch (error) {
       console.error('❌ OrderService: Błąd aktualizacji statusu płatności', error);
       throw error;
+    }
+  }
+
+  /**
+   * Synchronizuj zamówienie z Bitrix24
+   */
+  private async syncOrderToBitrix24(order: Order): Promise<void> {
+    try {
+      console.log('🔄 OrderService: Starting Bitrix24 sync for order:', order.orderNumber);
+
+      // 1. Mapuj dane zamówienia do kontaktu
+      const contactData = mapOrderToContact(order, {
+        sourceId: 'WEB',
+        sourceDescription: 'EVA Website',
+        utmSource: (order as any).utmSource,
+        utmMedium: (order as any).utmMedium,
+        utmCampaign: (order as any).utmCampaign,
+      });
+
+      // 2. Utwórz lub znajdź kontakt
+      const contactResult = await contactService.findOrCreateContact(contactData, {
+        sourceId: 'WEB',
+        sourceDescription: 'EVA Website',
+        utmSource: (order as any).utmSource,
+        utmMedium: (order as any).utmMedium,
+        utmCampaign: (order as any).utmCampaign,
+      });
+
+      if (!contactResult.id) {
+        throw new Error(`Failed to create/find contact: ${contactResult.error || 'Unknown error'}`);
+      }
+
+      console.log('✅ OrderService: Contact processed:', { 
+        id: contactResult.id, 
+        created: contactResult.created 
+      });
+
+      // 3. Sprawdź czy deal już istnieje
+      const existingDeal = await dealService.findByOrderNumber(order.orderNumber);
+      if (existingDeal) {
+        console.log('📋 OrderService: Deal already exists, updating:', existingDeal.id);
+        
+        // Zaktualizuj istniejący deal
+        const dealData = mapOrderToDeal(order, contactResult.id);
+        await dealService.updateDeal(existingDeal.id, dealData);
+        
+        // Zaktualizuj status deala na podstawie statusu zamówienia
+        const dealStage = this.getDealStageFromOrderStatus(order.status, order.paymentStatus);
+        await dealService.updateDealStage(existingDeal.id, {
+          stageId: dealStage,
+          comment: `Zamówienie zaktualizowane: ${order.status} (płatność: ${order.paymentStatus})`
+        });
+
+        console.log('✅ OrderService: Deal updated successfully');
+        return;
+      }
+
+      // 4. Utwórz nowy deal
+      const dealData = mapOrderToDeal(order, contactResult.id);
+      const dealResult = await dealService.createDeal(dealData, {
+        stageId: this.getDealStageFromOrderStatus(order.status, order.paymentStatus),
+        currencyId: 'PLN',
+        contactId: contactResult.id,
+      });
+
+      if (!dealResult.success) {
+        throw new Error(`Failed to create deal: ${dealResult.error}`);
+      }
+
+      console.log('✅ OrderService: Deal created successfully:', dealResult.id);
+
+      // 5. Dodaj produkty do deala
+      const products = createDealProducts(order);
+      if (products.length > 0) {
+        // Convert products to Bitrix24DealProduct format
+        const dealProducts = products.map(product => ({
+          PRODUCT_ID: product.PRODUCT_NAME, // Use product name as ID for now
+          QUANTITY: product.QUANTITY,
+          PRICE: product.PRICE,
+        }));
+        
+        const productResult = await dealService.addProductsToDeal(dealResult.id, dealProducts);
+        if (!productResult.success) {
+          console.warn('⚠️ OrderService: Failed to add products to deal:', productResult.error);
+        } else {
+          console.log('✅ OrderService: Products added to deal successfully');
+        }
+      }
+
+      console.log('✅ OrderService: Order synced to Bitrix24 successfully:', {
+        orderNumber: order.orderNumber,
+        contactId: contactResult.id,
+        dealId: dealResult.id,
+        productsCount: products.length
+      });
+
+    } catch (error) {
+      console.error('❌ OrderService: Failed to sync order to Bitrix24:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Pobierz etap deala na podstawie statusu zamówienia i płatności
+   */
+  private getDealStageFromOrderStatus(orderStatus: string, paymentStatus: string): string {
+    // Priorytet: status płatności > status zamówienia
+    if (paymentStatus === 'paid') {
+      return 'UC_DMBNNJ'; // Zamówienia ze strony opłacone (Przelewy24)
+    }
+    
+    if (paymentStatus === 'failed') {
+      return 'LOSE'; // Płatność nieudana - przegrana
+    }
+
+    if (paymentStatus === 'refunded') {
+      return 'LOSE'; // Zwrot - przegrana
+    }
+
+    // Na podstawie statusu zamówienia
+    switch (orderStatus) {
+      case 'pending':
+        return 'NEW'; // Czeka na opłatę
+      case 'confirmed':
+        return 'UC_DMBNNJ'; // Zamówienia ze strony opłacone
+      case 'processing':
+        return 'UC_DMBNNJ'; // Zamówienia ze strony opłacone
+      case 'shipped':
+        return 'UC_DMBNNJ'; // Zamówienia ze strony opłacone
+      case 'delivered':
+        return 'WON'; // Dostarczone - wygrana
+      case 'cancelled':
+        return 'LOSE'; // Anulowane - przegrana
+      default:
+        return 'NEW';
     }
   }
 }
