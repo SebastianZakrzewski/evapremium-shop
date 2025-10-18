@@ -48,10 +48,25 @@ export class Przelewy24Service {
    * Format: posId:reportKey (nie merchantId:apiKey!)
    */
   private getBasicAuthHeader(): string {
+    // Debug: sprawdź wartości
+    console.log('🔍 P24Service: posId:', this.config.posId, 'type:', typeof this.config.posId)
+    console.log('🔍 P24Service: reportKey:', this.config.reportKey, 'type:', typeof this.config.reportKey)
+    console.log('🔍 P24Service: posId length:', this.config.posId?.length)
+    console.log('🔍 P24Service: reportKey length:', this.config.reportKey?.length)
+    
+    // Usuń \r\n jeśli istnieją
+    const cleanPosId = this.config.posId?.toString().replace(/\r\n/g, '').trim()
+    const cleanReportKey = this.config.reportKey?.toString().replace(/\r\n/g, '').trim()
+    
+    console.log('🔍 P24Service: clean posId:', cleanPosId, 'length:', cleanPosId?.length)
+    console.log('🔍 P24Service: clean reportKey:', cleanReportKey, 'length:', cleanReportKey?.length)
+    
     // Użyj btoa dla kompatybilności z przeglądarką i Node.js
     const credentials = typeof window !== 'undefined' 
-      ? btoa(`${this.config.posId}:${this.config.reportKey}`)
-      : Buffer.from(`${this.config.posId}:${this.config.reportKey}`).toString('base64')
+      ? btoa(`${cleanPosId}:${cleanReportKey}`)
+      : Buffer.from(`${cleanPosId}:${cleanReportKey}`).toString('base64')
+    
+    console.log('🔍 P24Service: credentials:', credentials)
     return `Basic ${credentials}`
   }
 
