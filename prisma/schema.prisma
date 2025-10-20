@@ -146,10 +146,10 @@ model Order {
   total           Decimal  @db.Decimal(10, 2)
   
   // Przelewy24 fields
-  p24SessionId    String?  // Session ID dla P24
-  p24Token        String?  // Token transakcji P24
-  p24OrderId      Int?     // Order ID z P24 (po weryfikacji)
-  p24MethodId     Int?     // Metoda płatności wybrana w P24
+  p24SessionId    String?  @map("p24_session_id") // Session ID dla P24
+  p24Token        String?  @map("p24_token") // Token transakcji P24
+  p24OrderId      String?  @map("p24_order_id") // Order ID z P24 (po weryfikacji) - String bo P24 zwraca bardzo długie ID
+  p24MethodId     Int?     @map("p24_method_id") // Metoda płatności wybrana w P24
   
   // Timestamps
   notes           String?

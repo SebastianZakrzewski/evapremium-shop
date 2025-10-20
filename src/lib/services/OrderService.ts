@@ -281,7 +281,7 @@ export class OrderService {
   async getOrderBySessionId(sessionId: string): Promise<Order | null> {
     try {
       console.log('🛒 OrderService: getOrderBySessionId', sessionId);
-      return await this.repository.findByOrderNumber(sessionId);
+      return await this.repository.findBySessionId(sessionId);
     } catch (error) {
       console.error('❌ OrderService: Błąd pobierania zamówienia po sessionId', error);
       return null;
@@ -308,7 +308,7 @@ export class OrderService {
    * Zaktualizuj status płatności
    */
   async updatePaymentStatus(orderId: string, status: 'pending' | 'paid' | 'failed' | 'refunded', p24Data?: {
-    p24OrderId?: number;
+    p24OrderId?: string; // Zmienione z number na string - P24 zwraca bardzo długie ID
     p24MethodId?: number;
     error?: string;
   }): Promise<void> {
@@ -316,25 +316,24 @@ export class OrderService {
       console.log('🛒 OrderService: updatePaymentStatus', { orderId, status, p24Data });
       
       const updateData: any = {
-        paymentStatus: status,
-        updatedAt: new Date()
+        payment_status: status,
+        updated_at: new Date().toISOString()
       };
 
       if (p24Data) {
-        if (p24Data.p24OrderId) updateData.p24OrderId = p24Data.p24OrderId;
-        if (p24Data.p24MethodId) updateData.p24MethodId = p24Data.p24MethodId;
+        if (p24Data.p24OrderId) updateData.p24_order_id = p24Data.p24OrderId;
+        if (p24Data.p24MethodId) updateData.p24_method_id = p24Data.p24MethodId;
         if (p24Data.error) updateData.notes = p24Data.error;
       }
 
-      await this.repository.update(orderId, updateData);
-      
-      // Jeśli płatność została opłacona, zaktualizuj status zamówienia
+      // Jeśli płatność została opłacona, zaktualizuj status zamówienia w tym samym wywołaniu
       if (status === 'paid') {
-        await this.repository.update(orderId, {
-          status: 'confirmed',
-          updatedAt: new Date()
-        });
+        updateData.status = 'confirmed';
+        console.log('🛒 OrderService: Setting order status to confirmed');
       }
+
+      await this.repository.update(orderId, updateData);
+      console.log('🛒 OrderService: Order updated successfully', updateData);
 
       // Synchronizuj zmiany z Bitrix24
       if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders) {

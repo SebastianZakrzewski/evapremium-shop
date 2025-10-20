@@ -22,7 +22,7 @@ export interface Order {
   // Przelewy24 fields
   p24SessionId?: string;
   p24Token?: string;
-  p24OrderId?: number;
+  p24OrderId?: string; // Zmienione z number na string - P24 zwraca bardzo długie ID
   p24MethodId?: number;
 }
 

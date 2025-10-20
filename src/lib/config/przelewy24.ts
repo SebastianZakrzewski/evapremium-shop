@@ -29,6 +29,11 @@ function validateEnvVars() {
     'P24_URL_STATUS'
   ]
 
+  // W development sprawdź też zmienne LOCAL
+  if (process.env.NODE_ENV === 'development') {
+    required.push('P24_URL_RETURN_LOCAL', 'P24_URL_STATUS_LOCAL')
+  }
+
   const missing = required.filter(key => !process.env[key])
   
   if (missing.length > 0) {
@@ -59,14 +64,23 @@ export function getP24Config(): P24Config {
   const reportKey = cleanEnvValue(process.env.P24_REPORT_KEY) || '1522d8628486e9e78a320967921470bc'
   const environment = cleanEnvValue(process.env.P24_ENVIRONMENT) || 'sandbox'
   
-  // Wyczyść URL-e
+  // Wyczyść URL-e - tylko ze zmiennych środowiskowych (.env)
   const urlReturn = cleanEnvValue(process.env.NODE_ENV === 'development' 
-    ? process.env.P24_URL_RETURN_LOCAL || process.env.P24_URL_RETURN
-    : process.env.P24_URL_RETURN) || 'https://evapremium.pl/payment/success'
+    ? process.env.P24_URL_RETURN_LOCAL
+    : process.env.P24_URL_RETURN)
     
   const urlStatus = cleanEnvValue(process.env.NODE_ENV === 'development'
-    ? process.env.P24_URL_STATUS_LOCAL || process.env.P24_URL_STATUS
-    : process.env.P24_URL_STATUS) || 'https://evapremium.pl/api/payments/p24/callback'
+    ? process.env.P24_URL_STATUS_LOCAL
+    : process.env.P24_URL_STATUS)
+
+  // Walidacja URL-ów
+  if (!urlReturn) {
+    throw new Error(`Brak P24_URL_RETURN${process.env.NODE_ENV === 'development' ? '_LOCAL' : ''} w zmiennych środowiskowych`)
+  }
+  
+  if (!urlStatus) {
+    throw new Error(`Brak P24_URL_STATUS${process.env.NODE_ENV === 'development' ? '_LOCAL' : ''} w zmiennych środowiskowych`)
+  }
 
   // Ustaw URL API na podstawie środowiska
   const apiUrl = environment === 'sandbox' 

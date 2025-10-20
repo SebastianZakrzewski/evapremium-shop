@@ -28,7 +28,7 @@ export interface P24VerifyRequest {
   sessionId: string
   amount: number
   currency: string
-  orderId: number
+  orderId: string // Zmienione z number na string - P24 zwraca bardzo długie ID
   sign: string
 }
 
@@ -46,7 +46,7 @@ export interface P24RegisterResponse {
 export interface P24VerifyResponse {
   data: {
     status: string
-    orderId: number
+    orderId: string // Zmienione z number na string - P24 zwraca bardzo długie ID
     sessionId: string
     amount: number
     currency: string
@@ -67,7 +67,7 @@ export interface P24WebhookData {
   amount: number
   originAmount: number
   currency: string
-  orderId: number
+  orderId: string // Zmienione z number na string - P24 zwraca bardzo długie ID
   methodId: number
   statement: string
   sign: string
@@ -112,7 +112,7 @@ export interface P24PaymentResult {
 export interface P24VerificationResult {
   success: boolean
   verified: boolean
-  orderId?: number
+  orderId?: string // Zmienione z number na string - P24 zwraca bardzo długie ID
   methodId?: number
   error?: string
 }

@@ -14,7 +14,7 @@ interface PaymentStatus {
   orderId?: string;
   orderNumber?: string;
   transactionId?: number;
-  p24OrderId?: number;
+  p24OrderId?: string; // Zmienione z number na string - P24 zwraca bardzo długie ID
   p24MethodId?: number;
   total?: number;
   customer?: any;

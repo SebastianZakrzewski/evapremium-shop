@@ -20,10 +20,10 @@ export class OrderRepository extends BaseRepository<Order> {
       shippingAddress: data.shipping_address,
       billingAddress: data.billing_address,
       shippingCost: data.shipping_cost,
-      shippedAt: data.shipped_at,
-      deliveredAt: data.delivered_at,
-      createdAt: data.created_at,
-      updatedAt: data.updated_at,
+      shippedAt: data.shipped_at ? new Date(data.shipped_at) : undefined,
+      deliveredAt: data.delivered_at ? new Date(data.delivered_at) : undefined,
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at),
       p24SessionId: data.p24_session_id,
       p24OrderId: data.p24_order_id,
       p24TransactionId: data.p24_transaction_id,
@@ -69,7 +69,7 @@ export class OrderRepository extends BaseRepository<Order> {
       throw new Error(`Error finding order by number: ${error.message}`);
     }
 
-    return data;
+    return data ? this.mapOrderFromDB(data) : null;
   }
 
   async findByCustomerEmail(email: string): Promise<Order[]> {
@@ -86,7 +86,7 @@ export class OrderRepository extends BaseRepository<Order> {
       throw new Error(`Error finding orders by customer email: ${error.message}`);
     }
 
-    return data || [];
+    return data ? data.map(item => this.mapOrderFromDB(item)) : [];
   }
 
   async findByStatus(status: OrderStatus): Promise<Order[]> {
@@ -103,14 +103,14 @@ export class OrderRepository extends BaseRepository<Order> {
       throw new Error(`Error finding orders by status: ${error.message}`);
     }
 
-    return data || [];
+    return data ? data.map(item => this.mapOrderFromDB(item)) : [];
   }
 
   async updateStatus(
     id: string, 
     status: OrderStatus, 
     trackingNumber?: string
-  ): Promise<Order> {
+  ): Promise<Order | null> {
     const updateData: any = { status };
     
     if (status === 'shipped' && trackingNumber) {
@@ -136,7 +136,7 @@ export class OrderRepository extends BaseRepository<Order> {
       throw new Error(`Error updating order status: ${error.message}`);
     }
 
-    return data;
+    return data ? this.mapOrderFromDB(data) : null;
   }
 
   async countOrdersThisYear(): Promise<number> {
@@ -160,7 +160,7 @@ export class OrderRepository extends BaseRepository<Order> {
   async updatePaymentStatus(
     id: string,
     paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded'
-  ): Promise<Order> {
+  ): Promise<Order | null> {
     const { data, error } = await this.supabase
       .from(this.tableName)
       .update({ payment_status: paymentStatus })
@@ -175,7 +175,7 @@ export class OrderRepository extends BaseRepository<Order> {
       throw new Error(`Error updating payment status: ${error.message}`);
     }
 
-    return data;
+    return data ? this.mapOrderFromDB(data) : null;
   }
 
 
@@ -186,7 +186,7 @@ export class OrderRepository extends BaseRepository<Order> {
         *,
         order_items(*)
       `)
-      .eq('session_id', sessionId)
+      .eq('p24_session_id', sessionId)
       .single();
 
     if (error) {
@@ -196,7 +196,7 @@ export class OrderRepository extends BaseRepository<Order> {
       throw new Error(`Error finding order by session ID: ${error.message}`);
     }
 
-    return data;
+    return data ? this.mapOrderFromDB(data) : null;
   }
 
   async getOrderStats(): Promise<{
