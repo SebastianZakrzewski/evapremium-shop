@@ -21,11 +21,45 @@ export function mapOrderToDeal(
   contactId?: string,
   options: OrderToDealMappingOptions = {}
 ): Bitrix24Deal {
+  console.log('🔍 mapOrderToDeal: Starting mapping for order:', {
+    orderNumber: order.orderNumber,
+    status: order.status,
+    paymentStatus: order.paymentStatus,
+    total: order.total,
+    itemsCount: order.items?.length || 0,
+    contactId,
+    options
+  });
+
   const customer = order.customer as any; // Type assertion for JSON field
   const shippingAddress = order.shippingAddress as any; // Type assertion for JSON field
 
+  // Log order items details
+  console.log('🔍 mapOrderToDeal: Order items:', order.items?.map(item => ({
+    productType: item.productType,
+    productName: item.productName,
+    hasConfiguration: !!item.configuration,
+    configuration: item.configuration
+  })) || 'No items');
+
   // Extract car details from first mat item
   const carDetails = extractCarDetails(order);
+  console.log('🔍 mapOrderToDeal: Extracted car details:', carDetails);
+  
+  // Extract product details
+  const productVariant = extractProductVariant(order);
+  const productType = extractProductType(order);
+  const cellShape = extractCellShape(order);
+  const materialColor = extractMaterialColor(order);
+  const trimColor = extractTrimColor(order);
+  
+  console.log('🔍 mapOrderToDeal: Extracted product details:', {
+    productVariant,
+    productType,
+    cellShape,
+    materialColor,
+    trimColor
+  });
   
   // Build deal data
   const deal: Bitrix24Deal = {
@@ -34,35 +68,46 @@ export function mapOrderToDeal(
     OPPORTUNITY: Number(order.total),
     CURRENCY_ID: options.currencyId || 'PLN',
     CONTACT_ID: contactId,
-    CATEGORY_ID: 0, // Force deal to be created in "Deale" category (ID: 0)
-    // Custom fields for EVA Website integration - zaktualizowane na podstawie rzeczywistych pól Bitrix24
+    CATEGORY_ID: 0, // Deale / Zamówienia ze strony opłacone
     
-    // Podstawowe informacje o zamówieniu - używamy istniejących pól
+    // ✅ POLA IDENTYFIKACYJNE - dodane na podstawie analizy deala
     ORIGINATOR_ID: 'EVA Website',
     ORIGIN_ID: order.orderNumber, // Numer zamówienia
     SOURCE_ID: 'WEB',
     SOURCE_DESCRIPTION: 'EVA Website',
     COMMENTS: buildDealComments(order),
     
-    // Sekcja AUTO - informacje o samochodzie
+    // ✅ POLA NIESTANDARDOWE ZAMÓWIENIA - dodane na podstawie analizy deala
+    UF_CRM_ORDER_NUMBER: order.orderNumber,        // Numer zamówienia
+    UF_CRM_PAYMENT_STATUS: order.paymentStatus,    // Status płatności
+    UF_CRM_PAYMENT_METHOD: order.paymentMethod,    // Metoda płatności
+    UF_CRM_ORDER_DATE: order.createdAt.toISOString().split('T')[0], // Data zamówienia
+    UF_CRM_ORDER_SOURCE: "EVA Website",            // Źródło zamówienia
+    
+    // ✅ POLA SAMOCHODU - działają poprawnie
     UF_CRM_1760788285332: carDetails.brand,        // Marka samochodu
     UF_CRM_1760788302371: carDetails.model,        // Model samochodu
     UF_CRM_1760788317619: carDetails.year ? Number(carDetails.year) : undefined, // Rok samochodu (double)
     UF_CRM_1760788343011: carDetails.body,         // Typ nadwozia
     
-    // Sekcja komplet - informacje o produkcie (wartości enum)
-    UF_CRM_1757024835301: extractProductVariant(order),    // Wariant kompletu
-    UF_CRM_1757024931236: extractProductType(order),       // Rodzaj kompletu
-    UF_CRM_1757025126670: extractCellShape(order),         // Kształt komórek
-    UF_CRM_1757177134448: extractMaterialColor(order),     // Kolor materiału
-    UF_CRM_1757177281489: extractTrimColor(order),         // Kolor obszycia
+    // ✅ POLA PRODUKTU - działają poprawnie (wartości enum)
+    UF_CRM_1757024835301: productVariant,    // Wariant kompletu
+    UF_CRM_1757024931236: productType,       // Rodzaj kompletu
+    UF_CRM_1757025126670: cellShape,         // Kształt komórek
+    UF_CRM_1757177134448: materialColor,     // Kolor materiału
+    UF_CRM_1757177281489: trimColor,         // Kolor obszycia
     
-    // Dodatkowe informacje
+    // ✅ DODATKOWE INFORMACJE
     UF_CRM_SHIPPING_METHOD: extractShippingMethod(order),
   };
 
+  console.log('🔍 mapOrderToDeal: Built deal object before removing undefined values:', deal);
+
   // Remove undefined values
-  return removeUndefinedValues(deal);
+  const cleanedDeal = removeUndefinedValues(deal);
+  console.log('🔍 mapOrderToDeal: Final deal object after cleaning:', cleanedDeal);
+  
+  return cleanedDeal;
 }
 
 /**
@@ -74,27 +119,66 @@ function extractCarDetails(order: Order): {
   year?: string;
   body?: string;
 } {
+  console.log('🔍 extractCarDetails: Starting extraction for order:', order.orderNumber);
+  
   if (!order.items || order.items.length === 0) {
+    console.log('🔍 extractCarDetails: No items found in order');
     return {};
   }
 
+  console.log('🔍 extractCarDetails: Looking for mat items with configuration...');
+  
   // Look for mat items with car configuration
   const matItem = order.items.find(item => 
     item.productType === 'mat' && item.configuration
   );
 
-  if (matItem && matItem.configuration) {
+  if (!matItem) {
+    console.log('🔍 extractCarDetails: No mat items with configuration found');
+    return {};
+  }
+
+  console.log('🔍 extractCarDetails: Found mat item:', {
+    productName: matItem.productName,
+    hasConfiguration: !!matItem.configuration,
+    configuration: matItem.configuration
+  });
+
+  if (matItem.configuration) {
     const config = matItem.configuration as any;
+    console.log('🔍 extractCarDetails: Configuration object:', config);
+    console.log('🔍 extractCarDetails: Configuration keys:', Object.keys(config));
+    console.log('🔍 extractCarDetails: Has carDetails?', !!config.carDetails);
+    
     if (config.carDetails) {
-      return {
+      console.log('🔍 extractCarDetails: carDetails object:', config.carDetails);
+      console.log('🔍 extractCarDetails: carDetails keys:', Object.keys(config.carDetails));
+      
+      const carDetails = {
         brand: config.carDetails.brand,
         model: config.carDetails.model,
         year: config.carDetails.year,
-        body: config.carDetails.body,
+        body: config.carDetails.bodyType, // Naprawione: bodyType zamiast body
       };
+      console.log('🔍 extractCarDetails: Extracted car details:', carDetails);
+      console.log('🔍 extractCarDetails: Car details validation:', {
+        hasBrand: !!carDetails.brand,
+        hasModel: !!carDetails.model,
+        hasYear: !!carDetails.year,
+        hasBody: !!carDetails.body,
+        brandValue: carDetails.brand,
+        modelValue: carDetails.model,
+        yearValue: carDetails.year,
+        bodyValue: carDetails.body
+      });
+      return carDetails;
+    } else {
+      console.log('🔍 extractCarDetails: No carDetails found in configuration');
+      console.log('🔍 extractCarDetails: Available configuration keys:', Object.keys(config));
     }
   }
 
+  console.log('🔍 extractCarDetails: Returning empty car details');
   return {};
 }
 
@@ -134,8 +218,8 @@ function extractProductColors(order: Order): string {
       if (config.materialColor) {
         colors.push(`Materiał: ${config.materialColor}`);
       }
-      if (config.borderColor) {
-        colors.push(`Obszycie: ${config.borderColor}`);
+      if (config.edgeColor) {
+        colors.push(`Obszycie: ${config.edgeColor}`);
       }
     }
   });
@@ -209,7 +293,7 @@ function buildDealComments(order: Order): string {
         const config = item.configuration as any;
         if (config.carDetails) {
           const car = config.carDetails;
-          comments.push(`   Samochód: ${car.brand} ${car.model} ${car.year || ''} ${car.body || ''}`);
+          comments.push(`   Samochód: ${car.brand} ${car.model} ${car.year || ''} ${car.bodyType || ''}`);
         }
         if (config.setType) {
           comments.push(`   Typ zestawu: ${config.setType}`);
@@ -220,8 +304,8 @@ function buildDealComments(order: Order): string {
         if (config.materialColor) {
           comments.push(`   Kolor materiału: ${config.materialColor}`);
         }
-        if (config.borderColor) {
-          comments.push(`   Kolor obszycia: ${config.borderColor}`);
+        if (config.edgeColor) {
+          comments.push(`   Kolor obszycia: ${config.edgeColor}`);
         }
         if (config.heelPad) {
           comments.push(`   Podkładka pod pięty: ${config.heelPad ? 'Tak' : 'Nie'}`);
@@ -238,12 +322,36 @@ function buildDealComments(order: Order): string {
  */
 function removeUndefinedValues<T extends Record<string, any>>(obj: T): T {
   const result = {} as T;
+  const removedFields: string[] = [];
   
   for (const [key, value] of Object.entries(obj)) {
-    if (value !== undefined && value !== '') {
+    // Keep the field if:
+    // - value is not undefined
+    // - value is not an empty string (except for some special cases)
+    // - value is 0 (for numeric fields like year)
+    // - value is false (for boolean fields)
+    const shouldKeep = value !== undefined && 
+                      (value !== '' || key.includes('SHIPPING_METHOD')) && // Keep shipping method even if empty
+                      value !== null;
+    
+    if (shouldKeep) {
       result[key as keyof T] = value;
+    } else {
+      removedFields.push(`${key}: ${value}`);
     }
   }
+  
+  if (removedFields.length > 0) {
+    console.log('🔍 removeUndefinedValues: Removed fields:', removedFields);
+  } else {
+    console.log('🔍 removeUndefinedValues: No fields removed');
+  }
+  
+  console.log('🔍 removeUndefinedValues: Final field count:', {
+    original: Object.keys(obj).length,
+    cleaned: Object.keys(result).length,
+    removed: removedFields.length
+  });
   
   return result;
 }
@@ -274,91 +382,161 @@ export function createDealProducts(order: Order): Array<{
  * Extract product variant (enum value)
  */
 function extractProductVariant(order: Order): number | undefined {
+  console.log('🔍 extractProductVariant: Starting extraction for order:', order.orderNumber);
+  
   // Mapowanie wariantu produktu na ID enum w Bitrix24
-  // Przykład: jeśli order ma wariant "premium", zwróć 264
   const variantMap: Record<string, number> = {
-    'standard': 264,
-    'premium': 264,
-    'luxury': 264,
+    'front': 282,      // Starter - 2 dywaniki (tylko przód)
+    'basic': 284,      // Podstawowy - 5 dywaników (przód + tył + ochrona na tunel)
+    'premium': 286,    // Premium - 5 dywaników (przód + tył + bagażnik)
+    'complete': 288,   // Mata do Bagażnika - 1 dywanik
   };
   
   const firstItem = order.items?.[0];
-  if (!firstItem) return undefined;
+  if (!firstItem) {
+    console.log('🔍 extractProductVariant: No items found');
+    return undefined;
+  }
   
-  const variant = (firstItem.configuration as any)?.variant || 'standard';
-  return variantMap[variant] || 264; // Domyślnie 264
+  const variant = (firstItem.configuration as any)?.setVariant || 'basic';
+  const result = variantMap[variant] || 284; // Domyślnie basic
+  
+  console.log('🔍 extractProductVariant: Result:', {
+    firstItemProductType: firstItem.productType,
+    configuration: firstItem.configuration,
+    variant,
+    result
+  });
+  
+  return result;
 }
 
 /**
  * Extract product type (enum value)
  */
 function extractProductType(order: Order): number | undefined {
+  console.log('🔍 extractProductType: Starting extraction for order:', order.orderNumber);
+  
   // Mapowanie typu produktu na ID enum w Bitrix24
   const typeMap: Record<string, number> = {
-    'mat': 274,
-    'accessory': 274,
+    'mat': 274,        // Dywaniki samochodowe
+    'accessory': 276,  // Akcesoria
   };
   
   const firstItem = order.items?.[0];
-  if (!firstItem) return undefined;
+  if (!firstItem) {
+    console.log('🔍 extractProductType: No items found');
+    return undefined;
+  }
   
-  return typeMap[firstItem.productType] || 274; // Domyślnie 274
+  const result = typeMap[firstItem.productType] || 274; // Domyślnie 274
+  
+  console.log('🔍 extractProductType: Result:', {
+    firstItemProductType: firstItem.productType,
+    result
+  });
+  
+  return result;
 }
 
 /**
  * Extract cell shape (enum value)
  */
 function extractCellShape(order: Order): number | undefined {
+  console.log('🔍 extractCellShape: Starting extraction for order:', order.orderNumber);
+  
   // Mapowanie kształtu komórek na ID enum w Bitrix24
   const shapeMap: Record<string, number> = {
-    'standard': 278,
-    'premium': 278,
-    'luxury': 278,
+    'diamonds': 278,   // Romby
+    'honey': 280,      // Plaster miodu
   };
   
   const firstItem = order.items?.[0];
-  if (!firstItem) return undefined;
+  if (!firstItem) {
+    console.log('🔍 extractCellShape: No items found');
+    return undefined;
+  }
   
-  const shape = (firstItem.configuration as any)?.cellShape || 'standard';
-  return shapeMap[shape] || 278; // Domyślnie 278
+  const shape = (firstItem.configuration as any)?.cellType || 'diamonds';
+  const result = shapeMap[shape] || 278; // Domyślnie 278
+  
+  console.log('🔍 extractCellShape: Result:', {
+    firstItemProductType: firstItem.productType,
+    configuration: firstItem.configuration,
+    shape,
+    result
+  });
+  
+  return result;
 }
 
 /**
  * Extract material color (enum value)
  */
 function extractMaterialColor(order: Order): number | undefined {
+  console.log('🔍 extractMaterialColor: Starting extraction for order:', order.orderNumber);
+  
   // Mapowanie koloru materiału na ID enum w Bitrix24
   const colorMap: Record<string, number> = {
-    'black': 358,
-    'gray': 358,
-    'brown': 358,
-    'beige': 358,
+    'blue': 358,       // Niebieski
+    'black': 360,      // Czarny
+    'gray': 362,       // Szary
+    'brown': 364,      // Brązowy
+    'beige': 366,      // Beżowy
   };
   
   const firstItem = order.items?.[0];
-  if (!firstItem || !firstItem.configuration) return undefined;
+  if (!firstItem || !firstItem.configuration) {
+    console.log('🔍 extractMaterialColor: No items or configuration found');
+    return undefined;
+  }
   
   const config = firstItem.configuration as any;
   const materialColor = config.materialColor || 'black';
-  return colorMap[materialColor] || 358; // Domyślnie 358
+  const result = colorMap[materialColor] || 358; // Domyślnie blue
+  
+  console.log('🔍 extractMaterialColor: Result:', {
+    firstItemProductType: firstItem.productType,
+    configuration: firstItem.configuration,
+    materialColor,
+    result
+  });
+  
+  return result;
 }
 
 /**
  * Extract trim color (enum value)
  */
 function extractTrimColor(order: Order): number | undefined {
+  console.log('🔍 extractTrimColor: Starting extraction for order:', order.orderNumber);
+  
   // Mapowanie koloru obszycia na ID enum w Bitrix24
   const trimColorMap: Record<string, number> = {
-    'black': 362,
-    'gray': 362,
-    'brown': 362,
-    'beige': 362,
+    'blue': 368,       // Niebieski
+    'black': 370,      // Czarny
+    'gray': 372,       // Szary
+    'brown': 374,      // Brązowy
+    'beige': 376,      // Beżowy
   };
   
   const firstItem = order.items?.[0];
-  if (!firstItem || !firstItem.configuration) return undefined;
+  if (!firstItem || !firstItem.configuration) {
+    console.log('🔍 extractTrimColor: No items or configuration found');
+    return undefined;
+  }
   
   const config = firstItem.configuration as any;
-  const trimColor = config.borderColor || 'black';
-  return trimColorMap[trimColor] || 362; // Domyślnie 362
+  const trimColor = config.edgeColor || 'black';
+  const result = trimColorMap[trimColor] || 370; // Domyślnie black
+  
+  console.log('🔍 extractTrimColor: Result:', {
+    firstItemProductType: firstItem.productType,
+    configuration: firstItem.configuration,
+    trimColor,
+    result
+  });
+  
+  return result;
 }
+
