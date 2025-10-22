@@ -4,7 +4,7 @@
  * Handles HTTP requests to Bitrix24 with retry logic, rate limiting, and error handling
  */
 
-import { bitrix24Config, getBitrix24ApiUrl } from './config';
+import { getBitrix24Config, getBitrix24ApiUrl } from './config';
 import { 
   Bitrix24ApiResponse, 
   Bitrix24BatchResponse,
@@ -72,6 +72,7 @@ export class Bitrix24Client {
     apiMethod: string,
     data: Record<string, any> = {}
   ): Promise<Bitrix24ApiResponse<T>> {
+    const bitrix24Config = getBitrix24Config();
     if (!bitrix24Config.enabled) {
       throw new Error('Bitrix24 integration is disabled');
     }
@@ -96,7 +97,11 @@ export class Bitrix24Client {
       const searchParams = new URLSearchParams();
       Object.entries(data).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
-          searchParams.append(key, String(value));
+          // Serializuj obiekty i tablice jako JSON
+          const serializedValue = typeof value === 'object' 
+            ? JSON.stringify(value) 
+            : String(value);
+          searchParams.append(key, serializedValue);
         }
       });
       const urlWithParams = `${url}?${searchParams.toString()}`;
@@ -128,7 +133,13 @@ export class Bitrix24Client {
         throw new Error(`Bitrix24 API Error: ${data.error.error_description || data.error.error}`);
       }
 
-      console.log(`✅ Bitrix24 API Response:`, { method: options.method, success: true });
+      console.log(`✅ Bitrix24 API Response:`, { 
+        method: options.method, 
+        success: true,
+        hasResult: !!data.result,
+        resultType: typeof data.result,
+        result: data.result  // Pełna odpowiedź
+      });
       return data;
 
     } catch (error) {
@@ -151,6 +162,7 @@ export class Bitrix24Client {
    * Check if request should be retried
    */
   private shouldRetry(error: any, attempt: number): boolean {
+    const bitrix24Config = getBitrix24Config();
     if (attempt >= bitrix24Config.retry.maxAttempts) {
       return false;
     }
@@ -178,6 +190,7 @@ export class Bitrix24Client {
    * Calculate retry delay with exponential backoff
    */
   private calculateRetryDelay(attempt: number): number {
+    const bitrix24Config = getBitrix24Config();
     const baseDelay = bitrix24Config.retry.baseDelay;
     const exponentialDelay = baseDelay * Math.pow(2, attempt - 1);
     const jitter = Math.random() * 1000; // Add jitter to prevent thundering herd
@@ -188,6 +201,7 @@ export class Bitrix24Client {
    * Enforce rate limiting
    */
   private async enforceRateLimit(): Promise<void> {
+    const bitrix24Config = getBitrix24Config();
     const now = Date.now();
     const timeSinceLastRequest = now - this.lastRequestTime;
     const minInterval = bitrix24Config.rateLimit.timeWindow / bitrix24Config.rateLimit.maxRequests;

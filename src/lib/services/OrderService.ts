@@ -3,7 +3,7 @@ import { AccessoryService } from './AccessoryService';
 import { MatService } from './MatService';
 import { PricingService } from './PricingService';
 import { Order, CreateOrderDTO, OrderItem, OrderStatus } from '../types/order-new';
-import { bitrix24Config } from '../integrations/bitrix24/config';
+import { getBitrix24Config } from '../integrations/bitrix24/config';
 import { contactService } from '../integrations/bitrix24/services/ContactService';
 import { dealService } from '../integrations/bitrix24/services/DealService';
 import { mapOrderToContact } from '../integrations/bitrix24/mappers/orderToContact';
@@ -99,6 +99,7 @@ export class OrderService {
       console.log('🛒 OrderService: Inventory updated');
 
       // 8. Synchronizuj z Bitrix24 (jeśli włączone)
+      const bitrix24Config = getBitrix24Config();
       if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders) {
         console.log('🛒 OrderService: Syncing order to Bitrix24...');
         try {
@@ -319,6 +320,15 @@ export class OrderService {
     try {
       console.log('🛒 OrderService: updatePaymentStatus', { orderId, status, p24Data });
       
+      // Pobierz aktualne dane zamówienia PRZED aktualizacją
+      const orderBeforeUpdate = await this.getOrderById(orderId);
+      console.log('🔍 OrderService: Order before update:', {
+        id: orderBeforeUpdate?.id,
+        orderNumber: orderBeforeUpdate?.orderNumber,
+        status: orderBeforeUpdate?.status,
+        paymentStatus: orderBeforeUpdate?.paymentStatus
+      });
+      
       const updateData: any = {
         payment_status: status,
         updated_at: new Date().toISOString()
@@ -340,9 +350,18 @@ export class OrderService {
       console.log('🛒 OrderService: Order updated successfully', updateData);
 
       // Synchronizuj zmiany z Bitrix24
+      const bitrix24Config = getBitrix24Config();
       if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders) {
         try {
+          // Pobierz ŚWIEŻE dane zamówienia PO aktualizacji
           const order = await this.getOrderById(orderId);
+          console.log('🔍 OrderService: Order after update (before sync):', {
+            id: order?.id,
+            orderNumber: order?.orderNumber,
+            status: order?.status,
+            paymentStatus: order?.paymentStatus
+          });
+          
           if (order) {
             await this.syncOrderToBitrix24(order);
             console.log('✅ OrderService: Payment status synced to Bitrix24');
@@ -362,7 +381,12 @@ export class OrderService {
    */
   private async syncOrderToBitrix24(order: Order): Promise<void> {
     try {
-      console.log('🔄 OrderService: Starting Bitrix24 sync for order:', order.orderNumber);
+      console.log('🔄 OrderService: Starting Bitrix24 sync for order:', {
+        orderNumber: order.orderNumber,
+        status: order.status,
+        paymentStatus: order.paymentStatus,
+        total: order.total
+      });
 
       // Sprawdź czy zamówienie jest opłacone - synchronizuj tylko opłacone zamówienia
       if (order.paymentStatus !== 'paid') {
@@ -410,14 +434,26 @@ export class OrderService {
       // 2. Sprawdź czy deal już istnieje
       const existingDeal = await dealService.findByOrderNumber(order.orderNumber);
       if (existingDeal) {
-        console.log('📋 OrderService: Deal already exists, updating:', existingDeal.id);
-        
-        // Zaktualizuj istniejący deal
-        const dealData = mapOrderToDeal(order, contactId);
-        await dealService.updateDeal(existingDeal.id, dealData);
+        console.log('📋 OrderService: Deal already exists, updating:', {
+          dealId: existingDeal.id,
+          currentStageId: existingDeal.stageId,
+          orderNumber: order.orderNumber
+        });
         
         // Zaktualizuj status deala na podstawie statusu zamówienia
         const dealStage = this.getDealStageFromOrderStatus(order.status, order.paymentStatus);
+        
+        // Zaktualizuj istniejący deal
+        const dealData = mapOrderToDeal(order, contactId, { stageId: dealStage });
+        await dealService.updateDeal(existingDeal.id, dealData);
+        console.log('🔄 OrderService: Updating existing deal stage:', {
+          dealId: existingDeal.id,
+          fromStage: existingDeal.stageId,
+          toStage: dealStage,
+          orderStatus: order.status,
+          paymentStatus: order.paymentStatus
+        });
+        
         await dealService.updateDealStage(existingDeal.id, {
           stageId: dealStage,
           comment: `Zamówienie zaktualizowane: ${order.status} (płatność: ${order.paymentStatus})`
@@ -428,9 +464,18 @@ export class OrderService {
       }
 
       // 3. Utwórz nowy deal
-      const dealData = mapOrderToDeal(order, contactId);
+      const dealStage = this.getDealStageFromOrderStatus(order.status, order.paymentStatus);
+      const dealData = mapOrderToDeal(order, contactId, { stageId: dealStage });
+      console.log('🎯 OrderService: Creating new deal with stage:', { 
+        orderStatus: order.status, 
+        paymentStatus: order.paymentStatus, 
+        dealStage,
+        orderNumber: order.orderNumber,
+        total: order.total
+      });
+      
       const dealResult = await dealService.createDeal(dealData, {
-        stageId: this.getDealStageFromOrderStatus(order.status, order.paymentStatus),
+        stageId: dealStage,
         currencyId: 'PLN',
         contactId: contactId,
       });
@@ -476,34 +521,65 @@ export class OrderService {
    * Pobierz etap deala na podstawie statusu zamówienia i płatności
    */
   private getDealStageFromOrderStatus(orderStatus: string, paymentStatus: string): string {
+    console.log('🎯 OrderService: getDealStageFromOrderStatus called:', {
+      orderStatus,
+      paymentStatus
+    });
+
     // Priorytet: status płatności > status zamówienia
     if (paymentStatus === 'paid') {
-      return 'UC_DMBNNJ'; // Zamówienia ze strony opłacone (Przelewy24)
+      console.log('✅ OrderService: Payment is paid, checking order status');
+      // Dla opłaconych zamówień sprawdź status zamówienia
+      switch (orderStatus) {
+        case 'delivered':
+          console.log('🎯 OrderService: Order delivered -> WON');
+          return 'WON'; // Dostarczone - wygrana
+        case 'cancelled':
+          console.log('🎯 OrderService: Order cancelled -> LOSE');
+          return 'LOSE'; // Anulowane - przegrana
+        case 'pending':
+        case 'confirmed':
+        case 'processing':
+        case 'shipped':
+        default:
+          console.log('🎯 OrderService: Order paid with status', orderStatus, '-> UC_DMBNNJ');
+          return 'UC_DMBNNJ'; // Zamówienia ze strony opłacone (Przelewy24)
+      }
     }
     
     if (paymentStatus === 'failed') {
+      console.log('🎯 OrderService: Payment failed -> LOSE');
       return 'LOSE'; // Płatność nieudana - przegrana
     }
 
     if (paymentStatus === 'refunded') {
+      console.log('🎯 OrderService: Payment refunded -> LOSE');
       return 'LOSE'; // Zwrot - przegrana
     }
 
-    // Na podstawie statusu zamówienia
+    console.log('⚠️ OrderService: Payment not paid, checking order status only');
+    // Na podstawie statusu zamówienia (dla nieopłaconych)
     switch (orderStatus) {
       case 'pending':
+        console.log('🎯 OrderService: Order pending -> NEW');
         return 'NEW'; // Czeka na opłatę
       case 'confirmed':
+        console.log('🎯 OrderService: Order confirmed (not paid) -> UC_DMBNNJ');
         return 'UC_DMBNNJ'; // Zamówienia ze strony opłacone
       case 'processing':
+        console.log('🎯 OrderService: Order processing (not paid) -> UC_DMBNNJ');
         return 'UC_DMBNNJ'; // Zamówienia ze strony opłacone
       case 'shipped':
+        console.log('🎯 OrderService: Order shipped (not paid) -> UC_DMBNNJ');
         return 'UC_DMBNNJ'; // Zamówienia ze strony opłacone
       case 'delivered':
+        console.log('🎯 OrderService: Order delivered (not paid) -> WON');
         return 'WON'; // Dostarczone - wygrana
       case 'cancelled':
+        console.log('🎯 OrderService: Order cancelled (not paid) -> LOSE');
         return 'LOSE'; // Anulowane - przegrana
       default:
+        console.log('🎯 OrderService: Unknown order status', orderStatus, '-> NEW');
         return 'NEW';
     }
   }

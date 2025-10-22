@@ -34,6 +34,7 @@ export const Bitrix24DealSchema = z.object({
   OPPORTUNITY: z.number().positive('Opportunity must be positive'),
   CURRENCY_ID: z.string().default('PLN'),
   CONTACT_ID: z.string().optional(),
+  CATEGORY_ID: z.number().optional(),
   COMMENTS: z.string().optional(),
   // Custom fields
   UF_CRM_ORDER_NUMBER: z.string().optional(),

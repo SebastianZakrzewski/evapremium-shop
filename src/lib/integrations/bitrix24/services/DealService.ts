@@ -54,11 +54,34 @@ export class DealService {
         STAGE_ID: options.stageId || validatedData.STAGE_ID,
         CURRENCY_ID: options.currencyId || validatedData.CURRENCY_ID,
         CONTACT_ID: options.contactId || validatedData.CONTACT_ID,
+        CATEGORY_ID: 0, // Force deal to be created in "Deale" category (ID: 0)
       };
 
-      console.log('💼 Creating Bitrix24 deal:', { title: enrichedData.TITLE, opportunity: enrichedData.OPPORTUNITY });
+      console.log('💼 Creating Bitrix24 deal:', { 
+        title: enrichedData.TITLE, 
+        opportunity: enrichedData.OPPORTUNITY,
+        stageId: enrichedData.STAGE_ID,
+        optionsStageId: options.stageId,
+        validatedStageId: validatedData.STAGE_ID,
+        categoryId: enrichedData.CATEGORY_ID || 'not set',
+        currencyId: enrichedData.CURRENCY_ID,
+        contactId: enrichedData.CONTACT_ID
+      });
 
-      const response = await this.client.post<{ id: string }>('crm.deal.add', enrichedData);
+      console.log('🔍 STAGE_ID analysis:', {
+        'options.stageId': options.stageId,
+        'validatedData.STAGE_ID': validatedData.STAGE_ID,
+        'enrichedData.STAGE_ID': enrichedData.STAGE_ID,
+        'STAGE_ID !== NEW': enrichedData.STAGE_ID !== 'NEW',
+        'STAGE_ID && STAGE_ID !== NEW': enrichedData.STAGE_ID && enrichedData.STAGE_ID !== 'NEW'
+      });
+
+      // Create deal without STAGE_ID (Bitrix24 will set it to first stage in category)
+      const { STAGE_ID, ...dealDataWithoutStage } = enrichedData;
+      
+      const response = await this.client.post<{ id: string }>('crm.deal.add', {
+        fields: dealDataWithoutStage
+      });
       if (response.error) {
         throw new Error(`Bitrix24 API Error: ${response.error.error_description || response.error.error}`);
       }
@@ -69,6 +92,33 @@ export class DealService {
       }
 
       console.log('✅ Deal created successfully:', { id: dealId, title: enrichedData.TITLE });
+
+      // If STAGE_ID was specified and it's not NEW, update the deal stage immediately
+      if (STAGE_ID && STAGE_ID !== 'NEW') {
+        console.log('🔄 Setting deal stage to:', STAGE_ID, '(creating deal directly in target stage)');
+        console.log('🔄 Deal ID:', dealId);
+        console.log('🔄 Target stage:', STAGE_ID);
+        console.log('🔄 Request body:', JSON.stringify({ id: dealId, fields: { STAGE_ID } }));
+        
+        // Use direct API call to set the stage immediately
+        const stageUpdateResponse = await this.client.post('crm.deal.update', {
+          id: dealId,
+          fields: {
+            STAGE_ID: STAGE_ID
+          }
+        });
+        
+        console.log('🔄 Stage update full response:', stageUpdateResponse);
+        
+        if (stageUpdateResponse.error) {
+          console.warn('⚠️ Failed to set deal stage:', stageUpdateResponse.error);
+          throw new Error(`Failed to set deal stage: ${stageUpdateResponse.error.error_description || stageUpdateResponse.error.error}`);
+        } else {
+          console.log('✅ Deal created directly in stage:', STAGE_ID);
+        }
+      } else {
+        console.log('⏭️ Skipping stage update - STAGE_ID:', STAGE_ID);
+      }
 
       return {
         id: dealId,
@@ -129,17 +179,17 @@ export class DealService {
     try {
       console.log('💼 Updating deal stage:', { id: dealId, stageId: options.stageId });
 
-      const updateData: any = {
-        STAGE_ID: options.stageId,
+      const updateFields: any = {
+        STAGE_ID: options.stageId
       };
 
       if (options.comment) {
-        updateData.COMMENTS = options.comment;
+        updateFields.COMMENTS = options.comment;
       }
 
       const response = await this.client.post('crm.deal.update', {
         id: dealId,
-        fields: updateData,
+        fields: updateFields,
       });
 
       if (response.error) {
@@ -262,8 +312,9 @@ export class DealService {
       const response = await this.client.get('crm.deal.list', {
         filter: {
           'ORIGIN_ID': orderNumber,
+          'CATEGORY_ID': 0, // Search only in "Deale" category (ID: 0)
         },
-        select: ['ID', 'TITLE', 'STAGE_ID', 'OPPORTUNITY', 'CURRENCY_ID', 'CONTACT_ID', 'ORIGIN_ID', 'ORIGINATOR_ID'],
+        select: ['ID', 'TITLE', 'STAGE_ID', 'OPPORTUNITY', 'CURRENCY_ID', 'CONTACT_ID', 'ORIGIN_ID', 'ORIGINATOR_ID', 'CATEGORY_ID'],
         start: 0,
       });
 
@@ -289,7 +340,12 @@ export class DealService {
         paymentStatus: 'paid', // Jeśli deal istnieje, oznacza że zamówienie było opłacone
       };
 
-      console.log('✅ Deal found by order number:', { id: result.id, title: result.title });
+      console.log('✅ Deal found by order number:', { 
+        id: result.id, 
+        title: result.title, 
+        stageId: result.stageId,
+        categoryId: deal.CATEGORY_ID || 'unknown'
+      });
 
       return result;
 

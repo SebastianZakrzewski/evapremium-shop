@@ -34,6 +34,7 @@ export function mapOrderToDeal(
     OPPORTUNITY: Number(order.total),
     CURRENCY_ID: options.currencyId || 'PLN',
     CONTACT_ID: contactId,
+    CATEGORY_ID: 0, // Force deal to be created in "Deale" category (ID: 0)
     // Custom fields for EVA Website integration - zaktualizowane na podstawie rzeczywistych pól Bitrix24
     
     // Podstawowe informacje o zamówieniu - używamy istniejących pól

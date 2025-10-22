@@ -37,6 +37,7 @@ export interface Bitrix24Deal {
   OPPORTUNITY: number;
   CURRENCY_ID: string;
   CONTACT_ID?: string;
+  CATEGORY_ID?: number;
   COMMENTS?: string;
   // Custom fields for EVA Website integration - zaktualizowane na podstawie rzeczywistych pól Bitrix24
   
