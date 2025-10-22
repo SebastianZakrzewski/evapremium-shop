@@ -59,7 +59,6 @@ export class DealService {
       console.log('💼 Creating Bitrix24 deal:', { title: enrichedData.TITLE, opportunity: enrichedData.OPPORTUNITY });
 
       const response = await this.client.post<{ id: string }>('crm.deal.add', enrichedData);
-
       if (response.error) {
         throw new Error(`Bitrix24 API Error: ${response.error.error_description || response.error.error}`);
       }
@@ -262,9 +261,9 @@ export class DealService {
 
       const response = await this.client.get('crm.deal.list', {
         filter: {
-          'UF_CRM_ORDER_NUMBER': orderNumber,
+          'ORIGIN_ID': orderNumber,
         },
-        select: ['ID', 'TITLE', 'STAGE_ID', 'OPPORTUNITY', 'CURRENCY_ID', 'CONTACT_ID', 'UF_CRM_ORDER_NUMBER', 'UF_CRM_PAYMENT_STATUS'],
+        select: ['ID', 'TITLE', 'STAGE_ID', 'OPPORTUNITY', 'CURRENCY_ID', 'CONTACT_ID', 'ORIGIN_ID', 'ORIGINATOR_ID'],
         start: 0,
       });
 
@@ -286,8 +285,8 @@ export class DealService {
         opportunity: deal.OPPORTUNITY,
         currencyId: deal.CURRENCY_ID,
         contactId: deal.CONTACT_ID,
-        orderNumber: deal.UF_CRM_ORDER_NUMBER,
-        paymentStatus: deal.UF_CRM_PAYMENT_STATUS,
+        orderNumber: deal.ORIGIN_ID,
+        paymentStatus: 'paid', // Jeśli deal istnieje, oznacza że zamówienie było opłacone
       };
 
       console.log('✅ Deal found by order number:', { id: result.id, title: result.title });

@@ -34,19 +34,30 @@ export function mapOrderToDeal(
     OPPORTUNITY: Number(order.total),
     CURRENCY_ID: options.currencyId || 'PLN',
     CONTACT_ID: contactId,
+    // Custom fields for EVA Website integration - zaktualizowane na podstawie rzeczywistych pól Bitrix24
+    
+    // Podstawowe informacje o zamówieniu - używamy istniejących pól
+    ORIGINATOR_ID: 'EVA Website',
+    ORIGIN_ID: order.orderNumber, // Numer zamówienia
+    SOURCE_ID: 'WEB',
+    SOURCE_DESCRIPTION: 'EVA Website',
     COMMENTS: buildDealComments(order),
-    // Custom fields for EVA Website integration
-    UF_CRM_ORDER_NUMBER: order.orderNumber,
-    UF_CRM_PAYMENT_METHOD: order.paymentMethod || 'Nieznana',
-    UF_CRM_PAYMENT_STATUS: order.paymentStatus || 'pending',
-    UF_CRM_CAR_BRAND: carDetails.brand,
-    UF_CRM_CAR_MODEL: carDetails.model,
-    UF_CRM_CAR_YEAR: carDetails.year,
-    UF_CRM_PRODUCT_TYPE: extractProductTypes(order),
-    UF_CRM_PRODUCT_COLOR: extractProductColors(order),
+    
+    // Sekcja AUTO - informacje o samochodzie
+    UF_CRM_1760788285332: carDetails.brand,        // Marka samochodu
+    UF_CRM_1760788302371: carDetails.model,        // Model samochodu
+    UF_CRM_1760788317619: carDetails.year ? Number(carDetails.year) : undefined, // Rok samochodu (double)
+    UF_CRM_1760788343011: carDetails.body,         // Typ nadwozia
+    
+    // Sekcja komplet - informacje o produkcie (wartości enum)
+    UF_CRM_1757024835301: extractProductVariant(order),    // Wariant kompletu
+    UF_CRM_1757024931236: extractProductType(order),       // Rodzaj kompletu
+    UF_CRM_1757025126670: extractCellShape(order),         // Kształt komórek
+    UF_CRM_1757177134448: extractMaterialColor(order),     // Kolor materiału
+    UF_CRM_1757177281489: extractTrimColor(order),         // Kolor obszycia
+    
+    // Dodatkowe informacje
     UF_CRM_SHIPPING_METHOD: extractShippingMethod(order),
-    UF_CRM_ORDER_DATE: order.createdAt.toISOString().split('T')[0],
-    UF_CRM_ORDER_SOURCE: 'EVA Website',
   };
 
   // Remove undefined values
@@ -257,32 +268,96 @@ export function createDealProducts(order: Order): Array<{
   }));
 }
 
-/**
- * Get deal stage based on order status
- */
-export function getDealStageFromOrderStatus(orderStatus: string): string {
-  const stageMap: Record<string, string> = {
-    'pending': 'NEW',
-    'confirmed': 'PREPARATION',
-    'processing': 'PREPARATION',
-    'shipped': 'PREPARATION',
-    'delivered': 'WON',
-    'cancelled': 'LOSE',
-  };
 
-  return stageMap[orderStatus] || 'NEW';
+/**
+ * Extract product variant (enum value)
+ */
+function extractProductVariant(order: Order): number | undefined {
+  // Mapowanie wariantu produktu na ID enum w Bitrix24
+  // Przykład: jeśli order ma wariant "premium", zwróć 264
+  const variantMap: Record<string, number> = {
+    'standard': 264,
+    'premium': 264,
+    'luxury': 264,
+  };
+  
+  const firstItem = order.items?.[0];
+  if (!firstItem) return undefined;
+  
+  const variant = (firstItem.configuration as any)?.variant || 'standard';
+  return variantMap[variant] || 264; // Domyślnie 264
 }
 
 /**
- * Get deal stage based on payment status
+ * Extract product type (enum value)
  */
-export function getDealStageFromPaymentStatus(paymentStatus: string): string {
-  const stageMap: Record<string, string> = {
-    'pending': 'NEW',
-    'paid': 'PREPARATION',
-    'failed': 'LOSE',
-    'refunded': 'LOSE',
+function extractProductType(order: Order): number | undefined {
+  // Mapowanie typu produktu na ID enum w Bitrix24
+  const typeMap: Record<string, number> = {
+    'mat': 274,
+    'accessory': 274,
   };
+  
+  const firstItem = order.items?.[0];
+  if (!firstItem) return undefined;
+  
+  return typeMap[firstItem.productType] || 274; // Domyślnie 274
+}
 
-  return stageMap[paymentStatus] || 'NEW';
+/**
+ * Extract cell shape (enum value)
+ */
+function extractCellShape(order: Order): number | undefined {
+  // Mapowanie kształtu komórek na ID enum w Bitrix24
+  const shapeMap: Record<string, number> = {
+    'standard': 278,
+    'premium': 278,
+    'luxury': 278,
+  };
+  
+  const firstItem = order.items?.[0];
+  if (!firstItem) return undefined;
+  
+  const shape = (firstItem.configuration as any)?.cellShape || 'standard';
+  return shapeMap[shape] || 278; // Domyślnie 278
+}
+
+/**
+ * Extract material color (enum value)
+ */
+function extractMaterialColor(order: Order): number | undefined {
+  // Mapowanie koloru materiału na ID enum w Bitrix24
+  const colorMap: Record<string, number> = {
+    'black': 358,
+    'gray': 358,
+    'brown': 358,
+    'beige': 358,
+  };
+  
+  const firstItem = order.items?.[0];
+  if (!firstItem || !firstItem.configuration) return undefined;
+  
+  const config = firstItem.configuration as any;
+  const materialColor = config.materialColor || 'black';
+  return colorMap[materialColor] || 358; // Domyślnie 358
+}
+
+/**
+ * Extract trim color (enum value)
+ */
+function extractTrimColor(order: Order): number | undefined {
+  // Mapowanie koloru obszycia na ID enum w Bitrix24
+  const trimColorMap: Record<string, number> = {
+    'black': 362,
+    'gray': 362,
+    'brown': 362,
+    'beige': 362,
+  };
+  
+  const firstItem = order.items?.[0];
+  if (!firstItem || !firstItem.configuration) return undefined;
+  
+  const config = firstItem.configuration as any;
+  const trimColor = config.borderColor || 'black';
+  return trimColorMap[trimColor] || 362; // Domyślnie 362
 }

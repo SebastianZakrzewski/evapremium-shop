@@ -192,7 +192,11 @@ export class OrderService {
     status: OrderStatus,
     trackingNumber?: string
   ): Promise<Order> {
-    return await this.repository.updateStatus(orderId, status, trackingNumber);
+    const result = await this.repository.updateStatus(orderId, status, trackingNumber);
+    if (!result) {
+      throw new Error(`Order with ID ${orderId} not found`);
+    }
+    return result;
   }
 
 
@@ -360,40 +364,56 @@ export class OrderService {
     try {
       console.log('🔄 OrderService: Starting Bitrix24 sync for order:', order.orderNumber);
 
-      // 1. Mapuj dane zamówienia do kontaktu
-      const contactData = mapOrderToContact(order, {
-        sourceId: 'WEB',
-        sourceDescription: 'EVA Website',
-        utmSource: (order as any).utmSource,
-        utmMedium: (order as any).utmMedium,
-        utmCampaign: (order as any).utmCampaign,
-      });
-
-      // 2. Utwórz lub znajdź kontakt
-      const contactResult = await contactService.findOrCreateContact(contactData, {
-        sourceId: 'WEB',
-        sourceDescription: 'EVA Website',
-        utmSource: (order as any).utmSource,
-        utmMedium: (order as any).utmMedium,
-        utmCampaign: (order as any).utmCampaign,
-      });
-
-      if (!contactResult.id) {
-        throw new Error(`Failed to create/find contact: ${contactResult.error || 'Unknown error'}`);
+      // Sprawdź czy zamówienie jest opłacone - synchronizuj tylko opłacone zamówienia
+      if (order.paymentStatus !== 'paid') {
+        console.log('⏭️ OrderService: Skipping sync - order not paid:', {
+          orderNumber: order.orderNumber,
+          paymentStatus: order.paymentStatus
+        });
+        return;
       }
 
-      console.log('✅ OrderService: Contact processed:', { 
-        id: contactResult.id, 
-        created: contactResult.created 
-      });
+      console.log('✅ OrderService: Order is paid, proceeding with sync');
 
-      // 3. Sprawdź czy deal już istnieje
+      // 1. Próbuj utworzyć kontakt (opcjonalnie)
+      let contactId: string | undefined;
+      try {
+        const contactData = mapOrderToContact(order, {
+          sourceId: 'WEB',
+          sourceDescription: 'EVA Website',
+          utmSource: (order as any).utmSource,
+          utmMedium: (order as any).utmMedium,
+          utmCampaign: (order as any).utmCampaign,
+        });
+
+        const contactResult = await contactService.findOrCreateContact(contactData, {
+          sourceId: 'WEB',
+          sourceDescription: 'EVA Website',
+          utmSource: (order as any).utmSource,
+          utmMedium: (order as any).utmMedium,
+          utmCampaign: (order as any).utmCampaign,
+        });
+
+        if (contactResult.id) {
+          contactId = contactResult.id;
+          console.log('✅ OrderService: Contact processed:', { 
+            id: contactResult.id, 
+            created: contactResult.created 
+          });
+        } else {
+          console.log('⚠️ OrderService: Contact creation failed, proceeding without contact:', contactResult.error);
+        }
+      } catch (contactError) {
+        console.log('⚠️ OrderService: Contact creation failed, proceeding without contact:', contactError);
+      }
+
+      // 2. Sprawdź czy deal już istnieje
       const existingDeal = await dealService.findByOrderNumber(order.orderNumber);
       if (existingDeal) {
         console.log('📋 OrderService: Deal already exists, updating:', existingDeal.id);
         
         // Zaktualizuj istniejący deal
-        const dealData = mapOrderToDeal(order, contactResult.id);
+        const dealData = mapOrderToDeal(order, contactId);
         await dealService.updateDeal(existingDeal.id, dealData);
         
         // Zaktualizuj status deala na podstawie statusu zamówienia
@@ -407,12 +427,12 @@ export class OrderService {
         return;
       }
 
-      // 4. Utwórz nowy deal
-      const dealData = mapOrderToDeal(order, contactResult.id);
+      // 3. Utwórz nowy deal
+      const dealData = mapOrderToDeal(order, contactId);
       const dealResult = await dealService.createDeal(dealData, {
         stageId: this.getDealStageFromOrderStatus(order.status, order.paymentStatus),
         currencyId: 'PLN',
-        contactId: contactResult.id,
+        contactId: contactId,
       });
 
       if (!dealResult.success) {
@@ -441,7 +461,7 @@ export class OrderService {
 
       console.log('✅ OrderService: Order synced to Bitrix24 successfully:', {
         orderNumber: order.orderNumber,
-        contactId: contactResult.id,
+        contactId: contactId || 'none',
         dealId: dealResult.id,
         productsCount: products.length
       });

@@ -67,8 +67,8 @@ export async function POST(request: NextRequest) {
         'merchantId', 'posId', 'sessionId', 'amount', 'originAmount',
         'currency', 'orderId', 'methodId', 'statement', 'sign'
       ],
-      missingFields: [],
-      extraFields: []
+      missingFields: [] as string[],
+      extraFields: [] as string[]
     }
 
     // Check for missing expected fields

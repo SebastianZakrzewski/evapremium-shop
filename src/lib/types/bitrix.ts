@@ -38,26 +38,33 @@ export interface Bitrix24Deal {
   CURRENCY_ID: string;
   CONTACT_ID?: string;
   COMMENTS?: string;
-  // Custom fields for EVA Website integration
+  // Custom fields for EVA Website integration - zaktualizowane na podstawie rzeczywistych pól Bitrix24
+  
+  // Podstawowe informacje o zamówieniu
   UF_CRM_ORDER_NUMBER?: string;
   UF_CRM_PAYMENT_METHOD?: string;
   UF_CRM_PAYMENT_STATUS?: string;
-  UF_CRM_CAR_BRAND?: string;
-  UF_CRM_CAR_MODEL?: string;
-  UF_CRM_CAR_YEAR?: string;
-  UF_CRM_PRODUCT_TYPE?: string;
-  UF_CRM_PRODUCT_COLOR?: string;
-  UF_CRM_SHIPPING_METHOD?: string;
   UF_CRM_ORDER_DATE?: string;
   UF_CRM_ORDER_SOURCE?: string;
-  // Dodatkowe niestandardowe pola - dostosuj do swoich potrzeb
-  UF_CRM_CUSTOM_FIELD_1?: string;
-  UF_CRM_CUSTOM_FIELD_2?: string;
-  UF_CRM_CUSTOM_FIELD_3?: string;
-  UF_CRM_CUSTOM_FIELD_4?: string;
-  UF_CRM_CUSTOM_FIELD_5?: string;
-  // Możesz dodać więcej pól według potrzeb
-  [key: string]: any; // Pozwala na dynamiczne dodawanie pól
+  
+  // Sekcja AUTO - informacje o samochodzie
+  UF_CRM_1760788285332?: string;        // Marka samochodu
+  UF_CRM_1760788302371?: string;        // Model samochodu
+  UF_CRM_1760788317619?: number;        // Rok samochodu (double)
+  UF_CRM_1760788343011?: string;        // Typ nadwozia
+  
+  // Sekcja komplet - informacje o produkcie (wartości enum)
+  UF_CRM_1757024835301?: number;        // Wariant kompletu
+  UF_CRM_1757024931236?: number;        // Rodzaj kompletu
+  UF_CRM_1757025126670?: number;        // Kształt komórek
+  UF_CRM_1757177134448?: number;        // Kolor materiału
+  UF_CRM_1757177281489?: number;        // Kolor obszycia
+  
+  // Dodatkowe informacje
+  UF_CRM_SHIPPING_METHOD?: string;
+  
+  // Pozwala na dynamiczne dodawanie pól
+  [key: string]: any;
 }
 
 export interface Bitrix24Lead {

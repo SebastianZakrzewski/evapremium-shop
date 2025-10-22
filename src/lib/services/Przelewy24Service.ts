@@ -202,7 +202,7 @@ export class Przelewy24Service {
         sessionId,
         amount: amountInCents,
         currency: 'PLN',
-        orderId,
+        orderId: orderId.toString(),
         sign
       }
 
