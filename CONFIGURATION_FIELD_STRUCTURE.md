@@ -81,7 +81,7 @@ function extractCarDetails(order: Order) {
         brand: config.carDetails.brand,      // → UF_CRM_CAR_BRAND
         model: config.carDetails.model,      // → UF_CRM_CAR_MODEL  
         year: config.carDetails.year,        // → UF_CRM_CAR_YEAR
-        body: config.carDetails.bodyType,    // → (dodatkowe)
+        body: config.carDetails.bodyType,    // → UF_CRM_1760788343011 (Typ nadwozia)
       };
     }
   }
@@ -99,7 +99,7 @@ function extractProductColors(order: Order) {
         colors.push(`Materiał: ${config.materialColor}`);  // → UF_CRM_PRODUCT_COLOR
       }
       if (config.edgeColor) {
-        colors.push(`Obszycie: ${config.edgeColor}`);
+        colors.push(`Obszycie: ${config.edgeColor}`);  // → UF_CRM_1757177281489 (Kolor obszycia)
       }
     }
   });
@@ -201,3 +201,43 @@ Pole `configuration` zawiera **wszystkie szczegóły konfiguracji dywaników**:
 - ⚙️ **Opcje produktu** (typ zestawu, komórki, wariant)
 
 **Mapowanie jest automatyczne** - system wyciąga odpowiednie dane i wypełnia pola w Bitrix24 Deal.
+
+## 🔢 **Mapowanie wartości na ID enum w Bitrix24**
+
+### 📊 **Warianty zestawu (setVariant)**
+| Wartość | ID enum | Opis |
+|---------|---------|------|
+| `front` | 282 | Starter - 2 dywaniki (tylko przód) |
+| `basic` | 284 | Podstawowy - 5 dywaników (przód + tył + ochrona na tunel) |
+| `premium` | 286 | Premium - 5 dywaników (przód + tył + bagażnik) |
+| `complete` | 288 | Mata do Bagażnika - 1 dywanik |
+
+### ⚙️ **Typy zestawu (setType)**
+| Wartość | ID enum | Opis |
+|---------|---------|------|
+| `3d-with-rims` | 264 | Dywaniki 3D z obszyciem rantowym |
+| `classic` | 266 | Klasyczne dywaniki płaskie |
+
+### 🔷 **Typy komórek (cellType)**
+| Wartość | ID enum | Opis |
+|---------|---------|------|
+| `diamonds` | 278 | Romby |
+| `honey` | 280 | Plaster miodu |
+
+### 🎨 **Kolory materiału (materialColor)**
+| Wartość | ID enum | Opis |
+|---------|---------|------|
+| `blue` | 358 | Niebieski |
+| `black` | 360 | Czarny |
+| `gray` | 362 | Szary |
+| `brown` | 364 | Brązowy |
+| `beige` | 366 | Beżowy |
+
+### 🎨 **Kolory obszycia (edgeColor)**
+| Wartość | ID enum | Opis |
+|---------|---------|------|
+| `blue` | 368 | Niebieski |
+| `black` | 370 | Czarny |
+| `gray` | 372 | Szary |
+| `brown` | 374 | Brązowy |
+| `beige` | 376 | Beżowy |

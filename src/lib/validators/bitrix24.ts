@@ -36,18 +36,35 @@ export const Bitrix24DealSchema = z.object({
   CONTACT_ID: z.string().optional(),
   CATEGORY_ID: z.number().optional(),
   COMMENTS: z.string().optional(),
-  // Custom fields
+  
+  // ✅ POLA IDENTYFIKACYJNE
+  ORIGINATOR_ID: z.string().optional(),
+  ORIGIN_ID: z.string().optional(),
+  SOURCE_ID: z.string().optional(),
+  SOURCE_DESCRIPTION: z.string().optional(),
+  
+  // ✅ POLA NIESTANDARDOWE ZAMÓWIENIA
   UF_CRM_ORDER_NUMBER: z.string().optional(),
   UF_CRM_PAYMENT_METHOD: z.string().optional(),
   UF_CRM_PAYMENT_STATUS: z.string().optional(),
-  UF_CRM_CAR_BRAND: z.string().optional(),
-  UF_CRM_CAR_MODEL: z.string().optional(),
-  UF_CRM_CAR_YEAR: z.string().optional(),
-  UF_CRM_PRODUCT_TYPE: z.string().optional(),
-  UF_CRM_PRODUCT_COLOR: z.string().optional(),
-  UF_CRM_SHIPPING_METHOD: z.string().optional(),
   UF_CRM_ORDER_DATE: z.string().optional(),
   UF_CRM_ORDER_SOURCE: z.string().optional(),
+  
+  // ✅ POLA SAMOCHODU
+  UF_CRM_1760788285332: z.string().optional(),        // Marka samochodu
+  UF_CRM_1760788302371: z.string().optional(),        // Model samochodu
+  UF_CRM_1760788317619: z.number().optional(),        // Rok samochodu
+  UF_CRM_1760788343011: z.string().optional(),        // Typ nadwozia
+  
+  // ✅ POLA PRODUKTU
+  UF_CRM_1757024835301: z.number().optional(),        // Wariant kompletu
+  UF_CRM_1757024931236: z.number().optional(),        // Rodzaj kompletu
+  UF_CRM_1757025126670: z.number().optional(),        // Kształt komórek
+  UF_CRM_1757177134448: z.number().optional(),        // Kolor materiału
+  UF_CRM_1757177281489: z.number().optional(),        // Kolor obszycia
+  
+  // ✅ DODATKOWE INFORMACJE
+  UF_CRM_SHIPPING_METHOD: z.string().optional(),
 });
 
 export const Bitrix24LeadSchema = z.object({

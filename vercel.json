@@ -60,6 +60,12 @@
       "destination": "/",
       "permanent": true
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/abandoned-carts/cron",
+      "schedule": "*/5 * * * *"
+    }
   ]
 }
 

@@ -35,6 +35,9 @@ import { useOrder } from '@/hooks/useOrder.new';
 import { CreateOrderDTO } from '@/lib/types/order-new';
 import { PricingService } from '@/lib/services/PricingService';
 import { debugLog } from '@/lib/config/features';
+import { useAbandonedCartHeartbeat } from '@/hooks/useAbandonedCartHeartbeat';
+import { HybridSessionManager } from '@/lib/utils/hybrid-session-manager';
+import { motion } from 'framer-motion';
 
 // Schema walidacji - zaktualizowany dla nowego formatu
 const checkoutSchema = z.object({
@@ -118,6 +121,79 @@ export default function CheckoutSectionNew() {
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [priorityStartAt, setPriorityStartAt] = useState<number | null>(null);
+  const [remainingMs, setRemainingMs] = useState<number>(15 * 60 * 1000);
+  // Heartbeat (przeniesiony niżej po zainicjalizowaniu formularza, aby dołączyć dane kontaktowe)
+  const sessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : '';
+
+  // Priority window countdown (15 minutes) - active on step 2
+  // Start/reset countdown when entering step 2
+  useEffect(() => {
+    if (currentStep !== 2) return;
+
+    const KEY = 'checkout_priority_start_at';
+    const start = Date.now();
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.setItem(KEY, String(start));
+    }
+    setPriorityStartAt(start);
+
+    const total = 15 * 60 * 1000;
+    const update = () => {
+      const nowTs = Date.now();
+      const deadline = start + total;
+      const remaining = Math.max(0, deadline - nowTs);
+      setRemainingMs(remaining);
+    };
+    update();
+    const id = window.setInterval(update, 1000);
+    return () => clearInterval(id);
+  }, [currentStep]);
+
+  // Reset countdown if cart items change on step 2 (e.g., dodano nowy produkt)
+  useEffect(() => {
+    if (currentStep !== 2) return;
+    const KEY = 'checkout_priority_start_at';
+    const start = Date.now();
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.setItem(KEY, String(start));
+    }
+    setPriorityStartAt(start);
+    setRemainingMs(15 * 60 * 1000);
+  }, [itemCount, currentStep]);
+
+  const totalMs = 15 * 60 * 1000;
+  const progress = Math.max(0, Math.min(1, remainingMs / totalMs));
+  const minutes = Math.floor(remainingMs / 60000);
+  const seconds = Math.floor((remainingMs % 60000) / 1000)
+    .toString()
+    .padStart(2, '0');
+
+  // Reset visual state on step 1: keep full bar and 15:00 static
+  useEffect(() => {
+    if (currentStep < 2) {
+      setRemainingMs(totalMs);
+    }
+  }, [currentStep]);
+
+  // Heartbeat tylko na kroku 2 (adres): 15 min okno, interwał 30s
+  const cartHasItems = items.length > 0;
+  useAbandonedCartHeartbeat(currentStep === 2 && cartHasItems, () => ({
+    sessionId,
+    stage: 'checkout_step2',
+    cartHasItems: items.length > 0,
+    contact: {
+      firstName: contactFirstName,
+      lastName: contactLastName,
+      email: contactEmail,
+      phone: contactPhone,
+    },
+    items: items.map(i => ({ productId: i.productId, productName: i.productName, quantity: i.quantity, price: i.unitPrice, currency: 'PLN' })),
+    currency: 'PLN',
+    totalAmount: total,
+    metadata: { checkoutStep: 2 },
+    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+  }), { intervalMs: 30000 });
 
   const {
     register,
@@ -139,6 +215,10 @@ export default function CheckoutSectionNew() {
 
   const sameAsShipping = watch("sameAsShipping");
   const paymentMethod = watch("paymentMethod");
+  const contactFirstName = watch("firstName");
+  const contactLastName = watch("lastName");
+  const contactEmail = watch("email");
+  const contactPhone = watch("phone");
 
   // Redirect jeśli koszyk pusty (z opóźnieniem żeby dać czas na załadowanie)
   useEffect(() => {
@@ -483,6 +563,28 @@ export default function CheckoutSectionNew() {
               )}
             </React.Fragment>
           ))}
+          </div>
+          <div className="mt-4 max-w-3xl mx-auto">
+            <div className="flex items-center justify-between text-xs text-neutral-300 mb-2">
+              <span>
+                {currentStep >= 2
+                  ? 'Jeśli złożysz i opłacisz zamówienie w ciągu 15 minut, otrzymasz priorytet w kolejce produkcyjnej i szybszą realizację.'
+                  : 'Przejdź do kroku 2, aby włączyć 15‑minutowy priorytet produkcyjny i szybszą realizację.'}
+              </span>
+              <span>Pozostało: {currentStep >= 2 ? `${minutes}:${seconds}` : '15:00'}</span>
+            </div>
+            <div className="h-2 w-full bg-neutral-800 rounded-full overflow-hidden border border-neutral-700">
+              {currentStep >= 2 ? (
+                <motion.div
+                  initial={{ width: '100%' }}
+                  animate={{ width: `${progress * 100}%` }}
+                  transition={{ ease: 'linear', duration: 0.9 }}
+                  className="h-full bg-gradient-to-r from-green-500 via-yellow-400 to-red-500"
+                />
+              ) : (
+                <div className="h-full w-full bg-gradient-to-r from-green-500 via-yellow-400 to-red-500" />
+              )}
+            </div>
           </div>
         </div>
 

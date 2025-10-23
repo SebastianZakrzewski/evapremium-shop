@@ -359,16 +359,29 @@ export class OrderService {
             id: order?.id,
             orderNumber: order?.orderNumber,
             status: order?.status,
-            paymentStatus: order?.paymentStatus
+            paymentStatus: order?.paymentStatus,
+            itemsCount: order?.items?.length || 0,
+            hasItems: !!order?.items,
+            itemsDetails: order?.items?.map(item => ({
+              productType: item.productType,
+              productName: item.productName,
+              hasConfiguration: !!item.configuration,
+              configurationKeys: item.configuration ? Object.keys(item.configuration) : []
+            })) || []
           });
           
           if (order) {
+            console.log('🔄 OrderService: Starting Bitrix24 sync for updated order...');
             await this.syncOrderToBitrix24(order);
             console.log('✅ OrderService: Payment status synced to Bitrix24');
+          } else {
+            console.error('❌ OrderService: Order not found after update, cannot sync');
           }
         } catch (error) {
           console.error('❌ OrderService: Failed to sync payment status to Bitrix24:', error);
         }
+      } else {
+        console.log('⚠️ OrderService: Bitrix24 sync disabled or autoSyncOrders is false');
       }
     } catch (error) {
       console.error('❌ OrderService: Błąd aktualizacji statusu płatności', error);
@@ -388,16 +401,11 @@ export class OrderService {
         total: order.total
       });
 
-      // Sprawdź czy zamówienie jest opłacone - synchronizuj tylko opłacone zamówienia
-      if (order.paymentStatus !== 'paid') {
-        console.log('⏭️ OrderService: Skipping sync - order not paid:', {
-          orderNumber: order.orderNumber,
-          paymentStatus: order.paymentStatus
-        });
-        return;
-      }
-
-      console.log('✅ OrderService: Order is paid, proceeding with sync');
+      console.log('✅ OrderService: Proceeding with sync for order:', {
+        orderNumber: order.orderNumber,
+        paymentStatus: order.paymentStatus,
+        status: order.status
+      });
 
       // 1. Próbuj utworzyć kontakt (opcjonalnie)
       let contactId: string | undefined;
@@ -474,8 +482,9 @@ export class OrderService {
         total: order.total
       });
       
+      // ✅ ZMIANA: Uproszczone wywołanie - STAGE_ID jest już w dealData
       const dealResult = await dealService.createDeal(dealData, {
-        stageId: dealStage,
+        // Usuń stageId z options - jest już w dealData
         currencyId: 'PLN',
         contactId: contactId,
       });
@@ -484,7 +493,10 @@ export class OrderService {
         throw new Error(`Failed to create deal: ${dealResult.error}`);
       }
 
-      console.log('✅ OrderService: Deal created successfully:', dealResult.id);
+      console.log('✅ OrderService: Deal created successfully with stage:', {
+        dealId: dealResult.id,
+        stageId: dealStage
+      });
 
       // 5. Dodaj produkty do deala
       const products = createDealProducts(order);

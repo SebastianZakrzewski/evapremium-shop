@@ -1,0 +1,71 @@
+export type AbandonedCartStatus = 'pending' | 'exported' | 'converted' | 'discarded';
+
+export interface AbandonedCartSnapshotContact {
+  email?: string;
+  phone?: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface AbandonedCartSnapshotCar {
+  make?: string;
+  model?: string;
+  year?: string | number;
+  bodyType?: string;
+}
+
+export interface AbandonedCartSnapshotConfiguration {
+  variant?: number | string;
+  setType?: number | string;
+  cellShape?: number | string;
+  materialColor?: number | string;
+  trimColor?: number | string;
+}
+
+export interface AbandonedCartItem {
+  productId?: string;
+  productName?: string;
+  productType?: string;
+  quantity?: number;
+  price?: number;
+  currency?: string;
+}
+
+export interface AbandonedCartRecord {
+  id: string;
+  session_id: string;
+  status: AbandonedCartStatus;
+  created_at: string;
+  updated_at: string;
+  last_activity_at: string;
+  expire_at: string;
+  utm: Record<string, unknown>;
+  contact: AbandonedCartSnapshotContact;
+  car: AbandonedCartSnapshotCar;
+  configuration: AbandonedCartSnapshotConfiguration;
+  items: AbandonedCartItem[];
+  currency: string;
+  total_amount: number;
+  ip?: string;
+  user_agent?: string;
+  metadata?: Record<string, unknown>;
+  bitrix_deal_id?: string | null;
+  bitrix_category_id?: number | null;
+  bitrix_stage_id?: string | null;
+}
+
+export interface AbandonedCartUpsertInput {
+  sessionId: string;
+  utm?: Record<string, unknown>;
+  contact?: AbandonedCartSnapshotContact;
+  car?: AbandonedCartSnapshotCar;
+  configuration?: AbandonedCartSnapshotConfiguration;
+  items?: AbandonedCartItem[];
+  currency?: string;
+  totalAmount?: number;
+  ip?: string;
+  userAgent?: string;
+  metadata?: Record<string, unknown>;
+}
+
+

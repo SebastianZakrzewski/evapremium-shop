@@ -9,6 +9,12 @@ export interface Bitrix24Config {
   enabled: boolean;
   autoSyncOrders: boolean;
   autoSyncLeads: boolean;
+  abandoned: {
+    categoryId?: number;
+    categoryName?: string; // e.g., "Leady z Reklam"
+    stageId?: string;
+    stageName?: string;    // e.g., "Porzucone Koszyki"
+  };
   rateLimit: {
     maxRequests: number;
     timeWindow: number; // in milliseconds
@@ -25,6 +31,12 @@ export function getBitrix24Config(): Bitrix24Config {
     enabled: process.env.BITRIX24_WEBHOOK_ENABLED === 'true',
     autoSyncOrders: process.env.BITRIX24_AUTO_SYNC_ORDERS === 'true',
     autoSyncLeads: process.env.BITRIX24_AUTO_SYNC_LEADS === 'true',
+    abandoned: {
+      categoryId: process.env.BITRIX24_ABANDONED_CATEGORY_ID ? Number(process.env.BITRIX24_ABANDONED_CATEGORY_ID) : undefined,
+      categoryName: process.env.BITRIX24_ABANDONED_CATEGORY_NAME || 'Leady z Reklam',
+      stageId: process.env.BITRIX24_ABANDONED_STAGE_ID || undefined,
+      stageName: process.env.BITRIX24_ABANDONED_STAGE_NAME || 'Porzucone Koszyki',
+    },
     rateLimit: {
       maxRequests: 2, // Max 2 requests per second for webhook
       timeWindow: 1000, // 1 second

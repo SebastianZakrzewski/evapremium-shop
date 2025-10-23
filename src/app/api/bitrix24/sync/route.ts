@@ -314,7 +314,27 @@ async function syncOrderToBitrix24(order: any): Promise<void> {
   try {
     console.log('🔄 Syncing order to Bitrix24:', order.orderNumber);
 
+    // Sprawdź konfigurację Bitrix24
+    console.log('🔍 Bitrix24 configuration check:', {
+      enabled: bitrix24Config.enabled,
+      hasWebhookUrl: !!bitrix24Config.webhookUrl,
+      hasApiUrl: !!bitrix24Config.apiUrl,
+      config: bitrix24Config
+    });
+
     // 1. Map order to contact
+    console.log('🔍 Order data for contact mapping:', {
+      orderNumber: order.orderNumber,
+      customer: order.customer,
+      hasCustomerName: !!(order.customer as any)?.name,
+      hasCustomerEmail: !!(order.customer as any)?.email,
+      hasCustomerPhone: !!(order.customer as any)?.phone,
+      customerName: (order.customer as any)?.name,
+      customerEmail: (order.customer as any)?.email,
+      customerPhone: (order.customer as any)?.phone,
+      shippingAddress: order.shippingAddress
+    });
+
     const contactData = mapOrderToContact(order, {
       sourceId: 'WEB',
       sourceDescription: 'EVA Website',
@@ -323,7 +343,23 @@ async function syncOrderToBitrix24(order: any): Promise<void> {
       utmCampaign: order.utmCampaign,
     });
 
+    console.log('🔍 Mapped contact data:', {
+      name: contactData.NAME,
+      lastName: contactData.LAST_NAME,
+      hasEmail: !!contactData.EMAIL?.length,
+      hasPhone: !!contactData.PHONE?.length,
+      emailValue: contactData.EMAIL?.[0]?.VALUE,
+      phoneValue: contactData.PHONE?.[0]?.VALUE,
+      fullContactData: contactData
+    });
+
     // 2. Create or find contact
+    console.log('🔍 Contact data before findOrCreateContact:', {
+      contactData,
+      orderNumber: order.orderNumber,
+      customer: order.customer
+    });
+
     const contactResult = await contactService.findOrCreateContact(contactData, {
       sourceId: 'WEB',
       sourceDescription: 'EVA Website',
@@ -332,14 +368,37 @@ async function syncOrderToBitrix24(order: any): Promise<void> {
       utmCampaign: order.utmCampaign,
     });
 
+    console.log('🔍 Contact creation result:', {
+      hasId: !!contactResult.id,
+      id: contactResult.id,
+      error: contactResult.error,
+      created: contactResult.created
+    });
+
     if (!contactResult.id) {
-      throw new Error(`Failed to create/find contact: ${contactResult.error || 'Unknown error'}`);
+      console.error('❌ Contact creation failed:', {
+        contactData,
+        options: {
+          sourceId: 'WEB',
+          sourceDescription: 'EVA Website',
+          utmSource: order.utmSource,
+          utmMedium: order.utmMedium,
+          utmCampaign: order.utmCampaign,
+        },
+        result: contactResult
+      });
+      throw new Error(`Failed to create/find contact: ${contactResult.error || 'No contact ID returned'}`);
     }
 
     // 3. Check if deal already exists
     const existingDeal = await dealService.findByOrderNumber(order.orderNumber);
     if (existingDeal) {
       console.log('📋 Deal already exists, updating:', existingDeal.id);
+      console.log('🔍 Existing deal details:', {
+        id: existingDeal.id,
+        stageId: existingDeal.stageId,
+        orderNumber: existingDeal.orderNumber
+      });
       
       // Update existing deal
       const dealData = mapOrderToDeal(order, contactResult.id);
@@ -347,6 +406,7 @@ async function syncOrderToBitrix24(order: any): Promise<void> {
       
       // Update deal stage
       const dealStage = getDealStageFromOrderStatus(order.status, order.paymentStatus);
+      console.log('🎯 API: Calculated deal stage:', dealStage);
       await dealService.updateDealStage(existingDeal.id, {
         stageId: dealStage,
         comment: `Zamówienie zaktualizowane: ${order.status} (płatność: ${order.paymentStatus})`
@@ -357,9 +417,10 @@ async function syncOrderToBitrix24(order: any): Promise<void> {
     }
 
     // 4. Create new deal
-    const dealData = mapOrderToDeal(order, contactResult.id);
+    const dealStage = getDealStageFromOrderStatus(order.status, order.paymentStatus);
+    const dealData = mapOrderToDeal(order, contactResult.id, { stageId: dealStage });
     const dealResult = await dealService.createDeal(dealData, {
-      stageId: getDealStageFromOrderStatus(order.status, order.paymentStatus),
+      // Usuń stageId z options - jest już w dealData
       currencyId: 'PLN',
       contactId: contactResult.id,
     });
@@ -401,7 +462,13 @@ async function syncOrderToBitrix24(order: any): Promise<void> {
  * Get deal stage from order status
  */
 function getDealStageFromOrderStatus(orderStatus: string, paymentStatus: string): string {
+  console.log('🎯 API: getDealStageFromOrderStatus called:', {
+    orderStatus,
+    paymentStatus
+  });
+
   if (paymentStatus === 'paid') {
+    console.log('✅ API: Payment is paid -> UC_DMBNNJ');
     return 'UC_DMBNNJ'; // Zamówienia ze strony opłacone (Przelewy24)
   }
   

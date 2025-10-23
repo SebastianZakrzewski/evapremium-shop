@@ -54,21 +54,54 @@ export class ContactService {
 
       console.log('📞 Creating Bitrix24 contact:', { name: enrichedData.NAME, email: enrichedData.EMAIL?.[0]?.VALUE });
 
-      const response = await this.client.post<{ id: string }>('crm.contact.add', enrichedData);
+      // Sprawdź czy mamy minimum wymagane dane
+      console.log('🔍 Contact data before validation:', {
+        name: enrichedData.NAME,
+        hasEmail: !!enrichedData.EMAIL?.length,
+        hasPhone: !!enrichedData.PHONE?.length,
+        emailValue: enrichedData.EMAIL?.[0]?.VALUE,
+        phoneValue: enrichedData.PHONE?.[0]?.VALUE,
+        fullData: enrichedData
+      });
+
+      if (!enrichedData.NAME || (!enrichedData.EMAIL?.length && !enrichedData.PHONE?.length)) {
+        throw new Error('Contact must have name and either email or phone');
+      }
+
+      const response = await this.client.post<{ id: string }>('crm.contact.add', {
+        fields: enrichedData
+      });
 
       if (response.error) {
         throw new Error(`Bitrix24 API Error: ${response.error.error_description || response.error.error}`);
       }
 
-      const contactId = response.result?.id;
+      // Bitrix24 returns contact ID directly as result, not as result.id
+      const contactId = response.result;
+      
+      console.log('🔍 Contact creation response analysis:', {
+        hasResult: !!response.result,
+        resultType: typeof response.result,
+        resultValue: response.result,
+        extractedId: contactId,
+        isIdValid: !!contactId && contactId !== '0',
+        fullResponse: response
+      });
+
       if (!contactId) {
+        console.error('❌ No contact ID in response:', {
+          fullResponse: response,
+          result: response.result,
+          error: response.error,
+          enrichedData: enrichedData
+        });
         throw new Error('No contact ID returned from Bitrix24');
       }
 
       console.log('✅ Contact created successfully:', { id: contactId, name: enrichedData.NAME });
 
       return {
-        id: contactId,
+        id: String(contactId), // Convert to string for consistency
         success: true,
       };
 

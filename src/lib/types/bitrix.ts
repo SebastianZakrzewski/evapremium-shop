@@ -39,30 +39,35 @@ export interface Bitrix24Deal {
   CONTACT_ID?: string;
   CATEGORY_ID?: number;
   COMMENTS?: string;
-  // Custom fields for EVA Website integration - zaktualizowane na podstawie rzeczywistych pól Bitrix24
   
-  // Podstawowe informacje o zamówieniu
-  UF_CRM_ORDER_NUMBER?: string;
-  UF_CRM_PAYMENT_METHOD?: string;
-  UF_CRM_PAYMENT_STATUS?: string;
-  UF_CRM_ORDER_DATE?: string;
-  UF_CRM_ORDER_SOURCE?: string;
+  // ✅ POLA IDENTYFIKACYJNE - dodane na podstawie analizy deala
+  ORIGINATOR_ID?: string;               // Źródło systemu (EVA Website)
+  ORIGIN_ID?: string;                   // Numer zamówienia
+  SOURCE_ID?: string;                   // ID źródła (WEB)
+  SOURCE_DESCRIPTION?: string;          // Opis źródła (EVA Website)
   
-  // Sekcja AUTO - informacje o samochodzie
+  // ✅ POLA NIESTANDARDOWE ZAMÓWIENIA - dodane na podstawie analizy deala
+  UF_CRM_ORDER_NUMBER?: string;         // Numer zamówienia
+  UF_CRM_PAYMENT_METHOD?: string;       // Metoda płatności
+  UF_CRM_PAYMENT_STATUS?: string;       // Status płatności
+  UF_CRM_ORDER_DATE?: string;           // Data zamówienia
+  UF_CRM_ORDER_SOURCE?: string;         // Źródło zamówienia
+  
+  // ✅ POLA SAMOCHODU - działają poprawnie
   UF_CRM_1760788285332?: string;        // Marka samochodu
   UF_CRM_1760788302371?: string;        // Model samochodu
   UF_CRM_1760788317619?: number;        // Rok samochodu (double)
   UF_CRM_1760788343011?: string;        // Typ nadwozia
   
-  // Sekcja komplet - informacje o produkcie (wartości enum)
+  // ✅ POLA PRODUKTU - działają poprawnie (wartości enum)
   UF_CRM_1757024835301?: number;        // Wariant kompletu
   UF_CRM_1757024931236?: number;        // Rodzaj kompletu
   UF_CRM_1757025126670?: number;        // Kształt komórek
   UF_CRM_1757177134448?: number;        // Kolor materiału
   UF_CRM_1757177281489?: number;        // Kolor obszycia
   
-  // Dodatkowe informacje
-  UF_CRM_SHIPPING_METHOD?: string;
+  // ✅ DODATKOWE INFORMACJE
+  UF_CRM_SHIPPING_METHOD?: string;      // Metoda dostawy
   
   // Pozwala na dynamiczne dodawanie pól
   [key: string]: any;

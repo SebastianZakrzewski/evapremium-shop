@@ -5,6 +5,8 @@
  */
 
 import { Bitrix24Client } from '../client';
+import { bitrix24Config } from '../config';
+import type { AbandonedCartRecord } from '@/lib/types/abandonedCart';
 import { Bitrix24Deal, Bitrix24DealProduct, Bitrix24ApiResponse } from '@/lib/types/bitrix';
 import { validateBitrix24Deal, validateBitrix24DealProduct } from '@/lib/validators/bitrix24';
 
@@ -32,9 +34,85 @@ export interface UpdateDealStageOptions {
 
 export class DealService {
   private client: Bitrix24Client;
+  private abandonedCache?: { categoryId: number; stageId: string };
 
   constructor(client?: Bitrix24Client) {
     this.client = client || new Bitrix24Client();
+  }
+
+  /**
+   * Resolve abandoned carts category and stage (with in-memory cache)
+   */
+  private async resolveAbandonedCategoryAndStage(): Promise<{ categoryId: number; stageId: string }> {
+    if (this.abandonedCache) return this.abandonedCache;
+
+    // Prefer explicit IDs from env
+    const cfg = bitrix24Config.abandoned;
+    if (cfg.categoryId && cfg.stageId) {
+      this.abandonedCache = { categoryId: cfg.categoryId, stageId: cfg.stageId };
+      return this.abandonedCache;
+    }
+
+    // Resolve category by name
+    const categoriesResp = await this.client.get('crm.dealcategory.list');
+    const categories = categoriesResp.result || [];
+
+    const categoryName = cfg.categoryName || 'Leady z Reklam';
+    const category = categories.find((c: any) => String(c.NAME).toLowerCase() === categoryName.toLowerCase());
+    if (!category) {
+      throw new Error(`Bitrix24: Nie znaleziono kategorii "${categoryName}"`);
+    }
+    const categoryId = Number(category.ID);
+
+    // Resolve stage by name within category
+    const stagesResp = await this.client.get('crm.dealcategory.stage.list');
+    const stages = (stagesResp.result || []).filter((s: any) => Number(s.CATEGORY_ID) === categoryId);
+    const stageName = cfg.stageName || 'Porzucone Koszyki';
+    const stage = stages.find((s: any) => String(s.NAME).toLowerCase() === stageName.toLowerCase());
+    if (!stage) {
+      throw new Error(`Bitrix24: Nie znaleziono etapu "${stageName}" w kategorii ${categoryName}`);
+    }
+
+    this.abandonedCache = { categoryId, stageId: String(stage.STATUS_ID) };
+    return this.abandonedCache;
+  }
+
+  /**
+   * Build deal payload from abandoned cart
+   */
+  async createDealForAbandonedCart(cart: AbandonedCartRecord): Promise<{ id: string; success: boolean; error?: string }> {
+    const { categoryId, stageId } = await this.resolveAbandonedCategoryAndStage();
+
+    const titleParts: string[] = ['[Porzucony koszyk]'];
+    if (cart.car?.make) titleParts.push(String(cart.car.make));
+    if (cart.car?.model) titleParts.push(String(cart.car.model));
+    const title = titleParts.join(' ');
+
+    const commentsLines: string[] = [];
+    if (cart.configuration) {
+      const c = cart.configuration;
+      commentsLines.push(`Konfiguracja: variant=${String(c.variant ?? '')}, setType=${String(c.setType ?? '')}, cellShape=${String(c.cellShape ?? '')}`);
+      commentsLines.push(`Kolory: material=${String(c.materialColor ?? '')}, trim=${String(c.trimColor ?? '')}`);
+    }
+    if (cart.utm && Object.keys(cart.utm).length > 0) {
+      commentsLines.push(`UTM: ${JSON.stringify(cart.utm)}`);
+    }
+    commentsLines.push(`Session: ${cart.session_id}`);
+
+    const deal: Bitrix24Deal = {
+      TITLE: title,
+      STAGE_ID: stageId, // np. C2:UC_SNZYJF (Porzucone Koszyki)
+      CATEGORY_ID: categoryId, // np. 2 (Leady z Reklam)
+      OPPORTUNITY: Number(cart.total_amount || 0),
+      CURRENCY_ID: cart.currency || 'PLN',
+      SOURCE_ID: 'WEB',
+      SOURCE_DESCRIPTION: 'EVA Website',
+      ORIGINATOR_ID: 'EVA Website',
+      ORIGIN_ID: cart.id,
+      COMMENTS: commentsLines.join('\n'),
+    } as any;
+
+    return this.createDeal(deal, { stageId });
   }
 
   /**
@@ -48,14 +126,14 @@ export class DealService {
       // Validate deal data
       const validatedData = validateBitrix24Deal(dealData);
 
-      // Add options to deal data
+      // Add options to deal data (nie nadpisuj CATEGORY_ID jeżeli został podany)
       const enrichedData = {
         ...validatedData,
         STAGE_ID: options.stageId || validatedData.STAGE_ID,
         CURRENCY_ID: options.currencyId || validatedData.CURRENCY_ID,
         CONTACT_ID: options.contactId || validatedData.CONTACT_ID,
-        CATEGORY_ID: 0, // Deale / Zamówienia ze strony opłacone
-      };
+        CATEGORY_ID: validatedData.CATEGORY_ID, // respektuj kategorię z payloadu
+      } as typeof validatedData;
 
       console.log('💼 Creating Bitrix24 deal:', { 
         title: enrichedData.TITLE, 
