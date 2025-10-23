@@ -9,6 +9,25 @@ export class OrderRepository extends BaseRepository<Order> {
     return super.supabase;
   }
 
+  // Mapuj dane z bazy (snake_case) na camelCase dla order_item
+  private mapOrderItemFromDB(data: any): any {
+    return {
+      id: data.id,
+      quantity: data.quantity,
+      unitPrice: data.unit_price,
+      subtotal: data.subtotal,
+      productType: data.product_type,
+      productId: data.product_id,
+      productName: data.product_name,
+      productSku: data.product_sku,
+      productImage: data.product_image,
+      configuration: data.configuration, // JSONB - już jest w poprawnym formacie
+      orderId: data.order_id,
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at)
+    };
+  }
+
   // Mapuj dane z bazy (snake_case) na camelCase
   private mapOrderFromDB(data: any): Order {
     return {
@@ -28,11 +47,15 @@ export class OrderRepository extends BaseRepository<Order> {
       p24OrderId: data.p24_order_id,
       p24TransactionId: data.p24_transaction_id,
       p24Token: data.p24_token,
-      p24MethodId: data.p24_method_id
+      p24MethodId: data.p24_method_id,
+      // ✅ MAPOWANIE ORDER_ITEMS NA ITEMS z konwersją snake_case -> camelCase
+      items: data.order_items ? data.order_items.map((item: any) => this.mapOrderItemFromDB(item)) : []
     };
   }
 
   async findById(id: string): Promise<Order | null> {
+    console.log('🔍 OrderRepository: Finding order by ID:', id);
+    
     const { data, error } = await this.supabase
       .from(this.tableName)
       .select(`
@@ -44,15 +67,54 @@ export class OrderRepository extends BaseRepository<Order> {
 
     if (error) {
       if (error.code === 'PGRST116') {
+        console.log('🔍 OrderRepository: Order not found');
         return null; // Not found
       }
+      console.error('❌ OrderRepository: Error finding order by id:', error);
       throw new Error(`Error finding order by id: ${error.message}`);
     }
 
-    return data ? this.mapOrderFromDB(data) : null;
+    if (data) {
+      console.log('🔍 OrderRepository: Raw data from database:', {
+        orderId: data.id,
+        orderNumber: data.order_number,
+        status: data.status,
+        paymentStatus: data.payment_status,
+        itemsCount: data.order_items?.length || 0,
+        itemsDetails: data.order_items?.map((item: any) => ({
+          id: item.id,
+          productType: item.product_type,
+          productName: item.product_name,
+          hasConfiguration: !!item.configuration,
+          configurationType: typeof item.configuration,
+          configurationKeys: item.configuration ? Object.keys(item.configuration) : []
+        })) || []
+      });
+      
+      const mappedOrder = this.mapOrderFromDB(data);
+      console.log('🔍 OrderRepository: Mapped order:', {
+        id: mappedOrder.id,
+        orderNumber: mappedOrder.orderNumber,
+        status: mappedOrder.status,
+        paymentStatus: mappedOrder.paymentStatus,
+        itemsCount: mappedOrder.items?.length || 0,
+        itemsDetails: mappedOrder.items?.map(item => ({
+          productType: item.productType,
+          productName: item.productName,
+          hasConfiguration: !!item.configuration,
+          configurationKeys: item.configuration ? Object.keys(item.configuration) : []
+        })) || []
+      });
+      
+      return mappedOrder;
+    }
+
+    return null;
   }
 
   async findByOrderNumber(orderNumber: string): Promise<Order | null> {
+    console.log('🔍 OrderRepository: Finding order by number:', orderNumber);
+    
     const { data, error } = await this.supabase
       .from(this.tableName)
       .select(`
@@ -64,12 +126,49 @@ export class OrderRepository extends BaseRepository<Order> {
 
     if (error) {
       if (error.code === 'PGRST116') {
+        console.log('🔍 OrderRepository: Order not found by number');
         return null; // Not found
       }
+      console.error('❌ OrderRepository: Error finding order by number:', error);
       throw new Error(`Error finding order by number: ${error.message}`);
     }
 
-    return data ? this.mapOrderFromDB(data) : null;
+    if (data) {
+      console.log('🔍 OrderRepository: Raw data from database (by number):', {
+        orderId: data.id,
+        orderNumber: data.order_number,
+        status: data.status,
+        paymentStatus: data.payment_status,
+        itemsCount: data.order_items?.length || 0,
+        itemsDetails: data.order_items?.map((item: any) => ({
+          id: item.id,
+          productType: item.product_type,
+          productName: item.product_name,
+          hasConfiguration: !!item.configuration,
+          configurationType: typeof item.configuration,
+          configurationKeys: item.configuration ? Object.keys(item.configuration) : []
+        })) || []
+      });
+      
+      const mappedOrder = this.mapOrderFromDB(data);
+      console.log('🔍 OrderRepository: Mapped order (by number):', {
+        id: mappedOrder.id,
+        orderNumber: mappedOrder.orderNumber,
+        status: mappedOrder.status,
+        paymentStatus: mappedOrder.paymentStatus,
+        itemsCount: mappedOrder.items?.length || 0,
+        itemsDetails: mappedOrder.items?.map(item => ({
+          productType: item.productType,
+          productName: item.productName,
+          hasConfiguration: !!item.configuration,
+          configurationKeys: item.configuration ? Object.keys(item.configuration) : []
+        })) || []
+      });
+      
+      return mappedOrder;
+    }
+
+    return null;
   }
 
   async findByCustomerEmail(email: string): Promise<Order[]> {
