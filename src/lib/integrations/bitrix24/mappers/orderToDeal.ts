@@ -49,16 +49,27 @@ export function mapOrderToDeal(
   // Extract product details
   const productVariant = extractProductVariant(order);
   const productType = extractProductType(order);
+  const setType = extractSetType(order);
   const cellShape = extractCellShape(order);
   const materialColor = extractMaterialColor(order);
   const trimColor = extractTrimColor(order);
   
+  // Walidacja - sprawdź czy order ma items typu 'mat'
+  const hasMatItems = order.items?.some(item => item.productType === 'mat');
+  if (!hasMatItems) {
+    console.warn('⚠️ mapOrderToDeal: Order has no mat items, using default values for product fields');
+  }
+  
   console.log('🔍 mapOrderToDeal: Extracted product details:', {
     productVariant,
     productType,
+    setType,
     cellShape,
     materialColor,
-    trimColor
+    trimColor,
+    hasMatItems,
+    itemsCount: order.items?.length || 0,
+    matItemsCount: order.items?.filter(item => item.productType === 'mat').length || 0
   });
   
   // Build deal data
@@ -91,8 +102,8 @@ export function mapOrderToDeal(
     UF_CRM_1760788343011: carDetails.body,         // Typ nadwozia
     
     // ✅ POLA PRODUKTU - działają poprawnie (wartości enum)
-    UF_CRM_1757024835301: productVariant,    // Wariant kompletu
-    UF_CRM_1757024931236: productType,       // Rodzaj kompletu
+    UF_CRM_1757024835301: setType,           // Rodzaj kompletu (setType)
+    UF_CRM_1757024931236: productVariant,    // Wariant kompletu (setVariant)
     UF_CRM_1757025126670: cellShape,         // Kształt komórek
     UF_CRM_1757177134448: materialColor,     // Kolor materiału
     UF_CRM_1757177281489: trimColor,         // Kolor obszycia
@@ -386,26 +397,33 @@ function extractProductVariant(order: Order): number | undefined {
   
   // Mapowanie wariantu produktu na ID enum w Bitrix24
   const variantMap: Record<string, number> = {
-    'front': 282,      // Starter - 2 dywaniki (tylko przód)
-    'basic': 284,      // Podstawowy - 5 dywaników (przód + tył + ochrona na tunel)
-    'premium': 286,    // Premium - 5 dywaników (przód + tył + bagażnik)
-    'complete': 288,   // Mata do Bagażnika - 1 dywanik
+    'front': 270,      // Przód
+    'basic': 274,      // Przód + Tył
+    'premium': 276,    // Przód + Tył + Bagażnik
+    'complete': 272,   // Tył (jako fallback dla complete)
   };
   
   const firstItem = order.items?.[0];
   if (!firstItem) {
-    console.log('🔍 extractProductVariant: No items found');
-    return undefined;
+    console.log('🔍 extractProductVariant: No items found, using default value');
+    return 274; // Domyślnie "Przód + Tył"
+  }
+  
+  // Sprawdź czy item jest typu 'mat' i ma configuration
+  if (firstItem.productType !== 'mat' || !firstItem.configuration) {
+    console.log('🔍 extractProductVariant: Item is not mat or has no configuration, using default value');
+    return 274; // Domyślnie "Przód + Tył"
   }
   
   const variant = (firstItem.configuration as any)?.setVariant || 'basic';
-  const result = variantMap[variant] || 284; // Domyślnie basic
+  const result = variantMap[variant] || 274; // Domyślnie "Przód + Tył"
   
   console.log('🔍 extractProductVariant: Result:', {
     firstItemProductType: firstItem.productType,
-    configuration: firstItem.configuration,
+    hasConfiguration: !!firstItem.configuration,
     variant,
-    result
+    result,
+    mappedValue: variantMap[variant] ? `${variant} -> ${result}` : `${variant} -> default (274)`
   });
   
   return result;
@@ -434,6 +452,45 @@ function extractProductType(order: Order): number | undefined {
   console.log('🔍 extractProductType: Result:', {
     firstItemProductType: firstItem.productType,
     result
+  });
+  
+  return result;
+}
+
+/**
+ * Extract set type (enum value)
+ */
+function extractSetType(order: Order): number | undefined {
+  console.log('🔍 extractSetType: Starting extraction for order:', order.orderNumber);
+  
+  // Mapowanie typu zestawu na ID enum w Bitrix24
+  const setTypeMap: Record<string, number> = {
+    '3d-with-rims': 264,  // 3D EVAPREMIUM
+    'classic': 266,       // Klasyczne EVAPREMIUM
+  };
+  
+  const firstItem = order.items?.[0];
+  if (!firstItem) {
+    console.log('🔍 extractSetType: No items found, using default value');
+    return 264; // Domyślnie "3D EVAPREMIUM"
+  }
+  
+  // Sprawdź czy item jest typu 'mat' i ma configuration
+  if (firstItem.productType !== 'mat' || !firstItem.configuration) {
+    console.log('🔍 extractSetType: Item is not mat or has no configuration, using default value');
+    return 264; // Domyślnie "3D EVAPREMIUM"
+  }
+  
+  const config = firstItem.configuration as any;
+  const setType = config.setType || '3d-with-rims';
+  const result = setTypeMap[setType] || 264; // Domyślnie "3D EVAPREMIUM"
+  
+  console.log('🔍 extractSetType: Result:', {
+    firstItemProductType: firstItem.productType,
+    hasConfiguration: !!firstItem.configuration,
+    setType,
+    result,
+    mappedValue: setTypeMap[setType] ? `${setType} -> ${result}` : `${setType} -> default (264)`
   });
   
   return result;
