@@ -8,6 +8,7 @@ import { contactService } from '../integrations/bitrix24/services/ContactService
 import { dealService } from '../integrations/bitrix24/services/DealService';
 import { mapOrderToContact } from '../integrations/bitrix24/mappers/orderToContact';
 import { mapOrderToDeal, createDealProducts } from '../integrations/bitrix24/mappers/orderToDeal';
+import { stageMappingService } from '../integrations/bitrix24/services/StageMappingService';
 
 export class OrderService {
   private repository: OrderRepository;
@@ -449,7 +450,7 @@ export class OrderService {
         });
         
         // Zaktualizuj status deala na podstawie statusu zamówienia
-        const dealStage = this.getDealStageFromOrderStatus(order.status, order.paymentStatus);
+        const { stageId: dealStage } = await stageMappingService.resolveStage({ type: 'order', orderStatus: order.status, paymentStatus: order.paymentStatus });
         
         // Zaktualizuj istniejący deal
         const dealData = mapOrderToDeal(order, contactId, { stageId: dealStage });
@@ -472,7 +473,7 @@ export class OrderService {
       }
 
       // 3. Utwórz nowy deal
-      const dealStage = this.getDealStageFromOrderStatus(order.status, order.paymentStatus);
+      const { stageId: dealStage } = await stageMappingService.resolveStage({ type: 'order', orderStatus: order.status, paymentStatus: order.paymentStatus });
       const dealData = mapOrderToDeal(order, contactId, { stageId: dealStage });
       console.log('🎯 OrderService: Creating new deal with stage:', { 
         orderStatus: order.status, 

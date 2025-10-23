@@ -7,6 +7,7 @@
 import { Bitrix24Client } from '../client';
 import { bitrix24Config } from '../config';
 import type { AbandonedCartRecord } from '@/lib/types/abandonedCart';
+import { stageMappingService } from './StageMappingService';
 import { Bitrix24Deal, Bitrix24DealProduct, Bitrix24ApiResponse } from '@/lib/types/bitrix';
 import { validateBitrix24Deal, validateBitrix24DealProduct } from '@/lib/validators/bitrix24';
 
@@ -81,7 +82,7 @@ export class DealService {
    * Build deal payload from abandoned cart
    */
   async createDealForAbandonedCart(cart: AbandonedCartRecord): Promise<{ id: string; success: boolean; error?: string }> {
-    const { categoryId, stageId } = await this.resolveAbandonedCategoryAndStage();
+    const { categoryId, stageId } = await stageMappingService.resolveStage({ type: 'abandoned_cart' });
 
     const titleParts: string[] = ['[Porzucony koszyk]'];
     if (cart.car?.make) titleParts.push(String(cart.car.make));
