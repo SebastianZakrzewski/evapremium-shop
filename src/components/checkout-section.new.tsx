@@ -34,6 +34,7 @@ import { useCart } from '@/hooks/useCart.new';
 import { useOrder } from '@/hooks/useOrder.new';
 import { CreateOrderDTO } from '@/lib/types/order-new';
 import { PricingService } from '@/lib/services/PricingService';
+import { Przelewy24Service } from '@/lib/services/Przelewy24Service';
 import { debugLog } from '@/lib/config/features';
 import { useAbandonedCartHeartbeat } from '@/hooks/useAbandonedCartHeartbeat';
 import { HybridSessionManager } from '@/lib/utils/hybrid-session-manager';
@@ -399,38 +400,61 @@ export default function CheckoutSectionNew() {
       // Sprawdź metodę płatności
       if (data.paymentMethod === 'p24') {
         try {
-          console.log('🔄 Starting P24 payment registration...');
-          console.log('🔍 P24 Payment Debug Info:');
+          console.log('🔄 Starting P24 payment registration via direct service call...');
+          console.log('🔍 P24 Direct Service Debug Info:');
           console.log('🔍 Order ID:', order.id);
           console.log('🔍 Order Total:', order.total);
           console.log('🔍 Customer Email:', data.email);
           console.log('🔍 Payment Method:', data.paymentMethod);
+          console.log('🔍 Direct Service Call:', true);
           console.log('🔍 Environment:', process.env.NODE_ENV);
           console.log('🔍 Vercel:', process.env.VERCEL);
           console.log('🔍 Vercel Env:', process.env.VERCEL_ENV);
           
-          // Zarejestruj płatność w P24
-          const response = await fetch('/api/payments/p24/register', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ orderId: order.id })
-          });
+          // Wywołaj bezpośrednio funkcję serwisu Przelewy24
+          const p24Service = new Przelewy24Service();
+          
+          const sessionId = `eva_${order.orderNumber}_${Date.now()}`.substring(0, 100);
+          const transactionData = {
+            sessionId: sessionId,
+            amount: Number(order.total),
+            currency: 'PLN',
+            description: `Zamówienie ${order.orderNumber} - Dywaniki EVA`,
+            email: data.email || '',
+            country: 'PL'
+          };
 
-          const result = await response.json();
+          console.log('🔍 P24 Service: Transaction data:', transactionData);
+          
+          const result = await p24Service.registerTransaction(transactionData);
 
           if (!result.success) {
             throw new Error(result.error || 'Błąd rejestracji płatności');
           }
 
-          console.log('✅ P24 payment registered:', result.paymentUrl);
+          console.log('✅ P24 payment registered via direct service call:', result.paymentUrl);
+          
+          // Zapisz dane P24 w zamówieniu
+          await fetch(`/api/orders/${order.id}/p24`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              p24SessionId: sessionId,
+              p24Token: result.token
+            })
+          });
           
           // Wyczyść koszyk po udanej rejestracji
           clearCart();
           
           // Przekieruj do P24
-          window.location.href = result.paymentUrl;
+          if (result.paymentUrl) {
+            window.location.href = result.paymentUrl;
+          } else {
+            throw new Error('Brak URL płatności w odpowiedzi');
+          }
           return;
 
         } catch (error) {

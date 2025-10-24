@@ -32,6 +32,7 @@ import { useOrder } from '@/hooks/useOrder';
 import { CustomerData, ShippingData, PaymentData } from '@/lib/types/order';
 import { Product } from '@/lib/types/product';
 import { CartItem } from '@/lib/types/cart-new';
+import { Przelewy24Service } from '@/lib/services/Przelewy24Service';
 
 // Schema walidacji
 const checkoutSchema = z.object({
@@ -434,30 +435,52 @@ export function CheckoutSection() {
       console.log('🔄 Payment method:', data.paymentMethod);
       if (data.paymentMethod === 'p24') {
         try {
-          console.log('🔄 Starting P24 payment registration...');
+          console.log('🔄 Starting P24 payment registration via direct service call...');
           
-          // Zarejestruj płatność w P24
-          const response = await fetch('/api/payments/p24/register', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ orderId: savedOrder.id })
-          });
+          // Wywołaj bezpośrednio funkcję serwisu Przelewy24
+          const p24Service = new Przelewy24Service();
+          
+          const sessionId = `eva_${savedOrder.sessionId}_${Date.now()}`.substring(0, 100);
+          const transactionData = {
+            sessionId: sessionId,
+            amount: Number(savedOrder.pricing.totalAmount),
+            currency: 'PLN',
+            description: `Zamówienie ${savedOrder.sessionId} - Dywaniki EVA`,
+            email: data.email || '',
+            country: 'PL'
+          };
 
-          const result = await response.json();
+          console.log('🔍 P24 Service: Transaction data:', transactionData);
+          
+          const result = await p24Service.registerTransaction(transactionData);
 
           if (!result.success) {
             throw new Error(result.error || 'Błąd rejestracji płatności');
           }
 
-          console.log('✅ P24 payment registered:', result.paymentUrl);
+          console.log('✅ P24 payment registered via direct service call:', result.paymentUrl);
+          
+          // Zapisz dane P24 w zamówieniu
+          await fetch(`/api/orders/${savedOrder.id}/p24`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              p24SessionId: sessionId,
+              p24Token: result.token
+            })
+          });
           
           // Wyczyść koszyk po udanej rejestracji
           clearCart();
           
           // Przekieruj do P24
-          window.location.href = result.paymentUrl;
+          if (result.paymentUrl) {
+            window.location.href = result.paymentUrl;
+          } else {
+            throw new Error('Brak URL płatności w odpowiedzi');
+          }
           return;
 
         } catch (error) {
