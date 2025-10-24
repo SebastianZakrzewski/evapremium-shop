@@ -59,10 +59,10 @@ export function getP24Config(): P24Config {
   // Wyczyść wszystkie zmienne środowiskowe
   const merchantId = parseInt(cleanEnvValue(process.env.P24_MERCHANT_ID))
   const posId = parseInt(cleanEnvValue(process.env.P24_POS_ID))
-  const crcKey = cleanEnvValue(process.env.P24_CRC_KEY) || '9325080ce772326e'
-  const apiKey = cleanEnvValue(process.env.P24_API_KEY) || 'ef0b16e0'
-  const reportKey = cleanEnvValue(process.env.P24_REPORT_KEY) || '1522d8628486e9e78a320967921470bc'
-  const environment = cleanEnvValue(process.env.P24_ENVIRONMENT) || 'sandbox'
+  const crcKey = cleanEnvValue(process.env.P24_CRC_KEY)
+  const apiKey = cleanEnvValue(process.env.P24_API_KEY)
+  const reportKey = cleanEnvValue(process.env.P24_REPORT_KEY)
+  const environment = cleanEnvValue(process.env.P24_ENVIRONMENT)
   
   // Wyczyść URL-e - tylko ze zmiennych środowiskowych (.env)
   const urlReturn = cleanEnvValue(process.env.NODE_ENV === 'development' 
@@ -110,6 +110,14 @@ export function getP24Config(): P24Config {
   
   if (environment !== 'sandbox' && environment !== 'production') {
     throw new Error('P24_ENVIRONMENT musi być "sandbox" lub "production"')
+  }
+
+  // Ostrzeżenie dla produkcji
+  if (environment === 'production') {
+    console.warn('⚠️ P24Config: ŚRODOWISKO PRODUKCYJNE - rzeczywiste płatności!')
+    console.warn('⚠️ P24Config: Upewnij się, że wszystkie klucze są produkcyjne')
+  } else {
+    console.log('🔧 P24Config: Środowisko testowe (sandbox)')
   }
 
   const config: P24Config = {

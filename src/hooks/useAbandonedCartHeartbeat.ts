@@ -51,8 +51,8 @@ export function useAbandonedCartHeartbeat(active: boolean, buildPayload: BuildPa
       try {
         const payload = buildPayload();
         if (!payload || !payload.sessionId) return;
-        const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-        navigator.sendBeacon('/api/abandoned-carts', blob);
+        const blob = new Blob([JSON.stringify({ ...payload, event: 'pagehide' })], { type: 'application/json' });
+        navigator.sendBeacon('/api/abandoned-carts/webhook', blob);
       } catch (_) {
         // ignore
       }

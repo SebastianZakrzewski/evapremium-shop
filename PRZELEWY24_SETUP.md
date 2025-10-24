@@ -8,25 +8,25 @@ npm install
 
 ## 2. Konfiguracja zmiennych środowiskowych
 
-### Zmienne Przelewy24 zostały już dodane do pliku `.env`:
+### Zmienne Przelewy24 – dodaj do pliku `.env.local` (przykład z placeholderami):
 
 ```env
 # ===========================================
 # PRZELEWY24 CONFIGURATION
 # ===========================================
-# Dane z konta Przelewy24 (ID: 352557)
-P24_MERCHANT_ID=352557
-P24_POS_ID=352557
-P24_CRC_KEY=c99c68557cffe9f8
-P24_API_KEY=ef0b16e0
-P24_REPORT_KEY=1522d8628486e9e78a320967921470bc
+# Dane z konta Przelewy24
+P24_MERCHANT_ID=YOUR_P24_MERCHANT_ID
+P24_POS_ID=YOUR_P24_POS_ID
+P24_CRC_KEY=YOUR_P24_CRC_KEY
+P24_API_KEY=YOUR_P24_API_KEY
+P24_REPORT_KEY=YOUR_P24_REPORT_KEY
 
 # Środowisko (sandbox lub production)
 P24_ENVIRONMENT=sandbox
 
 # URLe callback dla płatności
-P24_URL_RETURN=https://evapremium.pl/payment/success
-P24_URL_STATUS=https://evapremium.pl/api/payments/przelewy24/callback
+P24_URL_RETURN=https://your-domain/payment/success
+P24_URL_STATUS=https://your-domain/api/payments/przelewy24/callback
 ```
 
 ### ✅ Gotowe! Możesz od razu uruchomić test.
@@ -71,6 +71,36 @@ Po pomyślnym teście:
    - Skonfiguruj konto produkcyjne
    - Zaktualizuj zmienne środowiskowe
    - Przetestuj na środowisku produkcyjnym
+   - **Szczegółowa instrukcja**: Zobacz `PRZELEWY24_PRODUCTION_SETUP.md`
+
+### 🔄 Różnice między sandbox a produkcją
+
+| Aspekt | Sandbox | Produkcja |
+|--------|---------|-----------|
+| **URL API** | `sandbox.przelewy24.pl` | `secure.przelewy24.pl` |
+| **Klucze** | Testowe | Produkcyjne z panelu P24 |
+| **Płatności** | Symulowane | Rzeczywiste |
+| **Weryfikacja webhook** | Wyłączona | Włączona |
+| **Weryfikacja transakcji** | Włączona | Włączona |
+
+### 🔑 Klucze produkcyjne
+
+Użyj wartości z panelu P24 (nie commituj realnych kluczy do repozytorium).
+
+### ⚠️ Konfiguracja białej listy IP
+
+W produkcji **MUSISZ** dodać adres IP serwera Vercel do białej listy w panelu P24:
+1. Przejdź do **"Moje dane"** → **"Adres IP"**
+2. Dodaj IP serwera Vercel (sprawdź w logach Vercel)
+3. Bez tego webhook nie będzie działał!
+
+### 🧪 Testowanie na produkcji
+
+**ZALECANE**: Przetestuj z małą kwotą (1-5 PLN) przed pełnym uruchomieniem:
+1. Utwórz testowe zamówienie
+2. Przejdź przez proces płatności
+3. Sprawdź czy webhook działa
+4. Zweryfikuj w logach czy wszystko przeszło
 
 ## 6. Struktura plików
 

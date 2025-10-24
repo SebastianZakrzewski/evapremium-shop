@@ -33,40 +33,50 @@ export class StageMappingService {
         return { stageId: 'NEW' };
     }
   }
-
+  /**
+   * Maps order and payment statuses to corresponding Bitrix24 deal stages
+   * 
+   * @param orderStatus - Current status of the order (e.g. 'cancelled', 'delivered', etc.)
+   * @param paymentStatus - Current payment status (e.g. 'failed', 'paid', etc.)
+   * @returns StageResult containing the mapped Bitrix24 stage ID
+   * 
+   * Stage mapping logic:
+   * 1. Payment status takes precedence:
+   *    - failed/refunded -> LOSE
+   *    - paid -> UC_DMBNNJ (In Progress)
+   * 
+   * 2. Order status mapping:
+   *    - cancelled -> LOSE
+   *    - delivered -> WON  
+   *    - confirmed/processing/shipped -> UC_DMBNNJ (In Progress)
+   * 
+   * 3. Default: NEW for unknown statuses
+   */
   private resolveOrderStage(orderStatus?: string, paymentStatus?: string): StageResult {
-    // zachowuje obecną logikę mapowania z OrderService
-    if (paymentStatus === 'paid') {
-      switch (orderStatus) {
-        case 'delivered':
-          return { stageId: 'WON' };
-        case 'cancelled':
-          return { stageId: 'LOSE' };
-        case 'pending':
-        case 'confirmed':
-        case 'processing':
-        case 'shipped':
-        default:
-          return { stageId: 'UC_DMBNNJ' };
-      }
+    // First check payment status as it takes precedence
+    const paymentStageMap: Record<string, string> = {
+      failed: 'LOSE',
+      refunded: 'LOSE',
+      paid: 'UC_DMBNNJ'
+    };
+    if (paymentStatus && paymentStatus in paymentStageMap) {
+      return { stageId: paymentStageMap[paymentStatus] };
     }
-    if (paymentStatus === 'failed' || paymentStatus === 'refunded') {
-      return { stageId: 'LOSE' };
+
+    // Then check order status
+    const orderStageMap: Record<string, string> = {
+      cancelled: 'LOSE',
+      delivered: 'WON',
+      confirmed: 'UC_DMBNNJ',
+      processing: 'UC_DMBNNJ', 
+      shipped: 'UC_DMBNNJ'
+    };
+    if (orderStatus && orderStatus in orderStageMap) {
+      return { stageId: orderStageMap[orderStatus] };
     }
-    switch (orderStatus) {
-      case 'pending':
-        return { stageId: 'NEW' };
-      case 'confirmed':
-      case 'processing':
-      case 'shipped':
-        return { stageId: 'UC_DMBNNJ' };
-      case 'delivered':
-        return { stageId: 'WON' };
-      case 'cancelled':
-        return { stageId: 'LOSE' };
-      default:
-        return { stageId: 'NEW' };
-    }
+
+    // Default stage for new/unknown status
+    return { stageId: 'NEW' };
   }
 
   private async resolveAbandonedCartStage(): Promise<StageResult> {

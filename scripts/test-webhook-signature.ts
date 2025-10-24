@@ -40,14 +40,22 @@ function loadEnvFile() {
 // Load environment variables
 const env = loadEnvFile()
 
-// Mock P24 config from .env
+function requireEnv(key: string): string {
+  const value = env[key]
+  if (!value || value.trim() === '' || value.toLowerCase().includes('your_')) {
+    throw new Error(`Missing required env variable: ${key}`)
+  }
+  return value.trim()
+}
+
+// P24 config from .env (no fallbacks)
 const p24Config = {
-  merchantId: parseInt(env.P24_MERCHANT_ID || '352557'),
-  posId: parseInt(env.P24_POS_ID || '352557'),
-  crcKey: env.P24_CRC_KEY || '9325080ce772326e',
-  apiKey: env.P24_API_KEY || 'ef0b16e0',
-  reportKey: env.P24_REPORT_KEY || '1522d8628486e9e78a320967921470bc',
-  environment: env.P24_ENVIRONMENT || 'sandbox'
+  merchantId: parseInt(requireEnv('P24_MERCHANT_ID')),
+  posId: parseInt(requireEnv('P24_POS_ID')),
+  crcKey: requireEnv('P24_CRC_KEY'),
+  apiKey: requireEnv('P24_API_KEY'),
+  reportKey: requireEnv('P24_REPORT_KEY'),
+  environment: requireEnv('P24_ENVIRONMENT')
 }
 
 // Symulowane dane webhook P24
@@ -64,12 +72,8 @@ const mockWebhookData = {
   sign: '' // Będzie wygenerowany
 }
 
-// Różne warianty CRC_KEY do testowania
-const crcKeys = [
-  '9325080ce772326e', // Z env.example
-  'c99c68557cffe9f8', // Z PRZELEWY24_SETUP.md
-  'test-crc-key-123'  // Testowy
-]
+// Warianty CRC tylko z env (brak hardcodu)
+const crcKeys = [p24Config.crcKey]
 
 /**
  * Generuje podpis P24 zgodnie z dokumentacją
@@ -139,7 +143,7 @@ async function runTests() {
     console.log('  - Environment:', config.environment)
     console.log('')
 
-    // Test 1: Generowanie podpisu z różnymi CRC_KEY
+    // Test 1: Generowanie podpisu z CRC_KEY z env
     console.log('📝 Test 1: Generowanie podpisu z różnymi CRC_KEY')
     console.log('------------------------------------------------')
     

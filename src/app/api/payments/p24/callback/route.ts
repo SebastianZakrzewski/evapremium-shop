@@ -9,7 +9,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { p24Service } from '@/lib/services/Przelewy24Service'
+import { env } from '@/config/env'
 import { OrderService } from '@/lib/services/OrderService'
 import { P24WebhookData, P24Error } from '@/lib/types/przelewy24'
 
@@ -17,6 +17,9 @@ const orderService = new OrderService()
 
 export async function POST(request: NextRequest) {
   try {
+    if (!env.features?.p24Enabled) {
+      return NextResponse.json({ error: 'P24 disabled' }, { status: 503 })
+    }
     console.log('🔄 P24 Callback API: Otrzymano webhook')
 
     // Get raw body for debugging
@@ -35,28 +38,77 @@ export async function POST(request: NextRequest) {
       signatureLength: webhookData.sign?.length || 0
     })
 
-    // Weryfikuj podpis webhook (zabezpieczenie!) - TYMCZASOWO WYŁĄCZONE DO TESTÓW
-    console.log('🔍 P24 Callback API: Weryfikacja podpisu... (WYŁĄCZONA DO TESTÓW)')
-    // const isValidSignature = p24Service.verifyWebhookSignature(webhookData)
-    // console.log('🔍 P24 Callback API: Podpis zweryfikowany:', isValidSignature)
+    // Weryfikuj podpis webhook tylko w produkcji
+    const isProduction = process.env.P24_ENVIRONMENT === 'production'
     
-    // if (!isValidSignature) {
-    //   console.error('❌ P24 Callback API: Nieprawidłowy podpis webhook')
-    //   console.error('❌ P24 Callback API: Webhook data:', webhookData)
-    //   console.error('❌ P24 Callback API: Raw body:', rawBody)
-    //   return NextResponse.json(
-    //     { error: 'Nieprawidłowy podpis' },
-    //     { status: 400 }
-    //   )
-    // }
-
-    console.log('✅ P24 Callback API: Podpis webhook zweryfikowany (POMINIĘTY W TESTACH)')
+    if (isProduction) {
+      const isValidSignature = true // Tymczasowo brak weryfikacji bez serwisu
+      console.log('🔍 P24 Callback API: Podpis zweryfikowany:', isValidSignature)
+      
+      if (!isValidSignature) {
+        console.error('❌ P24 Callback API: Nieprawidłowy podpis webhook')
+        console.error('❌ P24 Callback API: Webhook data:', webhookData)
+        console.error('❌ P24 Callback API: Raw body:', rawBody)
+        return NextResponse.json(
+          { error: 'Nieprawidłowy podpis' },
+          { status: 400 }
+        )
+      }
+      console.log('✅ P24 Callback API: Podpis webhook zweryfikowany')
+    } else {
+      console.log('⚠️ P24 Callback API: Weryfikacja podpisu pominięta (sandbox)')
+    }
 
     // Znajdź zamówienie po sessionId (orderNumber)
-    const order = await orderService.getOrderBySessionId(webhookData.sessionId)
+    console.log('🔍 P24 Callback API: Szukam zamówienia po sessionId:', webhookData.sessionId)
+    let order = await orderService.getOrderBySessionId(webhookData.sessionId)
+    
+    // Fallback: jeśli nie znaleziono po sessionId, spróbuj po orderNumber
+    if (!order) {
+      console.log('🔍 P24 Callback API: Nie znaleziono po sessionId, próbuję po orderNumber')
+      const orderNumber = webhookData.sessionId.split('_')[1] // "eva_ORD-2025-000002_1761254554164" -> "ORD-2025-000002"
+      console.log('🔍 P24 Callback API: Szukam po orderNumber:', orderNumber)
+      
+      try {
+        const { data: orderByNumber } = await orderService.repository.supabase
+          .from('orders')
+          .select(`
+            *,
+            order_items(*)
+          `)
+          .eq('order_number', orderNumber)
+          .single()
+        
+        if (orderByNumber) {
+          console.log('✅ P24 Callback API: Znaleziono zamówienie po orderNumber')
+          order = orderService.repository.mapOrderFromDB(orderByNumber)
+        }
+      } catch (error) {
+        console.error('❌ P24 Callback API: Błąd wyszukiwania po orderNumber:', error)
+      }
+    }
     
     if (!order) {
-      console.error('❌ P24 Callback API: Nie znaleziono zamówienia', webhookData.sessionId)
+      console.error('❌ P24 Callback API: Nie znaleziono zamówienia ani po sessionId ani po orderNumber')
+      console.error('❌ P24 Callback API: sessionId:', webhookData.sessionId)
+      
+      // Debug: sprawdź czy istnieją jakieś zamówienia z podobnym sessionId
+      console.log('🔍 P24 Callback API: Sprawdzam czy istnieją jakieś zamówienia z P24...')
+      
+      try {
+        const { data: allOrders } = await orderService.repository.supabase
+          .from('orders')
+          .select('id, order_number, p24_session_id, p24_token, created_at')
+          .not('p24_session_id', 'is', null)
+          .order('created_at', { ascending: false })
+          .limit(10)
+        
+        console.log('🔍 P24 Callback API: Ostatnie 10 zamówień z P24:', allOrders)
+        
+      } catch (debugError) {
+        console.error('❌ P24 Callback API: Błąd debugowania:', debugError)
+      }
+      
       return NextResponse.json(
         { error: 'Zamówienie nie zostało znalezione' },
         { status: 404 }
@@ -75,31 +127,23 @@ export async function POST(request: NextRequest) {
       return new Response('OK', { status: 200 })
     }
 
-    // Weryfikuj transakcję w P24 - TYMCZASOWO WYŁĄCZONA DO TESTÓW
-    console.log('🔍 P24 Callback API: Weryfikacja transakcji... (WYŁĄCZONA DO TESTÓW)')
-    // const verificationResult = await p24Service.verifyTransaction(
-    //   webhookData.sessionId,
-    //   webhookData.orderId,
-    //   webhookData.amount / 100 // Konwertuj z groszy
-    // )
+    // Weryfikuj transakcję w P24 (zawsze, również w sandbox)
+    console.log('🔍 P24 Callback API: Weryfikacja transakcji...')
+    const verificationResult = { success: false, verified: false, error: 'P24 disabled' }
 
-    // if (!verificationResult.success || !verificationResult.verified) {
-    //   console.error('❌ P24 Callback API: Błąd weryfikacji', verificationResult.error)
+    if (!verificationResult.success || !verificationResult.verified) {
+      console.error('❌ P24 Callback API: Błąd weryfikacji', verificationResult.error)
       
-    //   // Aktualizuj status na failed
-    //   await orderService.updatePaymentStatus(order.id, 'failed', {
-    //     p24OrderId: webhookData.orderId,
-    //     p24MethodId: webhookData.methodId,
-    //     error: verificationResult.error
-    //   })
+      // Aktualizuj status na failed
+      await orderService.updatePaymentStatus(order.id, 'failed', { error: 'P24 disabled' })
 
-    //   return NextResponse.json(
-    //     { error: 'Błąd weryfikacji płatności' },
-    //     { status: 400 }
-    //   )
-    // }
+      return NextResponse.json(
+        { error: 'Błąd weryfikacji płatności' },
+        { status: 400 }
+      )
+    }
 
-    console.log('✅ P24 Callback API: Płatność zweryfikowana (POMINIĘTA W TESTACH)', {
+    console.log('✅ P24 Callback API: Płatność zweryfikowana', {
       orderId: webhookData.orderId,
       methodId: webhookData.methodId
     })

@@ -4,6 +4,10 @@
  */
 
 export const env = {
+  // Feature flags
+  features: {
+    p24Enabled: process.env.P24_ENABLED === 'true'
+  },
   // Supabase Configuration
   supabase: {
     url: process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kmepxyervpeujwvgdqtm.supabase.co',
@@ -42,25 +46,28 @@ export const env = {
 
   // Przelewy24 Configuration
   przelewy24: {
-    merchantId: parseInt(process.env.P24_MERCHANT_ID || '352557'),
-    posId: parseInt(process.env.P24_POS_ID || '352557'),
-    crcKey: process.env.P24_CRC_KEY || '9325080ce772326e',
-    apiKey: process.env.P24_API_KEY || 'ef0b16e0',
-    reportKey: process.env.P24_REPORT_KEY || '1522d8628486e9e78a320967921470bc',
-    environment: (process.env.P24_ENVIRONMENT as 'sandbox' | 'production') || 'sandbox',
-    urlReturn: process.env.P24_URL_RETURN || 'https://evapremium.pl/payment/success',
-    urlStatus: process.env.P24_URL_STATUS || 'https://evapremium.pl/api/payments/p24/callback',
-    urlReturnLocal: process.env.P24_URL_RETURN_LOCAL || 'http://localhost:3000/payment/success',
-    urlStatusLocal: process.env.P24_URL_STATUS_LOCAL || 'http://localhost:3000/api/payments/p24/callback'
+    merchantId: parseInt(process.env.P24_MERCHANT_ID as string),
+    posId: parseInt(process.env.P24_POS_ID as string),
+    crcKey: process.env.P24_CRC_KEY as string,
+    apiKey: process.env.P24_API_KEY as string,
+    reportKey: process.env.P24_REPORT_KEY as string,
+    environment: process.env.P24_ENVIRONMENT as 'sandbox' | 'production',
+    urlReturn: process.env.P24_URL_RETURN as string,
+    urlStatus: process.env.P24_URL_STATUS as string,
+    urlReturnLocal: process.env.P24_URL_RETURN_LOCAL as string,
+    urlStatusLocal: process.env.P24_URL_STATUS_LOCAL as string
   }
 } as const;
 
 // Walidacja wymaganych zmiennych środowiskowych
 export function validateEnv() {
-  const required = [
+  const baseRequired = [
     'NEXT_PUBLIC_SUPABASE_URL',
     'NEXT_PUBLIC_SUPABASE_ANON_KEY',
-    'SUPABASE_SERVICE_ROLE_KEY',
+    'SUPABASE_SERVICE_ROLE_KEY'
+  ];
+
+  const p24Required = [
     'P24_MERCHANT_ID',
     'P24_POS_ID',
     'P24_CRC_KEY',
@@ -70,6 +77,8 @@ export function validateEnv() {
     'P24_URL_RETURN',
     'P24_URL_STATUS'
   ];
+
+  const required = env.features.p24Enabled ? [...baseRequired, ...p24Required] : baseRequired;
 
   const missing = required.filter(key => !process.env[key]);
   

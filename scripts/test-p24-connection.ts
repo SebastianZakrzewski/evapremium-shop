@@ -27,16 +27,24 @@ const colors = {
   bold: '\x1b[1m'
 };
 
-// Konfiguracja P24
+// Konfiguracja P24 - wymagana z .env (bez fallbacków)
+function requireEnv(key: string): string {
+  const v = process.env[key]
+  if (!v || v.trim() === '' || v.toLowerCase().includes('your_')) {
+    throw new Error(`Missing required env variable: ${key}`)
+  }
+  return v
+}
+
 const P24_CONFIG = {
-  merchantId: process.env.P24_MERCHANT_ID || '352557',
-  posId: process.env.P24_POS_ID || '352557',
-  crcKey: process.env.P24_CRC_KEY || 'c99c68557cffe9f8',
-  apiKey: process.env.P24_API_KEY || 'ef0b16e0',
-  reportKey: process.env.P24_REPORT_KEY || '1522d8628486e9e78a320967921470bc',
-  environment: process.env.P24_ENVIRONMENT || 'sandbox',
-  urlReturn: process.env.P24_URL_RETURN || 'https://evapremium.pl/payment/success',
-  urlStatus: process.env.P24_URL_STATUS || 'https://evapremium.pl/api/payments/przelewy24/callback'
+  merchantId: requireEnv('P24_MERCHANT_ID'),
+  posId: requireEnv('P24_POS_ID'),
+  crcKey: requireEnv('P24_CRC_KEY'),
+  apiKey: requireEnv('P24_API_KEY'),
+  reportKey: requireEnv('P24_REPORT_KEY'),
+  environment: requireEnv('P24_ENVIRONMENT'),
+  urlReturn: requireEnv('P24_URL_RETURN'),
+  urlStatus: requireEnv('P24_URL_STATUS')
 };
 
 // URL API na podstawie środowiska

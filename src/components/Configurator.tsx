@@ -68,8 +68,8 @@ type SetVariant = {
 // Struktura cenowa - sztywne ceny za komplety + rabaty
 const PRICING = {
   basePrice: {
-    'classic': { front: 290, basic: 510, premium: 710, complete: 350 },
-    '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350 }
+    'classic': { front: 290, basic: 510, premium: 710, complete: 0.10 },
+    '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 0.10 }
   },
   // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł
   getDiscount: (basePrice: number) => {
@@ -77,7 +77,7 @@ const PRICING = {
   },
   shipping: {
     cost: 27,
-    freeForVariants: ['basic', 'premium'] as const  // Darmowa dla basic i premium (przód+tył i przód+tył+bagażnik)
+    freeForVariants: ['basic', 'premium', 'complete'] as const  // Darmowa dla basic, premium i complete (mata do bagażnika)
   }
 };
 
@@ -736,14 +736,14 @@ export default function Configurator() {
       ? 0 
       : PRICING.shipping.cost;
     
-    const totalPrice = Math.round(priceAfterDiscount + shippingCost);
+    const totalPrice = Math.round((priceAfterDiscount + shippingCost) * 100) / 100;
     
     console.log('💰 Kalkulacja ceny:', {
       setType: selectedSetType,
       setVariant: selectedSetVariant,
       basePrice,
       discount: `${discount * 100}%`,
-      priceAfterDiscount: Math.round(priceAfterDiscount),
+      priceAfterDiscount: Math.round(priceAfterDiscount * 100) / 100,
       shippingCost,
       totalPrice
     });

@@ -1360,10 +1360,6 @@ export default function CheckoutSectionNew() {
                   {/* Totals */}
                   <div className="space-y-5 pt-6">
                     <div className="flex justify-between text-lg">
-                      <span className="text-neutral-300">Suma częściowa - pozycje: {items.length}</span>
-                      <span className="text-white font-medium">{PricingService.formatPrice(total)}</span>
-                    </div>
-                    <div className="flex justify-between text-lg">
                       <span className="text-neutral-300">Wysyłka</span>
                       <span className="text-white font-medium">27,00 zł</span>
                     </div>

@@ -279,6 +279,8 @@ export class OrderRepository extends BaseRepository<Order> {
 
 
   async findBySessionId(sessionId: string): Promise<Order | null> {
+    console.log('🔍 OrderRepository: findBySessionId', { sessionId });
+    
     const { data, error } = await this.supabase
       .from(this.tableName)
       .select(`
@@ -290,11 +292,19 @@ export class OrderRepository extends BaseRepository<Order> {
 
     if (error) {
       if (error.code === 'PGRST116') {
+        console.log('🔍 OrderRepository: Nie znaleziono zamówienia po sessionId');
         return null; // Not found
       }
+      console.error('❌ OrderRepository: Błąd wyszukiwania po sessionId', error);
       throw new Error(`Error finding order by session ID: ${error.message}`);
     }
 
+    console.log('✅ OrderRepository: Znaleziono zamówienie', { 
+      orderId: data?.id, 
+      orderNumber: data?.order_number,
+      p24SessionId: data?.p24_session_id 
+    });
+    
     return data ? this.mapOrderFromDB(data) : null;
   }
 
@@ -353,6 +363,8 @@ export class OrderRepository extends BaseRepository<Order> {
     p24SessionId?: string;
     p24Token?: string;
   }): Promise<void> {
+    console.log('🔄 OrderRepository: updateP24Data', { orderId, p24Data });
+    
     const { error } = await this.supabase
       .from(this.tableName)
       .update({
@@ -363,7 +375,10 @@ export class OrderRepository extends BaseRepository<Order> {
       .eq('id', orderId);
 
     if (error) {
+      console.error('❌ OrderRepository: Błąd aktualizacji P24 data', error);
       throw new Error(`Error updating P24 data: ${error.message}`);
     }
+    
+    console.log('✅ OrderRepository: P24 data zaktualizowane');
   }
 }

@@ -7,7 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { p24Service } from '@/lib/services/Przelewy24Service'
+import { env } from '@/config/env'
 import { OrderService } from '@/lib/services/OrderService'
 import { P24Error } from '@/lib/types/przelewy24'
 
@@ -15,6 +15,9 @@ const orderService = new OrderService()
 
 export async function POST(request: NextRequest) {
   try {
+    if (!env.features?.p24Enabled) {
+      return NextResponse.json({ error: 'P24 disabled' }, { status: 503 })
+    }
     console.log('🔄 P24 Register API: Rozpoczęcie rejestracji płatności')
     console.log('🔍 P24 Register API: Environment Variables Debug:')
     console.log('🔍 NODE_ENV:', process.env.NODE_ENV)
@@ -71,7 +74,8 @@ export async function POST(request: NextRequest) {
         { 
           success: false, 
           error: 'Płatność dla tego zamówienia została już zarejestrowana',
-          paymentUrl: p24Service.getPaymentUrl(order.p24Token)
+          // Tymczasowo bez zależności od serwisu; zachowaj zgodność odpowiedzi
+          paymentUrl: `${process.env.P24_API_URL_PRODUCTION?.replace('/api/v1','')}/trnRequest/${order.p24Token}`
         },
         { status: 400 }
       )
@@ -94,38 +98,11 @@ export async function POST(request: NextRequest) {
 
     console.log('🔄 P24 Register API: Dane transakcji', transactionData)
 
-    // Zarejestruj transakcję w P24
-    const result = await p24Service.registerTransaction(transactionData)
-
-    if (!result.success) {
-      console.error('❌ P24 Register API: Błąd rejestracji', result.error)
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: result.error || 'Błąd rejestracji płatności w P24' 
-        },
-        { status: 500 }
-      )
-    }
-
-    console.log('✅ P24 Register API: Transakcja zarejestrowana', {
-      token: result.token,
-      paymentUrl: result.paymentUrl
-    })
-
-    // Zaktualizuj zamówienie w bazie danych
-    await orderService.updateOrderP24Data(orderId, {
-      p24SessionId: sessionId,
-      p24Token: result.token!
-    })
-
-    // Zwróć URL płatności
-    return NextResponse.json({
-      success: true,
-      paymentUrl: result.paymentUrl,
-      token: result.token,
-      orderId: orderId
-    })
+    // Tymczasowo brak rejestracji – serwis wyłączony podczas refaktoru
+    return NextResponse.json(
+      { success: false, error: 'P24 disabled' },
+      { status: 503 }
+    )
 
   } catch (error) {
     console.error('❌ P24 Register API: Nieoczekiwany błąd', error)

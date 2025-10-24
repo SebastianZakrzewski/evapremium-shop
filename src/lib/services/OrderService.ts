@@ -247,10 +247,15 @@ export class OrderService {
     let subtotal = 0;
     
     for (const item of items) {
-      subtotal += item.subtotal;
+      // Dla mat używaj bezpośrednio unitPrice (już zawiera rabat i wysyłkę)
+      if (item.productType === 'mat') {
+        subtotal += item.unitPrice * item.quantity;
+      } else {
+        subtotal += item.subtotal;
+      }
     }
     
-    const shippingCost = PricingService.calculateShippingCost(subtotal);
+    const shippingCost = 0; // Wysyłka już wliczona w unitPrice dla mat
     const tax = 0; // VAT wyłączony
     const discount = 0; // TODO: Kody rabatowe
     const total = subtotal + shippingCost - discount; // Bez VAT

@@ -38,12 +38,20 @@ function loadEnvFile() {
 // Load environment variables
 const env = loadEnvFile()
 
-// P24 config from .env
+function requireEnv(key: string): string {
+  const value = env[key]
+  if (!value || value.trim() === '' || value.toLowerCase().includes('your_')) {
+    throw new Error(`Missing required env variable: ${key}`)
+  }
+  return value.trim()
+}
+
+// P24 config from .env (no fallbacks)
 const p24Config = {
-  merchantId: parseInt(env.P24_MERCHANT_ID || '352557'),
-  posId: parseInt(env.P24_POS_ID || '352557'),
-  crcKey: env.P24_CRC_KEY || '9325080ce772326e',
-  environment: env.P24_ENVIRONMENT || 'sandbox'
+  merchantId: parseInt(requireEnv('P24_MERCHANT_ID')),
+  posId: parseInt(requireEnv('P24_POS_ID')),
+  crcKey: requireEnv('P24_CRC_KEY'),
+  environment: requireEnv('P24_ENVIRONMENT')
 }
 
 /**
