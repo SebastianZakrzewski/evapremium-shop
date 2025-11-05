@@ -20,6 +20,7 @@ export interface DealSearchResult {
   contactId?: string;
   orderNumber?: string;
   paymentStatus?: string;
+  categoryId?: number;
 }
 
 export interface CreateDealOptions {
@@ -244,7 +245,24 @@ export class DealService {
     options: UpdateDealStageOptions
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      console.log('💼 Updating deal stage:', { id: dealId, stageId: options.stageId });
+      console.log('💼 DealService: Updating deal stage:', { 
+        id: dealId, 
+        stageId: options.stageId,
+        comment: options.comment 
+      });
+
+      // Najpierw pobierz aktualny deal aby sprawdzić kategorię
+      const currentDeal = await this.getDeal(dealId);
+      if (!currentDeal) {
+        throw new Error(`Deal not found: ${dealId}`);
+      }
+
+      console.log('🔍 DealService: Current deal info:', {
+        id: dealId,
+        currentStageId: currentDeal.stageId,
+        currentCategoryId: currentDeal.categoryId,
+        targetStageId: options.stageId
+      });
 
       const updateFields: any = {
         STAGE_ID: options.stageId
@@ -254,23 +272,61 @@ export class DealService {
         updateFields.COMMENTS = options.comment;
       }
 
+      console.log('📤 DealService: Sending update request to Bitrix24:', {
+        dealId,
+        fields: updateFields
+      });
+
       const response = await this.client.post('crm.deal.update', {
         id: dealId,
         fields: updateFields,
       });
 
+      console.log('📥 DealService: Bitrix24 API response:', {
+        dealId,
+        hasError: !!response.error,
+        error: response.error,
+        result: response.result
+      });
+
       if (response.error) {
-        throw new Error(`Bitrix24 API Error: ${response.error.error_description || response.error.error}`);
+        const errorMessage = response.error.error_description || response.error.error || 'Unknown error';
+        console.error('❌ DealService: Bitrix24 API Error:', {
+          dealId,
+          stageId: options.stageId,
+          error: response.error,
+          errorMessage
+        });
+        throw new Error(`Bitrix24 API Error: ${errorMessage}`);
       }
 
-      console.log('✅ Deal stage updated successfully:', { id: dealId, stageId: options.stageId });
+      // Zweryfikuj że stage został zaktualizowany
+      const updatedDeal = await this.getDeal(dealId);
+      if (updatedDeal && updatedDeal.stageId !== options.stageId) {
+        console.warn('⚠️ DealService: Stage verification failed:', {
+          dealId,
+          expectedStageId: options.stageId,
+          actualStageId: updatedDeal.stageId
+        });
+      }
+
+      console.log('✅ DealService: Deal stage updated successfully:', { 
+        id: dealId, 
+        stageId: options.stageId,
+        verifiedStageId: updatedDeal?.stageId
+      });
 
       return {
         success: true,
       };
 
     } catch (error) {
-      console.error('❌ Failed to update deal stage:', error);
+      console.error('❌ DealService: Failed to update deal stage:', {
+        dealId,
+        stageId: options.stageId,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -405,13 +461,14 @@ export class DealService {
         contactId: deal.CONTACT_ID,
         orderNumber: deal.ORIGIN_ID,
         paymentStatus: 'paid', // Jeśli deal istnieje, oznacza że zamówienie było opłacone
+        categoryId: deal.CATEGORY_ID ? Number(deal.CATEGORY_ID) : undefined,
       };
 
       console.log('✅ Deal found by order number:', { 
         id: result.id, 
         title: result.title, 
         stageId: result.stageId,
-        categoryId: deal.CATEGORY_ID || 'unknown'
+        categoryId: result.categoryId || 'unknown'
       });
 
       return result;
@@ -452,9 +509,15 @@ export class DealService {
         contactId: deal.CONTACT_ID,
         orderNumber: deal.UF_CRM_ORDER_NUMBER,
         paymentStatus: deal.UF_CRM_PAYMENT_STATUS,
+        categoryId: deal.CATEGORY_ID ? Number(deal.CATEGORY_ID) : undefined,
       };
 
-      console.log('✅ Deal retrieved:', { id: result.id, title: result.title });
+      console.log('✅ Deal retrieved:', { 
+        id: result.id, 
+        title: result.title,
+        stageId: result.stageId,
+        categoryId: result.categoryId
+      });
 
       return result;
 

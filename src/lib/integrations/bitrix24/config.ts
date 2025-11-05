@@ -26,8 +26,17 @@ export interface Bitrix24Config {
 }
 
 export function getBitrix24Config(): Bitrix24Config {
+  const webhookUrl = process.env.BITRIX24_WEBHOOK_URL || '';
+  
+  // Validate webhook URL - check if it's a placeholder
+  if (webhookUrl && (webhookUrl.includes('your-domain') || webhookUrl.includes('xxxxx'))) {
+    console.warn('⚠️ Bitrix24 Config: Webhook URL appears to be a placeholder!');
+    console.warn('⚠️ Bitrix24 Config: Please update BITRIX24_WEBHOOK_URL in your .env file');
+    console.warn('⚠️ Bitrix24 Config: Current URL:', webhookUrl);
+  }
+  
   return {
-    webhookUrl: process.env.BITRIX24_WEBHOOK_URL || '',
+    webhookUrl,
     enabled: process.env.BITRIX24_WEBHOOK_ENABLED === 'true',
     autoSyncOrders: process.env.BITRIX24_AUTO_SYNC_ORDERS === 'true',
     autoSyncLeads: process.env.BITRIX24_AUTO_SYNC_LEADS === 'true',
@@ -62,6 +71,10 @@ export function validateBitrix24Config(): { isValid: boolean; errors: string[] }
     errors.push('BITRIX24_WEBHOOK_URL is required');
   }
 
+  if (config.webhookUrl && (config.webhookUrl.includes('your-domain') || config.webhookUrl.includes('xxxxx'))) {
+    errors.push('BITRIX24_WEBHOOK_URL appears to be a placeholder. Please set a valid Bitrix24 webhook URL');
+  }
+
   if (config.webhookUrl && !config.webhookUrl.includes('bitrix24.com') && !config.webhookUrl.includes('bitrix24.pl')) {
     errors.push('BITRIX24_WEBHOOK_URL must be a valid Bitrix24 webhook URL');
   }
@@ -79,6 +92,13 @@ export function getBitrix24ApiUrl(method: string): string {
   const config = getBitrix24Config();
   if (!config.webhookUrl) {
     throw new Error('Bitrix24 webhook URL not configured');
+  }
+  
+  // Validate URL before using it
+  if (config.webhookUrl.includes('your-domain') || config.webhookUrl.includes('xxxxx')) {
+    const error = 'Bitrix24 webhook URL is a placeholder. Please set BITRIX24_WEBHOOK_URL in your .env file';
+    console.error('❌ Bitrix24 Config:', error);
+    throw new Error(error);
   }
   
   return `${config.webhookUrl}${method}`;

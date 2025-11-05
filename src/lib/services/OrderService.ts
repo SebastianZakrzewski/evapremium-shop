@@ -354,6 +354,33 @@ export class OrderService {
 
       await this.repository.update(orderId, updateData);
       console.log('🛒 OrderService: Order updated successfully', updateData);
+      
+      // Sprawdź czy aktualizacja się powiodła - pobierz zamówienie po aktualizacji
+      const orderAfterUpdate = await this.getOrderById(orderId);
+      console.log('🔍 OrderService: Order after update:', {
+        id: orderAfterUpdate?.id,
+        orderNumber: orderAfterUpdate?.orderNumber,
+        status: orderAfterUpdate?.status,
+        paymentStatus: orderAfterUpdate?.paymentStatus
+      });
+      
+      if (orderAfterUpdate?.paymentStatus !== status) {
+        console.error('❌ OrderService: BŁĄD - payment_status nie został zaktualizowany!', {
+          expected: status,
+          actual: orderAfterUpdate?.paymentStatus,
+          updateData
+        });
+        throw new Error(`Failed to update payment_status: expected ${status}, got ${orderAfterUpdate?.paymentStatus}`);
+      }
+      
+      if (status === 'paid' && orderAfterUpdate?.status !== 'confirmed') {
+        console.error('❌ OrderService: BŁĄD - status nie został zaktualizowany na confirmed!', {
+          expected: 'confirmed',
+          actual: orderAfterUpdate?.status,
+          updateData
+        });
+        throw new Error(`Failed to update status: expected confirmed, got ${orderAfterUpdate?.status}`);
+      }
 
       // Synchronizuj zmiany z Bitrix24
       const bitrix24Config = getBitrix24Config();
@@ -457,9 +484,6 @@ export class OrderService {
         // Zaktualizuj status deala na podstawie statusu zamówienia
         const { stageId: dealStage } = await stageMappingService.resolveStage({ type: 'order', orderStatus: order.status, paymentStatus: order.paymentStatus });
         
-        // Zaktualizuj istniejący deal
-        const dealData = mapOrderToDeal(order, contactId, { stageId: dealStage });
-        await dealService.updateDeal(existingDeal.id, dealData);
         console.log('🔄 OrderService: Updating existing deal stage:', {
           dealId: existingDeal.id,
           fromStage: existingDeal.stageId,
@@ -468,12 +492,36 @@ export class OrderService {
           paymentStatus: order.paymentStatus
         });
         
-        await dealService.updateDealStage(existingDeal.id, {
+        // Zaktualizuj istniejący deal (pola poza stage)
+        const dealData = mapOrderToDeal(order, contactId, { stageId: dealStage });
+        const updateDealResult = await dealService.updateDeal(existingDeal.id, dealData);
+        if (!updateDealResult.success) {
+          console.error('❌ OrderService: Failed to update deal fields:', updateDealResult.error);
+        }
+        
+        // Aktualizuj stage deala (wymaga osobnego wywołania)
+        const updateStageResult = await dealService.updateDealStage(existingDeal.id, {
           stageId: dealStage,
           comment: `Zamówienie zaktualizowane: ${order.status} (płatność: ${order.paymentStatus})`
         });
 
-        console.log('✅ OrderService: Deal updated successfully');
+        if (!updateStageResult.success) {
+          console.error('❌ OrderService: Failed to update deal stage:', {
+            dealId: existingDeal.id,
+            stageId: dealStage,
+            error: updateStageResult.error,
+            orderStatus: order.status,
+            paymentStatus: order.paymentStatus
+          });
+          throw new Error(`Failed to update deal stage: ${updateStageResult.error}`);
+        }
+
+        console.log('✅ OrderService: Deal updated successfully:', {
+          dealId: existingDeal.id,
+          stageId: dealStage,
+          orderStatus: order.status,
+          paymentStatus: order.paymentStatus
+        });
         return;
       }
 

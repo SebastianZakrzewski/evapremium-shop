@@ -29,7 +29,7 @@ export class OrderRepository extends BaseRepository<Order> {
   }
 
   // Mapuj dane z bazy (snake_case) na camelCase
-  private mapOrderFromDB(data: any): Order {
+  mapOrderFromDB(data: any): Order {
     return {
       ...data,
       orderNumber: data.order_number,
@@ -41,8 +41,8 @@ export class OrderRepository extends BaseRepository<Order> {
       shippingCost: data.shipping_cost,
       shippedAt: data.shipped_at ? new Date(data.shipped_at) : undefined,
       deliveredAt: data.delivered_at ? new Date(data.delivered_at) : undefined,
-      createdAt: new Date(data.created_at),
-      updatedAt: new Date(data.updated_at),
+      createdAt: data.created_at ? new Date(data.created_at) : new Date(),
+      updatedAt: data.updated_at ? new Date(data.updated_at) : new Date(),
       p24SessionId: data.p24_session_id,
       p24OrderId: data.p24_order_id,
       p24TransactionId: data.p24_transaction_id,
@@ -236,6 +236,41 @@ export class OrderRepository extends BaseRepository<Order> {
     }
 
     return data ? this.mapOrderFromDB(data) : null;
+  }
+
+  /**
+   * Nadpisuje update() aby zwracał zamapowane dane z order_items
+   */
+  async update(id: string, data: any): Promise<Order> {
+    console.log('🔍 OrderRepository: update called', { id, data });
+    
+    const { data: result, error } = await this.supabase
+      .from(this.tableName)
+      .update(data)
+      .eq('id', id)
+      .select(`
+        *,
+        order_items(*)
+      `)
+      .single();
+
+    if (error) {
+      console.error('❌ OrderRepository: Error updating order', error);
+      throw new Error(`Error updating order: ${error.message}`);
+    }
+
+    if (!result) {
+      throw new Error(`Order not found after update: ${id}`);
+    }
+
+    console.log('✅ OrderRepository: Order updated successfully', {
+      id: result.id,
+      orderNumber: result.order_number,
+      status: result.status,
+      payment_status: result.payment_status
+    });
+
+    return this.mapOrderFromDB(result);
   }
 
   async countOrdersThisYear(): Promise<number> {

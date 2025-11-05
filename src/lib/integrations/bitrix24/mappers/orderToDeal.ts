@@ -253,7 +253,17 @@ function buildDealComments(order: Order): string {
   const comments: string[] = [];
   
   comments.push(`Zamówienie: ${order.orderNumber}`);
-  comments.push(`Data: ${order.createdAt.toISOString().split('T')[0]}`);
+  
+  // Safe date formatting - handle missing createdAt
+  if (order.createdAt && order.createdAt instanceof Date && !isNaN(order.createdAt.getTime())) {
+    comments.push(`Data: ${order.createdAt.toISOString().split('T')[0]}`);
+  } else {
+    // Fallback to current date if createdAt is missing or invalid
+    const fallbackDate = new Date().toISOString().split('T')[0];
+    comments.push(`Data: ${fallbackDate}`);
+    console.warn('⚠️ buildDealComments: order.createdAt is missing or invalid, using current date');
+  }
+  
   comments.push(`Wartość: ${order.total} PLN`);
   comments.push(`Status płatności: ${order.paymentStatus}`);
   
