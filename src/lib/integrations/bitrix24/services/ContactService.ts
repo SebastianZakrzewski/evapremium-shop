@@ -77,7 +77,9 @@ export class ContactService {
       }
 
       // Bitrix24 returns contact ID directly as result, not as result.id
-      const contactId = response.result;
+      const contactId = typeof response.result === 'string' || typeof response.result === 'number' 
+        ? String(response.result) 
+        : response.result?.id ? String(response.result.id) : null;
       
       console.log('🔍 Contact creation response analysis:', {
         hasResult: !!response.result,
