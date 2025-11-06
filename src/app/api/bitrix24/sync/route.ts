@@ -318,7 +318,6 @@ async function syncOrderToBitrix24(order: any): Promise<void> {
     console.log('🔍 Bitrix24 configuration check:', {
       enabled: bitrix24Config.enabled,
       hasWebhookUrl: !!bitrix24Config.webhookUrl,
-      hasApiUrl: !!bitrix24Config.apiUrl,
       config: bitrix24Config
     });
 
