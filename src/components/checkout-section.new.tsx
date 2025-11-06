@@ -34,7 +34,6 @@ import { useCart } from '@/hooks/useCart.new';
 import { useOrder } from '@/hooks/useOrder.new';
 import { CreateOrderDTO } from '@/lib/types/order-new';
 import { PricingService } from '@/lib/services/PricingService';
-import { Przelewy24Service } from '@/lib/services/Przelewy24Service';
 import { debugLog } from '@/lib/config/features';
 import { useAbandonedCartHeartbeat } from '@/hooks/useAbandonedCartHeartbeat';
 import { HybridSessionManager } from '@/lib/utils/hybrid-session-manager';
@@ -179,22 +178,38 @@ export default function CheckoutSectionNew() {
 
   // Heartbeat tylko na kroku 2 (adres): 15 min okno, interwał 30s
   const cartHasItems = items.length > 0;
-  useAbandonedCartHeartbeat(currentStep === 2 && cartHasItems, () => ({
-    sessionId,
-    stage: 'checkout_step2',
-    cartHasItems: items.length > 0,
-    contact: {
-      firstName: contactFirstName,
-      lastName: contactLastName,
-      email: contactEmail,
-      phone: contactPhone,
-    },
-    items: items.map(i => ({ productId: i.productId, productName: i.productName, quantity: i.quantity, price: i.unitPrice, currency: 'PLN' })),
-    currency: 'PLN',
-    totalAmount: total,
-    metadata: { checkoutStep: 2 },
-    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
-  }), { intervalMs: 30000 });
+  
+  // Get sessionId dynamically in buildPayload to ensure it's always current
+  useAbandonedCartHeartbeat(currentStep === 2 && cartHasItems, () => {
+    const currentSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : '';
+    
+    if (!currentSessionId || currentSessionId.length < 8) {
+      console.warn('[CheckoutSection] Invalid sessionId for heartbeat', { sessionId: currentSessionId });
+    }
+    
+    return {
+      sessionId: currentSessionId,
+      stage: 'checkout_step2',
+      cartHasItems: items.length > 0,
+      contact: {
+        firstName: contactFirstName,
+        lastName: contactLastName,
+        email: contactEmail,
+        phone: contactPhone,
+      },
+      items: items.map(i => ({ 
+        productId: i.productId, 
+        productName: i.productName, 
+        quantity: i.quantity, 
+        price: i.unitPrice, 
+        currency: 'PLN' 
+      })),
+      currency: 'PLN',
+      totalAmount: total,
+      metadata: { checkoutStep: 2 },
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+    };
+  }, { intervalMs: 30000 });
 
   const {
     register,
@@ -400,51 +415,31 @@ export default function CheckoutSectionNew() {
       // Sprawdź metodę płatności
       if (data.paymentMethod === 'p24') {
         try {
-          console.log('🔄 Starting P24 payment registration via direct service call...');
-          console.log('🔍 P24 Direct Service Debug Info:');
+          console.log('🔄 Starting P24 payment registration via API endpoint...');
+          console.log('🔍 P24 API Debug Info:');
           console.log('🔍 Order ID:', order.id);
           console.log('🔍 Order Total:', order.total);
           console.log('🔍 Customer Email:', data.email);
           console.log('🔍 Payment Method:', data.paymentMethod);
-          console.log('🔍 Direct Service Call:', true);
-          console.log('🔍 Environment:', process.env.NODE_ENV);
-          console.log('🔍 Vercel:', process.env.VERCEL);
-          console.log('🔍 Vercel Env:', process.env.VERCEL_ENV);
           
-          // Wywołaj bezpośrednio funkcję serwisu Przelewy24
-          const p24Service = new Przelewy24Service();
+          // Wywołaj API endpoint dla rejestracji płatności P24
+          const response = await fetch('/api/payments/p24/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId: order.id })
+          });
           
-          const sessionId = `eva_${order.orderNumber}_${Date.now()}`.substring(0, 100);
-          const transactionData = {
-            sessionId: sessionId,
-            amount: Number(order.total),
-            currency: 'PLN',
-            description: `Zamówienie ${order.orderNumber} - Dywaniki EVA`,
-            email: data.email || '',
-            country: 'PL'
-          };
-
-          console.log('🔍 P24 Service: Transaction data:', transactionData);
+          const result = await response.json();
           
-          const result = await p24Service.registerTransaction(transactionData);
-
+          if (!response.ok) {
+            throw new Error(result.error || `HTTP ${response.status}: ${response.statusText}`);
+          }
+         
           if (!result.success) {
             throw new Error(result.error || 'Błąd rejestracji płatności');
           }
 
-          console.log('✅ P24 payment registered via direct service call:', result.paymentUrl);
-          
-          // Zapisz dane P24 w zamówieniu
-          await fetch(`/api/orders/${order.id}/p24`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              p24SessionId: sessionId,
-              p24Token: result.token
-            })
-          });
+          console.log('✅ P24 payment registered via API endpoint:', result.paymentUrl);
           
           // Wyczyść koszyk po udanej rejestracji
           clearCart();
@@ -456,7 +451,7 @@ export default function CheckoutSectionNew() {
             throw new Error('Brak URL płatności w odpowiedzi');
           }
           return;
-
+        
         } catch (error) {
           console.error('❌ P24 payment error:', error);
           setErrorMessage(`Błąd płatności: ${error instanceof Error ? error.message : 'Nieznany błąd'}`);

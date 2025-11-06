@@ -238,6 +238,67 @@ export class ContactService {
   }
 
   /**
+   * Create or find contact from abandoned cart data
+   */
+  async createOrFindContactFromAbandonedCart(
+    cart: any
+  ): Promise<{ id: string | null; created: boolean; error?: string }> {
+    try {
+      const contact = cart.contact || {};
+      
+      // Build contact data from cart
+      const contactData: Bitrix24Contact = {
+        NAME: contact.firstName || '',
+        LAST_NAME: contact.lastName || '',
+        EMAIL: contact.email ? [{ VALUE: contact.email, VALUE_TYPE: 'WORK' }] : undefined,
+        PHONE: contact.phone ? [{ VALUE: contact.phone, VALUE_TYPE: 'WORK' }] : undefined,
+        SOURCE_ID: 'WEB',
+        SOURCE_DESCRIPTION: 'EVA Website - Porzucony koszyk',
+      };
+
+      // Extract UTM data if available
+      if (cart.utm) {
+        if (cart.utm.source) contactData.UTM_SOURCE = String(cart.utm.source);
+        if (cart.utm.medium) contactData.UTM_MEDIUM = String(cart.utm.medium);
+        if (cart.utm.campaign) contactData.UTM_CAMPAIGN = String(cart.utm.campaign);
+      }
+
+      // Validate we have at least name and email or phone
+      if (!contactData.NAME || (!contactData.EMAIL?.length && !contactData.PHONE?.length)) {
+        console.warn('[ContactService] Insufficient contact data for abandoned cart', { 
+          hasName: !!contactData.NAME,
+          hasEmail: !!contactData.EMAIL?.length,
+          hasPhone: !!contactData.PHONE?.length
+        });
+        return { id: null, created: false, error: 'Insufficient contact data' };
+      }
+
+      // Use existing findOrCreateContact method
+      const result = await this.findOrCreateContact(contactData, {
+        sourceId: 'WEB',
+        sourceDescription: 'EVA Website - Porzucony koszyk',
+        utmSource: contactData.UTM_SOURCE,
+        utmMedium: contactData.UTM_MEDIUM,
+        utmCampaign: contactData.UTM_CAMPAIGN,
+      });
+
+      return {
+        id: result.id || null,
+        created: result.created,
+        error: result.error,
+      };
+
+    } catch (error) {
+      console.error('[ContactService] Failed to create or find contact from abandoned cart:', error);
+      return {
+        id: null,
+        created: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      };
+    }
+  }
+
+  /**
    * Find contact by email or phone (create if not found)
    */
   async findOrCreateContact(

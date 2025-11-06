@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 
 type BuildPayload = () => {
   sessionId: string;
+  stage?: string;
+  cartHasItems?: boolean;
   utm?: Record<string, unknown>;
   contact?: Record<string, unknown>;
   car?: Record<string, unknown>;
@@ -21,13 +23,19 @@ interface Options {
 export function useAbandonedCartHeartbeat(active: boolean, buildPayload: BuildPayload, options: Options = {}) {
   const { intervalMs = 30000 } = options;
   const timerRef = useRef<number | null>(null);
+  
+  // Store buildPayload in ref to avoid recreating effect on every render
+  const buildPayloadRef = useRef<BuildPayload>(buildPayload);
+  useEffect(() => {
+    buildPayloadRef.current = buildPayload;
+  }, [buildPayload]);
 
   useEffect(() => {
     if (!active) return;
 
     const send = async () => {
       try {
-        const payload = buildPayload();
+        const payload = buildPayloadRef.current();
         if (!payload || !payload.sessionId) return;
         await fetch('/api/abandoned-carts', {
           method: 'POST',
@@ -49,12 +57,37 @@ export function useAbandonedCartHeartbeat(active: boolean, buildPayload: BuildPa
     // pagehide/beforeunload via beacon
     const onPageHide = () => {
       try {
-        const payload = buildPayload();
-        if (!payload || !payload.sessionId) return;
-        const blob = new Blob([JSON.stringify({ ...payload, event: 'pagehide' })], { type: 'application/json' });
-        navigator.sendBeacon('/api/abandoned-carts/webhook', blob);
-      } catch (_) {
-        // ignore
+        const payload = buildPayloadRef.current();
+        if (!payload || !payload.sessionId) {
+          console.warn('[AbandonedCart:Heartbeat] Cannot send beacon: missing payload or sessionId');
+          return;
+        }
+        
+        const webhookPayload = { ...payload, event: 'pagehide' };
+        console.log('[AbandonedCart:Heartbeat] Sending beacon on pagehide', { 
+          sessionId: payload.sessionId?.substring(0, 8) + '...',
+          stage: payload.stage,
+          cartHasItems: payload.cartHasItems,
+          itemsCount: payload.items?.length || 0
+        });
+        
+        const blob = new Blob([JSON.stringify(webhookPayload)], { type: 'application/json' });
+        const sent = navigator.sendBeacon('/api/abandoned-carts/webhook', blob);
+        
+        if (!sent) {
+          console.warn('[AbandonedCart:Heartbeat] sendBeacon failed - browser rejected');
+          // Fallback: try fetch with keepalive
+          fetch('/api/abandoned-carts/webhook', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(webhookPayload),
+            keepalive: true,
+          }).catch(() => {
+            // Ignore errors - page is unloading
+          });
+        }
+      } catch (error) {
+        console.error('[AbandonedCart:Heartbeat] Error in onPageHide', error);
       }
     };
 
@@ -69,7 +102,7 @@ export function useAbandonedCartHeartbeat(active: boolean, buildPayload: BuildPa
       window.removeEventListener('pagehide', onPageHide);
       window.removeEventListener('beforeunload', onPageHide);
     };
-  }, [active, buildPayload, intervalMs]);
+  }, [active, intervalMs]); // Removed buildPayload from dependencies
 }
 
 

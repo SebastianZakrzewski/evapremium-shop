@@ -6,8 +6,9 @@
 
 import { Bitrix24Client } from '../client';
 import { bitrix24Config } from '../config';
-import type { AbandonedCartRecord } from '@/lib/types/abandonedCart';
+import type { AbandonedCartRecord, AbandonedCartItem } from '@/lib/types/abandonedCart';
 import { stageMappingService } from './StageMappingService';
+import { contactService } from './ContactService';
 import { Bitrix24Deal, Bitrix24DealProduct, Bitrix24ApiResponse } from '@/lib/types/bitrix';
 import { validateBitrix24Deal, validateBitrix24DealProduct } from '@/lib/validators/bitrix24';
 
@@ -85,26 +86,87 @@ export class DealService {
   async createDealForAbandonedCart(cart: AbandonedCartRecord): Promise<{ id: string; success: boolean; error?: string }> {
     const { categoryId, stageId } = await stageMappingService.resolveStage({ type: 'abandoned_cart' });
 
+    // 1. Create or find contact
+    let contactId: string | null = null;
+    try {
+      const contactResult = await contactService.createOrFindContactFromAbandonedCart(cart);
+      if (contactResult.id) {
+        contactId = contactResult.id;
+        console.log('[DealService] Contact resolved for abandoned cart', { 
+          contactId, 
+          created: contactResult.created 
+        });
+      } else {
+        console.warn('[DealService] Could not create/find contact for abandoned cart', contactResult.error);
+      }
+    } catch (error) {
+      console.error('[DealService] Error creating/finding contact for abandoned cart', error);
+      // Continue without contact - deal will still be created
+    }
+
+    // 2. Build deal title
     const titleParts: string[] = ['[Porzucony koszyk]'];
     if (cart.car?.make) titleParts.push(String(cart.car.make));
     if (cart.car?.model) titleParts.push(String(cart.car.model));
     const title = titleParts.join(' ');
 
+    // 3. Build comments with product details
     const commentsLines: string[] = [];
+    
+    // Add contact information
+    if (cart.contact) {
+      const c = cart.contact;
+      if (c.firstName || c.lastName) {
+        commentsLines.push(`Kontakt: ${c.firstName || ''} ${c.lastName || ''}`.trim());
+      }
+      if (c.email) commentsLines.push(`Email: ${c.email}`);
+      if (c.phone) commentsLines.push(`Telefon: ${c.phone}`);
+    }
+
+    // Add car information
+    if (cart.car) {
+      const carParts: string[] = [];
+      if (cart.car.make) carParts.push(cart.car.make);
+      if (cart.car.model) carParts.push(cart.car.model);
+      if (cart.car.year) carParts.push(String(cart.car.year));
+      if (cart.car.bodyType) carParts.push(cart.car.bodyType);
+      if (carParts.length > 0) {
+        commentsLines.push(`Samochód: ${carParts.join(' ')}`);
+      }
+    }
+
+    // Add product details
+    if (cart.items && cart.items.length > 0) {
+      commentsLines.push('--- Produkty ---');
+      cart.items.forEach((item, index) => {
+        const itemLines: string[] = [];
+        itemLines.push(`${index + 1}. ${item.productName || 'Produkt'}`);
+        if (item.quantity) itemLines.push(`Ilość: ${item.quantity}`);
+        if (item.price) itemLines.push(`Cena: ${item.price} ${item.currency || 'PLN'}`);
+        if (item.productType) itemLines.push(`Typ: ${item.productType}`);
+        commentsLines.push(itemLines.join(', '));
+      });
+      commentsLines.push('---');
+    }
+
+    // Add configuration details
     if (cart.configuration) {
       const c = cart.configuration;
       commentsLines.push(`Konfiguracja: variant=${String(c.variant ?? '')}, setType=${String(c.setType ?? '')}, cellShape=${String(c.cellShape ?? '')}`);
       commentsLines.push(`Kolory: material=${String(c.materialColor ?? '')}, trim=${String(c.trimColor ?? '')}`);
     }
+
+    // Add UTM and session
     if (cart.utm && Object.keys(cart.utm).length > 0) {
       commentsLines.push(`UTM: ${JSON.stringify(cart.utm)}`);
     }
     commentsLines.push(`Session: ${cart.session_id}`);
+    commentsLines.push(`Wartość całkowita: ${cart.total_amount || 0} ${cart.currency || 'PLN'}`);
 
     const deal: Bitrix24Deal = {
       TITLE: title,
-      STAGE_ID: stageId, // np. C2:UC_SNZYJF (Porzucone Koszyki)
-      CATEGORY_ID: categoryId, // np. 2 (Leady z Reklam)
+      STAGE_ID: stageId,
+      CATEGORY_ID: categoryId,
       OPPORTUNITY: Number(cart.total_amount || 0),
       CURRENCY_ID: cart.currency || 'PLN',
       SOURCE_ID: 'WEB',
@@ -112,9 +174,69 @@ export class DealService {
       ORIGINATOR_ID: 'EVA Website',
       ORIGIN_ID: cart.id,
       COMMENTS: commentsLines.join('\n'),
+      CONTACT_ID: contactId || undefined, // Add contact if available
     } as any;
 
-    return this.createDeal(deal, { stageId });
+    // 4. Create deal
+    const dealResult = await this.createDeal(deal, { 
+      stageId,
+      contactId: contactId || undefined,
+    });
+
+    if (!dealResult.success || !dealResult.id) {
+      return dealResult;
+    }
+
+    // 5. Add products to deal
+    if (cart.items && cart.items.length > 0) {
+      try {
+        const products = this.mapAbandonedCartItemsToDealProducts(cart.items);
+        if (products.length > 0) {
+          const productResult = await this.addProductsToDeal(dealResult.id, products);
+          if (!productResult.success) {
+            console.warn('[DealService] Failed to add products to deal, but deal was created', {
+              dealId: dealResult.id,
+              error: productResult.error
+            });
+          }
+        }
+      } catch (error) {
+        console.error('[DealService] Error adding products to deal', error);
+        // Don't fail the whole operation if products fail to add
+      }
+    }
+
+    // 6. Link contact if not already linked (double-check)
+    if (contactId) {
+      try {
+        // Contact is already set in CONTACT_ID above, but ensure it's linked
+        const linkResult = await this.linkContact(dealResult.id, contactId);
+        if (!linkResult.success) {
+          console.warn('[DealService] Failed to link contact to deal, but deal was created', {
+            dealId: dealResult.id,
+            contactId,
+            error: linkResult.error
+          });
+        }
+      } catch (error) {
+        console.warn('[DealService] Error linking contact to deal', { dealId: dealResult.id, contactId, error });
+      }
+    }
+
+    return dealResult;
+  }
+
+  /**
+   * Map abandoned cart items to Bitrix24 deal products
+   */
+  private mapAbandonedCartItemsToDealProducts(items: AbandonedCartItem[]): Bitrix24DealProduct[] {
+    return items
+      .filter(item => item && (item.productName || item.productId))
+      .map(item => ({
+        PRODUCT_ID: item.productId || item.productName || 'Produkt', // Bitrix24 uses PRODUCT_ID, can be name if product doesn't exist in catalog
+        QUANTITY: item.quantity || 1,
+        PRICE: Number(item.price || 0),
+      }));
   }
 
   /**
