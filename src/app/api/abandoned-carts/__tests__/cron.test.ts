@@ -23,7 +23,7 @@ vi.mock('@supabase/supabase-js', () => {
   }
 
   function table(name: string) {
-    let filters: any[] = [];
+    const filters: any[] = [];
     let limitVal: number | null = null;
     const api: any = {
       select: (_: any = '*') => api,

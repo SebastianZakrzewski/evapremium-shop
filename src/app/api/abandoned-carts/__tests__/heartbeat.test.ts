@@ -23,7 +23,7 @@ vi.mock('@supabase/supabase-js', () => {
   }
 
   function table(name: string) {
-    let filters: any[] = [];
+    const filters: any[] = [];
     let orderBy: { key: string; asc: boolean } | null = null;
     let limitVal: number | null = null;
 
