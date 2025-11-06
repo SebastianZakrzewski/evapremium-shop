@@ -441,6 +441,13 @@ export default function CheckoutSectionNew() {
 
           console.log('✅ P24 payment registered via API endpoint:', result.paymentUrl);
           
+          // Zapisz orderId w sessionStorage przed przekierowaniem do P24
+          // P24 może nie przekazać parametrów w URL, więc potrzebujemy fallback
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem('pending_order_id', order.id);
+            console.log('💾 Saved orderId to sessionStorage:', order.id);
+          }
+          
           // Wyczyść koszyk po udanej rejestracji
           clearCart();
           

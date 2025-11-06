@@ -17,45 +17,111 @@ interface PaymentStatus {
   p24OrderId?: string; // Zmienione z number na string - P24 zwraca bardzo długie ID
   p24MethodId?: number;
   total?: number;
-  customer?: any;
-  items?: any[];
+  subtotal?: number;
+  shippingCost?: number;
+  tax?: number;
+  discount?: number;
+  customer?: {
+    name?: string;
+    email?: string;
+    phone?: string;
+    company?: string;
+  };
+  shippingAddress?: {
+    street?: string;
+    city?: string;
+    postalCode?: string;
+    country?: string;
+  };
+  billingAddress?: {
+    street?: string;
+    city?: string;
+    postalCode?: string;
+    country?: string;
+  };
+  paymentMethod?: string;
+  orderStatus?: string;
+  paymentStatus?: string;
+  trackingNumber?: string;
+  notes?: string;
+  createdAt?: string;
+  items?: Array<{
+    id?: string;
+    productName?: string;
+    quantity?: number;
+    unitPrice?: number;
+    subtotal?: number;
+    productType?: string;
+    configuration?: any;
+  }>;
 }
 
 export function PaymentSuccess() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('orderId');
   const sessionId = searchParams.get('sessionId');
+  const p24SessionId = searchParams.get('p24_session_id'); // Parametr z Przelewy24
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Sprawdź czy mamy orderId lub sessionId
-    if (!orderId && !sessionId) {
-      // Zamiast błędu, pokaż domyślną stronę sukcesu
-      setPaymentStatus({
-        status: 'paid',
-        orderId: 'demo',
-        orderNumber: 'DEMO-' + Date.now(),
-        total: 0,
-        customer: { email: 'demo@evapremium.pl' },
-        items: []
-      });
+    // Sprawdź czy mamy orderId, sessionId lub p24_session_id
+    let identifier = orderId || sessionId || p24SessionId;
+    
+    // Fallback: Sprawdź sessionStorage (gdzie zapisujemy orderId przed przekierowaniem do P24)
+    if (!identifier && typeof window !== 'undefined') {
+      const savedOrderId = sessionStorage.getItem('pending_order_id');
+      if (savedOrderId) {
+        console.log('🔍 PaymentSuccess: Found orderId in sessionStorage:', savedOrderId);
+        identifier = savedOrderId;
+      }
+    }
+    
+    if (!identifier) {
+      // Jeśli nie ma żadnych parametrów, pokaż błąd zamiast danych demo
+      setError('Brak identyfikatora zamówienia. Skontaktuj się z nami jeśli problem się powtarza.');
       setLoading(false);
       return;
     }
 
-    checkPaymentStatus();
-  }, [orderId, sessionId]);
+    checkPaymentStatus(identifier);
+  }, [orderId, sessionId, p24SessionId]);
 
-  const checkPaymentStatus = async () => {
+  const checkPaymentStatus = async (identifier: string) => {
     try {
       setLoading(true);
+      setError(null);
       
-      // Pobierz szczegóły zamówienia
-      const response = await fetch(`/api/orders/${orderId || sessionId}`);
+      console.log('🔍 PaymentSuccess: Fetching order with identifier:', identifier);
+      
+      // Spróbuj pobrać zamówienie
+      // Jeśli to p24_session_id, może być w formacie "eva_ORD-2025-000002_timestamp"
+      // więc spróbuj najpierw po sessionId, a jeśli nie znajdzie, spróbuj wyciągnąć orderNumber
+      let response;
+      
+      if (p24SessionId || identifier.includes('_')) {
+        // Najpierw spróbuj po sessionId (pełny format P24)
+        response = await fetch(`/api/orders/${identifier}`);
+        
+        // Jeśli nie znaleziono, spróbuj wyciągnąć orderNumber z sessionId
+        if (!response.ok) {
+          const sessionIdParts = identifier.split('_');
+          if (sessionIdParts.length >= 2) {
+            const orderNumber = sessionIdParts[1];
+            console.log('🔍 PaymentSuccess: Trying orderNumber from sessionId:', orderNumber);
+            response = await fetch(`/api/orders/${orderNumber}`);
+          }
+        }
+      } else {
+        // Dla orderId lub sessionId, użyj bezpośrednio
+        response = await fetch(`/api/orders/${identifier}`);
+      }
       
       if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Zamówienie nie zostało znalezione. Sprawdź czy płatność została zakończona pomyślnie.');
+        }
         throw new Error('Nie udało się pobrać szczegółów zamówienia');
       }
 
@@ -63,25 +129,60 @@ export function PaymentSuccess() {
       
       if (data.success) {
         const order = data.data;
+        console.log('✅ PaymentSuccess: Order fetched successfully:', {
+          orderNumber: order.orderNumber,
+          paymentStatus: order.paymentStatus,
+          status: order.status
+        });
+        
+        // Wyczyść sessionStorage po pomyślnym pobraniu zamówienia
+        if (typeof window !== 'undefined') {
+          sessionStorage.removeItem('pending_order_id');
+        }
+        
         setPaymentStatus({
-          status: order.paymentStatus,
+          status: order.paymentStatus || 'pending',
           orderId: order.id,
           orderNumber: order.orderNumber,
           p24OrderId: order.p24OrderId,
           p24MethodId: order.p24MethodId,
-          total: Number(order.total),
+          total: Number(order.total || 0),
+          subtotal: Number(order.subtotal || 0),
+          shippingCost: Number(order.shippingCost || 0),
+          tax: Number(order.tax || 0),
+          discount: Number(order.discount || 0),
           customer: order.customer,
-          items: order.items
+          shippingAddress: order.shippingAddress,
+          billingAddress: order.billingAddress,
+          paymentMethod: order.paymentMethod,
+          orderStatus: order.status,
+          paymentStatus: order.paymentStatus,
+          trackingNumber: order.trackingNumber,
+          notes: order.notes,
+          createdAt: order.createdAt,
+          items: order.items || []
         });
       } else {
         throw new Error(data.error || 'Błąd podczas pobierania zamówienia');
       }
     } catch (err) {
-      console.error('Error checking payment status:', err);
+      console.error('❌ PaymentSuccess: Error checking payment status:', err);
       setError(err instanceof Error ? err.message : 'Nieznany błąd');
     } finally {
       setLoading(false);
     }
+  };
+
+  const getPaymentMethodLabel = (method?: string) => {
+    if (!method) return 'Nie określono';
+    const labels: Record<string, string> = {
+      'card': 'Karta płatnicza',
+      'transfer': 'Przelew bankowy',
+      'blik': 'BLIK',
+      'przelewy24': 'Przelewy24',
+      'cash': 'Gotówka',
+    };
+    return labels[method.toLowerCase()] || method;
   };
 
   const getStatusIcon = (status: string) => {
@@ -297,10 +398,7 @@ export function PaymentSuccess() {
                         Dziękujemy! Płatność potwierdzona!
                       </h3>
                       <p className="text-green-300 text-sm">
-                        {paymentStatus.orderId === 'demo' 
-                          ? 'Dziękujemy za zainteresowanie naszymi produktami! To jest przykładowa strona sukcesu.'
-                          : 'Dziękujemy za zakup! Twoje zamówienie zostało pomyślnie opłacone. Otrzymasz potwierdzenie na adres email.'
-                        }
+                        Dziękujemy za zakup! Twoje zamówienie zostało pomyślnie opłacone. Otrzymasz potwierdzenie na adres email.
                       </p>
                     </div>
                     
@@ -310,21 +408,10 @@ export function PaymentSuccess() {
                         Co dalej?
                       </h4>
                       <ul className="text-red-300 text-sm space-y-2">
-                        {paymentStatus.orderId === 'demo' ? (
-                          <>
-                            <li>• Przejdź do konfiguratora i skonfiguruj swoje dywaniki</li>
-                            <li>• Wybierz markę, model i rok produkcji swojego auta</li>
-                            <li>• Dostosuj kolory i materiały do swoich preferencji</li>
-                            <li>• Dodaj produkty do koszyka i złoż zamówienie</li>
-                          </>
-                        ) : (
-                          <>
-                            <li>• Otrzymasz email z potwierdzeniem zamówienia</li>
-                            <li>• Twoje dywaniki zostaną przygotowane w ciągu 1-2 dni</li>
-                            <li>• Otrzymasz informację o wysyłce</li>
-                            <li>• Czas dostawy: 2-3 dni robocze</li>
-                          </>
-                        )}
+                        <li>• Otrzymasz email z potwierdzeniem zamówienia</li>
+                        <li>• Twoje dywaniki zostaną przygotowane w ciągu 1-2 dni</li>
+                        <li>• Otrzymasz informację o wysyłce</li>
+                        <li>• Czas dostawy: 2-3 dni robocze</li>
                       </ul>
                     </div>
                   </div>
@@ -377,13 +464,53 @@ export function PaymentSuccess() {
                 </h4>
                 
                 <div className="space-y-3 text-sm">
+                  {/* Numer zamówienia */}
                   {paymentStatus.orderNumber && (
                     <div className="flex justify-between items-center py-2 border-b border-neutral-700">
                       <span className="text-white/70">Numer zamówienia:</span>
-                      <span className="text-white font-mono">{paymentStatus.orderNumber}</span>
+                      <span className="text-white font-mono font-semibold">{paymentStatus.orderNumber}</span>
                     </div>
                   )}
                   
+                  {/* Status zamówienia */}
+                  {paymentStatus.orderStatus && (
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-700">
+                      <span className="text-white/70">Status zamówienia:</span>
+                      <Badge className="bg-blue-900/30 text-blue-400 border-blue-500/30 px-2 py-1 text-xs">
+                        {paymentStatus.orderStatus === 'pending' && 'Oczekujące'}
+                        {paymentStatus.orderStatus === 'confirmed' && 'Potwierdzone'}
+                        {paymentStatus.orderStatus === 'processing' && 'W realizacji'}
+                        {paymentStatus.orderStatus === 'shipped' && 'Wysłane'}
+                        {paymentStatus.orderStatus === 'delivered' && 'Dostarczone'}
+                        {paymentStatus.orderStatus === 'cancelled' && 'Anulowane'}
+                        {!['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'].includes(paymentStatus.orderStatus) && paymentStatus.orderStatus}
+                      </Badge>
+                    </div>
+                  )}
+
+                  {/* Status płatności */}
+                  {paymentStatus.paymentStatus && (
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-700">
+                      <span className="text-white/70">Status płatności:</span>
+                      <Badge className="bg-green-900/30 text-green-400 border-green-500/30 px-2 py-1 text-xs">
+                        {paymentStatus.paymentStatus === 'paid' && 'Opłacone'}
+                        {paymentStatus.paymentStatus === 'pending' && 'Oczekujące'}
+                        {paymentStatus.paymentStatus === 'failed' && 'Nieudane'}
+                        {paymentStatus.paymentStatus === 'refunded' && 'Zwrócone'}
+                        {!['paid', 'pending', 'failed', 'refunded'].includes(paymentStatus.paymentStatus) && paymentStatus.paymentStatus}
+                      </Badge>
+                    </div>
+                  )}
+
+                  {/* Metoda płatności */}
+                  {paymentStatus.paymentMethod && (
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-700">
+                      <span className="text-white/70">Metoda płatności:</span>
+                      <span className="text-white">{getPaymentMethodLabel(paymentStatus.paymentMethod)}</span>
+                    </div>
+                  )}
+
+                  {/* ID zamówienia */}
                   {paymentStatus.orderId && (
                     <div className="flex justify-between items-center py-2 border-b border-neutral-700">
                       <span className="text-white/70">ID zamówienia:</span>
@@ -391,37 +518,201 @@ export function PaymentSuccess() {
                     </div>
                   )}
                   
+                  {/* ID transakcji P24 */}
                   {paymentStatus.p24OrderId && (
                     <div className="flex justify-between items-center py-2 border-b border-neutral-700">
                       <span className="text-white/70">ID transakcji P24:</span>
-                      <span className="text-white font-mono">{paymentStatus.p24OrderId}</span>
+                      <span className="text-white font-mono text-xs">{paymentStatus.p24OrderId}</span>
                     </div>
                   )}
-                  
-                  {paymentStatus.total && (
+
+                  {/* Data utworzenia */}
+                  {paymentStatus.createdAt && (
                     <div className="flex justify-between items-center py-2 border-b border-neutral-700">
-                      <span className="text-white/70">Kwota:</span>
-                      <span className="text-red-400 font-bold text-lg">{paymentStatus.total.toFixed(2)} zł</span>
+                      <span className="text-white/70">Data zamówienia:</span>
+                      <span className="text-white text-xs">
+                        {new Date(paymentStatus.createdAt).toLocaleString('pl-PL', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
                     </div>
                   )}
-                  
-                  {paymentStatus.customer && (
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-white/70">Email:</span>
-                      <span className="text-white">{paymentStatus.customer.email}</span>
+
+                  {/* Numer śledzenia */}
+                  {paymentStatus.trackingNumber && (
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-700">
+                      <span className="text-white/70">Numer śledzenia:</span>
+                      <span className="text-white font-mono">{paymentStatus.trackingNumber}</span>
                     </div>
                   )}
                 </div>
 
+                {/* Dane klienta */}
+                {paymentStatus.customer && (
+                  <div className="mt-6 pt-4 border-t border-neutral-700">
+                    <h5 className="font-semibold text-white mb-3">Dane klienta</h5>
+                    <div className="space-y-2 text-sm">
+                      {paymentStatus.customer.name && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-white/70">Imię i nazwisko:</span>
+                          <span className="text-white">{paymentStatus.customer.name}</span>
+                        </div>
+                      )}
+                      {paymentStatus.customer.email && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-white/70">Email:</span>
+                          <span className="text-white">{paymentStatus.customer.email}</span>
+                        </div>
+                      )}
+                      {paymentStatus.customer.phone && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-white/70">Telefon:</span>
+                          <span className="text-white">{paymentStatus.customer.phone}</span>
+                        </div>
+                      )}
+                      {paymentStatus.customer.company && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-white/70">Firma:</span>
+                          <span className="text-white">{paymentStatus.customer.company}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Adres dostawy */}
+                {paymentStatus.shippingAddress && (
+                  <div className="mt-6 pt-4 border-t border-neutral-700">
+                    <h5 className="font-semibold text-white mb-3">Adres dostawy</h5>
+                    <div className="text-sm text-white/80">
+                      {paymentStatus.shippingAddress.street && (
+                        <p>{paymentStatus.shippingAddress.street}</p>
+                      )}
+                      {(paymentStatus.shippingAddress.postalCode || paymentStatus.shippingAddress.city) && (
+                        <p>
+                          {paymentStatus.shippingAddress.postalCode && `${paymentStatus.shippingAddress.postalCode} `}
+                          {paymentStatus.shippingAddress.city}
+                        </p>
+                      )}
+                      {paymentStatus.shippingAddress.country && (
+                        <p>{paymentStatus.shippingAddress.country}</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Adres faktury (jeśli różny od dostawy) */}
+                {paymentStatus.billingAddress && 
+                 JSON.stringify(paymentStatus.billingAddress) !== JSON.stringify(paymentStatus.shippingAddress) && (
+                  <div className="mt-6 pt-4 border-t border-neutral-700">
+                    <h5 className="font-semibold text-white mb-3">Adres faktury</h5>
+                    <div className="text-sm text-white/80">
+                      {paymentStatus.billingAddress.street && (
+                        <p>{paymentStatus.billingAddress.street}</p>
+                      )}
+                      {(paymentStatus.billingAddress.postalCode || paymentStatus.billingAddress.city) && (
+                        <p>
+                          {paymentStatus.billingAddress.postalCode && `${paymentStatus.billingAddress.postalCode} `}
+                          {paymentStatus.billingAddress.city}
+                        </p>
+                      )}
+                      {paymentStatus.billingAddress.country && (
+                        <p>{paymentStatus.billingAddress.country}</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Szczegóły cenowe */}
+                {(paymentStatus.subtotal !== undefined || paymentStatus.shippingCost !== undefined || 
+                  paymentStatus.tax !== undefined || paymentStatus.discount !== undefined) && (
+                  <div className="mt-6 pt-4 border-t border-neutral-700">
+                    <h5 className="font-semibold text-white mb-3">Szczegóły ceny</h5>
+                    <div className="space-y-2 text-sm">
+                      {paymentStatus.subtotal !== undefined && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-white/70">Wartość netto:</span>
+                          <span className="text-white">{paymentStatus.subtotal.toFixed(2)} zł</span>
+                        </div>
+                      )}
+                      {paymentStatus.shippingCost !== undefined && paymentStatus.shippingCost > 0 && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-white/70">Dostawa:</span>
+                          <span className="text-white">{paymentStatus.shippingCost.toFixed(2)} zł</span>
+                        </div>
+                      )}
+                      {paymentStatus.tax !== undefined && paymentStatus.tax > 0 && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-white/70">Podatek:</span>
+                          <span className="text-white">{paymentStatus.tax.toFixed(2)} zł</span>
+                        </div>
+                      )}
+                      {paymentStatus.discount !== undefined && paymentStatus.discount > 0 && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-white/70">Rabat:</span>
+                          <span className="text-green-400">-{paymentStatus.discount.toFixed(2)} zł</span>
+                        </div>
+                      )}
+                      {paymentStatus.total !== undefined && (
+                        <div className="flex justify-between items-center pt-2 border-t border-neutral-700 mt-2">
+                          <span className="text-white font-semibold">Suma całkowita:</span>
+                          <span className="text-red-400 font-bold text-lg">{paymentStatus.total.toFixed(2)} zł</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Uwagi */}
+                {paymentStatus.notes && (
+                  <div className="mt-6 pt-4 border-t border-neutral-700">
+                    <h5 className="font-semibold text-white mb-2">Uwagi</h5>
+                    <p className="text-sm text-white/80">{paymentStatus.notes}</p>
+                  </div>
+                )}
+
                 {/* Products list */}
                 {paymentStatus.items && paymentStatus.items.length > 0 && (
-                  <div className="mt-6">
+                  <div className="mt-6 pt-4 border-t border-neutral-700">
                     <h5 className="font-semibold text-white mb-3">Produkty</h5>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {paymentStatus.items.map((item: any, index: number) => (
-                        <div key={index} className="flex justify-between items-center py-2 border-b border-neutral-700 last:border-b-0">
-                          <span className="text-white/70 text-sm">{item.productName}</span>
-                          <span className="text-white font-medium">{item.subtotal.toFixed(2)} zł</span>
+                        <div key={item.id || index} className="bg-neutral-800/50 rounded-lg p-3">
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="flex-1">
+                              <span className="text-white font-medium">{item.productName || 'Produkt'}</span>
+                              {item.productType && (
+                                <span className="text-white/50 text-xs ml-2">
+                                  ({item.productType === 'mat' ? 'Dywanik' : 'Akcesoria'})
+                                </span>
+                              )}
+                            </div>
+                            <span className="text-white font-semibold ml-2">
+                              {item.subtotal !== undefined 
+                                ? `${item.subtotal.toFixed(2)} zł`
+                                : item.unitPrice !== undefined && item.quantity !== undefined
+                                  ? `${(item.unitPrice * item.quantity).toFixed(2)} zł`
+                                  : '—'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center text-xs text-white/60">
+                            {item.quantity !== undefined && (
+                              <span>Ilość: {item.quantity}</span>
+                            )}
+                            {item.unitPrice !== undefined && (
+                              <span>Cena jednostkowa: {item.unitPrice.toFixed(2)} zł</span>
+                            )}
+                          </div>
+                          {item.configuration && Object.keys(item.configuration).length > 0 && (
+                            <div className="mt-2 pt-2 border-t border-neutral-700 text-xs text-white/60">
+                              <span className="font-medium">Konfiguracja: </span>
+                              <span>{JSON.stringify(item.configuration)}</span>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -453,7 +744,7 @@ export function PaymentSuccess() {
               <Button asChild variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-600/20 px-8 py-3 rounded-lg transition-all duration-300 hover:scale-105 flex items-center gap-2">
                 <Link href="/configurator">
                   <ArrowRight className="h-5 w-5" />
-                  {paymentStatus.orderId === 'demo' ? 'Przejdź do konfiguratora' : 'Skonfiguruj kolejne'}
+                  Skonfiguruj kolejne
                 </Link>
               </Button>
             )}
@@ -464,12 +755,12 @@ export function PaymentSuccess() {
             <p className="text-white/60 text-sm mb-4">Potrzebujesz pomocy?</p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
               <a 
-                href="mailto:kontakt@evapremium.pl" 
+                href="mailto:evapremium.kontakt@gmail.com" 
                 className="flex items-center justify-center gap-2 text-red-400 hover:text-red-300 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black rounded-lg p-2"
                 aria-label="Wyślij email do kontaktu"
               >
                 <Mail className="h-4 w-4" />
-                <span className="text-sm">kontakt@evapremium.pl</span>
+                <span className="text-sm">evapremium.kontakt@gmail.com</span>
               </a>
               <a 
                 href="tel:+48123456789" 

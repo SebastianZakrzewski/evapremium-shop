@@ -88,8 +88,8 @@ export default function DeliveryAndPaymentTermsPage() {
                 <div className="bg-yellow-900/20 border border-yellow-600/30 p-4 rounded-lg my-4">
                   <p className="text-yellow-200">
                     <strong>Ważne:</strong> Klient ma obowiązek sprawdzenia przesyłki przy odbiorze. W przypadku stwierdzenia uszkodzenia opakowania lub Produktu należy spisać protokół szkody w obecności kuriera oraz niezwłocznie skontaktować się ze Sprzedawcą pod adresem e-mail 
-                    <a href="mailto:kontakt@evapremium.pl" className="text-blue-400 hover:underline ml-1">
-                      kontakt@evapremium.pl
+                    <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-400 hover:underline ml-1">
+                      evapremium.kontakt@gmail.com
                     </a>
                     {' '}lub telefonicznie pod numerem 
                     <a href="tel:+48570123635" className="text-blue-400 hover:underline ml-1">
@@ -176,8 +176,8 @@ export default function DeliveryAndPaymentTermsPage() {
                 
                 <p>
                   Reklamacje dotyczące dostawy (np. opóźnienia, uszkodzenia) można zgłaszać mailowo na adres: 
-                  <a href="mailto:kontakt@evapremium.pl" className="text-blue-400 hover:underline ml-1">
-                    kontakt@evapremium.pl
+                  <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-400 hover:underline ml-1">
+                    evapremium.kontakt@gmail.com
                   </a>
                   {' '}w ciągu 3 dni roboczych od odbioru.
                 </p>
@@ -188,8 +188,8 @@ export default function DeliveryAndPaymentTermsPage() {
               <h3 className="text-lg font-semibold text-white mb-3">Kontakt w sprawach dostawy i płatności</h3>
               <div className="text-gray-300 space-y-2">
                 <p><strong>Email:</strong> 
-                  <a href="mailto:kontakt@evapremium.pl" className="text-blue-400 hover:underline ml-1">
-                    kontakt@evapremium.pl
+                  <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-400 hover:underline ml-1">
+                    evapremium.kontakt@gmail.com
                   </a>
                 </p>
                 <p><strong>Telefon:</strong> 

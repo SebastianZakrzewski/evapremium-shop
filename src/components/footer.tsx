@@ -103,8 +103,8 @@ export default function Footer() {
             <ul className="space-y-2">
               <li className="text-gray-400">
                 <span className="block">Email:</span>
-                <a href="mailto:kontakt@evapremium.pl" className="hover:text-white transition-colors">
-                  kontakt@evapremium.pl
+                <a href="mailto:evapremium.kontakt@gmail.com" className="hover:text-white transition-colors">
+                  evapremium.kontakt@gmail.com
                 </a>
               </li>
               <li className="text-gray-400">

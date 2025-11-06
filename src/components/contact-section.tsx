@@ -62,7 +62,9 @@ export default function ContactSection() {
                     </div>
                     <div>
                       <h3 className="text-white font-semibold">Telefon</h3>
-                      <p className="text-gray-300">+48 123 456 789</p>
+                      <a href="tel:+48570123635" className="text-gray-300 hover:text-white transition-colors">
+                        +48 570 123 635
+                      </a>
                       <p className="text-gray-400 text-sm">Pon-Pt: 8:00-18:00</p>
                     </div>
                   </div>
@@ -73,7 +75,7 @@ export default function ContactSection() {
                     </div>
                     <div>
                       <h3 className="text-white font-semibold">Email</h3>
-                      <p className="text-gray-300">kontakt@evapremium.pl</p>
+                      <p className="text-gray-300">evapremium.kontakt@gmail.com</p>
                       <p className="text-gray-400 text-sm">Odpowiadamy w ciągu 24h</p>
                     </div>
                   </div>
@@ -84,8 +86,9 @@ export default function ContactSection() {
                     </div>
                     <div>
                       <h3 className="text-white font-semibold">Adres</h3>
-                      <p className="text-gray-300">ul. Przykładowa 123</p>
-                      <p className="text-gray-300">00-000 Warszawa</p>
+                      <p className="text-gray-300">Klaudia Lewandowska</p>
+                      <p className="text-gray-300">81-198 Pogórze</p>
+                      <p className="text-gray-300">ul. Tadeusza Kościuszki 34/1</p>
                     </div>
                   </div>
 
@@ -98,6 +101,16 @@ export default function ContactSection() {
                       <p className="text-gray-300">Poniedziałek - Piątek: 8:00 - 18:00</p>
                       <p className="text-gray-300">Sobota: 9:00 - 15:00</p>
                       <p className="text-gray-400 text-sm">Niedziela: Zamknięte</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 p-4 bg-black/20 rounded-lg">
+                    <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
+                      <Building2 className="h-6 w-6 text-red-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold">NIP</h3>
+                      <p className="text-gray-300">5871715880</p>
                     </div>
                   </div>
                 </div>
@@ -192,12 +205,12 @@ export default function ContactSection() {
                     <Label htmlFor="phone" className="text-white font-medium">
                       Telefon
                     </Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+48 123 456 789"
-                      className="bg-black/40 border-gray-600 text-white placeholder-gray-400 focus:border-red-500 focus:ring-red-500/20"
-                    />
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="+48 570 123 635"
+                        className="bg-black/40 border-gray-600 text-white placeholder-gray-400 focus:border-red-500 focus:ring-red-500/20"
+                      />
                   </div>
 
                   <div className="space-y-2">
@@ -253,8 +266,8 @@ export default function ContactSection() {
                 <div className="w-full h-64 bg-gray-800 rounded-lg flex items-center justify-center">
                   <div className="text-center">
                     <MapPin className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-300 text-lg">Mapa zostanie wkrótce dodana</p>
-                    <p className="text-gray-400 text-sm">ul. Przykładowa 123, 00-000 Warszawa</p>
+                      <p className="text-gray-300 text-lg">Mapa zostanie wkrótce dodana</p>
+                      <p className="text-gray-400 text-sm">81-198 Pogórze, ul. Tadeusza Kościuszki 34/1</p>
                   </div>
                 </div>
               </div>
