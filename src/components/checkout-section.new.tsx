@@ -18,7 +18,6 @@ import {
   CreditCard,
   Check,
   CreditCard as PaymentIcon,
-  Banknote,
   CheckCircle,
   AlertCircle
 } from "lucide-react";
@@ -60,16 +59,10 @@ const checkoutSchema = z.object({
   billingCity: z.string().optional(),
   billingCountry: z.string().optional(),
   
-  // Metoda płatności
-  paymentMethod: z.enum(["card", "transfer", "p24"], {
+  // Metoda płatności - tylko Przelewy24
+  paymentMethod: z.literal("p24", {
     required_error: "Wybierz metodę płatności"
   }),
-  
-  // Dane karty płatniczej (opcjonalne, tylko gdy wybrano kartę)
-  cardNumber: z.string().optional(),
-  cardExpiry: z.string().optional(),
-  cardCvv: z.string().optional(),
-  cardholderName: z.string().optional(),
   
   // Zgody
   termsAccepted: z.boolean().refine(val => val === true, "Musisz zaakceptować regulamin"),
@@ -77,26 +70,6 @@ const checkoutSchema = z.object({
   
   // Notatki
   notes: z.string().optional(),
-}).refine((data) => {
-  // Walidacja pól karty tylko gdy wybrano kartę płatniczą
-  if (data.paymentMethod === "card") {
-    if (!data.cardNumber || data.cardNumber.length < 16) {
-      return false;
-    }
-    if (!data.cardExpiry || !/^\d{2}\/\d{2}$/.test(data.cardExpiry)) {
-      return false;
-    }
-    if (!data.cardCvv || data.cardCvv.length < 3) {
-      return false;
-    }
-    if (!data.cardholderName || data.cardholderName.length < 2) {
-      return false;
-    }
-  }
-  return true;
-}, {
-  message: "Wypełnij wszystkie wymagane pola karty płatniczej",
-  path: ["cardNumber"]
 });
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
@@ -344,7 +317,7 @@ export default function CheckoutSectionNew() {
 
       const paymentData = {
         method: data.paymentMethod,
-        methodName: data.paymentMethod === 'card' ? 'Karta kredytowa' : 'Pobranie',
+        methodName: 'Przelew Bankowy (Przelewy24)',
       };
       console.log('🛒 CheckoutSection: paymentData:', paymentData);
 
@@ -849,118 +822,18 @@ export default function CheckoutSectionNew() {
                   </CardHeader>
                   <CardContent className="space-y-8 px-8 pb-8">
                     <div className="space-y-4">
-                      <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
-                        paymentMethod === "card" 
-                          ? 'border-red-500 bg-red-900/30' 
-                          : 'bg-neutral-800/40 border-neutral-700 hover:border-red-500/70 hover:bg-red-900/10'
-                      }`}
-                      onClick={() => setValue("paymentMethod", "card")}>
-                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === "card" ? 'border-red-500 bg-red-500' : 'border-gray-400'}`}>
-                          {paymentMethod === "card" && <div className="w-2 h-2 bg-white rounded-full"></div>}
-                        </div>
-                        <div className="flex items-center space-x-4 flex-1 cursor-pointer">
-                          <CreditCard className={`w-6 h-6 ${paymentMethod === "card" ? 'text-red-400' : 'text-gray-400'}`} />
-                          <div>
-                            <div className={`font-medium text-base ${paymentMethod === "card" ? 'text-white' : 'text-gray-200'}`}>
-                              Karta płatnicza
-                            </div>
-                            <div className={`text-sm ${paymentMethod === "card" ? 'text-gray-400' : 'text-gray-500'} flex items-center gap-2`}>
-                              <span>Visa, Mastercard, American Express</span>
-                              <div className="flex items-center gap-3 ml-3">
-                                <Image 
-                                  src="/formy_platnosci/visa.png" 
-                                  alt="Visa" 
-                                  width={40} 
-                                  height={26} 
-                                  className="object-contain"
-                                />
-                                <Image 
-                                  src="/formy_platnosci/mastercard.png" 
-                                  alt="Mastercard" 
-                                  width={40} 
-                                  height={26} 
-                                  className="object-contain"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          {paymentMethod === "card" && (
-                            <Check className="w-5 h-5 text-red-400 ml-auto" />
-                          )}
-                        </div>
-                      </div>
-                      
-                      <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
-                        paymentMethod === "transfer" 
-                          ? 'border-red-500 bg-red-900/30' 
-                          : 'bg-neutral-800/40 border-neutral-700 hover:border-red-500/70 hover:bg-red-900/10'
-                      }`}
-                      onClick={() => setValue("paymentMethod", "transfer")}>
-                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === "transfer" ? 'border-red-500 bg-red-500' : 'border-gray-400'}`}>
-                          {paymentMethod === "transfer" && <div className="w-2 h-2 bg-white rounded-full"></div>}
-                        </div>
-                        <div className="flex items-center space-x-4 flex-1 cursor-pointer">
-                          <Banknote className={`w-6 h-6 ${paymentMethod === "transfer" ? 'text-red-400' : 'text-gray-400'}`} />
-                          <div>
-                            <div className={`font-medium text-base ${paymentMethod === "transfer" ? 'text-white' : 'text-gray-200'}`}>
-                              Przelew bankowy
-                            </div>
-                            <div className={`text-sm ${paymentMethod === "transfer" ? 'text-gray-400' : 'text-gray-500'} flex items-center gap-2`}>
-                              <span>Płać szybkimi przelewami, BLIK</span>
-                              <div className="flex items-center gap-3 ml-3">
-                                <Image 
-                                  src="/formy_platnosci/bank.png" 
-                                  alt="Przelew bankowy" 
-                                  width={40} 
-                                  height={26} 
-                                  className="object-contain"
-                                />
-                                <Image 
-                                  src="/formy_platnosci/blik.png" 
-                                  alt="BLIK" 
-                                  width={40} 
-                                  height={26} 
-                                  className="object-contain"
-                                />
-                                <Image 
-                                  src="/formy_platnosci/visa.png" 
-                                  alt="Visa" 
-                                  width={40} 
-                                  height={26} 
-                                  className="object-contain"
-                                />
-                                <Image 
-                                  src="/formy_platnosci/mastercard.png" 
-                                  alt="Mastercard" 
-                                  width={40} 
-                                  height={26} 
-                                  className="object-contain"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          {paymentMethod === "transfer" && (
-                            <Check className="w-5 h-5 text-red-400 ml-auto" />
-                          )}
-                        </div>
-                      </div>
-
-                      <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer ${
-                        paymentMethod === "p24" 
-                          ? 'border-red-500 bg-red-900/30' 
-                          : 'bg-neutral-800/40 border-neutral-700 hover:border-red-500/70 hover:bg-red-900/10'
-                      }`}
+                      <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer border-red-500 bg-red-900/30`}
                       onClick={() => setValue("paymentMethod", "p24")}>
-                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === "p24" ? 'border-red-500 bg-red-500' : 'border-gray-400'}`}>
-                          {paymentMethod === "p24" && <div className="w-2 h-2 bg-white rounded-full"></div>}
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center border-red-500 bg-red-500`}>
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
                         </div>
                         <div className="flex items-center space-x-4 flex-1 cursor-pointer">
-                          <CreditCard className={`w-6 h-6 ${paymentMethod === "p24" ? 'text-red-400' : 'text-gray-400'}`} />
+                          <CreditCard className={`w-6 h-6 text-red-400`} />
                           <div>
-                            <div className={`font-medium text-base ${paymentMethod === "p24" ? 'text-white' : 'text-gray-200'}`}>
+                            <div className={`font-medium text-base text-white`}>
                               Przelewy24
                             </div>
-                            <div className={`text-sm ${paymentMethod === "p24" ? 'text-gray-400' : 'text-gray-500'} flex items-center gap-2`}>
+                            <div className={`text-sm text-gray-400 flex items-center gap-2`}>
                               <span>Karty, BLIK, przelewy, Apple Pay, Google Pay</span>
                               <div className="flex items-center gap-3 ml-3">
                                 <Image 
@@ -1001,9 +874,7 @@ export default function CheckoutSectionNew() {
                               </div>
                             </div>
                           </div>
-                          {paymentMethod === "p24" && (
-                            <Check className="w-5 h-5 text-red-400 ml-auto" />
-                          )}
+                          <Check className="w-5 h-5 text-red-400 ml-auto" />
                         </div>
                       </div>
                       
@@ -1020,92 +891,6 @@ export default function CheckoutSectionNew() {
                         <div className="flex items-center space-x-2">
                           <AlertCircle className="w-5 h-5 text-red-400" />
                           <p className="text-red-400 text-sm">{errorMessage}</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Formularz danych karty - pokazuje się tylko gdy wybrano kartę płatniczą */}
-                    {paymentMethod === "card" && (
-                      <div className="mt-6 p-6 bg-neutral-800/50 rounded-lg border border-neutral-700 animate-in slide-in-from-top-2 duration-300">
-                        <h4 className="text-lg font-medium text-white mb-4 flex items-center">
-                          <CreditCard className="w-5 h-5 mr-2 text-red-400" />
-                          Dane karty płatniczej
-                        </h4>
-                        <div className="space-y-4">
-                          <div>
-                            <Label htmlFor="cardNumber" className="text-neutral-200 font-medium text-sm">
-                              Numer karty *
-                            </Label>
-                            <Input
-                              id="cardNumber"
-                              {...register("cardNumber")}
-                              placeholder="1234 5678 9012 3456"
-                              className="h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base"
-                            />
-                            {errors.cardNumber && (
-                              <p className="text-red-400 text-sm mt-1">
-                                {errors.cardNumber.message}
-                              </p>
-                            )}
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <Label htmlFor="cardExpiry" className="text-neutral-200 font-medium text-sm">
-                                Data ważności *
-                              </Label>
-                              <Input
-                                id="cardExpiry"
-                                {...register("cardExpiry")}
-                                placeholder="MM/RR"
-                                className="h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base"
-                              />
-                              {errors.cardExpiry && (
-                                <p className="text-red-400 text-sm mt-1">
-                                  {errors.cardExpiry.message}
-                                </p>
-                              )}
-                            </div>
-
-                            <div>
-                              <Label htmlFor="cardCvv" className="text-neutral-200 font-medium text-sm">
-                                CVV *
-                              </Label>
-                              <Input
-                                id="cardCvv"
-                                {...register("cardCvv")}
-                                placeholder="123"
-                                className="h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base"
-                              />
-                              {errors.cardCvv && (
-                                <p className="text-red-400 text-sm mt-1">
-                                  {errors.cardCvv.message}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-
-                          <div>
-                            <Label htmlFor="cardholderName" className="text-neutral-200 font-medium text-sm">
-                              Imię i nazwisko na karcie *
-                            </Label>
-                            <Input
-                              id="cardholderName"
-                              {...register("cardholderName")}
-                              placeholder="Jan Kowalski"
-                              className="h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base"
-                            />
-                            {errors.cardholderName && (
-                              <p className="text-red-400 text-sm mt-1">
-                                {errors.cardholderName.message}
-                              </p>
-                            )}
-                          </div>
-
-                          <div className="flex items-center space-x-2 text-sm text-neutral-400">
-                            <CheckCircle className="w-4 h-4 text-green-400" />
-                            <span>Twoje dane są szyfrowane i bezpieczne</span>
-                          </div>
                         </div>
                       </div>
                     )}
@@ -1385,21 +1170,13 @@ export default function CheckoutSectionNew() {
 
                   {/* Totals */}
                   <div className="space-y-5 pt-6">
-                    <div className="flex justify-between text-lg">
-                      <span className="text-neutral-300">Wysyłka</span>
-                      <span className="text-white font-medium">27,00 zł</span>
-                    </div>
-                    
                     <div className="pt-6 border-t border-neutral-700 bg-neutral-800/40 p-6 rounded-lg">
                       <div className="flex justify-between items-center">
                         <span className="text-white font-semibold text-2xl">Razem do zapłaty</span>
                         <span className="text-white font-bold text-3xl">
-                          PLN {PricingService.formatPrice(total + 27)}
+                          {total.toFixed(2).replace('.', ',')} <span className="text-xl font-normal">PLN</span>
                         </span>
                       </div>
-                      <p className="text-neutral-400 text-lg mt-3">
-                        W tym podatki: {((total + 27) * 0.23).toFixed(2)} zł
-                      </p>
                     </div>
                   </div>
                 </div>

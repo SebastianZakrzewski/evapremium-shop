@@ -32,7 +32,6 @@ import { useOrder } from '@/hooks/useOrder';
 import { CustomerData, ShippingData, PaymentData } from '@/lib/types/order';
 import { Product } from '@/lib/types/product';
 import { CartItem } from '@/lib/types/cart-new';
-import { Przelewy24Service } from '@/lib/services/Przelewy24Service';
 
 // Schema walidacji
 const checkoutSchema = z.object({
@@ -200,12 +199,12 @@ export function CheckoutSection() {
 
   const sameAsShipping = watch("sameAsShipping")
   const selectedShipping = watch("shippingMethod")
-  const shippingCost = shippingMethods.find(m => m.id === selectedShipping)?.price || 0
+  const shippingCost = 0 // Wysyłka darmowa - nie doliczamy kosztu
   
   // Oblicz total na podstawie koszyka
   const cartTotal = cartItems.reduce((sum, product) => sum + product.subtotal, 0);
   const subtotal = cartTotal;
-  const total = subtotal + shippingCost
+  const total = subtotal // Bez kosztu wysyłki
 
   // Watch all form fields for real-time validation
   const watchedFields = watch()
@@ -411,7 +410,7 @@ export function CheckoutSection() {
       const shippingData: ShippingData = {
         method: data.shippingMethod,
         methodName: selectedShipping?.name || '',
-        cost: selectedShipping?.price || 0,
+        cost: 0, // Wysyłka darmowa - nie doliczamy kosztu
         estimatedDelivery: selectedShipping?.description || ''
       };
 
@@ -435,42 +434,26 @@ export function CheckoutSection() {
       console.log('🔄 Payment method:', data.paymentMethod);
       if (data.paymentMethod === 'p24') {
         try {
-          console.log('🔄 Starting P24 payment registration via direct service call...');
+          console.log('🔄 Starting P24 payment registration via API endpoint...');
           
-          // Wywołaj bezpośrednio funkcję serwisu Przelewy24
-          const p24Service = new Przelewy24Service();
+          // Wywołaj API endpoint dla rejestracji płatności P24
+          const response = await fetch('/api/payments/p24/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId: savedOrder.id })
+          });
           
-          const sessionId = `eva_${savedOrder.sessionId}_${Date.now()}`.substring(0, 100);
-          const transactionData = {
-            sessionId: sessionId,
-            amount: Number(savedOrder.pricing.totalAmount),
-            currency: 'PLN',
-            description: `Zamówienie ${savedOrder.sessionId} - Dywaniki EVA`,
-            email: data.email || '',
-            country: 'PL'
-          };
-
-          console.log('🔍 P24 Service: Transaction data:', transactionData);
+          const result = await response.json();
           
-          const result = await p24Service.registerTransaction(transactionData);
+          if (!response.ok) {
+            throw new Error(result.error || `HTTP ${response.status}: ${response.statusText}`);
+          }
 
           if (!result.success) {
             throw new Error(result.error || 'Błąd rejestracji płatności');
           }
 
-          console.log('✅ P24 payment registered via direct service call:', result.paymentUrl);
-          
-          // Zapisz dane P24 w zamówieniu
-          await fetch(`/api/orders/${savedOrder.id}/p24`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              p24SessionId: sessionId,
-              p24Token: result.token
-            })
-          });
+          console.log('✅ P24 payment registered via API endpoint:', result.paymentUrl);
           
           // Wyczyść koszyk po udanej rejestracji
           clearCart();
@@ -516,7 +499,7 @@ export function CheckoutSection() {
           shipping: {
             method: data.shippingMethod,
             methodName: shippingMethods.find(m => m.id === data.shippingMethod)?.name || '',
-            cost: shippingMethods.find(m => m.id === data.shippingMethod)?.price || 0,
+            cost: 0, // Wysyłka darmowa - nie doliczamy kosztu
             estimatedDelivery: shippingMethods.find(m => m.id === data.shippingMethod)?.description || '',
             isComplete: true,
           },
@@ -922,7 +905,7 @@ export function CheckoutSection() {
                             </div>
                             <div className="text-right">
                               <span className="font-semibold text-white">
-                                {method.price === 0 ? "Darmowa" : `${method.price.toFixed(2)} zł`}
+                                Darmowa
                               </span>
                             </div>
                           </div>
@@ -1441,12 +1424,6 @@ function OrderSummaryContent({
             <div className="flex justify-between text-sm">
               <span className="text-gray-300">Wartość produktów:</span>
               <span className="text-white font-medium">{cartItems.reduce((sum, product) => sum + product.subtotal, 0).toFixed(2)} zł</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-300">Dostawa:</span>
-              <span className={`font-medium ${shippingCost === 0 ? 'text-green-400' : 'text-white'}`}>
-                {shippingCost === 0 ? "Darmowa" : `${shippingCost.toFixed(2)} zł`}
-              </span>
             </div>
             {discountApplied && (
               <div className="flex justify-between text-sm text-red-400 bg-red-900/20 rounded-lg p-2">

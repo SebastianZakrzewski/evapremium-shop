@@ -28,8 +28,8 @@ export class PricingService {
     setVariant: 'front' | 'basic' | 'premium' | 'complete'
   ): { basePrice: number; discount: number; shippingCost: number; totalPrice: number } {
     const basePrices = {
-      'classic': { front: 290, basic: 510, premium: 710, complete: 0.10 },
-      '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 0.10 }
+      'classic': { front: 290, basic: 510, premium: 710, complete: 350 },
+      '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350 }
     };
 
     const basePrice = basePrices[setType]?.[setVariant] || 0;
@@ -54,6 +54,7 @@ export class PricingService {
 
   /**
    * Oblicza cenę dywaników z konfiguracją (stary system - zachowany dla kompatybilności)
+   * UWAGA: Dla wariantu 'complete' (mata do bagażnika) cena bazowa już zawiera rabat!
    */
   static calculateMatPrice(basePrice: number, configuration: any): number {
     let totalPrice = basePrice;
@@ -63,12 +64,35 @@ export class PricingService {
       'front': 0,
       'basic': 150,
       'premium': 300,
-      'complete': 450
+      'complete': 0  // Mata do bagażnika - bez dodatkowych kosztów, cena bazowa już zawiera rabat
     };
 
     const setType = configuration?.setType;
+    console.log('💰 PricingService.calculateMatPrice - Input:', {
+      basePrice,
+      configuration,
+      setType,
+      'configuration.setType': configuration?.setType
+    });
+    
     if (setType && setTypeModifiers[setType as keyof typeof setTypeModifiers] !== undefined) {
       totalPrice += setTypeModifiers[setType as keyof typeof setTypeModifiers];
+      console.log('💰 PricingService.calculateMatPrice - Po dodaniu modyfikatora:', {
+        setType,
+        modifier: setTypeModifiers[setType as keyof typeof setTypeModifiers],
+        totalPrice
+      });
+    }
+
+    // Dla maty do bagażnika zastosuj rabat 20% jeśli jeszcze nie został zastosowany
+    if (setType === 'complete' && totalPrice >= 350) {
+      const discount = 0.20;
+      totalPrice = totalPrice * (1 - discount);
+      console.log('💰 PricingService.calculateMatPrice - Zastosowano rabat 20% dla complete:', {
+        basePrice,
+        totalPriceBeforeDiscount: totalPrice / (1 - discount),
+        totalPriceAfterDiscount: totalPrice
+      });
     }
 
     // Modyfikatory dla rodzaju komórek (wyzerowane)

@@ -3,8 +3,8 @@ import { ConfigurationData, Product, ProductPricing } from '../types/product';
 export class ConfiguratorService {
   private static readonly PRICING_CONFIG = {
     basePrice: {
-      'classic': { front: 290, basic: 510, premium: 710, complete: 0.10 },
-      '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 0.10 }
+      'classic': { front: 290, basic: 510, premium: 710, complete: 350 },
+      '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350 }
     },
     // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł
     getDiscount: (basePrice: number) => {

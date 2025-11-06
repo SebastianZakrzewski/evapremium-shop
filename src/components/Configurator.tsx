@@ -68,8 +68,8 @@ type SetVariant = {
 // Struktura cenowa - sztywne ceny za komplety + rabaty
 const PRICING = {
   basePrice: {
-    'classic': { front: 290, basic: 510, premium: 710, complete: 0.10 },
-    '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 0.10 }
+    'classic': { front: 290, basic: 510, premium: 710, complete: 350 },
+    '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350 }
   },
   // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł
   getDiscount: (basePrice: number) => {
@@ -473,6 +473,12 @@ export default function Configurator() {
         }
 
         const calculatedPrice = PricingService.calculateMatPrice(basePrice, matConfiguration);
+        console.log('💰 Configurator useEffect - calculateMatPrice:', {
+          basePrice,
+          matConfiguration,
+          calculatedPrice,
+          selectedSetVariant
+        });
         setBaseMatPrice(calculatedPrice);
         debugLog('💰 Obliczona cena końcowa:', calculatedPrice);
 
@@ -573,9 +579,16 @@ export default function Configurator() {
         }
       };
 
-      
       // Oblicz cenę końcową używając nowego systemu cenowego
       const finalPrice = price;
+      
+      console.log('💰 Configurator handleAddToCart - Ceny:', {
+        selectedSetVariant,
+        basePrice: PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'],
+        price,
+        finalPrice,
+        baseMatPrice
+      });
       
       // Generuj unikalny UUID dla produktu
       const productId = crypto.randomUUID();
@@ -738,7 +751,7 @@ export default function Configurator() {
     
     const totalPrice = Math.round((priceAfterDiscount + shippingCost) * 100) / 100;
     
-    console.log('💰 Kalkulacja ceny:', {
+    console.log('💰 Configurator price useMemo - Kalkulacja ceny:', {
       setType: selectedSetType,
       setVariant: selectedSetVariant,
       basePrice,

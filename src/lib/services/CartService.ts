@@ -99,11 +99,31 @@ export class CartService {
    */
   private async recalculateCart(cart: Cart): Promise<Cart> {
     cart.subtotal = cart.items.reduce((sum, item) => sum + item.subtotal, 0);
-    cart.shippingCost = PricingService.calculateShippingCost(cart.subtotal);
+    
+    // Sprawdź czy wszystkie produkty to maty do bagażnika (complete) - wtedy wysyłka darmowa
+    const allItemsAreCompleteMat = cart.items.every(item => 
+      item.productType === 'mat' && 
+      item.configuration?.setVariant === 'complete'
+    );
+    
+    // Wysyłka darmowa dla mat do bagażnika lub jeśli subtotal >= 300
+    if (allItemsAreCompleteMat || cart.subtotal >= 300) {
+      cart.shippingCost = 0;
+    } else {
+      cart.shippingCost = PricingService.calculateShippingCost(cart.subtotal);
+    }
+    
     cart.tax = 0; // VAT wyłączony
     cart.discount = 0; // TODO: Kody rabatowe
     cart.total = cart.subtotal + cart.shippingCost - cart.discount; // Bez VAT
     cart.itemCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+    
+    console.log('💰 CartService.recalculateCart:', {
+      subtotal: cart.subtotal,
+      shippingCost: cart.shippingCost,
+      total: cart.total,
+      allItemsAreCompleteMat
+    });
     
     return cart;
   }
@@ -162,6 +182,12 @@ export class CartService {
       productSku = item.productSku || `MAT-${item.configuration.carDetails.brand.toUpperCase()}-${item.configuration.carDetails.model.toUpperCase()}`;
       productImage = item.productImage || '';
       unitPrice = item.unitPrice || 300; // Fallback price
+      console.log('💰 CartService.createCartItem - Mat item:', {
+        unitPrice: item.unitPrice,
+        finalUnitPrice: unitPrice,
+        configuration: item.configuration,
+        'configuration.setVariant': item.configuration?.setVariant
+      });
     }
 
     return {
