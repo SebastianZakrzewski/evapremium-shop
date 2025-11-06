@@ -11,10 +11,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { env } from '@/config/env'
 import { OrderService } from '@/lib/services/OrderService'
+import { OrderRepository } from '@/lib/repositories/OrderRepository'
 import { Przelewy24Service } from '@/lib/services/Przelewy24Service'
 import { P24WebhookData, P24Error } from '@/lib/types/przelewy24'
 
 const orderService = new OrderService()
+const orderRepository = new OrderRepository()
 const p24Service = new Przelewy24Service()
 
 export async function POST(request: NextRequest) {
@@ -100,36 +102,14 @@ export async function POST(request: NextRequest) {
     if (!order) {
       console.log('🔍 P24 Callback API: Fallback 2 - próbuję bezpośrednio przez repository')
       try {
-        const { data: orderByNumber } = await orderService.repository.supabase
-          .from('orders')
-          .select(`
-            *,
-            order_items(*)
-          `)
-          .eq('p24_session_id', webhookData.sessionId)
-          .maybeSingle()
+        order = await orderRepository.findBySessionId(webhookData.sessionId)
         
-        if (orderByNumber) {
-          console.log('✅ P24 Callback API: Znaleziono zamówienie bezpośrednio przez repository')
-          order = orderService.repository.mapOrderFromDB(orderByNumber)
-        } else {
+        if (!order) {
           // Spróbuj też po orderNumber jeśli sessionId zawiera orderNumber
           const sessionIdParts = webhookData.sessionId.split('_')
           if (sessionIdParts.length >= 2) {
             const orderNumber = sessionIdParts[1]
-            const { data: orderByNum } = await orderService.repository.supabase
-              .from('orders')
-              .select(`
-                *,
-                order_items(*)
-              `)
-              .eq('order_number', orderNumber)
-              .maybeSingle()
-            
-            if (orderByNum) {
-              console.log('✅ P24 Callback API: Znaleziono zamówienie po order_number (fallback 2)')
-              order = orderService.repository.mapOrderFromDB(orderByNum)
-            }
+            order = await orderRepository.findByOrderNumber(orderNumber)
           }
         }
       } catch (error) {
@@ -146,7 +126,7 @@ export async function POST(request: NextRequest) {
       
       try {
         // Pobierz wszystkie zamówienia z P24
-        const { data: allOrders } = await orderService.repository.supabase
+        const { data: allOrders } = await orderRepository.supabase
           .from('orders')
           .select('id, order_number, p24_session_id, p24_token, payment_status, status, created_at')
           .not('p24_session_id', 'is', null)
