@@ -442,7 +442,12 @@ export function PaymentSuccess() {
                         Dziękujemy za zakup! Twoja płatność jest w trakcie przetwarzania. Sprawdzimy status za chwilę.
                       </p>
                       <Button 
-                        onClick={checkPaymentStatus} 
+                        onClick={() => {
+                          const identifier = orderId || sessionId || p24SessionId || (typeof window !== 'undefined' ? sessionStorage.getItem('pending_order_id') : null);
+                          if (identifier) {
+                            checkPaymentStatus(identifier);
+                          }
+                        }}
                         variant="outline" 
                         className="w-full bg-yellow-600/20 border-yellow-500/30 text-yellow-300 hover:bg-yellow-600/30"
                         disabled={loading}
