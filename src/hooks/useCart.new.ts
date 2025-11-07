@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { CartV2 as Cart, CartItemV2 as CartItem, AddToCartDTO } from '@/lib/types';
 import { CartService } from '@/lib/services/CartService';
 import { debugLog } from '@/lib/config/features';
+import { useTracking, createAddToCartData } from '@/lib/tracking';
 
 const CART_STORAGE_KEY = 'cart-v2';
 
@@ -80,6 +81,7 @@ export function useCart(): UseCartReturn {
   const [cart, setCart] = useState<Cart>(emptyCart);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { trackAddToCart, createAddToCartData: createAddToCart } = useTracking();
 
   // Użyj useRef aby uniknąć tworzenia nowej instancji w każdym renderze
   const cartServiceRef = useRef<CartService | null>(null);
@@ -198,6 +200,22 @@ export function useCart(): UseCartReturn {
       setTimeout(() => {
         window.dispatchEvent(new CustomEvent('cartUpdated', { detail: updatedCart }));
       }, 0);
+      
+      // Track AddToCart event
+      try {
+        // Znajdź dodany item w zaktualizowanym koszyku
+        const addedItem = updatedCart.items.find(
+          cartItem => cartItem.productId === item.productId &&
+          JSON.stringify(cartItem.configuration) === JSON.stringify(item.configuration)
+        );
+
+        if (addedItem) {
+          const addToCartData = createAddToCart(addedItem, updatedCart.total);
+          trackAddToCart(addToCartData);
+        }
+      } catch (trackingError) {
+        console.error('[Tracking] Error tracking AddToCart:', trackingError);
+      }
       
       debugLog('useCart: Item added successfully', updatedCart);
     } catch (err) {

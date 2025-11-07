@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTracking, createPurchaseData } from '@/lib/tracking';
 
 interface PaymentStatus {
   status: 'pending' | 'paid' | 'failed' | 'cancelled';
@@ -64,6 +65,7 @@ export function PaymentSuccess() {
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { trackPurchase, createPurchaseData: createPurchase } = useTracking();
 
   useEffect(() => {
     // Sprawdź czy mamy orderId, sessionId lub p24_session_id
@@ -162,6 +164,34 @@ export function PaymentSuccess() {
           createdAt: order.createdAt,
           items: order.items || []
         });
+
+        // Track Purchase gdy płatność jest opłacona
+        if (order.paymentStatus === 'paid' && order.items && order.items.length > 0) {
+          try {
+            // Sprawdź czy event nie został już wysłany dla tego zamówienia (deduplikacja)
+            const cacheKey = `purchase_${order.orderNumber}`;
+            const cached = localStorage.getItem(cacheKey);
+            
+            if (!cached) {
+              const transactionId = order.p24OrderId || order.id;
+              const purchaseData = createPurchase(
+                order.items,
+                order.orderNumber,
+                Number(order.total || 0),
+                transactionId,
+                order.paymentMethod,
+                order.customer?.email,
+                order.customer?.phone
+              );
+              trackPurchase(purchaseData);
+
+              // Zapisz w cache (ważność: localStorage - raz na zamówienie)
+              localStorage.setItem(cacheKey, Date.now().toString());
+            }
+          } catch (error) {
+            console.error('[Tracking] Error tracking Purchase:', error);
+          }
+        }
       } else {
         throw new Error(data.error || 'Błąd podczas pobierania zamówienia');
       }

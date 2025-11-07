@@ -15,6 +15,7 @@ import { PricingService } from "@/lib/services/PricingService";
 import { MatService } from "@/lib/services/MatService";
 import { ConfigurationData } from "@/lib/types/product";
 import { debugLog } from "@/lib/config/features";
+import { useTracking, createViewContentData, createAddToCartData } from "@/lib/tracking";
 import { getModelsByBrand } from "@/data/carouselData";
 import { Brand, Model } from "@/types/carousel";
 import { getYearsForModel, getModelData, findGenerationByYear, getAvailableModels, getBodyTypesForYear, getBodyTypesForModel } from "@/data/car-model-years.utils";
@@ -117,6 +118,7 @@ export default function Configurator() {
   const router = useRouter();
   const brandParam = searchParams.get('brand');
   const { addToCart, isLoading: cartLoading, error: cartError } = useCart();
+  const { trackViewContent, trackAddToCart, createViewContentData: createViewContent, createAddToCartData: createAddToCart } = useTracking();
   const matService = new MatService();
   
   // Stan dla marek pobieranych z API
@@ -615,6 +617,27 @@ export default function Configurator() {
 
       console.log('✅ Produkt dodany do koszyka:', productId);
       
+      // Track AddToCart event
+      try {
+        const cartItem = {
+          id: productId,
+          quantity: 1,
+          unitPrice: finalPrice,
+          subtotal: finalPrice,
+          productType: 'mat' as const,
+          productId: productId,
+          productName: `Dywaniki EVA Premium - ${selectedCarBrand} ${selectedCarModel}`,
+          productSku: `EVA-${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`,
+          productImage: matImagePath,
+          configuration: configData
+        };
+        
+        const addToCartData = createAddToCart(cartItem, finalPrice);
+        trackAddToCart(addToCartData);
+      } catch (error) {
+        console.error('[Tracking] Error tracking AddToCart:', error);
+      }
+      
       // Otwórz modal koszyka po dodaniu produktu
       setTimeout(() => {
         openCartModal();
@@ -763,6 +786,58 @@ export default function Configurator() {
     
     return totalPrice;
   }, [selectedSetType, selectedSetVariant]);
+
+  // Track ViewContent gdy konfiguracja jest kompletna
+  useEffect(() => {
+    if (!selectedCarBrand || !selectedCarModel || !selectedCarYear || price === 0) {
+      return;
+    }
+
+    // Sprawdź czy event nie został już wysłany dla tej konfiguracji (deduplikacja)
+    const configKey = `${selectedCarBrand}_${selectedCarModel}_${selectedCarYear}_${selectedSetType}_${selectedSetVariant}_${selectedCellType}_${selectedMat}_${selectedEdge}`;
+    const cacheKey = `viewcontent_${configKey}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    
+    if (cached) {
+      return;
+    }
+
+    try {
+      const productId = `${selectedCarBrand}-${selectedCarModel}-${selectedCarYear}-${selectedSetType}-${selectedSetVariant}`;
+      const productName = `Dywaniki EVA Premium - ${selectedCarBrand} ${selectedCarModel}`;
+      const productSku = `EVA-${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`;
+
+      const viewContentData = createViewContent({
+        id: productId,
+        name: productName,
+        sku: productSku,
+        price: price,
+        brand: selectedCarBrand,
+        category: 'car_mats',
+        configuration: {
+          setType: selectedSetType,
+          cellType: selectedCellType,
+          setVariant: selectedSetVariant,
+          materialColor: selectedMat,
+          edgeColor: selectedEdge,
+          heelPad: selectedHeelPad,
+          carDetails: {
+            brand: selectedCarBrand,
+            model: selectedCarModel,
+            year: selectedCarYear,
+            bodyType: selectedBodyType || 'universal'
+          }
+        }
+      }, price);
+
+      trackViewContent(viewContentData);
+
+      // Zapisz w cache (ważność: sesja)
+      sessionStorage.setItem(cacheKey, Date.now().toString());
+    } catch (error) {
+      console.error('[Tracking] Error tracking ViewContent:', error);
+    }
+  }, [selectedCarBrand, selectedCarModel, selectedCarYear, selectedSetType, selectedSetVariant, selectedCellType, selectedMat, selectedEdge, selectedHeelPad, selectedBodyType, price, trackViewContent, createViewContent]);
 
   const mat = useMemo(() => availableMaterialColors.find(m => m.id === selectedMat)!, [selectedMat, availableMaterialColors]);
   const edge = useMemo(() => availableEdgeColors.find(e => e.id === selectedEdge)!, [selectedEdge, availableEdgeColors]);

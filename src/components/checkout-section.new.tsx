@@ -36,6 +36,7 @@ import { PricingService } from '@/lib/services/PricingService';
 import { debugLog } from '@/lib/config/features';
 import { useAbandonedCartHeartbeat } from '@/hooks/useAbandonedCartHeartbeat';
 import { HybridSessionManager } from '@/lib/utils/hybrid-session-manager';
+import { useTracking, createInitiateCheckoutData } from '@/lib/tracking';
 import { motion } from 'framer-motion';
 
 // Schema walidacji - zaktualizowany dla nowego formatu
@@ -88,6 +89,7 @@ export default function CheckoutSectionNew() {
   const router = useRouter();
   const { items, total, itemCount, clearCart } = useCart();
   const { createOrder, saveOrder, isLoading: orderLoading, error: orderError } = useOrder();
+  const { trackInitiateCheckout, trackAddPaymentInfo, createInitiateCheckoutData: createInitiateCheckout } = useTracking();
   
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -149,20 +151,54 @@ export default function CheckoutSectionNew() {
     }
   }, [currentStep]);
 
-  // Heartbeat tylko na kroku 2 (adres): 15 min okno, interwał 30s
+  // Track InitiateCheckout przy pierwszym renderze gdy koszyk nie jest pusty
+  useEffect(() => {
+    if (items.length === 0) {
+      return;
+    }
+
+    // Sprawdź czy event nie został już wysłany dla tego checkoutu (deduplikacja)
+    const cacheKey = 'initiatecheckout_sent';
+    const cached = sessionStorage.getItem(cacheKey);
+    
+    if (cached) {
+      return;
+    }
+
+    try {
+      const initiateCheckoutData = createInitiateCheckout(items, total);
+      trackInitiateCheckout(initiateCheckoutData);
+
+      // Zapisz w cache (ważność: sesja)
+      sessionStorage.setItem(cacheKey, Date.now().toString());
+    } catch (error) {
+      console.error('[Tracking] Error tracking InitiateCheckout:', error);
+    }
+  }, [items, total, trackInitiateCheckout, createInitiateCheckout]);
+
+  // Heartbeat na krokach 2 (adres) i 3 (płatność): 15 min okno, interwał 30s
   const cartHasItems = items.length > 0;
   
   // Get sessionId dynamically in buildPayload to ensure it's always current
-  useAbandonedCartHeartbeat(currentStep === 2 && cartHasItems, () => {
+  useAbandonedCartHeartbeat((currentStep === 2 || currentStep === 3) && cartHasItems, () => {
     const currentSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : '';
     
     if (!currentSessionId || currentSessionId.length < 8) {
       console.warn('[CheckoutSection] Invalid sessionId for heartbeat', { sessionId: currentSessionId });
     }
     
+    // Get address data from form
+    const watchedValues = watch();
+    const addressData = {
+      street: watchedValues.street,
+      city: watchedValues.city,
+      postalCode: watchedValues.postalCode,
+      country: watchedValues.country,
+    };
+    
     return {
       sessionId: currentSessionId,
-      stage: 'checkout_step2',
+      stage: currentStep === 2 ? 'checkout_step2' : 'checkout_step3',
       cartHasItems: items.length > 0,
       contact: {
         firstName: contactFirstName,
@@ -170,6 +206,7 @@ export default function CheckoutSectionNew() {
         email: contactEmail,
         phone: contactPhone,
       },
+      address: addressData.street || addressData.city ? addressData : undefined, // Only include if at least street or city is filled
       items: items.map(i => ({ 
         productId: i.productId, 
         productName: i.productName, 
@@ -179,7 +216,7 @@ export default function CheckoutSectionNew() {
       })),
       currency: 'PLN',
       totalAmount: total,
-      metadata: { checkoutStep: 2 },
+      metadata: { checkoutStep: currentStep },
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
     };
   }, { intervalMs: 30000 });
@@ -349,6 +386,29 @@ export default function CheckoutSectionNew() {
       console.log('🛒 CheckoutSection: cartProducts:', cartProducts);
 
       console.log('🛒 CheckoutSection: Calling createOrder...');
+      
+      // Track AddPaymentInfo przed utworzeniem zamówienia
+      try {
+        const addPaymentInfoData = {
+          content_name: 'Payment Info Added',
+          content_category: 'checkout' as const,
+          value: total,
+          currency: 'PLN',
+          payment_method: data.paymentMethod,
+          contents: items.map(item => ({
+            id: item.productId,
+            quantity: item.quantity,
+            item_price: item.unitPrice,
+            item_name: item.productName,
+            item_category: item.productType === 'mat' ? 'car_mats' : 'accessories',
+            item_brand: item.configuration?.carDetails?.brand || 'EvaPremium',
+            item_variant: item.productSku,
+          })),
+        };
+        trackAddPaymentInfo(addPaymentInfoData);
+      } catch (error) {
+        console.error('[Tracking] Error tracking AddPaymentInfo:', error);
+      }
       
       // Przygotuj dane zamówienia w nowym formacie
       const orderData: CreateOrderDTO = {

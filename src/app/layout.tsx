@@ -6,6 +6,7 @@ import Footer from "@/components/footer";
 import Chatbot from "@/components/Chatbot";
 import Script from "next/script";
 import { SessionProvider } from "@/lib/contexts/session-context";
+import { TrackingProvider } from "@/components/tracking-provider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -30,6 +31,14 @@ export const metadata: Metadata = {
     telephone: false,
   },
   metadataBase: new URL('https://evapremium.pl'),
+  icons: {
+    icon: [
+      { url: '/icon.png', type: 'image/png' },
+      { url: '/favicon.ico', type: 'image/x-icon' },
+    ],
+    apple: '/icon.png',
+    shortcut: '/favicon.ico',
+  },
   alternates: {
     canonical: '/',
   },
@@ -152,10 +161,12 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} bg-black min-h-screen`}>
         <SessionProvider>
-          <Navbar />
-          <div className="pt-16 md:pt-20 lg:pt-24">{children}</div>
-          <Footer />
-          <Chatbot />
+          <TrackingProvider>
+            <Navbar />
+            <div className="pt-16 md:pt-20 lg:pt-24">{children}</div>
+            <Footer />
+            <Chatbot />
+          </TrackingProvider>
         </SessionProvider>
       </body>
     </html>
