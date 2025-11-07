@@ -71,11 +71,11 @@ export class FacebookPixelProvider extends BasePixelProvider {
 
       // Inicjalizacja fbq jeśli jeszcze nie istnieje
       if (!window.fbq) {
-        // eslint-disable-next-line prefer-rest-params, prefer-spread
-        (function (f: Window, b: Document, e: string, v: string, n?: string, t?: string, s?: HTMLScriptElement) {
+        // eslint-disable-next-line prefer-rest-params, prefer-spread, @typescript-eslint/no-explicit-any
+        (function (f: any, b: Document, e: string, v: string) {
           if (f.fbq) return;
-          // eslint-disable-next-line prefer-rest-params, prefer-spread
-          n = f.fbq = function () {
+          // eslint-disable-next-line prefer-rest-params, prefer-spread, @typescript-eslint/no-explicit-any
+          const n: any = f.fbq = function () {
             // eslint-disable-next-line prefer-rest-params, prefer-spread
             n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
           };
@@ -84,10 +84,10 @@ export class FacebookPixelProvider extends BasePixelProvider {
           n.loaded = !0;
           n.version = '2.0';
           n.queue = [];
-          t = b.createElement(e);
+          const t = b.createElement(e);
           t.async = !0;
           t.src = v;
-          s = b.getElementsByTagName(e)[0];
+          const s = b.getElementsByTagName(e)[0];
           if (s?.parentNode) {
             s.parentNode.insertBefore(t, s);
           }
