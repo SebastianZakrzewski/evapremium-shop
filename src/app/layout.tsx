@@ -143,6 +143,17 @@ export default function RootLayout({
           `}
         </Script>
         
+        {/* Facebook Pixel Noscript - dla użytkowników z wyłączonym JavaScript */}
+        <noscript>
+          <img 
+            height="1" 
+            width="1" 
+            style={{ display: 'none' }}
+            src={`https://www.facebook.com/tr?id=${process.env.NEXT_PUBLIC_FB_PIXEL_ID || ''}&ev=PageView&noscript=1`}
+            alt=""
+          />
+        </noscript>
+        
         {/* Schema.org */}
         <Script
           id="organization-schema"
