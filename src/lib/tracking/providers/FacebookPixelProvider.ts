@@ -84,7 +84,7 @@ export class FacebookPixelProvider extends BasePixelProvider {
           n.loaded = !0;
           n.version = '2.0';
           n.queue = [];
-          const t = b.createElement(e);
+          const t = b.createElement(e) as HTMLScriptElement;
           t.async = !0;
           t.src = v;
           const s = b.getElementsByTagName(e)[0];
