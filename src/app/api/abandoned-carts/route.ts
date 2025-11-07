@@ -21,8 +21,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Invalid sessionId' }, { status: 400 });
     }
 
-    // Enforce conditions: only checkout step 2 and cart must have items
-    if (input.stage !== 'checkout_step2' || !input.cartHasItems) {
+    // Enforce conditions: checkout step 2 or 3 and cart must have items
+    if ((input.stage !== 'checkout_step2' && input.stage !== 'checkout_step3') || !input.cartHasItems) {
       console.log('[AbandonedCart:Heartbeat] Not eligible', { stage: input.stage, cartHasItems: input.cartHasItems });
       return NextResponse.json({ success: false, error: 'Not eligible (stage/cart)' }, { status: 400 });
     }
@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
         .update({
           utm: input.utm || {},
           contact: input.contact || {},
+          address: input.address || {},
           car: input.car || {},
           configuration: input.configuration || {},
           items: input.items || [],
@@ -92,6 +93,7 @@ export async function POST(request: NextRequest) {
         status: 'pending',
         utm: input.utm || {},
         contact: input.contact || {},
+        address: input.address || {},
         car: input.car || {},
         configuration: input.configuration || {},
         items: input.items || [],

@@ -52,8 +52,8 @@ export default function Navbar() {
           </div>
           {/* Desktop Cart Icon and Contact */}
           <div className="hidden md:flex items-center gap-3">
-            <a href="tel:+48505401233" className="text-white/90 hover:text-white transition-colors font-medium text-sm">
-              +48 505 401 233
+            <a href="tel:+48570123635" className="text-white/90 hover:text-white transition-colors font-medium text-sm">
+              +48 570 123 635
             </a>
             <Link href="/wyszukaj" className="text-white/90 hover:text-white transition-colors p-2 group">
               <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,8 +116,8 @@ export default function Navbar() {
             <Link href="/akcesoria" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Akcesoria</Link>
             <Link href="/o-nas" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>O Nas</Link>
             <Link href="/kontakt" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Kontakt</Link>
-            <a href="tel:+48505401233" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>
-              +48 505 401 233
+            <a href="tel:+48570123635" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>
+              +48 570 123 635
             </a>
           </div>
         </div>

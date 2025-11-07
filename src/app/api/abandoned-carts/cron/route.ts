@@ -34,41 +34,73 @@ export async function POST(_request: NextRequest) {
       try {
         console.log('[AbandonedCart:Cron] Processing cart', { cartId: cart.id });
         
-        // Double-check that cart still doesn't have a deal (race condition protection)
-        const { data: currentCart } = await supabase
+        // Atomic lock: set status to 'processing' to prevent concurrent processing
+        const { data: lockedCart, error: lockError } = await supabase
           .from('abandoned_carts')
-          .select('bitrix_deal_id')
+          .update({ status: 'processing' })
           .eq('id', cart.id)
+          .eq('status', 'pending') // Only update if still pending
+          .is('bitrix_deal_id', null) // Only update if deal_id is still null
+          .select()
           .single();
 
-        if (currentCart?.bitrix_deal_id) {
-          console.log('[AbandonedCart:Cron] Cart already has deal, skipping', { cartId: cart.id, dealId: currentCart.bitrix_deal_id });
-          results.push({ id: cart.id, error: 'already_exported' });
+        if (lockError) {
+          console.error('[AbandonedCart:Cron] Error locking cart for processing', { cartId: cart.id, error: lockError });
+          results.push({ id: cart.id, error: lockError.message });
+          continue;
+        }
+
+        if (!lockedCart) {
+          // Another process already locked this cart (race condition prevented)
+          console.log('[AbandonedCart:Cron] Cart already locked by another process, skipping', { cartId: cart.id });
+          results.push({ id: cart.id, error: 'already_processing' });
           continue;
         }
 
         const created = await dealService.createDealForAbandonedCart(cart as any);
-        if (created.success && created.id) {
-          // Atomic update: only update if deal_id is still null
-          const { error: updateError } = await supabase
+        
+        if (!created.success || !created.id) {
+          console.error('[AbandonedCart:Cron] Failed to create deal, rolling back status', { cartId: cart.id, error: created.error });
+          // Rollback status to 'pending' if deal creation failed
+          await supabase
             .from('abandoned_carts')
-            .update({ bitrix_deal_id: created.id, bitrix_category_id: null, bitrix_stage_id: null })
-            .eq('id', cart.id)
-            .is('bitrix_deal_id', null);
-
-          if (updateError) {
-            console.error('[AbandonedCart:Cron] Error updating cart with deal_id', updateError);
-            results.push({ id: cart.id, error: updateError.message });
-          } else {
-            console.log('[AbandonedCart:Cron] Successfully created deal', { cartId: cart.id, dealId: created.id });
-            results.push({ id: cart.id, bitrixDealId: created.id });
-          }
-        } else {
-          console.error('[AbandonedCart:Cron] Failed to create deal', { cartId: cart.id, error: created.error });
+            .update({ status: 'pending' })
+            .eq('id', cart.id);
           results.push({ id: cart.id, error: created.error || 'unknown' });
+          continue;
+        }
+
+        // Atomic update: set deal_id and status to 'exported'
+        const { error: updateError } = await supabase
+          .from('abandoned_carts')
+          .update({ bitrix_deal_id: created.id, status: 'exported', bitrix_category_id: null, bitrix_stage_id: null })
+          .eq('id', cart.id)
+          .eq('status', 'processing') // Only update if still processing (double-check)
+          .is('bitrix_deal_id', null); // Extra safety check
+
+        if (updateError) {
+          console.error('[AbandonedCart:Cron] Error updating cart with deal_id', { cartId: cart.id, error: updateError });
+          // Rollback status to 'pending' if update failed
+          await supabase
+            .from('abandoned_carts')
+            .update({ status: 'pending' })
+            .eq('id', cart.id);
+          results.push({ id: cart.id, error: updateError.message });
+        } else {
+          console.log('[AbandonedCart:Cron] Successfully created deal', { cartId: cart.id, dealId: created.id });
+          results.push({ id: cart.id, bitrixDealId: created.id });
         }
       } catch (e: any) {
         console.error('[AbandonedCart:Cron] Exception processing cart', { cartId: cart.id, error: e?.message });
+        // Try to rollback status on exception
+        try {
+          await supabase
+            .from('abandoned_carts')
+            .update({ status: 'pending' })
+            .eq('id', cart.id);
+        } catch (rollbackError) {
+          console.error('[AbandonedCart:Cron] Failed to rollback status on exception', { cartId: cart.id, error: rollbackError });
+        }
         results.push({ id: cart.id, error: e?.message || 'unknown' });
       }
     }

@@ -9,14 +9,28 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { env } from '@/config/env'
 import { OrderService } from '@/lib/services/OrderService'
+import { Przelewy24Service } from '@/lib/services/Przelewy24Service'
 import { P24Error } from '@/lib/types/przelewy24'
 
 const orderService = new OrderService()
+const p24Service = new Przelewy24Service()
 
 export async function POST(request: NextRequest) {
   try {
     if (!env.features?.p24Enabled) {
       return NextResponse.json({ error: 'P24 disabled' }, { status: 503 })
+    }
+
+    // Sprawdź czy P24 jest skonfigurowane
+    if (!p24Service.isP24Available()) {
+      console.error('❌ P24 Register API: P24 nie jest skonfigurowane')
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'P24 nie jest skonfigurowane lub wyłączone' 
+        },
+        { status: 503 }
+      )
     }
     console.log('🔄 P24 Register API: Rozpoczęcie rejestracji płatności')
     console.log('🔍 P24 Register API: Environment Variables Debug:')
@@ -74,8 +88,7 @@ export async function POST(request: NextRequest) {
         { 
           success: false, 
           error: 'Płatność dla tego zamówienia została już zarejestrowana',
-          // Tymczasowo bez zależności od serwisu; zachowaj zgodność odpowiedzi
-          paymentUrl: `${process.env.P24_API_URL_PRODUCTION?.replace('/api/v1','')}/trnRequest/${order.p24Token}`
+          paymentUrl: p24Service.getPaymentUrl(order.p24Token)
         },
         { status: 400 }
       )
@@ -89,7 +102,7 @@ export async function POST(request: NextRequest) {
     
     const transactionData = {
       sessionId: sessionId,
-      amount: Number(order.total),
+      amount: Math.round(Number(order.total) * 100), // Konwersja z złotych na grosze
       currency: 'PLN',
       description: `Zamówienie ${order.orderNumber} - Dywaniki EVA`,
       email: customerData.email,
@@ -97,12 +110,38 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('🔄 P24 Register API: Dane transakcji', transactionData)
+    console.log('🔍 P24 Register API: Kwota w złotych:', order.total)
+    console.log('🔍 P24 Register API: Kwota w groszach:', Math.round(Number(order.total) * 100))
+    console.log('🔍 P24 Register API: Typ kwoty:', typeof order.total)
 
-    // Tymczasowo brak rejestracji – serwis wyłączony podczas refaktoru
-    return NextResponse.json(
-      { success: false, error: 'P24 disabled' },
-      { status: 503 }
-    )
+    // Zarejestruj płatność w P24
+    console.log('🔄 P24 Register API: Rejestracja płatności w P24...')
+    const paymentResult = await p24Service.registerTransaction(transactionData)
+    
+    if (!paymentResult.success) {
+      console.error('❌ P24 Register API: Błąd rejestracji płatności', paymentResult.error)
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: paymentResult.error || 'Błąd rejestracji płatności' 
+        },
+        { status: 500 }
+      )
+    }
+
+    // Zaktualizuj zamówienie z tokenem P24
+    await orderService.updateOrderP24Data(orderId, {
+      p24SessionId: sessionId,
+      p24Token: paymentResult.token
+    })
+
+    console.log('✅ P24 Register API: Płatność zarejestrowana', paymentResult.token)
+
+    return NextResponse.json({
+      success: true,
+      paymentUrl: paymentResult.token ? p24Service.getPaymentUrl(paymentResult.token) : '',
+      token: paymentResult.token || ''
+    })
 
   } catch (error) {
     console.error('❌ P24 Register API: Nieoczekiwany błąd', error)

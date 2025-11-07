@@ -110,3 +110,7 @@ curl -X POST http://localhost:3000/api/abandoned-carts/webhook \
 4. Sprawdź czy deal jest tworzony w Bitrix24
 5. Jeśli nadal nie działa, sprawdź szczegóły błędów w logach
 
+
+
+
+

@@ -227,3 +227,7 @@ Po utworzeniu deala, sprawdź w Bitrix24:
 - `💼 Creating Bitrix24 deal` - próby utworzenia deali
 - `❌ Failed to create deal` - błędy przy tworzeniu deali
 
+
+
+
+

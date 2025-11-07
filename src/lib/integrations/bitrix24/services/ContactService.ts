@@ -247,6 +247,7 @@ export class ContactService {
   ): Promise<{ id: string | null; created: boolean; error?: string }> {
     try {
       const contact = cart.contact || {};
+      const address = cart.address || {};
       
       // Build contact data from cart
       const contactData: Bitrix24Contact = {
@@ -257,6 +258,20 @@ export class ContactService {
         SOURCE_ID: 'WEB',
         SOURCE_DESCRIPTION: 'EVA Website - Porzucony koszyk',
       };
+
+      // Add address data if available
+      if (address.street || address.city || address.postalCode || address.country) {
+        const addressParts: string[] = [];
+        if (address.street) addressParts.push(address.street);
+        if (address.city) addressParts.push(address.city);
+        if (address.postalCode) addressParts.push(address.postalCode);
+        if (address.country) addressParts.push(address.country);
+        
+        contactData.ADDRESS = addressParts.length > 0 ? addressParts.join(', ') : undefined;
+        if (address.city) contactData.ADDRESS_CITY = address.city;
+        if (address.postalCode) contactData.ADDRESS_POSTAL_CODE = address.postalCode;
+        if (address.country) contactData.ADDRESS_COUNTRY = address.country;
+      }
 
       // Extract UTM data if available
       if (cart.utm) {

@@ -19,6 +19,14 @@ function cleanEnvValue(value: string | undefined): string {
 
 // Walidacja zmiennych środowiskowych
 function validateEnvVars() {
+  // Sprawdź czy P24 jest włączone
+  const p24Enabled = process.env.P24_ENABLED === 'true'
+  
+  if (!p24Enabled) {
+    console.log('🔧 P24Config: Przelewy24 jest wyłączone (P24_ENABLED=false)')
+    return false
+  }
+
   const required = [
     'P24_MERCHANT_ID',
     'P24_POS_ID', 
@@ -39,11 +47,21 @@ function validateEnvVars() {
   if (missing.length > 0) {
     throw new Error(`Brakujące zmienne środowiskowe P24: ${missing.join(', ')}`)
   }
+  
+  return true
 }
 
 // Pobierz konfigurację P24
-export function getP24Config(): P24Config {
+export function getP24Config(): P24Config | null {
   console.log('🔍 P24Config: Ładowanie konfiguracji P24...')
+  
+  // Sprawdź czy P24 jest włączone
+  const p24Enabled = process.env.P24_ENABLED === 'true'
+  
+  if (!p24Enabled) {
+    console.log('🔧 P24Config: Przelewy24 jest wyłączone (P24_ENABLED=false)')
+    return null
+  }
   
   // Debug: sprawdź surowe zmienne środowiskowe
   console.log('🔍 P24Config: Surowe zmienne:')
@@ -54,7 +72,10 @@ export function getP24Config(): P24Config {
   console.log('🔍 P24Config: P24_REPORT_KEY:', `"${process.env.P24_REPORT_KEY}"`, 'length:', process.env.P24_REPORT_KEY?.length)
   console.log('🔍 P24Config: P24_ENVIRONMENT:', `"${process.env.P24_ENVIRONMENT}"`, 'length:', process.env.P24_ENVIRONMENT?.length)
   
-  validateEnvVars()
+  const isValid = validateEnvVars()
+  if (!isValid) {
+    return null
+  }
 
   // Wyczyść wszystkie zmienne środowiskowe
   const merchantId = parseInt(cleanEnvValue(process.env.P24_MERCHANT_ID))
@@ -152,5 +173,10 @@ export function getP24Config(): P24Config {
   return config
 }
 
-// Eksportuj domyślną konfigurację
-export const P24_CONFIG = getP24Config()
+// Eksportuj domyślną konfigurację (może być null jeśli P24 jest wyłączone)
+// export const P24_CONFIG = getP24Config() // Wyłączone - nie używane po stronie klienta
+
+// Helper function do sprawdzenia czy P24 jest dostępne
+export function isP24Enabled(): boolean {
+  return process.env.P24_ENABLED === 'true' && getP24Config() !== null
+}

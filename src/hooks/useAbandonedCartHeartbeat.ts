@@ -23,6 +23,7 @@ interface Options {
 export function useAbandonedCartHeartbeat(active: boolean, buildPayload: BuildPayload, options: Options = {}) {
   const { intervalMs = 30000 } = options;
   const timerRef = useRef<number | null>(null);
+  const webhookSentRef = useRef<boolean>(false); // Flag to prevent duplicate webhook calls
   
   // Store buildPayload in ref to avoid recreating effect on every render
   const buildPayloadRef = useRef<BuildPayload>(buildPayload);
@@ -31,7 +32,14 @@ export function useAbandonedCartHeartbeat(active: boolean, buildPayload: BuildPa
   }, [buildPayload]);
 
   useEffect(() => {
-    if (!active) return;
+    if (!active) {
+      // Reset flag when hook is deactivated
+      webhookSentRef.current = false;
+      return;
+    }
+
+    // Reset flag when hook becomes active
+    webhookSentRef.current = false;
 
     const send = async () => {
       try {
@@ -56,12 +64,21 @@ export function useAbandonedCartHeartbeat(active: boolean, buildPayload: BuildPa
 
     // pagehide/beforeunload via beacon
     const onPageHide = () => {
+      // Prevent duplicate webhook calls if already sent
+      if (webhookSentRef.current) {
+        console.log('[AbandonedCart:Heartbeat] Webhook already sent, skipping duplicate call');
+        return;
+      }
+
       try {
         const payload = buildPayloadRef.current();
         if (!payload || !payload.sessionId) {
           console.warn('[AbandonedCart:Heartbeat] Cannot send beacon: missing payload or sessionId');
           return;
         }
+        
+        // Mark as sent immediately to prevent duplicate calls
+        webhookSentRef.current = true;
         
         const webhookPayload = { ...payload, event: 'pagehide' };
         console.log('[AbandonedCart:Heartbeat] Sending beacon on pagehide', { 
@@ -88,6 +105,8 @@ export function useAbandonedCartHeartbeat(active: boolean, buildPayload: BuildPa
         }
       } catch (error) {
         console.error('[AbandonedCart:Heartbeat] Error in onPageHide', error);
+        // Reset flag on error so it can be retried if needed
+        webhookSentRef.current = false;
       }
     };
 
@@ -101,6 +120,8 @@ export function useAbandonedCartHeartbeat(active: boolean, buildPayload: BuildPa
       }
       window.removeEventListener('pagehide', onPageHide);
       window.removeEventListener('beforeunload', onPageHide);
+      // Reset flag when cleaning up
+      webhookSentRef.current = false;
     };
   }, [active, intervalMs]); // Removed buildPayload from dependencies
 }

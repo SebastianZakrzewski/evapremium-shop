@@ -286,3 +286,7 @@ Logi zawierają:
    - Frontend wywołuje `/api/abandoned-carts/convert`
    - Status zmienia się na 'converted'
 
+
+
+
+

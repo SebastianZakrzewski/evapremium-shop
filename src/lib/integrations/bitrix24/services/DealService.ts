@@ -81,10 +81,231 @@ export class DealService {
   }
 
   /**
+   * Remove undefined values from object
+   */
+  private removeUndefinedValues<T extends Record<string, any>>(obj: T): T {
+    const result = {} as T;
+    
+    for (const [key, value] of Object.entries(obj)) {
+      // Keep the field if value is not undefined and not null
+      if (value !== undefined && value !== null) {
+        result[key as keyof T] = value;
+      }
+    }
+    
+    return result;
+  }
+
+  /**
+   * Extract car details from abandoned cart
+   */
+  private extractCarDetailsFromCart(cart: AbandonedCartRecord): {
+    brand?: string;
+    model?: string;
+    year?: string | number;
+    body?: string;
+  } {
+    // First try cart.car (direct car data)
+    if (cart.car) {
+      return {
+        brand: cart.car.make,
+        model: cart.car.model,
+        year: cart.car.year,
+        body: cart.car.bodyType,
+      };
+    }
+
+    // Fallback: try to extract from items configuration
+    if (cart.items && cart.items.length > 0) {
+      const matItem = cart.items.find(item => 
+        item.productType === 'mat' && (item as any).configuration
+      );
+
+      if (matItem && (matItem as any).configuration) {
+        const config = (matItem as any).configuration;
+        if (config.carDetails) {
+          return {
+            brand: config.carDetails.brand || config.carDetails.make,
+            model: config.carDetails.model,
+            year: config.carDetails.year,
+            body: config.carDetails.bodyType || config.carDetails.body,
+          };
+        }
+      }
+    }
+
+    return {};
+  }
+
+  /**
+   * Extract product variant (enum value) from abandoned cart
+   */
+  private extractProductVariantFromCart(cart: AbandonedCartRecord): number | undefined {
+    const variantMap: Record<string, number> = {
+      'front': 270,
+      'basic': 274,
+      'premium': 276,
+      'complete': 272,
+    };
+
+    // Try cart.configuration first
+    if (cart.configuration) {
+      const variant = (cart.configuration as any).setVariant || (cart.configuration as any).variant || 'basic';
+      return variantMap[variant] || 274;
+    }
+
+    // Fallback: try items configuration
+    if (cart.items && cart.items.length > 0) {
+      const matItem = cart.items.find(item => item.productType === 'mat');
+      if (matItem && (matItem as any).configuration) {
+        const config = (matItem as any).configuration;
+        const variant = config.setVariant || config.variant || 'basic';
+        return variantMap[variant] || 274;
+      }
+    }
+
+    return 274; // Default
+  }
+
+  /**
+   * Extract set type (enum value) from abandoned cart
+   */
+  private extractSetTypeFromCart(cart: AbandonedCartRecord): number | undefined {
+    const setTypeMap: Record<string, number> = {
+      '3d-with-rims': 264,
+      'classic': 266,
+    };
+
+    // Try cart.configuration first
+    if (cart.configuration) {
+      const setType = (cart.configuration as any).setType || '3d-with-rims';
+      return setTypeMap[setType] || 264;
+    }
+
+    // Fallback: try items configuration
+    if (cart.items && cart.items.length > 0) {
+      const matItem = cart.items.find(item => item.productType === 'mat');
+      if (matItem && (matItem as any).configuration) {
+        const config = (matItem as any).configuration;
+        const setType = config.setType || '3d-with-rims';
+        return setTypeMap[setType] || 264;
+      }
+    }
+
+    return 264; // Default
+  }
+
+  /**
+   * Extract cell shape (enum value) from abandoned cart
+   */
+  private extractCellShapeFromCart(cart: AbandonedCartRecord): number | undefined {
+    const shapeMap: Record<string, number> = {
+      'diamonds': 278,
+      'honey': 280,
+    };
+
+    // Try cart.configuration first
+    if (cart.configuration) {
+      const cellShape = (cart.configuration as any).cellShape || (cart.configuration as any).cellType || 'diamonds';
+      return shapeMap[cellShape] || 278;
+    }
+
+    // Fallback: try items configuration
+    if (cart.items && cart.items.length > 0) {
+      const matItem = cart.items.find(item => item.productType === 'mat');
+      if (matItem && (matItem as any).configuration) {
+        const config = (matItem as any).configuration;
+        const cellShape = config.cellShape || config.cellType || 'diamonds';
+        return shapeMap[cellShape] || 278;
+      }
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Extract material color (enum value) from abandoned cart
+   */
+  private extractMaterialColorFromCart(cart: AbandonedCartRecord): number | undefined {
+    const colorMap: Record<string, number> = {
+      'blue': 358,
+      'black': 360,
+      'gray': 362,
+      'brown': 364,
+      'beige': 366,
+    };
+
+    // Try cart.configuration first
+    if (cart.configuration) {
+      const materialColor = (cart.configuration as any).materialColor || 'black';
+      return colorMap[materialColor] || undefined;
+    }
+
+    // Fallback: try items configuration
+    if (cart.items && cart.items.length > 0) {
+      const matItem = cart.items.find(item => item.productType === 'mat');
+      if (matItem && (matItem as any).configuration) {
+        const config = (matItem as any).configuration;
+        const materialColor = config.materialColor || 'black';
+        return colorMap[materialColor] || undefined;
+      }
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Extract trim color (enum value) from abandoned cart
+   */
+  private extractTrimColorFromCart(cart: AbandonedCartRecord): number | undefined {
+    const trimColorMap: Record<string, number> = {
+      'blue': 368,
+      'black': 370,
+      'gray': 372,
+      'brown': 374,
+      'beige': 376,
+    };
+
+    // Try cart.configuration first
+    if (cart.configuration) {
+      const trimColor = (cart.configuration as any).trimColor || (cart.configuration as any).edgeColor || 'black';
+      return trimColorMap[trimColor] || undefined;
+    }
+
+    // Fallback: try items configuration
+    if (cart.items && cart.items.length > 0) {
+      const matItem = cart.items.find(item => item.productType === 'mat');
+      if (matItem && (matItem as any).configuration) {
+        const config = (matItem as any).configuration;
+        const trimColor = config.trimColor || config.edgeColor || 'black';
+        return trimColorMap[trimColor] || undefined;
+      }
+    }
+
+    return undefined;
+  }
+
+  /**
    * Build deal payload from abandoned cart
    */
   async createDealForAbandonedCart(cart: AbandonedCartRecord): Promise<{ id: string; success: boolean; error?: string }> {
     const { categoryId, stageId } = await stageMappingService.resolveStage({ type: 'abandoned_cart' });
+
+    // 0. Check if deal already exists in Bitrix24 (prevent duplicates)
+    const existingDeal = await this.findByOriginId(cart.id);
+    if (existingDeal) {
+      console.log('[DealService] Deal already exists for abandoned cart, returning existing deal', {
+        cartId: cart.id,
+        dealId: existingDeal.id,
+        title: existingDeal.title,
+        stageId: existingDeal.stageId,
+        categoryId: existingDeal.categoryId
+      });
+      return {
+        id: existingDeal.id,
+        success: true,
+      };
+    }
 
     // 1. Create or find contact
     let contactId: string | null = null;
@@ -104,10 +325,27 @@ export class DealService {
       // Continue without contact - deal will still be created
     }
 
-    // 2. Build deal title
+    // 2. Extract car and product details
+    const carDetails = this.extractCarDetailsFromCart(cart);
+    const productVariant = this.extractProductVariantFromCart(cart);
+    const setType = this.extractSetTypeFromCart(cart);
+    const cellShape = this.extractCellShapeFromCart(cart);
+    const materialColor = this.extractMaterialColorFromCart(cart);
+    const trimColor = this.extractTrimColorFromCart(cart);
+
+    console.log('[DealService] Extracted car and product details:', {
+      carDetails,
+      productVariant,
+      setType,
+      cellShape,
+      materialColor,
+      trimColor,
+    });
+
+    // 3. Build deal title
     const titleParts: string[] = ['[Porzucony koszyk]'];
-    if (cart.car?.make) titleParts.push(String(cart.car.make));
-    if (cart.car?.model) titleParts.push(String(cart.car.model));
+    if (carDetails.brand) titleParts.push(String(carDetails.brand));
+    if (carDetails.model) titleParts.push(String(carDetails.model));
     const title = titleParts.join(' ');
 
     // 3. Build comments with product details
@@ -123,6 +361,19 @@ export class DealService {
       if (c.phone) commentsLines.push(`Telefon: ${c.phone}`);
     }
 
+    // Add address information
+    if (cart.address) {
+      const addr = cart.address;
+      const addrParts: string[] = [];
+      if (addr.street) addrParts.push(addr.street);
+      if (addr.city) addrParts.push(addr.city);
+      if (addr.postalCode) addrParts.push(addr.postalCode);
+      if (addr.country) addrParts.push(addr.country);
+      if (addrParts.length > 0) {
+        commentsLines.push(`Adres: ${addrParts.join(', ')}`);
+      }
+    }
+
     // Add car information
     if (cart.car) {
       const carParts: string[] = [];
@@ -130,6 +381,16 @@ export class DealService {
       if (cart.car.model) carParts.push(cart.car.model);
       if (cart.car.year) carParts.push(String(cart.car.year));
       if (cart.car.bodyType) carParts.push(cart.car.bodyType);
+      if (carParts.length > 0) {
+        commentsLines.push(`Samochód: ${carParts.join(' ')}`);
+      }
+    } else if (carDetails.brand || carDetails.model) {
+      // Fallback: use extracted car details
+      const carParts: string[] = [];
+      if (carDetails.brand) carParts.push(String(carDetails.brand));
+      if (carDetails.model) carParts.push(String(carDetails.model));
+      if (carDetails.year) carParts.push(String(carDetails.year));
+      if (carDetails.body) carParts.push(String(carDetails.body));
       if (carParts.length > 0) {
         commentsLines.push(`Samochód: ${carParts.join(' ')}`);
       }
@@ -174,11 +435,44 @@ export class DealService {
       ORIGINATOR_ID: 'EVA Website',
       ORIGIN_ID: cart.id,
       COMMENTS: commentsLines.join('\n'),
-      CONTACT_ID: contactId || undefined, // Add contact if available
+      CONTACT_ID: contactId || undefined,
+      
+      // ✅ POLA SAMOCHODU - mapowanie danych auta
+      UF_CRM_1760788285332: carDetails.brand,        // Marka samochodu
+      UF_CRM_1760788302371: carDetails.model,        // Model samochodu
+      UF_CRM_1760788317619: carDetails.year ? Number(carDetails.year) : undefined, // Rok samochodu (double)
+      UF_CRM_1760788343011: carDetails.body,         // Typ nadwozia
+      
+      // ✅ POLA PRODUKTU - mapowanie danych produktu (wartości enum)
+      UF_CRM_1757024835301: setType,           // Rodzaj kompletu (setType)
+      UF_CRM_1757024931236: productVariant,    // Wariant kompletu (setVariant)
+      UF_CRM_1757025126670: cellShape,         // Kształt komórek
+      UF_CRM_1757177134448: materialColor,     // Kolor materiału
+      UF_CRM_1757177281489: trimColor,         // Kolor obszycia
     } as any;
 
+    // Remove undefined values before validation
+    const cleanedDeal = this.removeUndefinedValues(deal);
+    console.log('[DealService] Deal object after cleaning undefined values:', {
+      originalFields: Object.keys(deal).length,
+      cleanedFields: Object.keys(cleanedDeal).length,
+      carFields: {
+        brand: cleanedDeal.UF_CRM_1760788285332,
+        model: cleanedDeal.UF_CRM_1760788302371,
+        year: cleanedDeal.UF_CRM_1760788317619,
+        body: cleanedDeal.UF_CRM_1760788343011,
+      },
+      productFields: {
+        setType: cleanedDeal.UF_CRM_1757024835301,
+        variant: cleanedDeal.UF_CRM_1757024931236,
+        cellShape: cleanedDeal.UF_CRM_1757025126670,
+        materialColor: cleanedDeal.UF_CRM_1757177134448,
+        trimColor: cleanedDeal.UF_CRM_1757177281489,
+      },
+    });
+
     // 4. Create deal
-    const dealResult = await this.createDeal(deal, { 
+    const dealResult = await this.createDeal(cleanedDeal, { 
       stageId,
       contactId: contactId || undefined,
     });
@@ -597,6 +891,61 @@ export class DealService {
 
     } catch (error) {
       console.error('❌ Failed to find deal by order number:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Find deal by ORIGIN_ID across all categories
+   * Used to prevent duplicate deals for abandoned carts
+   */
+  async findByOriginId(originId: string): Promise<DealSearchResult | null> {
+    try {
+      console.log('🔍 Searching deal by ORIGIN_ID:', originId);
+
+      const response = await this.client.get('crm.deal.list', {
+        filter: {
+          'ORIGIN_ID': originId,
+          'ORIGINATOR_ID': 'EVA Website', // Ensure it's from our system
+        },
+        select: ['ID', 'TITLE', 'STAGE_ID', 'OPPORTUNITY', 'CURRENCY_ID', 'CONTACT_ID', 'ORIGIN_ID', 'ORIGINATOR_ID', 'CATEGORY_ID'],
+        start: 0,
+      });
+
+      if (response.error) {
+        throw new Error(`Bitrix24 API Error: ${response.error.error_description || response.error.error}`);
+      }
+
+      const deals = response.result || [];
+      if (deals.length === 0) {
+        console.log('💼 No deal found with ORIGIN_ID:', originId);
+        return null;
+      }
+
+      const deal = deals[0];
+      const result: DealSearchResult = {
+        id: deal.ID,
+        title: deal.TITLE,
+        stageId: deal.STAGE_ID,
+        opportunity: deal.OPPORTUNITY,
+        currencyId: deal.CURRENCY_ID,
+        contactId: deal.CONTACT_ID,
+        orderNumber: deal.ORIGIN_ID,
+        categoryId: deal.CATEGORY_ID ? Number(deal.CATEGORY_ID) : undefined,
+      };
+
+      console.log('✅ Deal found by ORIGIN_ID:', { 
+        id: result.id, 
+        title: result.title, 
+        stageId: result.stageId,
+        categoryId: result.categoryId || 'unknown',
+        originId: originId
+      });
+
+      return result;
+
+    } catch (error) {
+      console.error('❌ Failed to find deal by ORIGIN_ID:', error);
       return null;
     }
   }

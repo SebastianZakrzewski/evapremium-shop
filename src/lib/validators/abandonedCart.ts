@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const abandonedCartStatusSchema = z.enum(['pending', 'exported', 'converted', 'discarded']);
+export const abandonedCartStatusSchema = z.enum(['pending', 'processing', 'exported', 'converted', 'discarded']);
 
 export const abandonedCartContactSchema = z.object({
   email: z.string().email().optional(),
@@ -33,12 +33,20 @@ export const abandonedCartItemSchema = z.object({
   currency: z.string().max(8).optional(),
 }).strict();
 
+export const abandonedCartAddressSchema = z.object({
+  street: z.string().max(255).optional(),
+  city: z.string().max(100).optional(),
+  postalCode: z.string().max(20).optional(),
+  country: z.string().max(100).optional(),
+}).strict().partial();
+
 export const abandonedCartUpsertInputSchema = z.object({
   sessionId: z.string().min(8),
-  stage: z.literal('checkout_step2'),
+  stage: z.enum(['checkout_step2', 'checkout_step3']),
   cartHasItems: z.boolean(),
   utm: z.record(z.unknown()).optional(),
   contact: abandonedCartContactSchema.optional(),
+  address: abandonedCartAddressSchema.optional(),
   car: abandonedCartCarSchema.optional(),
   configuration: abandonedCartConfigurationSchema.optional(),
   items: z.array(abandonedCartItemSchema).optional(),
@@ -59,6 +67,7 @@ export const abandonedCartRecordSchema = z.object({
   expire_at: z.string(),
   utm: z.record(z.unknown()),
   contact: abandonedCartContactSchema.default({}).catch({}),
+  address: abandonedCartAddressSchema.default({}).catch({}).optional(),
   car: abandonedCartCarSchema.default({}).catch({}),
   configuration: abandonedCartConfigurationSchema.default({}).catch({}),
   items: z.array(abandonedCartItemSchema).default([]).catch([]),

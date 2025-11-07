@@ -1,4 +1,4 @@
-export type AbandonedCartStatus = 'pending' | 'exported' | 'converted' | 'discarded';
+export type AbandonedCartStatus = 'pending' | 'processing' | 'exported' | 'converted' | 'discarded';
 
 export interface AbandonedCartSnapshotContact {
   email?: string;
@@ -31,6 +31,13 @@ export interface AbandonedCartItem {
   currency?: string;
 }
 
+export interface AbandonedCartSnapshotAddress {
+  street?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
+}
+
 export interface AbandonedCartRecord {
   id: string;
   session_id: string;
@@ -41,6 +48,7 @@ export interface AbandonedCartRecord {
   expire_at: string;
   utm: Record<string, unknown>;
   contact: AbandonedCartSnapshotContact;
+  address?: AbandonedCartSnapshotAddress;
   car: AbandonedCartSnapshotCar;
   configuration: AbandonedCartSnapshotConfiguration;
   items: AbandonedCartItem[];
@@ -56,8 +64,11 @@ export interface AbandonedCartRecord {
 
 export interface AbandonedCartUpsertInput {
   sessionId: string;
+  stage: 'checkout_step2' | 'checkout_step3';
+  cartHasItems: boolean;
   utm?: Record<string, unknown>;
   contact?: AbandonedCartSnapshotContact;
+  address?: AbandonedCartSnapshotAddress;
   car?: AbandonedCartSnapshotCar;
   configuration?: AbandonedCartSnapshotConfiguration;
   items?: AbandonedCartItem[];
