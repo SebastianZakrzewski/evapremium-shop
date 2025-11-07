@@ -71,9 +71,12 @@ export class FacebookPixelProvider extends BasePixelProvider {
 
       // Inicjalizacja fbq jeśli jeszcze nie istnieje
       if (!window.fbq) {
+        // eslint-disable-next-line prefer-rest-params, prefer-spread
         (function (f: Window, b: Document, e: string, v: string, n?: string, t?: string, s?: HTMLScriptElement) {
           if (f.fbq) return;
+          // eslint-disable-next-line prefer-rest-params, prefer-spread
           n = f.fbq = function () {
+            // eslint-disable-next-line prefer-rest-params, prefer-spread
             n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
           };
           if (!f._fbq) f._fbq = n;
