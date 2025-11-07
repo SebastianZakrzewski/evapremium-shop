@@ -26,7 +26,7 @@ const faqData: FAQItem[] = [
   {
     id: 3,
     question: "Ile trwa realizacja zamówienia?",
-    answer: "Standardowy czas realizacji to 2-5 dni roboczych. W przypadku specjalnych zamówień lub nietypowych modeli aut czas może się wydłużyć do 7-10 dni. Oferujemy również ekspresową realizację w 24h za dodatkową opłatą.",
+    answer: "Standardowy czas realizacji to 2-3 tygodnie. W przypadku specjalnych zamówień lub nietypowych modeli aut czas może się wydłużyć. Oferujemy również ekspresową realizację w 24h za dodatkową opłatą.",
     category: "Dostawa"
   },
   {
@@ -38,13 +38,13 @@ const faqData: FAQItem[] = [
   {
     id: 5,
     question: "Czy dywaniki mają gwarancję?",
-    answer: "Tak, wszystkie nasze dywaniki objęte są 2-letnią gwarancją na wady materiałowe i wykonania. Gwarancja obejmuje również odporność na normalne użytkowanie. W przypadku problemów zwracamy lub wymieniamy produkt bezpłatnie.",
+    answer: "Tak, wszystkie nasze dywaniki objęte są roczną gwarancją na wady materiałowe i wykonania. Gwarancja obejmuje również odporność na normalne użytkowanie. W przypadku problemów wymieniamy produkt bezpłatnie.",
     category: "Gwarancja"
   },
   {
     id: 6,
     question: "Jakie kolory są dostępne?",
-    answer: "Oferujemy szeroką paletę kolorów: czarny, szary, beżowy, brązowy, niebieski, czerwony, zielony i wiele innych. Kolory są dopasowane do najpopularniejszych odcieni wnętrz samochodowych. Możemy również wykonać dywaniki w kolorach specjalnych na zamówienie.",
+    answer: "Oferujemy szeroką paletę kolorów: czarny, szary, beżowy, brązowy, niebieski, czerwony, zielony i wiele innych. Kolory są dopasowane do najpopularniejszych odcieni wnętrz samochodowych.",
     category: "Kolorystyka"
   },
   {
@@ -62,13 +62,13 @@ const faqData: FAQItem[] = [
   {
     id: 9,
     question: "Czy oferujecie darmową dostawę?",
-    answer: "Tak, oferujemy darmową dostawę na terenie całej Polski przy zamówieniach powyżej 199 zł. Dla zamówień poniżej tej kwoty koszt dostawy wynosi 15 zł. Dostawa realizowana jest przez firmę kurierską w ciągu 1-2 dni roboczych.",
+    answer: "Tak, oferujemy darmową dostawę na terenie całej Polski przy zamówieniach powyżej 600 zł. Dla zamówień poniżej tej kwoty koszt dostawy wynosi 27 zł. Dostawa realizowana jest przez firmę kurierską w ciągu 1-2 dni roboczych.",
     category: "Dostawa"
   },
   {
     id: 10,
     question: "Co zrobić jeśli dywaniki nie pasują?",
-    answer: "Jeśli dywaniki nie pasują idealnie do Twojego samochodu, skontaktuj się z nami w ciągu 14 dni od otrzymania przesyłki. Wymienimy je na nowe lub zwrócimy pełną kwotę. Jakość dopasowania jest dla nas priorytetem.",
+    answer: "Jeśli dywaniki nie pasują idealnie do Twojego samochodu, skontaktuj się z nami w ciągu 14 dni od otrzymania przesyłki. Wymienimy je na nowe, dopasowane do Twojego pojazdu. Jakość dopasowania jest dla nas priorytetem.",
     category: "Zwroty"
   }
 ];

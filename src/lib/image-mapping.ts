@@ -41,9 +41,9 @@ export function getMatImagePath(
   const honeyClassicBorderFolderMap: Record<string, string> = {
     'beige': 'honey beige trim',
     'black': 'honey black',
-    'blue': 'honey blue trim',
+    'blue': 'honey blue trim', // Niebieskie obszycie używa podstawowego folderu
     'brown': 'honey brown trim',
-    'darkblue': 'honey blue trim', // Użyj blue trim dla darkblue (brak dedykowanego folderu)
+    'darkblue': 'honey darkblue trim', // Granatowe obszycie używa dedykowanego folderu
     'darkgrey': 'honey darkgrey trim',
     'green': 'honey green trim',
     'lightgrey': 'honey lightgrey trim',
@@ -70,7 +70,9 @@ export function getMatImagePath(
       return `/dywaniki/classic/diamonds/diamonds ${borderFolder}/5os-classic-diamonds-${materialColor}-${borderColor}.webp`;
     } else if (cellStructure === 'honey') {
       const honeyBorderFolder = honeyClassicBorderFolderMap[borderColor] || `honey ${borderColor} trim`;
-      return `/dywaniki/classic/honeycomb/${honeyBorderFolder}/5os-classic-honey-${materialColor}-${borderColor}.webp`;
+      // Dla darkblue obszycia w classic+honey, nazwa pliku używa 'blue' zamiast 'darkblue'
+      const borderColorForFilename = borderColor === 'darkblue' ? 'blue' : borderColor;
+      return `/dywaniki/classic/honeycomb/${honeyBorderFolder}/5os-classic-honey-${materialColor}-${borderColorForFilename}.webp`;
     }
   }
 

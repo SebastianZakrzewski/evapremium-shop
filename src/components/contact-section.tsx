@@ -262,13 +262,33 @@ export default function ContactSection() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="bg-black/20 rounded-lg p-8 text-center">
-                <div className="w-full h-64 bg-gray-800 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-300 text-lg">Mapa zostanie wkrótce dodana</p>
-                      <p className="text-gray-400 text-sm">81-198 Pogórze, ul. Tadeusza Kościuszki 34/1</p>
-                  </div>
+              <div className="bg-black/20 rounded-lg p-4">
+                <div className="w-full h-96 rounded-lg overflow-hidden border border-gray-700 shadow-lg">
+                  <iframe
+                    src="https://www.google.com/maps?q=ul.+Tadeusza+Kościuszki+34%2F1,+81-198+Pogórze,+Gdynia&output=embed&hl=pl&z=16"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Lokalizacja EvaPremium - ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze"
+                    className="w-full h-full"
+                  />
+                </div>
+                <div className="mt-4 text-center">
+                  <p className="text-gray-300 text-sm">
+                    <MapPin className="h-4 w-4 inline mr-2 text-red-400" />
+                    81-198 Pogórze, ul. Tadeusza Kościuszki 34/1
+                  </p>
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=ul.+Tadeusza+Kościuszki+34%2F1,+81-198+Pogórze,+Gdynia"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-red-400 hover:text-red-300 transition-colors text-sm mt-2 inline-block"
+                  >
+                    Otwórz w Google Maps →
+                  </a>
                 </div>
               </div>
             </CardContent>

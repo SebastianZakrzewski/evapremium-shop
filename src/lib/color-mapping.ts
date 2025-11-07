@@ -76,3 +76,31 @@ export function getAvailableColors(cellStructure: string, type: 'material' | 'bo
   
   return type === 'material' ? structure.materialColors : structure.borderColors;
 }
+
+/**
+ * Pobiera dostępne kolory materiałów filtrowane na podstawie wybranego koloru obszycia
+ * Szczególnie ważne dla kombinacji classic+honey+darkblue obszycie
+ */
+export function getAvailableMaterialColorsForEdge(
+  cellStructure: string,
+  setType: string,
+  edgeColor: string
+): string[] {
+  const allMaterialColors = getAvailableColors(cellStructure, 'material');
+  
+  // Specjalna logika dla classic+honey+darkblue obszycie
+  if (setType === 'classic' && cellStructure === 'honey' && edgeColor === 'darkblue') {
+    // Dla granatowego obszycia w classic+honey, dostępne są tylko niektóre kolory materiałów
+    // Na podstawie dostępnych kombinacji w systemie plików
+    const availableWithDarkblueEdge = [
+      'black', 'blue', 'brown', 'darkblue', 'darkgreen', 'darkgrey',
+      'ivory', 'lightbeige', 'maroon', 'red'
+    ];
+    
+    // Zwróć tylko kolory które są dostępne zarówno dla honey jak i z darkblue obszyciem
+    return allMaterialColors.filter(color => availableWithDarkblueEdge.includes(color));
+  }
+  
+  // Dla wszystkich innych kombinacji zwróć wszystkie dostępne kolory
+  return allMaterialColors;
+}

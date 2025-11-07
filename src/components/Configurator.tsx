@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
-import { getAvailableColors, getColorInfo } from "@/lib/color-mapping";
+import { getAvailableColors, getColorInfo, getAvailableMaterialColorsForEdge } from "@/lib/color-mapping";
 import { getMatImagePath } from "@/lib/image-mapping";
 import { useCart } from "@/hooks/useCart.new";
 import { ConfiguratorService } from "@/lib/services/ConfiguratorService";
@@ -84,8 +84,8 @@ const PRICING = {
 };
 
 const setTypes: SetType[] = [
-  { id: "3d-with-rims", name: "3D z rantami", description: "Dywaniki 3D z obszyciem rantowym", priceModifier: 0 },
-  { id: "classic", name: "3D bez rantów", description: "Klasyczne dywaniki płaskie", priceModifier: 0 },
+  { id: "3d-with-rims", name: "3D z rantami", description: "Dywaniki 3D z wysokimi rantami", priceModifier: 0 },
+  { id: "classic", name: "3D bez rantów", description: "Dywaniki standardowe", priceModifier: 0 },
 ];
 
 const cellTypes: CellType[] = [
@@ -740,14 +740,21 @@ export default function Configurator() {
     return parts.join(" ");
   };
 
-  // Dynamiczne kolory na podstawie wybranej struktury komórek
+  // Dynamiczne kolory na podstawie wybranej struktury komórek i obszycia
   const availableMaterialColors = useMemo(() => {
-    return getAvailableColors(selectedCellType, 'material').map(colorKey => ({
+    // Użyj filtrowania na podstawie obszycia dla classic+honey+darkblue
+    const materialColorKeys = getAvailableMaterialColorsForEdge(
+      selectedCellType,
+      selectedSetType,
+      selectedEdge
+    );
+    
+    return materialColorKeys.map(colorKey => ({
       id: colorKey,
       name: getColorInfo(colorKey).name,
       color: getColorInfo(colorKey).color
     }));
-  }, [selectedCellType]);
+  }, [selectedCellType, selectedSetType, selectedEdge]);
 
   const availableEdgeColors = useMemo(() => {
     return getAvailableColors(selectedCellType, 'border').map(colorKey => ({
@@ -757,7 +764,7 @@ export default function Configurator() {
     }));
   }, [selectedCellType]);
 
-  // Resetuj wybrane kolory jeśli nie są dostępne dla nowej struktury komórek
+  // Resetuj wybrane kolory jeśli nie są dostępne dla nowej struktury komórek lub obszycia
   useEffect(() => {
     if (!availableMaterialColors.find(c => c.id === selectedMat)) {
       setSelectedMat(availableMaterialColors[0]?.id || "black");
@@ -765,7 +772,7 @@ export default function Configurator() {
     if (!availableEdgeColors.find(c => c.id === selectedEdge)) {
       setSelectedEdge(availableEdgeColors[0]?.id || "black");
     }
-  }, [selectedCellType, availableMaterialColors, availableEdgeColors, selectedMat, selectedEdge]);
+  }, [selectedCellType, selectedSetType, selectedEdge, availableMaterialColors, availableEdgeColors, selectedMat, selectedEdge]);
 
   const price = useMemo(() => {
     if (!selectedSetType || !selectedSetVariant) return 0;

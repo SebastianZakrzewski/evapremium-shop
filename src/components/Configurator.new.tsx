@@ -80,8 +80,8 @@ const PRICING = {
 };
 
 const setTypes: SetType[] = [
-  { id: "3d-with-rims", name: "3D z rantami", description: "Dywaniki 3D z obszyciem rantowym", priceModifier: 0 },
-  { id: "classic", name: "3D bez rantów", description: "Klasyczne dywaniki płaskie", priceModifier: -40 },
+  { id: "3d-with-rims", name: "3D z rantami", description: "Dywaniki 3D z wysokimi rantami", priceModifier: 0 },
+  { id: "classic", name: "3D bez rantów", description: "Dywaniki standardowe", priceModifier: -40 },
 ];
 
 const cellTypes: CellType[] = [
