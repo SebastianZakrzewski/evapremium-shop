@@ -69,16 +69,17 @@ type SetVariant = {
 // Struktura cenowa - sztywne ceny za komplety + rabaty
 const PRICING = {
   basePrice: {
-    'classic': { front: 290, basic: 510, premium: 710, complete: 350 },
-    '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350 }
+    'classic': { front: 290, basic: 510, premium: 710, complete: 350, test: 0.05 },
+    '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350, test: 0.05 }
   },
-  // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł
+  // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł, 0% dla test
   getDiscount: (basePrice: number) => {
+    if (basePrice <= 0.05) return 0; // Brak rabatu dla testu
     return basePrice >= 910 ? 0.30 : 0.20;
   },
   shipping: {
     cost: 27,
-    freeForVariants: ['basic', 'premium', 'complete'] as const  // Darmowa dla basic, premium i complete (mata do bagażnika)
+    freeForVariants: ['basic', 'premium', 'complete', 'test'] as const  // Darmowa dla basic, premium, complete i test
   }
 };
 
@@ -97,6 +98,7 @@ const setVariants: SetVariant[] = [
   { id: "basic", name: "Podstawowy", description: "5 dywaników (przód + tył + ochrona na tunel środkowy)", priceModifier: 0 },
   { id: "premium", name: "Premium", description: "5 dywaników (przód + tył + bagażnik)", priceModifier: 0 },
   { id: "complete", name: "Mata do Bagażnika", description: "1 dywanik - Mata do Bagażnika", priceModifier: 0 },
+  { id: "test", name: "TEST - 5 groszy", description: "Testowy produkt do integracji pixela (0.05 PLN)", priceModifier: 0 },
 ];
 
 const bodyTypes = [
@@ -236,11 +238,11 @@ export default function Configurator() {
     setType: string,
     setVariant: string
   ): number => {
-    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
+    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || 0;
     const discount = PRICING.getDiscount(basePrice);
     const priceAfterDiscount = basePrice * (1 - discount);
     const shippingCost = PRICING.shipping.freeForVariants.includes(setVariant as any) ? 0 : PRICING.shipping.cost;
-    return Math.round(priceAfterDiscount + shippingCost);
+    return setVariant === 'test' ? priceAfterDiscount : Math.round(priceAfterDiscount + shippingCost);
   }, []);
 
   // Funkcja do obliczania ceny bazowej bez wysyłki (do wyświetlania w sekcji wyboru zestawu)
@@ -248,10 +250,10 @@ export default function Configurator() {
     setType: string,
     setVariant: string
   ): number => {
-    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
+    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || 0;
     const discount = PRICING.getDiscount(basePrice);
     const priceAfterDiscount = basePrice * (1 - discount);
-    return Math.round(priceAfterDiscount);
+    return setVariant === 'test' ? priceAfterDiscount : Math.round(priceAfterDiscount);
   }, []);
 
   // Funkcja do pobierania opisu ilości dywaników na podstawie wariantu zestawu
@@ -260,7 +262,8 @@ export default function Configurator() {
       'front': 'przód',
       'basic': 'przód + tył',
       'premium': 'przód + tył + bagażnik',
-      'complete': 'mata do bagażnika'
+      'complete': 'mata do bagażnika',
+      'test': 'testowy produkt'
     };
     return descriptions[variantId] || variantId;
   }, []);
@@ -269,17 +272,17 @@ export default function Configurator() {
   const priceBreakdown = useMemo(() => {
     if (!selectedSetType || !selectedSetVariant) return { basePrice: 0, discount: 0, priceAfterDiscount: 0, shippingCost: 0, totalPrice: 0 };
     
-    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
+    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || 0;
     const discount = PRICING.getDiscount(basePrice);
     const discountAmount = basePrice * discount;
     const priceAfterDiscount = basePrice - discountAmount;
     const shippingCost = PRICING.shipping.freeForVariants.includes(selectedSetVariant as any) ? 0 : PRICING.shipping.cost;
-    const totalPrice = Math.round(priceAfterDiscount + shippingCost);
+    const totalPrice = selectedSetVariant === 'test' ? priceAfterDiscount : Math.round(priceAfterDiscount + shippingCost);
     
     return {
-      basePrice: Math.round(basePrice),
-      discount: Math.round(discountAmount),
-      priceAfterDiscount: Math.round(priceAfterDiscount),
+      basePrice: selectedSetVariant === 'test' ? basePrice : Math.round(basePrice),
+      discount: selectedSetVariant === 'test' ? discountAmount : Math.round(discountAmount),
+      priceAfterDiscount: selectedSetVariant === 'test' ? priceAfterDiscount : Math.round(priceAfterDiscount),
       shippingCost,
       totalPrice
     };
@@ -470,8 +473,15 @@ export default function Configurator() {
           debugLog('💰 Używam ceny z bazy danych:', basePrice);
         } else {
           // Użyj domyślnej ceny bazowej z nowego systemu
-          basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
+          basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || (selectedSetVariant === 'test' ? 0.05 : 300);
           debugLog('💰 Używam domyślnej ceny bazowej:', basePrice);
+        }
+
+        // Dla wariantu testowego zwróć bezpośrednio cenę 0.05 PLN bez modyfikacji
+        if (selectedSetVariant === 'test') {
+          setBaseMatPrice(0.05);
+          debugLog('💰 Wariant testowy - ustawiam cenę 0.05 PLN');
+          return;
         }
 
         const calculatedPrice = PricingService.calculateMatPrice(basePrice, matConfiguration);
@@ -487,7 +497,7 @@ export default function Configurator() {
       } catch (error) {
         console.error('❌ Błąd podczas pobierania dywaników:', error);
         // W przypadku błędu, użyj domyślnej ceny z nowego systemu
-        const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
+        const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || (selectedSetVariant === 'test' ? 0.05 : 300);
         setBaseMatPrice(basePrice);
         debugLog('💰 Używam domyślnej ceny po błędzie:', basePrice);
       } finally {
@@ -562,7 +572,7 @@ export default function Configurator() {
       if (baseMatPrice === 0) {
         console.warn('⚠️ Używam domyślnej ceny');
         // Użyj domyślnej ceny zamiast blokować
-        const defaultPrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
+        const defaultPrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || (selectedSetVariant === 'test' ? 0.05 : 300);
         setBaseMatPrice(defaultPrice);
       }
 
@@ -586,7 +596,7 @@ export default function Configurator() {
       
       console.log('💰 Configurator handleAddToCart - Ceny:', {
         selectedSetVariant,
-        basePrice: PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'],
+        basePrice: PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'],
         price,
         finalPrice,
         baseMatPrice
@@ -761,18 +771,20 @@ export default function Configurator() {
     if (!selectedSetType || !selectedSetVariant) return 0;
     
     // 1. Pobierz bazową cenę kompletu
-    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
+    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || 0;
     
-    // 2. Oblicz rabat (zależny od wartości: ≥910 zł = -30%, <910 zł = -20%)
+    // 2. Oblicz rabat (zależny od wartości: ≥910 zł = -30%, <910 zł = -20%, test = 0%)
     const discount = PRICING.getDiscount(basePrice);
     const priceAfterDiscount = basePrice * (1 - discount);
     
-    // 3. Dodaj koszt wysyłki (27 zł tylko dla 'front', darmowa dla 'basic' i 'premium')
+    // 3. Dodaj koszt wysyłki (27 zł tylko dla 'front', darmowa dla 'basic', 'premium', 'complete' i 'test')
     const shippingCost = PRICING.shipping.freeForVariants.includes(selectedSetVariant as any) 
       ? 0 
       : PRICING.shipping.cost;
     
-    const totalPrice = Math.round((priceAfterDiscount + shippingCost) * 100) / 100;
+    const totalPrice = selectedSetVariant === 'test' 
+      ? priceAfterDiscount 
+      : Math.round((priceAfterDiscount + shippingCost) * 100) / 100;
     
     console.log('💰 Configurator price useMemo - Kalkulacja ceny:', {
       setType: selectedSetType,
@@ -1189,10 +1201,10 @@ export default function Configurator() {
                               <div className="text-xs text-white/60">{v.description}</div>
                             </div>
                             <div className="flex items-center gap-3 flex-shrink-0">
-                              {(v.id === "front" || v.id === "basic" || v.id === "premium" || v.id === "complete") && (
+                              {(v.id === "front" || v.id === "basic" || v.id === "premium" || v.id === "complete" || v.id === "test") && (
                                 <div className="flex items-center justify-center">
                                   <Image
-                                    src={v.id === "front" ? "/konfigurator/zestaw/przod.png" : v.id === "basic" ? "/konfigurator/zestaw/pt.png" : v.id === "premium" ? "/konfigurator/zestaw/ptb.png" : "/konfigurator/zestaw/mata.png"}
+                                    src={v.id === "front" ? "/konfigurator/zestaw/przod.png" : v.id === "basic" ? "/konfigurator/zestaw/pt.png" : v.id === "premium" ? "/konfigurator/zestaw/ptb.png" : v.id === "complete" ? "/konfigurator/zestaw/mata.png" : "/konfigurator/zestaw/przod.png"}
                                     alt={`Wizualizacja zestawu ${v.name}`}
                                     width={80}
                                     height={48}
@@ -1204,10 +1216,10 @@ export default function Configurator() {
                               {displayPrice > 0 && (
                                 <div className="text-right">
                                   <div className="text-lg font-bold text-green-400">
-                                    {displayPrice} zł
+                                    {v.id === 'test' ? displayPrice.toFixed(2) : displayPrice} zł
                                   </div>
                                   <div className="text-xs text-white/60">
-                                    {selectedSetType === '3d-with-rims' ? 'z rantami' : 'bez rantów'}
+                                    {v.id === 'test' ? 'test' : selectedSetType === '3d-with-rims' ? 'z rantami' : 'bez rantów'}
                                   </div>
                                 </div>
                               )}
