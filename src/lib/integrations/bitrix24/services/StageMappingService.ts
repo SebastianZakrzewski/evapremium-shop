@@ -1,7 +1,7 @@
 import { bitrix24Config } from '../config';
 import { Bitrix24Client } from '../client';
 
-export type StageContextType = 'abandoned_cart' | 'order' | 'lead';
+export type StageContextType = 'abandoned_cart' | 'order' | 'lead' | 'chat';
 
 export interface StageResolveOptions {
   type: StageContextType;
@@ -16,7 +16,10 @@ interface StageResult {
 
 export class StageMappingService {
   private client: Bitrix24Client;
-  private cache: { abandoned?: { categoryId: number; stageId: string } } = {};
+  private cache: { 
+    abandoned?: { categoryId: number; stageId: string };
+    chat?: { categoryId: number; stageId: string };
+  } = {};
 
   constructor(client?: Bitrix24Client) {
     this.client = client || new Bitrix24Client();
@@ -28,6 +31,8 @@ export class StageMappingService {
         return await this.resolveAbandonedCartStage();
       case 'order':
         return this.resolveOrderStage(options.orderStatus, options.paymentStatus);
+      case 'chat':
+        return await this.resolveChatStage();
       case 'lead':
       default:
         return { stageId: 'NEW' };
@@ -104,6 +109,46 @@ export class StageMappingService {
 
     this.cache.abandoned = { categoryId, stageId };
     return this.cache.abandoned;
+  }
+
+  /**
+   * Resolves chat stage ("Czaty ze strony") in "Leady z Reklam" category
+   * Uses the same category as abandoned carts
+   */
+  private async resolveChatStage(): Promise<StageResult> {
+    if (this.cache.chat) return this.cache.chat;
+
+    // Use the same category as abandoned carts
+    const abandonedStage = await this.resolveAbandonedCartStage();
+    const categoryId = abandonedStage.categoryId;
+    
+    if (!categoryId) {
+      throw new Error('StageMappingService: Nie można określić kategorii dla czatów');
+    }
+
+    // Check for environment variable first
+    const envStageId = process.env.BITRIX24_CHAT_STAGE_ID;
+    if (envStageId) {
+      this.cache.chat = { categoryId, stageId: envStageId };
+      return this.cache.chat;
+    }
+
+    // Fallback: auto-resolve by name
+    const statusesResp = await this.client.post('crm.status.list', { 
+      filter: { ENTITY_ID: `DEAL_STAGE_${categoryId}` } 
+    });
+    const statuses = statusesResp.result || [];
+    const stage = statuses.find((s: any) => 
+      String(s.NAME).toLowerCase() === 'czaty ze strony'
+    );
+    
+    if (!stage) {
+      throw new Error('StageMappingService: Etap "Czaty ze strony" nie znaleziony w kategorii "Leady z Reklam"');
+    }
+    
+    const stageId = String(stage.STATUS_ID);
+    this.cache.chat = { categoryId, stageId };
+    return this.cache.chat;
   }
 }
 

@@ -142,21 +142,38 @@ export default function Chatbot() {
     setIsSubmittingContact(true);
 
     try {
-      // Create contact info object
-      const contactInfo: ContactInfo = {
-        id: Date.now().toString(),
-        name: contactData.name.trim(),
-        phone: contactData.phone.trim(),
-        message: contactData.message,
-        timestamp: new Date(),
-        source: 'chatbot'
-      };
+      // Validate input
+      if (contactData.name.trim().length < 2) {
+        const errorMessage: Message = {
+          id: (Date.now() + 2).toString(),
+          text: "Imię musi mieć co najmniej 2 znaki.",
+          sender: "bot",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+        setIsSubmittingContact(false);
+        return;
+      }
 
-      // Here you can send the data to your API or parent component
-      console.log('Contact data to be sent:', contactInfo);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Send data to API
+      const response = await fetch('/api/bitrix24/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: contactData.name.trim(),
+          phone: contactData.phone.trim(),
+          message: contactData.message || undefined,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        const errorMessage = result?.error || 'Failed to submit contact form';
+        throw new Error(errorMessage);
+      }
 
       // Add success message
       const successMessage: Message = {
@@ -175,7 +192,9 @@ export default function Chatbot() {
       // Add error message
       const errorMessage: Message = {
         id: (Date.now() + 2).toString(),
-        text: "Wystąpił błąd podczas przesyłania danych. Spróbuj ponownie.",
+        text: error instanceof Error && error.message.includes('disabled')
+          ? "Przepraszam, system kontaktowy jest obecnie niedostępny. Proszę spróbować później."
+          : "Wystąpił błąd podczas przesyłania danych. Spróbuj ponownie.",
         sender: "bot",
         timestamp: new Date(),
       };
