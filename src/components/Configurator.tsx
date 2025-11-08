@@ -733,7 +733,6 @@ export default function Configurator() {
   }, [selectedCarModel, selectedCarYear, selectedBodyType, currentSection, scrollToElement, isMobileCheck]);
 
   // Auto-scroll po wyborze typu zestawu - Sekcja 1
-  const hasScrolledToSetType = useRef(false);
   useEffect(() => {
     if (!isMobileCheck() || currentSection !== 1) {
       hasScrolledToSetType.current = false;
