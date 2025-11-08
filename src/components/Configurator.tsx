@@ -988,11 +988,6 @@ export default function Configurator() {
                 </div>
               </div>
               <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-4 right-4 text-xs md:text-sm bg-black/60 backdrop-blur px-3 py-1.5 rounded-full border border-neutral-800">
-                  <div>Typ: {setType.name}</div>
-                  <div>Komórki: {cellType.name}</div>
-                  <div>Zestaw: {setVariant.name}</div>
-                </div>
                 {/* Tap to expand indicator na mobile */}
                 <div className="md:hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur px-3 py-1.5 rounded-full border border-neutral-800 text-xs text-white/80">
                   Dotknij aby powiększyć
