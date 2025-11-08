@@ -232,6 +232,7 @@ export default function Configurator() {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const hasScrolledToPreview = useRef(false);
   const hasScrolledToModelSelect = useRef(false);
+  const hasScrolledToSetType = useRef(false);
   
   // Funkcja pomocnicza do sprawdzania czy jesteśmy na mobile
   const isMobileCheck = useCallback(() => typeof window !== 'undefined' && window.innerWidth < 768, []);
@@ -732,17 +733,33 @@ export default function Configurator() {
   }, [selectedCarModel, selectedCarYear, selectedBodyType, currentSection, scrollToElement, isMobileCheck]);
 
   // Auto-scroll po wyborze typu zestawu - Sekcja 1
+  const hasScrolledToSetType = useRef(false);
   useEffect(() => {
-    if (!isMobileCheck() || currentSection !== 1) return;
+    if (!isMobileCheck() || currentSection !== 1) {
+      hasScrolledToSetType.current = false;
+      return;
+    }
     
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        if (selectedSetType && navigationRef.current) {
-          scrollToElement(navigationRef.current);
-        }
-      }, 200);
-    });
-  }, [selectedSetType, currentSection, scrollToElement, isMobileCheck]);
+    // Przewiń do podglądu dywanika i opcji wyboru (z rantami/bez rantów) tylko raz na początku sekcji
+    if (!hasScrolledToSetType.current) {
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          // Najpierw przewiń do podglądu dywanika (zawsze przewiń, aby użytkownik widział wizualizację)
+          if (previewRef.current) {
+            scrollToElement(previewRef.current, { forceScroll: true });
+          }
+          
+          // Następnie przewiń do sekcji z opcjami wyboru rodzaju dywaników (z rantami/bez rantów)
+          setTimeout(() => {
+            if (sectionRefs.current[1]) {
+              scrollToElement(sectionRefs.current[1], { forceScroll: true });
+              hasScrolledToSetType.current = true;
+            }
+          }, 400);
+        }, 200);
+      });
+    }
+  }, [currentSection, scrollToElement, isMobileCheck]);
 
   // Auto-scroll po wyborze typu komórek - Sekcja 2
   useEffect(() => {
