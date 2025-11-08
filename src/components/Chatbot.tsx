@@ -19,6 +19,8 @@ export default function Chatbot() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const chatWindowRef = useRef<HTMLDivElement>(null);
   
   // Sprawdź czy jesteśmy na urządzeniu mobilnym i na stronie konfiguratora
   const isConfiguratorPage = useMemo(() => pathname?.startsWith('/konfigurator') ?? false, [pathname]);
@@ -118,6 +120,62 @@ export default function Chatbot() {
       window.removeEventListener('resize', checkMobile);
     };
   }, []);
+
+  // Śledź wysokość klawiatury używając Visual Viewport API
+  useEffect(() => {
+    if (!isMobile || typeof window === 'undefined') return;
+
+    const updateKeyboardHeight = () => {
+      if (window.visualViewport) {
+        const viewportHeight = window.visualViewport.height;
+        const windowHeight = window.innerHeight;
+        const keyboardHeight = windowHeight - viewportHeight;
+        setKeyboardHeight(Math.max(0, keyboardHeight));
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateKeyboardHeight);
+      updateKeyboardHeight();
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', updateKeyboardHeight);
+      }
+    };
+  }, [isMobile]);
+
+  // Zapobiegaj automatycznemu scrollowaniu i zoomowaniu przy focus na input
+  useEffect(() => {
+    if (!isMobile || !inputRef.current || !isOpen) return;
+
+    const input = inputRef.current;
+
+    const handleFocus = () => {
+      // Zapobiegaj automatycznemu scrollowaniu - użyj requestAnimationFrame dla lepszej synchronizacji
+      requestAnimationFrame(() => {
+        if (chatWindowRef.current) {
+          chatWindowRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      });
+    };
+
+    const handleBlur = () => {
+      // Resetuj wysokość klawiatury po zamknięciu
+      setTimeout(() => {
+        setKeyboardHeight(0);
+      }, 100);
+    };
+
+    input.addEventListener('focus', handleFocus);
+    input.addEventListener('blur', handleBlur);
+
+    return () => {
+      input.removeEventListener('focus', handleFocus);
+      input.removeEventListener('blur', handleBlur);
+    };
+  }, [isMobile, isOpen]);
 
   // Ukryj chatbota jeśli jesteśmy na mobile w konfiguratorze
   useEffect(() => {
@@ -303,6 +361,7 @@ export default function Chatbot() {
       {/* Chat Window */}
       {isOpen && (
         <div 
+          ref={chatWindowRef}
           className={`fixed z-50 bg-gradient-to-b from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-gray-600 flex flex-col overflow-hidden backdrop-blur-sm transition-all duration-300 pb-safe ${
             isMobile 
               ? '' 
@@ -312,11 +371,13 @@ export default function Chatbot() {
             left: '1rem',
             right: '1rem',
             top: '4rem',
-            bottom: '5rem',
+            bottom: keyboardHeight > 0 ? `${keyboardHeight + 20}px` : '5rem',
             width: 'calc(100vw - 2rem)',
             maxWidth: 'none',
-            height: 'auto',
-            maxHeight: 'calc(100dvh - 9rem)'
+            height: keyboardHeight > 0 ? `calc(100dvh - ${keyboardHeight + 80}px)` : 'auto',
+            maxHeight: keyboardHeight > 0 ? `calc(100dvh - ${keyboardHeight + 80}px)` : 'calc(100dvh - 9rem)',
+            transform: 'none',
+            position: 'fixed'
           } : undefined}
         >
           {/* Header */}
@@ -496,7 +557,8 @@ export default function Chatbot() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Napisz wiadomość..."
-                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm md:text-sm transition-all duration-200 min-h-[48px]"
+                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-base md:text-sm transition-all duration-200 min-h-[48px]"
+                style={{ fontSize: '16px', touchAction: 'manipulation' }}
                 disabled={isTyping}
               />
               <button
