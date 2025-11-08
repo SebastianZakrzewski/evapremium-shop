@@ -935,7 +935,7 @@ export default function Configurator() {
           <div className="w-full lg:w-[720px] xl:w-[800px] 2xl:w-[880px]">
             <div 
               ref={previewRef}
-              className="relative w-full h-[40vh] md:h-[440px] lg:h-[520px] xl:h-[560px] 2xl:h-[640px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300 sticky top-16 md:sticky md:top-20 z-30 border-b md:border-b-0"
+              className="relative w-full h-[30vh] md:h-[440px] lg:h-[520px] xl:h-[560px] 2xl:h-[640px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300 md:sticky md:top-20 z-30 border-b md:border-b-0"
               onClick={() => {
                 if (typeof window !== 'undefined' && window.innerWidth < 768) {
                   setIsVisualizationExpanded(true);
@@ -1002,7 +1002,7 @@ export default function Configurator() {
           {/* Prawa strona - konfigurator z sekcjami */}
           <div 
             ref={configPanelRef}
-            className="w-full lg:w-[560px] xl:w-[624px] 2xl:w-[720px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 2xl:p-12 min-h-[400px] sm:min-h-[500px] md:h-auto flex flex-col pb-32 md:pb-24 h-[calc(60vh-80px)] md:h-auto max-h-[calc(60vh-80px)] md:max-h-none overflow-y-auto md:overflow-visible overflow-x-hidden"
+            className="w-full lg:w-[560px] xl:w-[624px] 2xl:w-[720px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 2xl:p-12 min-h-[400px] sm:min-h-[500px] flex flex-col pb-24 md:pb-24 overflow-x-hidden"
             data-config-panel
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
