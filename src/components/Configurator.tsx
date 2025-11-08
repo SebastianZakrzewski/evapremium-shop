@@ -929,13 +929,13 @@ export default function Configurator() {
 
   return (
     <section className="w-full bg-black text-white">
-      <div className="max-w-[1024px] 2xl:max-w-[1280px] mx-auto px-4 sm:px-8 py-6 md:py-12 lg:py-16">
+      <div className="max-w-[1024px] 2xl:max-w-[1280px] mx-auto px-4 sm:px-8 py-6 md:py-[38.4px] lg:py-[51.2px] 2xl:py-[51.2px]">
         <div className="flex flex-col md:flex-row gap-6 lg:gap-8 2xl:gap-[38.4px]">
           {/* Lewa strona - wizualizacja */}
           <div className="w-full lg:w-[720px] xl:w-[800px] 2xl:w-[880px]">
             <div 
               ref={previewRef}
-              className="relative w-full h-[40vh] md:h-[550px] lg:h-[650px] xl:h-[700px] 2xl:h-[800px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300 sticky top-16 md:sticky md:top-20 z-30 border-b md:border-b-0"
+              className="relative w-full h-[40vh] md:h-[440px] lg:h-[520px] xl:h-[560px] 2xl:h-[640px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300 sticky top-16 md:sticky md:top-20 z-30 border-b md:border-b-0"
               onClick={() => {
                 if (typeof window !== 'undefined' && window.innerWidth < 768) {
                   setIsVisualizationExpanded(true);
