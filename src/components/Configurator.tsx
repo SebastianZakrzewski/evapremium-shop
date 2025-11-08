@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
+import { ChevronLeft, ChevronRight, ShoppingCart, Info, Search, Sparkles, X, Check } from "lucide-react";
 import { getAvailableColors, getColorInfo, getAvailableMaterialColorsForEdge } from "@/lib/color-mapping";
 import { getMatImagePath } from "@/lib/image-mapping";
 import { useCart } from "@/hooks/useCart.new";
@@ -235,6 +235,66 @@ export default function Configurator() {
   const [loadingBodyTypes, setLoadingBodyTypes] = useState(false);
   const [baseMatPrice, setBaseMatPrice] = useState<number>(0);
   const [isPriceLoading, setIsPriceLoading] = useState(false);
+
+  // Nowe stany dla ulepszeń UX
+  const [searchQueryModel, setSearchQueryModel] = useState("");
+  const [searchQueryYear, setSearchQueryYear] = useState("");
+  const [searchQueryBodyType, setSearchQueryBodyType] = useState("");
+  const [isSearchOpenModel, setIsSearchOpenModel] = useState(false);
+  const [isSearchOpenYear, setIsSearchOpenYear] = useState(false);
+  const [isSearchOpenBodyType, setIsSearchOpenBodyType] = useState(false);
+  const [showTooltip, setShowTooltip] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+
+  // Funkcja haptic feedback
+  const vibrate = useCallback((pattern: number | number[] = 10) => {
+    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(pattern);
+      } catch (e) {
+        // Fallback - ignoruj błąd
+      }
+    }
+  }, []);
+
+  const getPopularSets = useCallback(() => {
+    return setVariants.filter(v => ['basic', 'premium'].includes(v.id));
+  }, []);
+
+  // Wykrywanie urządzenia mobilnego
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Resetuj stan ładowania obrazu gdy zmienia się konfiguracja
+  useEffect(() => {
+    setIsImageLoading(true);
+  }, [selectedSetType, selectedCellType, selectedMat, selectedEdge]);
+
+  // Zamykanie dropdownów po kliknięciu poza nie
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.searchable-select')) {
+        setIsSearchOpenModel(false);
+        setIsSearchOpenYear(false);
+        setIsSearchOpenBodyType(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, []);
 
   // Funkcja do obliczania ceny dla konkretnego wariantu (do wyświetlania w UI)
   const getVariantPrice = useCallback((
@@ -550,6 +610,7 @@ export default function Configurator() {
 
   const nextSection = () => {
     if (currentSection < totalSections - 1) {
+      vibrate(10); // Haptic feedback
       setCurrentSection(currentSection + 1);
       // Auto-scroll do góry sekcji na mobile
       if (typeof window !== 'undefined' && window.innerWidth < 768) {
@@ -565,6 +626,7 @@ export default function Configurator() {
 
   const prevSection = () => {
     if (currentSection > 0) {
+      vibrate(10); // Haptic feedback
       setCurrentSection(currentSection - 1);
       // Auto-scroll do góry sekcji na mobile
       if (typeof window !== 'undefined' && window.innerWidth < 768) {
@@ -605,6 +667,7 @@ export default function Configurator() {
   };
 
   const handleAddToCart = async () => {
+    vibrate([50, 30, 50]); // Dłuższa wibracja dla ważnej akcji
     setIsAddingToCart(true);
     
     try {
@@ -811,6 +874,15 @@ export default function Configurator() {
     }));
   }, [selectedCellType]);
 
+  // Funkcje do pobierania popularnych wyborów - po definicji availableMaterialColors
+  const getPopularColors = useCallback(() => {
+    // Najpopularniejsze kolory: czarny, szary, beżowy, ciemnoszary
+    if (!availableMaterialColors || availableMaterialColors.length === 0) return [];
+    return availableMaterialColors.filter(c => 
+      ['black', 'grey', 'beige', 'darkgrey'].includes(c.id)
+    ).slice(0, 4);
+  }, [availableMaterialColors]);
+
   // Resetuj wybrane kolory jeśli nie są dostępne dla nowej struktury komórek lub obszycia
   useEffect(() => {
     if (!availableMaterialColors.find(c => c.id === selectedMat)) {
@@ -941,24 +1013,33 @@ export default function Configurator() {
           {/* Lewa strona - wizualizacja */}
           <div className="w-full lg:w-[900px] xl:w-[1000px] 2xl:w-[1100px]">
             <div 
-              className="relative w-full h-[250px] sm:h-[300px] md:h-[550px] lg:h-[650px] xl:h-[700px] 2xl:h-[800px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300"
+              className="relative w-full h-[350px] sm:h-[400px] md:h-[550px] lg:h-[650px] xl:h-[700px] 2xl:h-[800px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300"
               onClick={() => {
                 if (typeof window !== 'undefined' && window.innerWidth < 768) {
                   setIsVisualizationExpanded(true);
                 }
               }}
             >
+              {/* Skeleton loader dla wizualizacji */}
+              {isImageLoading && (
+                <div className="absolute inset-0 bg-neutral-800 animate-pulse flex items-center justify-center">
+                  <div className="text-white/40 text-sm">Ładowanie wizualizacji...</div>
+                </div>
+              )}
+              
               {/* Rzeczywisty obraz dywanika */}
               <Image
                 key={`${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`}
                 src={matImagePath}
                 alt={`Dywanik ${mat.name} z obszyciem ${edge.name}`}
                 fill
-                className="object-cover transition-opacity duration-500"
+                className={`object-cover transition-opacity duration-500 ${isImageLoading ? 'opacity-0' : 'opacity-100'}`}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 priority={false}
                 loading="lazy"
+                onLoad={() => setIsImageLoading(false)}
                 onError={(e) => {
+                  setIsImageLoading(false);
                   // Fallback do emoji jeśli obraz nie istnieje
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
@@ -1012,7 +1093,7 @@ export default function Configurator() {
 
           {/* Prawa strona - konfigurator z sekcjami */}
           <div 
-            className="w-full lg:w-[700px] xl:w-[780px] 2xl:w-[900px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 2xl:p-12 min-h-[400px] sm:min-h-[500px] md:h-auto flex flex-col pb-32 md:pb-24 max-h-[calc(100vh-200px)] md:max-h-none overflow-y-auto md:overflow-visible overflow-x-hidden"
+            className="w-full lg:w-[700px] xl:w-[780px] 2xl:w-[900px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 2xl:p-12 min-h-[400px] sm:min-h-[500px] md:h-auto flex flex-col pb-40 md:pb-24 max-h-[calc(100vh-200px)] md:max-h-none overflow-y-auto md:overflow-visible overflow-x-hidden"
             data-config-panel
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
@@ -1030,17 +1111,51 @@ export default function Configurator() {
                 }
               </p>
               
-              {/* Progress indicator */}
-              <div className="mt-4 flex items-center gap-2">
-                <div className="flex-1 bg-neutral-800 rounded-full h-2 md:h-2">
+              {/* Breadcrumbs Navigation */}
+              <div className="mt-3 flex flex-wrap items-center gap-1 text-xs text-white/60">
+                {Array.from({ length: totalSections }, (_, i) => (
+                  <React.Fragment key={i}>
+                    <button
+                      onClick={() => {
+                        if (i <= currentSection) {
+                          setCurrentSection(i);
+                          vibrate(10);
+                        }
+                      }}
+                      className={`transition-colors ${
+                        i < currentSection
+                          ? 'text-white/80 hover:text-white cursor-pointer'
+                          : i === currentSection
+                          ? 'text-white font-semibold'
+                          : 'text-white/40 cursor-not-allowed'
+                      }`}
+                      disabled={i > currentSection}
+                    >
+                      {getSectionTitle(i)}
+                    </button>
+                    {i < totalSections - 1 && (
+                      <span className="text-white/40 mx-1">→</span>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+              
+              {/* Enhanced Progress indicator */}
+              <div className="mt-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-white/80">
+                    {getSectionTitle(currentSection)}
+                  </span>
+                  <span className="text-xs text-white/60">
+                    {currentSection + 1} / {totalSections}
+                  </span>
+                </div>
+                <div className="flex-1 bg-neutral-800 rounded-full h-3 md:h-2">
                   <div 
-                    className="bg-red-500 rounded-full h-2 md:h-2 transition-all duration-300"
+                    className="bg-red-500 rounded-full h-3 md:h-2 transition-all duration-300"
                     style={{ width: `${((currentSection + 1) / totalSections) * 100}%` }}
                   />
                 </div>
-                <span className="text-xs text-white/60">
-                  {currentSection + 1} / {totalSections}
-                </span>
               </div>
             </div>
 
@@ -1090,29 +1205,71 @@ export default function Configurator() {
                   <div>
                     <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz model</h3>
                     {loadingModels ? (
-                      <div className="text-center py-8 text-gray-400">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
-                        <p>Ładowanie modeli...</p>
+                      <div className="space-y-2">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="h-12 bg-neutral-800 animate-pulse rounded-lg"></div>
+                        ))}
+                        <p className="text-center text-xs text-gray-400 mt-2">Ładowanie modeli dla {selectedCarBrand}...</p>
                       </div>
                     ) : availableModels.length > 0 ? (
-                      <div className="relative">
-                        <select
-                          value={selectedCarModel}
-                          onChange={(e) => setSelectedCarModel(e.target.value)}
-                          className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
-                        >
-                          <option value="" className="bg-neutral-900 text-gray-400">Wybierz model...</option>
-                          {availableModels.map((model, index) => (
-                            <option key={index} value={model.name} className="bg-neutral-900 text-white">
-                              {model.name}
-                            </option>
-                          ))}
-                        </select>
-                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
+                      <div className="relative searchable-select">
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <input
+                            type="text"
+                            value={isSearchOpenModel ? searchQueryModel : selectedCarModel}
+                            onChange={(e) => {
+                              setSearchQueryModel(e.target.value);
+                              setIsSearchOpenModel(true);
+                            }}
+                            onFocus={() => setIsSearchOpenModel(true)}
+                            placeholder="Szukaj modelu..."
+                            className="w-full pl-10 pr-4 py-3 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 min-h-[48px]"
+                          />
+                          {selectedCarModel && !isSearchOpenModel && (
+                            <button
+                              onClick={() => {
+                                setSelectedCarModel("");
+                                setSearchQueryModel("");
+                              }}
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          )}
                         </div>
+                        {isSearchOpenModel && (
+                          <div className="absolute z-50 w-full mt-1 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                            {availableModels
+                              .filter((model) =>
+                                model.name.toLowerCase().includes(searchQueryModel.toLowerCase())
+                              )
+                              .map((model, index) => (
+                                <button
+                                  key={index}
+                                  onClick={() => {
+                                    setSelectedCarModel(model.name);
+                                    setSearchQueryModel("");
+                                    setIsSearchOpenModel(false);
+                                    vibrate(10);
+                                  }}
+                                  className="w-full text-left px-4 py-3 hover:bg-neutral-800 transition-colors flex items-center justify-between"
+                                >
+                                  <span className="text-white">{model.name}</span>
+                                  {selectedCarModel === model.name && (
+                                    <Check className="w-4 h-4 text-red-500" />
+                                  )}
+                                </button>
+                              ))}
+                            {availableModels.filter((model) =>
+                              model.name.toLowerCase().includes(searchQueryModel.toLowerCase())
+                            ).length === 0 && (
+                              <div className="px-4 py-3 text-gray-400 text-sm">
+                                Brak wyników
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
@@ -1127,29 +1284,71 @@ export default function Configurator() {
                   <div>
                     <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz rocznik</h3>
                     {loadingYears ? (
-                      <div className="text-center py-8 text-gray-400">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
-                        <p>Ładowanie roczników...</p>
+                      <div className="space-y-2">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="h-12 bg-neutral-800 animate-pulse rounded-lg"></div>
+                        ))}
+                        <p className="text-center text-xs text-gray-400 mt-2">Ładowanie roczników dla {selectedCarModel}...</p>
                       </div>
                     ) : availableYears.length > 0 ? (
-                      <div className="relative">
-                        <select
-                          value={selectedCarYear}
-                          onChange={(e) => setSelectedCarYear(e.target.value)}
-                          className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
-                        >
-                          <option value="" className="bg-neutral-900 text-gray-400">Wybierz rocznik...</option>
-                          {availableYears.map((year) => (
-                            <option key={year.id} value={year.name} className="bg-neutral-900 text-white">
-                              {year.name}
-                            </option>
-                          ))}
-                        </select>
-                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
+                      <div className="relative searchable-select">
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <input
+                            type="text"
+                            value={isSearchOpenYear ? searchQueryYear : selectedCarYear}
+                            onChange={(e) => {
+                              setSearchQueryYear(e.target.value);
+                              setIsSearchOpenYear(true);
+                            }}
+                            onFocus={() => setIsSearchOpenYear(true)}
+                            placeholder="Szukaj rocznika..."
+                            className="w-full pl-10 pr-4 py-3 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 min-h-[48px]"
+                          />
+                          {selectedCarYear && !isSearchOpenYear && (
+                            <button
+                              onClick={() => {
+                                setSelectedCarYear("");
+                                setSearchQueryYear("");
+                              }}
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          )}
                         </div>
+                        {isSearchOpenYear && (
+                          <div className="absolute z-50 w-full mt-1 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                            {availableYears
+                              .filter((year) =>
+                                year.name.toLowerCase().includes(searchQueryYear.toLowerCase())
+                              )
+                              .map((year) => (
+                                <button
+                                  key={year.id}
+                                  onClick={() => {
+                                    setSelectedCarYear(year.name);
+                                    setSearchQueryYear("");
+                                    setIsSearchOpenYear(false);
+                                    vibrate(10);
+                                  }}
+                                  className="w-full text-left px-4 py-3 hover:bg-neutral-800 transition-colors flex items-center justify-between"
+                                >
+                                  <span className="text-white">{year.name}</span>
+                                  {selectedCarYear === year.name && (
+                                    <Check className="w-4 h-4 text-red-500" />
+                                  )}
+                                </button>
+                              ))}
+                            {availableYears.filter((year) =>
+                              year.name.toLowerCase().includes(searchQueryYear.toLowerCase())
+                            ).length === 0 && (
+                              <div className="px-4 py-3 text-gray-400 text-sm">
+                                Brak wyników
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
@@ -1175,29 +1374,71 @@ export default function Configurator() {
                     
                     <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz typ nadwozia</h3>
                     {loadingBodyTypes ? (
-                      <div className="text-center py-8 text-gray-400">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
-                        <p>Ładowanie typów nadwozia...</p>
+                      <div className="space-y-2">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="h-12 bg-neutral-800 animate-pulse rounded-lg"></div>
+                        ))}
+                        <p className="text-center text-xs text-gray-400 mt-2">Ładowanie typów nadwozia...</p>
                       </div>
                     ) : availableBodyTypes.length > 0 ? (
-                      <div className="relative">
-                        <select
-                          value={selectedBodyType}
-                          onChange={(e) => setSelectedBodyType(e.target.value)}
-                          className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
-                        >
-                          <option value="" className="bg-neutral-900 text-gray-400">Wybierz typ nadwozia...</option>
-                          {availableBodyTypes.map((bodyType) => (
-                            <option key={bodyType.id} value={bodyType.id} className="bg-neutral-900 text-white">
-                              {bodyType.name}
-                            </option>
-                          ))}
-                        </select>
-                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
+                      <div className="relative searchable-select">
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <input
+                            type="text"
+                            value={isSearchOpenBodyType ? searchQueryBodyType : (availableBodyTypes.find(bt => bt.id === selectedBodyType)?.name || "")}
+                            onChange={(e) => {
+                              setSearchQueryBodyType(e.target.value);
+                              setIsSearchOpenBodyType(true);
+                            }}
+                            onFocus={() => setIsSearchOpenBodyType(true)}
+                            placeholder="Szukaj typu nadwozia..."
+                            className="w-full pl-10 pr-4 py-3 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 min-h-[48px]"
+                          />
+                          {selectedBodyType && !isSearchOpenBodyType && (
+                            <button
+                              onClick={() => {
+                                setSelectedBodyType("");
+                                setSearchQueryBodyType("");
+                              }}
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          )}
                         </div>
+                        {isSearchOpenBodyType && (
+                          <div className="absolute z-50 w-full mt-1 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                            {availableBodyTypes
+                              .filter((bodyType) =>
+                                bodyType.name.toLowerCase().includes(searchQueryBodyType.toLowerCase())
+                              )
+                              .map((bodyType) => (
+                                <button
+                                  key={bodyType.id}
+                                  onClick={() => {
+                                    setSelectedBodyType(bodyType.id);
+                                    setSearchQueryBodyType("");
+                                    setIsSearchOpenBodyType(false);
+                                    vibrate(10);
+                                  }}
+                                  className="w-full text-left px-4 py-3 hover:bg-neutral-800 transition-colors flex items-center justify-between"
+                                >
+                                  <span className="text-white">{bodyType.name}</span>
+                                  {selectedBodyType === bodyType.id && (
+                                    <Check className="w-4 h-4 text-red-500" />
+                                  )}
+                                </button>
+                              ))}
+                            {availableBodyTypes.filter((bodyType) =>
+                              bodyType.name.toLowerCase().includes(searchQueryBodyType.toLowerCase())
+                            ).length === 0 && (
+                              <div className="px-4 py-3 text-gray-400 text-sm">
+                                Brak wyników
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
@@ -1221,7 +1462,23 @@ export default function Configurator() {
             {currentSection === 1 && (
               <div className="flex-1 space-y-6">
                 <div>
-                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj dywaników</h3>
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                    Wybierz rodzaj dywaników
+                    <button
+                      onMouseEnter={() => setShowTooltip('set-type')}
+                      onMouseLeave={() => setShowTooltip(null)}
+                      onTouchStart={() => setShowTooltip(showTooltip === 'set-type' ? null : 'set-type')}
+                      className="relative"
+                    >
+                      <Info className="w-4 h-4 text-white/60 hover:text-white/80" />
+                      {showTooltip === 'set-type' && (
+                        <div className="absolute left-0 top-6 w-64 p-3 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl z-50 text-xs text-white/90">
+                          <p><strong>3D z rantami:</strong> Wysokie rantki chronią przed brudem i wodą</p>
+                          <p className="mt-1"><strong>3D bez rantów:</strong> Standardowe dywaniki z niższymi rantkami</p>
+                        </div>
+                      )}
+                    </button>
+                  </h3>
                   <RadioGroup value={selectedSetType} onValueChange={setSelectedSetType} className="space-y-3">
                     {setTypes.map((s) => {
                       // W nowym systemie nie ma modyfikatorów za typ zestawu
@@ -1256,8 +1513,54 @@ export default function Configurator() {
             {/* Sekcja 3: Rodzaj zestawu */}
             {currentSection === 3 && (
               <div className="flex-1 space-y-6">
+                {/* Quick Actions - Popularne zestawy */}
+                {getPopularSets().length > 0 && (
+                  <div className="mb-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Sparkles className="w-4 h-4 text-yellow-400" />
+                      <h4 className="text-xs font-medium text-white/80">Popularne wybory</h4>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {getPopularSets().map((set) => (
+                        <button
+                          key={set.id}
+                          onClick={() => {
+                            setSelectedSetVariant(set.id);
+                            vibrate(10);
+                          }}
+                          className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                            selectedSetVariant === set.id
+                              ? 'bg-red-600 text-white'
+                              : 'bg-neutral-800 text-white/80 hover:bg-neutral-700'
+                          }`}
+                        >
+                          {set.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div>
-                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj zestawu</h3>
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                    Wybierz rodzaj zestawu
+                    <button
+                      onMouseEnter={() => setShowTooltip('set-variant')}
+                      onMouseLeave={() => setShowTooltip(null)}
+                      onTouchStart={() => setShowTooltip(showTooltip === 'set-variant' ? null : 'set-variant')}
+                      className="relative"
+                    >
+                      <Info className="w-4 h-4 text-white/60 hover:text-white/80" />
+                      {showTooltip === 'set-variant' && (
+                        <div className="absolute left-0 top-6 w-64 p-3 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl z-50 text-xs text-white/90">
+                          <p><strong>Starter:</strong> 2 dywaniki tylko na przód</p>
+                          <p className="mt-1"><strong>Podstawowy:</strong> 5 dywaników (przód + tył)</p>
+                          <p className="mt-1"><strong>Premium:</strong> 5 dywaników + bagażnik</p>
+                          <p className="mt-1"><strong>Mata:</strong> Tylko mata do bagażnika</p>
+                        </div>
+                      )}
+                    </button>
+                  </h3>
                   <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
                     {setVariants.map((v) => {
                       // Oblicz cenę bazową bez wysyłki (do wyświetlania w sekcji wyboru zestawu)
@@ -1310,7 +1613,23 @@ export default function Configurator() {
             {currentSection === 2 && (
               <div className="flex-1 space-y-6">
                 <div>
-                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj komórek</h3>
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                    Wybierz rodzaj komórek
+                    <button
+                      onMouseEnter={() => setShowTooltip('cell-type')}
+                      onMouseLeave={() => setShowTooltip(null)}
+                      onTouchStart={() => setShowTooltip(showTooltip === 'cell-type' ? null : 'cell-type')}
+                      className="relative"
+                    >
+                      <Info className="w-4 h-4 text-white/60 hover:text-white/80" />
+                      {showTooltip === 'cell-type' && (
+                        <div className="absolute left-0 top-6 w-64 p-3 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl z-50 text-xs text-white/90">
+                          <p><strong>Romby:</strong> Klasyczna struktura rombowa</p>
+                          <p className="mt-1"><strong>Plaster miodu:</strong> Struktura plastra miodu dla lepszej przyczepności</p>
+                        </div>
+                      )}
+                    </button>
+                  </h3>
                   <RadioGroup value={selectedCellType} onValueChange={setSelectedCellType} className="space-y-3">
                     {cellTypes.map((c) => (
                       <Label key={c.id} htmlFor={`cell-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedCellType === c.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 active:bg-neutral-800 active:scale-[0.98] transition`}>
@@ -1332,45 +1651,133 @@ export default function Configurator() {
             {/* Sekcja 4: Kolory */}
             {currentSection === 4 && (
               <div className="flex-1 space-y-6">
+                {/* Quick Actions - Popularne kolory */}
+                {getPopularColors().length > 0 && (
+                  <div className="mb-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Sparkles className="w-4 h-4 text-yellow-400" />
+                      <h4 className="text-xs font-medium text-white/80">Popularne kolory</h4>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {getPopularColors().map((color) => (
+                        <button
+                          key={color.id}
+                          onClick={() => {
+                            setSelectedMat(color.id);
+                            vibrate(10);
+                          }}
+                          className={`px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center gap-2 ${
+                            selectedMat === color.id
+                              ? 'bg-red-600 text-white'
+                              : 'bg-neutral-800 text-white/80 hover:bg-neutral-700'
+                          }`}
+                        >
+                          <div
+                            className="w-4 h-4 rounded border border-white/20"
+                            style={{ backgroundColor: color.color }}
+                          />
+                          {color.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div>
-                  <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
-                  <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-2 md:gap-3">
-                    {availableMaterialColors.map((c) => (
-                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden min-w-[48px] min-h-[48px]`}>
-                        <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
-                        <div
-                          className="absolute inset-0"
-                          style={{
-                            backgroundColor: c.color,
-                            filter: 'brightness(1.15) saturate(1.25) contrast(1.05)'
-                          }}
-                        />
-                        <div
-                          className="absolute inset-0 pointer-events-none"
-                          data-testid="texture-overlay"
-                          style={{
-                            backgroundImage: `url(${selectedCellType === 'honey' ? '/konfigurator/komorki/plaster.png' : '/konfigurator/komorki/romb.png'})`,
-                            backgroundSize: 'cover',
-                            backgroundRepeat: 'no-repeat',
-                            mixBlendMode: 'multiply',
-                            opacity: 0.35
-                          }}
-                        />
-                        <div className="flex items-center justify-center h-full relative z-[1]">
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                    Kolor dywaników
+                    <button
+                      onMouseEnter={() => setShowTooltip('mat-color')}
+                      onMouseLeave={() => setShowTooltip(null)}
+                      onTouchStart={() => setShowTooltip(showTooltip === 'mat-color' ? null : 'mat-color')}
+                      className="relative"
+                    >
+                      <Info className="w-4 h-4 text-white/60 hover:text-white/80" />
+                      {showTooltip === 'mat-color' && (
+                        <div className="absolute left-0 top-6 w-64 p-3 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl z-50 text-xs text-white/90">
+                          <p>Wybierz kolor główny dywaników. Kolor wpływa na wygląd i łatwość utrzymania czystości.</p>
                         </div>
-                      </Label>
-                    ))}
-                  </RadioGroup>
+                      )}
+                    </button>
+                  </h3>
+                  <div className="relative">
+                    <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-2 md:gap-3 max-h-[400px] overflow-y-auto pr-2">
+                      <RadioGroup value={selectedMat} onValueChange={(value) => {
+                        setSelectedMat(value);
+                        vibrate(10);
+                      }} className="contents">
+                        {availableMaterialColors.map((c) => {
+                          const isPopular = ['black', 'grey', 'beige', 'darkgrey'].includes(c.id);
+                          return (
+                            <Label
+                              key={c.id}
+                              htmlFor={`mat-${c.id}`}
+                              className={`group relative cursor-pointer rounded-lg border-2 ${
+                                selectedMat === c.id
+                                  ? "border-white ring-2 ring-white/30"
+                                  : "border-neutral-700"
+                              } hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden min-w-[56px] min-h-[56px] md:min-w-[48px] md:min-h-[48px]`}
+                            >
+                              <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
+                              {isPopular && (
+                                <div className="absolute top-1 right-1 z-10">
+                                  <Sparkles className="w-3 h-3 text-yellow-400" />
+                                </div>
+                              )}
+                              <div
+                                className="absolute inset-0"
+                                style={{
+                                  backgroundColor: c.color,
+                                  filter: 'brightness(1.15) saturate(1.25) contrast(1.05)'
+                                }}
+                              />
+                              <div
+                                className="absolute inset-0 pointer-events-none"
+                                data-testid="texture-overlay"
+                                style={{
+                                  backgroundImage: `url(${selectedCellType === 'honey' ? '/konfigurator/komorki/plaster.png' : '/konfigurator/komorki/romb.png'})`,
+                                  backgroundSize: 'cover',
+                                  backgroundRepeat: 'no-repeat',
+                                  mixBlendMode: 'multiply',
+                                  opacity: 0.35
+                                }}
+                              />
+                              <div className="flex items-center justify-center h-full relative z-[1]">
+                              </div>
+                            </Label>
+                          );
+                        })}
+                      </RadioGroup>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium mb-3">Kolor obszycia</h3>
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                    Kolor obszycia
+                    <button
+                      onMouseEnter={() => setShowTooltip('edge-color')}
+                      onMouseLeave={() => setShowTooltip(null)}
+                      onTouchStart={() => setShowTooltip(showTooltip === 'edge-color' ? null : 'edge-color')}
+                      className="relative"
+                    >
+                      <Info className="w-4 h-4 text-white/60 hover:text-white/80" />
+                      {showTooltip === 'edge-color' && (
+                        <div className="absolute left-0 top-6 w-64 p-3 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl z-50 text-xs text-white/90">
+                          <p>Wybierz kolor obszycia (krawędzi) dywaników. Obszycie może kontrastować lub pasować do głównego koloru.</p>
+                        </div>
+                      )}
+                    </button>
+                  </h3>
                   <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-2 md:gap-3">
                     {availableEdgeColors.map((e) => (
                       <button
                         key={e.id}
-                        onClick={() => setSelectedEdge(e.id)}
-                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 aspect-square cursor-pointer min-w-[48px] min-h-[48px]`}
+                        onClick={() => {
+                          setSelectedEdge(e.id);
+                          vibrate(10);
+                        }}
+                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 aspect-square cursor-pointer min-w-[56px] min-h-[56px] md:min-w-[48px] md:min-h-[48px]`}
                         style={{ backgroundColor: e.hex }}
                         aria-pressed={selectedEdge === e.id}
                       >
@@ -1539,6 +1946,36 @@ export default function Configurator() {
               </div>
             )}
 
+
+            {/* Sticky Price Bar - tylko na mobile */}
+            {isMobile && (
+              <div className="md:hidden fixed bottom-[88px] left-0 right-0 bg-neutral-950/95 backdrop-blur border-t border-neutral-800 px-4 py-3 z-19 pb-safe">
+                <div className="max-w-7xl mx-auto flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="text-xs text-white/60">Aktualna cena</div>
+                    <div className="text-lg font-bold text-green-400">
+                      {isPriceLoading ? (
+                        <span className="flex items-center gap-2">
+                          <div className="w-4 h-4 border-2 border-green-400 border-t-transparent rounded-full animate-spin"></div>
+                          Ładowanie...
+                        </span>
+                      ) : (
+                        `${priceBreakdown.totalPrice} zł`
+                      )}
+                    </div>
+                    {priceBreakdown.discount > 0 && (
+                      <div className="text-xs text-red-400">
+                        Rabat: -{priceBreakdown.discount} zł
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-white/60">{setVariant.name}</div>
+                    <div className="text-xs text-white/80">{setType.name}</div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Navigation buttons */}
 
