@@ -231,6 +231,7 @@ export default function Configurator() {
   const headerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const hasScrolledToPreview = useRef(false);
+  const hasScrolledToModelSelect = useRef(false);
   
   // Funkcja pomocnicza do sprawdzania czy jesteśmy na mobile
   const isMobileCheck = useCallback(() => typeof window !== 'undefined' && window.innerWidth < 768, []);
@@ -651,6 +652,27 @@ export default function Configurator() {
     }
   }, [currentSection, scrollToElement, isMobileCheck]);
 
+  // Auto-scroll na początku sekcji 0 - przewiń do "Wybierz model"
+  useEffect(() => {
+    if (!isMobileCheck() || currentSection !== 0) {
+      hasScrolledToModelSelect.current = false;
+      return;
+    }
+    
+    // Przewiń do selecta "Wybierz model" tylko raz na początku sekcji
+    if (!hasScrolledToModelSelect.current && selectedCarBrand && !selectedCarModel) {
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const modelSelect = document.querySelector('[data-model-select]') as HTMLElement;
+          if (modelSelect) {
+            scrollToElement(modelSelect);
+            hasScrolledToModelSelect.current = true;
+          }
+        }, 300);
+      });
+    }
+  }, [currentSection, selectedCarBrand, selectedCarModel, scrollToElement, isMobileCheck]);
+
   // Auto-scroll po wyborach użytkownika - Sekcja 0 (Wybór samochodu)
   useEffect(() => {
     if (!isMobileCheck() || currentSection !== 0) return;
@@ -722,20 +744,17 @@ export default function Configurator() {
       return;
     }
     
-    // Scrolluj do podglądu tylko raz, gdy użytkownik pierwszy raz wybiera kolor i podgląd nie jest widoczny
-    if (!hasScrolledToPreview.current && (selectedMat || selectedEdge)) {
+    // Scrolluj do sekcji kolorów tak, aby użytkownik widział oba nagłówki ("Kolor dywaników" i "Kolor obszycia")
+    if (!hasScrolledToPreview.current && sectionRefs.current[4]) {
       requestAnimationFrame(() => {
         setTimeout(() => {
-          if (previewRef.current && !isElementVisible(previewRef.current)) {
-            scrollToElement(previewRef.current);
-            hasScrolledToPreview.current = true;
-          } else {
-            hasScrolledToPreview.current = true;
-          }
+          // Przewiń do początku sekcji kolorów, aby oba nagłówki były widoczne
+          scrollToElement(sectionRefs.current[4]!);
+          hasScrolledToPreview.current = true;
         }, 200);
       });
     }
-  }, [selectedMat, selectedEdge, currentSection, scrollToElement, isElementVisible, isMobileCheck]);
+  }, [currentSection, scrollToElement, isMobileCheck]);
 
   // Auto-scroll po wyborze dodatków - Sekcja 5
   useEffect(() => {
@@ -1284,6 +1303,7 @@ export default function Configurator() {
                     ) : availableModels.length > 0 ? (
                       <div className="relative">
                         <select
+                          data-model-select
                           value={selectedCarModel}
                           onChange={(e) => setSelectedCarModel(e.target.value)}
                           className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
