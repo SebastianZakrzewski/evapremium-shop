@@ -1038,7 +1038,7 @@ export default function Configurator() {
 
             {/* Sekcja 1: Rodzaj zestawu */}
             {currentSection === 0 && (
-              <div ref={(el) => { sectionRefs.current[0] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-200px)] md:max-h-none">
+              <div ref={(el) => { sectionRefs.current[0] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 {/* Wyświetl wybraną markę */}
                 {selectedCarBrand && (
                   <div className="mb-6 p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
@@ -1212,7 +1212,7 @@ export default function Configurator() {
 
             {/* Sekcja 1: Rodzaj dywaników */}
             {currentSection === 1 && (
-              <div ref={(el) => { sectionRefs.current[1] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-200px)] md:max-h-none">
+              <div ref={(el) => { sectionRefs.current[1] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj dywaników</h3>
                   <RadioGroup value={selectedSetType} onValueChange={setSelectedSetType} className="space-y-3">
@@ -1249,7 +1249,7 @@ export default function Configurator() {
             {/* Sekcja 3: Rodzaj zestawu */}
             {/* Sekcja 3: Wariant zestawu */}
             {currentSection === 3 && (
-              <div ref={(el) => { sectionRefs.current[3] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-200px)] md:max-h-none">
+              <div ref={(el) => { sectionRefs.current[3] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj zestawu</h3>
                   <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
@@ -1302,7 +1302,7 @@ export default function Configurator() {
 
             {/* Sekcja 2: Rodzaj komórek */}
             {currentSection === 2 && (
-              <div ref={(el) => { sectionRefs.current[2] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-200px)] md:max-h-none">
+              <div ref={(el) => { sectionRefs.current[2] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj komórek</h3>
                   <RadioGroup value={selectedCellType} onValueChange={setSelectedCellType} className="space-y-3">
@@ -1325,12 +1325,12 @@ export default function Configurator() {
 
             {/* Sekcja 4: Kolory */}
             {currentSection === 4 && (
-              <div ref={(el) => { sectionRefs.current[4] = el; }} className="flex-1 space-y-6 md:space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-200px)] md:max-h-none">
+              <div ref={(el) => { sectionRefs.current[4] = el; }} className="flex-1 space-y-6 md:space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 <div>
                   <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
-                  <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-7 sm:grid-cols-7 md:grid-cols-6 lg:grid-cols-7 gap-1 md:gap-3">
+                  <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-6 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-7 gap-1 md:gap-3">
                     {availableMaterialColors.map((c) => (
-                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden min-w-[24px] min-h-[24px] md:min-w-[48px] md:min-h-[48px]`}>
+                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden min-w-[28px] min-h-[28px] md:min-w-[48px] md:min-h-[48px]`}>
                         <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
                         <div
                           className="absolute inset-0"
@@ -1359,12 +1359,12 @@ export default function Configurator() {
 
                 <div data-edge-color-section>
                   <h3 className="text-sm font-medium mb-3">Kolor obszycia</h3>
-                  <div className="grid grid-cols-7 sm:grid-cols-7 md:grid-cols-6 lg:grid-cols-7 gap-1 md:gap-3">
+                  <div className="grid grid-cols-6 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-7 gap-1 md:gap-3">
                     {availableEdgeColors.map((e) => (
                       <button
                         key={e.id}
                         onClick={() => setSelectedEdge(e.id)}
-                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 aspect-square cursor-pointer min-w-[24px] min-h-[24px] md:min-w-[48px] md:min-h-[48px]`}
+                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 aspect-square cursor-pointer min-w-[28px] min-h-[28px] md:min-w-[48px] md:min-h-[48px]`}
                         style={{ backgroundColor: e.hex }}
                         aria-pressed={selectedEdge === e.id}
                       >
@@ -1379,7 +1379,7 @@ export default function Configurator() {
 
             {/* Sekcja 5: Dodatki */}
             {currentSection === 5 && (
-              <div ref={(el) => { sectionRefs.current[5] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-200px)] md:max-h-none">
+              <div ref={(el) => { sectionRefs.current[5] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 <div>
                   <h3 className="text-sm font-medium mb-3">Ochraniacz pod piętę</h3>
                   <RadioGroup value={selectedHeelPad} onValueChange={setSelectedHeelPad} className="grid grid-cols-2 gap-3">
@@ -1399,7 +1399,7 @@ export default function Configurator() {
 
             {/* Sekcja 6: Podsumowanie */}
             {currentSection === 6 && (
-              <div ref={(el) => { sectionRefs.current[6] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-200px)] md:max-h-none">
+              <div ref={(el) => { sectionRefs.current[6] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 {/* Wybrane auto */}
                 <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
                   <h3 className="text-sm font-medium mb-3 text-gray-300">Wybrane auto</h3>
