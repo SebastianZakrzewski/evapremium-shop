@@ -1018,8 +1018,8 @@ export default function Configurator() {
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
-            {/* Header z progressem - sticky na mobile */}
-            <div className="mb-6 sticky top-0 z-10 bg-neutral-950/95 backdrop-blur md:bg-transparent md:backdrop-blur-none pb-4 md:pb-0 -mx-6 md:mx-0 px-6 md:px-0 pt-safe md:pt-0">
+            {/* Header z progressem - sticky tylko na desktop */}
+            <div className="mb-6 md:sticky md:top-0 z-10 bg-neutral-950/60 md:bg-transparent backdrop-blur md:backdrop-blur-none pb-4 md:pb-0 -mx-6 md:mx-0 px-6 md:px-0 pt-safe md:pt-0">
               <h2 className="text-xl md:text-2xl font-semibold">
                 {getDynamicTitle()}
               </h2>
