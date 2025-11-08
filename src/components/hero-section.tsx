@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
 const heroSlides = [
   {
@@ -32,63 +32,123 @@ const heroSlides = [
   }
 ];
 
+// Funkcja do wykrywania odpowiedniego formatu video
+const getVideoSource = (baseVideo: string, isMobile: boolean, isHighDpi: boolean) => {
+  if (isMobile) {
+    return baseVideo; // Mobile - użyj standardowego mp4
+  }
+  if (isHighDpi && typeof window !== 'undefined' && window.innerWidth >= 1920) {
+    return baseVideo.replace('.mp4', '-4k.mp4'); // 4K dla dużych ekranów
+  }
+  return baseVideo; // Standardowy format
+};
+
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isHighDpi, setIsHighDpi] = useState(false);
 
-  const goToSlide = (index: number) => {
+  // Wykrywanie typu urządzenia
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const checkDevice = () => {
+        setIsMobile(window.innerWidth < 768);
+        setIsHighDpi(window.devicePixelRatio > 1.5);
+      };
+      checkDevice();
+      window.addEventListener('resize', checkDevice);
+      return () => window.removeEventListener('resize', checkDevice);
+    }
+  }, []);
+
+  const goToSlide = useCallback((index: number) => {
     setCurrentSlide(index);
-  };
+  }, []);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-  };
+  }, []);
 
-  const goToPrev = () => {
+  const goToPrev = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
-  };
+  }, []);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        goToPrev();
+      } else if (e.key === 'ArrowRight') {
+        goToNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [goToNext, goToPrev]);
+
+  // Określ które slajdy renderować (tylko aktywny + następny dla lazy loading)
+  const visibleSlides = useMemo(() => {
+    const slides: number[] = [currentSlide];
+    const nextSlide = (currentSlide + 1) % heroSlides.length;
+    if (nextSlide !== currentSlide) {
+      slides.push(nextSlide);
+    }
+    return slides;
+  }, [currentSlide]);
 
   return (
     <section className="relative min-h-[500px] h-[70vh] md:h-[80vh] overflow-hidden">
       {/* Carousel */}
       <div className="container mx-auto px-4 relative h-full">
-        {heroSlides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            {/* Video Background */}
-            <div className="absolute inset-0 w-full h-full flex justify-center">
-              <div className="w-full h-full">
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="metadata"
-                  poster="/images/hero/video-poster.jpg"
-                  className="w-full h-full object-cover object-center rounded-lg"
-                  style={{
-                    objectPosition: 'center center',
-                    transform: 'scale(1.0)',
-                    filter: 'brightness(1.0) contrast(1.0)'
-                  }}
-                  onLoadedData={(e) => {
-                    const video = e.target as HTMLVideoElement;
-                    video.playbackRate = 0.8;
-                  }}
-                >
-                <source src={slide.video} type="video/mp4" />
-                <source src="/images/hero/video.webm" type="video/webm" />
-                <source src="/images/hero/video-4k.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-                </video>
-                
-                {/* Enhanced Overlay with Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 rounded-lg"></div>
+        {heroSlides.map((slide, index) => {
+          const isVisible = visibleSlides.includes(index);
+          const isActive = index === currentSlide;
+          const videoSource = getVideoSource(slide.video, isMobile, isHighDpi);
+          
+          // Renderuj tylko widoczne slajdy (lazy loading)
+          if (!isVisible) {
+            return null;
+          }
+
+          return (
+            <div
+              key={slide.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                isActive ? "opacity-100 z-10" : "opacity-0 z-0"
+              }`}
+            >
+              {/* Video Background */}
+              <div className="absolute inset-0 w-full h-full flex justify-center">
+                <div className="w-full h-full">
+                  <video
+                    autoPlay={isActive}
+                    loop
+                    muted
+                    playsInline
+                    preload={index === 0 ? "auto" : "metadata"}
+                    poster="/images/hero/video-poster.jpg"
+                    className="w-full h-full object-cover object-center rounded-lg"
+                    style={{
+                      objectPosition: 'center center',
+                      transform: 'scale(1.0)',
+                      filter: 'brightness(1.0) contrast(1.0)'
+                    }}
+                    onLoadedData={(e) => {
+                      const video = e.target as HTMLVideoElement;
+                      video.playbackRate = 0.8;
+                    }}
+                  >
+                    {/* Dynamiczne źródło video w zależności od urządzenia */}
+                    <source src={videoSource} type="video/mp4" />
+                    {!isMobile && <source src="/images/hero/video.webm" type="video/webm" />}
+                    Your browser does not support the video tag.
+                  </video>
+                  
+                  {/* Enhanced Overlay with Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 rounded-lg"></div>
+                </div>
               </div>
-            </div>
             
             {/* Content */}
             <div className="relative z-10 flex items-center justify-center h-full text-center text-white">
@@ -147,7 +207,8 @@ export default function HeroSection() {
               </div>
             </div>
           </div>
-        ))}
+        );
+        })}
       </div>
 
       {/* Navigation Arrows */}

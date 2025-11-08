@@ -647,9 +647,9 @@ export default function CheckoutSectionNew() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-5 xl:grid-cols-3 gap-8 xl:gap-12">
           {/* Form */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 xl:col-span-2">
             <form onSubmit={handleSubmit(
               (data) => {
                 console.log('🛒 CheckoutSection: onSubmit called with valid data:', data);
@@ -1066,7 +1066,7 @@ export default function CheckoutSectionNew() {
           </div>
 
           {/* Order Summary */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 xl:col-span-1">
             <Card className="sticky top-0 md:top-4 bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300 max-h-[calc(100vh-100px)] md:max-h-none overflow-y-auto md:overflow-visible">
               <CardHeader className="border-b border-neutral-700 px-8 py-6">
                 <div className="flex items-center justify-between">

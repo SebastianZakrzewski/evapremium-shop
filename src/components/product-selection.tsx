@@ -1,77 +1,71 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import ImageCarousel from './ImageCarousel';
 import { BrandCard } from './ui/BrandCard';
 import { Brand } from '../types/carousel';
 import { Car, Loader2 } from 'lucide-react';
 
+// Fetch function dla React Query
+const fetchBrands = async (): Promise<Brand[]> => {
+  const response = await fetch('/api/car-brands');
+  
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  
+  return response.json();
+};
+
+// Fallback brands
+const fallbackBrands: Brand[] = [
+  {
+    id: 1,
+    name: "BMW",
+    logo: "/images/products/bmw.png",
+    description: "Niemiecka marka sportowa"
+  },
+  {
+    id: 2,
+    name: "Mercedes",
+    logo: "/images/products/mercedes.jpg",
+    description: "Niemiecka marka luksusowa"
+  },
+  {
+    id: 3,
+    name: "Audi",
+    logo: "/images/products/audi.jpg",
+    description: "Niemiecka marka premium"
+  },
+  {
+    id: 4,
+    name: "Tesla",
+    logo: "/images/products/tesla.avif",
+    description: "Amerykańska marka elektryczna"
+  },
+  {
+    id: 5,
+    name: "Porsche",
+    logo: "/images/products/porsche.png",
+    description: "Niemiecka marka sportowa"
+  }
+];
+
 export default function ProductSelection() {
-  const [brands, setBrands] = useState<Brand[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [clickedCardId, setClickedCardId] = useState<number | null>(null);
 
-  // Pobierz marki z API
-  useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/car-brands?t=${Date.now()}`);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        setBrands(data);
-        setError(null);
-      } catch (err) {
-        console.error('Błąd podczas pobierania marek:', err);
-        setError('Nie udało się pobrać marek samochodów');
-        
-        // Fallback do statycznych danych
-        setBrands([
-          {
-            id: 1,
-            name: "BMW",
-            logo: "/images/products/bmw.png",
-            description: "Niemiecka marka sportowa"
-          },
-          {
-            id: 2,
-            name: "Mercedes",
-            logo: "/images/products/mercedes.jpg",
-            description: "Niemiecka marka luksusowa"
-          },
-          {
-            id: 3,
-            name: "Audi",
-            logo: "/images/products/audi.jpg",
-            description: "Niemiecka marka premium"
-          },
-          {
-            id: 4,
-            name: "Tesla",
-            logo: "/images/products/tesla.avif",
-            description: "Amerykańska marka elektryczna"
-          },
-          {
-            id: 5,
-            name: "Porsche",
-            logo: "/images/products/porsche.png",
-            description: "Niemiecka marka sportowa"
-          }
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Użyj React Query do cache'owania brandów
+  const { data: brands = fallbackBrands, isLoading: loading, error } = useQuery({
+    queryKey: ['car-brands'],
+    queryFn: fetchBrands,
+    staleTime: 10 * 60 * 1000, // 10 minut
+    gcTime: 30 * 60 * 1000, // 30 minut cache
+    retry: 2,
+    retryDelay: 1000,
+  });
 
-    fetchBrands();
-  }, []);
-
-  const handleBrandClick = (brand: Brand) => {
+  const handleBrandClick = useCallback((brand: Brand) => {
     setClickedCardId(brand.id);
     
     // Animacja kliknięcia - reset po 300ms
@@ -80,7 +74,7 @@ export default function ProductSelection() {
       // Przekierowanie do konfiguratora z parametrem marki
       window.location.href = `/konfigurator?brand=${encodeURIComponent(brand.name.toLowerCase())}`;
     }, 300);
-  };
+  }, []);
 
   if (loading) {
     return (
@@ -135,6 +129,7 @@ export default function ProductSelection() {
               <BrandCard 
                 brand={brand} 
                 className={`${position} ${clickedCardId === brand.id ? 'animate-click' : ''}`}
+                isPriority={index < 3 && position === 'center'} // Priority tylko dla pierwszych 3 widocznych na środku
               />
             )}
           />

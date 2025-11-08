@@ -6,9 +6,10 @@ import { Car } from "lucide-react";
 interface BrandCardProps {
   brand: Brand;
   className?: string;
+  isPriority?: boolean; // Dodaj prop dla priority
 }
 
-export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) => {
+export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, className = "", isPriority = false }) => {
   // Sprawdź czy to jest zdjęcie czy logo SVG
   const isImage = brand.logo.includes('.jpg') || brand.logo.includes('.png') || brand.logo.includes('.jpeg') || brand.logo.includes('.avif') || brand.logo.includes('.webp');
   
@@ -31,8 +32,9 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
                 isBrandImage ? 'object-cover object-top' : 'object-contain'
               }`}
               sizes="(max-width: 768px) 224px 320px, 288px 448px"
-              priority={true}
-              quality={95}
+              priority={isPriority}
+              quality={85}
+              loading={isPriority ? "eager" : "lazy"}
               placeholder="blur"
               blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
             />
@@ -95,6 +97,11 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand, className = "" }) =
       </div>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison - re-render tylko jeśli brand.id lub isPriority się zmieniły
+  return prevProps.brand.id === nextProps.brand.id && 
+         prevProps.isPriority === nextProps.isPriority &&
+         prevProps.className === nextProps.className;
+});
 
 export default BrandCard; 

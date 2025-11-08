@@ -936,12 +936,12 @@ export default function Configurator() {
 
   return (
     <section className="w-full bg-black text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 md:py-16">
-        <div className="flex flex-col md:flex-row gap-6 lg:gap-10">
+      <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-8 py-12 md:py-16">
+        <div className="flex flex-col md:flex-row gap-6 lg:gap-10 2xl:gap-12">
           {/* Lewa strona - wizualizacja */}
-          <div className="w-full lg:w-[900px] xl:w-[1000px]">
+          <div className="w-full lg:w-[900px] xl:w-[1000px] 2xl:w-[1100px]">
             <div 
-              className="relative w-full h-[250px] sm:h-[300px] md:h-[550px] lg:h-[650px] xl:h-[700px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300"
+              className="relative w-full h-[250px] sm:h-[300px] md:h-[550px] lg:h-[650px] xl:h-[700px] 2xl:h-[800px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300"
               onClick={() => {
                 if (typeof window !== 'undefined' && window.innerWidth < 768) {
                   setIsVisualizationExpanded(true);
@@ -1012,7 +1012,7 @@ export default function Configurator() {
 
           {/* Prawa strona - konfigurator z sekcjami */}
           <div 
-            className="w-full lg:w-[700px] xl:w-[780px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 min-h-[400px] sm:min-h-[500px] md:h-auto flex flex-col pb-32 md:pb-24 max-h-[calc(100vh-200px)] md:max-h-none overflow-y-auto md:overflow-visible overflow-x-hidden"
+            className="w-full lg:w-[700px] xl:w-[780px] 2xl:w-[900px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 2xl:p-12 min-h-[400px] sm:min-h-[500px] md:h-auto flex flex-col pb-32 md:pb-24 max-h-[calc(100vh-200px)] md:max-h-none overflow-y-auto md:overflow-visible overflow-x-hidden"
             data-config-panel
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}

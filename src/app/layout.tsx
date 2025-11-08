@@ -7,6 +7,7 @@ import Chatbot from "@/components/Chatbot";
 import Script from "next/script";
 import { SessionProvider } from "@/lib/contexts/session-context";
 import { TrackingProvider } from "@/components/tracking-provider";
+import { QueryProvider } from "@/lib/providers/query-provider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -178,14 +179,16 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} bg-black min-h-screen`}>
-        <SessionProvider>
-          <TrackingProvider>
-            <Navbar />
-            <div className="pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden">{children}</div>
-            <Footer />
-            <Chatbot />
-          </TrackingProvider>
-        </SessionProvider>
+        <QueryProvider>
+          <SessionProvider>
+            <TrackingProvider>
+              <Navbar />
+              <div className="pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden">{children}</div>
+              <Footer />
+              <Chatbot />
+            </TrackingProvider>
+          </SessionProvider>
+        </QueryProvider>
       </body>
     </html>
   );

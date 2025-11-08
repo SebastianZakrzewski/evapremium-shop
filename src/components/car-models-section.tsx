@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { Model } from "../types/carousel";
@@ -17,13 +18,21 @@ interface FilterState {
   vehicleType: string[];
 }
 
+// Fetch function dla React Query
+const fetchCarModels = async (brandName: string): Promise<CarModel[]> => {
+  const response = await fetch(`/api/car-models?brandName=${brandName}`);
+  
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  
+  const data = await response.json();
+  return Array.isArray(data) ? data : [];
+};
+
 export default function CarModelsSection() {
   const searchParams = useSearchParams();
   const brandParam = searchParams.get('brand');
-  
-  // Stan dla modeli z API
-  const [apiModels, setApiModels] = useState<CarModel[]>([]);
-  const [loading, setLoading] = useState(false);
   
   // Fallback do statycznych danych
   const allModels = getAllModels();
@@ -35,33 +44,14 @@ export default function CarModelsSection() {
     vehicleType: []
   });
 
-  // Pobieranie modeli z API gdy podano markę
-  useEffect(() => {
-    if (brandParam) {
-      setLoading(true);
-      console.log('Fetching models for brand:', brandParam);
-      fetch(`/api/car-models?brandName=${brandParam}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('API response:', data);
-          // Upewnij się, że data jest tablicą
-          setApiModels(Array.isArray(data) ? data : []);
-          setLoading(false);
-        })
-        .catch(error => {
-          console.error('Error fetching models:', error);
-          setApiModels([]);
-          setLoading(false);
-        });
-    } else {
-      setApiModels([]);
-    }
-  }, [brandParam]);
+  // Użyj React Query do cache'owania modeli
+  const { data: apiModels = [], isLoading: loading } = useQuery({
+    queryKey: ['car-models', brandParam],
+    queryFn: () => brandParam ? fetchCarModels(brandParam) : Promise.resolve([]),
+    enabled: !!brandParam,
+    staleTime: 5 * 60 * 1000, // 5 minut
+    gcTime: 10 * 60 * 1000, // 10 minut cache
+  });
 
   // Mapowanie modeli z API na format komponentu
   const mappedApiModels: Model[] = useMemo(() => {
