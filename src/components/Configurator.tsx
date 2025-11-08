@@ -951,7 +951,7 @@ export default function Configurator() {
           </div>
 
           {/* Prawa strona - konfigurator z sekcjami */}
-          <div className="w-full lg:w-[700px] xl:w-[780px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 min-h-[600px] md:h-auto flex flex-col pb-24">
+          <div className="w-full lg:w-[700px] xl:w-[780px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 min-h-[400px] sm:min-h-[500px] md:h-auto flex flex-col pb-24 max-h-[calc(100vh-200px)] md:max-h-none overflow-y-auto md:overflow-visible">
             {/* Header z progressem */}
             <div className="mb-6">
               <h2 className="text-xl md:text-2xl font-semibold">
@@ -1481,7 +1481,7 @@ export default function Configurator() {
                 variant="outline"
                 onClick={prevSection}
                 disabled={currentSection === 0}
-                className="flex items-center gap-2 border-neutral-700 text-white hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 border-neutral-700 text-white hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px]"
               >
                 <ChevronLeft className="h-4 w-4" />
                 Wstecz
@@ -1492,7 +1492,7 @@ export default function Configurator() {
                 <Button
                   onClick={handleAddToCart}
                   disabled={isAddingToCart || cartLoading}
-                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 px-8 py-3 text-lg font-semibold min-w-[200px] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 px-8 py-3 text-lg font-semibold min-w-[200px] min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isAddingToCart || cartLoading ? (
                     <>
@@ -1510,7 +1510,7 @@ export default function Configurator() {
                 <Button
                   onClick={nextSection}
                   disabled={currentSection === 0 && (!selectedCarModel || !selectedCarYear || !selectedBodyType)}
-                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px]"
                 >
                   Dalej
                   <ChevronRight className="h-4 w-4" />

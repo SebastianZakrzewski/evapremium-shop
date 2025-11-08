@@ -42,7 +42,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       
       {/* Modal */}
       <div 
-        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-black border-l border-neutral-800 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-full max-w-full sm:max-w-md bg-black border-l border-neutral-800 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -103,7 +103,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                       <div className="flex items-center gap-2 mt-2">
                         <button 
                           onClick={() => updateQuantity(item.accessory.id, item.quantity - 1)}
-                          className="w-10 h-10 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 active:bg-neutral-600 transition-colors text-white touch-manipulation"
+                          className="min-w-[44px] min-h-[44px] w-12 h-12 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 active:bg-neutral-600 transition-colors text-white touch-manipulation"
                           aria-label="Zmniejsz ilość"
                         >
                           -
@@ -111,7 +111,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                         <span className="w-8 text-center text-sm font-medium text-white">{item.quantity}</span>
                         <button 
                           onClick={() => updateQuantity(item.accessory.id, item.quantity + 1)}
-                          className="w-10 h-10 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 active:bg-neutral-600 transition-colors text-white touch-manipulation"
+                          className="min-w-[44px] min-h-[44px] w-12 h-12 bg-neutral-800 border border-neutral-700 rounded flex items-center justify-center text-sm font-medium hover:bg-neutral-700 active:bg-neutral-600 transition-colors text-white touch-manipulation"
                           aria-label="Zwiększ ilość"
                         >
                           +

@@ -177,9 +177,9 @@ export default function HeroSection() {
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-3 h-3 sm:w-2 sm:h-2 rounded-full transition-colors ${
+            className={`w-4 h-4 sm:w-3 sm:h-3 md:w-2 md:h-2 rounded-full transition-colors p-2 ${
               index === currentSlide ? "bg-white" : "bg-white/50"
-            } p-2`}
+            }`}
             aria-label={`Przejdź do slajdu ${index + 1}`}
           />
         ))}

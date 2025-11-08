@@ -577,7 +577,7 @@ export default function CheckoutSectionNew() {
   }
 
   return (
-    <div className="min-h-screen bg-black py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-black py-12 relative overflow-hidden pb-safe">
       {/* Animowane tło z gradientem - ciemniejszy motyw */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
       
@@ -604,11 +604,11 @@ export default function CheckoutSectionNew() {
         </div>
 
         {/* Progress Steps - Sticky on mobile - ciemniejszy motyw */}
-        <div className="sticky top-0 z-20 bg-black/95 backdrop-blur border-b border-red-900/30 mb-8 -mx-6 px-6 py-4">
+        <div className="sticky top-0 z-20 bg-black/95 backdrop-blur border-b border-red-900/30 mb-8 -mx-6 px-6 py-4 pt-safe">
           <div className="flex items-center justify-center">
           {[1, 2, 3].map((step) => (
             <React.Fragment key={step}>
-              <div className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation ${
+              <div className={`flex items-center justify-center min-w-[48px] min-h-[48px] w-12 h-12 rounded-full border-2 transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation ${
                 currentStep >= step 
                   ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-500/50' 
                   : 'border-red-800/50 text-gray-500 bg-black/80 hover:border-red-600/70 hover:bg-red-900/20'
@@ -676,7 +676,7 @@ export default function CheckoutSectionNew() {
                         <Input
                           id="firstName"
                           {...register("firstName")}
-                          className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.firstName ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -692,7 +692,7 @@ export default function CheckoutSectionNew() {
                         <Input
                           id="lastName"
                           {...register("lastName")}
-                          className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.lastName ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -710,7 +710,7 @@ export default function CheckoutSectionNew() {
                         id="email"
                         type="email"
                         {...register("email")}
-                        className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.email ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -726,7 +726,7 @@ export default function CheckoutSectionNew() {
                       <Input
                         id="phone"
                         {...register("phone")}
-                        className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.phone ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -755,7 +755,7 @@ export default function CheckoutSectionNew() {
                       <Input
                         id="street"
                         {...register("street")}
-                        className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.street ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -772,7 +772,7 @@ export default function CheckoutSectionNew() {
                         <Input
                           id="postalCode"
                           {...register("postalCode")}
-                          className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.postalCode ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -788,7 +788,7 @@ export default function CheckoutSectionNew() {
                         <Input
                           id="city"
                           {...register("city")}
-                          className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.city ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -805,7 +805,7 @@ export default function CheckoutSectionNew() {
                       <Input
                         id="country"
                         {...register("country")}
-                        className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.country ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -837,7 +837,7 @@ export default function CheckoutSectionNew() {
                             <Input
                               id="billingStreet"
                               {...register("billingStreet")}
-                              className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                              className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                                 errors.billingStreet ? "border-red-500 bg-red-900/20" : ""
                               }`}
                             />
@@ -848,7 +848,7 @@ export default function CheckoutSectionNew() {
                               <Input
                                 id="billingPostalCode"
                                 {...register("billingPostalCode")}
-                                className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                                className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                                   errors.billingPostalCode ? "border-red-500 bg-red-900/20" : ""
                                 }`}
                               />
@@ -858,7 +858,7 @@ export default function CheckoutSectionNew() {
                               <Input
                                 id="billingCity"
                                 {...register("billingCity")}
-                                className={`h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                                className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                                   errors.billingCity ? "border-red-500 bg-red-900/20" : ""
                                 }`}
                               />
@@ -1067,7 +1067,7 @@ export default function CheckoutSectionNew() {
 
           {/* Order Summary */}
           <div className="lg:col-span-2">
-            <Card className="sticky top-4 bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
+            <Card className="sticky top-0 md:top-4 bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300 max-h-[calc(100vh-100px)] md:max-h-none overflow-y-auto md:overflow-visible">
               <CardHeader className="border-b border-neutral-700 px-8 py-6">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl text-white">Podsumowanie zamówienia</CardTitle>
@@ -1217,7 +1217,7 @@ export default function CheckoutSectionNew() {
                     <div className="flex space-x-3">
                       <Input 
                         placeholder="Wprowadź kod"
-                        className="h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-base"
+                        className="min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-base"
                       />
                       <Button 
                         type="button"
