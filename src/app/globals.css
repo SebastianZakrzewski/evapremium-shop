@@ -71,11 +71,13 @@ button, a, input, select, textarea, [role="button"] {
   }
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
   }
 }
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* Responsywne animacje - wyłącz na urządzeniach z preferencją reduced motion */

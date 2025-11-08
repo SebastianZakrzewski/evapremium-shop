@@ -220,6 +220,9 @@ export default function Configurator() {
   const [selectedCellType, setSelectedCellType] = useState<string>(cellTypes[0].id);
   const [selectedSetVariant, setSelectedSetVariant] = useState<string>(setVariants[0].id);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isVisualizationExpanded, setIsVisualizationExpanded] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   // Nowe stany dla danych z Supabase
   const [availableBrands, setAvailableBrands] = useState<any[]>([]);
@@ -548,12 +551,56 @@ export default function Configurator() {
   const nextSection = () => {
     if (currentSection < totalSections - 1) {
       setCurrentSection(currentSection + 1);
+      // Auto-scroll do góry sekcji na mobile
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        setTimeout(() => {
+          const configPanel = document.querySelector('[data-config-panel]');
+          if (configPanel) {
+            configPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      }
     }
   };
 
   const prevSection = () => {
     if (currentSection > 0) {
       setCurrentSection(currentSection - 1);
+      // Auto-scroll do góry sekcji na mobile
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        setTimeout(() => {
+          const configPanel = document.querySelector('[data-config-panel]');
+          if (configPanel) {
+            configPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      }
+    }
+  };
+
+  // Swipe gesture handlers
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && currentSection < totalSections - 1) {
+      nextSection();
+    }
+    if (isRightSwipe && currentSection > 0) {
+      prevSection();
     }
   };
 
@@ -893,15 +940,24 @@ export default function Configurator() {
         <div className="flex flex-col md:flex-row gap-6 lg:gap-10">
           {/* Lewa strona - wizualizacja */}
           <div className="w-full lg:w-[900px] xl:w-[1000px]">
-            <div className="relative w-full h-[350px] sm:h-[450px] md:h-[550px] lg:h-[650px] xl:h-[700px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
+            <div 
+              className="relative w-full h-[250px] sm:h-[300px] md:h-[550px] lg:h-[650px] xl:h-[700px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300"
+              onClick={() => {
+                if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                  setIsVisualizationExpanded(true);
+                }
+              }}
+            >
               {/* Rzeczywisty obraz dywanika */}
               <Image
                 key={`${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`}
                 src={matImagePath}
                 alt={`Dywanik ${mat.name} z obszyciem ${edge.name}`}
                 fill
-                className="object-cover"
+                className="object-cover transition-opacity duration-500"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority={false}
+                loading="lazy"
                 onError={(e) => {
                   // Fallback do emoji jeśli obraz nie istnieje
                   const target = e.target as HTMLImageElement;
@@ -943,6 +999,10 @@ export default function Configurator() {
                   <div>Komórki: {cellType.name}</div>
                   <div>Zestaw: {setVariant.name}</div>
                 </div>
+                {/* Tap to expand indicator na mobile */}
+                <div className="md:hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur px-3 py-1.5 rounded-full border border-neutral-800 text-xs text-white/80">
+                  Dotknij aby powiększyć
+                </div>
               </div>
             </div>
             <p className="mt-3 text-sm text-white/70">
@@ -951,9 +1011,15 @@ export default function Configurator() {
           </div>
 
           {/* Prawa strona - konfigurator z sekcjami */}
-          <div className="w-full lg:w-[700px] xl:w-[780px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 min-h-[400px] sm:min-h-[500px] md:h-auto flex flex-col pb-24 max-h-[calc(100vh-200px)] md:max-h-none overflow-y-auto md:overflow-visible">
-            {/* Header z progressem */}
-            <div className="mb-6">
+          <div 
+            className="w-full lg:w-[700px] xl:w-[780px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 min-h-[400px] sm:min-h-[500px] md:h-auto flex flex-col pb-32 md:pb-24 max-h-[calc(100vh-200px)] md:max-h-none overflow-y-auto md:overflow-visible overflow-x-hidden"
+            data-config-panel
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
+            {/* Header z progressem - sticky na mobile */}
+            <div className="mb-6 sticky top-0 z-10 bg-neutral-950/95 backdrop-blur md:bg-transparent md:backdrop-blur-none pb-4 md:pb-0 -mx-6 md:mx-0 px-6 md:px-0 pt-safe md:pt-0">
               <h2 className="text-xl md:text-2xl font-semibold">
                 {getDynamicTitle()}
               </h2>
@@ -966,9 +1032,9 @@ export default function Configurator() {
               
               {/* Progress indicator */}
               <div className="mt-4 flex items-center gap-2">
-                <div className="flex-1 bg-neutral-800 rounded-full h-2">
+                <div className="flex-1 bg-neutral-800 rounded-full h-2 md:h-2">
                   <div 
-                    className="bg-red-500 rounded-full h-2 transition-all duration-300"
+                    className="bg-red-500 rounded-full h-2 md:h-2 transition-all duration-300"
                     style={{ width: `${((currentSection + 1) / totalSections) * 100}%` }}
                   />
                 </div>
@@ -1033,7 +1099,7 @@ export default function Configurator() {
                         <select
                           value={selectedCarModel}
                           onChange={(e) => setSelectedCarModel(e.target.value)}
-                          className="w-full p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer"
+                          className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
                         >
                           <option value="" className="bg-neutral-900 text-gray-400">Wybierz model...</option>
                           {availableModels.map((model, index) => (
@@ -1070,7 +1136,7 @@ export default function Configurator() {
                         <select
                           value={selectedCarYear}
                           onChange={(e) => setSelectedCarYear(e.target.value)}
-                          className="w-full p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer"
+                          className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
                         >
                           <option value="" className="bg-neutral-900 text-gray-400">Wybierz rocznik...</option>
                           {availableYears.map((year) => (
@@ -1118,7 +1184,7 @@ export default function Configurator() {
                         <select
                           value={selectedBodyType}
                           onChange={(e) => setSelectedBodyType(e.target.value)}
-                          className="w-full p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer"
+                          className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
                         >
                           <option value="" className="bg-neutral-900 text-gray-400">Wybierz typ nadwozia...</option>
                           {availableBodyTypes.map((bodyType) => (
@@ -1162,7 +1228,7 @@ export default function Configurator() {
                       const modifier = { modifier: 0, label: '+0 zł' };
                       
                       return (
-                        <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                        <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 active:bg-neutral-800 active:scale-[0.98] transition`}>
                           <RadioGroupItem value={s.id} id={`set-${s.id}`} className="sr-only" />
                           <div className="flex items-center justify-between">
                             <div>
@@ -1200,7 +1266,7 @@ export default function Configurator() {
                         : 0;
                       
                       return (
-                        <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                        <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 active:bg-neutral-800 active:scale-[0.98] transition`}>
                           <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
                           <div className="flex items-center justify-between">
                             <div className="flex-1">
@@ -1247,7 +1313,7 @@ export default function Configurator() {
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj komórek</h3>
                   <RadioGroup value={selectedCellType} onValueChange={setSelectedCellType} className="space-y-3">
                     {cellTypes.map((c) => (
-                      <Label key={c.id} htmlFor={`cell-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedCellType === c.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 transition`}>
+                      <Label key={c.id} htmlFor={`cell-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedCellType === c.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 active:bg-neutral-800 active:scale-[0.98] transition`}>
                         <RadioGroupItem value={c.id} id={`cell-${c.id}`} className="sr-only" />
                         <div className="flex items-center justify-between">
                           <div>
@@ -1270,7 +1336,7 @@ export default function Configurator() {
                   <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
                   <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-2 md:gap-3">
                     {availableMaterialColors.map((c) => (
-                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden min-w-[48px] min-h-[48px]`}>
+                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden min-w-[48px] min-h-[48px]`}>
                         <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
                         <div
                           className="absolute inset-0"
@@ -1304,7 +1370,7 @@ export default function Configurator() {
                       <button
                         key={e.id}
                         onClick={() => setSelectedEdge(e.id)}
-                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 transition-all duration-200 aspect-square cursor-pointer min-w-[48px] min-h-[48px]`}
+                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 aspect-square cursor-pointer min-w-[48px] min-h-[48px]`}
                         style={{ backgroundColor: e.hex }}
                         aria-pressed={selectedEdge === e.id}
                       >
@@ -1327,7 +1393,7 @@ export default function Configurator() {
                       { id: "brak", name: "Brak" },
                       { id: "gumowy", name: "Gumowy" },
                     ].map((h) => (
-                      <Label key={h.id} htmlFor={`heel-${h.id}`} className={`cursor-pointer rounded-xl border ${selectedHeelPad === h.id ? "border-white" : "border-neutral-800"} px-4 py-3 bg-neutral-900/50 hover:bg-neutral-900 transition` }>
+                      <Label key={h.id} htmlFor={`heel-${h.id}`} className={`cursor-pointer rounded-xl border ${selectedHeelPad === h.id ? "border-white" : "border-neutral-800"} px-4 py-3 bg-neutral-900/50 hover:bg-neutral-900 active:bg-neutral-800 active:scale-[0.98] transition` }>
                         <RadioGroupItem value={h.id} id={`heel-${h.id}`} className="sr-only" />
                         <span className="text-sm">{h.name}</span>
                       </Label>
@@ -1476,15 +1542,15 @@ export default function Configurator() {
 
             {/* Navigation buttons */}
 
-            <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800">
+            <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800 md:static fixed bottom-0 left-0 right-0 bg-neutral-950/95 backdrop-blur border-t border-neutral-800 p-4 md:p-0 md:bg-transparent md:backdrop-blur-none z-20 pb-safe md:pb-0 shadow-lg md:shadow-none">
               <Button
                 variant="outline"
                 onClick={prevSection}
                 disabled={currentSection === 0}
-                className="flex items-center gap-2 border-neutral-700 text-white hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px]"
+                className="flex items-center gap-2 border-neutral-700 text-white hover:bg-neutral-800 active:bg-neutral-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] md:min-w-auto"
               >
                 <ChevronLeft className="h-4 w-4" />
-                Wstecz
+                <span className="hidden sm:inline">Wstecz</span>
               </Button>
               
               
@@ -1492,7 +1558,7 @@ export default function Configurator() {
                 <Button
                   onClick={handleAddToCart}
                   disabled={isAddingToCart || cartLoading}
-                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 px-8 py-3 text-lg font-semibold min-w-[200px] min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 active:bg-red-800 active:scale-95 px-8 py-3 text-lg font-semibold min-w-[200px] min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isAddingToCart || cartLoading ? (
                     <>
@@ -1510,9 +1576,9 @@ export default function Configurator() {
                 <Button
                   onClick={nextSection}
                   disabled={currentSection === 0 && (!selectedCarModel || !selectedCarYear || !selectedBodyType)}
-                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px]"
+                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 active:bg-red-800 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] md:min-w-auto"
                 >
-                  Dalej
+                  <span className="hidden sm:inline">Dalej</span>
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               )}
@@ -1520,6 +1586,38 @@ export default function Configurator() {
           </div>
         </div>
       </div>
+
+      {/* Modal pełnoekranowy dla wizualizacji na mobile */}
+      {isVisualizationExpanded && (
+        <div 
+          className="fixed inset-0 z-50 bg-black flex items-center justify-center p-4"
+          onClick={() => setIsVisualizationExpanded(false)}
+        >
+          <div className="relative w-full h-full max-w-4xl max-h-[90vh] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
+            <Image
+              key={`expanded-${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`}
+              src={matImagePath}
+              alt={`Dywanik ${mat.name} z obszyciem ${edge.name}`}
+              fill
+              className="object-contain transition-opacity duration-500"
+              sizes="100vw"
+              priority
+            />
+            <button
+              onClick={() => setIsVisualizationExpanded(false)}
+              className="absolute top-4 right-4 bg-black/60 backdrop-blur px-4 py-2 rounded-full border border-neutral-800 text-white hover:bg-black/80 active:bg-black active:scale-95 transition-all min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label="Zamknij"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur px-4 py-2 rounded-full border border-neutral-800 text-sm text-white/80">
+              Dotknij poza obraz aby zamknąć
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

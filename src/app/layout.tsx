@@ -181,7 +181,7 @@ export default function RootLayout({
         <SessionProvider>
           <TrackingProvider>
             <Navbar />
-            <div className="pt-16 md:pt-20 lg:pt-24">{children}</div>
+            <div className="pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden">{children}</div>
             <Footer />
             <Chatbot />
           </TrackingProvider>

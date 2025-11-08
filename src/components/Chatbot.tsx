@@ -211,12 +211,12 @@ export default function Chatbot() {
   return (
     <>
       {/* Floating Chat Button with Tooltip */}
-      <div className={`fixed bottom-6 z-50 transition-all duration-300 ${isCartOpen ? 'left-6' : 'right-6'}`}>
-        {/* Tooltip */}
+      <div className={`fixed bottom-4 md:bottom-6 z-50 transition-all duration-300 pb-safe ${isCartOpen ? 'left-4 md:left-6' : 'right-4 md:right-6'}`}>
+        {/* Tooltip - ukryty na bardzo małych ekranach */}
         {showTooltip && !isOpen && (
-          <div className={`absolute bottom-20 bg-gradient-to-r from-gray-900 to-gray-800 text-white px-5 py-3 rounded-xl shadow-2xl border border-gray-600 max-w-sm animate-bounce ${isCartOpen ? 'left-0' : 'right-0'}`}>
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+          <div className={`absolute bottom-20 md:bottom-20 bg-gradient-to-r from-gray-900 to-gray-800 text-white px-3 py-2 md:px-5 md:py-3 rounded-xl shadow-2xl border border-gray-600 max-w-[200px] sm:max-w-sm animate-bounce sm:block ${isCartOpen ? 'left-0' : 'right-0'}`}>
+            <div className="flex items-center space-x-2 md:space-x-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden flex-shrink-0">
                 <Image
                   src="/chat.webp"
                   alt="EVA Premium Chat"
@@ -225,9 +225,10 @@ export default function Chatbot() {
                   className="rounded-full"
                 />
               </div>
-              <div>
-                <p className="text-sm font-semibold text-white">Potrzebujesz pomocy?</p>
-                <p className="text-xs text-gray-200">Kliknij aby porozmawiać z Klaudią</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs md:text-sm font-semibold text-white">Potrzebujesz pomocy?</p>
+                <p className="text-[10px] md:text-xs text-gray-200 hidden sm:block">Kliknij aby porozmawiać z Klaudią</p>
+                <p className="text-[10px] md:text-xs text-gray-200 sm:hidden">Kliknij tutaj</p>
               </div>
             </div>
             {/* Arrow pointing down */}
@@ -242,7 +243,7 @@ export default function Chatbot() {
           }}
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
-          className={`w-20 h-20 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 relative overflow-hidden border-2 border-white/20 ${
+          className={`w-16 h-16 md:w-20 md:h-20 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 relative overflow-hidden border-2 border-white/20 min-w-[64px] min-h-[64px] md:min-w-[80px] md:min-h-[80px] ${
             isOpen
               ? "bg-red-600 hover:bg-red-700 shadow-red-500/50"
               : "bg-gradient-to-br from-red-500 via-red-600 to-red-700 hover:from-red-600 hover:via-red-700 hover:to-red-800 shadow-red-500/30"
@@ -250,7 +251,7 @@ export default function Chatbot() {
           aria-label={isOpen ? "Zamknij chat" : "Otwórz chat"}
         >
           {isOpen ? (
-            <X className="w-8 h-8 text-white mx-auto drop-shadow-lg" />
+            <X className="w-6 h-6 md:w-8 md:h-8 text-white mx-auto drop-shadow-lg" />
           ) : (
             <div className="w-full h-full flex items-center justify-center p-2">
               <Image
@@ -258,7 +259,7 @@ export default function Chatbot() {
                 alt="EVA Premium Chat"
                 width={48}
                 height={48}
-                className="rounded-full drop-shadow-lg"
+                className="rounded-full drop-shadow-lg w-10 h-10 md:w-12 md:h-12"
                 style={{ width: "auto", height: "auto" }}
               />
             </div>
@@ -268,7 +269,7 @@ export default function Chatbot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className={`fixed bottom-28 z-50 w-96 h-[500px] bg-gradient-to-b from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-gray-600 flex flex-col overflow-hidden backdrop-blur-sm transition-all duration-300 ${isCartOpen ? 'left-6' : 'right-6'}`}>
+        <div className={`fixed bottom-24 md:bottom-28 z-50 w-full max-w-[calc(100vw-2rem)] sm:w-96 h-[500px] md:h-[500px] max-h-[calc(100vh-150px)] md:max-h-[calc(100vh-200px)] bg-gradient-to-b from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-gray-600 flex flex-col overflow-hidden backdrop-blur-sm transition-all duration-300 pb-safe ${isCartOpen ? 'left-4 md:left-6' : 'right-4 md:right-6'}`}>
           {/* Header */}
           <div className="bg-gradient-to-r from-red-500 via-red-600 to-red-700 px-6 py-4 flex items-center justify-between shadow-lg">
             <div className="flex items-center space-x-4">
@@ -292,7 +293,7 @@ export default function Chatbot() {
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-white/80 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"
+              className="text-white/80 hover:text-white active:text-white active:bg-white/20 transition-colors p-2 hover:bg-white/10 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Zamknij chat"
             >
               <X className="w-6 h-6" />
@@ -391,7 +392,7 @@ export default function Chatbot() {
                       value={contactData.name}
                       onChange={(e) => handleContactInputChange('name', e.target.value)}
                       placeholder="Imię"
-                      className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-all duration-200"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm md:text-sm transition-all duration-200 min-h-[48px]"
                       required
                     />
                   </div>
@@ -403,7 +404,7 @@ export default function Chatbot() {
                       value={contactData.phone}
                       onChange={(e) => handleContactInputChange('phone', e.target.value)}
                       placeholder="Numer telefonu"
-                      className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-all duration-200"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm md:text-sm transition-all duration-200 min-h-[48px]"
                       required
                     />
                   </div>
@@ -413,7 +414,7 @@ export default function Chatbot() {
                   <button
                     type="submit"
                     disabled={!contactData.name.trim() || !contactData.phone.trim() || isSubmittingContact}
-                    className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white py-3 px-6 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-red-500/25"
+                    className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 active:from-red-700 active:to-red-800 active:scale-95 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white py-3 px-6 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-red-500/25 min-h-[44px]"
                   >
                     {isSubmittingContact ? (
                       <>
@@ -427,7 +428,7 @@ export default function Chatbot() {
                   <button
                     type="button"
                     onClick={() => setShowContactForm(false)}
-                    className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-xl text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-gray-500/25"
+                    className="px-6 py-3 bg-gray-700 hover:bg-gray-600 active:bg-gray-500 active:scale-95 text-gray-300 rounded-xl text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-gray-500/25 min-h-[44px]"
                   >
                     Anuluj
                   </button>
@@ -446,13 +447,13 @@ export default function Chatbot() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Napisz wiadomość..."
-                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm transition-all duration-200"
+                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm md:text-sm transition-all duration-200 min-h-[48px]"
                 disabled={isTyping}
               />
               <button
                 type="submit"
                 disabled={!inputValue.trim() || isTyping}
-                className="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white rounded-xl flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-red-500/25"
+                className="w-12 h-12 md:w-12 md:h-12 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 active:from-red-700 active:to-red-800 active:scale-95 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white rounded-xl flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-red-500/25 min-h-[48px] min-w-[48px]"
                 aria-label="Wyślij wiadomość"
               >
                 <Send className="w-5 h-5" />
