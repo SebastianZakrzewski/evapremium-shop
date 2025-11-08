@@ -19,7 +19,6 @@ export default function Chatbot() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const chatWindowRef = useRef<HTMLDivElement>(null);
   
   // Sprawdź czy jesteśmy na urządzeniu mobilnym i na stronie konfiguratora
@@ -121,39 +120,14 @@ export default function Chatbot() {
     };
   }, []);
 
-  // Śledź wysokość klawiatury używając Visual Viewport API
-  useEffect(() => {
-    if (!isMobile || typeof window === 'undefined') return;
-
-    const updateKeyboardHeight = () => {
-      if (window.visualViewport) {
-        const viewportHeight = window.visualViewport.height;
-        const windowHeight = window.innerHeight;
-        const keyboardHeight = windowHeight - viewportHeight;
-        setKeyboardHeight(Math.max(0, keyboardHeight));
-      }
-    };
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', updateKeyboardHeight);
-      updateKeyboardHeight();
-    }
-
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', updateKeyboardHeight);
-      }
-    };
-  }, [isMobile]);
-
-  // Zapobiegaj automatycznemu scrollowaniu i zoomowaniu przy focus na input
+  // Zapobiegaj automatycznemu scrollowaniu przy focus na input
   useEffect(() => {
     if (!isMobile || !inputRef.current || !isOpen) return;
 
     const input = inputRef.current;
 
     const handleFocus = () => {
-      // Zapobiegaj automatycznemu scrollowaniu - użyj requestAnimationFrame dla lepszej synchronizacji
+      // Zapobiegaj automatycznemu scrollowaniu strony
       requestAnimationFrame(() => {
         if (chatWindowRef.current) {
           chatWindowRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -161,19 +135,10 @@ export default function Chatbot() {
       });
     };
 
-    const handleBlur = () => {
-      // Resetuj wysokość klawiatury po zamknięciu
-      setTimeout(() => {
-        setKeyboardHeight(0);
-      }, 100);
-    };
-
     input.addEventListener('focus', handleFocus);
-    input.addEventListener('blur', handleBlur);
 
     return () => {
       input.removeEventListener('focus', handleFocus);
-      input.removeEventListener('blur', handleBlur);
     };
   }, [isMobile, isOpen]);
 
@@ -371,13 +336,13 @@ export default function Chatbot() {
             left: '1rem',
             right: '1rem',
             top: '4rem',
-            bottom: keyboardHeight > 0 ? `${keyboardHeight + 20}px` : '5rem',
+            bottom: '1rem',
             width: 'calc(100vw - 2rem)',
             maxWidth: 'none',
-            height: keyboardHeight > 0 ? `calc(100dvh - ${keyboardHeight + 80}px)` : 'auto',
-            maxHeight: keyboardHeight > 0 ? `calc(100dvh - ${keyboardHeight + 80}px)` : 'calc(100dvh - 9rem)',
-            transform: 'none',
-            position: 'fixed'
+            height: 'auto',
+            maxHeight: 'calc(100dvh - 5rem)',
+            position: 'fixed',
+            transform: 'none'
           } : undefined}
         >
           {/* Header */}
