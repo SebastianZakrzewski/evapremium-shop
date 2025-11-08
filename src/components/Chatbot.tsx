@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { MessageCircle, X, Send, Bot, User, Phone, User as UserIcon } from "lucide-react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { ContactInfo, ContactFormData } from "@/types/contact";
 
 interface Message {
@@ -13,9 +14,15 @@ interface Message {
 }
 
 export default function Chatbot() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Sprawdź czy jesteśmy na urządzeniu mobilnym i na stronie konfiguratora
+  const isConfiguratorPage = useMemo(() => pathname?.startsWith('/konfigurator') ?? false, [pathname]);
+  const shouldHideChatbot = useMemo(() => isMobile && isConfiguratorPage, [isMobile, isConfiguratorPage]);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -97,6 +104,27 @@ export default function Chatbot() {
       window.removeEventListener('openChatbot', handleOpenChatbot);
     };
   }, []);
+
+  // Sprawdź rozmiar ekranu i czy jesteśmy na mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint w Tailwind
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+
+  // Ukryj chatbota jeśli jesteśmy na mobile w konfiguratorze
+  useEffect(() => {
+    if (shouldHideChatbot && isOpen) {
+      setIsOpen(false);
+    }
+  }, [shouldHideChatbot, isOpen]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -207,6 +235,11 @@ export default function Chatbot() {
   const handleContactInputChange = (field: keyof ContactFormData, value: string) => {
     setContactData(prev => ({ ...prev, [field]: value }));
   };
+
+  // Nie renderuj chatbota na mobile w konfiguratorze
+  if (shouldHideChatbot) {
+    return null;
+  }
 
   return (
     <>
