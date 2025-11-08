@@ -109,7 +109,7 @@ export default function Navbar() {
         </div>
         {/* Mobile Menu */}
         <div
-          className={`md:hidden fixed top-16 md:top-20 lg:top-24 left-0 w-full bg-black/95 backdrop-blur border-b border-neutral-800 z-40 transition-all duration-300 ease-in-out pb-safe ${open ? "max-h-96 opacity-100" : "max-h-0 opacity-0 overflow-hidden"}`}
+          className={`md:hidden fixed top-16 left-0 w-full bg-black/95 backdrop-blur border-b border-neutral-800 z-40 transition-all duration-300 ease-in-out ${open ? "max-h-96 opacity-100 visible" : "max-h-0 opacity-0 invisible overflow-hidden"}`}
         >
           <div className="flex flex-col gap-4 py-8 px-6">
             <Link href="#products" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Dywaniki Samochodowe</Link>
