@@ -1010,10 +1010,10 @@ export default function Configurator() {
           >
             {/* Header z progressem - sticky tylko na desktop */}
             <div ref={headerRef} className="mb-6 md:sticky md:top-0 z-10 bg-neutral-950/60 md:bg-transparent backdrop-blur md:backdrop-blur-none pb-4 md:pb-0 -mx-6 md:mx-0 px-6 md:px-0 pt-safe md:pt-0">
-              <h2 className="text-xl md:text-2xl font-semibold">
+              <h2 className="hidden md:block text-xl md:text-2xl font-semibold">
                 {getDynamicTitle()}
               </h2>
-              <p className="text-white/70 text-sm mt-1">
+              <p className="hidden md:block text-white/70 text-sm mt-1">
                 {brandParam 
                   ? `Dopasowane dywaniki EVA Premium dla marki ${brandParam.toUpperCase()}. Zachowujemy stylistykę EvaPremium i jakość premium.`
                   : 'Zachowujemy stylistykę EvaPremium i jakość premium.'
