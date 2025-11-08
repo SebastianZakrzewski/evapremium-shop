@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState, useEffect, useCallback } from "react";
+import React, { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
@@ -223,6 +223,67 @@ export default function Configurator() {
   const [isVisualizationExpanded, setIsVisualizationExpanded] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // Refs dla inteligentnego scrollowania na mobile
+  const configPanelRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const navigationRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const hasScrolledToPreview = useRef(false);
+  
+  // Funkcja pomocnicza do sprawdzania czy jesteśmy na mobile
+  const isMobileCheck = useCallback(() => typeof window !== 'undefined' && window.innerWidth < 768, []);
+  
+  // Funkcja pomocnicza do sprawdzania czy element jest widoczny w viewport panelu konfiguracji
+  const isElementVisible = useCallback((element: HTMLElement | null): boolean => {
+    if (!element || !isMobileCheck() || !configPanelRef.current) return true;
+    const elementRect = element.getBoundingClientRect();
+    const panelRect = configPanelRef.current.getBoundingClientRect();
+    // Sprawdź czy element jest widoczny w panelu (z małym marginesem)
+    return elementRect.top >= panelRect.top - 50 && elementRect.bottom <= panelRect.bottom + 50;
+  }, [isMobileCheck]);
+  
+  // Funkcja do inteligentnego scrollowania z opóźnieniem
+  const scrollToElement = useCallback((element: HTMLElement | null, options: ScrollIntoViewOptions = {}) => {
+    if (!isMobileCheck() || !element || !configPanelRef.current) return;
+    
+    // Sprawdź czy element jest już widoczny
+    if (isElementVisible(element)) return;
+    
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        // Użyj scrollIntoView z opcją względem panelu konfiguracji
+        // Najpierw sprawdź czy element jest wewnątrz panelu
+        const panelRect = configPanelRef.current?.getBoundingClientRect();
+        const elementRect = element.getBoundingClientRect();
+        
+        if (panelRect && elementRect.top < panelRect.top) {
+          // Element jest powyżej panelu - scroll do góry
+          const offset = elementRect.top - panelRect.top - 20;
+          configPanelRef.current?.scrollBy({
+            top: offset,
+            behavior: 'smooth'
+          });
+        } else if (panelRect && elementRect.bottom > panelRect.bottom) {
+          // Element jest poniżej panelu - scroll w dół
+          const offset = elementRect.bottom - panelRect.bottom + 20;
+          configPanelRef.current?.scrollBy({
+            top: offset,
+            behavior: 'smooth'
+          });
+        } else {
+          // Element jest w panelu ale nie w pełni widoczny - użyj scrollIntoView
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest',
+            ...options
+          });
+        }
+      }, 100);
+    });
+  }, [isElementVisible, isMobileCheck]);
 
   // Nowe stany dla danych z Supabase
   const [availableBrands, setAvailableBrands] = useState<any[]>([]);
@@ -548,35 +609,159 @@ export default function Configurator() {
     }
   }, [selectedCarBrand, selectedCarModel, selectedCarYear, selectedBodyType]);
 
-  const nextSection = () => {
+  const nextSection = useCallback(() => {
     if (currentSection < totalSections - 1) {
-      setCurrentSection(currentSection + 1);
-      // Auto-scroll do góry sekcji na mobile
-      if (typeof window !== 'undefined' && window.innerWidth < 768) {
-        setTimeout(() => {
-          const configPanel = document.querySelector('[data-config-panel]');
-          if (configPanel) {
-            configPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }, 100);
+      const nextSectionIndex = currentSection + 1;
+      setCurrentSection(nextSectionIndex);
+      
+      // Auto-scroll do początku nowej sekcji na mobile
+      if (isMobileCheck()) {
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            const sectionElement = sectionRefs.current[nextSectionIndex];
+            if (sectionElement) {
+              scrollToElement(sectionElement);
+            } else if (headerRef.current) {
+              scrollToElement(headerRef.current);
+            }
+          }, 150);
+        });
       }
     }
-  };
+  }, [currentSection, scrollToElement, isMobileCheck]);
 
-  const prevSection = () => {
+  const prevSection = useCallback(() => {
     if (currentSection > 0) {
-      setCurrentSection(currentSection - 1);
-      // Auto-scroll do góry sekcji na mobile
-      if (typeof window !== 'undefined' && window.innerWidth < 768) {
-        setTimeout(() => {
-          const configPanel = document.querySelector('[data-config-panel]');
-          if (configPanel) {
-            configPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }, 100);
+      const prevSectionIndex = currentSection - 1;
+      setCurrentSection(prevSectionIndex);
+      
+      // Auto-scroll do początku poprzedniej sekcji na mobile
+      if (isMobileCheck()) {
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            const sectionElement = sectionRefs.current[prevSectionIndex];
+            if (sectionElement) {
+              scrollToElement(sectionElement);
+            } else if (headerRef.current) {
+              scrollToElement(headerRef.current);
+            }
+          }, 150);
+        });
       }
     }
-  };
+  }, [currentSection, scrollToElement, isMobileCheck]);
+
+  // Auto-scroll po wyborach użytkownika - Sekcja 0 (Wybór samochodu)
+  useEffect(() => {
+    if (!isMobileCheck() || currentSection !== 0) return;
+    
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        // Po wyborze modelu → scroll do pola rocznika
+        if (selectedCarModel && !selectedCarYear) {
+          const yearSelect = document.querySelector('[data-year-select]') as HTMLElement;
+          if (yearSelect) scrollToElement(yearSelect);
+        }
+        // Po wyborze rocznika → scroll do pola typu nadwozia
+        else if (selectedCarYear && !selectedBodyType) {
+          const bodyTypeSelect = document.querySelector('[data-body-type-select]') as HTMLElement;
+          if (bodyTypeSelect) scrollToElement(bodyTypeSelect);
+        }
+        // Po wyborze typu nadwozia → scroll do przycisku "Dalej"
+        else if (selectedBodyType && navigationRef.current) {
+          scrollToElement(navigationRef.current);
+        }
+      }, 200);
+    });
+  }, [selectedCarModel, selectedCarYear, selectedBodyType, currentSection, scrollToElement, isMobileCheck]);
+
+  // Auto-scroll po wyborze typu zestawu - Sekcja 1
+  useEffect(() => {
+    if (!isMobileCheck() || currentSection !== 1) return;
+    
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        if (selectedSetType && navigationRef.current) {
+          scrollToElement(navigationRef.current);
+        }
+      }, 200);
+    });
+  }, [selectedSetType, currentSection, scrollToElement, isMobileCheck]);
+
+  // Auto-scroll po wyborze typu komórek - Sekcja 2
+  useEffect(() => {
+    if (!isMobileCheck() || currentSection !== 2) return;
+    
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        if (selectedCellType && navigationRef.current) {
+          scrollToElement(navigationRef.current);
+        }
+      }, 200);
+    });
+  }, [selectedCellType, currentSection, scrollToElement, isMobileCheck]);
+
+  // Auto-scroll po wyborze wariantu zestawu - Sekcja 3
+  useEffect(() => {
+    if (!isMobileCheck() || currentSection !== 3) return;
+    
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        if (selectedSetVariant && navigationRef.current) {
+          scrollToElement(navigationRef.current);
+        }
+      }, 200);
+    });
+  }, [selectedSetVariant, currentSection, scrollToElement, isMobileCheck]);
+
+  // Auto-scroll po wyborze kolorów - Sekcja 4
+  useEffect(() => {
+    if (!isMobileCheck() || currentSection !== 4) {
+      // Reset flag gdy zmieniamy sekcję
+      hasScrolledToPreview.current = false;
+      return;
+    }
+    
+    // Scrolluj do podglądu tylko raz, gdy użytkownik pierwszy raz wybiera kolor i podgląd nie jest widoczny
+    if (!hasScrolledToPreview.current && (selectedMat || selectedEdge)) {
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          if (previewRef.current && !isElementVisible(previewRef.current)) {
+            scrollToElement(previewRef.current);
+            hasScrolledToPreview.current = true;
+          } else {
+            hasScrolledToPreview.current = true;
+          }
+        }, 200);
+      });
+    }
+  }, [selectedMat, selectedEdge, currentSection, scrollToElement, isElementVisible, isMobileCheck]);
+
+  // Auto-scroll po wyborze dodatków - Sekcja 5
+  useEffect(() => {
+    if (!isMobileCheck() || currentSection !== 5) return;
+    
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        if (selectedHeelPad && navigationRef.current) {
+          scrollToElement(navigationRef.current);
+        }
+      }, 200);
+    });
+  }, [selectedHeelPad, currentSection, scrollToElement, isMobileCheck]);
+
+  // Auto-scroll do przycisku "Dodaj do koszyka" - Sekcja 6
+  useEffect(() => {
+    if (!isMobileCheck() || currentSection !== 6) return;
+    
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        if (navigationRef.current) {
+          scrollToElement(navigationRef.current);
+        }
+      }, 300);
+    });
+  }, [currentSection, scrollToElement, isMobileCheck]);
 
   // Swipe gesture handlers
   const minSwipeDistance = 50;
@@ -941,6 +1126,7 @@ export default function Configurator() {
           {/* Lewa strona - wizualizacja */}
           <div className="w-full lg:w-[900px] xl:w-[1000px] 2xl:w-[1100px]">
             <div 
+              ref={previewRef}
               className="relative w-full h-[40vh] md:h-[550px] lg:h-[650px] xl:h-[700px] 2xl:h-[800px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300 sticky top-16 md:sticky md:top-20 z-30 border-b md:border-b-0"
               onClick={() => {
                 if (typeof window !== 'undefined' && window.innerWidth < 768) {
@@ -1012,6 +1198,7 @@ export default function Configurator() {
 
           {/* Prawa strona - konfigurator z sekcjami */}
           <div 
+            ref={configPanelRef}
             className="w-full lg:w-[700px] xl:w-[780px] 2xl:w-[900px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 2xl:p-12 min-h-[400px] sm:min-h-[500px] md:h-auto flex flex-col pb-32 md:pb-24 h-[calc(60vh-80px)] md:h-auto max-h-[calc(60vh-80px)] md:max-h-none overflow-y-auto md:overflow-visible overflow-x-hidden"
             data-config-panel
             onTouchStart={onTouchStart}
@@ -1019,7 +1206,7 @@ export default function Configurator() {
             onTouchEnd={onTouchEnd}
           >
             {/* Header z progressem - sticky tylko na desktop */}
-            <div className="mb-6 md:sticky md:top-0 z-10 bg-neutral-950/60 md:bg-transparent backdrop-blur md:backdrop-blur-none pb-4 md:pb-0 -mx-6 md:mx-0 px-6 md:px-0 pt-safe md:pt-0">
+            <div ref={headerRef} className="mb-6 md:sticky md:top-0 z-10 bg-neutral-950/60 md:bg-transparent backdrop-blur md:backdrop-blur-none pb-4 md:pb-0 -mx-6 md:mx-0 px-6 md:px-0 pt-safe md:pt-0">
               <h2 className="text-xl md:text-2xl font-semibold">
                 {getDynamicTitle()}
               </h2>
@@ -1048,7 +1235,7 @@ export default function Configurator() {
 
             {/* Sekcja 1: Rodzaj zestawu */}
             {currentSection === 0 && (
-              <div className="flex-1 space-y-6">
+              <div ref={(el) => { sectionRefs.current[0] = el; }} className="flex-1 space-y-6">
                 {/* Wyświetl wybraną markę */}
                 {selectedCarBrand && (
                   <div className="mb-6 p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
@@ -1134,6 +1321,7 @@ export default function Configurator() {
                     ) : availableYears.length > 0 ? (
                       <div className="relative">
                         <select
+                          data-year-select
                           value={selectedCarYear}
                           onChange={(e) => setSelectedCarYear(e.target.value)}
                           className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
@@ -1182,6 +1370,7 @@ export default function Configurator() {
                     ) : availableBodyTypes.length > 0 ? (
                       <div className="relative">
                         <select
+                          data-body-type-select
                           value={selectedBodyType}
                           onChange={(e) => setSelectedBodyType(e.target.value)}
                           className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
@@ -1219,7 +1408,7 @@ export default function Configurator() {
 
             {/* Sekcja 1: Rodzaj dywaników */}
             {currentSection === 1 && (
-              <div className="flex-1 space-y-6">
+              <div ref={(el) => { sectionRefs.current[1] = el; }} className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj dywaników</h3>
                   <RadioGroup value={selectedSetType} onValueChange={setSelectedSetType} className="space-y-3">
@@ -1254,8 +1443,9 @@ export default function Configurator() {
             )}
 
             {/* Sekcja 3: Rodzaj zestawu */}
+            {/* Sekcja 3: Wariant zestawu */}
             {currentSection === 3 && (
-              <div className="flex-1 space-y-6">
+              <div ref={(el) => { sectionRefs.current[3] = el; }} className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj zestawu</h3>
                   <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
@@ -1308,7 +1498,7 @@ export default function Configurator() {
 
             {/* Sekcja 2: Rodzaj komórek */}
             {currentSection === 2 && (
-              <div className="flex-1 space-y-6">
+              <div ref={(el) => { sectionRefs.current[2] = el; }} className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Wybierz rodzaj komórek</h3>
                   <RadioGroup value={selectedCellType} onValueChange={setSelectedCellType} className="space-y-3">
@@ -1331,7 +1521,7 @@ export default function Configurator() {
 
             {/* Sekcja 4: Kolory */}
             {currentSection === 4 && (
-              <div className="flex-1 space-y-6">
+              <div ref={(el) => { sectionRefs.current[4] = el; }} className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
                   <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-7 gap-1.5 md:gap-3">
@@ -1363,7 +1553,7 @@ export default function Configurator() {
                   </RadioGroup>
                 </div>
 
-                <div>
+                <div data-edge-color-section>
                   <h3 className="text-sm font-medium mb-3">Kolor obszycia</h3>
                   <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-7 gap-1.5 md:gap-3">
                     {availableEdgeColors.map((e) => (
@@ -1385,7 +1575,7 @@ export default function Configurator() {
 
             {/* Sekcja 5: Dodatki */}
             {currentSection === 5 && (
-              <div className="flex-1 space-y-6">
+              <div ref={(el) => { sectionRefs.current[5] = el; }} className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Ochraniacz pod piętę</h3>
                   <RadioGroup value={selectedHeelPad} onValueChange={setSelectedHeelPad} className="grid grid-cols-2 gap-3">
@@ -1405,7 +1595,7 @@ export default function Configurator() {
 
             {/* Sekcja 6: Podsumowanie */}
             {currentSection === 6 && (
-              <div className="flex-1 space-y-6">
+              <div ref={(el) => { sectionRefs.current[6] = el; }} className="flex-1 space-y-6">
                 {/* Wybrane auto */}
                 <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
                   <h3 className="text-sm font-medium mb-3 text-gray-300">Wybrane auto</h3>
@@ -1541,8 +1731,7 @@ export default function Configurator() {
 
 
             {/* Navigation buttons */}
-
-            <div className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800 md:static fixed bottom-0 left-0 right-0 bg-neutral-950/95 backdrop-blur border-t border-neutral-800 p-4 md:p-0 md:bg-transparent md:backdrop-blur-none z-20 pb-safe md:pb-0 shadow-lg md:shadow-none">
+            <div ref={navigationRef} className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800 md:static fixed bottom-0 left-0 right-0 bg-neutral-950/95 backdrop-blur border-t border-neutral-800 p-4 md:p-0 md:bg-transparent md:backdrop-blur-none z-20 pb-safe md:pb-0 shadow-lg md:shadow-none">
               <Button
                 variant="outline"
                 onClick={prevSection}
