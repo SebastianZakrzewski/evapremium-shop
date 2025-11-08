@@ -224,71 +224,15 @@ export default function Configurator() {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-  // Refs dla inteligentnego scrollowania na mobile
+  // Refs dla elementów UI
   const configPanelRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const navigationRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const hasScrolledToPreview = useRef(false);
-  const hasScrolledToModelSelect = useRef(false);
-  const hasScrolledToSetType = useRef(false);
   
   // Funkcja pomocnicza do sprawdzania czy jesteśmy na mobile
   const isMobileCheck = useCallback(() => typeof window !== 'undefined' && window.innerWidth < 768, []);
-  
-  // Funkcja pomocnicza do sprawdzania czy element jest widoczny w viewport panelu konfiguracji
-  const isElementVisible = useCallback((element: HTMLElement | null): boolean => {
-    if (!element || !isMobileCheck() || !configPanelRef.current) return false;
-    const elementRect = element.getBoundingClientRect();
-    const panelRect = configPanelRef.current.getBoundingClientRect();
-    // Element jest widoczny tylko jeśli jest w górnej części widoku (z marginesem)
-    // Użytkownik powinien widzieć element wyraźnie, nie tylko częściowo
-    return elementRect.top >= panelRect.top + 50 && elementRect.top <= panelRect.top + 200;
-  }, [isMobileCheck]);
-  
-  // Funkcja do inteligentnego scrollowania z opóźnieniem
-  const scrollToElement = useCallback((element: HTMLElement | null, options: { forceScroll?: boolean } & ScrollIntoViewOptions = {}) => {
-    if (!isMobileCheck() || !element || !configPanelRef.current) return;
-    
-    const { forceScroll = false, ...scrollOptions } = options;
-    
-    // Jeśli forceScroll, przewiń zawsze (ignoruj sprawdzenie widoczności)
-    if (!forceScroll && isElementVisible(element)) return;
-    
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        // Użyj scrollIntoView z opcją względem panelu konfiguracji
-        // Najpierw sprawdź czy element jest wewnątrz panelu
-        const panelRect = configPanelRef.current?.getBoundingClientRect();
-        const elementRect = element.getBoundingClientRect();
-        
-        if (panelRect && elementRect.top < panelRect.top) {
-          // Element jest powyżej panelu - scroll do góry
-          const offset = elementRect.top - panelRect.top - 20;
-          configPanelRef.current?.scrollBy({
-            top: offset,
-            behavior: 'smooth'
-          });
-        } else if (panelRect && elementRect.bottom > panelRect.bottom) {
-          // Element jest poniżej panelu - scroll w dół
-          const offset = elementRect.bottom - panelRect.bottom + 20;
-          configPanelRef.current?.scrollBy({
-            top: offset,
-            behavior: 'smooth'
-          });
-        } else {
-          // Element jest w panelu ale nie w pełni widoczny - użyj scrollIntoView
-          element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-            inline: 'nearest',
-            ...scrollOptions
-          });
-        }
-      }, 100);
-    });
-  }, [isElementVisible, isMobileCheck]);
 
   // Nowe stany dla danych z Supabase
   const [availableBrands, setAvailableBrands] = useState<any[]>([]);
@@ -616,221 +560,16 @@ export default function Configurator() {
 
   const nextSection = useCallback(() => {
     if (currentSection < totalSections - 1) {
-      const nextSectionIndex = currentSection + 1;
-      setCurrentSection(nextSectionIndex);
-      
-      // Auto-scroll do początku nowej sekcji na mobile
-      if (isMobileCheck()) {
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            const sectionElement = sectionRefs.current[nextSectionIndex];
-            if (sectionElement) {
-              scrollToElement(sectionElement);
-            } else if (headerRef.current) {
-              scrollToElement(headerRef.current);
-            }
-          }, 150);
-        });
-      }
+      setCurrentSection(currentSection + 1);
     }
-  }, [currentSection, scrollToElement, isMobileCheck]);
+  }, [currentSection]);
 
   const prevSection = useCallback(() => {
     if (currentSection > 0) {
-      const prevSectionIndex = currentSection - 1;
-      setCurrentSection(prevSectionIndex);
-      
-      // Auto-scroll do początku poprzedniej sekcji na mobile
-      if (isMobileCheck()) {
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            const sectionElement = sectionRefs.current[prevSectionIndex];
-            if (sectionElement) {
-              scrollToElement(sectionElement);
-            } else if (headerRef.current) {
-              scrollToElement(headerRef.current);
-            }
-          }, 150);
-        });
-      }
+      setCurrentSection(currentSection - 1);
     }
-  }, [currentSection, scrollToElement, isMobileCheck]);
+  }, [currentSection]);
 
-  // Auto-scroll na początku sekcji 0 - przewiń do "Wybierz model"
-  useEffect(() => {
-    if (!isMobileCheck() || currentSection !== 0) {
-      hasScrolledToModelSelect.current = false;
-      return;
-    }
-    
-    // Funkcja pomocnicza do próby scrollowania
-    const attemptScroll = (retries = 0) => {
-      const modelSelect = document.querySelector('[data-model-select]') as HTMLElement;
-      
-      // Jeśli select istnieje i nie jest w trakcie ładowania
-      if (modelSelect && !loadingModels && availableModels.length > 0) {
-        scrollToElement(modelSelect, { forceScroll: true });
-        hasScrolledToModelSelect.current = true;
-        return;
-      }
-      
-      // Fallback: przewiń do początku sekcji 0 jeśli select nie istnieje po kilku próbach
-      if (sectionRefs.current[0] && retries >= 2) {
-        scrollToElement(sectionRefs.current[0], { forceScroll: true });
-        hasScrolledToModelSelect.current = true;
-        return;
-      }
-      
-      // Retry jeśli element nie istnieje jeszcze
-      if (retries < 3) {
-        setTimeout(() => attemptScroll(retries + 1), 300);
-      }
-    };
-    
-    // Przewiń do selecta jeśli mamy markę, lub do początku sekcji jeśli nie mamy marki
-    if (!hasScrolledToModelSelect.current) {
-      if (selectedCarBrand && !selectedCarModel) {
-        // Mamy markę - próbuj przewinąć do selecta
-        requestAnimationFrame(() => {
-          setTimeout(() => attemptScroll(), 300);
-        });
-      } else if (!selectedCarBrand) {
-        // Nie mamy marki - przewiń do początku sekcji 0
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            if (sectionRefs.current[0]) {
-              scrollToElement(sectionRefs.current[0], { forceScroll: true });
-              hasScrolledToModelSelect.current = true;
-            }
-          }, 300);
-        });
-      }
-    }
-  }, [currentSection, selectedCarBrand, selectedCarModel, loadingModels, availableModels.length, scrollToElement, isMobileCheck]);
-
-  // Auto-scroll po wyborach użytkownika - Sekcja 0 (Wybór samochodu)
-  useEffect(() => {
-    if (!isMobileCheck() || currentSection !== 0) return;
-    
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        // Po wyborze modelu → scroll do pola rocznika
-        if (selectedCarModel && !selectedCarYear) {
-          const yearSelect = document.querySelector('[data-year-select]') as HTMLElement;
-          if (yearSelect) scrollToElement(yearSelect);
-        }
-        // Po wyborze rocznika → scroll do pola typu nadwozia
-        else if (selectedCarYear && !selectedBodyType) {
-          const bodyTypeSelect = document.querySelector('[data-body-type-select]') as HTMLElement;
-          if (bodyTypeSelect) scrollToElement(bodyTypeSelect);
-        }
-        // Po wyborze typu nadwozia → scroll do przycisku "Dalej"
-        else if (selectedBodyType && navigationRef.current) {
-          scrollToElement(navigationRef.current);
-        }
-      }, 200);
-    });
-  }, [selectedCarModel, selectedCarYear, selectedBodyType, currentSection, scrollToElement, isMobileCheck]);
-
-  // Auto-scroll po wyborze typu zestawu - Sekcja 1
-  useEffect(() => {
-    if (!isMobileCheck() || currentSection !== 1) {
-      hasScrolledToSetType.current = false;
-      return;
-    }
-    
-    // Przewiń do podglądu dywanika i opcji wyboru (z rantami/bez rantów) tylko raz na początku sekcji
-    if (!hasScrolledToSetType.current) {
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          // Najpierw przewiń do podglądu dywanika (zawsze przewiń, aby użytkownik widział wizualizację)
-          if (previewRef.current) {
-            scrollToElement(previewRef.current, { forceScroll: true });
-          }
-          
-          // Następnie przewiń do sekcji z opcjami wyboru rodzaju dywaników (z rantami/bez rantów)
-          setTimeout(() => {
-            if (sectionRefs.current[1]) {
-              scrollToElement(sectionRefs.current[1], { forceScroll: true });
-              hasScrolledToSetType.current = true;
-            }
-          }, 400);
-        }, 200);
-      });
-    }
-  }, [currentSection, scrollToElement, isMobileCheck]);
-
-  // Auto-scroll po wyborze typu komórek - Sekcja 2
-  useEffect(() => {
-    if (!isMobileCheck() || currentSection !== 2) return;
-    
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        if (selectedCellType && navigationRef.current) {
-          scrollToElement(navigationRef.current);
-        }
-      }, 200);
-    });
-  }, [selectedCellType, currentSection, scrollToElement, isMobileCheck]);
-
-  // Auto-scroll po wyborze wariantu zestawu - Sekcja 3
-  useEffect(() => {
-    if (!isMobileCheck() || currentSection !== 3) return;
-    
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        if (selectedSetVariant && navigationRef.current) {
-          scrollToElement(navigationRef.current);
-        }
-      }, 200);
-    });
-  }, [selectedSetVariant, currentSection, scrollToElement, isMobileCheck]);
-
-  // Auto-scroll po wyborze kolorów - Sekcja 4
-  useEffect(() => {
-    if (!isMobileCheck() || currentSection !== 4) {
-      // Reset flag gdy zmieniamy sekcję
-      hasScrolledToPreview.current = false;
-      return;
-    }
-    
-    // Scrolluj do sekcji kolorów tak, aby użytkownik widział oba nagłówki ("Kolor dywaników" i "Kolor obszycia")
-    if (!hasScrolledToPreview.current && sectionRefs.current[4]) {
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          // Przewiń do początku sekcji kolorów, aby oba nagłówki były widoczne
-          scrollToElement(sectionRefs.current[4]!);
-          hasScrolledToPreview.current = true;
-        }, 200);
-      });
-    }
-  }, [currentSection, scrollToElement, isMobileCheck]);
-
-  // Auto-scroll po wyborze dodatków - Sekcja 5
-  useEffect(() => {
-    if (!isMobileCheck() || currentSection !== 5) return;
-    
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        if (selectedHeelPad && navigationRef.current) {
-          scrollToElement(navigationRef.current);
-        }
-      }, 200);
-    });
-  }, [selectedHeelPad, currentSection, scrollToElement, isMobileCheck]);
-
-  // Auto-scroll do przycisku "Dodaj do koszyka" - Sekcja 6
-  useEffect(() => {
-    if (!isMobileCheck() || currentSection !== 6) return;
-    
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        if (navigationRef.current) {
-          scrollToElement(navigationRef.current);
-        }
-      }, 300);
-    });
-  }, [currentSection, scrollToElement, isMobileCheck]);
 
   // Swipe gesture handlers
   const minSwipeDistance = 50;
