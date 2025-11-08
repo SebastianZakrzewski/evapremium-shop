@@ -238,19 +238,22 @@ export default function Configurator() {
   
   // Funkcja pomocnicza do sprawdzania czy element jest widoczny w viewport panelu konfiguracji
   const isElementVisible = useCallback((element: HTMLElement | null): boolean => {
-    if (!element || !isMobileCheck() || !configPanelRef.current) return true;
+    if (!element || !isMobileCheck() || !configPanelRef.current) return false;
     const elementRect = element.getBoundingClientRect();
     const panelRect = configPanelRef.current.getBoundingClientRect();
-    // Sprawdź czy element jest widoczny w panelu (z małym marginesem)
-    return elementRect.top >= panelRect.top - 50 && elementRect.bottom <= panelRect.bottom + 50;
+    // Element jest widoczny tylko jeśli jest w górnej części widoku (z marginesem)
+    // Użytkownik powinien widzieć element wyraźnie, nie tylko częściowo
+    return elementRect.top >= panelRect.top + 50 && elementRect.top <= panelRect.top + 200;
   }, [isMobileCheck]);
   
   // Funkcja do inteligentnego scrollowania z opóźnieniem
-  const scrollToElement = useCallback((element: HTMLElement | null, options: ScrollIntoViewOptions = {}) => {
+  const scrollToElement = useCallback((element: HTMLElement | null, options: { forceScroll?: boolean } & ScrollIntoViewOptions = {}) => {
     if (!isMobileCheck() || !element || !configPanelRef.current) return;
     
-    // Sprawdź czy element jest już widoczny
-    if (isElementVisible(element)) return;
+    const { forceScroll = false, ...scrollOptions } = options;
+    
+    // Jeśli forceScroll, przewiń zawsze (ignoruj sprawdzenie widoczności)
+    if (!forceScroll && isElementVisible(element)) return;
     
     requestAnimationFrame(() => {
       setTimeout(() => {
@@ -279,7 +282,7 @@ export default function Configurator() {
             behavior: 'smooth',
             block: 'start',
             inline: 'nearest',
-            ...options
+            ...scrollOptions
           });
         }
       }, 100);
@@ -659,19 +662,50 @@ export default function Configurator() {
       return;
     }
     
-    // Przewiń do selecta "Wybierz model" tylko raz na początku sekcji
-    if (!hasScrolledToModelSelect.current && selectedCarBrand && !selectedCarModel) {
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          const modelSelect = document.querySelector('[data-model-select]') as HTMLElement;
-          if (modelSelect) {
-            scrollToElement(modelSelect);
-            hasScrolledToModelSelect.current = true;
-          }
-        }, 300);
-      });
+    // Funkcja pomocnicza do próby scrollowania
+    const attemptScroll = (retries = 0) => {
+      const modelSelect = document.querySelector('[data-model-select]') as HTMLElement;
+      
+      // Jeśli select istnieje i nie jest w trakcie ładowania
+      if (modelSelect && !loadingModels && availableModels.length > 0) {
+        scrollToElement(modelSelect, { forceScroll: true });
+        hasScrolledToModelSelect.current = true;
+        return;
+      }
+      
+      // Fallback: przewiń do początku sekcji 0 jeśli select nie istnieje po kilku próbach
+      if (sectionRefs.current[0] && retries >= 2) {
+        scrollToElement(sectionRefs.current[0], { forceScroll: true });
+        hasScrolledToModelSelect.current = true;
+        return;
+      }
+      
+      // Retry jeśli element nie istnieje jeszcze
+      if (retries < 3) {
+        setTimeout(() => attemptScroll(retries + 1), 300);
+      }
+    };
+    
+    // Przewiń do selecta jeśli mamy markę, lub do początku sekcji jeśli nie mamy marki
+    if (!hasScrolledToModelSelect.current) {
+      if (selectedCarBrand && !selectedCarModel) {
+        // Mamy markę - próbuj przewinąć do selecta
+        requestAnimationFrame(() => {
+          setTimeout(() => attemptScroll(), 300);
+        });
+      } else if (!selectedCarBrand) {
+        // Nie mamy marki - przewiń do początku sekcji 0
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            if (sectionRefs.current[0]) {
+              scrollToElement(sectionRefs.current[0], { forceScroll: true });
+              hasScrolledToModelSelect.current = true;
+            }
+          }, 300);
+        });
+      }
     }
-  }, [currentSection, selectedCarBrand, selectedCarModel, scrollToElement, isMobileCheck]);
+  }, [currentSection, selectedCarBrand, selectedCarModel, loadingModels, availableModels.length, scrollToElement, isMobileCheck]);
 
   // Auto-scroll po wyborach użytkownika - Sekcja 0 (Wybór samochodu)
   useEffect(() => {
