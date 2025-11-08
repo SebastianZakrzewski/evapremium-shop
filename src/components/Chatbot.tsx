@@ -304,7 +304,7 @@ export default function Chatbot() {
       {isOpen && (
         <div className={`fixed z-50 bg-gradient-to-b from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-gray-600 flex flex-col overflow-hidden backdrop-blur-sm transition-all duration-300 pb-safe ${
           isMobile 
-            ? 'left-4 right-4 top-20 bottom-20 rounded-2xl' 
+            ? 'inset-x-4 top-20 bottom-24 max-h-[calc(100vh-120px)]' 
             : `bottom-24 md:bottom-28 w-full max-w-[calc(100vw-2rem)] sm:w-96 h-[500px] md:h-[500px] max-h-[calc(100vh-150px)] md:max-h-[calc(100vh-200px)] ${isCartOpen ? 'left-4 md:left-6' : 'right-4 md:right-6'}`
         }`}>
           {/* Header */}
