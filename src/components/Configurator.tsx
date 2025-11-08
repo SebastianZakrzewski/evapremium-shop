@@ -936,12 +936,12 @@ export default function Configurator() {
 
   return (
     <section className="w-full bg-black text-white">
-      <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-8 py-12 md:py-16">
+      <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-8 py-6 md:py-12 lg:py-16">
         <div className="flex flex-col md:flex-row gap-6 lg:gap-10 2xl:gap-12">
           {/* Lewa strona - wizualizacja */}
           <div className="w-full lg:w-[900px] xl:w-[1000px] 2xl:w-[1100px]">
             <div 
-              className="relative w-full h-[250px] sm:h-[300px] md:h-[550px] lg:h-[650px] xl:h-[700px] 2xl:h-[800px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300"
+              className="relative w-full h-[40vh] md:h-[550px] lg:h-[650px] xl:h-[700px] 2xl:h-[800px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300 sticky top-16 md:sticky md:top-20 z-30 border-b md:border-b-0"
               onClick={() => {
                 if (typeof window !== 'undefined' && window.innerWidth < 768) {
                   setIsVisualizationExpanded(true);
@@ -1005,14 +1005,14 @@ export default function Configurator() {
                 </div>
               </div>
             </div>
-            <p className="mt-3 text-sm text-white/70">
+            <p className="mt-3 text-sm text-white/70 md:block hidden">
               Wizualizacja poglądowa. Docelowy kształt dywanika dopasujemy do Twojego modelu auta.
             </p>
           </div>
 
           {/* Prawa strona - konfigurator z sekcjami */}
           <div 
-            className="w-full lg:w-[700px] xl:w-[780px] 2xl:w-[900px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 2xl:p-12 min-h-[400px] sm:min-h-[500px] md:h-auto flex flex-col pb-32 md:pb-24 max-h-[calc(100vh-200px)] md:max-h-none overflow-y-auto md:overflow-visible overflow-x-hidden"
+            className="w-full lg:w-[700px] xl:w-[780px] 2xl:w-[900px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 2xl:p-12 min-h-[400px] sm:min-h-[500px] md:h-auto flex flex-col pb-32 md:pb-24 h-[calc(60vh-80px)] md:h-auto max-h-[calc(60vh-80px)] md:max-h-none overflow-y-auto md:overflow-visible overflow-x-hidden"
             data-config-panel
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
@@ -1334,9 +1334,9 @@ export default function Configurator() {
               <div className="flex-1 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
-                  <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-2 md:gap-3">
+                  <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-7 gap-1.5 md:gap-3">
                     {availableMaterialColors.map((c) => (
-                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden min-w-[48px] min-h-[48px]`}>
+                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden min-w-[36px] min-h-[36px] md:min-w-[48px] md:min-h-[48px]`}>
                         <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
                         <div
                           className="absolute inset-0"
@@ -1365,12 +1365,12 @@ export default function Configurator() {
 
                 <div>
                   <h3 className="text-sm font-medium mb-3">Kolor obszycia</h3>
-                  <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-2 md:gap-3">
+                  <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-7 gap-1.5 md:gap-3">
                     {availableEdgeColors.map((e) => (
                       <button
                         key={e.id}
                         onClick={() => setSelectedEdge(e.id)}
-                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 aspect-square cursor-pointer min-w-[48px] min-h-[48px]`}
+                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 aspect-square cursor-pointer min-w-[36px] min-h-[36px] md:min-w-[48px] md:min-h-[48px]`}
                         style={{ backgroundColor: e.hex }}
                         aria-pressed={selectedEdge === e.id}
                       >
