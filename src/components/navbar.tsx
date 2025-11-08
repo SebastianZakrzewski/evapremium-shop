@@ -30,8 +30,8 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 bg-black/90 backdrop-blur border-b border-neutral-800 overflow-x-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 md:h-20 lg:h-24 flex items-center justify-between">
+      <nav className="fixed top-0 left-0 w-full z-50 bg-black/90 backdrop-blur border-b border-neutral-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 md:h-20 lg:h-24 flex items-center justify-between overflow-x-hidden">
           {/* Logo */}
           <Link href="/" className="flex items-center justify-center gap-2 text-white font-bold text-lg hover:opacity-80 transition-opacity">
             <Image
@@ -109,7 +109,7 @@ export default function Navbar() {
         </div>
         {/* Mobile Menu */}
         {open && (
-          <div className="md:hidden fixed top-16 left-0 w-full bg-black/95 backdrop-blur border-b border-neutral-800 z-40 pb-safe transition-all duration-300 ease-in-out">
+          <div className="md:hidden fixed top-16 left-0 w-full bg-black/95 backdrop-blur border-b border-neutral-800 z-[60] shadow-lg pb-safe transition-all duration-300 ease-in-out animate-in slide-in-from-top-2">
             <div className="flex flex-col gap-4 py-8 px-6">
               <Link href="#products" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Dywaniki Samochodowe</Link>
               <Link href="/akcesoria" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Akcesoria</Link>
