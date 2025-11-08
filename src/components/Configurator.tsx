@@ -1153,7 +1153,7 @@ export default function Configurator() {
                 )}
 
                 {selectedCarYear && (
-                  <div>
+                  <div className="mb-8 pb-8">
                     {/* Wyświetl informację o generacji */}
                     {(() => {
                       const generation = findGenerationByYear(selectedCarBrand, selectedCarModel, parseInt(selectedCarYear));
@@ -1172,7 +1172,7 @@ export default function Configurator() {
                         <p>Ładowanie typów nadwozia...</p>
                       </div>
                     ) : availableBodyTypes.length > 0 ? (
-                      <div className="relative">
+                      <div className="relative pb-8">
                         <select
                           data-body-type-select
                           value={selectedBodyType}
@@ -1193,7 +1193,7 @@ export default function Configurator() {
                         </div>
                       </div>
                     ) : (
-                      <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
+                      <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center pb-8">
                         <p className="text-gray-400 mb-2">Brak dostępnych typów nadwozia</p>
                         <p className="text-sm text-gray-500">Dla wybranego modelu nie ma jeszcze dostępnych typów nadwozia</p>
                       </div>
