@@ -54,7 +54,6 @@ export async function POST(request: NextRequest) {
         .update({
           utm: input.utm || {},
           contact: input.contact || {},
-          address: input.address || {},
           car: input.car || {},
           configuration: input.configuration || {},
           items: input.items || [],
@@ -62,7 +61,7 @@ export async function POST(request: NextRequest) {
           total_amount: input.totalAmount ?? 0,
           ip: input.ip,
           user_agent: input.userAgent,
-          metadata: { ...(input.metadata || {}), stage: input.stage },
+          metadata: { ...(input.metadata || {}), stage: input.stage, address: input.address || {} },
           last_activity_at: new Date().toISOString(),
           expire_at: expireAt,
         })
@@ -93,7 +92,6 @@ export async function POST(request: NextRequest) {
         status: 'pending',
         utm: input.utm || {},
         contact: input.contact || {},
-        address: input.address || {},
         car: input.car || {},
         configuration: input.configuration || {},
         items: input.items || [],
@@ -101,7 +99,7 @@ export async function POST(request: NextRequest) {
         total_amount: input.totalAmount ?? 0,
         ip: input.ip,
         user_agent: input.userAgent,
-        metadata: { ...(input.metadata || {}), stage: input.stage },
+        metadata: { ...(input.metadata || {}), stage: input.stage, address: input.address || {} },
         last_activity_at: new Date().toISOString(),
         expire_at: expireAt,
       })

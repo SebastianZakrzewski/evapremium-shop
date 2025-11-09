@@ -247,7 +247,8 @@ export class ContactService {
   ): Promise<{ id: string | null; created: boolean; error?: string }> {
     try {
       const contact = cart.contact || {};
-      const address = cart.address || {};
+      // Address is stored in metadata now (since there's no address column in DB)
+      const address = (cart.metadata?.address as any) || cart.address || {};
       
       // Build contact data from cart
       const contactData: Bitrix24Contact = {

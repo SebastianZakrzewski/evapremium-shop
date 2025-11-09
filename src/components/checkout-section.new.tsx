@@ -663,13 +663,13 @@ export default function CheckoutSectionNew() {
               {/* Step 1: Dane kontaktowe */}
               {currentStep === 1 && (
                 <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
-                  <CardHeader className="border-l-4 border-red-500 px-8 py-6">
-                    <CardTitle className="flex items-center text-white text-xl">
-                      <CreditCard className="w-6 h-6 mr-3 text-red-500" />
+                  <CardHeader className="border-l-4 border-red-500 px-4 md:px-8 py-4 md:py-6">
+                    <CardTitle className="flex items-center text-white text-lg md:text-xl">
+                      <CreditCard className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-red-500" />
                       Dane kontaktowe
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-6 px-8 pb-8">
+                  <CardContent className="space-y-4 md:space-y-6 px-4 md:px-8 pb-6 md:pb-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="firstName" className="text-neutral-200 font-medium text-base">Imię *</Label>
@@ -743,13 +743,13 @@ export default function CheckoutSectionNew() {
               {/* Step 2: Adres */}
               {currentStep === 2 && (
                 <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
-                  <CardHeader className="border-l-4 border-red-500 px-8 py-6">
-                    <CardTitle className="flex items-center text-white text-xl">
-                      <Truck className="w-6 h-6 mr-3 text-red-500" />
+                  <CardHeader className="border-l-4 border-red-500 px-4 md:px-8 py-4 md:py-6">
+                    <CardTitle className="flex items-center text-white text-lg md:text-xl">
+                      <Truck className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-red-500" />
                       Adres wysyłkowy
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-6 px-8 pb-8">
+                  <CardContent className="space-y-4 md:space-y-6 px-4 md:px-8 pb-6 md:pb-8">
                     <div className="space-y-2">
                       <Label htmlFor="street" className="text-neutral-200 font-medium text-base">Ulica i numer *</Label>
                       <Input
@@ -874,67 +874,67 @@ export default function CheckoutSectionNew() {
               {/* Step 3: Płatność */}
               {currentStep === 3 && (
                 <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
-                  <CardHeader className="border-l-4 border-red-500 px-8 py-6">
-                    <CardTitle className="flex items-center text-white text-xl">
-                      <CreditCard className="w-6 h-6 mr-3 text-red-500" />
+                  <CardHeader className="border-l-4 border-red-500 px-4 md:px-8 py-4 md:py-6">
+                    <CardTitle className="flex items-center text-white text-lg md:text-xl">
+                      <CreditCard className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-red-500" />
                       Metoda płatności
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-8 px-8 pb-8">
+                  <CardContent className="space-y-6 md:space-y-8 px-4 md:px-8 pb-6 md:pb-8">
                     <div className="space-y-4">
-                      <div className={`flex items-center space-x-4 p-6 rounded-lg border transition-all duration-300 cursor-pointer border-red-500 bg-red-900/30`}
+                      <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 md:p-6 rounded-lg border transition-all duration-300 cursor-pointer border-red-500 bg-red-900/30`}
                       onClick={() => setValue("paymentMethod", "p24")}>
-                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center border-red-500 bg-red-500`}>
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center border-red-500 bg-red-500 flex-shrink-0`}>
                           <div className="w-2 h-2 bg-white rounded-full"></div>
                         </div>
-                        <div className="flex items-center space-x-4 flex-1 cursor-pointer">
-                          <CreditCard className={`w-6 h-6 text-red-400`} />
-                          <div>
-                            <div className={`font-medium text-base text-white`}>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 flex-1 cursor-pointer w-full">
+                          <CreditCard className={`w-5 h-5 md:w-6 md:h-6 text-red-400 flex-shrink-0`} />
+                          <div className="flex-1 min-w-0 w-full">
+                            <div className={`font-medium text-base text-white mb-1`}>
                               Przelewy24
                             </div>
-                            <div className={`text-sm text-gray-400 flex items-center gap-2`}>
-                              <span>Karty, BLIK, przelewy, Apple Pay, Google Pay</span>
-                              <div className="flex items-center gap-3 ml-3">
+                            <div className={`text-xs md:text-sm text-gray-400 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-2`}>
+                              <span className="whitespace-normal">Karty, BLIK, przelewy, Apple Pay, Google Pay</span>
+                              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                                 <Image 
                                   src="/formy_platnosci/visa.png" 
                                   alt="Visa" 
-                                  width={40} 
-                                  height={26} 
-                                  className="object-contain"
+                                  width={32} 
+                                  height={20} 
+                                  className="object-contain md:w-10 md:h-[26px]"
                                 />
                                 <Image 
                                   src="/formy_platnosci/mastercard.png" 
                                   alt="Mastercard" 
-                                  width={40} 
-                                  height={26} 
-                                  className="object-contain"
+                                  width={32} 
+                                  height={20} 
+                                  className="object-contain md:w-10 md:h-[26px]"
                                 />
                                 <Image 
                                   src="/formy_platnosci/blik.png" 
                                   alt="BLIK" 
-                                  width={40} 
-                                  height={26} 
-                                  className="object-contain"
+                                  width={32} 
+                                  height={20} 
+                                  className="object-contain md:w-10 md:h-[26px]"
                                 />
                                 <Image 
                                   src="/formy_platnosci/apple.jpg" 
                                   alt="Apple Pay" 
-                                  width={40} 
-                                  height={26} 
-                                  className="object-contain"
+                                  width={32} 
+                                  height={20} 
+                                  className="object-contain md:w-10 md:h-[26px]"
                                 />
                                 <Image 
                                   src="/formy_platnosci/google.png" 
                                   alt="Google Pay" 
-                                  width={40} 
-                                  height={26} 
-                                  className="object-contain"
+                                  width={32} 
+                                  height={20} 
+                                  className="object-contain md:w-10 md:h-[26px]"
                                 />
                               </div>
                             </div>
                           </div>
-                          <Check className="w-5 h-5 text-red-400 ml-auto" />
+                          <Check className="w-5 h-5 text-red-400 flex-shrink-0 sm:ml-auto" />
                         </div>
                       </div>
                       
@@ -1006,15 +1006,15 @@ export default function CheckoutSectionNew() {
               )}
 
               {/* Navigation */}
-              <div className="flex justify-between pt-8">
+              <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 pt-6 md:pt-8">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={prevStep}
                   disabled={currentStep === 1}
-                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-8 py-4 text-base"
+                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-4 sm:px-8 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto"
                 >
-                  <ArrowLeft className="w-5 h-5 mr-3" />
+                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
                   Wstecz
                 </Button>
 
@@ -1023,16 +1023,16 @@ export default function CheckoutSectionNew() {
                     type="button"
                     onClick={nextStep}
                     disabled={!isCurrentStepValid()}
-                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-10 py-4 text-base"
+                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-6 sm:px-10 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto"
                   >
                     Dalej
-                    <ArrowRight className="w-5 h-5 ml-3" />
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3" />
                   </Button>
                 ) : (
                   <Button
                     type="submit"
                     disabled={isSubmitting || orderLoading}
-                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-10 py-4 text-base"
+                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-6 sm:px-10 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto"
                     onClick={() => {
                       console.log('🛒 CheckoutSection: Submit button clicked');
                       console.log('🛒 CheckoutSection: isSubmitting:', isSubmitting);
@@ -1042,12 +1042,12 @@ export default function CheckoutSectionNew() {
                   >
                     {isSubmitting || orderLoading ? (
                       <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3" />
+                        <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white mr-2 sm:mr-3" />
                         Przetwarzanie...
                       </>
                     ) : (
                       <>
-                        <Check className="w-5 h-5 mr-3" />
+                        <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
                         Zapłać teraz
                       </>
                     )}
@@ -1068,22 +1068,22 @@ export default function CheckoutSectionNew() {
           {/* Order Summary */}
           <div className="lg:col-span-2 xl:col-span-1">
             <Card className="sticky top-0 md:top-4 bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300 max-h-[calc(100vh-100px)] md:max-h-none overflow-y-auto md:overflow-visible">
-              <CardHeader className="border-b border-neutral-700 px-8 py-6">
+              <CardHeader className="border-b border-neutral-700 px-4 md:px-8 py-4 md:py-6">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-xl text-white">Podsumowanie zamówienia</CardTitle>
-                  <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
+                  <CardTitle className="text-lg md:text-xl text-white">Podsumowanie zamówienia</CardTitle>
+                  <div className="w-3 h-3 md:w-4 md:h-4 bg-red-500 rounded-full animate-pulse"></div>
                 </div>
               </CardHeader>
-              <CardContent className="p-8">
+              <CardContent className="p-4 md:p-8">
                 <div className="space-y-8">
                   {/* Items */}
                   <div className="space-y-6">
                     {items.map((item, index) => (
-                      <div key={item.id} className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                      <div key={item.id} className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700 rounded-xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300">
                         {/* Header z nazwą produktu */}
-                        <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-start justify-between mb-3 md:mb-4">
                           <div className="flex-1">
-                            <h3 className="text-xl font-bold text-white mb-2">
+                            <h3 className="text-lg md:text-xl font-bold text-white mb-2">
                               {item.productType === 'mat' ? 'Dywaniki samochodowe' : item.productName}
                             </h3>
                             
@@ -1105,8 +1105,8 @@ export default function CheckoutSectionNew() {
                           </div>
 
                           {/* Obraz produktu */}
-                          <div className="ml-4">
-                            <div className="w-16 h-16 bg-neutral-700 rounded-lg flex items-center justify-center overflow-hidden">
+                          <div className="ml-3 md:ml-4 flex-shrink-0">
+                            <div className="w-12 h-12 md:w-16 md:h-16 bg-neutral-700 rounded-lg flex items-center justify-center overflow-hidden">
                               {item.productImage ? (
                                 <img 
                                   src={item.productImage} 
