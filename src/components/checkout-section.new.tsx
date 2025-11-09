@@ -71,6 +71,9 @@ const checkoutSchema = z.object({
   
   // Notatki
   notes: z.string().optional(),
+  
+  // Kod rabatowy (opcjonalny)
+  discountCode: z.string().optional(),
 });
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
@@ -96,6 +99,10 @@ export default function CheckoutSectionNew() {
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [discountCode, setDiscountCode] = useState<string>('');
+  const [discountApplied, setDiscountApplied] = useState(false);
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
+  const [discountError, setDiscountError] = useState<string | null>(null);
   const [priorityStartAt, setPriorityStartAt] = useState<number | null>(null);
   const [remainingMs, setRemainingMs] = useState<number>(15 * 60 * 1000);
   // Heartbeat (przeniesiony niżej po zainicjalizowaniu formularza, aby dołączyć dane kontaktowe)
@@ -215,7 +222,7 @@ export default function CheckoutSectionNew() {
         currency: 'PLN' 
       })),
       currency: 'PLN',
-      totalAmount: total,
+      totalAmount: finalTotal,
       metadata: { checkoutStep: currentStep },
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
     };
@@ -245,6 +252,41 @@ export default function CheckoutSectionNew() {
   const contactLastName = watch("lastName");
   const contactEmail = watch("email");
   const contactPhone = watch("phone");
+
+  // Oblicz subtotal i total z uwzględnieniem zniżki
+  const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
+  const finalTotal = discountApplied ? subtotal - discountAmount : subtotal;
+
+  // Funkcja do zastosowania kodu rabatowego
+  const applyDiscountCode = () => {
+    if (!discountCode.trim()) {
+      setDiscountError('Wprowadź kod rabatowy');
+      return;
+    }
+
+    const validation = PricingService.validateDiscountCode(discountCode.trim(), subtotal);
+    
+    if (validation.isValid) {
+      setDiscountApplied(true);
+      setDiscountAmount(validation.discountAmount);
+      setDiscountError(null);
+      setValue('discountCode', discountCode.trim());
+    } else {
+      setDiscountApplied(false);
+      setDiscountAmount(0);
+      setDiscountError(validation.message || 'Nieprawidłowy kod rabatowy');
+    }
+  };
+
+  // Reset zniżki gdy kod się zmienia
+  const handleDiscountCodeChange = (value: string) => {
+    setDiscountCode(value);
+    if (discountApplied) {
+      setDiscountApplied(false);
+      setDiscountAmount(0);
+      setDiscountError(null);
+    }
+  };
 
   // Redirect jeśli koszyk pusty (z opóźnieniem żeby dać czas na załadowanie)
   useEffect(() => {
@@ -392,7 +434,7 @@ export default function CheckoutSectionNew() {
         const addPaymentInfoData = {
           content_name: 'Payment Info Added',
           content_category: 'checkout' as const,
-          value: total,
+          value: finalTotal,
           currency: 'PLN',
           payment_method: data.paymentMethod,
           contents: items.map(item => ({
@@ -424,6 +466,8 @@ export default function CheckoutSectionNew() {
           country: customerData.country
         },
         paymentMethod: paymentData.method,
+        discountCode: discountApplied ? discountCode : undefined,
+        discountAmount: discountApplied ? discountAmount : undefined,
         items: cartProducts.map(item => ({
           quantity: item.quantity,
           unitPrice: item.unitPrice,
@@ -1216,27 +1260,59 @@ export default function CheckoutSectionNew() {
                     <Label className="text-white text-base font-medium">Kod rabatowy</Label>
                     <div className="flex space-x-3">
                       <Input 
-                        placeholder="Wprowadź kod"
-                        className="min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-base"
+                        value={discountCode}
+                        onChange={(e) => handleDiscountCodeChange(e.target.value)}
+                        placeholder="Wprowadź kod (np. LISTOPAD5)"
+                        className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-base ${
+                          discountError ? 'border-red-500' : discountApplied ? 'border-green-500' : ''
+                        }`}
+                        disabled={discountApplied}
                       />
                       <Button 
                         type="button"
-                        className="h-12 bg-red-600 border-red-500 text-white hover:bg-red-700 rounded-lg px-6 text-base"
+                        onClick={applyDiscountCode}
+                        disabled={discountApplied || !discountCode.trim()}
+                        className="h-12 bg-red-600 border-red-500 text-white hover:bg-red-700 rounded-lg px-6 text-base disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        Zastosuj
+                        {discountApplied ? '✓' : 'Zastosuj'}
                       </Button>
                     </div>
+                    {discountError && (
+                      <p className="text-red-400 text-sm">{discountError}</p>
+                    )}
+                    {discountApplied && (
+                      <div className="bg-green-900/20 border border-green-500/50 rounded-lg p-3">
+                        <p className="text-green-400 text-sm font-medium">
+                          ✓ Kod zastosowany! Zniżka: -{discountAmount.toFixed(2)} PLN
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   {/* Totals */}
                   <div className="space-y-5 pt-6">
-                    <div className="pt-6 border-t border-neutral-700 bg-neutral-800/40 p-6 rounded-lg">
-                      <div className="flex justify-between items-center">
+                    <div className="pt-6 border-t border-neutral-700 bg-neutral-800/40 p-6 rounded-lg space-y-3">
+                      <div className="flex justify-between items-center text-neutral-300">
+                        <span className="text-base">Wartość produktów:</span>
+                        <span className="text-base">{subtotal.toFixed(2).replace('.', ',')} PLN</span>
+                      </div>
+                      {discountApplied && (
+                        <div className="flex justify-between items-center text-green-400">
+                          <span className="text-base">Zniżka ({discountCode}):</span>
+                          <span className="text-base font-semibold">-{discountAmount.toFixed(2).replace('.', ',')} PLN</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between items-center pt-3 border-t border-neutral-700">
                         <span className="text-white font-semibold text-2xl">Razem do zapłaty</span>
                         <span className="text-white font-bold text-3xl">
-                          {total.toFixed(2).replace('.', ',')} <span className="text-xl font-normal">PLN</span>
+                          {finalTotal.toFixed(2).replace('.', ',')} <span className="text-xl font-normal">PLN</span>
                         </span>
                       </div>
+                      {discountApplied && (
+                        <p className="text-green-400 text-sm mt-2">
+                          Oszczędzasz {discountAmount.toFixed(2).replace('.', ',')} PLN!
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

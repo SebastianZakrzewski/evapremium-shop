@@ -177,12 +177,13 @@ export class PricingService {
     message?: string;
   } {
     const validCodes = {
+      'LISTOPAD5': { type: 'percentage', value: 5, minAmount: 0 },
       'WELCOME10': { type: 'percentage', value: 10, minAmount: 100 },
       'SAVE50': { type: 'fixed', value: 50, minAmount: 200 },
       'FREESHIP': { type: 'shipping', value: 15, minAmount: 150 }
     };
 
-    const discount = validCodes[code as keyof typeof validCodes];
+    const discount = validCodes[code.toUpperCase() as keyof typeof validCodes];
     
     if (!discount) {
       return {
@@ -210,7 +211,7 @@ export class PricingService {
     return {
       isValid: true,
       discountAmount,
-      message: `Rabat: ${discountAmount} PLN`
+      message: `Rabat ${discount.value}%: ${discountAmount.toFixed(2)} PLN`
     };
   }
 

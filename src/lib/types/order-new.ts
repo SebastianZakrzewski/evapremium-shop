@@ -62,6 +62,8 @@ export interface CreateOrderDTO {
   billingAddress?: AddressData;
   paymentMethod: string;
   notes?: string;
+  discountCode?: string;
+  discountAmount?: number;
   items: CreateOrderItemDTO[];
 }
 

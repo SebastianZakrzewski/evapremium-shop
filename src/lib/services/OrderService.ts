@@ -36,7 +36,7 @@ export class OrderService {
       
       // 2. Oblicz ceny
       console.log('🛒 OrderService: Calculating pricing...');
-      const pricing = await this.calculateOrderPricing(data.items);
+      const pricing = await this.calculateOrderPricing(data.items, data.discountCode, data.discountAmount);
       console.log('🛒 OrderService: Pricing calculated:', pricing);
       
       // 3. Generuj numer zamówienia
@@ -243,7 +243,7 @@ export class OrderService {
   /**
    * Oblicz ceny zamówienia
    */
-  private async calculateOrderPricing(items: any[]) {
+  private async calculateOrderPricing(items: any[], discountCode?: string, discountAmount?: number) {
     let subtotal = 0;
     
     for (const item of items) {
@@ -257,7 +257,7 @@ export class OrderService {
     
     const shippingCost = 0; // Wysyłka już wliczona w unitPrice dla mat
     const tax = 0; // VAT wyłączony
-    const discount = 0; // TODO: Kody rabatowe
+    const discount = discountAmount || 0; // Użyj zniżki z kodu rabatowego jeśli jest
     const total = subtotal + shippingCost - discount; // Bez VAT
     
     return { subtotal, shippingCost, tax, discount, total };
