@@ -8,7 +8,7 @@ const heroSlides = [
     title: "Dywaniki Samochodowe EVA Premium",
     subtitle: "Wodoodporne, łatwe w czyszczeniu, precyzyjnie dopasowane do Twojego auta",
     video: "/images/hero/video.mp4",
-    cta: "Sprawdź Ceny",
+    cta: "Skonfiguruj swój zestaw",
     price: "Od 199 zł",
     benefits: ["Wodoodporne", "Łatwe w czyszczeniu", "Gwarancja 2 lata"]
   },
@@ -191,7 +191,7 @@ export default function HeroSection() {
                   </button>
                   <button 
                     onClick={() => {
-                      const element = document.getElementById('o-nas');
+                      const element = document.getElementById('3d-mats-section');
                       if (element) {
                         element.scrollIntoView({ 
                           behavior: 'smooth',
