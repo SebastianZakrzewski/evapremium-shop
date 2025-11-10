@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { Phone } from "lucide-react";
 
 const heroSlides = [
   {
@@ -211,6 +212,20 @@ export default function HeroSection() {
                   >
                     Dowiedz się więcej
                   </button>
+                </div>
+                
+                {/* Mobile - Numer telefonu i informacja */}
+                <div className="md:hidden mt-6 animate-fade-in-delay-2 flex flex-col items-center gap-3">
+                  <a 
+                    href="tel:+48570123635"
+                    className="text-white text-xl md:text-2xl font-bold flex items-center gap-3 hover:text-red-400 transition-colors drop-shadow-lg"
+                  >
+                    <Phone className="w-6 h-6" />
+                    +48 570 123 635
+                  </a>
+                  <p className="text-white text-base md:text-lg font-semibold text-center drop-shadow-lg">
+                    Zadzwoń i wyceń dywaniki
+                  </p>
                 </div>
               </div>
             </div>
