@@ -244,13 +244,15 @@ export default function CustomFitSection() {
                       {step.title}
                     </span>
                   </div>
-                  {/* Opis pod węzłem */}
-                  <div className="mt-4 text-center max-w-[200px]">
-                    <div className="text-white font-semibold text-base mb-1 animate-fade-in drop-shadow-lg" style={{animationDelay: `${200 + idx * 120}ms`}}>
-                      {step.title}
-                    </div>
-                    <div className="text-gray-300 text-sm animate-fade-in drop-shadow-lg" style={{animationDelay: `${400 + idx * 120}ms`}}>
-                      {step.day}
+                  {/* Opis pod węzłem - w czarnym eleganckim oknie na mobile */}
+                  <div className="mt-4 text-center max-w-[200px] md:hidden">
+                    <div className="bg-black/90 backdrop-blur-sm border border-gray-700/50 rounded-lg px-4 py-3 shadow-xl shadow-red-500/10 animate-fade-in" style={{animationDelay: `${200 + idx * 120}ms`}}>
+                      <div className="text-white font-semibold text-sm mb-1 drop-shadow-lg">
+                        {step.title}
+                      </div>
+                      <div className="text-gray-300 text-xs drop-shadow-lg">
+                        {step.day}
+                      </div>
                     </div>
                   </div>
                 </div>
