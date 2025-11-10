@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -482,9 +483,12 @@ export default function ProductGallerySection() {
       {/* Call to Action - z kontenerem */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mt-16">
-          <button className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25">
-            Zobacz Wszystkie Produkty
-          </button>
+          <Link 
+            href="/dywaniki"
+            className="inline-block bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25"
+          >
+            Sprawdź Dostępność Marki
+          </Link>
         </div>
       </div>
     </section>
