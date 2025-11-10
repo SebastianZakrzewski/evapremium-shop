@@ -47,7 +47,7 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
         bg-gradient-to-br from-gray-900/90 via-gray-800/80 to-gray-900/90
         backdrop-blur-xl
         border border-gray-700/50
-        rounded-2xl
+        rounded-xl sm:rounded-2xl
         overflow-hidden
         cursor-pointer
         transition-all duration-500 ease-out
@@ -74,15 +74,15 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
       }}
     >
       {/* Gradient border glow przy hover */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-red-500/50 via-red-600/50 to-red-500/50 blur-sm" />
+      <div className="absolute inset-0 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-red-500/50 via-red-600/50 to-red-500/50 blur-sm" />
       </div>
 
       {/* Overlay przy hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
 
       {/* Zdjęcie/Logo marki */}
-      <div className="relative w-full h-full flex items-center justify-center p-6 z-20">
+      <div className="relative w-full h-full flex items-center justify-center p-3 sm:p-4 md:p-6 z-20">
         {isImage ? (
           <Image
             src={brand.logo}
@@ -94,7 +94,7 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
               group-hover:scale-110
               drop-shadow-[0_0_20px_rgba(220,38,38,0.3)]
             `}
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
             quality={100}
             loading={isPriority ? "eager" : "lazy"}
             placeholder="blur"
@@ -102,13 +102,13 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
           />
         ) : (
-          <div className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 flex items-center justify-center">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-32 md:h-32 lg:w-40 lg:h-40 flex items-center justify-center">
             <Image
               src={brand.logo}
               alt={`${brand.name} logo`}
               width={160}
               height={160}
-              className="object-contain transition-all duration-500 group-hover:scale-110 drop-shadow-[0_0_20px_rgba(220,38,38,0.3)]"
+              className="object-contain transition-all duration-500 group-hover:scale-110 drop-shadow-[0_0_20px_rgba(220,38,38,0.3)] w-full h-full"
               quality={100}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
@@ -120,20 +120,20 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
       </div>
 
       {/* Nazwa marki na dole */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/60 to-transparent z-30">
-        <h3 className="text-white font-bold text-lg md:text-xl text-center drop-shadow-2xl">
+      <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 md:p-4 bg-gradient-to-t from-black/80 via-black/60 to-transparent z-30">
+        <h3 className="text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl text-center drop-shadow-2xl">
           {brand.name}
         </h3>
         {brand.description && (
-          <p className="text-gray-300 text-xs md:text-sm text-center mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <p className="text-gray-300 text-[10px] sm:text-xs md:text-sm text-center mt-0.5 sm:mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             {brand.description}
           </p>
         )}
       </div>
 
       {/* Indikator wyboru przy hover */}
-      <div className="absolute top-4 right-4 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-40">
-        <Car className="w-4 h-4 text-white" />
+      <div className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-40">
+        <Car className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-white" />
       </div>
 
       {/* 3D transform effect przy hover */}
