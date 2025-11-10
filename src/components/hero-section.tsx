@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 const heroSlides = [
   {
@@ -44,6 +45,7 @@ const getVideoSource = (baseVideo: string, isMobile: boolean, isHighDpi: boolean
 };
 
 export default function HeroSection() {
+  const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isHighDpi, setIsHighDpi] = useState(false);
@@ -177,12 +179,18 @@ export default function HeroSection() {
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center animate-fade-in-delay-2">
                   <button 
                     onClick={() => {
-                      const element = document.getElementById('products');
-                      if (element) {
-                        element.scrollIntoView({ 
-                          behavior: 'smooth',
-                          block: 'start'
-                        });
+                      // Dla pierwszego slajdu z "Skonfiguruj swój zestaw" przekieruj na /dywaniki
+                      if (slide.cta === "Skonfiguruj swój zestaw") {
+                        router.push('/dywaniki');
+                      } else {
+                        // Dla innych przycisków zachowaj poprzednie zachowanie
+                        const element = document.getElementById('products');
+                        if (element) {
+                          element.scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                          });
+                        }
                       }
                     }}
                     className="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white px-6 py-3 rounded-full text-base font-semibold transition-all duration-300 shadow-xl hover:shadow-red-500/25 hover:scale-105 active:scale-95 touch-manipulation min-h-[44px]"
