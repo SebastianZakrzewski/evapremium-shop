@@ -50,7 +50,7 @@ export default function AboutUsSection() {
               <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Award className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-2">14+</h3>
+              <h3 className="text-3xl font-bold text-white mb-2">5+</h3>
               <p className="text-gray-300">Lat doświadczenia</p>
             </CardContent>
           </Card>
@@ -60,7 +60,7 @@ export default function AboutUsSection() {
               <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-2">50K+</h3>
+              <h3 className="text-3xl font-bold text-white mb-2">2K+</h3>
               <p className="text-gray-300">Zadowolonych klientów</p>
             </CardContent>
           </Card>
