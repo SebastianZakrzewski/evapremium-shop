@@ -215,7 +215,7 @@ export default function HeroSection() {
                 </div>
                 
                 {/* Mobile - Numer telefonu i informacja */}
-                <div className="md:hidden mt-6 animate-fade-in-delay-2 flex flex-col items-center gap-3">
+                <div className="md:hidden mt-6 mb-16 animate-fade-in-delay-2 flex flex-col items-center gap-3">
                   <a 
                     href="tel:+48570123635"
                     className="text-white text-xl md:text-2xl font-bold flex items-center gap-3 hover:text-red-400 transition-colors drop-shadow-lg"
@@ -256,7 +256,7 @@ export default function HeroSection() {
       </button>
 
       {/* Indicators */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+      <div className="absolute bottom-4 md:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
         {heroSlides.map((_, index) => (
           <button
             key={index}
