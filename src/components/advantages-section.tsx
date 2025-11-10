@@ -26,7 +26,7 @@ const advantagesItems = [
   {
     id: 3,
     type: "image" as const,
-    src: "/images/zalety/kolorystyka.png",
+    src: "/kolory.png",
     title: "Różnorodna kolorystyka",
     description: "Szeroka paleta kolorów dopasowana do wnętrza Twojego auta",
     icon: Star,

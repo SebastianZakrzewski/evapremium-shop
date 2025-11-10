@@ -69,23 +69,13 @@ export default function RoznorodnaKolorystykaSection() {
           {/* Obrazek */}
           <div className="relative w-full xl:w-1/2 flex justify-center">
             <div className="relative bg-black rounded-3xl p-6 shadow-2xl w-full max-w-[500px] h-[350px] flex items-center justify-center">
-              {selectedColor && colorImages[selectedColor] ? (
-                <Image
-                  src={colorImages[selectedColor]}
-                  alt={`Dywanik w aucie - kolor ${selectedColor}`}
-                  width={400}
-                  height={400}
-                  className="w-full h-auto rounded-2xl object-cover transition-all duration-500"
-                />
-              ) : (
-                <Image
-                  src="/images/kolory dywanikow/czarny.jpg"
-                  alt="Dywaniki w kolorze czarnym - przykład"
-                  width={400}
-                  height={400}
-                  className="w-full h-auto rounded-2xl object-cover"
-                />
-              )}
+              <Image
+                src="/kolory.png"
+                alt="Różnorodna kolorystyka dywaników"
+                width={400}
+                height={400}
+                className="w-full h-auto rounded-2xl object-cover"
+              />
             </div>
           </div>
           {/* Paleta kolorów */}
