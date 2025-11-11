@@ -15,7 +15,7 @@ import { PricingService } from "@/lib/services/PricingService";
 import { MatService } from "@/lib/services/MatService";
 import { ConfigurationData } from "@/lib/types/product";
 import { debugLog } from "@/lib/config/features";
-import { useTracking, createViewContentData, createAddToCartData } from "@/lib/tracking";
+import { useTracking } from "@/lib/tracking";
 import { getModelsByBrand } from "@/data/carouselData";
 import { Brand, Model } from "@/types/carousel";
 import { getYearsForModel, getModelData, findGenerationByYear, getAvailableModels, getBodyTypesForYear, getBodyTypesForModel } from "@/data/car-model-years.utils";
@@ -69,17 +69,16 @@ type SetVariant = {
 // Struktura cenowa - sztywne ceny za komplety + rabaty
 const PRICING = {
   basePrice: {
-    'classic': { front: 290, basic: 510, premium: 710, complete: 350, test: 0.05 },
-    '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350, test: 0.05 }
+    'classic': { front: 290, basic: 510, premium: 710, complete: 350 },
+    '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350 }
   },
-  // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł, 0% dla test
+  // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł
   getDiscount: (basePrice: number) => {
-    if (basePrice <= 0.05) return 0; // Brak rabatu dla testu
     return basePrice >= 910 ? 0.30 : 0.20;
   },
   shipping: {
     cost: 27,
-    freeForVariants: ['basic', 'premium', 'complete', 'test'] as const  // Darmowa dla basic, premium, complete i test
+    freeForVariants: ['basic', 'premium', 'complete'] as const  // Darmowa dla basic, premium, complete
   }
 };
 
@@ -98,7 +97,6 @@ const setVariants: SetVariant[] = [
   { id: "basic", name: "Podstawowy", description: "5 dywaników (przód + tył + ochrona na tunel środkowy)", priceModifier: 0 },
   { id: "premium", name: "Premium", description: "5 dywaników (przód + tył + bagażnik)", priceModifier: 0 },
   { id: "complete", name: "Mata do Bagażnika", description: "1 dywanik - Mata do Bagażnika", priceModifier: 0 },
-  { id: "test", name: "TEST - 5 groszy", description: "Testowy produkt do integracji pixela (0.05 PLN)", priceModifier: 0 },
 ];
 
 const bodyTypes = [
@@ -119,8 +117,11 @@ export default function Configurator() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const brandParam = searchParams.get('brand');
+  const modelParam = searchParams.get('model');
+  const bodyTypeParam = searchParams.get('bodyType');
+  const generationParam = searchParams.get('generation');
   const { addToCart, isLoading: cartLoading, error: cartError } = useCart();
-  const { trackViewContent, trackAddToCart, createViewContentData: createViewContent, createAddToCartData: createAddToCart } = useTracking();
+  const { trackViewContent, createViewContentData: createViewContent } = useTracking();
   const matService = new MatService();
   
   // Stan dla marek pobieranych z API
@@ -199,20 +200,26 @@ export default function Configurator() {
     }
   }, [brandParam]);
   
-  // Resetuj modele gdy marka się zmieni
+  // Resetuj modele gdy marka się zmieni (ale zachowaj wartości z URL jeśli są dostępne)
   useEffect(() => {
     if (selectedCarBrand) {
       setAvailableModels([]);
-      setSelectedCarModel("");
-      setSelectedCarYear("");
-      setSelectedBodyType("");
+      // Resetuj tylko jeśli nie ma wartości z URL
+      if (!modelParam) {
+        setSelectedCarModel("");
+      }
+      setSelectedCarYear(""); // Zawsze resetuj rocznik - jest do wyboru
+      // Resetuj typ nadwozia tylko jeśli nie ma wartości z URL
+      if (!bodyTypeParam) {
+        setSelectedBodyType("");
+      }
     }
-  }, [selectedCarBrand]);
+  }, [selectedCarBrand, modelParam, bodyTypeParam]);
   
-  const [selectedCarModel, setSelectedCarModel] = useState<string>("");
-  const [selectedGeneration, setSelectedGeneration] = useState<string>("");
-  const [selectedCarYear, setSelectedCarYear] = useState<string>("");
-  const [selectedBodyType, setSelectedBodyType] = useState<string>("");
+  const [selectedCarModel, setSelectedCarModel] = useState<string>(modelParam || "");
+  const [selectedGeneration, setSelectedGeneration] = useState<string>(generationParam || "");
+  const [selectedCarYear, setSelectedCarYear] = useState<string>(""); // Nie inicjalizuj z URL - rocznik jest do wyboru
+  const [selectedBodyType, setSelectedBodyType] = useState<string>(bodyTypeParam ? bodyTypeParam.toLowerCase().replace(/\s+/g, '-') : "");
   const [selectedMat, setSelectedMat] = useState<string>("black");
   const [selectedEdge, setSelectedEdge] = useState<string>("black");
   const [selectedHeelPad, setSelectedHeelPad] = useState<string>("brak");
@@ -251,11 +258,11 @@ export default function Configurator() {
     setType: string,
     setVariant: string
   ): number => {
-    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || 0;
+    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
     const discount = PRICING.getDiscount(basePrice);
     const priceAfterDiscount = basePrice * (1 - discount);
     const shippingCost = PRICING.shipping.freeForVariants.includes(setVariant as any) ? 0 : PRICING.shipping.cost;
-    return setVariant === 'test' ? priceAfterDiscount : Math.round(priceAfterDiscount + shippingCost);
+    return Math.round(priceAfterDiscount + shippingCost);
   }, []);
 
   // Funkcja do obliczania ceny bazowej bez wysyłki (do wyświetlania w sekcji wyboru zestawu)
@@ -263,10 +270,10 @@ export default function Configurator() {
     setType: string,
     setVariant: string
   ): number => {
-    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || 0;
+    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
     const discount = PRICING.getDiscount(basePrice);
     const priceAfterDiscount = basePrice * (1 - discount);
-    return setVariant === 'test' ? priceAfterDiscount : Math.round(priceAfterDiscount);
+    return Math.round(priceAfterDiscount);
   }, []);
 
   // Funkcja do pobierania opisu ilości dywaników na podstawie wariantu zestawu
@@ -275,8 +282,7 @@ export default function Configurator() {
       'front': 'przód',
       'basic': 'przód + tył',
       'premium': 'przód + tył + bagażnik',
-      'complete': 'mata do bagażnika',
-      'test': 'testowy produkt'
+      'complete': 'mata do bagażnika'
     };
     return descriptions[variantId] || variantId;
   }, []);
@@ -285,17 +291,17 @@ export default function Configurator() {
   const priceBreakdown = useMemo(() => {
     if (!selectedSetType || !selectedSetVariant) return { basePrice: 0, discount: 0, priceAfterDiscount: 0, shippingCost: 0, totalPrice: 0 };
     
-    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || 0;
+    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
     const discount = PRICING.getDiscount(basePrice);
     const discountAmount = basePrice * discount;
     const priceAfterDiscount = basePrice - discountAmount;
     const shippingCost = PRICING.shipping.freeForVariants.includes(selectedSetVariant as any) ? 0 : PRICING.shipping.cost;
-    const totalPrice = selectedSetVariant === 'test' ? priceAfterDiscount : Math.round(priceAfterDiscount + shippingCost);
+    const totalPrice = Math.round(priceAfterDiscount + shippingCost);
     
     return {
-      basePrice: selectedSetVariant === 'test' ? basePrice : Math.round(basePrice),
-      discount: selectedSetVariant === 'test' ? discountAmount : Math.round(discountAmount),
-      priceAfterDiscount: selectedSetVariant === 'test' ? priceAfterDiscount : Math.round(priceAfterDiscount),
+      basePrice: Math.round(basePrice),
+      discount: Math.round(discountAmount),
+      priceAfterDiscount: Math.round(priceAfterDiscount),
       shippingCost,
       totalPrice
     };
@@ -359,6 +365,43 @@ export default function Configurator() {
 
     loadModels();
   }, [selectedCarBrand]);
+
+  // Inicjalizuj model i typ nadwozia z URL po załadowaniu modeli
+  useEffect(() => {
+    if (modelParam && selectedCarBrand && availableModels.length > 0) {
+      // Normalizuj nazwę modelu z URL (może być w różnych formatach)
+      const normalizedModelParam = modelParam.toLowerCase().trim();
+      
+      // Znajdź model w dostępnych modelach (case-insensitive, sprawdź różne formaty)
+      const foundModel = availableModels.find(m => {
+        const modelNameLower = m.name.toLowerCase().trim();
+        // Sprawdź dokładne dopasowanie lub dopasowanie po usunięciu spacji/myślników
+        return modelNameLower === normalizedModelParam || 
+               modelNameLower.replace(/[\s-]/g, '') === normalizedModelParam.replace(/[\s-]/g, '');
+      });
+      
+      if (foundModel && selectedCarModel !== foundModel.name) {
+        setSelectedCarModel(foundModel.name);
+        console.log('Inicjalizacja modelu z URL:', modelParam, '->', foundModel.name);
+      } else if (!foundModel && modelParam) {
+        console.warn('Nie znaleziono modelu z URL:', modelParam, 'dostępne modele:', availableModels.map(m => m.name));
+      }
+    }
+  }, [modelParam, selectedCarBrand, availableModels, selectedCarModel]);
+
+  // Inicjalizuj typ nadwozia z URL po załadowaniu typów nadwozia
+  useEffect(() => {
+    if (bodyTypeParam && selectedCarBrand && selectedCarModel && availableBodyTypes.length > 0) {
+      const normalizedBodyType = bodyTypeParam.toLowerCase().replace(/\s+/g, '-');
+      const foundBodyType = availableBodyTypes.find(
+        bt => bt.id === normalizedBodyType
+      );
+      if (foundBodyType && selectedBodyType !== foundBodyType.id) {
+        setSelectedBodyType(foundBodyType.id);
+        console.log('Inicjalizacja typu nadwozia z URL:', foundBodyType.id);
+      }
+    }
+  }, [bodyTypeParam, selectedCarBrand, selectedCarModel, availableBodyTypes, selectedBodyType]);
 
   // Pobierz roczniki z nowych danych JSON
   useEffect(() => {
@@ -429,18 +472,36 @@ export default function Configurator() {
     loadModelYears();
   }, [selectedCarBrand, selectedCarModel]);
 
-  // Resetuj rocznik i typ nadwozia przy zmianie modelu
+  // Resetuj rocznik przy zmianie typu nadwozia
   useEffect(() => {
     setSelectedCarYear("");
+  }, [selectedBodyType]);
+
+  // Resetuj typ nadwozia i rocznik przy zmianie modelu
+  useEffect(() => {
     setSelectedBodyType("");
+    setSelectedCarYear("");
   }, [selectedCarModel]);
 
   // Pobierz dostępne dywaniki z bazy danych i oblicz cenę bazową
   useEffect(() => {
     const loadMats = async () => {
-      if (!selectedCarBrand || !selectedCarModel || !selectedCarYear) {
+      if (!selectedCarBrand || !selectedCarModel || !selectedBodyType) {
         debugLog('Brak podstawowych danych samochodu, nie pobieram dywaników');
         setBaseMatPrice(0);
+        return;
+      }
+      
+      // Jeśli nie wybrano rocznika, użyj domyślnej ceny
+      if (!selectedCarYear) {
+        const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
+        const matConfiguration = {
+          setType: selectedSetVariant || 'basic',
+          cellType: selectedCellType || 'diamonds',
+          hasHeelPad: selectedHeelPad === 'yes'
+        };
+        const calculatedPrice = PricingService.calculateMatPrice(basePrice, matConfiguration);
+        setBaseMatPrice(calculatedPrice);
         return;
       }
 
@@ -486,15 +547,8 @@ export default function Configurator() {
           debugLog('💰 Używam ceny z bazy danych:', basePrice);
         } else {
           // Użyj domyślnej ceny bazowej z nowego systemu
-          basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || (selectedSetVariant === 'test' ? 0.05 : 300);
+          basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
           debugLog('💰 Używam domyślnej ceny bazowej:', basePrice);
-        }
-
-        // Dla wariantu testowego zwróć bezpośrednio cenę 0.05 PLN bez modyfikacji
-        if (selectedSetVariant === 'test') {
-          setBaseMatPrice(0.05);
-          debugLog('💰 Wariant testowy - ustawiam cenę 0.05 PLN');
-          return;
         }
 
         const calculatedPrice = PricingService.calculateMatPrice(basePrice, matConfiguration);
@@ -510,7 +564,7 @@ export default function Configurator() {
       } catch (error) {
         console.error('❌ Błąd podczas pobierania dywaników:', error);
         // W przypadku błędu, użyj domyślnej ceny z nowego systemu
-        const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || (selectedSetVariant === 'test' ? 0.05 : 300);
+        const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
         setBaseMatPrice(basePrice);
         debugLog('💰 Używam domyślnej ceny po błędzie:', basePrice);
       } finally {
@@ -519,44 +573,38 @@ export default function Configurator() {
     };
 
     loadMats();
-  }, [selectedCarBrand, selectedCarModel, selectedCarYear, selectedBodyType, selectedSetType, selectedCellType, selectedHeelPad]);
+  }, [selectedCarBrand, selectedCarModel, selectedCarYear, selectedBodyType, selectedSetType, selectedSetVariant, selectedCellType, selectedHeelPad]);
 
-  // Aktualizuj typy nadwozia po wybraniu rocznika
+  // Aktualizuj generację gdy zmienia się rocznik
   useEffect(() => {
-    if (selectedCarBrand && selectedCarModel && selectedCarYear) {
+    if (selectedCarYear && selectedCarBrand && selectedCarModel) {
+      const generation = findGenerationByYear(selectedCarBrand, selectedCarModel, parseInt(selectedCarYear));
+      if (generation && generation !== selectedGeneration) {
+        setSelectedGeneration(generation);
+        console.log('Aktualizacja generacji na podstawie rocznika:', selectedCarYear, '->', generation);
+      }
+    } else if (!selectedCarYear && selectedGeneration) {
+      // Resetuj generację jeśli rocznik został usunięty
+      setSelectedGeneration("");
+    }
+  }, [selectedCarYear, selectedCarBrand, selectedCarModel, selectedGeneration]);
+
+  // Filtruj dostępne roczniki po wybraniu typu nadwozia (opcjonalnie)
+  useEffect(() => {
+    if (selectedCarBrand && selectedCarModel && selectedBodyType && selectedCarYear) {
       const year = parseInt(selectedCarYear);
       const bodyTypesForYear = getBodyTypesForYear(selectedCarBrand, selectedCarModel, year);
       
-      if (bodyTypesForYear.length > 0) {
-        // Konwertuj typy nadwozia do formatu komponentu
-        const bodyTypesData = bodyTypesForYear.map(type => ({
-          id: type.toLowerCase().replace(/\s+/g, '-'),
-          name: type
-        }));
-        
-        setAvailableBodyTypes(bodyTypesData);
-        console.log(`Typy nadwozia dla ${selectedCarBrand} ${selectedCarModel} ${year}:`, bodyTypesForYear);
-        
-        // Resetuj wybrany typ nadwozia jeśli nie jest dostępny
-        if (selectedBodyType && !bodyTypesForYear.some(type => 
-          type.toLowerCase().replace(/\s+/g, '-') === selectedBodyType
-        )) {
-          setSelectedBodyType("");
-        }
-      } else {
-        // Fallback: użyj wszystkich typów dla modelu
-        const allBodyTypes = getBodyTypesForModel(selectedCarBrand, selectedCarModel);
-        if (allBodyTypes.length > 0) {
-          const bodyTypesData = allBodyTypes.map(type => ({
-            id: type.toLowerCase().replace(/\s+/g, '-'),
-            name: type
-          }));
-          setAvailableBodyTypes(bodyTypesData);
-          console.log(`Używam wszystkich typów nadwozia dla ${selectedCarBrand} ${selectedCarModel}`);
-        }
+      // Sprawdź czy wybrany typ nadwozia jest dostępny dla wybranego rocznika
+      if (bodyTypesForYear.length > 0 && !bodyTypesForYear.some(type => 
+        type.toLowerCase().replace(/\s+/g, '-') === selectedBodyType
+      )) {
+        // Jeśli typ nadwozia nie jest dostępny dla tego rocznika, zresetuj rocznik
+        console.log(`Typ nadwozia ${selectedBodyType} nie jest dostępny dla rocznika ${year}, resetuję rocznik`);
+        setSelectedCarYear("");
       }
     }
-  }, [selectedCarBrand, selectedCarModel, selectedCarYear, selectedBodyType]);
+  }, [selectedCarBrand, selectedCarModel, selectedBodyType, selectedCarYear]);
 
   const nextSection = useCallback(() => {
     if (currentSection < totalSections - 1) {
@@ -602,17 +650,20 @@ export default function Configurator() {
     
     try {
       // Walidacja podstawowych danych samochodu
-      if (!selectedCarBrand || !selectedCarModel || !selectedCarYear) {
+      if (!selectedCarBrand || !selectedCarModel || !selectedBodyType) {
         console.error('❌ Brak podstawowych danych samochodu');
-        alert('Proszę wybrać markę, model i rocznik');
+        alert('Proszę wybrać markę, model i typ nadwozia');
         return;
       }
+      
+      // Jeśli nie wybrano rocznika, użyj domyślnego (najnowszego dostępnego lub aktualny rok)
+      const yearToUse = selectedCarYear || (availableYears.length > 0 ? availableYears[0].name : new Date().getFullYear().toString());
 
       // Sprawdź czy cena bazowa jest dostępna (teraz zawsze powinna być dostępna)
       if (baseMatPrice === 0) {
         console.warn('⚠️ Używam domyślnej ceny');
         // Użyj domyślnej ceny zamiast blokować
-        const defaultPrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || (selectedSetVariant === 'test' ? 0.05 : 300);
+        const defaultPrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
         setBaseMatPrice(defaultPrice);
       }
 
@@ -626,7 +677,7 @@ export default function Configurator() {
         carDetails: {
           brand: selectedCarBrand,
           model: selectedCarModel,
-          year: selectedCarYear,
+          year: yearToUse,
           bodyType: selectedBodyType || 'universal'
         }
       };
@@ -636,7 +687,7 @@ export default function Configurator() {
       
       console.log('💰 Configurator handleAddToCart - Ceny:', {
         selectedSetVariant,
-        basePrice: PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'],
+        basePrice: PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'],
         price,
         finalPrice,
         baseMatPrice
@@ -667,26 +718,8 @@ export default function Configurator() {
 
       console.log('✅ Produkt dodany do koszyka:', productId);
       
-      // Track AddToCart event
-      try {
-        const cartItem = {
-          id: productId,
-          quantity: 1,
-          unitPrice: finalPrice,
-          subtotal: finalPrice,
-          productType: 'mat' as const,
-          productId: productId,
-          productName: `Dywaniki EVA Premium - ${selectedCarBrand} ${selectedCarModel}`,
-          productSku: `EVA-${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`,
-          productImage: matImagePath,
-          configuration: configData
-        };
-        
-        const addToCartData = createAddToCart(cartItem, finalPrice);
-        trackAddToCart(addToCartData);
-      } catch (error) {
-        console.error('[Tracking] Error tracking AddToCart:', error);
-      }
+      // Track AddToCart event jest już obsługiwane przez useCart hook
+      // Nie trzeba ręcznie śledzić tutaj, aby uniknąć duplikacji
       
       // Otwórz modal koszyka po dodaniu produktu
       setTimeout(() => {
@@ -761,19 +794,9 @@ export default function Configurator() {
       parts.push(`do ${formattedBrand}`);
       
       if (selectedCarModel) {
-        parts.push(selectedCarModel);
-        
-        if (selectedCarYear) {
-          parts.push(selectedCarYear);
-          
-          if (selectedBodyType) {
-            // Znajdź nazwę typu nadwozia na podstawie ID
-            const bodyType = bodyTypes.find(bt => bt.id === selectedBodyType);
-            if (bodyType) {
-              parts.push(bodyType.name);
-            }
-          }
-        }
+        // Model z małej litery (np. "a3" zamiast "A3")
+        const formattedModel = selectedCarModel.toLowerCase();
+        parts.push(formattedModel);
       }
     }
     
@@ -818,20 +841,18 @@ export default function Configurator() {
     if (!selectedSetType || !selectedSetVariant) return 0;
     
     // 1. Pobierz bazową cenę kompletu
-    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete' | 'test'] || 0;
+    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
     
-    // 2. Oblicz rabat (zależny od wartości: ≥910 zł = -30%, <910 zł = -20%, test = 0%)
+    // 2. Oblicz rabat (zależny od wartości: ≥910 zł = -30%, <910 zł = -20%)
     const discount = PRICING.getDiscount(basePrice);
     const priceAfterDiscount = basePrice * (1 - discount);
     
-    // 3. Dodaj koszt wysyłki (27 zł tylko dla 'front', darmowa dla 'basic', 'premium', 'complete' i 'test')
+    // 3. Dodaj koszt wysyłki (27 zł tylko dla 'front', darmowa dla 'basic', 'premium', 'complete')
     const shippingCost = PRICING.shipping.freeForVariants.includes(selectedSetVariant as any) 
       ? 0 
       : PRICING.shipping.cost;
     
-    const totalPrice = selectedSetVariant === 'test' 
-      ? priceAfterDiscount 
-      : Math.round((priceAfterDiscount + shippingCost) * 100) / 100;
+    const totalPrice = Math.round((priceAfterDiscount + shippingCost) * 100) / 100;
     
     console.log('💰 Configurator price useMemo - Kalkulacja ceny:', {
       setType: selectedSetType,
@@ -846,14 +867,15 @@ export default function Configurator() {
     return totalPrice;
   }, [selectedSetType, selectedSetVariant]);
 
-  // Track ViewContent gdy konfiguracja jest kompletna
+  // Track ViewContent gdy konfiguracja jest kompletna (model i typ nadwozia są wymagane, rocznik opcjonalny)
   useEffect(() => {
-    if (!selectedCarBrand || !selectedCarModel || !selectedCarYear || price === 0) {
+    if (!selectedCarBrand || !selectedCarModel || !selectedBodyType || price === 0) {
       return;
     }
 
     // Sprawdź czy event nie został już wysłany dla tej konfiguracji (deduplikacja)
-    const configKey = `${selectedCarBrand}_${selectedCarModel}_${selectedCarYear}_${selectedSetType}_${selectedSetVariant}_${selectedCellType}_${selectedMat}_${selectedEdge}`;
+    const yearToUse = selectedCarYear || 'all';
+    const configKey = `${selectedCarBrand}_${selectedCarModel}_${yearToUse}_${selectedSetType}_${selectedSetVariant}_${selectedCellType}_${selectedMat}_${selectedEdge}`;
     const cacheKey = `viewcontent_${configKey}`;
     const cached = sessionStorage.getItem(cacheKey);
     
@@ -862,7 +884,7 @@ export default function Configurator() {
     }
 
     try {
-      const productId = `${selectedCarBrand}-${selectedCarModel}-${selectedCarYear}-${selectedSetType}-${selectedSetVariant}`;
+      const productId = `${selectedCarBrand}-${selectedCarModel}-${yearToUse}-${selectedSetType}-${selectedSetVariant}`;
       const productName = `Dywaniki EVA Premium - ${selectedCarBrand} ${selectedCarModel}`;
       const productSku = `EVA-${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`;
 
@@ -883,7 +905,7 @@ export default function Configurator() {
           carDetails: {
             brand: selectedCarBrand,
             model: selectedCarModel,
-            year: selectedCarYear,
+            year: yearToUse,
             bodyType: selectedBodyType || 'universal'
           }
         }
@@ -896,7 +918,7 @@ export default function Configurator() {
     } catch (error) {
       console.error('[Tracking] Error tracking ViewContent:', error);
     }
-  }, [selectedCarBrand, selectedCarModel, selectedCarYear, selectedSetType, selectedSetVariant, selectedCellType, selectedMat, selectedEdge, selectedHeelPad, selectedBodyType, price, trackViewContent, createViewContent]);
+  }, [selectedCarBrand, selectedCarModel, selectedCarYear, selectedBodyType, selectedSetType, selectedSetVariant, selectedCellType, selectedMat, selectedEdge, selectedHeelPad, price, trackViewContent, createViewContent]);
 
   const mat = useMemo(() => availableMaterialColors.find(m => m.id === selectedMat)!, [selectedMat, availableMaterialColors]);
   const edge = useMemo(() => availableEdgeColors.find(e => e.id === selectedEdge)!, [selectedEdge, availableEdgeColors]);
@@ -1014,10 +1036,26 @@ export default function Configurator() {
                 {getDynamicTitle()}
               </h2>
               <p className="hidden md:block text-white/70 text-sm mt-1">
-                {brandParam 
-                  ? `Dopasowane dywaniki EVA Premium dla marki ${brandParam.toUpperCase()}. Zachowujemy stylistykę EvaPremium i jakość premium.`
-                  : 'Zachowujemy stylistykę EvaPremium i jakość premium.'
-                }
+                {selectedCarBrand ? (
+                  <>
+                    Dopasowane dywaniki EVA Premium dla marki {selectedCarBrand.toUpperCase()}.
+                    {(() => {
+                      // Pobierz generację - z URL lub oblicz na podstawie rocznika
+                      const generation = selectedGeneration || (selectedCarYear && selectedCarBrand && selectedCarModel 
+                        ? findGenerationByYear(selectedCarBrand, selectedCarModel, parseInt(selectedCarYear))
+                        : null);
+                      return generation ? ` Generacja: ${generation}.` : '';
+                    })()}
+                    {selectedBodyType && (
+                      <>
+                        {' '}Typ nadwozia: {bodyTypes.find(bt => bt.id === selectedBodyType)?.name || selectedBodyType}.
+                      </>
+                    )}
+                    {' '}Zachowujemy stylistykę EvaPremium i jakość premium.
+                  </>
+                ) : (
+                  'Zachowujemy stylistykę EvaPremium i jakość premium.'
+                )}
               </p>
               
               {/* Progress indicator */}
@@ -1115,56 +1153,7 @@ export default function Configurator() {
                 )}
 
                 {selectedCarModel && (
-                  <div>
-                    <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz rocznik</h3>
-                    {loadingYears ? (
-                      <div className="text-center py-8 text-gray-400">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
-                        <p>Ładowanie roczników...</p>
-                      </div>
-                    ) : availableYears.length > 0 ? (
-                      <div className="relative">
-                        <select
-                          data-year-select
-                          value={selectedCarYear}
-                          onChange={(e) => setSelectedCarYear(e.target.value)}
-                          className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
-                        >
-                          <option value="" className="bg-neutral-900 text-gray-400">Wybierz rocznik...</option>
-                          {availableYears.map((year) => (
-                            <option key={year.id} value={year.name} className="bg-neutral-900 text-white">
-                              {year.name}
-                            </option>
-                          ))}
-                        </select>
-                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
-                        <p className="text-gray-400 mb-2">Brak dostępnych roczników</p>
-                        <p className="text-sm text-gray-500">Dla wybranego modelu nie ma jeszcze dostępnych roczników</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {selectedCarYear && (
                   <div className="mb-8 pb-8">
-                    {/* Wyświetl informację o generacji */}
-                    {(() => {
-                      const generation = findGenerationByYear(selectedCarBrand, selectedCarModel, parseInt(selectedCarYear));
-                      return generation ? (
-                        <div className="mb-4 p-3 bg-blue-900/20 border border-blue-800/50 rounded-lg">
-                          <h4 className="text-sm font-medium text-blue-300 mb-1">Generacja</h4>
-                          <p className="text-sm text-blue-200">{generation}</p>
-                        </div>
-                      ) : null;
-                    })()}
-                    
                     <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz typ nadwozia</h3>
                     {loadingBodyTypes ? (
                       <div className="text-center py-8 text-gray-400">
@@ -1196,6 +1185,55 @@ export default function Configurator() {
                       <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center pb-8">
                         <p className="text-gray-400 mb-2">Brak dostępnych typów nadwozia</p>
                         <p className="text-sm text-gray-500">Dla wybranego modelu nie ma jeszcze dostępnych typów nadwozia</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {selectedCarModel && selectedBodyType && (
+                  <div className="mb-8 pb-8">
+                    {/* Wyświetl informację o generacji jeśli jest dostępna */}
+                    {selectedCarYear && (() => {
+                      const generation = findGenerationByYear(selectedCarBrand, selectedCarModel, parseInt(selectedCarYear));
+                      return generation ? (
+                        <div className="mb-4 p-3 bg-blue-900/20 border border-blue-800/50 rounded-lg">
+                          <h4 className="text-sm font-medium text-blue-300 mb-1">Generacja</h4>
+                          <p className="text-sm text-blue-200">{generation}</p>
+                        </div>
+                      ) : null;
+                    })()}
+                    
+                    <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz rocznik</h3>
+                    {loadingYears ? (
+                      <div className="text-center py-8 text-gray-400">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
+                        <p>Ładowanie roczników...</p>
+                      </div>
+                    ) : availableYears.length > 0 ? (
+                      <div className="relative pb-8">
+                        <select
+                          data-year-select
+                          value={selectedCarYear}
+                          onChange={(e) => setSelectedCarYear(e.target.value)}
+                          className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
+                        >
+                          <option value="" className="bg-neutral-900 text-gray-400">Wybierz rocznik...</option>
+                          {availableYears.map((year) => (
+                            <option key={year.id} value={year.name} className="bg-neutral-900 text-white">
+                              {year.name}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
+                        <p className="text-gray-400 mb-2">Brak dostępnych roczników</p>
+                        <p className="text-sm text-gray-500">Dla wybranego modelu nie ma jeszcze dostępnych roczników</p>
                       </div>
                     )}
                   </div>
@@ -1283,10 +1321,10 @@ export default function Configurator() {
                               {displayPrice > 0 && (
                                 <div className="text-right">
                                   <div className="text-lg font-bold text-green-400">
-                                    {v.id === 'test' ? displayPrice.toFixed(2) : displayPrice} zł
+                                    {displayPrice} zł
                                   </div>
                                   <div className="text-xs text-white/60">
-                                    {v.id === 'test' ? 'test' : selectedSetType === '3d-with-rims' ? 'z rantami' : 'bez rantów'}
+                                    {selectedSetType === '3d-with-rims' ? 'z rantami' : 'bez rantów'}
                                   </div>
                                 </div>
                               )}
@@ -1568,7 +1606,7 @@ export default function Configurator() {
               ) : (
                 <Button
                   onClick={nextSection}
-                  disabled={currentSection === 0 && (!selectedCarModel || !selectedCarYear || !selectedBodyType)}
+                  disabled={currentSection === 0 && (!selectedCarModel || !selectedBodyType)}
                   className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 active:bg-red-800 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] md:min-w-auto"
                 >
                   <span className="hidden sm:inline">Dalej</span>

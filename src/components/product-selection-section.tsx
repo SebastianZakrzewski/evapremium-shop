@@ -141,6 +141,7 @@ interface ProductSelectionSectionProps {
 export default function ProductSelectionSection({ params }: ProductSelectionSectionProps) {
   const [brand, setBrand] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [selectedBodyType, setSelectedBodyType] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterState>({
     bodyTypes: [],
     yearRanges: [],
@@ -291,29 +292,51 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
       });
   }, [displayProducts]);
 
-  // Wyodrębnij unikalne modele z produktów
+  // Wyodrębnij unikalne kombinacje modelu i typu nadwozia z produktów
   const availableModels = useMemo(() => {
-    const modelMap = new Map<string, number>();
+    const modelBodyTypeMap = new Map<string, { model: string; bodyType: string; count: number }>();
     displayProducts.forEach((product) => {
       const modelName = product.model;
-      const count = modelMap.get(modelName) || 0;
-      modelMap.set(modelName, count + 1);
+      const bodyType = product.bodyType || 'universal';
+      const key = `${modelName}-${bodyType}`;
+      
+      if (!modelBodyTypeMap.has(key)) {
+        modelBodyTypeMap.set(key, {
+          model: modelName,
+          bodyType: bodyType,
+          count: 1
+        });
+      } else {
+        const existing = modelBodyTypeMap.get(key)!;
+        existing.count += 1;
+      }
     });
-    return Array.from(modelMap.entries())
-      .map(([model, count]) => ({ model, count }))
-      .sort((a, b) => a.model.localeCompare(b.model));
+    
+    return Array.from(modelBodyTypeMap.values())
+      .sort((a, b) => {
+        // Sortuj najpierw po modelu, potem po typie nadwozia
+        if (a.model !== b.model) {
+          return a.model.localeCompare(b.model);
+        }
+        return a.bodyType.localeCompare(b.bodyType);
+      });
   }, [displayProducts]);
 
   // Filtrowanie produktów
   const filteredProducts = useMemo(() => {
     let filtered = displayProducts;
 
-    // Filtrowanie według wybranego modelu
-    if (selectedModel) {
+    // Filtrowanie według wybranego modelu i typu nadwozia
+    if (selectedModel && selectedBodyType) {
+      filtered = filtered.filter(
+        (product) => product.model === selectedModel && (product.bodyType || 'universal') === selectedBodyType
+      );
+    } else if (selectedModel) {
+      // Jeśli wybrano tylko model (bez typu nadwozia), pokaż wszystkie warianty tego modelu
       filtered = filtered.filter((product) => product.model === selectedModel);
     }
 
-    // Filtrowanie według typu nadwozia
+    // Filtrowanie według typu nadwozia (dodatkowe filtry)
     if (filters.bodyTypes.length > 0) {
       filtered = filtered.filter(
         (product) => product.bodyType && filters.bodyTypes.includes(product.bodyType)
@@ -330,7 +353,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
     }
 
     return filtered;
-  }, [displayProducts, selectedModel, filters]);
+  }, [displayProducts, selectedModel, selectedBodyType, filters]);
 
   // Obsługa filtrów
   const handleBodyTypeChange = (bodyType: string, checked: boolean) => {
@@ -488,28 +511,45 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
                   Powrót
                 </Link>
                 <button
-                  onClick={() => setSelectedModel(null)}
+                  onClick={() => {
+                    setSelectedModel(null);
+                    setSelectedBodyType(null);
+                  }}
                   className={`px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
-                    selectedModel === null
+                    selectedModel === null && selectedBodyType === null
                       ? 'bg-red-600 text-white shadow-lg shadow-red-500/50'
                       : 'bg-white text-black hover:bg-gray-200'
                   }`}
                 >
                   Wszystkie
                 </button>
-                {availableModels.map(({ model, count }) => (
-                  <button
-                    key={model}
-                    onClick={() => setSelectedModel(model)}
-                    className={`px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
-                      selectedModel === model
-                        ? 'bg-red-600 text-white shadow-lg shadow-red-500/50'
-                        : 'bg-white text-black hover:bg-gray-200'
-                    }`}
-                  >
-                    {model.toUpperCase()} ({count})
-                  </button>
-                ))}
+                {availableModels.map(({ model, bodyType, count }) => {
+                  const key = `${model}-${bodyType}`;
+                  const isSelected = selectedModel === model && selectedBodyType === bodyType;
+                  const bodyTypeDisplay = formatBodyType(bodyType);
+                  
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => {
+                        setSelectedModel(model);
+                        setSelectedBodyType(bodyType);
+                      }}
+                      className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 text-xs ${
+                        isSelected
+                          ? 'bg-red-600 text-white shadow-lg shadow-red-500/50'
+                          : 'bg-white text-black hover:bg-gray-200'
+                      }`}
+                      title={`${model.toUpperCase()} - ${bodyTypeDisplay}`}
+                    >
+                      <div className="flex flex-col items-center text-center">
+                        <span className="font-bold leading-tight">{model.toUpperCase()}</span>
+                        <span className="text-[10px] mt-0.5 leading-tight">{bodyTypeDisplay}</span>
+                        <span className="text-[10px] mt-0.5 opacity-70">({count})</span>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
