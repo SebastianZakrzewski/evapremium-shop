@@ -9,7 +9,7 @@ import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
-import { Loader2, Car } from "lucide-react";
+import { Loader2, Car, ChevronDown, ChevronUp } from "lucide-react";
 
 interface FilterState {
   bodyTypes: string[];
@@ -142,6 +142,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
   const [brand, setBrand] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [selectedBodyType, setSelectedBodyType] = useState<string | null>(null);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState<boolean>(false);
   const [filters, setFilters] = useState<FilterState>({
     bodyTypes: [],
     yearRanges: [],
@@ -491,12 +492,85 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
           
           {/* Sekcja z opisem marki */}
           <div className="bg-gray-900/50 rounded-lg p-6 mb-8">
+            {/* Pierwszy akapit - zawsze widoczny */}
             <p className="text-white text-base md:text-lg leading-relaxed mb-4">
-              Każdy posiadacz {currentBrand.displayName} stara się dbać o swój samochód w należyty sposób. Nie zawsze jest to jednak takie proste. Osoby, które spędzają dużo godzin za kółkiem, wiedzą, jak trudne jest utrzymanie samochodu w czystości. Czasami jesteśmy zmuszeni do jazdy podczas deszczu, zatrzymywania się w zabłoconych miejscach, odśnieżanie samochodu. Nie sposób jest doczyścić dokładnie buty, aby nie wnieść części zabrudzeń do wnętrza pojazdu. Wśród oferowanych na rynku rodzajów dywaników samochodowych w standardowych rozmiarach, często trudno znaleźć idealnie dopasowane do konkretnego modelu {currentBrand.displayName}.
+              Właściciele samochodów marki {currentBrand.displayName} przykładają dużą wagę do właściwej pielęgnacji swojego pojazdu. Jednak utrzymanie auta w idealnym stanie nie zawsze jest łatwe. Kierowcy, którzy spędzają wiele godzin za kierownicą, doskonale znają problemy związane z utrzymaniem czystości w kabinie. Deszczowa pogoda, błotniste drogi czy konieczność odśnieżania pojazdu sprawiają, że nawet najbardziej staranne czyszczenie obuwia nie gwarantuje, że do wnętrza nie przedostaną się zanieczyszczenia. Tradycyjne dywaniki samochodowe dostępne na rynku – czy to gumowe, czy welurowe – często nie spełniają oczekiwań. W odpowiedzi na te potrzeby wprowadziliśmy innowacyjne rozwiązanie: dywaniki wykonane z materiału EVA, które gwarantują czystość, są bezpieczne dla zdrowia i hipoalergiczne.
             </p>
-            <p className="text-white text-base md:text-lg leading-relaxed">
-              Dywaniki EVA Premium to rozwiązanie stworzone specjalnie z myślą o precyzyjnym dopasowaniu do Twojego samochodu. Oferujemy dywaniki wykonane z wysokiej jakości materiału EVA, które idealnie pasują do wnętrza Twojego {currentBrand.displayName}, zapewniając maksymalną ochronę i estetykę.
-            </p>
+            
+            {/* Reszta tekstu - zwijana/rozwijana */}
+            <div className={`overflow-hidden transition-all duration-300 ${isDescriptionExpanded ? 'max-h-[2000px]' : 'max-h-0'}`}>
+              <h3 className="text-white text-xl md:text-2xl font-semibold mb-3 mt-6">
+                Dywaniki samochodowe do {currentBrand.displayName} – czy znajdę dywaniki do swojego modelu?
+              </h3>
+              
+              <p className="text-white text-base md:text-lg leading-relaxed mb-4">
+                W naszym sklepie internetowym znajdą Państwo dywanik samochodowy do {currentBrand.displayName} w różnych jego wariantach. Przede wszystkim wykonujemy dywaniki na wymiar do najbardziej popularnych modeli tych pojazdów. Znajdą Państwo u nas produkty dopasowane do:
+              </p>
+              
+              {/* Lista dostępnych modeli */}
+              {availableModels.length > 0 && (
+                <div className="mb-4">
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {Array.from(new Set(availableModels.map(m => m.model)))
+                      .sort()
+                      .map((model) => (
+                        <span
+                          key={model}
+                          className="px-3 py-1 bg-red-600/20 border border-red-600/30 rounded-lg text-white text-sm font-medium"
+                        >
+                          {model.toUpperCase()}
+                        </span>
+                      ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Statyczna lista modeli dla Audi jeśli nie ma dostępnych modeli */}
+              {availableModels.length === 0 && currentBrand.displayName.toLowerCase() === 'audi' && (
+                <div className="mb-4">
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {['100', '80', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'E-TRON', 'Q2', 'Q3', 'Q4 E-Tron', 'Q5', 'Q7', 'Q8', 'RS3', 'RS5', 'RS6', 'S3', 'S5', 'S6', 'TT'].map((model) => (
+                      <span
+                        key={model}
+                        className="px-3 py-1 bg-red-600/20 border border-red-600/30 rounded-lg text-white text-sm font-medium"
+                      >
+                        {model}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              <p className="text-white text-base md:text-lg leading-relaxed mb-4">
+                Oprócz tego staramy się na bieżąco uzupełniać nasz magazyn w dywaniki, które idealnie pasują do innych modeli. Podczas składania zamówienia prosimy o podanie szczegółowych informacji o pojeździe, takich jak rocznik produkcji, rodzaj silnika, typ napędu oraz inne istotne parametry techniczne. Dlaczego to ma znaczenie? Ponieważ naszym celem jest zapewnienie, aby dywaniki samochodowe zakrywały jak największą powierzchnię oryginalnej wykładziny, oferując maksymalną ochronę.
+              </p>
+              
+              <h3 className="text-white text-xl md:text-2xl font-semibold mb-3 mt-6">
+                Gdzie kupić dywaniki do {currentBrand.displayName}?
+              </h3>
+              
+              <p className="text-white text-base md:text-lg leading-relaxed">
+                Nasz sklep internetowy oferuje nie tylko kompleksową gamę dywaników samochodowych. W asortymencie znajdą Państwo również maty zabezpieczające bagażnik oraz praktyczne organizery do przewożenia płynów, narzędzi czy oleju. Każdy produkt jest wykonywany na wymiar, a dodatkowo oferujemy bogaty wybór wariantów kolorystycznych. Oznacza to, że dywaniki samochodowe dostępne w naszej ofercie łączą w sobie najwyższą funkcjonalność z eleganckim wyglądem, idealnie komponując się z wnętrzem Twojego {currentBrand.displayName}.
+              </p>
+            </div>
+            
+            {/* Przycisk Czytaj więcej/mniej */}
+            <button
+              onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+              className="mt-4 flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors duration-200 font-medium"
+            >
+              {isDescriptionExpanded ? (
+                <>
+                  <span>Czytaj mniej</span>
+                  <ChevronUp className="w-4 h-4" />
+                </>
+              ) : (
+                <>
+                  <span>Czytaj więcej</span>
+                  <ChevronDown className="w-4 h-4" />
+                </>
+              )}
+            </button>
           </div>
 
           {/* Grid z buttonami modeli */}
