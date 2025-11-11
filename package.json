@@ -18,6 +18,7 @@
     "db:create-table": "node -e \"console.log('Wykonaj SQL w Supabase Dashboard')\"",
     "supabase:migrate": "node scripts/migrate-to-supabase.js",
     "supabase:seed": "node scripts/supabase-seed.js",
+    "seed:audi-mats": "node scripts/seed-audi-mats.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",

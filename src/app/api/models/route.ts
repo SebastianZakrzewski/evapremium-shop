@@ -25,6 +25,8 @@ export async function GET(request: NextRequest) {
       isCurrentlyProduced: searchParams.get('isCurrentlyProduced'),
     };
 
+    console.log('🔍 API /api/models: Fetching models with params:', queryParams);
+
     // Walidacja parametrów
     const validatedParams = QueryParamsSchema.parse(queryParams);
 
@@ -59,16 +61,26 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query;
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error('❌ Supabase error:', error);
+      
+      // Jeśli tabela nie istnieje lub brak uprawnień, zwróć pustą tablicę zamiast błędu
+      if (error.code === 'PGRST116' || error.message.includes('relation') || error.message.includes('does not exist') || error.message.includes('permission denied')) {
+        console.warn('⚠️ Table car_models_extended may not exist or be accessible, returning empty array');
+        return NextResponse.json([]);
+      }
+      
       return NextResponse.json(
-        { error: 'Błąd podczas pobierania modeli' },
+        { error: `Błąd podczas pobierania modeli: ${error.message}` },
         { status: 500 }
       );
     }
 
     if (!data || data.length === 0) {
+      console.log('ℹ️ No models found for params:', validatedParams);
       return NextResponse.json([]);
     }
+
+    console.log(`✅ API /api/models: Found ${data.length} models`);
 
     // Grupowanie modeli po marce i nazwie
     const groupedModels = data.reduce((acc: any, item: any) => {
@@ -124,9 +136,22 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error('API error:', error);
+    console.error('❌ API error:', error);
+    
+    // Jeśli błąd walidacji lub inny, zwróć pustą tablicę zamiast błędu 500
+    if (error instanceof z.ZodError) {
+      console.warn('⚠️ Validation error, returning empty array');
+      return NextResponse.json([]);
+    }
+    
+    // Jeśli problem z tabelą, zwróć pustą tablicę
+    if (error instanceof Error && (error.message.includes('relation') || error.message.includes('does not exist'))) {
+      console.warn('⚠️ Table may not exist, returning empty array');
+      return NextResponse.json([]);
+    }
+    
     return NextResponse.json(
-      { error: 'Wystąpił błąd serwera' },
+      { error: error instanceof Error ? error.message : 'Wystąpił błąd serwera' },
       { status: 500 }
     );
   }

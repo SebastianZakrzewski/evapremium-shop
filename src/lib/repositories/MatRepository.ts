@@ -4,6 +4,28 @@ import { Mat, MatFilters } from '../types/mat';
 export class MatRepository extends BaseRepository<Mat> {
   protected tableName = 'mats';
 
+  // Mapuj dane z bazy (snake_case) na camelCase
+  private mapMatFromDB(data: any): Mat {
+    return {
+      id: data.id,
+      carBrandSlug: data.car_brand_slug,
+      carModelSlug: data.car_model_slug,
+      generation: data.generation || undefined,
+      bodyType: data.body_type || undefined,
+      yearFrom: data.year_from || undefined,
+      yearTo: data.year_to || undefined,
+      basePrice: parseFloat(data.base_price) || 0,
+      availableSetTypes: data.available_set_types || [],
+      availableCellTypes: data.available_cell_types || [],
+      availableColors: data.available_colors || [],
+      availableEdgeColors: data.available_edge_colors || [],
+      hasHeelPad: data.has_heel_pad || false,
+      isActive: data.is_active !== undefined ? data.is_active : true,
+      createdAt: data.created_at ? new Date(data.created_at) : new Date(),
+      updatedAt: data.updated_at ? new Date(data.updated_at) : new Date(),
+    };
+  }
+
   async findByCarDetails(params: {
     brandSlug: string;
     modelSlug: string;
@@ -34,7 +56,7 @@ export class MatRepository extends BaseRepository<Mat> {
       throw new Error(`Error finding mat by car details: ${error.message}`);
     }
 
-    return data;
+    return data ? this.mapMatFromDB(data) : null;
   }
 
   async findMany(filters?: MatFilters): Promise<Mat[]> {
@@ -82,7 +104,7 @@ export class MatRepository extends BaseRepository<Mat> {
       throw new Error(`Error finding mats: ${error.message}`);
     }
 
-    return data || [];
+    return (data || []).map(item => this.mapMatFromDB(item));
   }
 
   async findByBrandAndModel(brandSlug: string, modelSlug: string): Promise<Mat[]> {
@@ -98,7 +120,7 @@ export class MatRepository extends BaseRepository<Mat> {
       throw new Error(`Error finding mats by brand and model: ${error.message}`);
     }
 
-    return data || [];
+    return (data || []).map(item => this.mapMatFromDB(item));
   }
 
   async findAvailableBodyTypes(brandSlug: string, modelSlug: string): Promise<string[]> {
