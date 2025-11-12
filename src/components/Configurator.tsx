@@ -951,7 +951,7 @@ export default function Configurator() {
 
   return (
     <section className="w-full bg-black text-white md:flex md:items-start md:justify-center md:min-h-screen">
-      <div className="max-w-[1024px] 2xl:max-w-[1280px] mx-auto px-4 sm:px-8 py-6 md:py-[38.4px] lg:py-[51.2px] 2xl:py-[51.2px] md:scale-[0.65] md:origin-top md:w-[153.85%] md:max-w-[1575px] 2xl:max-w-[1969px]">
+      <div className="max-w-[1024px] 2xl:max-w-[1280px] mx-auto px-4 sm:px-8 py-6 md:py-[38.4px] lg:py-[51.2px] 2xl:py-[51.2px] md:scale-[0.8] md:origin-top md:w-[125%] md:max-w-[1280px] 2xl:max-w-[1600px]">
         <div className="flex flex-col md:flex-row gap-6 lg:gap-8 2xl:gap-[38.4px]">
           {/* Lewa strona - wizualizacja */}
           <div className="w-full lg:w-[720px] xl:w-[800px] 2xl:w-[880px]">
@@ -1032,10 +1032,10 @@ export default function Configurator() {
           >
             {/* Header z progressem - sticky tylko na desktop */}
             <div ref={headerRef} className="mb-6 md:sticky md:top-0 z-10 bg-neutral-950/60 md:bg-transparent backdrop-blur md:backdrop-blur-none pb-4 md:pb-0 -mx-6 md:mx-0 px-6 md:px-0 pt-safe md:pt-0">
-              <h2 className="hidden md:block text-xl md:text-2xl font-semibold">
+              <h2 className="hidden md:block text-2xl md:text-3xl font-semibold">
                 {getDynamicTitle()}
               </h2>
-              <p className="hidden md:block text-white/70 text-sm mt-1">
+              <p className="hidden md:block text-white/70 text-base mt-1">
                 {selectedCarBrand ? (
                   <>
                     Dopasowane dywaniki EVA Premium dla marki {selectedCarBrand.toUpperCase()}.
@@ -1066,7 +1066,7 @@ export default function Configurator() {
                     style={{ width: `${((currentSection + 1) / totalSections) * 100}%` }}
                   />
                 </div>
-                <span className="text-xs text-white/60">
+                <span className="text-sm text-white/60">
                   {currentSection + 1} / {totalSections}
                 </span>
               </div>
@@ -1080,7 +1080,7 @@ export default function Configurator() {
                 {/* Wyświetl wybraną markę */}
                 {selectedCarBrand && (
                   <div className="mb-6 p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
-                    <h3 className="text-sm font-medium mb-2 text-gray-300">Wybrana marka</h3>
+                    <h3 className="text-base font-medium mb-2 text-gray-300">Wybrana marka</h3>
                     <div className="flex items-center gap-3">
                       <div className="relative w-24 h-24 bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
                         {brandsLoading ? (
@@ -1108,7 +1108,7 @@ export default function Configurator() {
                         })()}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-400 mt-2">
+                    <p className="text-base text-gray-400 mt-2">
                       Wybierz model samochodu z listy poniżej
                     </p>
                   </div>
@@ -1116,7 +1116,7 @@ export default function Configurator() {
 
                 {selectedCarBrand && (
                   <div>
-                    <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz model</h3>
+                    <h3 className="text-base font-medium mb-3 text-gray-300">Wybierz model</h3>
                     {loadingModels ? (
                       <div className="text-center py-8 text-gray-400">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
@@ -1153,8 +1153,8 @@ export default function Configurator() {
                 )}
 
                 {selectedCarModel && (
-                  <div className="mb-8 pb-8">
-                    <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz typ nadwozia</h3>
+                  <div className="mb-2 pb-2">
+                    <h3 className="text-base font-medium mb-3 text-gray-300">Wybierz typ nadwozia</h3>
                     {loadingBodyTypes ? (
                       <div className="text-center py-8 text-gray-400">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
@@ -1192,18 +1192,7 @@ export default function Configurator() {
 
                 {selectedCarModel && selectedBodyType && (
                   <div className="mb-8 pb-8">
-                    {/* Wyświetl informację o generacji jeśli jest dostępna */}
-                    {selectedCarYear && (() => {
-                      const generation = findGenerationByYear(selectedCarBrand, selectedCarModel, parseInt(selectedCarYear));
-                      return generation ? (
-                        <div className="mb-4 p-3 bg-blue-900/20 border border-blue-800/50 rounded-lg">
-                          <h4 className="text-sm font-medium text-blue-300 mb-1">Generacja</h4>
-                          <p className="text-sm text-blue-200">{generation}</p>
-                        </div>
-                      ) : null;
-                    })()}
-                    
-                    <h3 className="text-sm font-medium mb-3 text-gray-300">Wybierz rocznik</h3>
+                    <h3 className="text-base font-medium mb-3 text-gray-300">Wybierz rocznik</h3>
                     {loadingYears ? (
                       <div className="text-center py-8 text-gray-400">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
@@ -1252,7 +1241,7 @@ export default function Configurator() {
             {currentSection === 1 && (
               <div ref={(el) => { sectionRefs.current[1] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 <div>
-                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj dywaników</h3>
+                  <h3 className="text-base font-medium mb-3">Wybierz rodzaj dywaników</h3>
                   <RadioGroup value={selectedSetType} onValueChange={setSelectedSetType} className="space-y-3">
                     {setTypes.map((s) => {
                       // W nowym systemie nie ma modyfikatorów za typ zestawu
@@ -1263,8 +1252,8 @@ export default function Configurator() {
                           <RadioGroupItem value={s.id} id={`set-${s.id}`} className="sr-only" />
                           <div className="flex items-center justify-between">
                             <div>
-                              <div className="text-sm font-medium">{s.name}</div>
-                              <div className="text-xs text-white/60">{s.description}</div>
+                              <div className="text-base font-medium">{s.name}</div>
+                              <div className="text-sm text-white/60">{s.description}</div>
                             </div>
                           </div>
                         </Label>
@@ -1276,7 +1265,7 @@ export default function Configurator() {
                 {/* Info box o wpływie na cenę */}
                 {selectedSetType && (
                   <div className="p-4 bg-neutral-800/50 border border-neutral-700 rounded-lg">
-                    <p className="text-sm text-gray-300">
+                    <p className="text-base text-gray-300">
                       Wybór rodzaju dywaników wpłynie na końcową cenę zestawu
                     </p>
                   </div>
@@ -1289,7 +1278,7 @@ export default function Configurator() {
             {currentSection === 3 && (
               <div ref={(el) => { sectionRefs.current[3] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 <div>
-                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj zestawu</h3>
+                  <h3 className="text-base font-medium mb-3">Wybierz rodzaj zestawu</h3>
                   <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
                     {setVariants.map((v) => {
                       // Oblicz cenę bazową bez wysyłki (do wyświetlania w sekcji wyboru zestawu)
@@ -1302,8 +1291,8 @@ export default function Configurator() {
                           <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
                           <div className="flex items-center justify-between">
                             <div className="flex-1">
-                              <div className="text-sm font-medium">{v.name}</div>
-                              <div className="text-xs text-white/60">{v.description}</div>
+                              <div className="text-base font-medium">{v.name}</div>
+                              <div className="text-sm text-white/60">{v.description}</div>
                             </div>
                             <div className="flex items-center gap-3 flex-shrink-0">
                               {(v.id === "front" || v.id === "basic" || v.id === "premium" || v.id === "complete" || v.id === "test") && (
@@ -1323,7 +1312,7 @@ export default function Configurator() {
                                   <div className="text-lg font-bold text-green-400">
                                     {displayPrice} zł
                                   </div>
-                                  <div className="text-xs text-white/60">
+                                  <div className="text-sm text-white/60">
                                     {selectedSetType === '3d-with-rims' ? 'z rantami' : 'bez rantów'}
                                   </div>
                                 </div>
@@ -1342,15 +1331,15 @@ export default function Configurator() {
             {currentSection === 2 && (
               <div ref={(el) => { sectionRefs.current[2] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 <div>
-                  <h3 className="text-sm font-medium mb-3">Wybierz rodzaj komórek</h3>
+                  <h3 className="text-base font-medium mb-3">Wybierz rodzaj komórek</h3>
                   <RadioGroup value={selectedCellType} onValueChange={setSelectedCellType} className="space-y-3">
                     {cellTypes.map((c) => (
                       <Label key={c.id} htmlFor={`cell-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedCellType === c.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 active:bg-neutral-800 active:scale-[0.98] transition`}>
                         <RadioGroupItem value={c.id} id={`cell-${c.id}`} className="sr-only" />
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className="text-sm font-medium">{c.name}</div>
-                            <div className="text-xs text-white/60">{c.description}</div>
+                            <div className="text-base font-medium">{c.name}</div>
+                            <div className="text-sm text-white/60">{c.description}</div>
                           </div>
                           {/* W nowym systemie nie ma modyfikatorów cenowych za personalizację */}
                         </div>
@@ -1365,7 +1354,7 @@ export default function Configurator() {
             {currentSection === 4 && (
               <div ref={(el) => { sectionRefs.current[4] = el; }} className="flex-1 space-y-6 md:space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 <div>
-                  <h3 className="text-sm font-medium mb-3">Kolor dywaników</h3>
+                  <h3 className="text-base font-medium mb-3">Kolor dywaników</h3>
                   <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-6 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-7 gap-1 md:gap-3">
                     {availableMaterialColors.map((c) => (
                       <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden min-w-[28px] min-h-[28px] md:min-w-[48px] md:min-h-[48px]`}>
@@ -1396,7 +1385,7 @@ export default function Configurator() {
                 </div>
 
                 <div data-edge-color-section>
-                  <h3 className="text-sm font-medium mb-3">Kolor obszycia</h3>
+                  <h3 className="text-base font-medium mb-3">Kolor obszycia</h3>
                   <div className="grid grid-cols-6 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-7 gap-1 md:gap-3">
                     {availableEdgeColors.map((e) => (
                       <button
@@ -1419,7 +1408,7 @@ export default function Configurator() {
             {currentSection === 5 && (
               <div ref={(el) => { sectionRefs.current[5] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 <div>
-                  <h3 className="text-sm font-medium mb-3">Ochraniacz pod piętę</h3>
+                  <h3 className="text-base font-medium mb-3">Ochraniacz pod piętę</h3>
                   <RadioGroup value={selectedHeelPad} onValueChange={setSelectedHeelPad} className="grid grid-cols-2 gap-3">
                     {[
                       { id: "brak", name: "Brak" },
@@ -1427,7 +1416,7 @@ export default function Configurator() {
                     ].map((h) => (
                       <Label key={h.id} htmlFor={`heel-${h.id}`} className={`cursor-pointer rounded-xl border ${selectedHeelPad === h.id ? "border-white" : "border-neutral-800"} px-4 py-3 bg-neutral-900/50 hover:bg-neutral-900 active:bg-neutral-800 active:scale-[0.98] transition` }>
                         <RadioGroupItem value={h.id} id={`heel-${h.id}`} className="sr-only" />
-                        <span className="text-sm">{h.name}</span>
+                        <span className="text-base">{h.name}</span>
                       </Label>
                     ))}
                   </RadioGroup>
@@ -1440,7 +1429,7 @@ export default function Configurator() {
               <div ref={(el) => { sectionRefs.current[6] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 {/* Wybrane auto */}
                 <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
-                  <h3 className="text-sm font-medium mb-3 text-gray-300">Wybrane auto</h3>
+                  <h3 className="text-base font-medium mb-3 text-gray-300">Wybrane auto</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
                       <div className="relative w-16 h-16 bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
@@ -1470,7 +1459,7 @@ export default function Configurator() {
                             return brandMappings[brandName] || brandName;
                           })()} {selectedCarModel}
                         </div>
-                        <div className="text-sm text-gray-400">
+                        <div className="text-base text-gray-400">
                           {selectedCarYear} • {bodyTypes.find(bt => bt.id === selectedBodyType)?.name || "Nie wybrano"}
                         </div>
                       </div>
@@ -1479,11 +1468,11 @@ export default function Configurator() {
                 </div>
 
                 <div className="space-y-3">
-                  <div className="text-sm">
+                  <div className="text-base">
                     <div className="flex justify-between items-center mb-1">
                       <span className="text-white/70">Wybrana konfiguracja:</span>
                     </div>
-                    <div className="text-xs text-white/60 space-y-1">
+                    <div className="text-sm text-white/60 space-y-1">
                       <div>• {getVariantMatsDescription(selectedSetVariant)}</div>
                       <div>• {setType.name}</div>
                       <div>• {cellType.name}</div>
@@ -1493,7 +1482,7 @@ export default function Configurator() {
                   </div>
                   
                   {/* Breakdown ceny */}
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-2 text-base">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Zestaw ({setVariant.name})</span>
                       <span className="text-white">{priceBreakdown.basePrice} zł</span>
@@ -1532,28 +1521,28 @@ export default function Configurator() {
                     </div>
                   </div>
                 </div>
-                <p className="text-xs text-white/60">Finalna cena może się różnić w zależności od modelu auta.</p>
+                <p className="text-sm text-white/60">Finalna cena może się różnić w zależności od modelu auta.</p>
                 
                 {/* Szacowany czas dostawy */}
                 <div className="mt-6 p-3 bg-neutral-800/50 rounded-lg border border-neutral-700">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-xs text-white/80 font-medium">Szacowany czas dostawy</span>
+                    <span className="text-sm text-white/80 font-medium">Szacowany czas dostawy</span>
                   </div>
-                  <p className="text-xs text-white/60 mt-1 ml-4">
+                  <p className="text-sm text-white/60 mt-1 ml-4">
                     Szacowana data dostawy: <span className="text-green-400 font-medium">{deliveryDate}</span>
                   </p>
                 </div>
                 
                 {/* Uwagi do zamówienia */}
                 <div className="mt-4">
-                  <label htmlFor="order-notes" className="block text-xs text-white/70 mb-2">
+                  <label htmlFor="order-notes" className="block text-sm text-white/70 mb-2">
                     Uwagi do zamówienia (opcjonalnie)
                   </label>
                   <textarea
                     id="order-notes"
                     placeholder="Dodatkowe informacje, uwagi, specjalne życzenia..."
-                    className="w-full h-20 px-3 py-2 bg-neutral-800 border border-neutral-600 rounded-lg text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                    className="w-full h-20 px-3 py-2 bg-neutral-800 border border-neutral-600 rounded-lg text-white text-base placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
                   />
                 </div>
                 
@@ -1564,7 +1553,7 @@ export default function Configurator() {
                     id="privacy-agreement"
                     className="w-4 h-4 text-red-600 bg-neutral-800 border-neutral-600 rounded focus:ring-red-500 focus:ring-2"
                   />
-                  <label htmlFor="privacy-agreement" className="text-xs text-white/70 cursor-pointer">
+                  <label htmlFor="privacy-agreement" className="text-sm text-white/70 cursor-pointer">
                     Zgadzam się z polityką prywatności i regulaminem
                   </label>
                 </div>
@@ -1580,8 +1569,8 @@ export default function Configurator() {
                 disabled={currentSection === 0}
                 className="flex items-center gap-2 border-neutral-700 text-white hover:bg-neutral-800 active:bg-neutral-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] md:min-w-auto"
               >
-                <ChevronLeft className="h-4 w-4" />
-                <span className="hidden sm:inline">Wstecz</span>
+                <ChevronLeft className="h-5 w-5" />
+                <span className="hidden sm:inline text-base">Wstecz</span>
               </Button>
               
               
@@ -1589,7 +1578,7 @@ export default function Configurator() {
                 <Button
                   onClick={handleAddToCart}
                   disabled={isAddingToCart || cartLoading}
-                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 active:bg-red-800 active:scale-95 px-8 py-3 text-lg font-semibold min-w-[200px] min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 active:bg-red-800 active:scale-95 px-8 py-3 text-xl font-semibold min-w-[200px] min-h-[48px] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isAddingToCart || cartLoading ? (
                     <>
@@ -1609,8 +1598,8 @@ export default function Configurator() {
                   disabled={currentSection === 0 && (!selectedCarModel || !selectedBodyType)}
                   className="flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 active:bg-red-800 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] md:min-w-auto"
                 >
-                  <span className="hidden sm:inline">Dalej</span>
-                  <ChevronRight className="h-4 w-4" />
+                  <span className="hidden sm:inline text-base">Dalej</span>
+                  <ChevronRight className="h-5 w-5" />
                 </Button>
               )}
             </div>
