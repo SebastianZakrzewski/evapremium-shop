@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Brand } from "../../types/carousel";
 import { Car } from "lucide-react";
@@ -20,12 +21,14 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
   isClicked = false,
   isPriority = false
 }) => {
+  const router = useRouter();
+  
   const handleClick = () => {
     if (onClick) {
       onClick(brand);
     } else {
-      // Default behavior - redirect to configurator
-      window.location.href = `/konfigurator?brand=${encodeURIComponent(brand.name.toLowerCase())}`;
+      // Default behavior - redirect to brand products page
+      router.push(`/dywaniki/${brand.name.toLowerCase()}`);
     }
   };
 

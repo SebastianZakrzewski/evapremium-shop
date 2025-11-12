@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { BrandGridCard } from "./ui/BrandGridCard";
 import { Brand } from "../types/carousel";
@@ -53,6 +54,7 @@ const fallbackBrands: Brand[] = [
 ];
 
 export default function BrandSelectionGrid() {
+  const router = useRouter();
   const [clickedBrandId, setClickedBrandId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -85,10 +87,10 @@ export default function BrandSelectionGrid() {
     // Animacja kliknięcia - reset po 300ms
     setTimeout(() => {
       setClickedBrandId(null);
-      // Przekierowanie do konfiguratora z parametrem marki
-      window.location.href = `/konfigurator?brand=${encodeURIComponent(brand.name.toLowerCase())}`;
+      // Przekierowanie do strony z wyborem produktów dla danej marki
+      router.push(`/dywaniki/${brand.name.toLowerCase()}`);
     }, 300);
-  }, []);
+  }, [router]);
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
