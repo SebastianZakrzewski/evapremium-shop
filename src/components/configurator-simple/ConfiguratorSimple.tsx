@@ -216,6 +216,12 @@ export default function ConfiguratorSimple() {
     }
   };
 
+  // Sprawdź czy sticky preview powinien być widoczny (od kroku wyboru typu dywaników)
+  const shouldShowStickyPreview = activeStep >= 2;
+  
+  // Sprawdź czy mamy wszystkie dane do wyświetlenia pełnego podglądu
+  const hasFullPreview = config.structure && config.color && config.edgeColor;
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Progress Bar */}
@@ -231,7 +237,7 @@ export default function ConfiguratorSimple() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-20 pb-6 md:pb-8">
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-20 pb-6 md:pb-8 ${shouldShowStickyPreview ? 'lg:pb-6 md:pb-8 pb-[100px]' : ''}`}>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8">
           {/* Left Column - Configuration */}
           <div className="lg:col-span-3 space-y-4 md:space-y-5">
@@ -564,6 +570,94 @@ export default function ConfiguratorSimple() {
           </div>
         </div>
       </div>
+
+      {/* Sticky Preview Bar - Mobile Only */}
+      {shouldShowStickyPreview && (
+        <div 
+          className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-sm border-t border-neutral-800 shadow-lg"
+          style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+        >
+          <div className="px-4 py-3">
+            <div className="flex items-center gap-3">
+              {/* Mały obrazek podglądu */}
+              {hasFullPreview ? (
+                <div 
+                  onClick={() => setIsPreviewModalOpen(true)}
+                  className="relative w-16 h-16 flex-shrink-0 bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-lg overflow-hidden border-2 border-neutral-700 cursor-pointer"
+                >
+                  <Image
+                    key={`sticky-${config.matType}-${config.structure}-${config.color}-${config.edgeColor}`}
+                    src={matImagePath}
+                    alt={`Podgląd dywanika`}
+                    fill
+                    className="object-contain"
+                    sizes="64px"
+                    priority={false}
+                    loading="lazy"
+                  />
+                </div>
+              ) : (
+                <div className="relative w-16 h-16 flex-shrink-0 bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-lg overflow-hidden border-2 border-neutral-700 flex items-center justify-center">
+                  <div className="text-center text-gray-500">
+                    <p className="text-[10px] leading-tight">Wybierz opcje</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Informacje o konfiguracji */}
+              <div className="flex-1 min-w-0">
+                {hasFullPreview ? (
+                  <>
+                    <div className="flex items-center gap-2 mb-1">
+                      <div
+                        className="w-4 h-4 rounded border border-neutral-600 flex-shrink-0"
+                        style={{ backgroundColor: getColorInfo(config.color).color }}
+                      />
+                      <span className="text-xs text-gray-300 truncate">
+                        {getColorInfo(config.color).name}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-4 h-4 rounded border border-neutral-600 flex-shrink-0"
+                        style={{ backgroundColor: getColorInfo(config.edgeColor).color }}
+                      />
+                      <span className="text-xs text-gray-400 truncate">
+                        {getColorInfo(config.edgeColor).name}
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="space-y-1">
+                    <p className="text-xs text-gray-400">
+                      {config.matType ? (config.matType === '3d-with-rims' ? '3D z rantami' : 'Klasyczne') : 'Wybierz typ'}
+                    </p>
+                    {config.variant && (
+                      <p className="text-xs text-gray-500">
+                        {config.variant === 'front' ? 'Przód' : config.variant === 'basic' ? 'Podstawowy' : config.variant === 'premium' ? 'Premium' : 'Kompletny'}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Przycisk powiększ - tylko gdy mamy pełny podgląd */}
+              {hasFullPreview ? (
+                <button
+                  onClick={() => setIsPreviewModalOpen(true)}
+                  className="px-3 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-xs font-medium transition-colors duration-200 flex-shrink-0 min-h-[44px] flex items-center justify-center"
+                >
+                  Powiększ
+                </button>
+              ) : (
+                <div className="px-3 py-2 bg-neutral-800 rounded-lg text-xs font-medium flex-shrink-0 min-h-[44px] flex items-center justify-center text-gray-500">
+                  ...
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
