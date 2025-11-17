@@ -25,6 +25,7 @@ interface CartModalProps {
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
   const router = useRouter();
   const { 
+    cart,
     items, 
     total, 
     itemCount, 
@@ -156,12 +157,8 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
               {/* Podsumowanie */}
               <div className="space-y-2">
                 <div className="flex justify-between text-neutral-300">
-                  <span>Suma częściowa:</span>
-                  <span>{PricingService.formatPrice(total)}</span>
-                </div>
-                <div className="flex justify-between text-neutral-300">
-                  <span>Dostawa:</span>
-                  <span>Gratis</span>
+                  <span>Dywaniki:</span>
+                  <span>{PricingService.formatPrice(cart.subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-lg font-bold text-white border-t border-neutral-700 pt-2">
                   <span>Razem:</span>

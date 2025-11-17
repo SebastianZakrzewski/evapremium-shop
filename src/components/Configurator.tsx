@@ -1499,12 +1499,6 @@ export default function Configurator() {
                         <span className="text-white">{priceBreakdown.shippingCost} zł</span>
                       </div>
                     )}
-                    {priceBreakdown.shippingCost === 0 && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Wysyłka</span>
-                        <span className="text-green-400">Darmowa</span>
-                      </div>
-                    )}
                     <Separator className="my-2" />
                     <div className="flex justify-between text-lg font-bold">
                       <span>Razem</span>
