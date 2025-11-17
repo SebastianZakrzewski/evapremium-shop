@@ -100,12 +100,18 @@ export default function SearchDropdown() {
     setSelectedIndex(-1);
   }, [debouncedQuery]);
 
-  // Focus input gdy modal się otwiera
+  // Focus input gdy modal się otwiera (z opóźnieniem dla mobile)
   useEffect(() => {
     if (isModalOpen && inputRef.current) {
+      // Na mobile dajemy więcej czasu, aby klawiatura się otworzyła
+      const delay = window.innerWidth < 768 ? 300 : 100;
       setTimeout(() => {
         inputRef.current?.focus();
-      }, 100);
+        // Scroll do góry na mobile, aby uniknąć problemów z klawiaturą
+        if (window.innerWidth < 768) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, delay);
     }
   }, [isModalOpen]);
 
@@ -213,43 +219,43 @@ export default function SearchDropdown() {
         <>
           {/* Overlay */}
           <div
-            className="fixed inset-0 bg-black/70 z-[100] transition-opacity duration-300"
+            className="fixed inset-0 bg-black/85 md:bg-black/70 z-[100] transition-opacity duration-300"
             onClick={handleCloseModal}
           />
           
           {/* Modal */}
           <div className="
             fixed
-            top-4 left-4 right-4 bottom-4
+            top-0 left-0 right-0 bottom-0
             md:top-20 md:left-1/2 md:right-auto md:bottom-auto
             md:transform md:-translate-x-1/2
-            w-auto
-            max-w-2xl
-            bg-neutral-900/95 backdrop-blur-sm
-            border border-neutral-800
-            rounded-lg
-            shadow-lg shadow-red-500/10
+            w-full
+            md:w-auto md:max-w-2xl
+            bg-black md:bg-neutral-900/95
+            backdrop-blur-sm
+            border-0 md:border border-neutral-800
+            rounded-none md:rounded-lg
+            shadow-2xl md:shadow-lg shadow-red-500/20 md:shadow-red-500/10
             z-[101]
-            max-h-[calc(100vh-2rem)]
-            md:max-h-[calc(100vh-5rem)]
             flex flex-col
+            h-screen md:h-auto
           ">
             {/* Header */}
-            <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-700 flex-shrink-0">
-              <h2 className="text-lg sm:text-xl font-bold text-white">Wyszukiwanie</h2>
+            <div className="flex items-center justify-between p-4 sm:p-5 flex-shrink-0">
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Wyszukiwanie</h2>
               <button
                 onClick={handleCloseModal}
-                className="text-gray-400 hover:text-white transition-colors p-1"
+                className="text-gray-400 hover:text-white transition-colors p-2 -mr-2 touch-manipulation"
                 aria-label="Zamknij"
               >
-                <X className="w-5 h-5 sm:w-6 sm:h-6" />
+                <X className="w-6 h-6 sm:w-7 sm:h-7" />
               </button>
             </div>
 
             {/* Input wyszukiwania */}
-            <div className="p-3 sm:p-4 border-b border-gray-700 flex-shrink-0">
+            <div className="p-4 sm:p-5 flex-shrink-0">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 text-gray-400 z-10" />
                 <Input
                   ref={inputRef}
                   type="text"
@@ -258,39 +264,48 @@ export default function SearchDropdown() {
                   onChange={handleInputChange}
                   onKeyDown={handleKeyDown}
                   className="
-                    pl-10 pr-10
-                    h-11 sm:h-12
+                    pl-12 pr-12
+                    h-14 sm:h-12
                     w-full
-                    bg-gray-800/80 backdrop-blur-xl
-                    border-gray-700/50
-                    text-white text-sm sm:text-base
-                    placeholder:text-gray-400
-                    focus:border-red-500/70 focus:ring-2 focus:ring-red-500/30
+                    bg-gray-800 md:bg-gray-800/80 backdrop-blur-xl
+                    border-2 border-gray-600 md:border-gray-700/50
+                    text-white text-base sm:text-base
+                    placeholder:text-gray-400 md:placeholder:text-gray-400
+                    focus:border-red-500 focus:ring-2 focus:ring-red-500/50 md:focus:ring-red-500/30
                     rounded-lg
                     transition-all duration-300
+                    shadow-lg md:shadow-none
                   "
                   aria-label="Wyszukaj marki, modele lub produkty"
                   aria-expanded={debouncedQuery.trim().length > 0}
                   aria-haspopup="listbox"
+                  autoComplete="off"
                 />
                 {query && (
                   <button
                     onClick={clearSearch}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors z-10"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors z-10 p-1 touch-manipulation"
                     aria-label="Wyczyść wyszukiwanie"
                   >
-                    <X className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <X className="w-5 h-5 sm:w-6 sm:h-6" />
                   </button>
                 )}
               </div>
             </div>
 
             {/* Dropdown z wynikami */}
-            <div className="flex-1 overflow-y-auto min-h-0">
+            <div 
+              className="flex-1 overflow-y-auto overscroll-contain"
+              style={{ 
+                maxHeight: 'calc(100vh - 200px)',
+                minHeight: 0,
+                WebkitOverflowScrolling: 'touch'
+              }}
+            >
               {debouncedQuery.trim() ? (
                 <div
                   ref={dropdownRef}
-                  className="p-2 sm:p-3"
+                  className="p-3 sm:p-4"
                   role="listbox"
                 >
                   {isLoading && (
@@ -326,21 +341,21 @@ export default function SearchDropdown() {
                                 key={brand.id}
                                 onClick={() => handleResultClick({ type: 'brand', data: brand })}
                                 className={`
-                                  w-full flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-2 rounded-lg mb-1
-                                  transition-colors text-left
+                                  w-full flex items-center gap-3 px-4 py-3 sm:py-2 rounded-lg mb-1
+                                  transition-colors text-left touch-manipulation
                                   ${selectedIndex === flatIndex 
                                     ? 'bg-red-500/20 text-white' 
-                                    : 'hover:bg-gray-800/50 text-gray-300 hover:text-white'
+                                    : 'active:bg-gray-800/50 hover:bg-gray-800/50 text-gray-300 hover:text-white'
                                   }
                                 `}
                                 role="option"
                                 aria-selected={selectedIndex === flatIndex}
                               >
-                                <Car className="w-4 h-4 text-red-500 flex-shrink-0" />
+                                <Car className="w-5 h-5 sm:w-4 sm:h-4 text-red-500 flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
-                                  <div className="font-medium truncate text-sm sm:text-base">{brand.name}</div>
+                                  <div className="font-medium truncate text-base sm:text-base">{brand.name}</div>
                                   {brand.description && (
-                                    <div className="text-xs text-gray-400 truncate">{brand.description}</div>
+                                    <div className="text-sm sm:text-xs text-gray-400 truncate mt-0.5">{brand.description}</div>
                                   )}
                                 </div>
                               </button>
@@ -362,23 +377,23 @@ export default function SearchDropdown() {
                                 key={`${model.brand}-${model.model}`}
                                 onClick={() => handleResultClick({ type: 'model', data: model })}
                                 className={`
-                                  w-full flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-2 rounded-lg mb-1
-                                  transition-colors text-left
+                                  w-full flex items-center gap-3 px-4 py-3 sm:py-2 rounded-lg mb-1
+                                  transition-colors text-left touch-manipulation
                                   ${selectedIndex === flatIndex 
                                     ? 'bg-red-500/20 text-white' 
-                                    : 'hover:bg-gray-800/50 text-gray-300 hover:text-white'
+                                    : 'active:bg-gray-800/50 hover:bg-gray-800/50 text-gray-300 hover:text-white'
                                   }
                                 `}
                                 role="option"
                                 aria-selected={selectedIndex === flatIndex}
                               >
-                                <Car className="w-4 h-4 text-red-500 flex-shrink-0" />
+                                <Car className="w-5 h-5 sm:w-4 sm:h-4 text-red-500 flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
-                                  <div className="font-medium truncate text-sm sm:text-base">
+                                  <div className="font-medium truncate text-base sm:text-base">
                                     {model.brand} {model.model}
                                   </div>
                                   {model.bodyTypes.length > 0 && (
-                                    <div className="text-xs text-gray-400 truncate">
+                                    <div className="text-sm sm:text-xs text-gray-400 truncate mt-0.5">
                                       {model.bodyTypes.slice(0, 2).join(', ')}
                                       {model.bodyTypes.length > 2 && '...'}
                                     </div>
@@ -392,8 +407,8 @@ export default function SearchDropdown() {
 
                       {/* Produkty */}
                       {results.products.length > 0 && (
-                        <div className="px-2 sm:px-3 py-1 sm:py-2 border-t border-gray-700/50">
-                          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                        <div className="px-3 sm:px-4 py-2 sm:py-2 border-t border-gray-700/50">
+                          <div className="text-xs sm:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                             Produkty ({results.products.length})
                           </div>
                           {results.products.map((product, index) => {
@@ -403,23 +418,23 @@ export default function SearchDropdown() {
                                 key={product.id}
                                 onClick={() => handleResultClick({ type: 'product', data: product })}
                                 className={`
-                                  w-full flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-2 rounded-lg mb-1
-                                  transition-colors text-left
+                                  w-full flex items-center gap-3 px-4 py-3 sm:py-2 rounded-lg mb-1
+                                  transition-colors text-left touch-manipulation
                                   ${selectedIndex === flatIndex 
                                     ? 'bg-red-500/20 text-white' 
-                                    : 'hover:bg-gray-800/50 text-gray-300 hover:text-white'
+                                    : 'active:bg-gray-800/50 hover:bg-gray-800/50 text-gray-300 hover:text-white'
                                   }
                                 `}
                                 role="option"
                                 aria-selected={selectedIndex === flatIndex}
                               >
-                                <Car className="w-4 h-4 text-red-500 flex-shrink-0" />
+                                <Car className="w-5 h-5 sm:w-4 sm:h-4 text-red-500 flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
-                                  <div className="font-medium truncate text-sm sm:text-base">
+                                  <div className="font-medium truncate text-base sm:text-base">
                                     {product.carBrandSlug} {product.carModelSlug}
                                   </div>
                                   {product.generation && (
-                                    <div className="text-xs text-gray-400 truncate">
+                                    <div className="text-sm sm:text-xs text-gray-400 truncate mt-0.5">
                                       {product.generation}
                                       {product.bodyType && ` • ${product.bodyType}`}
                                     </div>
@@ -434,9 +449,9 @@ export default function SearchDropdown() {
                   )}
                 </div>
               ) : (
-                <div className="p-6 sm:p-8 text-center text-gray-400">
-                  <Search className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 opacity-50" />
-                  <p className="text-xs sm:text-sm px-4">Wpisz frazę wyszukiwania, aby znaleźć marki, modele lub produkty</p>
+                <div className="p-8 sm:p-12 text-center text-gray-400">
+                  <Search className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 opacity-50" />
+                  <p className="text-sm sm:text-base px-4">Wpisz frazę wyszukiwania, aby znaleźć marki, modele lub produkty</p>
                 </div>
               )}
             </div>
