@@ -124,7 +124,7 @@ export function SummaryStep({
             <span className="font-semibold">{priceBreakdown.basePrice.toFixed(2)} zł</span>
           </div>
           {priceBreakdown.discount > 0 && (
-            <div className="flex justify-between text-green-400 text-sm">
+            <div className="flex justify-between text-red-400 text-sm">
               <span>Rabat:</span>
               <span className="font-bold">-{priceBreakdown.discount.toFixed(2)} zł</span>
             </div>

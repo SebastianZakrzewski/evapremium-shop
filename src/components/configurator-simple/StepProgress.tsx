@@ -32,7 +32,7 @@ export function StepProgress({ currentStep, totalSteps, onStepClick, isValid }: 
                 ${isCurrent 
                   ? 'bg-red-600 text-white scale-105 shadow-md shadow-red-600/30 ring-2 ring-red-500/50' 
                   : isCompleted 
-                  ? 'bg-green-600 text-white shadow-sm shadow-green-600/20 hover:scale-105' 
+                  ? 'bg-red-600 text-white shadow-sm shadow-red-600/20 hover:scale-105' 
                   : 'bg-neutral-800 text-gray-400 border border-neutral-700'
                 }
                 ${isClickable ? 'cursor-pointer hover:scale-105 active:scale-95' : 'cursor-not-allowed'}
@@ -45,7 +45,7 @@ export function StepProgress({ currentStep, totalSteps, onStepClick, isValid }: 
                 className={`
                   flex-1 h-1 mx-2 md:mx-3 rounded-full
                   transition-all duration-300
-                  ${isCompleted ? 'bg-green-600 shadow-sm shadow-green-600/20' : 'bg-neutral-700'}
+                  ${isCompleted ? 'bg-red-600 shadow-sm shadow-red-600/20' : 'bg-neutral-700'}
                 `}
               />
             )}

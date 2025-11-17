@@ -45,6 +45,7 @@ type SetType = {
   name: string;
   description: string;
   priceModifier: number;
+  image: string;
 };
 
 type CellType = {
@@ -80,8 +81,8 @@ const PRICING = {
 };
 
 const setTypes: SetType[] = [
-  { id: "3d-with-rims", name: "3D z rantami", description: "Dywaniki 3D z wysokimi rantami", priceModifier: 0 },
-  { id: "classic", name: "3D bez rantów", description: "Dywaniki standardowe", priceModifier: -40 },
+  { id: "3d-with-rims", name: "3D z rantami", description: "Dywaniki 3D z wysokimi rantami", priceModifier: 0, image: "/images/zalety/dywanik_z_rantami.png" },
+  { id: "classic", name: "3D bez rantów", description: "Dywaniki standardowe", priceModifier: -40, image: "/images/konfigurator/dywaniki/klasyczne/romby/romby czarne/5os-classic-diamonds-black-black.webp" },
 ];
 
 const cellTypes: CellType[] = [
@@ -494,22 +495,30 @@ export default function ConfiguratorNew() {
               <RadioGroup value={selectedMatType} onValueChange={setSelectedMatType}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {availableSetTypes.map((type) => (
-                    <div key={type.id} className="border rounded-lg p-4 hover:bg-gray-50">
+                    <Label
+                      key={type.id}
+                      htmlFor={type.id}
+                      className={`flex items-center justify-between border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                        selectedMatType === type.id
+                          ? 'border-blue-500 bg-blue-50 shadow-md'
+                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
                       <div className="flex items-center space-x-3">
                         <RadioGroupItem value={type.id} id={type.id} />
-                        <div className="flex-1">
-                          <Label htmlFor={type.id} className="text-lg font-semibold">
+                        <div>
+                          <div className="text-lg font-semibold text-gray-900">
                             {type.name}
-                          </Label>
+                          </div>
                           <p className="text-gray-600 text-sm">{type.description}</p>
                         </div>
-                        <div className="text-right">
-                          <span className="text-lg font-bold text-green-600">
-                            {type.priceModifier >= 0 ? '+' : ''}{type.priceModifier} zł
-                          </span>
-                        </div>
                       </div>
-                    </div>
+                      <div className="text-right">
+                        <span className="text-lg font-bold text-green-600">
+                          {type.priceModifier >= 0 ? '+' : ''}{type.priceModifier} zł
+                        </span>
+                      </div>
+                    </Label>
                   ))}
                 </div>
               </RadioGroup>

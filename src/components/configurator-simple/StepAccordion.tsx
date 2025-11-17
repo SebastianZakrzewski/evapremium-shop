@@ -41,7 +41,7 @@ export function StepAccordion({
               w-8 h-8 md:w-9 md:h-9 rounded-full
               transition-all duration-300
               ${isValid 
-                ? 'bg-green-600 text-white shadow-md shadow-green-600/20' 
+                ? 'bg-red-600 text-white shadow-md shadow-red-600/20' 
                 : isOpen 
                 ? 'bg-red-600 text-white shadow-md shadow-red-600/20' 
                 : 'bg-neutral-800 text-gray-400 border border-neutral-700'

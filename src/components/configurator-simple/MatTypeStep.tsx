@@ -18,13 +18,11 @@ const matTypes = [
     id: "3d-with-rims" as const,
     name: "3D z rantami",
     description: "Dywaniki 3D z wysokimi rantami chroniącymi przed brudem",
-    image: "/images/mats/3d-with-rims.jpg",
   },
   {
     id: "classic" as const,
     name: "3D bez rantów",
     description: "Dywaniki standardowe bez wysokich rantów",
-    image: "/images/mats/classic.jpg",
   },
 ];
 
@@ -44,14 +42,9 @@ export function MatTypeStep({ config, onUpdate, onNext, onPrevious }: MatTypeSte
               }
             `}
           >
-            <div className="space-y-3">
-              <div>
-                <h3 className="text-lg md:text-xl font-semibold mb-1.5 leading-tight">{type.name}</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">{type.description}</p>
-              </div>
-              <div className="aspect-video bg-gradient-to-br from-neutral-700 to-neutral-800 rounded-lg flex items-center justify-center border border-neutral-700">
-                <span className="text-gray-400 text-sm">Podgląd</span>
-              </div>
+            <div>
+              <h3 className="text-lg md:text-xl font-semibold mb-1.5 leading-tight">{type.name}</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">{type.description}</p>
             </div>
           </Card>
         ))}
