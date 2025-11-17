@@ -2,8 +2,11 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { useCart } from "@/hooks/useCart.new";
 import { PricingService } from "@/lib/services/PricingService";
+import { getMatImagePath } from "@/lib/image-mapping";
+import { getColorInfo } from "@/lib/color-mapping";
 import { StepProgress } from "./StepProgress";
 import { StepAccordion } from "./StepAccordion";
 import { CarSelectionStep } from "./CarSelectionStep";
@@ -41,6 +44,12 @@ export interface ConfiguratorState {
 
 const TOTAL_STEPS = 8;
 
+// Mapowanie ID na typy dla funkcji getMatImagePath
+const getMatTypeForImage = (setTypeId: string): '3d' | 'classic' => {
+  if (setTypeId === 'classic') return 'classic';
+  return '3d'; // dla '3d-with-rims'
+};
+
 export default function ConfiguratorSimple() {
   const searchParams = useSearchParams();
   const { addToCart, isLoading: cartLoading } = useCart();
@@ -69,6 +78,21 @@ export default function ConfiguratorSimple() {
   const priceBreakdown = useMemo(() => {
     return PricingService.calculateConfiguratorPrice(config.matType, config.variant);
   }, [config.matType, config.variant]);
+
+  // Generuj ścieżkę do obrazu dywanika na podstawie konfiguracji
+  const matImagePath = useMemo(() => {
+    if (!config.structure || !config.color || !config.edgeColor) {
+      return '/dywaniki/3d/diamonds/black/5os-3d-diamonds-black-black.webp'; // Fallback
+    }
+    
+    const matType = getMatTypeForImage(config.matType);
+    return getMatImagePath(
+      matType,
+      config.structure,
+      config.color,
+      config.edgeColor
+    );
+  }, [config.matType, config.structure, config.color, config.edgeColor]);
 
   // Zapisz konfigurację do localStorage
   useEffect(() => {
@@ -363,14 +387,70 @@ export default function ConfiguratorSimple() {
               {/* Product Visualization */}
               <div className="bg-neutral-900 rounded-lg p-6 border border-neutral-800">
                 <h3 className="text-xl font-bold mb-4">Podgląd</h3>
-                <div className="aspect-square bg-neutral-800 rounded-lg flex items-center justify-center">
-                  <div className="text-center text-gray-400">
-                    <p className="text-sm">Wizualizacja produktu</p>
-                    <p className="text-xs mt-2">
-                      {config.brand} {config.model}
-                    </p>
-                  </div>
+                <div className="relative aspect-square bg-neutral-950 rounded-lg overflow-hidden border border-neutral-700">
+                  {config.structure && config.color && config.edgeColor ? (
+                    <>
+                      <Image
+                        key={`${config.matType}-${config.structure}-${config.color}-${config.edgeColor}`}
+                        src={matImagePath}
+                        alt={`Dywanik ${getColorInfo(config.color).name} z obszyciem ${getColorInfo(config.edgeColor).name}`}
+                        fill
+                        className="object-contain transition-opacity duration-500"
+                        sizes="(max-width: 1024px) 100vw, 33vw"
+                        priority={false}
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const fallback = target.nextElementSibling as HTMLElement;
+                          if (fallback) fallback.style.display = 'flex';
+                        }}
+                      />
+                      {/* Fallback z kolorami */}
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-4" style={{ display: 'none' }}>
+                        <div className="text-6xl">🚗</div>
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-center gap-3">
+                            <span 
+                              className="inline-block h-6 w-6 rounded-full border-2 shadow-lg" 
+                              style={{ 
+                                backgroundColor: getColorInfo(config.color).color,
+                                borderColor: getColorInfo(config.color).color === '#ffffff' || getColorInfo(config.color).color === '#d9d7c7' || getColorInfo(config.color).color === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
+                              }} 
+                            />
+                            <span className="text-sm font-medium text-white">Kolor: {getColorInfo(config.color).name}</span>
+                          </div>
+                          <div className="flex items-center justify-center gap-3">
+                            <span 
+                              className="inline-block h-6 w-6 rounded-full border-2 shadow-lg" 
+                              style={{ 
+                                backgroundColor: getColorInfo(config.edgeColor).color,
+                                borderColor: getColorInfo(config.edgeColor).color === '#ffffff' || getColorInfo(config.edgeColor).color === '#d9d7c7' || getColorInfo(config.edgeColor).color === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
+                              }} 
+                            />
+                            <span className="text-sm font-medium text-white">Obszycie: {getColorInfo(config.edgeColor).name}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center text-gray-400">
+                        <p className="text-sm">Wybierz opcje, aby zobaczyć podgląd</p>
+                        {config.brand && config.model && (
+                          <p className="text-xs mt-2">
+                            {config.brand} {config.model}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
+                {config.structure && config.color && config.edgeColor && (
+                  <p className="mt-3 text-xs text-gray-400 text-center">
+                    Wizualizacja poglądowa. Docelowy kształt dopasujemy do Twojego auta.
+                  </p>
+                )}
               </div>
 
               {/* Price Summary */}
