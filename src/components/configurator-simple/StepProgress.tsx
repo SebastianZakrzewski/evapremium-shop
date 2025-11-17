@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Check } from "lucide-react";
 
 interface StepProgressProps {
   currentStep: number;
@@ -12,7 +11,7 @@ interface StepProgressProps {
 
 export function StepProgress({ currentStep, totalSteps, onStepClick, isValid }: StepProgressProps) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between gap-2">
       {Array.from({ length: totalSteps }, (_, i) => {
         const step = i + 1;
         const isCompleted = step < currentStep;
@@ -27,29 +26,26 @@ export function StepProgress({ currentStep, totalSteps, onStepClick, isValid }: 
               disabled={!isClickable}
               className={`
                 flex items-center justify-center
-                w-10 h-10 rounded-full
-                transition-all duration-200
+                w-10 h-10 md:w-11 md:h-11 rounded-full
+                transition-all duration-300
+                min-w-[40px] min-h-[40px]
                 ${isCurrent 
-                  ? 'bg-red-600 text-white scale-110' 
+                  ? 'bg-red-600 text-white scale-105 shadow-md shadow-red-600/30 ring-2 ring-red-500/50' 
                   : isCompleted 
-                  ? 'bg-green-600 text-white' 
+                  ? 'bg-green-600 text-white shadow-sm shadow-green-600/20 hover:scale-105' 
                   : 'bg-neutral-800 text-gray-400 border border-neutral-700'
                 }
-                ${isClickable ? 'cursor-pointer hover:scale-105' : 'cursor-not-allowed'}
+                ${isClickable ? 'cursor-pointer hover:scale-105 active:scale-95' : 'cursor-not-allowed'}
               `}
             >
-              {isCompleted ? (
-                <Check className="w-5 h-5" />
-              ) : (
-                <span className="text-sm font-semibold">{step}</span>
-              )}
+              <span className="text-sm md:text-base font-bold">{step}</span>
             </button>
             {step < totalSteps && (
               <div
                 className={`
-                  flex-1 h-0.5 mx-2
-                  transition-colors duration-200
-                  ${isCompleted ? 'bg-green-600' : 'bg-neutral-700'}
+                  flex-1 h-1 mx-2 md:mx-3 rounded-full
+                  transition-all duration-300
+                  ${isCompleted ? 'bg-green-600 shadow-sm shadow-green-600/20' : 'bg-neutral-700'}
                 `}
               />
             )}

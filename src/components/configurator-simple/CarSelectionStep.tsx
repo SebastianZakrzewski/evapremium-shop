@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Loader2 } from "lucide-react";
 import { Brand } from "@/types/carousel";
 import { getAvailableModels, getYearsForModel, getBodyTypesForModel, getBodyTypesForYear } from "@/data/car-model-years.utils";
 
@@ -138,14 +137,14 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
     <div className="space-y-6">
       {/* Marka */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-200 mb-2">
           Marka *
         </label>
         <div className="relative">
           <select
             value={config.brand}
             onChange={(e) => onUpdate({ brand: e.target.value, model: '', year: '', bodyType: '' })}
-            className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+            className="w-full px-4 py-2.5 min-h-[40px] bg-neutral-800 border border-neutral-700 rounded-lg text-white text-sm appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200"
             disabled={brandsLoading}
           >
             <option value="">Wybierz markę</option>
@@ -157,9 +156,9 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
           </select>
           <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
             {brandsLoading ? (
-              <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
+              <span className="text-gray-400 text-sm">...</span>
             ) : (
-              <ChevronDown className="w-5 h-5 text-gray-400" />
+              <span className="text-gray-400">▼</span>
             )}
           </div>
         </div>
@@ -167,7 +166,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
 
       {/* Model */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-200 mb-2">
           Model *
         </label>
         <div className="relative">
@@ -175,7 +174,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
             value={config.model}
             onChange={(e) => onUpdate({ model: e.target.value, year: '', bodyType: '' })}
             disabled={!config.brand || availableModels.length === 0}
-            className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-3 md:py-4 min-h-[44px] bg-neutral-800 border border-neutral-700 rounded-lg text-white text-base appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             <option value="">
               {!config.brand 
@@ -191,14 +190,14 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
             ))}
           </select>
           <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-            <ChevronDown className="w-5 h-5 text-gray-400" />
+            <span className="text-gray-400">▼</span>
           </div>
         </div>
       </div>
 
       {/* Rok produkcji */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-200 mb-2">
           Rok produkcji *
         </label>
         <div className="relative">
@@ -206,7 +205,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
             value={config.year}
             onChange={(e) => onUpdate({ year: e.target.value, bodyType: '' })}
             disabled={!config.model || availableYears.length === 0}
-            className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-3 md:py-4 min-h-[44px] bg-neutral-800 border border-neutral-700 rounded-lg text-white text-base appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             <option value="">
               {!config.model 
@@ -222,14 +221,14 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
             ))}
           </select>
           <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-            <ChevronDown className="w-5 h-5 text-gray-400" />
+            <span className="text-gray-400">▼</span>
           </div>
         </div>
       </div>
 
       {/* Typ nadwozia */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-200 mb-2">
           Typ nadwozia *
         </label>
         <div className="relative">
@@ -237,7 +236,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
             value={config.bodyType}
             onChange={(e) => onUpdate({ bodyType: e.target.value })}
             disabled={!config.year || availableBodyTypes.length === 0}
-            className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-3 md:py-4 min-h-[44px] bg-neutral-800 border border-neutral-700 rounded-lg text-white text-base appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             <option value="">
               {!config.year 
@@ -253,7 +252,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
             ))}
           </select>
           <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-            <ChevronDown className="w-5 h-5 text-gray-400" />
+            <span className="text-gray-400">▼</span>
           </div>
         </div>
       </div>
@@ -263,7 +262,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
         <Button
           onClick={onNext}
           disabled={!isStepComplete}
-          className="px-8 py-3 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-2.5 min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30"
         >
           Dalej
         </Button>

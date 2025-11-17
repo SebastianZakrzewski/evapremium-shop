@@ -57,7 +57,7 @@ export function ColorPicker({ type, config, onUpdate, onNext, onPrevious }: Colo
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-3 md:gap-4">
         {availableColors.map((colorKey) => {
           const colorInfo = getColorInfo(colorKey);
           const isSelected = selectedColor === colorKey;
@@ -67,10 +67,10 @@ export function ColorPicker({ type, config, onUpdate, onNext, onPrevious }: Colo
               key={colorKey}
               onClick={() => handleColorSelect(colorKey)}
               className={`
-                aspect-square rounded-lg border-2 transition-all duration-200
+                aspect-square rounded-lg border-2 transition-all duration-300 min-w-[36px] min-h-[36px]
                 ${isSelected
-                  ? 'border-red-500 ring-2 ring-red-500/20 scale-105'
-                  : 'border-neutral-700 hover:border-neutral-600'
+                  ? 'border-red-500 ring-2 ring-red-500/30 scale-105 shadow-md shadow-red-500/20'
+                  : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
                 }
               `}
               style={{
@@ -80,10 +80,8 @@ export function ColorPicker({ type, config, onUpdate, onNext, onPrevious }: Colo
             >
               {isSelected && (
                 <div className="w-full h-full flex items-center justify-center">
-                  <div className="w-6 h-6 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
+                  <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-white/25 backdrop-blur-sm flex items-center justify-center shadow-md">
+                    <span className="text-white text-xs md:text-sm font-bold">✓</span>
                   </div>
                 </div>
               )}
@@ -93,34 +91,34 @@ export function ColorPicker({ type, config, onUpdate, onNext, onPrevious }: Colo
       </div>
 
       {selectedColor && (
-        <div className="p-4 bg-neutral-800 rounded-lg border border-neutral-700">
+        <div className="p-4 bg-neutral-800 rounded-lg border border-neutral-700 shadow-sm">
           <div className="flex items-center gap-3">
             <div
-              className="w-12 h-12 rounded-lg border border-neutral-700"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-lg border-2 border-neutral-600 shadow-sm"
               style={{ backgroundColor: getColorInfo(selectedColor).color }}
             />
             <div>
-              <p className="text-sm text-gray-400">
+              <p className="text-xs md:text-sm text-gray-400 mb-0.5">
                 {type === "mat" ? "Wybrany kolor dywaników" : "Wybrany kolor obszycia"}
               </p>
-              <p className="text-lg font-semibold">{getColorInfo(selectedColor).name}</p>
+              <p className="text-base md:text-lg font-semibold text-white">{getColorInfo(selectedColor).name}</p>
             </div>
           </div>
         </div>
       )}
 
-      <div className="flex gap-4 justify-end pt-4">
+      <div className="flex flex-col sm:flex-row gap-3 justify-end pt-4">
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="px-6 py-3 border-neutral-700 hover:bg-neutral-800"
+          className="px-6 py-2.5 min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200"
         >
           Wstecz
         </Button>
         <Button
           onClick={onNext}
           disabled={!isStepComplete}
-          className="px-6 py-3 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-2.5 min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30"
         >
           Dalej
         </Button>

@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart.new";
 import { PricingService } from "@/lib/services/PricingService";
 import { getMatImagePath } from "@/lib/image-mapping";
@@ -13,7 +14,7 @@ import { CarSelectionStep } from "./CarSelectionStep";
 import { MatTypeStep } from "./MatTypeStep";
 import { VariantStep } from "./VariantStep";
 import { StructureStep } from "./StructureStep";
-import { ColorPicker } from "./ColorPicker";
+import { CombinedColorPicker } from "./CombinedColorPicker";
 import { SummaryStep } from "./SummaryStep";
 
 export interface ConfiguratorState {
@@ -42,7 +43,7 @@ export interface ConfiguratorState {
   heelPad: boolean;
 }
 
-const TOTAL_STEPS = 8;
+const TOTAL_STEPS = 7;
 
 // Mapowanie ID na typy dla funkcji getMatImagePath
 const getMatTypeForImage = (setTypeId: string): '3d' | 'classic' => {
@@ -73,6 +74,9 @@ export default function ConfiguratorSimple() {
   
   // Stan dodawania do koszyka
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+
+  // Stan modala z podglądem
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   // Oblicz cenę na podstawie konfiguracji
   const priceBreakdown = useMemo(() => {
@@ -129,13 +133,11 @@ export default function ConfiguratorSimple() {
       case 4:
         return !!config.structure;
       case 5:
-        return !!config.color;
+        return !!(config.color && config.edgeColor);
       case 6:
-        return !!config.edgeColor;
-      case 7:
         return true; // Heel pad jest opcjonalny
-      case 8:
-        return isStepValid(1) && isStepValid(2) && isStepValid(3) && isStepValid(4) && isStepValid(5) && isStepValid(6);
+      case 7:
+        return isStepValid(1) && isStepValid(2) && isStepValid(3) && isStepValid(4) && isStepValid(5);
       default:
         return false;
     }
@@ -162,9 +164,20 @@ export default function ConfiguratorSimple() {
     }
   };
 
+  // Zamknij modal ESC
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isPreviewModalOpen) {
+        setIsPreviewModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isPreviewModalOpen]);
+
   // Dodaj do koszyka
   const handleAddToCart = async () => {
-    if (!isStepValid(8)) {
+    if (!isStepValid(7)) {
       return;
     }
 
@@ -218,10 +231,10 @@ export default function ConfiguratorSimple() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-20 pb-6 md:pb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8">
           {/* Left Column - Configuration */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-3 space-y-4 md:space-y-5">
             {/* Step 1: Wybór samochodu */}
             <StepAccordion
               step={1}
@@ -289,17 +302,16 @@ export default function ConfiguratorSimple() {
               />
             </StepAccordion>
 
-            {/* Step 5: Kolor dywaników */}
+            {/* Step 5: Kolory */}
             <StepAccordion
               step={5}
-              title="Kolor dywaników"
+              title="Kolory materiału i obszycia"
               isOpen={activeStep === 5}
               onToggle={() => goToStep(5)}
               isValid={isStepValid(5)}
               disabled={!isStepValid(4)}
             >
-              <ColorPicker
-                type="mat"
+              <CombinedColorPicker
                 config={config}
                 onUpdate={updateConfig}
                 onNext={goToNextStep}
@@ -307,32 +319,14 @@ export default function ConfiguratorSimple() {
               />
             </StepAccordion>
 
-            {/* Step 6: Kolor obszycia */}
+            {/* Step 6: Dodatki */}
             <StepAccordion
               step={6}
-              title="Kolor obszycia"
+              title="Dodatki"
               isOpen={activeStep === 6}
               onToggle={() => goToStep(6)}
               isValid={isStepValid(6)}
               disabled={!isStepValid(5)}
-            >
-              <ColorPicker
-                type="edge"
-                config={config}
-                onUpdate={updateConfig}
-                onNext={goToNextStep}
-                onPrevious={goToPreviousStep}
-              />
-            </StepAccordion>
-
-            {/* Step 7: Dodatki */}
-            <StepAccordion
-              step={7}
-              title="Dodatki"
-              isOpen={activeStep === 7}
-              onToggle={() => goToStep(7)}
-              isValid={isStepValid(7)}
-              disabled={!isStepValid(6)}
             >
               <div className="space-y-4">
                 <label className="flex items-center space-x-3 cursor-pointer">
@@ -342,34 +336,35 @@ export default function ConfiguratorSimple() {
                     onChange={(e) => updateConfig({ heelPad: e.target.checked })}
                     className="w-5 h-5 rounded border-gray-600 bg-neutral-800 text-red-500 focus:ring-red-500"
                   />
-                  <span className="text-lg">Podkładka pod piętę</span>
+                  <span className="text-sm md:text-base">Podkładka pod piętę</span>
                 </label>
-                <div className="flex gap-4">
-                  <button
+                <div className="flex flex-col sm:flex-row gap-3 justify-end pt-4">
+                  <Button
                     onClick={goToPreviousStep}
-                    className="px-6 py-3 border border-neutral-700 rounded-lg hover:bg-neutral-800 transition-colors"
+                    variant="outline"
+                    className="px-6 py-2.5 min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200"
                   >
                     Wstecz
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={goToNextStep}
-                    disabled={!isStepValid(7)}
-                    className="px-6 py-3 bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={!isStepValid(6)}
+                    className="px-6 py-2.5 min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30"
                   >
                     Dalej
-                  </button>
+                  </Button>
                 </div>
               </div>
             </StepAccordion>
 
-            {/* Step 8: Podsumowanie */}
+            {/* Step 7: Podsumowanie */}
             <StepAccordion
-              step={8}
+              step={7}
               title="Podsumowanie"
-              isOpen={activeStep === 8}
-              onToggle={() => goToStep(8)}
-              isValid={isStepValid(8)}
-              disabled={!isStepValid(7)}
+              isOpen={activeStep === 7}
+              onToggle={() => goToStep(7)}
+              isValid={isStepValid(7)}
+              disabled={!isStepValid(6)}
             >
               <SummaryStep
                 config={config}
@@ -382,12 +377,25 @@ export default function ConfiguratorSimple() {
           </div>
 
           {/* Right Column - Visualization & Summary */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-6">
+          <div className="lg:col-span-2">
+            <div className="sticky top-24 space-y-5 md:space-y-6">
               {/* Product Visualization */}
-              <div className="bg-neutral-900 rounded-lg p-6 border border-neutral-800">
-                <h3 className="text-xl font-bold mb-4">Podgląd</h3>
-                <div className="relative aspect-square bg-neutral-950 rounded-lg overflow-hidden border border-neutral-700">
+              <div className="relative bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-lg p-4 md:p-5 border border-neutral-800 shadow-md">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg md:text-xl font-semibold leading-tight">Podgląd</h3>
+                  {config.structure && config.color && config.edgeColor && (
+                    <button
+                      onClick={() => setIsPreviewModalOpen(true)}
+                      className="text-xs text-gray-400 hover:text-white transition-colors underline"
+                    >
+                      Powiększ
+                    </button>
+                  )}
+                </div>
+                <div 
+                  onClick={() => config.structure && config.color && config.edgeColor && setIsPreviewModalOpen(true)}
+                  className="relative aspect-square bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-lg overflow-hidden border-2 border-neutral-700 shadow-xl cursor-pointer hover:border-red-500/50 transition-colors duration-300"
+                >
                   {config.structure && config.color && config.edgeColor ? (
                     <>
                       <Image
@@ -447,34 +455,105 @@ export default function ConfiguratorSimple() {
                   )}
                 </div>
                 {config.structure && config.color && config.edgeColor && (
-                  <p className="mt-3 text-xs text-gray-400 text-center">
+                  <p className="mt-3 text-xs text-gray-400 text-center leading-relaxed">
                     Wizualizacja poglądowa. Docelowy kształt dopasujemy do Twojego auta.
                   </p>
                 )}
               </div>
 
+              {/* Modal z powiększonym podglądem */}
+              {isPreviewModalOpen && config.structure && config.color && config.edgeColor && (
+                <div 
+                  className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+                  onClick={() => setIsPreviewModalOpen(false)}
+                >
+                  {/* Tło */}
+                  <div className="absolute inset-0 bg-black/90 backdrop-blur-sm"></div>
+                  
+                  {/* Modal */}
+                  <div 
+                    className="relative z-[101] max-w-4xl w-full bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-lg border border-neutral-800 shadow-2xl p-6 md:p-8"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-xl md:text-2xl font-bold">Podgląd dywaników</h3>
+                      <button
+                        onClick={() => setIsPreviewModalOpen(false)}
+                        className="text-gray-400 hover:text-white transition-colors text-2xl leading-none"
+                        aria-label="Zamknij"
+                      >
+                        ×
+                      </button>
+                    </div>
+                    
+                    {/* Powiększony obraz */}
+                    <div className="relative aspect-square bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-lg overflow-hidden border-2 border-neutral-700">
+                      <Image
+                        key={`modal-${config.matType}-${config.structure}-${config.color}-${config.edgeColor}`}
+                        src={matImagePath}
+                        alt={`Dywanik ${getColorInfo(config.color).name} z obszyciem ${getColorInfo(config.edgeColor).name}`}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 1024px) 100vw, 80vw"
+                        priority={true}
+                      />
+                    </div>
+                    
+                    {/* Informacje */}
+                    <div className="mt-4 p-4 bg-neutral-800 rounded-lg border border-neutral-700">
+                      <div className="flex items-center gap-4 justify-center">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-6 h-6 rounded border-2 border-neutral-600"
+                            style={{ backgroundColor: getColorInfo(config.color).color }}
+                          />
+                          <span className="text-sm text-gray-300">
+                            <span className="text-gray-400">Kolor:</span> {getColorInfo(config.color).name}
+                          </span>
+                        </div>
+                        <div className="w-px h-6 bg-neutral-700"></div>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-6 h-6 rounded border-2 border-neutral-600"
+                            style={{ backgroundColor: getColorInfo(config.edgeColor).color }}
+                          />
+                          <span className="text-sm text-gray-300">
+                            <span className="text-gray-400">Obszycie:</span> {getColorInfo(config.edgeColor).name}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <p className="mt-4 text-xs text-gray-400 text-center">
+                      Wizualizacja poglądowa. Docelowy kształt dopasujemy do Twojego auta.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {/* Price Summary */}
-              <div className="bg-neutral-900 rounded-lg p-6 border border-neutral-800">
-                <h3 className="text-xl font-bold mb-4">Podsumowanie ceny</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-gray-400">
+              <div className="bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-lg p-4 md:p-5 border border-neutral-800 shadow-md">
+                <h3 className="text-lg md:text-xl font-semibold mb-4 leading-tight">Podsumowanie ceny</h3>
+                <div className="space-y-2.5">
+                  <div className="flex justify-between text-gray-300 text-sm">
                     <span>Cena bazowa:</span>
-                    <span>{priceBreakdown.basePrice.toFixed(2)} zł</span>
+                    <span className="font-semibold">{priceBreakdown.basePrice.toFixed(2)} zł</span>
                   </div>
                   {priceBreakdown.discount > 0 && (
-                    <div className="flex justify-between text-green-400">
+                    <div className="flex justify-between text-green-400 text-sm">
                       <span>Rabat:</span>
-                      <span>-{priceBreakdown.discount.toFixed(2)} zł</span>
+                      <span className="font-bold">-{priceBreakdown.discount.toFixed(2)} zł</span>
                     </div>
                   )}
                   {priceBreakdown.shippingCost > 0 && (
-                    <div className="flex justify-between text-gray-400">
+                    <div className="flex justify-between text-gray-300 text-sm">
                       <span>Dostawa:</span>
-                      <span>{priceBreakdown.shippingCost.toFixed(2)} zł</span>
+                      <span className="font-semibold">{priceBreakdown.shippingCost.toFixed(2)} zł</span>
                     </div>
                   )}
-                  <div className="border-t border-neutral-700 pt-2 mt-2">
-                    <div className="flex justify-between text-xl font-bold">
+                  <div className="border-t border-neutral-700 pt-3 mt-3">
+                    <div className="flex justify-between text-xl md:text-2xl font-bold">
                       <span>Razem:</span>
                       <span className="text-red-500">{priceBreakdown.totalPrice.toFixed(2)} zł</span>
                     </div>
