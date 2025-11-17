@@ -59,6 +59,7 @@ export default function Navbar() {
             <Link href="/dywaniki" className="text-white/90 hover:text-white transition font-medium" title="Dywaniki Samochodowe EVA Premium">Dywaniki Samochodowe</Link>
             <Link href="/akcesoria" className="text-white/90 hover:text-white transition font-medium" title="Akcesoria Samochodowe - Kompletna Oferta">Akcesoria</Link>
             <Link href="/galeria" onClick={handleGalleryClick} className="text-white/90 hover:text-white transition font-medium" title="Galeria Produktów EVA Premium">Galeria</Link>
+            <Link href="/konfigurator-simple" className="text-red-400 hover:text-red-300 transition font-medium" title="Nowy Konfigurator - Test">Konfigurator (Test)</Link>
             <Link href="/o-nas" className="text-white/90 hover:text-white transition font-medium" title="O Firmie EvaPremium">O Nas</Link>
             <Link href="/kontakt" className="text-white/90 hover:text-white transition font-medium" title="Kontakt - EvaPremium">Kontakt</Link>
           </div>
@@ -118,6 +119,7 @@ export default function Navbar() {
               <Link href="/dywaniki" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Dywaniki Samochodowe</Link>
               <Link href="/akcesoria" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Akcesoria</Link>
               <Link href="/galeria" onClick={handleGalleryClick} className="text-white/90 hover:text-white text-lg font-medium">Galeria</Link>
+              <Link href="/konfigurator-simple" className="text-red-400 hover:text-red-300 text-lg font-medium" onClick={() => setOpen(false)}>Konfigurator (Test)</Link>
               <Link href="/o-nas" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>O Nas</Link>
               <Link href="/kontakt" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>Kontakt</Link>
               <a href="tel:+48570123635" className="text-white/90 hover:text-white text-lg font-medium" onClick={() => setOpen(false)}>
