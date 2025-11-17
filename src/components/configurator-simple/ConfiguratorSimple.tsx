@@ -394,7 +394,7 @@ export default function ConfiguratorSimple() {
                       onClick={() => setIsPreviewModalOpen(true)}
                       className="text-xs text-gray-400 hover:text-white transition-colors underline"
                     >
-                      Powiększ
+                      Powiększ podgląd
                     </button>
                   )}
                 </div>
@@ -647,7 +647,7 @@ export default function ConfiguratorSimple() {
                   onClick={() => setIsPreviewModalOpen(true)}
                   className="px-3 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-xs font-medium transition-colors duration-200 flex-shrink-0 min-h-[44px] flex items-center justify-center"
                 >
-                  Powiększ
+                  Powiększ podgląd
                 </button>
               ) : (
                 <div className="px-3 py-2 bg-neutral-800 rounded-lg text-xs font-medium flex-shrink-0 min-h-[44px] flex items-center justify-center text-gray-500">
