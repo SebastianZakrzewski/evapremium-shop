@@ -225,10 +225,10 @@ export default function SearchDropdown() {
             md:transform md:-translate-x-1/2
             w-auto
             max-w-2xl
-            bg-gray-900
-            border border-gray-700
+            bg-neutral-900/95 backdrop-blur-sm
+            border border-neutral-800
             rounded-lg
-            shadow-2xl
+            shadow-lg shadow-red-500/10
             z-[101]
             max-h-[calc(100vh-2rem)]
             md:max-h-[calc(100vh-5rem)]
