@@ -5,8 +5,10 @@ import { env } from '@/config/env';
 import { abandonedCartUpsertInputSchema } from '@/lib/validators/abandonedCart';
 import type { AbandonedCartRecord } from '@/lib/types/abandonedCart';
 import { dealService } from '@/lib/integrations/bitrix24/services/DealService';
+import { OrderRepository } from '@/lib/repositories/OrderRepository';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+const orderRepository = new OrderRepository();
 
 const webhookInputSchema = abandonedCartUpsertInputSchema.extend({
   event: z.enum(['pagehide', 'beforeunload', 'heartbeat']).optional(),
@@ -53,12 +55,54 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Not eligible (stage/cart)' }, { status: 400 });
     }
 
+    // Sprawdź czy istnieje opłacone zamówienie dla tego klienta (zapobiega tworzeniu abandoned cart po opłaceniu)
+    if (input.contact?.email) {
+      try {
+        const recentPaidOrders = await orderRepository.supabase
+          .from('orders')
+          .select('id, order_number, payment_status, total, created_at')
+          .eq('payment_status', 'paid')
+          .eq('customer->>email', input.contact.email)
+          .gte('created_at', new Date(Date.now() - 30 * 60 * 1000).toISOString()) // Ostatnie 30 minut
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if (recentPaidOrders.data && recentPaidOrders.data.length > 0) {
+          const paidOrder = recentPaidOrders.data[0];
+          // Sprawdź czy kwota jest podobna (różnica mniejsza niż 10%)
+          const orderTotal = Number(paidOrder.total);
+          const cartTotal = input.totalAmount || 0;
+          const difference = Math.abs(orderTotal - cartTotal);
+          const tolerance = Math.max(orderTotal, cartTotal) * 0.1; // 10% tolerancji
+
+          if (difference <= tolerance) {
+            console.log('[AbandonedCart:Webhook] Found paid order for this customer, skipping abandoned cart', {
+              orderId: paidOrder.id,
+              orderNumber: paidOrder.order_number,
+              orderTotal,
+              cartTotal,
+              email: input.contact.email
+            });
+            return NextResponse.json({ 
+              success: true, 
+              skipped: true, 
+              reason: 'order_already_paid',
+              orderId: paidOrder.id 
+            }, { status: 200 });
+          }
+        }
+      } catch (checkError) {
+        console.error('[AbandonedCart:Webhook] Error checking for paid orders', checkError);
+        // Kontynuuj przetwarzanie - nie blokuj jeśli sprawdzenie się nie powiodło
+      }
+    }
+
     const now = new Date();
 
     // Try find existing cart (pending or processing) without exported deal
     const { data: existingList, error: findError } = await supabase
       .from('abandoned_carts')
-      .select('id, expire_at, bitrix_deal_id, status')
+      .select('id, expire_at, bitrix_deal_id, status, metadata')
       .eq('session_id', input.sessionId)
       .in('status', ['pending', 'processing']) // Include both pending and processing statuses
       .is('bitrix_deal_id', null)
@@ -71,6 +115,61 @@ export async function POST(request: NextRequest) {
     }
 
     const existing = Array.isArray(existingList) && existingList.length > 0 ? existingList[0] : null;
+
+    // Sprawdź ponownie dla istniejącego rekordu (może być race condition)
+    if (existing && input.contact?.email) {
+      try {
+        const recentPaidOrders = await orderRepository.supabase
+          .from('orders')
+          .select('id, order_number, payment_status, total, created_at')
+          .eq('payment_status', 'paid')
+          .eq('customer->>email', input.contact.email)
+          .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString()) // Ostatnia godzina
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if (recentPaidOrders.data && recentPaidOrders.data.length > 0) {
+          const paidOrder = recentPaidOrders.data[0];
+          const orderTotal = Number(paidOrder.total);
+          const cartTotal = input.totalAmount || 0;
+          const difference = Math.abs(orderTotal - cartTotal);
+          const tolerance = Math.max(orderTotal, cartTotal) * 0.1;
+
+          if (difference <= tolerance) {
+            console.log('[AbandonedCart:Webhook] Found paid order for existing cart, marking as converted', {
+              cartId: existing.id,
+              orderId: paidOrder.id,
+              orderNumber: paidOrder.order_number,
+              email: input.contact.email
+            });
+            
+            // Oznacz jako converted (zamówienie zostało opłacone)
+            const existingMetadata = (existing.metadata as Record<string, unknown>) || {};
+            await supabase
+              .from('abandoned_carts')
+              .update({ 
+                status: 'converted',
+                metadata: { 
+                  ...existingMetadata, 
+                  converted_reason: 'order_paid',
+                  converted_order_id: paidOrder.id,
+                  converted_at: new Date().toISOString()
+                }
+              })
+              .eq('id', existing.id);
+            
+            return NextResponse.json({ 
+              success: true, 
+              skipped: true, 
+              reason: 'order_already_paid',
+              orderId: paidOrder.id 
+            }, { status: 200 });
+          }
+        }
+      } catch (checkError) {
+        console.error('[AbandonedCart:Webhook] Error checking for paid orders (existing cart)', checkError);
+      }
+    }
 
     // Don't reset expire_at since we're creating deal immediately
     // This prevents cron from picking up the same cart

@@ -14,10 +14,12 @@ import { OrderService } from '@/lib/services/OrderService'
 import { OrderRepository } from '@/lib/repositories/OrderRepository'
 import { Przelewy24Service } from '@/lib/services/Przelewy24Service'
 import { P24WebhookData, P24Error } from '@/lib/types/przelewy24'
+import { createClient } from '@supabase/supabase-js'
 
 const orderService = new OrderService()
 const orderRepository = new OrderRepository()
 const p24Service = new Przelewy24Service()
+const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey)
 
 export async function POST(request: NextRequest) {
   try {
@@ -287,6 +289,45 @@ export async function POST(request: NextRequest) {
           expected: 'confirmed',
           actual: updatedOrder?.status
         })
+      }
+
+      // Oznacz wszystkie abandoned carts dla tego klienta jako converted (zamówienie zostało opłacone)
+      if (order.customer && typeof order.customer === 'object' && 'email' in order.customer) {
+        const customerEmail = (order.customer as any).email;
+        if (customerEmail) {
+          try {
+            console.log('🔄 P24 Callback API: Oznaczam abandoned carts jako converted dla klienta', { email: customerEmail });
+            
+            const { data: updatedCarts, error: cartUpdateError } = await supabase
+              .from('abandoned_carts')
+              .update({ 
+                status: 'converted',
+                metadata: { 
+                  converted_reason: 'order_paid',
+                  converted_order_id: order.id,
+                  converted_order_number: order.orderNumber,
+                  converted_at: new Date().toISOString()
+                }
+              })
+              .eq('contact->>email', customerEmail)
+              .in('status', ['pending', 'processing'])
+              .is('bitrix_deal_id', null)
+              .select('id');
+
+            if (cartUpdateError) {
+              console.error('❌ P24 Callback API: Błąd podczas oznaczania abandoned carts jako converted', cartUpdateError);
+            } else {
+              const updatedCount = Array.isArray(updatedCarts) ? updatedCarts.length : 0;
+              console.log('✅ P24 Callback API: Oznaczono abandoned carts jako converted', { 
+                updatedCount,
+                email: customerEmail 
+              });
+            }
+          } catch (cartError) {
+            console.error('❌ P24 Callback API: Nieoczekiwany błąd podczas oznaczania abandoned carts', cartError);
+            // Nie rzucaj błędu - to nie jest krytyczne
+          }
+        }
       }
     } catch (updateError) {
       console.error('❌ P24 Callback API: Błąd podczas aktualizacji statusu', updateError)

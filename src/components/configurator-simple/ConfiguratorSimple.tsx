@@ -339,6 +339,10 @@ export default function ConfiguratorSimple() {
 
     setIsAddingToCart(true);
     try {
+      // Generuj unikalny UUID dla produktu (jak w starym konfiguratorze)
+      const productId = crypto.randomUUID();
+      console.log('🆔 ConfiguratorSimple: Generated UUID productId:', productId);
+      
       // Mapuj typ dywanika dla funkcji getMatImagePath ('3d-with-rims' -> '3d', 'classic' -> 'classic')
       const matTypeForImage: '3d' | 'classic' = config.matType === '3d-with-rims' ? '3d' : 'classic';
       
@@ -352,7 +356,7 @@ export default function ConfiguratorSimple() {
 
       await addToCart({
         productType: 'mat',
-        productId: `mat-${config.brand}-${config.model}`,
+        productId: productId, // UUID zamiast stringa
         quantity: 1,
         unitPrice: priceBreakdown.totalPrice,
         productName: `Dywaniki ${config.brand} ${config.model}`,
