@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 
 interface MatTypeStepProps {
   config: {
-    matType: "3d-with-rims" | "classic" | "";
+    matType: "3d-with-rims" | "classic";
   };
   onUpdate: (updates: { matType?: "3d-with-rims" | "classic" }) => void;
   onNext: () => void;

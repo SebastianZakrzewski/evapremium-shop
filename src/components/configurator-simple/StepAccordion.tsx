@@ -38,17 +38,40 @@ export function StepAccordion({
           <div
             className={`
               flex items-center justify-center
-              w-8 h-8 md:w-9 md:h-9 rounded-full
+              w-6 h-6 md:w-7 md:h-7
               transition-all duration-300
               ${isValid 
-                ? 'bg-red-600 text-white shadow-md shadow-red-600/20' 
+                ? 'text-red-400 opacity-100' 
                 : isOpen 
-                ? 'bg-red-600 text-white shadow-md shadow-red-600/20' 
-                : 'bg-neutral-800 text-gray-400 border border-neutral-700'
+                ? 'text-red-400 opacity-100' 
+                : 'text-gray-500 opacity-50'
               }
             `}
           >
-            <span className="text-xs md:text-sm font-bold">{step}</span>
+            {step === 7 ? (
+              // Ikona flagi mety dla ostatniego kroku
+              <svg 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                className="w-full h-full"
+              >
+                {/* Flaga mety - wzór szachownicy */}
+                <rect x="4" y="4" width="16" height="16" fill="currentColor" opacity="0.15"/>
+                {/* Czarne pola szachownicy */}
+                <rect x="4" y="4" width="4" height="4" fill="currentColor"/>
+                <rect x="12" y="4" width="4" height="4" fill="currentColor"/>
+                <rect x="8" y="8" width="4" height="4" fill="currentColor"/>
+                <rect x="16" y="8" width="4" height="4" fill="currentColor"/>
+                <rect x="4" y="12" width="4" height="4" fill="currentColor"/>
+                <rect x="12" y="12" width="4" height="4" fill="currentColor"/>
+                <rect x="8" y="16" width="4" height="4" fill="currentColor"/>
+                <rect x="16" y="16" width="4" height="4" fill="currentColor"/>
+                {/* Ramka */}
+                <rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+              </svg>
+            ) : (
+              <span className="text-xs font-medium">{step}</span>
+            )}
           </div>
           <h3 className="text-lg md:text-xl font-semibold leading-tight">{title}</h3>
         </div>

@@ -32,7 +32,7 @@ const variants = [
   {
     id: "basic" as const,
     name: "Podstawowy",
-    description: "5 dywaników (przód + tył + ochrona na tunel środkowy)",
+    description: "5 dywaników (przód + tył + ochrona na środek)",
     image: "/konfigurator/zestaw/pt.png",
   },
   {
@@ -52,6 +52,10 @@ const variants = [
 export function VariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdown }: VariantStepProps) {
   const getVariantPrice = (variantId: string) => {
     const price = PricingService.calculateConfiguratorPrice(config.matType, variantId as any);
+    // Dla 'classic' + 'front' wyświetlaj cenę bez wysyłki (232 zł)
+    if (config.matType === 'classic' && variantId === 'front') {
+      return price.priceAfterDiscount || (price.totalPrice - price.shippingCost); // Cena bez wysyłki
+    }
     return price.totalPrice;
   };
 
@@ -89,7 +93,7 @@ export function VariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdo
                 <div className="pt-2 border-t border-neutral-700">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400 text-xs">Cena:</span>
-                    <span className="text-base md:text-lg font-bold text-red-500">
+                    <span className="text-base md:text-lg font-bold text-white">
                       {variantPrice.toFixed(2)} zł
                     </span>
                   </div>

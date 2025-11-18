@@ -26,7 +26,7 @@ export class PricingService {
   static calculateConfiguratorPrice(
     setType: 'classic' | '3d-with-rims',
     setVariant: 'front' | 'basic' | 'premium' | 'complete'
-  ): { basePrice: number; discount: number; shippingCost: number; totalPrice: number } {
+  ): { basePrice: number; discount: number; shippingCost: number; totalPrice: number; priceAfterDiscount: number } {
     const basePrices = {
       'classic': { front: 290, basic: 510, premium: 710, complete: 350 },
       '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350 }
@@ -35,9 +35,23 @@ export class PricingService {
     const basePrice = basePrices[setType]?.[setVariant] || 0;
     
     // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł
-    const discount = basePrice >= 910 ? 0.30 : 0.20;
-    const discountAmount = basePrice * discount;
-    const priceAfterDiscount = basePrice - discountAmount;
+    // Dla 'classic' + 'front' cena po rabacie ma być 232 zł (bez wysyłki)
+    let discount: number;
+    let priceAfterDiscount: number;
+    
+    if (setType === 'classic' && setVariant === 'front') {
+      // Cena po rabacie ma być 232 zł, więc obliczamy cenę bazową wstecz
+      // Jeśli rabat to 20%, to: basePrice * 0.8 = 232, więc basePrice = 232 / 0.8 = 290
+      // Ale użytkownik chce, aby cena po rabacie była 232 zł, więc ustawiamy bezpośrednio
+      discount = 0.20;
+      priceAfterDiscount = 232; // Cena bez wysyłki dla starter bez rantów
+    } else {
+      discount = basePrice >= 910 ? 0.30 : 0.20;
+      const discountAmount = basePrice * discount;
+      priceAfterDiscount = basePrice - discountAmount;
+    }
+    
+    const discountAmount = basePrice - priceAfterDiscount;
     
     // Koszt wysyłki (27 zł dla 'front', darmowa dla 'basic', 'premium' i 'complete')
     const shippingCost = ['basic', 'premium', 'complete'].includes(setVariant) ? 0 : 27;
@@ -48,7 +62,8 @@ export class PricingService {
       basePrice,
       discount: discountAmount,
       shippingCost,
-      totalPrice
+      totalPrice,
+      priceAfterDiscount: Math.round(priceAfterDiscount * 100) / 100
     };
   }
 

@@ -67,7 +67,7 @@ export function ColorPicker({ type, config, onUpdate, onNext, onPrevious }: Colo
               key={colorKey}
               onClick={() => handleColorSelect(colorKey)}
               className={`
-                aspect-square rounded-lg border-2 transition-all duration-300 min-w-[36px] min-h-[36px]
+                aspect-square rounded-lg border transition-all duration-300 min-w-[36px] min-h-[36px]
                 ${isSelected
                   ? 'border-red-500 ring-2 ring-red-500/30 scale-105 shadow-md shadow-red-500/20'
                   : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
@@ -94,7 +94,7 @@ export function ColorPicker({ type, config, onUpdate, onNext, onPrevious }: Colo
         <div className="p-4 bg-neutral-800 rounded-lg border border-neutral-700 shadow-sm">
           <div className="flex items-center gap-3">
             <div
-              className="w-10 h-10 md:w-12 md:h-12 rounded-lg border-2 border-neutral-600 shadow-sm"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-lg border border-neutral-600 shadow-sm"
               style={{ backgroundColor: getColorInfo(selectedColor).color }}
             />
             <div>

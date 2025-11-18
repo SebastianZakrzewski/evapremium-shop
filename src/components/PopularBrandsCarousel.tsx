@@ -72,8 +72,8 @@ export default function PopularBrandsCarousel() {
 
   // Handler dla kliknięcia w markę
   const handleBrandClick = (brand: Brand) => {
-    // Przekieruj do strony z modelami danej marki
-    window.location.href = `/modele?brand=${encodeURIComponent(brand.name)}`;
+    // Przekieruj do konfiguratora z wybraną marką
+    window.location.href = `/konfigurator?brand=${encodeURIComponent(brand.name.toLowerCase())}`;
   };
 
   // Renderowanie karty marki

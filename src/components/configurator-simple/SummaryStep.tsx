@@ -84,7 +84,7 @@ export function SummaryStep({
             <div className="flex items-center gap-2.5">
               <span className="text-gray-400 text-sm">Kolor dywaników:</span>
               <div
-                className="w-5 h-5 md:w-6 md:h-6 rounded border-2 border-neutral-600 shadow-sm"
+                className="w-5 h-5 md:w-6 md:h-6 rounded border border-neutral-600 shadow-sm"
                 style={{ backgroundColor: getColorInfo(config.color).color }}
               />
             </div>
@@ -96,7 +96,7 @@ export function SummaryStep({
             <div className="flex items-center gap-2.5">
               <span className="text-gray-400 text-sm">Kolor obszycia:</span>
               <div
-                className="w-5 h-5 md:w-6 md:h-6 rounded border-2 border-neutral-600 shadow-sm"
+                className="w-5 h-5 md:w-6 md:h-6 rounded border border-neutral-600 shadow-sm"
                 style={{ backgroundColor: getColorInfo(config.edgeColor).color }}
               />
             </div>
@@ -124,21 +124,25 @@ export function SummaryStep({
             <span className="font-semibold">{priceBreakdown.basePrice.toFixed(2)} zł</span>
           </div>
           {priceBreakdown.discount > 0 && (
-            <div className="flex justify-between text-red-400 text-sm">
+            <div className="flex justify-between text-white text-sm">
               <span>Rabat:</span>
               <span className="font-bold">-{priceBreakdown.discount.toFixed(2)} zł</span>
             </div>
           )}
-          {priceBreakdown.shippingCost > 0 && (
-            <div className="flex justify-between text-gray-300 text-sm">
-              <span>Dostawa:</span>
-              <span className="font-semibold">{priceBreakdown.shippingCost.toFixed(2)} zł</span>
-            </div>
-          )}
+          <div className="flex justify-between text-gray-300 text-sm">
+            <span>Dostawa:</span>
+            <span className="font-semibold">
+              {priceBreakdown.shippingCost === 0 ? (
+                <span className="text-green-400">Gratis</span>
+              ) : (
+                `${priceBreakdown.shippingCost.toFixed(2)} zł`
+              )}
+            </span>
+          </div>
           <div className="border-t border-neutral-700 pt-3 mt-3">
             <div className="flex justify-between text-xl md:text-2xl font-bold">
               <span>Razem:</span>
-              <span className="text-red-500">{priceBreakdown.totalPrice.toFixed(2)} zł</span>
+              <span className="text-white">{priceBreakdown.totalPrice.toFixed(2)} zł</span>
             </div>
           </div>
         </div>

@@ -87,8 +87,8 @@ export default function BrandSelectionGrid() {
     // Animacja kliknięcia - reset po 300ms
     setTimeout(() => {
       setClickedBrandId(null);
-      // Przekierowanie do strony z wyborem produktów dla danej marki
-      router.push(`/dywaniki/${brand.name.toLowerCase()}`);
+      // Przekierowanie do konfiguratora z wybraną marką
+      router.push(`/konfigurator?brand=${encodeURIComponent(brand.name.toLowerCase())}`);
     }, 300);
   }, [router]);
 

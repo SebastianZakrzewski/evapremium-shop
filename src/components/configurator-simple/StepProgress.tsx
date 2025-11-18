@@ -38,7 +38,30 @@ export function StepProgress({ currentStep, totalSteps, onStepClick, isValid }: 
                 ${isClickable ? 'cursor-pointer hover:scale-105 active:scale-95' : 'cursor-not-allowed'}
               `}
             >
-              <span className="text-sm md:text-base font-bold">{step}</span>
+              {step === totalSteps ? (
+                // Ikona flagi mety dla ostatniego kroku
+                <svg 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  className="w-5 h-5 md:w-6 md:h-6"
+                >
+                  {/* Flaga mety - wzór szachownicy */}
+                  <rect x="4" y="4" width="16" height="16" fill="currentColor" opacity="0.15"/>
+                  {/* Czarne pola szachownicy */}
+                  <rect x="4" y="4" width="4" height="4" fill="currentColor"/>
+                  <rect x="12" y="4" width="4" height="4" fill="currentColor"/>
+                  <rect x="8" y="8" width="4" height="4" fill="currentColor"/>
+                  <rect x="16" y="8" width="4" height="4" fill="currentColor"/>
+                  <rect x="4" y="12" width="4" height="4" fill="currentColor"/>
+                  <rect x="12" y="12" width="4" height="4" fill="currentColor"/>
+                  <rect x="8" y="16" width="4" height="4" fill="currentColor"/>
+                  <rect x="16" y="16" width="4" height="4" fill="currentColor"/>
+                  {/* Ramka */}
+                  <rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+                </svg>
+              ) : (
+                <span className="text-sm md:text-base font-bold">{step}</span>
+              )}
             </button>
             {step < totalSteps && (
               <div
