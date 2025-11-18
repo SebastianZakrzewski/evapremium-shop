@@ -1,6 +1,7 @@
 "use client";
 
 import HeroSection from "@/components/hero-section";
+import QuickSearchBar from "@/components/quick-search-bar";
 import AdvantagesSection from "@/components/advantages-section";
 import ThreeDMatsSection from "@/components/3d-mats-section";
 import ProductGallerySection from "@/components/product-gallery-section";
@@ -15,6 +16,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <HeroSection />
+      <QuickSearchBar />
       <ProductGallerySection />
       <AdvantagesSection />
       <ProductSelection />
