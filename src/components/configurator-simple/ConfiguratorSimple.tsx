@@ -339,6 +339,17 @@ export default function ConfiguratorSimple() {
 
     setIsAddingToCart(true);
     try {
+      // Mapuj typ dywanika dla funkcji getMatImagePath ('3d-with-rims' -> '3d', 'classic' -> 'classic')
+      const matTypeForImage: '3d' | 'classic' = config.matType === '3d-with-rims' ? '3d' : 'classic';
+      
+      // Generuj ścieżkę do obrazka na podstawie konfiguracji
+      const productImagePath = getMatImagePath(
+        matTypeForImage,
+        config.structure as 'diamonds' | 'honey',
+        config.color,
+        config.edgeColor
+      );
+
       await addToCart({
         productType: 'mat',
         productId: `mat-${config.brand}-${config.model}`,
@@ -346,7 +357,7 @@ export default function ConfiguratorSimple() {
         unitPrice: priceBreakdown.totalPrice,
         productName: `Dywaniki ${config.brand} ${config.model}`,
         productSku: `MAT-${config.brand.toUpperCase()}-${config.model.toUpperCase()}`,
-        productImage: '',
+        productImage: productImagePath,
         configuration: {
           carDetails: {
             brand: config.brand,
@@ -357,7 +368,7 @@ export default function ConfiguratorSimple() {
           setType: config.matType,
           setVariant: config.variant,
           cellType: config.structure,
-          color: config.color,
+          materialColor: config.color,
           edgeColor: config.edgeColor,
           heelPad: config.heelPad ? 'yes' : 'no',
         },
