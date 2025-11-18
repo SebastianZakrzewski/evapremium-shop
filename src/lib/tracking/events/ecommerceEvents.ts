@@ -76,7 +76,7 @@ function cartItemToContentItem(item: CartItem): ContentItem {
  */
 function orderItemToContentItem(item: OrderItem): ContentItem {
   return {
-    id: item.productId,
+    id: item.productId || item.id, // Fallback do item.id jeśli productId jest null
     quantity: item.quantity,
     item_price: item.unitPrice,
     item_name: item.productName,
