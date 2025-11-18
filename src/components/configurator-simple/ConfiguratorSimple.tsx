@@ -389,6 +389,13 @@ export default function ConfiguratorSimple() {
 
   // Sprawdź czy sticky preview powinien być widoczny (od kroku wyboru typu dywaników)
   const shouldShowStickyPreview = activeStep >= 2;
+  
+  // Oblicz padding bottom dla głównego kontenera - uwzględnia galerię miniatur jeśli jest widoczna
+  const mainContainerPaddingBottom = shouldShowStickyPreview && config.matType 
+    ? 'pb-[180px]' // Więcej miejsca gdy jest galeria miniatur + sticky bar
+    : shouldShowStickyPreview 
+    ? 'pb-[100px]' // Tylko sticky bar
+    : '';
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -405,7 +412,7 @@ export default function ConfiguratorSimple() {
       </div>
 
       {/* Main Content */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-20 pb-6 md:pb-8 ${shouldShowStickyPreview ? 'lg:pb-6 md:pb-8 pb-[100px]' : ''}`}>
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-20 pb-6 md:pb-8 ${shouldShowStickyPreview ? `lg:pb-6 md:pb-8 ${mainContainerPaddingBottom}` : ''}`}>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8">
           {/* Left Column - Configuration */}
           <div className="lg:col-span-3 space-y-4 md:space-y-5">
@@ -1335,12 +1342,63 @@ export default function ConfiguratorSimple() {
 
       {/* Sticky Preview Bar - Mobile Only */}
       {shouldShowStickyPreview && (
-        <div 
-          className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-sm border-t border-neutral-800 shadow-lg"
-          style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-        >
-          <div className="px-4 py-3">
-            <div className="flex items-center gap-3">
+        <>
+          {/* Galeria miniatur zdjęć produktu - Mobile Only */}
+          {config.matType && (
+            <div 
+              className="lg:hidden fixed bottom-[88px] left-0 right-0 z-30 bg-black/90 backdrop-blur-sm border-t border-neutral-800 shadow-lg overflow-x-auto"
+              style={{ paddingBottom: '8px' }}
+            >
+              <div className="px-4 py-2">
+                <div className="flex gap-2 overflow-x-auto pb-2">
+                  {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => {
+                    const isSelected = config.matType === 'classic' 
+                      ? selectedClassicProductImage === imagePath 
+                      : selectedRimsProductImage === imagePath;
+                    
+                    return (
+                      <button
+                        key={imagePath}
+                        onClick={() => {
+                          if (config.matType === 'classic') {
+                            setSelectedClassicProductImage(imagePath);
+                          } else {
+                            setSelectedRimsProductImage(imagePath);
+                          }
+                          // Otwórz modal z powiększonym zdjęciem
+                          setModalImageType('product');
+                          setIsPreviewModalOpen(true);
+                        }}
+                        className={`
+                          relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 flex-shrink-0
+                          ${isSelected
+                            ? 'border-red-500 ring-2 ring-red-500/30 scale-105'
+                            : 'border-neutral-700 hover:border-neutral-600 opacity-80 hover:opacity-100'
+                          }
+                        `}
+                      >
+                        <Image
+                          src={imagePath}
+                          alt={`Zdjęcie produktu ${imagePath.split('/').pop()}`}
+                          fill
+                          className="object-cover"
+                          sizes="80px"
+                          loading="lazy"
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <div 
+            className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-sm border-t border-neutral-800 shadow-lg"
+            style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+          >
+            <div className="px-4 py-3">
+              <div className="flex items-center gap-3">
               {/* Mały obrazek podglądu - pokazuj dynamiczny podgląd jeśli dostępny, w przeciwnym razie zdjęcie produktu lub logo marki */}
               {config.matType ? (
                 <div 
@@ -1449,6 +1507,7 @@ export default function ConfiguratorSimple() {
             </div>
           </div>
         </div>
+        </>
       )}
     </div>
   );
