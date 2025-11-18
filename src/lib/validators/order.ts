@@ -14,7 +14,8 @@ export const AddressDataSchema = z.object({
   country: z.string().min(1, 'Kraj jest wymagany')
 });
 
-export const OrderItemSchema = z.object({
+// Bazowy schema bez refine (używany do CreateOrderItemSchema)
+const OrderItemBaseSchema = z.object({
   id: z.string().uuid(),
   quantity: z.number().int().positive('Ilość musi być większa od 0'),
   unitPrice: z.number().positive('Cena jednostkowa musi być większa od 0'),
@@ -22,7 +23,7 @@ export const OrderItemSchema = z.object({
   productType: z.enum(['accessory', 'mat'], {
     errorMap: () => ({ message: 'Typ produktu musi być "accessory" lub "mat"' })
   }),
-  productId: z.string().uuid('Nieprawidłowy ID produktu'),
+  productId: z.string().uuid('Nieprawidłowy ID produktu').nullable().optional(),
   productName: z.string().min(1, 'Nazwa produktu jest wymagana'),
   productSku: z.string().optional(),
   productImage: z.string().url().optional(),
@@ -31,6 +32,21 @@ export const OrderItemSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date()
 });
+
+export const OrderItemSchema = OrderItemBaseSchema.refine(
+  (data) => {
+    // Dla akcesoriów productId jest wymagany (UUID)
+    // Dla matów productId może być null (produkty konfigurowane)
+    if (data.productType === 'accessory') {
+      return data.productId !== null && data.productId !== undefined;
+    }
+    return true; // Dla matów productId może być null
+  },
+  {
+    message: 'productId jest wymagany dla akcesoriów',
+    path: ['productId']
+  }
+);
 
 export const OrderSchema = z.object({
   id: z.string().uuid(),
@@ -55,12 +71,25 @@ export const OrderSchema = z.object({
   updatedAt: z.date()
 });
 
-export const CreateOrderItemSchema = OrderItemSchema.omit({
+export const CreateOrderItemSchema = OrderItemBaseSchema.omit({
   id: true,
   orderId: true,
   createdAt: true,
   updatedAt: true
-});
+}).refine(
+  (data) => {
+    // Dla akcesoriów productId jest wymagany (UUID)
+    // Dla matów productId może być null (produkty konfigurowane)
+    if (data.productType === 'accessory') {
+      return data.productId !== null && data.productId !== undefined;
+    }
+    return true; // Dla matów productId może być null
+  },
+  {
+    message: 'productId jest wymagany dla akcesoriów',
+    path: ['productId']
+  }
+);
 
 export const CreateOrderSchema = z.object({
   customer: CustomerDataSchema,
