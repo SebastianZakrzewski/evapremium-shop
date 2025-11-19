@@ -269,7 +269,7 @@ export default function HeroSection() {
                 
                 {/* Mobile - Numer telefonu i informacja */}
                 {!isImageSlide && (
-                  <div className="md:hidden mt-6 mb-16 animate-fade-in-delay-2 flex flex-col items-center gap-3">
+                  <div className="md:hidden mt-6 mb-16 animate-fade-in-delay-2 flex flex-col items-center gap-3 px-12">
                     <a 
                       href="tel:+48570123635"
                       className="text-white text-xl md:text-2xl font-bold flex items-center gap-3 hover:text-red-400 transition-colors drop-shadow-lg"
@@ -292,20 +292,20 @@ export default function HeroSection() {
       {/* Navigation Arrows */}
       <button
         onClick={goToPrev}
-        className="absolute left-2 bottom-24 md:top-1/2 md:bottom-auto transform md:-translate-y-1/2 bg-white/20 hover:bg-white/30 active:bg-white/40 text-white p-3 rounded-full transition-colors z-20 touch-manipulation min-w-[44px] min-h-[44px]"
+        className="absolute left-2 bottom-32 md:top-1/2 md:bottom-auto transform md:-translate-y-1/2 bg-white/20 hover:bg-white/30 active:bg-white/40 text-white p-2.5 md:p-3 rounded-full transition-colors z-20 touch-manipulation min-w-[40px] min-h-[40px] md:min-w-[44px] md:min-h-[44px]"
         aria-label="Poprzedni slajd"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
       
       <button
         onClick={goToNext}
-        className="absolute right-2 bottom-24 md:top-1/2 md:bottom-auto transform md:-translate-y-1/2 bg-white/20 hover:bg-white/30 active:bg-white/40 text-white p-3 rounded-full transition-colors z-20 touch-manipulation min-w-[44px] min-h-[44px]"
+        className="absolute right-2 bottom-32 md:top-1/2 md:bottom-auto transform md:-translate-y-1/2 bg-white/20 hover:bg-white/30 active:bg-white/40 text-white p-2.5 md:p-3 rounded-full transition-colors z-20 touch-manipulation min-w-[40px] min-h-[40px] md:min-w-[44px] md:min-h-[44px]"
         aria-label="Następny slajd"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </button>
