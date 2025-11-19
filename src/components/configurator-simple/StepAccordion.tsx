@@ -12,7 +12,7 @@ interface StepAccordionProps {
   children: React.ReactNode;
 }
 
-export function StepAccordion({
+export const StepAccordion = React.forwardRef<HTMLDivElement, StepAccordionProps>(({
   step,
   title,
   isOpen,
@@ -20,9 +20,10 @@ export function StepAccordion({
   isValid,
   disabled = false,
   children,
-}: StepAccordionProps) {
+}, ref) => {
   return (
     <div
+      ref={ref}
       className={`
         bg-neutral-900 rounded-lg border transition-all duration-300
         ${isOpen ? 'border-red-500/50 shadow-lg shadow-red-500/10' : 'border-neutral-800'}
@@ -87,5 +88,7 @@ export function StepAccordion({
       )}
     </div>
   );
-}
+});
+
+StepAccordion.displayName = "StepAccordion";
 

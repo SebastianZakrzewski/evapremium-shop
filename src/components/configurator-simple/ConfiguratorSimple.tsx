@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
@@ -122,6 +122,9 @@ export default function ConfiguratorSimple() {
 
   // Aktualny aktywny krok (dla accordion)
   const [activeStep, setActiveStep] = useState<number>(1);
+
+  // Refs dla każdego kroku (do przewijania)
+  const stepRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
   // Mapuj parametr marki z URL na właściwą nazwę marki z listy
   useEffect(() => {
@@ -331,6 +334,33 @@ export default function ConfiguratorSimple() {
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isPreviewModalOpen]);
 
+  // Automatyczne przewijanie do aktywnego kroku
+  useEffect(() => {
+    const stepElement = stepRefs.current[activeStep];
+    if (!stepElement) return;
+
+    // Opóźnienie aby akordeon zdążył się otworzyć przed przewinięciem
+    const scrollTimeout = setTimeout(() => {
+      // Oblicz offset dla sticky progress bar na górze (~100px)
+      const topOffset = 100;
+      
+      // Pobierz pozycję elementu
+      const elementRect = stepElement.getBoundingClientRect();
+      const elementTop = elementRect.top + window.pageYOffset;
+      
+      // Oblicz docelową pozycję z uwzględnieniem offsetu górnego
+      const targetPosition = elementTop - topOffset;
+      
+      // Przewiń do pozycji z smooth behavior
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth',
+      });
+    }, 150); // Opóźnienie 150ms dla animacji akordeonu
+
+    return () => clearTimeout(scrollTimeout);
+  }, [activeStep]);
+
   // Dodaj do koszyka
   const handleAddToCart = async () => {
     if (!isStepValid(7)) {
@@ -418,6 +448,7 @@ export default function ConfiguratorSimple() {
           <div className="lg:col-span-3 space-y-4 md:space-y-5">
             {/* Step 1: Wybór samochodu */}
             <StepAccordion
+              ref={(el) => { stepRefs.current[1] = el; }}
               step={1}
               title="Wybór samochodu"
               isOpen={activeStep === 1}
@@ -433,6 +464,7 @@ export default function ConfiguratorSimple() {
 
             {/* Step 2: Typ dywaników */}
             <StepAccordion
+              ref={(el) => { stepRefs.current[2] = el; }}
               step={2}
               title="Typ dywaników"
               isOpen={activeStep === 2}
@@ -450,6 +482,7 @@ export default function ConfiguratorSimple() {
 
             {/* Step 3: Wariant zestawu */}
             <StepAccordion
+              ref={(el) => { stepRefs.current[3] = el; }}
               step={3}
               title="Wariant zestawu"
               isOpen={activeStep === 3}
@@ -468,6 +501,7 @@ export default function ConfiguratorSimple() {
 
             {/* Step 4: Struktura */}
             <StepAccordion
+              ref={(el) => { stepRefs.current[4] = el; }}
               step={4}
               title="Struktura"
               isOpen={activeStep === 4}
@@ -485,6 +519,7 @@ export default function ConfiguratorSimple() {
 
             {/* Step 5: Kolory */}
             <StepAccordion
+              ref={(el) => { stepRefs.current[5] = el; }}
               step={5}
               title="Kolory materiału i obszycia"
               isOpen={activeStep === 5}
@@ -502,6 +537,7 @@ export default function ConfiguratorSimple() {
 
             {/* Step 6: Dodatki */}
             <StepAccordion
+              ref={(el) => { stepRefs.current[6] = el; }}
               step={6}
               title="Dodatki"
               isOpen={activeStep === 6}
@@ -540,6 +576,7 @@ export default function ConfiguratorSimple() {
 
             {/* Step 7: Podsumowanie */}
             <StepAccordion
+              ref={(el) => { stepRefs.current[7] = el; }}
               step={7}
               title="Podsumowanie"
               isOpen={activeStep === 7}
