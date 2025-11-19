@@ -292,7 +292,7 @@ export default function HeroSection() {
       {/* Navigation Arrows */}
       <button
         onClick={goToPrev}
-        className="absolute left-2 top-[35%] md:top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 active:bg-white/40 text-white p-3 rounded-full transition-colors z-20 touch-manipulation min-w-[44px] min-h-[44px]"
+        className="absolute left-2 bottom-24 md:top-1/2 md:bottom-auto transform md:-translate-y-1/2 bg-white/20 hover:bg-white/30 active:bg-white/40 text-white p-3 rounded-full transition-colors z-20 touch-manipulation min-w-[44px] min-h-[44px]"
         aria-label="Poprzedni slajd"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -302,7 +302,7 @@ export default function HeroSection() {
       
       <button
         onClick={goToNext}
-        className="absolute right-2 top-[35%] md:top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 active:bg-white/40 text-white p-3 rounded-full transition-colors z-20 touch-manipulation min-w-[44px] min-h-[44px]"
+        className="absolute right-2 bottom-24 md:top-1/2 md:bottom-auto transform md:-translate-y-1/2 bg-white/20 hover:bg-white/30 active:bg-white/40 text-white p-3 rounded-full transition-colors z-20 touch-manipulation min-w-[44px] min-h-[44px]"
         aria-label="Następny slajd"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
