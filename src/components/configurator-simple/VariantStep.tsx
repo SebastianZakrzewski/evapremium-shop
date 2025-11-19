@@ -112,13 +112,18 @@ export function VariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdo
         >
           Wstecz
         </Button>
-        <Button
-          onClick={onNext}
-          disabled={!config.variant}
-          className="px-6 py-2.5 min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30"
-        >
-          Dalej
-        </Button>
+        <div className="flex flex-col items-end gap-2">
+          {!config.variant && (
+            <p className="text-xs text-gray-400 text-right">Wybierz wariant zestawu aby kontynuować</p>
+          )}
+          <Button
+            onClick={onNext}
+            disabled={!config.variant}
+            className="px-6 py-2.5 min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30"
+          >
+            Dalej
+          </Button>
+        </div>
       </div>
     </div>
   );

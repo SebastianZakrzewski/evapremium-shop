@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import ConfiguratorSimple from "@/components/configurator-simple/ConfiguratorSimple";
+import { ConfiguratorLoader } from "@/components/configurator-simple/ConfiguratorLoader";
 
 export const metadata: Metadata = {
   title: "Konfigurator Dywaników | EvaPremium",
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center"><div className="text-white text-xl">Ładowanie konfiguratora...</div></div>}>
+    <Suspense fallback={<ConfiguratorLoader />}>
       <ConfiguratorSimple />
     </Suspense>
   );

@@ -573,7 +573,7 @@ export function CheckoutSection() {
 
   // Progress indicator component
   const ProgressIndicator = () => (
-    <div className="mb-8">
+    <div className="mb-4 md:mb-6 sticky top-0 z-40 bg-black/95 backdrop-blur-sm border-b border-neutral-800 pb-4 md:pb-6 -mx-4 px-4 md:-mx-6 md:px-6">
       <div className="flex items-center justify-between max-w-4xl mx-auto">
         {checkoutSteps.map((step, index) => {
           const isActive = currentStep === step.id
@@ -698,7 +698,7 @@ export function CheckoutSection() {
           }
         )} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Formularz klienta */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-4 md:space-y-6">
             {/* Step 1: Dane kontaktowe */}
             {currentStep === 1 && (
               <Card className="bg-black/40 backdrop-blur border-gray-800 shadow-2xl hover:shadow-red-500/10 transition-all duration-300 animate-slide-in-left">
@@ -707,7 +707,7 @@ export function CheckoutSection() {
                     Dane kontaktowe
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6 pt-6">
+                <CardContent className="space-y-4 md:space-y-5 pt-4 md:pt-5">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="firstName" className="text-gray-300">Imię *</Label>
@@ -775,7 +775,7 @@ export function CheckoutSection() {
                     Adres wysyłkowy
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6 pt-6">
+                <CardContent className="space-y-4 md:space-y-5 pt-4 md:pt-5">
                   <div className="space-y-2">
                     <Label htmlFor="street" className="text-gray-300">Ulica i numer *</Label>
                     <Input
@@ -845,7 +845,7 @@ export function CheckoutSection() {
                     </div>
                     
                     {!sameAsShipping && (
-                      <div className="space-y-6 pt-4 animate-fade-in">
+                      <div className="space-y-4 md:space-y-5 pt-3 md:pt-4 animate-fade-in">
                         <div className="space-y-2">
                           <Label htmlFor="companyName" className="text-gray-300">🏢 Nazwa firmy</Label>
                           <Input
@@ -873,7 +873,7 @@ export function CheckoutSection() {
 
             {/* Step 3: Dostawa i płatność */}
             {currentStep === 3 && (
-              <div className="space-y-8 animate-scale-in">
+              <div className="space-y-4 md:space-y-6 animate-scale-in">
                 {/* Metoda dostawy */}
                 <Card className="bg-black/40 backdrop-blur border-gray-800 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
                   <CardHeader className="border-b border-gray-800">
@@ -960,7 +960,7 @@ export function CheckoutSection() {
 
                 {/* Checkboxy */}
                 <Card className="bg-black/40 backdrop-blur border-gray-800 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-                  <CardContent className="space-y-6 pt-6">
+                  <CardContent className="space-y-4 md:space-y-5 pt-4 md:pt-5">
                     <div className="flex items-start space-x-3 p-4 bg-gray-900/30 rounded-lg border border-gray-700">
                       <Checkbox
                         id="termsAccepted"
@@ -1004,7 +1004,7 @@ export function CheckoutSection() {
 
             {/* Step 4: Podsumowanie */}
             {currentStep === 4 && (
-              <div className="space-y-6 animate-bounce-in">
+              <div className="space-y-4 md:space-y-5 animate-bounce-in">
                 <Card className="bg-black/40 backdrop-blur border-gray-800 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
                   <CardHeader className="border-b border-gray-800">
                                       <CardTitle className="text-xl text-white">
@@ -1012,7 +1012,7 @@ export function CheckoutSection() {
                   </CardTitle>
                   </CardHeader>
                   <CardContent className="pt-6">
-                    <div className="space-y-6">
+                    <div className="space-y-4 md:space-y-5">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="bg-gray-900/30 rounded-lg p-4 border border-gray-700">
                           <h4 className="text-white font-semibold mb-3">

@@ -166,13 +166,22 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
         >
           Wstecz
         </Button>
-        <Button
-          onClick={onNext}
-          disabled={!isStepComplete}
-          className="px-6 py-2.5 min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30"
-        >
-          Dalej
-        </Button>
+        <div className="flex flex-col items-end gap-2">
+          {!isStepComplete && (
+            <p className="text-xs text-gray-400 text-right">
+              {!config.color && !config.edgeColor && "Wybierz kolory aby kontynuować"}
+              {config.edgeColor && !config.color && "Wybierz kolor materiału aby kontynuować"}
+              {config.color && !config.edgeColor && "Wybierz kolor obszycia aby kontynuować"}
+            </p>
+          )}
+          <Button
+            onClick={onNext}
+            disabled={!isStepComplete}
+            className="px-6 py-2.5 min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30"
+          >
+            Dalej
+          </Button>
+        </div>
       </div>
     </div>
   );

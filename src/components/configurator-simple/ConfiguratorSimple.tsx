@@ -18,6 +18,7 @@ import { VariantStep } from "./VariantStep";
 import { StructureStep } from "./StructureStep";
 import { CombinedColorPicker } from "./CombinedColorPicker";
 import { SummaryStep } from "./SummaryStep";
+import { ConfiguratorLoader } from "./ConfiguratorLoader";
 
 export interface ConfiguratorState {
   // Step 1: Wybór samochodu
@@ -67,7 +68,7 @@ export default function ConfiguratorSimple() {
   const { addToCart, isLoading: cartLoading } = useCart();
   
   // Pobierz marki
-  const { data: brands = [] } = useQuery<Brand[]>({
+  const { data: brands = [], isLoading: brandsLoading } = useQuery<Brand[]>({
     queryKey: ['car-brands'],
     queryFn: fetchBrands,
     staleTime: 10 * 60 * 1000,
@@ -427,6 +428,11 @@ export default function ConfiguratorSimple() {
     ? 'pb-[100px]' // Tylko sticky bar
     : '';
 
+  // Pokaż loader podczas ładowania marek
+  if (brandsLoading) {
+    return <ConfiguratorLoader />;
+  }
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Progress Bar */}
@@ -451,6 +457,7 @@ export default function ConfiguratorSimple() {
               ref={(el) => { stepRefs.current[1] = el; }}
               step={1}
               title="Wybór samochodu"
+              benefitDescription="Dopasujemy dywaniki idealnie do Twojego modelu"
               isOpen={activeStep === 1}
               onToggle={() => goToStep(1)}
               isValid={isStepValid(1)}
@@ -467,6 +474,7 @@ export default function ConfiguratorSimple() {
               ref={(el) => { stepRefs.current[2] = el; }}
               step={2}
               title="Typ dywaników"
+              benefitDescription="Wybierz poziom ochrony i stylu"
               isOpen={activeStep === 2}
               onToggle={() => goToStep(2)}
               isValid={isStepValid(2)}
@@ -485,6 +493,7 @@ export default function ConfiguratorSimple() {
               ref={(el) => { stepRefs.current[3] = el; }}
               step={3}
               title="Wariant zestawu"
+              benefitDescription="Dostosuj zestaw do swoich potrzeb"
               isOpen={activeStep === 3}
               onToggle={() => goToStep(3)}
               isValid={isStepValid(3)}
@@ -504,6 +513,7 @@ export default function ConfiguratorSimple() {
               ref={(el) => { stepRefs.current[4] = el; }}
               step={4}
               title="Struktura"
+              benefitDescription="Wybierz wzór komórek EVA"
               isOpen={activeStep === 4}
               onToggle={() => goToStep(4)}
               isValid={isStepValid(4)}
@@ -522,6 +532,7 @@ export default function ConfiguratorSimple() {
               ref={(el) => { stepRefs.current[5] = el; }}
               step={5}
               title="Kolory materiału i obszycia"
+              benefitDescription="Personalizuj wygląd dywaników"
               isOpen={activeStep === 5}
               onToggle={() => goToStep(5)}
               isValid={isStepValid(5)}
@@ -540,6 +551,7 @@ export default function ConfiguratorSimple() {
               ref={(el) => { stepRefs.current[6] = el; }}
               step={6}
               title="Dodatki"
+              benefitDescription="Dodaj opcjonalne akcesoria"
               isOpen={activeStep === 6}
               onToggle={() => goToStep(6)}
               isValid={isStepValid(6)}
@@ -579,6 +591,7 @@ export default function ConfiguratorSimple() {
               ref={(el) => { stepRefs.current[7] = el; }}
               step={7}
               title="Podsumowanie"
+              benefitDescription="Sprawdź konfigurację przed zamówieniem"
               isOpen={activeStep === 7}
               onToggle={() => goToStep(7)}
               isValid={isStepValid(7)}

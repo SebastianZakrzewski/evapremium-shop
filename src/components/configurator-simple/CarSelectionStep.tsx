@@ -258,7 +258,15 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
       </div>
 
       {/* Przycisk Dalej */}
-      <div className="flex justify-end pt-4">
+      <div className="flex flex-col items-end gap-2 pt-4">
+        {!isStepComplete && (
+          <p className="text-xs text-gray-400 text-right">
+            {!config.brand && "Wybierz markę aby kontynuować"}
+            {config.brand && !config.model && "Wybierz model aby kontynuować"}
+            {config.brand && config.model && !config.year && "Wybierz rok aby kontynuować"}
+            {config.brand && config.model && config.year && !config.bodyType && "Wybierz typ nadwozia aby kontynuować"}
+          </p>
+        )}
         <Button
           onClick={onNext}
           disabled={!isStepComplete}

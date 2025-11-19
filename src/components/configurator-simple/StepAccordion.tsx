@@ -9,6 +9,7 @@ interface StepAccordionProps {
   onToggle: () => void;
   isValid: boolean;
   disabled?: boolean;
+  benefitDescription?: string;
   children: React.ReactNode;
 }
 
@@ -19,6 +20,7 @@ export const StepAccordion = React.forwardRef<HTMLDivElement, StepAccordionProps
   onToggle,
   isValid,
   disabled = false,
+  benefitDescription,
   children,
 }, ref) => {
   return (
@@ -74,7 +76,12 @@ export const StepAccordion = React.forwardRef<HTMLDivElement, StepAccordionProps
               <span className="text-xs font-medium">{step}</span>
             )}
           </div>
-          <h3 className="text-lg md:text-xl font-semibold leading-tight">{title}</h3>
+          <div className="flex flex-col">
+            <h3 className="text-lg md:text-xl font-semibold leading-tight">{title}</h3>
+            {benefitDescription && (
+              <p className="text-xs md:text-sm text-gray-400 mt-1 leading-relaxed">{benefitDescription}</p>
+            )}
+          </div>
         </div>
         <span className={`text-gray-400 text-base md:text-lg transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
           ▼
