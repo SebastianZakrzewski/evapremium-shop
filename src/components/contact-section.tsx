@@ -1,7 +1,6 @@
 "use client";
 
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,297 +13,206 @@ import {
   Send,
   MessageCircle,
   Building2,
-  Users
+  ArrowRight
 } from 'lucide-react';
+import SectionHeading from "./ui/section-heading";
+import { cn } from '@/lib/utils';
+
+const contactInfo = [
+  {
+    icon: Phone,
+    title: "Infolinia",
+    value: "+48 570 123 635",
+    subtext: "Pon-Pt: 8:00-18:00",
+    action: "tel:+48570123635",
+    color: "text-green-500",
+    bg: "bg-green-500/10"
+  },
+  {
+    icon: Mail,
+    title: "Email",
+    value: "evapremium.kontakt@gmail.com",
+    subtext: "Odpowiadamy w 24h",
+    action: "mailto:evapremium.kontakt@gmail.com",
+    color: "text-blue-500",
+    bg: "bg-blue-500/10"
+  },
+  {
+    icon: MapPin,
+    title: "Siedziba",
+    value: "Gdynia, Pogórze",
+    subtext: "ul. Tadeusza Kościuszki 34/1",
+    action: "https://maps.google.com",
+    color: "text-red-500",
+    bg: "bg-red-500/10"
+  }
+];
 
 export default function ContactSection() {
+  const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormState('submitting');
+    // Simulate API call
+    setTimeout(() => setFormState('success'), 1500);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
-      
-      {/* Floating particles */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute top-60 left-1/4 w-1.5 h-1.5 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-500 rounded-full animate-float-hover" style={{animationDelay: '3s'}}></div>
-        <div className="absolute bottom-20 left-1/2 w-2 h-2 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '4s'}}></div>
+    <div className="min-h-screen bg-black relative overflow-hidden py-20 md:py-32">
+      {/* Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/3 left-0 w-[600px] h-[600px] bg-red-900/5 blur-[120px] rounded-full" />
+        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-blue-900/5 blur-[120px] rounded-full" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-16">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            KONTAKT
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-            Masz pytania? Chcesz złożyć zamówienie? Jesteśmy tutaj, aby Ci pomóc!
-          </p>
-        </div>
+      <div className="container mx-auto px-4 relative z-10">
+        <SectionHeading
+          title="SKONTAKTUJ SIĘ"
+          highlight="Z NAMI"
+          subtitle="Masz pytania dotyczące produktów lub zamówienia? Jesteśmy tutaj, aby Ci pomóc."
+        />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Information */}
-          <div className="space-y-8">
-            <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-              <CardHeader className="text-center pb-4">
-                <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-3">
-                  <MessageCircle className="h-8 w-8 text-red-500" />
-                  Skontaktuj się z nami
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Contact Details */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4 p-4 bg-black/20 rounded-lg">
-                    <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
-                      <Phone className="h-6 w-6 text-red-400" />
+        <div className="grid lg:grid-cols-12 gap-12">
+          {/* Left Side - Contact Info & Map */}
+          <div className="lg:col-span-5 space-y-8">
+            {/* Info Cards */}
+            <div className="grid gap-4">
+              {contactInfo.map((info, idx) => {
+                const Icon = info.icon;
+                return (
+                  <a 
+                    key={idx} 
+                    href={info.action}
+                    className="flex items-center gap-5 p-5 rounded-xl bg-[#111] border border-white/5 hover:border-white/20 hover:bg-[#161616] transition-all duration-300 group"
+                  >
+                    <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-110", info.bg)}>
+                      <Icon className={cn("w-6 h-6", info.color)} />
                     </div>
                     <div>
-                      <h3 className="text-white font-semibold">Telefon</h3>
-                      <a href="tel:+48570123635" className="text-gray-300 hover:text-white transition-colors">
-                        +48 570 123 635
-                      </a>
-                      <p className="text-gray-400 text-sm">Pon-Pt: 8:00-18:00</p>
+                      <p className="text-sm text-gray-400 font-medium mb-1">{info.title}</p>
+                      <h4 className="text-lg font-bold text-white group-hover:text-red-500 transition-colors">{info.value}</h4>
+                      <p className="text-xs text-gray-500">{info.subtext}</p>
                     </div>
-                  </div>
+                    <ArrowRight className="ml-auto w-5 h-5 text-gray-600 group-hover:text-white opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                  </a>
+                );
+              })}
+            </div>
 
-                  <div className="flex items-center gap-4 p-4 bg-black/20 rounded-lg">
-                    <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
-                      <Mail className="h-6 w-6 text-red-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-semibold">Email</h3>
-                      <p className="text-gray-300">evapremium.kontakt@gmail.com</p>
-                      <p className="text-gray-400 text-sm">Odpowiadamy w ciągu 24h</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4 p-4 bg-black/20 rounded-lg">
-                    <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
-                      <MapPin className="h-6 w-6 text-red-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-semibold">Adres</h3>
-                      <p className="text-gray-300">Klaudia Lewandowska</p>
-                      <p className="text-gray-300">81-198 Pogórze</p>
-                      <p className="text-gray-300">ul. Tadeusza Kościuszki 34/1</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4 p-4 bg-black/20 rounded-lg">
-                    <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
-                      <Clock className="h-6 w-6 text-red-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-semibold">Godziny pracy</h3>
-                      <p className="text-gray-300">Poniedziałek - Piątek: 8:00 - 18:00</p>
-                      <p className="text-gray-300">Sobota: 9:00 - 15:00</p>
-                      <p className="text-gray-400 text-sm">Niedziela: Zamknięte</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4 p-4 bg-black/20 rounded-lg">
-                    <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
-                      <Building2 className="h-6 w-6 text-red-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-semibold">NIP</h3>
-                      <p className="text-gray-300">5871715880</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Company Info */}
-            <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-              <CardHeader className="text-center pb-4">
-                <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-3">
-                  <Building2 className="h-8 w-8 text-red-500" />
-                  O naszej firmie
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4 text-center">
-                  <div className="flex items-center justify-center gap-4 p-4 bg-black/20 rounded-lg">
-                    <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
-                      <Users className="h-6 w-6 text-red-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-semibold">Zespół ekspertów</h3>
-                      <p className="text-gray-300">Ponad 50 specjalistów</p>
-                    </div>
-                  </div>
-                  
-                  <p className="text-gray-300 leading-relaxed">
-                    EvaPremium to polska firma z wieloletnim doświadczeniem w produkcji 
-                    dywaników samochodowych EVA. Nasz zespół składa się z ekspertów, 
-                    którzy pomogą Ci wybrać idealne rozwiązanie dla Twojego samochodu.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Map Preview */}
+            <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl group">
+              <iframe
+                src="https://www.google.com/maps?q=ul.+Tadeusza+Kościuszki+34%2F1,+81-198+Pogórze,+Gdynia&output=embed&hl=pl&z=16"
+                width="100%"
+                height="100%"
+                style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(85%) grayscale(20%)' }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Lokalizacja EvaPremium"
+                className="opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+              />
+              <div className="absolute inset-0 pointer-events-none border-2 border-white/5 rounded-2xl" />
+            </div>
+            
+            <div className="p-6 bg-[#111] rounded-xl border border-white/5">
+              <div className="flex items-center gap-3 mb-4">
+                <Building2 className="w-5 h-5 text-gray-400" />
+                <h4 className="font-bold text-white">Dane Firmowe</h4>
+              </div>
+              <div className="space-y-2 text-sm text-gray-400">
+                <p>EvaPremium Klaudia Lewandowska</p>
+                <p>NIP: 5871715880</p>
+                <p>ul. Tadeusza Kościuszki 34/1</p>
+                <p>81-198 Pogórze</p>
+              </div>
+            </div>
           </div>
 
-          {/* Contact Form */}
-          <div>
-            <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-              <CardHeader className="text-center pb-6">
-                <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-3">
-                  <Send className="h-8 w-8 text-red-500" />
-                  Wyślij wiadomość
-                </CardTitle>
-                <p className="text-gray-300">
-                  Wypełnij formularz, a skontaktujemy się z Tobą w ciągu 24 godzin
-                </p>
-              </CardHeader>
-              <CardContent>
-                <form className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName" className="text-white font-medium">
-                        Imię *
-                      </Label>
-                      <Input
-                        id="firstName"
-                        type="text"
-                        placeholder="Twoje imię"
-                        className="bg-black/40 border-gray-600 text-white placeholder-gray-400 focus:border-red-500 focus:ring-red-500/20"
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName" className="text-white font-medium">
-                        Nazwisko *
-                      </Label>
-                      <Input
-                        id="lastName"
-                        type="text"
-                        placeholder="Twoje nazwisko"
-                        className="bg-black/40 border-gray-600 text-white placeholder-gray-400 focus:border-red-500 focus:ring-red-500/20"
-                        required
-                      />
-                    </div>
-                  </div>
+          {/* Right Side - Form */}
+          <div className="lg:col-span-7">
+            <div className="bg-[#111] border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/5 blur-[80px] rounded-full pointer-events-none" />
+              
+              <div className="flex items-center gap-3 mb-8">
+                <MessageCircle className="w-6 h-6 text-red-500" />
+                <h3 className="text-2xl font-bold text-white">Napisz do nas</h3>
+              </div>
 
+              <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-white font-medium">
-                      Email *
-                    </Label>
+                    <Label htmlFor="firstName" className="text-gray-300">Imię</Label>
+                    <Input
+                      id="firstName"
+                      placeholder="Wpisz imię"
+                      className="bg-black/50 border-white/10 text-white placeholder:text-gray-600 focus:border-red-500 focus:ring-red-500/20 h-12"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-gray-300">Email</Label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder="twoj@email.pl"
-                      className="bg-black/40 border-gray-600 text-white placeholder-gray-400 focus:border-red-500 focus:ring-red-500/20"
+                      placeholder="twoj@email.com"
+                      className="bg-black/50 border-white/10 text-white placeholder:text-gray-600 focus:border-red-500 focus:ring-red-500/20 h-12"
                       required
                     />
                   </div>
+                </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-white font-medium">
-                      Telefon
-                    </Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="+48 570 123 635"
-                        className="bg-black/40 border-gray-600 text-white placeholder-gray-400 focus:border-red-500 focus:ring-red-500/20"
-                      />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="subject" className="text-white font-medium">
-                      Temat *
-                    </Label>
-                    <Input
-                      id="subject"
-                      type="text"
-                      placeholder="Temat wiadomości"
-                      className="bg-black/40 border-gray-600 text-white placeholder-gray-400 focus:border-red-500 focus:ring-red-500/20"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="message" className="text-white font-medium">
-                      Wiadomość *
-                    </Label>
-                    <Textarea
-                      id="message"
-                      placeholder="Opisz swoje pytanie lub zapytanie..."
-                      rows={6}
-                      className="bg-black/40 border-gray-600 text-white placeholder-gray-400 focus:border-red-500 focus:ring-red-500/20 resize-none"
-                      required
-                    />
-                  </div>
-
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-red-500/25"
-                  >
-                    <Send className="h-5 w-5 mr-2" />
-                    Wyślij wiadomość
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* Map Section */}
-        <div className="mt-16">
-          <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-            <CardHeader className="text-center pb-6">
-              <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-3">
-                <MapPin className="h-8 w-8 text-red-500" />
-                Znajdź nas
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="bg-black/20 rounded-lg p-4">
-                <div className="w-full h-96 rounded-lg overflow-hidden border border-gray-700 shadow-lg">
-                  <iframe
-                    src="https://www.google.com/maps?q=ul.+Tadeusza+Kościuszki+34%2F1,+81-198+Pogórze,+Gdynia&output=embed&hl=pl&z=16"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Lokalizacja EvaPremium - ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze"
-                    className="w-full h-full"
+                <div className="space-y-2">
+                  <Label htmlFor="subject" className="text-gray-300">Temat</Label>
+                  <Input
+                    id="subject"
+                    placeholder="Czego dotyczy wiadomość?"
+                    className="bg-black/50 border-white/10 text-white placeholder:text-gray-600 focus:border-red-500 focus:ring-red-500/20 h-12"
+                    required
                   />
                 </div>
-                <div className="mt-4 text-center">
-                  <p className="text-gray-300 text-sm">
-                    <MapPin className="h-4 w-4 inline mr-2 text-red-400" />
-                    81-198 Pogórze, ul. Tadeusza Kościuszki 34/1
-                  </p>
-                  <a
-                    href="https://www.google.com/maps/search/?api=1&query=ul.+Tadeusza+Kościuszki+34%2F1,+81-198+Pogórze,+Gdynia"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-red-400 hover:text-red-300 transition-colors text-sm mt-2 inline-block"
-                  >
-                    Otwórz w Google Maps →
-                  </a>
+
+                <div className="space-y-2">
+                  <Label htmlFor="message" className="text-gray-300">Wiadomość</Label>
+                  <Textarea
+                    id="message"
+                    placeholder="Treść wiadomości..."
+                    rows={6}
+                    className="bg-black/50 border-white/10 text-white placeholder:text-gray-600 focus:border-red-500 focus:ring-red-500/20 resize-none"
+                    required
+                  />
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+
+                <Button 
+                  type="submit" 
+                  disabled={formState !== 'idle'}
+                  className={cn(
+                    "w-full h-14 text-base font-bold transition-all duration-300",
+                    formState === 'success' 
+                      ? "bg-green-600 hover:bg-green-700 text-white"
+                      : "bg-white text-black hover:bg-gray-200"
+                  )}
+                >
+                  {formState === 'idle' && (
+                    <>
+                      Wyślij Wiadomość
+                      <Send className="ml-2 w-4 h-4" />
+                    </>
+                  )}
+                  {formState === 'submitting' && "Wysyłanie..."}
+                  {formState === 'success' && (
+                    <>
+                      Wysłano Pomyślnie
+                      <CheckCircle className="ml-2 w-5 h-5" />
+                    </>
+                  )}
+                </Button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes float-hover {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        .animate-float-hover {
-          animation: float-hover 6s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 }

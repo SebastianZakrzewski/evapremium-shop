@@ -1,9 +1,12 @@
 "use client";
+
 import React, { useState, useCallback, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import SectionHeading from "./ui/section-heading";
+import { cn } from "@/lib/utils";
 
 interface ProductImage {
   id: number;
@@ -48,7 +51,7 @@ const productImages: ProductImage[] = [
     src: "/galeria/photo_2025-04-25_17.04.39.webp",
     alt: "Dywaniki samochodowe EVA - gotowy produkt",
     title: "Dywaniki EVA - Gotowy Produkt",
-    description: "Gotowe do montażu dywaniki EVA Premium"
+    description: "Gotowe do montażu dywaników EVA Premium"
   },
   {
     id: 6,
@@ -242,32 +245,30 @@ const ProductImageCard = React.memo(({
   const isPriority = index < 3;
   
   return (
-    <div key={`${setKey}-${index}`} className="flex-shrink-0 w-96 h-80 mx-3">
+    <div key={`${setKey}-${index}`} className="flex-shrink-0 w-80 h-64 sm:w-96 sm:h-80 mx-3 group">
       <div 
-        className="relative h-full rounded-2xl overflow-hidden group border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20 cursor-pointer"
+        className="relative h-full rounded-xl overflow-hidden bg-[#111] border border-white/5 group-hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1 cursor-pointer"
         onClick={() => onImageClick(image)}
       >
         <Image
           src={image.src}
           alt={image.alt}
           fill
-          className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-          sizes="(max-width: 768px) 384px 320px, 384px 320px"
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          sizes="(max-width: 768px) 320px, 384px"
           priority={isPriority}
           quality={85}
-          placeholder="blur"
-          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
         />
         
         {/* Overlay z gradientem */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         
         {/* Tekst na obrazie */}
-        <div className="absolute bottom-0 left-0 right-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
-          <h3 className="text-2xl font-bold mb-3">
+        <div className="absolute bottom-0 left-0 right-0 p-6 text-white translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+          <h3 className="text-xl font-bold mb-2 text-white group-hover:text-red-500 transition-colors">
             {image.title}
           </h3>
-          <p className="text-base text-gray-200">
+          <p className="text-sm text-gray-300 line-clamp-2">
             {image.description}
           </p>
         </div>
@@ -293,21 +294,21 @@ const ImageModal = React.memo(({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] flex items-center justify-center p-4 md:p-8"
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
+        initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.8, opacity: 0 }}
+        exit={{ scale: 0.9, opacity: 0 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="relative max-w-4xl max-h-[90vh] w-full h-full"
+        className="relative max-w-5xl max-h-[90vh] w-full h-full flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Przycisk zamknięcia */}
         <button
           onClick={onClose}
-          className="absolute -top-12 right-0 z-10 text-white hover:text-red-400 transition-colors duration-200"
+          className="absolute -top-12 right-0 z-10 text-white hover:text-red-500 transition-colors duration-200 p-2"
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -315,24 +316,24 @@ const ImageModal = React.memo(({
         </button>
 
         {/* Kontener obrazu */}
-        <div className="relative w-full h-full rounded-2xl overflow-hidden">
+        <div className="relative flex-1 rounded-2xl overflow-hidden bg-[#111] shadow-2xl border border-white/10">
           <Image
             src={selectedImage.src}
             alt={selectedImage.alt}
             fill
             className="object-contain"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+            sizes="(max-width: 1200px) 100vw, 1200px"
             quality={100}
             priority
           />
         </div>
 
         {/* Informacje o produkcie */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 text-white">
-          <h3 className="text-2xl font-bold mb-2">
+        <div className="mt-6 bg-[#111] border border-white/10 rounded-xl p-6 backdrop-blur-md">
+          <h3 className="text-2xl font-bold text-white mb-2">
             {selectedImage.title}
           </h3>
-          <p className="text-lg text-gray-200">
+          <p className="text-gray-400">
             {selectedImage.description}
           </p>
         </div>
@@ -388,65 +389,44 @@ export default function ProductGallerySection() {
     );
   }, [openModal]);
 
-  // Zoptymalizowane animowane cząsteczki
-  const animatedParticles = useMemo(() => [
-    { top: 'top-20', left: 'left-10', size: 'w-2 h-2', color: 'bg-red-500', delay: '0s' },
-    { top: 'top-40', left: 'right-20', size: 'w-1 h-1', color: 'bg-red-400', delay: '1s' },
-    { top: 'bottom-20', left: 'left-1/4', size: 'w-1.5 h-1.5', color: 'bg-red-300', delay: '2s' },
-    { top: 'bottom-40', left: 'right-1/3', size: 'w-1 h-1', color: 'bg-red-600', delay: '0.5s' }
-  ], []);
-
   return (
-    <section className="py-20 bg-black relative overflow-hidden">
-      {/* Animowane tło z gradientem */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
-      
-      {/* Animowane cząsteczki tła */}
-      <div className="absolute inset-0 opacity-20">
-        {animatedParticles.map((particle, index) => (
-          <div
-            key={index}
-            className={`absolute ${particle.top} ${particle.left} ${particle.size} ${particle.color} rounded-full animate-float-hover`}
-            style={{animationDelay: particle.delay}}
-          />
-        ))}
+    <section className="py-20 md:py-32 bg-black relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-red-900/10 blur-[100px] rounded-full" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-900/10 blur-[100px] rounded-full" />
       </div>
 
-      {/* Nagłówek sekcji - z kontenerem */}
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Nasze Produkty <span className="text-red-500">EVAPREMIUM</span>
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Odkryj kolekcję najwyższej jakości dywaników samochodowych, 
-            precyzyjnie dopasowanych do Twojego auta
-          </p>
-        </div>
+        <SectionHeading
+          title="NASZA GALERIA"
+          highlight="PRODUKTÓW"
+          subtitle="Odkryj jakość i precyzję wykonania naszych dywaników. Każdy detal ma znaczenie."
+        />
       </div>
 
       {/* Kontener galerii - pełna szerokość */}
-      <div className="w-full overflow-hidden relative z-10">
+      <div className="w-full overflow-hidden relative z-10 mt-8">
         {/* Strzałka w lewo */}
         <button
           onClick={goToPrevious}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
+          className="absolute left-4 md:left-8 top-1/2 transform -translate-y-1/2 z-20 bg-black/80 hover:bg-red-600 text-white p-3 md:p-4 rounded-full transition-all duration-300 border border-white/10 hover:border-red-500 shadow-xl backdrop-blur-sm group"
           aria-label="Przewiń w lewo"
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-6 h-6 group-hover:scale-110 transition-transform" />
         </button>
 
         {/* Strzałka w prawo */}
         <button
           onClick={goToNext}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
+          className="absolute right-4 md:right-8 top-1/2 transform -translate-y-1/2 z-20 bg-black/80 hover:bg-red-600 text-white p-3 md:p-4 rounded-full transition-all duration-300 border border-white/10 hover:border-red-500 shadow-xl backdrop-blur-sm group"
           aria-label="Przewiń w prawo"
         >
-          <ChevronRight className="w-6 h-6" />
+          <ChevronRight className="w-6 h-6 group-hover:scale-110 transition-transform" />
         </button>
 
         {/* Główny kontener z automatyczną animacją */}
-        <div className="carousel-container overflow-hidden">
+        <div className="carousel-container overflow-hidden py-10">
           <motion.div 
             className="flex carousel-motion"
             style={{ width: 'max-content' }}
@@ -469,7 +449,6 @@ export default function ProductGallerySection() {
               }
             }}
           >
-            {/* Zoptymalizowane zestawy obrazów */}
             {imageSets}
           </motion.div>
         </div>
@@ -480,17 +459,15 @@ export default function ProductGallerySection() {
         <ImageModal selectedImage={selectedImage} onClose={closeModal} />
       </AnimatePresence>
 
-      {/* Call to Action - z kontenerem */}
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mt-16">
-          <Link 
-            href="/dywaniki"
-            className="inline-block bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25"
-          >
-            Sprawdź Dostępność Marki
-          </Link>
-        </div>
+      {/* Call to Action */}
+      <div className="container mx-auto px-4 relative z-10 mt-12 text-center">
+        <Link 
+          href="/dywaniki"
+          className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-all duration-300 bg-red-600 hover:bg-red-700 rounded-full shadow-lg hover:shadow-xl hover:shadow-red-900/30 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black"
+        >
+          Sprawdź Dostępność Dla Twojego Auta
+        </Link>
       </div>
     </section>
   );
-} 
+}

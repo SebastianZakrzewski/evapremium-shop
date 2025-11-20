@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { 
   Award, 
   Users, 
@@ -13,298 +12,214 @@ import {
   Star,
   CheckCircle,
   TrendingUp,
-  Globe
+  Globe,
+  ArrowRight
 } from 'lucide-react';
+import SectionHeading from "./ui/section-heading";
+import { cn } from '@/lib/utils';
+
+const stats = [
+  {
+    icon: Award,
+    value: "13+",
+    label: "Lat doświadczenia",
+    description: "Od 2010 roku na rynku"
+  },
+  {
+    icon: Users,
+    value: "15K+",
+    label: "Zadowolonych klientów",
+    description: "W całej Europie"
+  },
+  {
+    icon: Target,
+    value: "2500+",
+    label: "Modeli samochodów",
+    description: "Precyzyjnie zmierzonych"
+  },
+  {
+    icon: Star,
+    value: "4.9/5",
+    label: "Średnia ocena",
+    description: "Z tysięcy opinii"
+  }
+];
+
+const values = [
+  {
+    icon: Shield,
+    title: "Jakość Premium",
+    description: "Używamy tylko certyfikowanego materiału EVA o podwyższonej gęstości i trwałości."
+  },
+  {
+    icon: Heart,
+    title: "Pasja do Motoryzacji",
+    description: "Każdy komplet dywaników traktujemy jak element tuningu wnętrza."
+  },
+  {
+    icon: TrendingUp,
+    title: "Ciągły Rozwój",
+    description: "Stale poszerzamy bazę szablonów o najnowsze modele samochodów."
+  },
+  {
+    icon: Users,
+    title: "Podejście do Klienta",
+    description: "Jesteśmy doradcami, nie tylko sprzedawcami. Pomagamy w wyborze."
+  },
+  {
+    icon: Truck,
+    title: "Ekspresowa Realizacja",
+    description: "Wysyłka w 24-48h dla większości popularnych modeli."
+  },
+  {
+    icon: CheckCircle,
+    title: "Gwarancja Satysfakcji",
+    description: "Pełne wsparcie posprzedażowe i bezproblemowe zwroty."
+  }
+];
 
 export default function AboutUsSection() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
-      
-      {/* Floating particles */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+    <div className="min-h-screen bg-black relative overflow-hidden py-20 md:py-32">
+      {/* Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-red-900/5 blur-[120px] rounded-full" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-900/5 blur-[120px] rounded-full" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-20 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 drop-shadow-lg">
-            O Nas
-          </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            EvaPremium to polski producent najwyższej jakości dywaników samochodowych EVA. 
-            Od 2010 roku dostarczamy innowacyjne rozwiązania dla miłośników motoryzacji.
-          </p>
-          <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-red-500 to-transparent mx-auto mt-8"></div>
-        </div>
+        <SectionHeading
+          title="O NASZEJ"
+          highlight="MARCE"
+          subtitle="EvaPremium to polski producent innowacyjnych dywaników samochodowych. Łączymy technologię z rzemieślniczą precyzją."
+        />
 
         {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
-          <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300 text-center">
-            <CardContent className="p-8">
-              <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="w-8 h-8 text-white" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
+          {stats.map((stat, idx) => {
+            const Icon = stat.icon;
+            return (
+              <div 
+                key={idx}
+                className="bg-[#111] border border-white/5 p-8 rounded-2xl hover:border-red-900/30 transition-all duration-300 group hover:-translate-y-1"
+              >
+                <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-600 transition-colors">
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-4xl font-bold text-white mb-2 group-hover:text-red-500 transition-colors">
+                  {stat.value}
+                </h3>
+                <p className="text-white font-medium mb-1">{stat.label}</p>
+                <p className="text-sm text-gray-500">{stat.description}</p>
               </div>
-              <h3 className="text-3xl font-bold text-white mb-2">5+</h3>
-              <p className="text-gray-300">Lat doświadczenia</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300 text-center">
-            <CardContent className="p-8">
-              <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-3xl font-bold text-white mb-2">2K+</h3>
-              <p className="text-gray-300">Zadowolonych klientów</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300 text-center">
-            <CardContent className="p-8">
-              <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Target className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-3xl font-bold text-white mb-2">1000+</h3>
-              <p className="text-gray-300">Modeli samochodów</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300 text-center">
-            <CardContent className="p-8">
-              <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Star className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-3xl font-bold text-white mb-2">4.9/5</h3>
-              <p className="text-gray-300">Ocena klientów</p>
-            </CardContent>
-          </Card>
+            );
+          })}
         </div>
 
-        {/* Mission & Vision */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
-            <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-            <CardContent className="p-8">
-              <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center mr-4">
-                  <Target className="w-6 h-6 text-white" />
+        {/* Mission & Vision - Split Layout */}
+        <div className="grid lg:grid-cols-2 gap-12 items-center mb-24">
+          <div className="relative">
+             <div className="absolute -inset-4 bg-gradient-to-r from-red-600 to-blue-600 opacity-20 blur-2xl rounded-full" />
+             <div className="relative bg-[#111] border border-white/10 rounded-3xl p-8 md:p-12">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 text-red-500 text-sm font-medium mb-6">
+                  <Target className="w-4 h-4" />
+                  Nasza Misja
                 </div>
-                <h2 className="text-2xl font-bold text-white">Nasza Misja</h2>
-              </div>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                Dostarczamy najwyższej jakości dywaniki samochodowe EVA, które łączą funkcjonalność, 
-                trwałość i estetykę. Naszym celem jest zapewnienie każdemu kierowcy komfortu i stylu 
-                podczas codziennych podróży.
-              </p>
-            </CardContent>
-          </Card>
-
-            <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-            <CardContent className="p-8">
-              <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center mr-4">
-                  <Globe className="w-6 h-6 text-white" />
-                </div>
-                <h2 className="text-2xl font-bold text-white">Nasza Wizja</h2>
-              </div>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                Być wiodącym producentem dywaników samochodowych w Europie, wyznaczając nowe standardy 
-                jakości i innowacyjności. Chcemy, aby EvaPremium było synonimem doskonałości w branży automotive.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Values */}
-        <div className="mb-20">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">Nasze Wartości</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Shield className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Jakość</h3>
-                <p className="text-gray-300">
-                  Używamy tylko najwyższej jakości materiałów EVA i najnowszych technologii produkcji.
+                <h3 className="text-3xl font-bold text-white mb-6">
+                  Redefinicja standardów ochrony wnętrza
+                </h3>
+                <p className="text-gray-400 text-lg leading-relaxed mb-8">
+                  Naszym celem jest dostarczenie produktu, który nie tylko chroni samochód, ale staje się jego integralną, estetyczną częścią. Wierzymy, że praktyczność nie musi oznaczać kompromisów w wyglądzie.
                 </p>
-              </CardContent>
-            </Card>
+                <ul className="space-y-4">
+                  {['Innowacja materiałowa', 'Lokalna produkcja', 'Ekologia'].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-white">
+                      <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                      </div>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+             </div>
+          </div>
 
-            <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Heart className="w-8 h-8 text-white" />
+          <div className="space-y-8">
+             <div className="bg-[#111] border border-white/5 p-8 rounded-2xl hover:bg-[#161616] transition-colors">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center shrink-0">
+                    <Globe className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-white mb-2">Globalna Wizja</h4>
+                    <p className="text-gray-400 leading-relaxed">
+                      Chcemy być pierwszym wyborem dla świadomych kierowców w Europie, wyznaczając trendy w akcesoriach samochodowych.
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">Pasja</h3>
-                <p className="text-gray-300">
-                  Motoryzacja to nasza pasja. Każdy produkt tworzymy z miłością do detali.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="w-8 h-8 text-white" />
+             </div>
+             <div className="bg-[#111] border border-white/5 p-8 rounded-2xl hover:bg-[#161616] transition-colors">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center shrink-0">
+                    <Award className="w-5 h-5 text-purple-500" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-white mb-2">Mistrzowska Jakość</h4>
+                    <p className="text-gray-400 leading-relaxed">
+                      Każdy dywanik przechodzi rygorystyczną kontrolę jakości. Nie uznajemy dróg na skróty w procesie produkcji.
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">Innowacja</h3>
-                <p className="text-gray-300">
-                  Ciągle rozwijamy nasze produkty, wprowadzając nowe wzory i rozwiązania.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Klient</h3>
-                <p className="text-gray-300">
-                  Zadowolenie naszych klientów jest dla nas najważniejsze. Słuchamy i reagujemy na potrzeby.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Truck className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Szybkość</h3>
-                <p className="text-gray-300">
-                  Szybka realizacja zamówień i dostawa w całej Polsce w ciągu 24-48 godzin.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gray-900 backdrop-blur border-gray-700 shadow-2xl hover:shadow-red-500/10 transition-all duration-300">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Gwarancja</h3>
-                <p className="text-gray-300">
-                  Pełna gwarancja jakości i satysfakcji. Jeśli nie jesteś zadowolony, zwracamy pieniądze.
-                </p>
-              </CardContent>
-            </Card>
+             </div>
           </div>
         </div>
 
-        {/* Why Choose Us */}
-        <div className="mb-20">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">Dlaczego EvaPremium?</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <CheckCircle className="w-5 h-5 text-white" />
+        {/* Values Grid */}
+        <div className="mb-24">
+          <SectionHeading title="NASZE" highlight="WARTOŚCI" className="mb-16" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {values.map((val, idx) => {
+              const Icon = val.icon;
+              return (
+                <div key={idx} className="p-6 rounded-xl bg-[#111] border border-white/5 hover:border-white/20 transition-all duration-300 group">
+                  <Icon className="w-8 h-8 text-gray-500 group-hover:text-white mb-4 transition-colors" />
+                  <h3 className="text-lg font-bold text-white mb-2">{val.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{val.description}</p>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Materiał EVA Premium</h3>
-                  <p className="text-gray-300">
-                    Używamy najwyższej jakości materiału EVA, który jest wodoodporny, łatwy w czyszczeniu i trwały.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <CheckCircle className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Dokładne Dopasowanie</h3>
-                  <p className="text-gray-300">
-                    Każdy dywanik jest precyzyjnie dopasowany do konkretnego modelu i wersji samochodu.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <CheckCircle className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Różnorodność Wzorów</h3>
-                  <p className="text-gray-300">
-                    Oferujemy dziesiątki wzorów i kolorów, abyś mógł dopasować dywaniki do swojego stylu.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <CheckCircle className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Polska Produkcja</h3>
-                  <p className="text-gray-300">
-                    Wszystkie dywaniki produkowane są w Polsce, wspierając lokalną gospodarkę.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <CheckCircle className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Szybka Dostawa</h3>
-                  <p className="text-gray-300">
-                    Realizujemy zamówienia w ciągu 24-48 godzin i dostarczamy w całej Polsce.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <CheckCircle className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Gwarancja Jakości</h3>
-                  <p className="text-gray-300">
-                    100% gwarancji satysfakcji. Jeśli nie jesteś zadowolony, zwracamy pieniądze.
-                  </p>
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
 
         {/* CTA Section */}
-        <Card className="bg-gradient-to-r from-red-600/20 to-red-700/20 backdrop-blur border-red-500/30 shadow-2xl">
-          <CardContent className="p-12 text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Gotowy na zmianę?
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#1a1a1a] to-[#111] border border-white/10 p-8 md:p-16 text-center">
+          <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
+          <div className="relative z-10 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              Dołącz do Świata EvaPremium
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Dołącz do tysięcy zadowolonych klientów i zamów swoje idealne dywaniki EVA już dziś!
+            <p className="text-gray-400 text-lg mb-8">
+              Przekonaj się, dlaczego tysiące kierowców wybrało nasze rozwiązania. 
+              Zmień wnętrze swojego auta już dziś.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="#dywaniki" 
-                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-red-500/25"
+                className="bg-white text-black hover:bg-gray-200 px-8 py-4 rounded-full font-bold transition-all duration-300 flex items-center justify-center gap-2 group"
               >
-                Zobacz Produkty
+                Zobacz Ofertę
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
               <a 
                 href="tel:+48570123635" 
-                className="border border-gray-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gray-700 transition-colors"
+                className="border border-white/20 hover:bg-white/10 text-white px-8 py-4 rounded-full font-semibold transition-colors"
               >
-                Zadzwoń: +48 570 123 635
+                Zadzwoń do nas
               </a>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -3,7 +3,9 @@
 import React, { useState, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import SectionHeading from "./ui/section-heading";
+import { cn } from "@/lib/utils";
 
 interface GalleryImage {
   id: number;
@@ -231,7 +233,6 @@ export default function GallerySection() {
     }
   }, [currentIndex]);
 
-  // Obsługa klawiatury
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!selectedImage) return;
@@ -250,34 +251,20 @@ export default function GallerySection() {
   }, [selectedImage, goToPrevious, goToNext, closeModal]);
 
   return (
-    <section id="galeria" className="py-20 bg-black relative overflow-hidden">
-      {/* Animowane tło z gradientem */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
-      
-      {/* Animowane cząsteczki tła */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+    <section id="galeria" className="py-20 md:py-32 bg-black relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-red-900/5 blur-[120px] rounded-full" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-900/5 blur-[120px] rounded-full" />
       </div>
 
-      {/* Nagłówek sekcji */}
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Galeria <span className="text-red-500">Produktów</span>
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Odkryj naszą kolekcję najwyższej jakości dywaników samochodowych EVA Premium. 
-            Każdy produkt jest precyzyjnie dopasowany do Twojego auta.
-          </p>
-          <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-red-500 to-transparent mx-auto mt-8"></div>
-        </div>
-      </div>
+        <SectionHeading
+          title="GALERIA"
+          highlight="PRODUKTÓW"
+          subtitle="Odkryj naszą kolekcję najwyższej jakości dywaników samochodowych EVA Premium. Każdy produkt jest precyzyjnie dopasowany do Twojego auta."
+        />
 
-      {/* Grid galerii */}
-      <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {galleryImages.map((image, index) => (
             <motion.div
@@ -286,109 +273,105 @@ export default function GallerySection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.05 }}
-              className="group relative aspect-square overflow-hidden rounded-xl cursor-pointer border-2 border-red-800/30 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/20"
+              className="group relative aspect-square bg-[#111] rounded-xl overflow-hidden cursor-pointer border-2 border-white/5 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-900/20 hover:-translate-y-1"
               onClick={() => openModal(image, index)}
             >
               <Image
                 src={image.src}
                 alt={image.alt}
                 fill
-                className="object-cover transition-transform duration-300 ease-out group-hover:scale-110"
+                className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                 sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 quality={85}
               />
               
-              {/* Overlay z gradientem */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></div>
+              {/* Overlay Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out" />
               
-              {/* Tytuł na obrazie */}
-              {image.title && (
-                <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
-                  <h3 className="text-lg font-semibold">
-                    {image.title}
-                  </h3>
-                </div>
-              )}
+              {/* Hover Content */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 text-white translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <h3 className="text-lg font-bold text-white group-hover:text-red-400 transition-colors">
+                  {image.title}
+                </h3>
+                <div className="w-full h-0.5 bg-red-500 mt-2 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+              </div>
+              
+              {/* Search Icon */}
+              <div className="absolute top-4 right-4 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 border border-white/10">
+                <Search className="w-5 h-5" />
+              </div>
             </motion.div>
           ))}
         </div>
       </div>
 
-      {/* Modal dla powiększonego obrazu */}
+      {/* Lightbox Modal */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] flex items-center justify-center p-4"
             onClick={closeModal}
           >
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
+              exit={{ scale: 0.9, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative max-w-6xl max-h-[90vh] w-full h-full flex flex-col"
+              className="relative max-w-7xl max-h-[90vh] w-full h-full flex flex-col items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Przycisk zamknięcia */}
+              {/* Close Button */}
               <button
                 onClick={closeModal}
-                className="absolute -top-12 right-0 z-10 text-white hover:text-red-400 transition-colors duration-200 p-2"
+                className="absolute -top-12 right-0 md:-right-12 z-20 text-white hover:text-red-500 transition-colors p-2 bg-black/50 rounded-full border border-white/10 backdrop-blur-sm"
                 aria-label="Zamknij"
               >
-                <X className="w-8 h-8" />
+                <X className="w-6 h-6" />
               </button>
 
-              {/* Kontener obrazu */}
-              <div className="relative w-full h-full flex-1 rounded-2xl overflow-hidden bg-gray-900">
+              {/* Navigation Buttons */}
+              <button
+                onClick={goToPrevious}
+                className="absolute left-0 md:-left-16 top-1/2 transform -translate-y-1/2 z-20 bg-black/50 hover:bg-red-600/90 text-white p-3 rounded-full transition-all duration-300 border border-white/10 backdrop-blur-sm group"
+                aria-label="Poprzednie"
+              >
+                <ChevronLeft className="w-8 h-8 group-hover:scale-110 transition-transform" />
+              </button>
+
+              <button
+                onClick={goToNext}
+                className="absolute right-0 md:-right-16 top-1/2 transform -translate-y-1/2 z-20 bg-black/50 hover:bg-red-600/90 text-white p-3 rounded-full transition-all duration-300 border border-white/10 backdrop-blur-sm group"
+                aria-label="Następne"
+              >
+                <ChevronRight className="w-8 h-8 group-hover:scale-110 transition-transform" />
+              </button>
+
+              {/* Main Image Container */}
+              <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#050505] shadow-2xl border border-white/10">
                 <Image
                   src={selectedImage.src}
                   alt={selectedImage.alt}
                   fill
                   className="object-contain"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+                  sizes="100vw"
                   quality={100}
                   priority
                 />
+                
+                {/* Info Bar */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-8 text-white">
+                   <h3 className="text-3xl font-bold mb-2">{selectedImage.title}</h3>
+                   <div className="flex items-center gap-4 text-sm text-gray-400 font-mono">
+                     <span>{selectedImage.alt}</span>
+                     <span className="w-1 h-1 rounded-full bg-gray-500" />
+                     <span>{currentIndex + 1} / {galleryImages.length}</span>
+                   </div>
+                </div>
               </div>
 
-              {/* Informacje o obrazie */}
-              {selectedImage.title && (
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 text-white">
-                  <h3 className="text-2xl font-bold mb-2">
-                    {selectedImage.title}
-                  </h3>
-                  <p className="text-lg text-gray-200">
-                    {selectedImage.alt}
-                  </p>
-                  <p className="text-sm text-gray-400 mt-2">
-                    {currentIndex + 1} / {galleryImages.length}
-                  </p>
-                </div>
-              )}
-
-              {/* Przyciski nawigacji */}
-              <button
-                onClick={goToPrevious}
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
-                aria-label="Poprzednie zdjęcie"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              <button
-                onClick={goToNext}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
-                aria-label="Następne zdjęcie"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
             </motion.div>
           </motion.div>
         )}
@@ -396,4 +379,3 @@ export default function GallerySection() {
     </section>
   );
 }
-
