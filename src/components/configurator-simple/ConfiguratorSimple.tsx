@@ -422,6 +422,7 @@ export default function ConfiguratorSimple() {
                     onNext={goToNextStep}
                     onPrevious={goToPreviousStep}
                     onAddToCart={handleAddToCart}
+                    isAddingToCart={isAddingToCart}
                     isAddingToCart={isAddingToCart || cartLoading}
                   />
                 ) : null}
