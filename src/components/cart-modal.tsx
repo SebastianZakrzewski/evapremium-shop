@@ -102,16 +102,16 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
             <div className="space-y-6">
               {cart.items.map((item) => (
                 <div 
-                  key={item.accessory.id} 
+                  key={item.id} 
                   className="group relative bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 rounded-2xl p-4 transition-all duration-300 animate-fade-in"
                 >
                   <div className="flex gap-4">
                     {/* Image */}
                     <div className="w-24 h-24 bg-black rounded-xl overflow-hidden flex-shrink-0 border border-white/10 relative">
-                      {item.accessory.imageSrc ? (
+                      {item.productImage ? (
                         <Image 
-                          src={item.accessory.imageSrc} 
-                          alt={item.accessory.name}
+                          src={item.productImage} 
+                          alt={item.productName}
                           fill
                           className="object-cover group-hover:scale-110 transition-transform duration-500"
                         />
@@ -127,10 +127,10 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                       <div>
                         <div className="flex justify-between items-start gap-2">
                           <h3 className="font-bold text-white leading-tight line-clamp-2">
-                            {item.accessory.name}
+                            {item.productName}
                           </h3>
                           <button 
-                            onClick={() => removeFromCart(item.accessory.id)}
+                            onClick={() => removeFromCart(item.id)}
                             className="text-gray-500 hover:text-red-500 transition-colors p-1"
                             aria-label="Usuń produkt"
                           >
@@ -138,14 +138,14 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                           </button>
                         </div>
                         <p className="text-sm text-gray-400 mt-1">
-                          {item.accessory.category?.name || 'Akcesoria'}
+                          {item.productType === 'accessory' ? 'Akcesoria' : 'Dywaniki'}
                         </p>
                       </div>
 
                       <div className="flex items-end justify-between mt-2">
                         <div className="flex items-center bg-black/40 rounded-lg border border-white/10 p-1">
                           <button 
-                            onClick={() => updateQuantity(item.accessory.id, Math.max(1, item.quantity - 1))}
+                            onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
                             className="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded-md transition-colors disabled:opacity-50"
                             disabled={item.quantity <= 1}
                           >
@@ -155,7 +155,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                             {item.quantity}
                           </span>
                           <button 
-                            onClick={() => updateQuantity(item.accessory.id, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
                             className="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded-md transition-colors"
                           >
                             <Plus className="w-3 h-3" />
@@ -164,10 +164,10 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                         
                         <div className="text-right">
                           <p className="text-sm text-gray-400 line-through">
-                            {(item.accessory.price * 1.2).toLocaleString('pl-PL')} zł
+                            {(item.unitPrice * 1.2).toLocaleString('pl-PL')} zł
                           </p>
                           <p className="text-lg font-bold text-red-500">
-                            {item.accessory.price.toLocaleString('pl-PL')} zł
+                            {item.unitPrice.toLocaleString('pl-PL')} zł
                           </p>
                         </div>
                       </div>
@@ -185,7 +185,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
             <div className="space-y-3 mb-6">
               <div className="flex justify-between text-gray-400 text-sm">
                 <span>Suma częściowa</span>
-                <span>{cart.totalPrice.toLocaleString('pl-PL')} zł</span>
+                <span>{cart.subtotal.toLocaleString('pl-PL')} zł</span>
               </div>
               <div className="flex justify-between text-gray-400 text-sm">
                 <span>Dostawa</span>
@@ -194,7 +194,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
               <div className="flex justify-between items-end pt-3 border-t border-white/10">
                 <span className="text-white font-medium">Do zapłaty</span>
                 <span className="text-3xl font-bold text-white tracking-tight">
-                  {cart.totalPrice.toLocaleString('pl-PL')} <span className="text-lg font-normal text-gray-400">PLN</span>
+                  {cart.total.toLocaleString('pl-PL')} <span className="text-lg font-normal text-gray-400">PLN</span>
                 </span>
               </div>
             </div>
