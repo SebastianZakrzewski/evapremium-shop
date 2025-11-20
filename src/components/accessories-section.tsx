@@ -2,15 +2,18 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import { Accessory } from "@/lib/types/accessory";
 import { useAccessories } from "@/hooks/useAccessories";
 import { useCart } from "@/hooks/useCart.new";
+import { toast } from "react-hot-toast";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { SlidersHorizontal, X } from "lucide-react";
+import AccessoryCard from "./accessory-card";
 
 interface FilterState {
   categories: string[];
@@ -22,7 +25,6 @@ export default function AccessoriesSection() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
   
-  // Hook do pobierania danych z bazy
   const { 
     accessories, 
     categories, 
@@ -31,39 +33,34 @@ export default function AccessoriesSection() {
     getAccessoriesByCategory: getAccessoriesByCategorySlug 
   } = useAccessories();
 
-  // Hook do zarządzania koszykiem
   const { addToCart } = useCart();
   
-  // Stan filtrów
   const [filters, setFilters] = useState<FilterState>({
     categories: [],
-    priceRange: [0, 1000],
+    priceRange: [0, 5000],
     inStock: false
   });
 
-  // Dostępne kategorie z bazy danych
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+
   const availableCategories = useMemo(() => {
     return categories.map(cat => cat.name).sort();
   }, [categories]);
 
-  // Filtrowanie akcesoriów
   const filteredAccessories = useMemo(() => {
     let filtered = accessories;
 
-    // Filtrowanie według kategorii
     if (filters.categories.length > 0) {
       filtered = filtered.filter(accessory => 
         accessory.category && filters.categories.includes(accessory.category.name)
       );
     }
 
-    // Filtrowanie według ceny
     const [minPrice, maxPrice] = filters.priceRange;
     filtered = filtered.filter(accessory => {
       return accessory.price >= minPrice && accessory.price <= maxPrice;
     });
 
-    // Filtrowanie według dostępności
     if (filters.inStock) {
       filtered = filtered.filter(accessory => accessory.inStock);
     }
@@ -71,7 +68,6 @@ export default function AccessoriesSection() {
     return filtered;
   }, [accessories, filters]);
 
-  // Obsługa filtrów
   const handleCategoryChange = (categoryName: string, checked: boolean) => {
     setFilters(prev => ({
       ...prev,
@@ -81,10 +77,11 @@ export default function AccessoriesSection() {
     }));
   };
 
-  const handlePriceRangeChange = (minValue: number, maxValue: number) => {
+  const handlePriceRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
     setFilters(prev => ({
       ...prev,
-      priceRange: [minValue, maxValue]
+      priceRange: [prev.priceRange[0], value]
     }));
   };
 
@@ -98,37 +95,31 @@ export default function AccessoriesSection() {
   const clearFilters = () => {
     setFilters({
       categories: [],
-      priceRange: [0, 1000],
+      priceRange: [0, 5000],
       inStock: false
     });
   };
 
-  // Funkcja obsługi dodawania do koszyka
   const handleAddToCart = async (accessory: Accessory, event: React.MouseEvent) => {
-    event.preventDefault(); // Zapobiegaj nawigacji do linku
-    event.stopPropagation(); // Zapobiegaj propagacji eventu
+    event.preventDefault();
+    event.stopPropagation();
     
     try {
-      // Dodaj produkt do koszyka używając nowego API
       await addToCart({
         productType: 'accessory',
         productId: accessory.id,
         quantity: 1
       });
-      
-      // Produkt został dodany do koszyka - bez alertu
-      console.log(`Dodano "${accessory.name}" do koszyka za ${accessory.price} PLN`);
+      toast.success(`Dodano "${accessory.name}" do koszyka`);
     } catch (error) {
       console.error('Błąd dodawania do koszyka:', error);
-      alert('Nie udało się dodać produktu do koszyka');
+      toast.error('Nie udało się dodać produktu do koszyka');
     }
   };
 
-  // Stan dla akcesoriów z konkretnej kategorii
   const [categoryAccessories, setCategoryAccessories] = useState<Accessory[]>([]);
   const [loadingCategory, setLoadingCategory] = useState(false);
 
-  // Pobierz akcesoria dla konkretnej kategorii jeśli podano parametr
   useEffect(() => {
     if (categoryParam) {
       setLoadingCategory(true);
@@ -143,105 +134,111 @@ export default function AccessoriesSection() {
   }, [categoryParam, getAccessoriesByCategorySlug]);
 
   const currentAccessories = categoryParam ? categoryAccessories : filteredAccessories;
+  const activeFiltersCount = filters.categories.length + (filters.inStock ? 1 : 0) + (filters.priceRange[1] < 5000 ? 1 : 0);
 
-  // Obsługa stanu ładowania
-  if (isLoading || loadingCategory) {
-    return (
-      <section className="py-8 md:py-12 bg-black">
-        <div className="container mx-auto px-4">
-          <div className="min-h-screen bg-black flex items-center justify-center">
-            <div className="text-white text-xl">Ładowanie akcesoriów...</div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // Obsługa błędów
   if (error) {
     return (
-      <section className="py-8 md:py-12 bg-black">
-        <div className="container mx-auto px-4">
-          <div className="min-h-screen bg-black flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-red-400 text-xl mb-4">Błąd ładowania akcesoriów</div>
-              <div className="text-gray-400">{error}</div>
-            </div>
-          </div>
+      <section className="min-h-[60vh] flex items-center justify-center bg-black">
+        <div className="text-center space-y-4">
+          <div className="text-red-500 text-xl font-semibold">Wystąpił błąd</div>
+          <p className="text-gray-400">{error}</p>
+          <Button variant="outline" onClick={() => window.location.reload()} className="border-white/20 text-white hover:bg-white/10">
+            Spróbuj ponownie
+          </Button>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="py-8 md:py-12 bg-black">
-      <div className="container mx-auto px-4">
-        {/* Breadcrumbs */}
-        <nav className="mb-6" aria-label="Breadcrumb">
-          <ol className="flex items-center space-x-2 text-sm text-gray-400">
-            <li>
-              <Link href="/" className="hover:text-white transition-colors">
-                Strona główna
-              </Link>
-            </li>
-            <li className="text-gray-600">/</li>
-            <li className="text-white font-medium">Akcesoria</li>
-          </ol>
-        </nav>
-
-        {/* Header */}
-        <div className="text-center mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
-            {categoryParam ? `AKCESORIA - ${categoryParam.toUpperCase()}` : 'AKCESORIA SAMOCHODOWE'}
-          </h1>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-            {categoryParam 
-              ? `Wysokiej jakości akcesoria z kategorii ${categoryParam} do Twojego samochodu.`
-              : 'Kompletna gama akcesoriów samochodowych do ochrony, organizacji i zwiększenia komfortu jazdy. Wszystko w jednym miejscu!'
-            }
-          </p>
-          {categoryParam && (
-            <div className="mt-4">
-              <Link 
-                href="/akcesoria" 
-                className="text-red-400 hover:text-red-300 text-sm font-medium"
-              >
-                ← Zobacz wszystkie kategorie
-              </Link>
-            </div>
-          )}
+    <div className="min-h-screen bg-black text-white pb-20">
+      {/* Hero Header */}
+      <div className="relative bg-[#0a0a0a] border-b border-white/5 py-16 md:py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <span>/</span>
+            <span className="text-white">Akcesoria</span>
+          </nav>
+          
+          <div className="max-w-3xl">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+              {categoryParam ? (
+                <>AKCESORIA <span className="text-red-600">{categoryParam.toUpperCase()}</span></>
+              ) : (
+                <>WYPOSAŻENIE <span className="text-red-600">PREMIUM</span></>
+              )}
+            </h1>
+            <p className="text-lg text-gray-400 leading-relaxed">
+              {categoryParam 
+                ? `Dedykowane akcesoria z kolekcji ${categoryParam}. Podkreśl styl swojego samochodu.`
+                : 'Odkryj naszą wyselekcjonowaną kolekcję akcesoriów samochodowych. Od kosmetyków po elektronikę – wszystko, czego potrzebuje Twój samochód.'
+              }
+            </p>
+          </div>
         </div>
+      </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Panel filtrowania - lewa strona */}
-          <div className="lg:w-1/4">
-            <div className="bg-gray-900 rounded-lg p-6 sticky top-4">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-white">Filtry</h2>
-                <button
-                  onClick={clearFilters}
-                  className="text-red-400 hover:text-red-300 text-sm font-medium"
-                >
-                  Wyczyść wszystkie
-                </button>
+      <div className="container mx-auto px-4 py-12">
+        <div className="flex flex-col lg:flex-row gap-10">
+          
+          {/* Mobile Filter Toggle */}
+          <div className="lg:hidden mb-6">
+            <Button 
+              onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
+              variant="outline" 
+              className="w-full flex items-center justify-between border-white/20 bg-transparent text-white hover:bg-white/5"
+            >
+              <span className="flex items-center gap-2">
+                <SlidersHorizontal className="w-4 h-4" />
+                Filtry
+              </span>
+              {activeFiltersCount > 0 && (
+                <Badge variant="secondary" className="bg-red-600 text-white hover:bg-red-700 border-none">
+                  {activeFiltersCount}
+                </Badge>
+              )}
+            </Button>
+          </div>
+
+          {/* Sidebar Filters */}
+          <aside className={`
+            lg:w-72 shrink-0 space-y-8
+            ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}
+          `}>
+            <div className="sticky top-24 space-y-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Filtrowanie</h3>
+                {activeFiltersCount > 0 && (
+                  <button 
+                    onClick={clearFilters}
+                    className="text-xs text-red-400 hover:text-red-300 font-medium transition-colors"
+                  >
+                    WYCZYŚĆ
+                  </button>
+                )}
               </div>
 
-              {/* Kategorie */}
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-white mb-3">Kategorie</h3>
-                <div className="space-y-2">
+              {/* Categories */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Kategorie</h4>
+                <div className="space-y-3">
                   {availableCategories.map((category) => (
-                    <div key={category} className="flex items-center space-x-2">
+                    <div key={category} className="flex items-center space-x-3 group">
                       <Checkbox
                         id={`category-${category}`}
                         checked={filters.categories.includes(category)}
                         onCheckedChange={(checked) => 
                           handleCategoryChange(category, checked as boolean)
                         }
+                        className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                       />
                       <Label 
                         htmlFor={`category-${category}`}
-                        className="text-gray-300 hover:text-white cursor-pointer"
+                        className="text-gray-300 group-hover:text-white cursor-pointer transition-colors"
                       >
                         {category}
                       </Label>
@@ -250,127 +247,113 @@ export default function AccessoriesSection() {
                 </div>
               </div>
 
-              <Separator className="bg-gray-700 mb-6" />
+              <Separator className="bg-white/10" />
 
-              {/* Zakres cenowy */}
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-white mb-3">Zakres cenowy</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between text-sm text-gray-300">
-                    <span>{filters.priceRange[0].toLocaleString()} PLN</span>
-                    <span>{filters.priceRange[1].toLocaleString()} PLN</span>
-                  </div>
+              {/* Price Range */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Cena</h4>
+                  <span className="text-sm font-mono text-white">
+                    do {filters.priceRange[1]} PLN
+                  </span>
+                </div>
+                <div className="pt-2">
                   <input
                     type="range"
                     min="0"
-                    max="1000"
-                    step="10"
+                    max="5000"
+                    step="50"
                     value={filters.priceRange[1]}
-                    onChange={(e) => handlePriceRangeChange(filters.priceRange[0], parseInt(e.target.value))}
-                    className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
+                    onChange={handlePriceRangeChange}
+                    className="w-full h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-red-600"
                   />
-                </div>
-              </div>
-
-              <Separator className="bg-gray-700 mb-6" />
-
-              {/* Dostępność */}
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-white mb-3">Dostępność</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="inStock"
-                      checked={filters.inStock}
-                      onCheckedChange={(checked) => handleInStockChange(checked as boolean)}
-                    />
-                    <Label 
-                      htmlFor="inStock"
-                      className="text-gray-300 hover:text-white cursor-pointer"
-                    >
-                      Tylko dostępne
-                    </Label>
+                  <div className="flex justify-between mt-2 text-xs text-gray-500">
+                    <span>0 PLN</span>
+                    <span>5000+ PLN</span>
                   </div>
                 </div>
               </div>
 
-              {/* Liczba wyników */}
-              <div className="text-center">
-                <p className="text-gray-400 text-sm">
-                  Znaleziono: <span className="text-white font-semibold">{filteredAccessories.length}</span> akcesoriów
-                </p>
-              </div>
-            </div>
-          </div>
+              <Separator className="bg-white/10" />
 
-          {/* Grid z akcesoriami - prawa strona */}
-          <div className="lg:w-3/4">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {currentAccessories.map((accessory) => (
-                <article
-                  key={accessory.id}
-                  className="flex items-center justify-center group cursor-pointer"
-                >
-                  <Link 
-                    href={`/akcesoria/${accessory.category?.slug || 'all'}`}
-                    className="flex flex-col items-center text-center transition-all duration-300 transform hover:scale-105"
+              {/* Availability */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Dostępność</h4>
+                <div className="flex items-center space-x-3 group">
+                  <Checkbox
+                    id="inStock"
+                    checked={filters.inStock}
+                    onCheckedChange={(checked) => handleInStockChange(checked as boolean)}
+                    className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                  />
+                  <Label 
+                    htmlFor="inStock"
+                    className="text-gray-300 group-hover:text-white cursor-pointer transition-colors"
                   >
-                    {/* Accessory Window */}
-                    <div className="mb-4 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl w-40 h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 relative overflow-hidden transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl">
-                      {/* Image or placeholder */}
-                      {accessory.imageSrc ? (
-                        <Image
-                          src={accessory.imageSrc}
-                          alt={accessory.name}
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <div className="text-6xl text-gray-400">📦</div>
-                        </div>
-                      )}
-                      {/* Overlay for better text readability */}
-                      <div className="absolute inset-0 bg-black/20" />
-                    </div>
-                    
-                    {/* Accessory Info */}
-                    <div className="text-center">
-                      <h3 className="text-lg md:text-xl font-semibold text-white transition-all duration-300 group-hover:text-red-400 mb-2">
-                        {accessory.name}
-                      </h3>
-                      <p className="text-sm md:text-base text-gray-300 transition-all duration-300 group-hover:text-white mb-2">
-                        {accessory.category?.name || 'Brak kategorii'}
-                      </p>
-                      <p className="text-red-400 font-semibold text-base md:text-lg transition-all duration-300 group-hover:text-red-300 mb-3">
-                        {accessory.price.toLocaleString('pl-PL')} PLN
-                      </p>
-                      <p className="text-xs md:text-sm text-gray-400 mb-4 max-w-xs transition-all duration-300 group-hover:text-gray-300">
-                        {accessory.description || 'Brak opisu'}
-                      </p>
-                      
-                      {/* Add to Cart Button */}
-                      <Button
-                        onClick={(e) => handleAddToCart(accessory, e)}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                        size="sm"
-                      >
-                        Dodaj do koszyka
-                      </Button>
-                    </div>
-                  </Link>
-                </article>
-              ))}
+                    Tylko dostępne produkty
+                  </Label>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <main className="flex-1">
+            {/* Results Header */}
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+              <p className="text-gray-400">
+                Znaleziono <span className="text-white font-semibold">{currentAccessories.length}</span> produktów
+              </p>
+              
+              {categoryParam && (
+                <Link 
+                  href="/akcesoria" 
+                  className="text-sm text-red-400 hover:text-red-300 flex items-center gap-1 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                  Wyczyść kategorię
+                </Link>
+              )}
             </div>
 
-            {currentAccessories.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-gray-400 text-lg">Nie znaleziono akcesoriów spełniających kryteria</p>
+            {/* Loading State */}
+            {(isLoading || loadingCategory) ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="h-[400px] bg-white/5 rounded-xl animate-pulse" />
+                ))}
               </div>
+            ) : (
+              <>
+                {/* Product Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {currentAccessories.map((accessory) => (
+                    <AccessoryCard 
+                      key={accessory.id} 
+                      accessory={accessory}
+                      onAddToCart={(e) => handleAddToCart(accessory, e)}
+                    />
+                  ))}
+                </div>
+
+                {/* Empty State */}
+                {currentAccessories.length === 0 && (
+                  <div className="py-20 text-center border border-dashed border-white/10 rounded-xl">
+                    <div className="text-4xl mb-4">🔍</div>
+                    <h3 className="text-xl font-semibold text-white mb-2">Nie znaleziono produktów</h3>
+                    <p className="text-gray-400 max-w-md mx-auto mb-6">
+                      Spróbuj zmienić kryteria wyszukiwania lub usuń filtry, aby zobaczyć więcej wyników.
+                    </p>
+                    <Button onClick={clearFilters} variant="secondary">
+                      Wyczyść wszystkie filtry
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
-          </div>
+          </main>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
