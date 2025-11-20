@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Search, X, ChevronDown, Loader2, Car } from "lucide-react";
+import { Search, X, ChevronDown, Loader2 } from "lucide-react";
 import { Brand } from "@/types/carousel";
 import { getAvailableModels } from "@/data/car-model-years.utils";
 
@@ -124,8 +124,7 @@ export default function QuickSearchBar() {
 
       <div className="max-w-5xl mx-auto px-4 relative z-10">
         <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 flex items-center justify-center gap-3">
-            <Car className="w-6 h-6 md:w-8 md:h-8 text-red-500" />
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3">
             Dobierz dywaniki w <span className="text-red-500">15 sekund</span>
           </h2>
           <p className="text-gray-400">Wybierz markę i model, a my dopasujemy idealne dywaniki.</p>

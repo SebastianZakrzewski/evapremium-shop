@@ -76,11 +76,11 @@ export default function Navbar() {
           
           {/* Desktop Links - Centered */}
           <div className="hidden md:flex gap-8 items-center absolute left-1/2 transform -translate-x-1/2">
-            <Link href="/dywaniki" className="text-white/90 hover:text-white transition font-medium link-underline py-1" title="Dywaniki Samochodowe EVA Premium">Dywaniki Samochodowe</Link>
-            <Link href="/akcesoria" className="text-white/90 hover:text-white transition font-medium link-underline py-1" title="Akcesoria Samochodowe - Kompletna Oferta">Akcesoria</Link>
-            <Link href="/galeria" onClick={handleGalleryClick} className="text-white/90 hover:text-white transition font-medium link-underline py-1" title="Galeria Produktów EVA Premium">Galeria</Link>
-            <Link href="/o-nas" className="text-white/90 hover:text-white transition font-medium link-underline py-1" title="O Firmie EvaPremium">O Nas</Link>
-            <Link href="/kontakt" className="text-white/90 hover:text-white transition font-medium link-underline py-1" title="Kontakt - EvaPremium">Kontakt</Link>
+            <Link href="/dywaniki" className="text-white/90 hover:text-red-500 transition-colors font-medium py-1" title="Dywaniki Samochodowe EVA Premium">Dywaniki Samochodowe</Link>
+            <Link href="/akcesoria" className="text-white/90 hover:text-red-500 transition-colors font-medium py-1" title="Akcesoria Samochodowe - Kompletna Oferta">Akcesoria</Link>
+            <Link href="/galeria" onClick={handleGalleryClick} className="text-white/90 hover:text-red-500 transition-colors font-medium py-1" title="Galeria Produktów EVA Premium">Galeria</Link>
+            <Link href="/o-nas" className="text-white/90 hover:text-red-500 transition-colors font-medium py-1" title="O Firmie EvaPremium">O Nas</Link>
+            <Link href="/kontakt" className="text-white/90 hover:text-red-500 transition-colors font-medium py-1" title="Kontakt - EvaPremium">Kontakt</Link>
           </div>
           
           {/* Desktop Cart Icon and Contact */}
@@ -139,28 +139,23 @@ export default function Navbar() {
         {/* Mobile Menu */}
         <div className={`md:hidden fixed top-[64px] left-0 w-full bg-black/95 backdrop-blur-xl border-b border-white/10 z-[40] shadow-2xl pb-safe transition-all duration-300 ease-in-out overflow-hidden ${open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
           <div className="flex flex-col gap-4 py-8 px-6">
-            <Link href="/dywaniki" className="text-white/90 hover:text-white text-lg font-medium flex items-center gap-3 group" onClick={() => setOpen(false)}>
-              <span className="w-1 h-1 rounded-full bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+            <Link href="/dywaniki" className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               Dywaniki Samochodowe
             </Link>
             <div className="h-[1px] bg-white/5 w-full"></div>
-            <Link href="/akcesoria" className="text-white/90 hover:text-white text-lg font-medium flex items-center gap-3 group" onClick={() => setOpen(false)}>
-              <span className="w-1 h-1 rounded-full bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+            <Link href="/akcesoria" className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               Akcesoria
             </Link>
             <div className="h-[1px] bg-white/5 w-full"></div>
-            <Link href="/galeria" onClick={handleGalleryClick} className="text-white/90 hover:text-white text-lg font-medium flex items-center gap-3 group">
-              <span className="w-1 h-1 rounded-full bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+            <Link href="/galeria" onClick={handleGalleryClick} className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors">
               Galeria
             </Link>
             <div className="h-[1px] bg-white/5 w-full"></div>
-            <Link href="/o-nas" className="text-white/90 hover:text-white text-lg font-medium flex items-center gap-3 group" onClick={() => setOpen(false)}>
-              <span className="w-1 h-1 rounded-full bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+            <Link href="/o-nas" className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               O Nas
             </Link>
             <div className="h-[1px] bg-white/5 w-full"></div>
-            <Link href="/kontakt" className="text-white/90 hover:text-white text-lg font-medium flex items-center gap-3 group" onClick={() => setOpen(false)}>
-              <span className="w-1 h-1 rounded-full bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+            <Link href="/kontakt" className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               Kontakt
             </Link>
             
