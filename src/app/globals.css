@@ -73,6 +73,50 @@ button, a, input, select, textarea, [role="button"] {
     @apply bg-background text-foreground;
     overflow-x: hidden;
   }
+  
+  /* Custom Selection */
+  ::selection {
+    @apply bg-red-600 text-white;
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-neutral-900;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-neutral-700 rounded-full border-2 border-neutral-900 hover:bg-neutral-600 transition-colors;
+  }
+}
+
+@layer components {
+  /* Glassmorphism Utilities */
+  .glass-panel {
+    @apply bg-black/40 backdrop-blur-md border border-white/10 shadow-xl;
+  }
+  
+  .glass-button {
+    @apply bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 active:bg-white/30 transition-all duration-300;
+  }
+  
+  /* Premium Gradients */
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-600;
+  }
+  
+  .text-gradient-silver {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-300 via-slate-100 to-slate-300;
+  }
+
+  /* Link Underline Effect */
+  .link-underline {
+    @apply relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100;
+  }
 }
 
 html {
@@ -120,6 +164,10 @@ html {
   
   .animate-click {
     animation: click 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 
   /* Nowe animacje dla sekcji "Poznaj nasz produkt" */
@@ -263,6 +311,17 @@ html {
   from {
     opacity: 0;
     transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
   to {
     opacity: 1;

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Phone } from "lucide-react";
+import { Phone, ChevronRight, ShieldCheck, Droplets, Truck } from "lucide-react";
 import Image from "next/image";
 
 type HeroSlide = {
@@ -124,7 +124,7 @@ export default function HeroSection() {
   }, [currentSlide]);
 
   return (
-    <section className="relative min-h-[500px] h-[60vh] md:h-[60vh] overflow-hidden pt-4 md:pt-0">
+    <section className="relative min-h-[550px] h-[65vh] md:h-[70vh] overflow-hidden pt-4 md:pt-0 bg-black">
       {/* Carousel */}
       <div className="container mx-auto px-4 relative h-full py-4 md:py-0">
         {heroSlides.map((slide, index) => {
@@ -146,178 +146,165 @@ export default function HeroSection() {
               }`}
             >
               {/* Background - Video or Image */}
-              <div className="absolute inset-0 w-full h-full flex justify-center">
-                <div className="w-full h-full">
+              <div className="absolute inset-0 w-full h-full flex justify-center items-center md:p-8">
+                <div className="w-full h-full relative rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10">
                   {isImageSlide && slide.image ? (
                     <>
                       <Image
                         src={slide.image}
                         alt="Black Friday"
                         fill
-                        className="object-cover object-center rounded-lg"
+                        className="object-cover object-center"
                         priority={index === 1}
                         sizes="100vw"
                       />
-                      {/* Overlay dla lepszej widoczności tekstu */}
-                      <div className="absolute inset-0 bg-black/30 rounded-lg"></div>
+                      {/* Radial Overlay */}
+                      <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/20 to-black/60"></div>
                     </>
                   ) : (
-                    <video
-                      autoPlay={isActive}
-                      loop
-                      muted
-                      playsInline
-                      preload={index === 0 ? "auto" : "metadata"}
-                      poster="/images/hero/video-poster.jpg"
-                      className="w-full h-full object-cover object-center rounded-lg"
-                      style={{
-                        objectPosition: 'center center',
-                        transform: 'scale(1.0)',
-                        filter: 'brightness(1.0) contrast(1.0)'
-                      }}
-                      onLoadedData={(e) => {
-                        const video = e.target as HTMLVideoElement;
-                        video.playbackRate = 0.8;
-                      }}
-                    >
-                      {/* Dynamiczne źródło video w zależności od urządzenia */}
-                      {videoSource && <source src={videoSource} type="video/mp4" />}
-                      {!isMobile && slide.video && <source src="/images/hero/video.webm" type="video/webm" />}
-                      Your browser does not support the video tag.
-                    </video>
+                    <>
+                      <video
+                        autoPlay={isActive}
+                        loop
+                        muted
+                        playsInline
+                        preload={index === 0 ? "auto" : "metadata"}
+                        poster="/images/hero/video-poster.jpg"
+                        className="w-full h-full object-cover object-center"
+                        style={{
+                          objectPosition: 'center center',
+                          filter: 'brightness(0.9) contrast(1.1)'
+                        }}
+                        onLoadedData={(e) => {
+                          const video = e.target as HTMLVideoElement;
+                          video.playbackRate = 0.8;
+                        }}
+                      >
+                        {videoSource && <source src={videoSource} type="video/mp4" />}
+                        {!isMobile && slide.video && <source src="/images/hero/video.webm" type="video/webm" />}
+                        Your browser does not support the video tag.
+                      </video>
+                      {/* Premium Radial Overlay - Focus center */}
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent via-black/40 to-black/80"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
+                    </>
                   )}
                   
-                  {/* Enhanced Overlay with Gradient - tylko dla slajdów z video */}
-                  {!isImageSlide && (
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 rounded-lg"></div>
-                  )}
-                </div>
-              </div>
-            
-            {/* Content */}
-            <div className={`relative z-10 flex items-start md:items-center justify-center h-full text-center pt-12 md:pt-0 ${isImageSlide ? 'text-white' : 'text-white'}`}>
-              <div className="w-full">
-                {slide.title && (
-                  <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-3 animate-fade-in ${isImageSlide ? 'drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]' : 'drop-shadow-2xl'}`}>
-                    {slide.title}
-                  </h1>
-                )}
-                {slide.subtitle && (
-                  <p className={`text-base md:text-lg lg:text-xl mb-4 animate-fade-in-delay max-w-2xl mx-auto ${isImageSlide ? 'text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]' : 'text-gray-300 drop-shadow-lg'}`}>
-                    {slide.subtitle}
-                  </p>
-                )}
-                
-                {/* Benefits */}
-                {slide.benefits && slide.benefits.length > 0 && (
-                  <div className="mb-6 animate-fade-in-delay">
-                    <div className="flex flex-wrap justify-center gap-2 mb-4">
-                      {slide.benefits.map((benefit, index) => (
-                        <span 
-                          key={index}
-                          className="bg-white/10 backdrop-blur px-3 py-1.5 rounded-full text-xs md:text-sm border border-white/20"
-                        >
-                          ✓ {benefit}
-                        </span>
-                      ))}
+                  {/* Content */}
+                  <div className={`absolute inset-0 flex flex-col items-center justify-center text-center p-6 md:p-12 ${isImageSlide ? 'text-white' : 'text-white'}`}>
+                    <div className="max-w-4xl mx-auto space-y-8">
+                      {slide.title && (
+                        <h1 className={`text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-tight animate-fade-up ${isImageSlide ? 'drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]' : 'drop-shadow-2xl'}`}>
+                          {slide.title}
+                        </h1>
+                      )}
+                      
+                      {slide.subtitle && (
+                        <p className={`text-lg md:text-xl lg:text-2xl font-light tracking-wide max-w-2xl mx-auto animate-fade-in-delay ${isImageSlide ? 'text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]' : 'text-gray-200 drop-shadow-lg'}`}>
+                          {slide.subtitle}
+                        </p>
+                      )}
+                      
+                      {/* Benefits Chips */}
+                      {slide.benefits && slide.benefits.length > 0 && (
+                        <div className="animate-fade-in-delay flex flex-wrap justify-center gap-3">
+                          {slide.benefits.map((benefit, index) => (
+                            <div 
+                              key={index}
+                              className="glass-panel px-4 py-2 rounded-full flex items-center gap-2 text-sm font-medium backdrop-blur-md border-white/20 bg-white/5 hover:bg-white/10 transition-colors"
+                            >
+                              {index === 0 && <ShieldCheck className="w-4 h-4 text-red-500" />}
+                              {index === 1 && <Droplets className="w-4 h-4 text-blue-400" />}
+                              {index === 2 && <Truck className="w-4 h-4 text-green-400" />}
+                              {benefit}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {slide.cta && (
+                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center animate-fade-in-delay-2 pt-4">
+                          <button 
+                            onClick={() => {
+                              if (slide.cta === "Skonfiguruj swój zestaw") {
+                                router.push('/dywaniki');
+                              } else if (slide.cta === "Sprawdź promocję") {
+                                router.push('/konfigurator');
+                              } else {
+                                const element = document.getElementById('products');
+                                if (element) {
+                                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }
+                              }
+                            }}
+                            className={`
+                              group relative px-8 py-4 rounded-full text-base font-bold tracking-wide transition-all duration-300
+                              ${isImageSlide 
+                                ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20' 
+                                : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-xl shadow-red-900/30'
+                              }
+                              hover:scale-105 hover:shadow-2xl hover:shadow-red-600/20 active:scale-95
+                            `}
+                          >
+                            <span className="flex items-center gap-2">
+                              {slide.cta}
+                              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </span>
+                          </button>
+                          
+                          {!isImageSlide && (
+                            <button 
+                              onClick={() => {
+                                const element = document.getElementById('3d-mats-section');
+                                if (element) {
+                                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }
+                              }}
+                              className="glass-button px-8 py-4 rounded-full text-base font-semibold tracking-wide hover:bg-white/10 hover:border-white/40"
+                            >
+                              Dowiedz się więcej
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
-                )}
-                
-                {slide.cta && (
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center animate-fade-in-delay-2">
-                    <button 
-                      onClick={() => {
-                        // Dla pierwszego slajdu z "Skonfiguruj swój zestaw" przekieruj na /dywaniki
-                        if (slide.cta === "Skonfiguruj swój zestaw") {
-                          router.push('/dywaniki');
-                        } else if (slide.cta === "Sprawdź promocję") {
-                          router.push('/konfigurator');
-                        } else {
-                          // Dla innych przycisków zachowaj poprzednie zachowanie
-                          const element = document.getElementById('products');
-                          if (element) {
-                            element.scrollIntoView({ 
-                              behavior: 'smooth',
-                              block: 'start'
-                            });
-                          }
-                        }
-                      }}
-                      className={`${isImageSlide ? 'bg-red-600 hover:bg-red-700' : 'bg-red-500 hover:bg-red-600'} active:bg-red-700 text-white px-6 py-3 rounded-full text-base font-semibold transition-all duration-300 shadow-xl hover:shadow-red-500/25 hover:scale-105 active:scale-95 touch-manipulation min-h-[44px]`}
-                    >
-                      {slide.cta}
-                    </button>
-                    {!isImageSlide && (
-                      <button 
-                        onClick={() => {
-                          const element = document.getElementById('3d-mats-section');
-                          if (element) {
-                            element.scrollIntoView({ 
-                              behavior: 'smooth',
-                              block: 'start'
-                            });
-                          }
-                        }}
-                        className="bg-white/10 backdrop-blur border border-white/20 text-white px-6 py-3 rounded-full text-base font-semibold transition-all duration-300 hover:bg-white/20 active:bg-white/30 touch-manipulation min-h-[44px]"
-                      >
-                        Dowiedz się więcej
-                      </button>
-                    )}
-                  </div>
-                )}
-                
-                {/* Mobile - Numer telefonu i informacja */}
-                {!isImageSlide && (
-                  <div className="md:hidden mt-6 mb-16 animate-fade-in-delay-2 flex flex-col items-center gap-3 px-12">
-                    <a 
-                      href="tel:+48570123635"
-                      className="text-white text-xl md:text-2xl font-bold flex items-center gap-3 hover:text-red-400 transition-colors drop-shadow-lg"
-                    >
-                      <Phone className="w-6 h-6" />
-                      +48 570 123 635
-                    </a>
-                    <p className="text-white text-base md:text-lg font-semibold text-center drop-shadow-lg">
-                      Zadzwoń i wyceń dywaniki
-                    </p>
-                  </div>
-                )}
+                </div>
               </div>
             </div>
-          </div>
-        );
+          );
         })}
       </div>
 
       {/* Navigation Arrows */}
       <button
         onClick={goToPrev}
-        className="absolute left-2 bottom-32 md:top-1/2 md:bottom-auto transform md:-translate-y-1/2 bg-white/20 hover:bg-white/30 active:bg-white/40 text-white p-2.5 md:p-3 rounded-full transition-colors z-20 touch-manipulation min-w-[40px] min-h-[40px] md:min-w-[44px] md:min-h-[44px]"
+        className="absolute left-6 top-1/2 transform -translate-y-1/2 glass-button p-3 rounded-full hover:bg-white/20 transition-all z-20 group opacity-0 md:opacity-100"
         aria-label="Poprzedni slajd"
       >
-        <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5 text-white group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
       
       <button
         onClick={goToNext}
-        className="absolute right-2 bottom-32 md:top-1/2 md:bottom-auto transform md:-translate-y-1/2 bg-white/20 hover:bg-white/30 active:bg-white/40 text-white p-2.5 md:p-3 rounded-full transition-colors z-20 touch-manipulation min-w-[40px] min-h-[40px] md:min-w-[44px] md:min-h-[44px]"
+        className="absolute right-6 top-1/2 transform -translate-y-1/2 glass-button p-3 rounded-full hover:bg-white/20 transition-all z-20 group opacity-0 md:opacity-100"
         aria-label="Następny slajd"
       >
-        <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5 text-white group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </button>
 
       {/* Indicators */}
-      <div className="absolute bottom-4 md:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
         {heroSlides.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-4 h-4 sm:w-3 sm:h-3 md:w-2 md:h-2 rounded-full transition-colors p-2 ${
-              index === currentSlide ? "bg-white" : "bg-white/50"
+            className={`h-1.5 rounded-full transition-all duration-500 ${
+              index === currentSlide ? "w-8 bg-white" : "w-2 bg-white/30 hover:bg-white/50"
             }`}
             aria-label={`Przejdź do slajdu ${index + 1}`}
           />

@@ -1,12 +1,12 @@
 import React from "react";
 import Image from "next/image";
 import { Brand } from "../../types/carousel";
-import { Car } from "lucide-react";
+import { Car, ChevronRight } from "lucide-react";
 
 interface BrandCardProps {
   brand: Brand;
   className?: string;
-  isPriority?: boolean; // Dodaj prop dla priority
+  isPriority?: boolean;
 }
 
 export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, className = "", isPriority = false }) => {
@@ -18,25 +18,37 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
   
   return (
     <div
-      className={`w-56 h-80 md:w-72 md:h-112 aspect-[9/16] flex flex-col items-center justify-center rounded-2xl shadow-lg overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 transition-all duration-300 cursor-pointer relative group ${className}`}
+      className={`
+        group relative w-56 h-80 md:w-72 md:h-112 aspect-[9/16] 
+        flex flex-col items-center justify-center 
+        rounded-3xl overflow-hidden 
+        bg-gradient-to-br from-gray-900 to-black 
+        border border-white/10
+        shadow-2xl shadow-black/50
+        hover:shadow-red-900/20 hover:border-white/20
+        transition-all duration-500 ease-out
+        cursor-pointer 
+        ${className}
+      `}
     >
-              {/* Zdjęcie/Logo marki */}
-        <div className="w-full h-full relative">
+        {/* Zdjęcie/Logo marki */}
+        <div className="w-full h-full relative overflow-hidden">
           {isImage ? (
             // Dla zdjęć - pełne tło z wysoką jakością
             <Image
               src={brand.logo}
               alt={`${brand.name}`}
               fill
-              className={`group-hover:scale-105 transition-transform duration-300 ${
-                isBrandImage ? 'object-cover object-top' : 'object-contain'
-              }`}
+              className={`
+                transition-transform duration-700 ease-out will-change-transform
+                group-hover:scale-110
+                ${isBrandImage ? 'object-cover object-center' : 'object-contain p-8'}
+                opacity-90 group-hover:opacity-100
+              `}
               sizes="(max-width: 768px) 224px 320px, 288px 448px"
               priority={isPriority}
-              quality={85}
+              quality={90}
               loading={isPriority ? "eager" : "lazy"}
-              placeholder="blur"
-              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
             />
           ) : (
             // Dla logo SVG - w centrum
@@ -46,10 +58,9 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
                 alt={`${brand.name} logo`}
                 width={128}
                 height={128}
-                className="object-contain"
+                className="object-contain transition-transform duration-500 group-hover:scale-110"
                 quality={95}
                 onError={(e) => {
-                  // Fallback jeśli logo nie istnieje
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
                 }}
@@ -57,51 +68,62 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
             </div>
           )}
           
-          {/* Overlay dla lepszej czytelności tekstu */}
-          <div className={`absolute inset-0 transition-colors duration-300 ${
-            isBrandImage 
-              ? 'bg-black/40 group-hover:bg-black/30' 
-              : 'bg-black/20 group-hover:bg-black/10'
-          }`} />
+          {/* Gradient Overlays */}
+          <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90`} />
+          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
         </div>
       
+      {/* Shine Effect */}
+      <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+        <div className="absolute inset-0 transform -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      </div>
+      
       {/* Zawartość tekstowa */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+      <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 flex flex-col items-center justify-end z-20 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
         {/* Nazwa marki */}
-        <h3 className={`text-center mb-3 font-bold ${
-          isBrandImage 
-            ? 'text-white text-4xl drop-shadow-2xl' 
-            : 'text-white text-3xl drop-shadow-lg'
-        }`}>
+        <h3 className={`
+          text-center font-bold tracking-tight mb-2
+          text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-300
+          ${isBrandImage ? 'text-3xl md:text-4xl' : 'text-2xl md:text-3xl'}
+          drop-shadow-lg
+        `}>
           {brand.name}
         </h3>
         
         {/* Opis marki */}
         {brand.description && (
-          <p className={`text-center px-6 ${
-            isBrandImage 
-              ? 'text-white text-lg drop-shadow-2xl' 
-              : 'text-white/90 text-base drop-shadow-lg'
-          }`}>
+          <p className={`
+            text-center text-sm md:text-base text-gray-300/90 mb-4
+            max-w-[200px] line-clamp-2
+            opacity-0 group-hover:opacity-100 transition-all duration-500 delay-75
+            transform translate-y-4 group-hover:translate-y-0
+          `}>
             {brand.description}
           </p>
         )}
+
+        {/* CTA Indicator */}
+        <div className="
+          flex items-center gap-2 text-xs font-bold text-red-500 uppercase tracking-wider
+          opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100
+          transform translate-y-4 group-hover:translate-y-0
+        ">
+          Wybierz model <ChevronRight className="w-3 h-3" />
+        </div>
       </div>
       
-      {/* Efekt hover */}
-      <div className="absolute inset-0 bg-[#ff0033]/0 group-hover:bg-[#ff0033]/10 transition-colors duration-300 z-20" />
-      
-      {/* Indikator wyboru */}
-      <div className="absolute top-4 right-4 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
-        <Car className="w-4 h-4 text-white" />
+      {/* Indikator wyboru - Badge */}
+      <div className="absolute top-4 right-4 z-30 transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300">
+        <div className="bg-red-600 text-white p-2 rounded-full shadow-lg shadow-red-900/50">
+          <Car className="w-5 h-5" />
+        </div>
       </div>
     </div>
   );
 }, (prevProps, nextProps) => {
-  // Custom comparison - re-render tylko jeśli brand.id lub isPriority się zmieniły
   return prevProps.brand.id === nextProps.brand.id && 
          prevProps.isPriority === nextProps.isPriority &&
          prevProps.className === nextProps.className;
 });
 
-export default BrandCard; 
+export default BrandCard;
