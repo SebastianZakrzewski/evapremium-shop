@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import SectionHeading from "./ui/section-heading";
+import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ProductImage {
@@ -348,6 +347,25 @@ export default function ProductGallerySection() {
   const [selectedImage, setSelectedImage] = useState<ProductImage | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [carouselOffset, setCarouselOffset] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const section = document.querySelector('[data-section="product-gallery"]');
+    if (section) {
+      observer.observe(section);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   // Zoptymalizowane funkcje z useCallback
   const openModal = useCallback((image: ProductImage) => {
@@ -390,19 +408,37 @@ export default function ProductGallerySection() {
   }, [openModal]);
 
   return (
-    <section className="py-20 md:py-32 bg-black relative overflow-hidden">
+    <section data-section="product-gallery" className="py-12 md:py-16 bg-black relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-red-900/10 blur-[100px] rounded-full" />
         <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-900/10 blur-[100px] rounded-full" />
       </div>
 
+      {/* Animowane tło */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
+      
+      {/* Animowane cząsteczki */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+      </div>
+
       <div className="container mx-auto px-4 relative z-10">
-        <SectionHeading
-          title="NASZA GALERIA"
-          highlight="PRODUKTÓW"
-          subtitle="Odkryj jakość i precyzję wykonania naszych dywaników. Każdy detal ma znaczenie."
-        />
+        {/* Header */}
+        <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-8 animate-pulse-glow shadow-lg shadow-red-500/30 transition-all duration-1000 ease-out" style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
+            <ImageIcon className="w-10 h-10 text-white" />
+          </div>
+          <h1 className={`text-4xl md:text-6xl font-bold text-white mb-6 bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent leading-tight transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
+            NASZA GALERIA PRODUKTÓW
+          </h1>
+          <h2 className={`text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
+            Odkryj jakość i precyzję wykonania naszych dywaników. Każdy detal ma znaczenie.
+          </h2>
+        </div>
       </div>
 
       {/* Kontener galerii - pełna szerokość */}
@@ -463,7 +499,7 @@ export default function ProductGallerySection() {
       <div className="container mx-auto px-4 relative z-10 mt-12 text-center">
         <Link 
           href="/dywaniki"
-          className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-all duration-300 bg-red-600 hover:bg-red-700 rounded-full shadow-lg hover:shadow-xl hover:shadow-red-900/30 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black"
+          className="inline-flex items-center justify-center px-4 py-2.5 md:px-8 md:py-4 text-sm md:text-base font-bold text-white transition-all duration-300 bg-red-600 hover:bg-red-700 rounded-full shadow-lg hover:shadow-xl hover:shadow-red-900/30 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black"
         >
           Sprawdź Dostępność Dla Twojego Auta
         </Link>

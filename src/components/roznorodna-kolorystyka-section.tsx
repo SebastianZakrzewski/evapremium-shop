@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import SectionHeading from "./ui/section-heading";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Palette } from "lucide-react";
 import Link from "next/link";
 
 const colorVariants = [
@@ -39,21 +38,58 @@ const colorImages: Record<string, string> = {
 
 export default function RoznorodnaKolorystykaSection() {
   const [selectedColor, setSelectedColor] = useState(colorVariants[0]);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const section = document.getElementById('roznorodna-kolorystyka-section');
+    if (section) {
+      observer.observe(section);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section className="py-20 bg-black relative overflow-hidden">
+    <section id="roznorodna-kolorystyka-section" className="py-12 md:py-16 bg-black relative overflow-hidden">
       {/* Background Glow */}
       <div 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] blur-[120px] rounded-full opacity-20 transition-colors duration-700 pointer-events-none"
         style={{ backgroundColor: selectedColor.hex }}
       />
 
+      {/* Animowane tło */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
+      
+      {/* Animowane cząsteczki */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+      </div>
+
       <div className="container mx-auto px-4 relative z-10">
-        <SectionHeading 
-          title="KOLORYSTYKA" 
-          highlight="PREMIUM"
-          subtitle="Dopasuj kolor dywaników do wnętrza swojego samochodu lub stwórz kontrastowy akcent."
-        />
+        {/* Header */}
+        <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-8 animate-pulse-glow shadow-lg shadow-red-500/30 transition-all duration-1000 ease-out" style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
+            <Palette className="w-10 h-10 text-white" />
+          </div>
+          <h1 className={`text-4xl md:text-6xl font-bold text-white mb-6 bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent leading-tight transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
+            KOLORYSTYKA PREMIUM
+          </h1>
+          <h2 className={`text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
+            Dopasuj kolor dywaników do wnętrza swojego samochodu lub stwórz kontrastowy akcent.
+          </h2>
+        </div>
 
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
           {/* Preview Area */}

@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Target, Search, Ruler, CheckCircle, ClipboardList, BarChart2, Scissors, Pen, Package, Truck } from "lucide-react";
 import Image from "next/image";
-import SectionHeading from "./ui/section-heading";
 
 const carBrands = [
   { name: "BMW", logo: "/images/products/bmw.png" },
@@ -30,8 +29,28 @@ const timelineSteps = [
 ];
 
 export default function CustomFitSection() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const section = document.getElementById('custom-fit-section');
+    if (section) {
+      observer.observe(section);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id="custom-fit-section" className="py-20 md:py-32 bg-black relative overflow-hidden">
+    <section id="custom-fit-section" className="py-12 md:py-16 bg-black relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -44,12 +63,30 @@ export default function CustomFitSection() {
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black" />
       </div>
 
+      {/* Animowane tło */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
+      
+      {/* Animowane cząsteczki */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+      </div>
+
       <div className="container mx-auto px-4 relative z-10">
-        <SectionHeading
-          title="SZYTE NA MIARĘ"
-          highlight="DO TWOJEGO AUTA"
-          subtitle="Każdy dywanik jest precyzyjnie dopasowany do konkretnego modelu samochodu z dokładnością do milimetra. Gwarantujemy idealne pokrycie podłogi."
-        />
+        {/* Header */}
+        <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-8 animate-pulse-glow shadow-lg shadow-red-500/30 transition-all duration-1000 ease-out" style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
+            <Target className="w-10 h-10 text-white" />
+          </div>
+          <h2 className={`text-4xl md:text-6xl font-bold text-white mb-6 bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent leading-tight transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
+            SZYTE NA MIARĘ DO TWOJEGO AUTA
+          </h2>
+          <p className={`text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
+            Każdy dywanik jest precyzyjnie dopasowany do konkretnego modelu samochodu z dokładnością do milimetra. Nasz proces produkcyjny gwarantuje idealne pokrycie podłogi, perfekcyjne dopasowanie do kształtów i maksymalną ochronę. Obsługujemy ponad 50 marek samochodów, zapewniając rozwiązanie dopasowane do Twojego auta.
+          </p>
+        </div>
 
         {/* Timeline */}
         <div className="mb-16 md:mb-24 relative">
