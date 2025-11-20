@@ -14,7 +14,7 @@ interface VariantStepProps {
   onUpdate: (updates: { variant?: "front" | "basic" | "premium" | "complete" }) => void;
   onNext: () => void;
   onPrevious: () => void;
-  priceBreakdown: {
+  priceBreakdown?: {
     basePrice: number;
     discount: number;
     shippingCost: number;

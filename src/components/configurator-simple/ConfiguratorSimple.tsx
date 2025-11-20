@@ -417,12 +417,11 @@ export default function ConfiguratorSimple() {
                 ) : Comp ? (
                   <Comp
                     config={config}
-                    priceBreakdown={step === 7 ? priceBreakdown : undefined}
+                    priceBreakdown={priceBreakdown}
                     onUpdate={updateConfig}
                     onNext={goToNextStep}
                     onPrevious={goToPreviousStep}
                     onAddToCart={handleAddToCart}
-                    isAddingToCart={isAddingToCart}
                     isAddingToCart={isAddingToCart || cartLoading}
                   />
                 ) : null}
