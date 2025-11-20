@@ -19,6 +19,7 @@ import { StructureStep } from "./StructureStep";
 import { CombinedColorPicker } from "./CombinedColorPicker";
 import { SummaryStep } from "./SummaryStep";
 import { ConfiguratorLoader } from "./ConfiguratorLoader";
+import { ZoomIn, ArrowLeft, ArrowRight, Info, RotateCcw } from "lucide-react";
 
 export interface ConfiguratorState {
   // Step 1: Wybór samochodu
@@ -205,17 +206,10 @@ export default function ConfiguratorSimple() {
   }, [config.matType, config.structure, config.color, config.edgeColor]);
 
   // Generuj ścieżkę do zdjęcia produktu (wybrane zdjęcie z galerii)
-  // Pokazuj tylko jeśli użytkownik faktycznie przeszedł przez krok wyboru typu dywaników (activeStep >= 2)
   const productPreviewPath = useMemo(() => {
-    // Jeśli użytkownik jeszcze nie wybrał typu dywaników, nie pokazuj zdjęcia produktu
-    if (activeStep < 2) {
-      return null;
-    }
-    if (config.matType === '3d-with-rims') {
-      return selectedRimsProductImage;
-    } else if (config.matType === 'classic') {
-      return selectedClassicProductImage;
-    }
+    if (activeStep < 2) return null;
+    if (config.matType === '3d-with-rims') return selectedRimsProductImage;
+    if (config.matType === 'classic') return selectedClassicProductImage;
     return null;
   }, [config.matType, activeStep, selectedClassicProductImage, selectedRimsProductImage]);
   
@@ -256,18 +250,10 @@ export default function ConfiguratorSimple() {
       try {
         const parsed = JSON.parse(saved);
         setConfig(prev => {
-          // Zachowaj wartości z URL jeśli istnieją
           const updates: Partial<ConfiguratorState> = { ...parsed };
-          if (brandParam) {
-            // Marka z URL ma priorytet - zostanie zmapowana przez osobny useEffect
-            delete updates.brand;
-          }
-          if (modelParam) {
-            updates.model = modelParam;
-          }
-          if (bodyTypeParam) {
-            updates.bodyType = bodyTypeParam;
-          }
+          if (brandParam) delete updates.brand;
+          if (modelParam) updates.model = modelParam;
+          if (bodyTypeParam) updates.bodyType = bodyTypeParam;
           return { ...prev, ...updates };
         });
       } catch (e) {
@@ -284,100 +270,45 @@ export default function ConfiguratorSimple() {
   // Walidacja kroku
   const isStepValid = (step: number): boolean => {
     switch (step) {
-      case 1:
-        return !!(config.brand && config.model && config.year && config.bodyType);
-      case 2:
-        return !!config.matType;
-      case 3:
-        return !!config.variant;
-      case 4:
-        return !!config.structure;
-      case 5:
-        return !!(config.color && config.edgeColor);
-      case 6:
-        return true; // Heel pad jest opcjonalny
-      case 7:
-        return isStepValid(1) && isStepValid(2) && isStepValid(3) && isStepValid(4) && isStepValid(5);
-      default:
-        return false;
+      case 1: return !!(config.brand && config.model && config.year && config.bodyType);
+      case 2: return !!config.matType;
+      case 3: return !!config.variant;
+      case 4: return !!config.structure;
+      case 5: return !!(config.color && config.edgeColor);
+      case 6: return true;
+      case 7: return isStepValid(1) && isStepValid(2) && isStepValid(3) && isStepValid(4) && isStepValid(5);
+      default: return false;
     }
   };
 
-  // Przejdź do następnego kroku
-  const goToNextStep = () => {
-    if (activeStep < TOTAL_STEPS && isStepValid(activeStep)) {
-      setActiveStep(prev => prev + 1);
-    }
-  };
+  const goToNextStep = () => activeStep < TOTAL_STEPS && isStepValid(activeStep) && setActiveStep(prev => prev + 1);
+  const goToPreviousStep = () => activeStep > 1 && setActiveStep(prev => prev - 1);
+  const goToStep = (step: number) => step >= 1 && step <= TOTAL_STEPS && setActiveStep(step);
 
-  // Przejdź do poprzedniego kroku
-  const goToPreviousStep = () => {
-    if (activeStep > 1) {
-      setActiveStep(prev => prev - 1);
-    }
-  };
-
-  // Przejdź do konkretnego kroku
-  const goToStep = (step: number) => {
-    if (step >= 1 && step <= TOTAL_STEPS) {
-      setActiveStep(step);
-    }
-  };
-
-  // Zamknij modal ESC
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isPreviewModalOpen) {
-        setIsPreviewModalOpen(false);
-      }
-    };
+    const handleEscape = (e: KeyboardEvent) => e.key === 'Escape' && setIsPreviewModalOpen(false);
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
-  }, [isPreviewModalOpen]);
+  }, []);
 
-  // Automatyczne przewijanie do aktywnego kroku
   useEffect(() => {
     const stepElement = stepRefs.current[activeStep];
     if (!stepElement) return;
-
-    // Opóźnienie aby akordeon zdążył się otworzyć przed przewinięciem
     const scrollTimeout = setTimeout(() => {
-      // Oblicz offset dla sticky progress bar na górze (~100px)
       const topOffset = 100;
-      
-      // Pobierz pozycję elementu
       const elementRect = stepElement.getBoundingClientRect();
       const elementTop = elementRect.top + window.pageYOffset;
-      
-      // Oblicz docelową pozycję z uwzględnieniem offsetu górnego
-      const targetPosition = elementTop - topOffset;
-      
-      // Przewiń do pozycji z smooth behavior
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth',
-      });
-    }, 150); // Opóźnienie 150ms dla animacji akordeonu
-
+      window.scrollTo({ top: elementTop - topOffset, behavior: 'smooth' });
+    }, 150);
     return () => clearTimeout(scrollTimeout);
   }, [activeStep]);
 
-  // Dodaj do koszyka
   const handleAddToCart = async () => {
-    if (!isStepValid(7)) {
-      return;
-    }
-
+    if (!isStepValid(7)) return;
     setIsAddingToCart(true);
     try {
-      // Generuj unikalny UUID dla produktu (jak w starym konfiguratorze)
       const productId = crypto.randomUUID();
-      console.log('🆔 ConfiguratorSimple: Generated UUID productId:', productId);
-      
-      // Mapuj typ dywanika dla funkcji getMatImagePath ('3d-with-rims' -> '3d', 'classic' -> 'classic')
       const matTypeForImage: '3d' | 'classic' = config.matType === '3d-with-rims' ? '3d' : 'classic';
-      
-      // Generuj ścieżkę do obrazka na podstawie konfiguracji
       const productImagePath = getMatImagePath(
         matTypeForImage,
         config.structure as 'diamonds' | 'honey',
@@ -387,7 +318,7 @@ export default function ConfiguratorSimple() {
 
       await addToCart({
         productType: 'mat',
-        productId: productId, // UUID zamiast stringa
+        productId: productId,
         quantity: 1,
         unitPrice: priceBreakdown.totalPrice,
         productName: `Dywaniki ${config.brand} ${config.model}`,
@@ -408,8 +339,6 @@ export default function ConfiguratorSimple() {
           heelPad: config.heelPad ? 'yes' : 'no',
         },
       });
-
-      // Otwórz modal koszyka
       window.dispatchEvent(new CustomEvent('openCartModal'));
     } catch (error) {
       console.error('Error adding to cart:', error);
@@ -418,25 +347,19 @@ export default function ConfiguratorSimple() {
     }
   };
 
-  // Sprawdź czy sticky preview powinien być widoczny (od kroku wyboru typu dywaników)
   const shouldShowStickyPreview = activeStep >= 2;
-  
-  // Oblicz padding bottom dla głównego kontenera - uwzględnia galerię miniatur jeśli jest widoczna
   const mainContainerPaddingBottom = shouldShowStickyPreview && config.matType 
-    ? 'pb-[180px]' // Więcej miejsca gdy jest galeria miniatur + sticky bar
+    ? 'pb-[180px]' 
     : shouldShowStickyPreview 
-    ? 'pb-[100px]' // Tylko sticky bar
+    ? 'pb-[100px]' 
     : '';
 
-  // Pokaż loader podczas ładowania marek
-  if (brandsLoading) {
-    return <ConfiguratorLoader />;
-  }
+  if (brandsLoading) return <ConfiguratorLoader />;
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white selection:bg-red-500 selection:text-white">
       {/* Progress Bar */}
-      <div className="sticky top-0 z-50 bg-black/95 backdrop-blur-sm border-b border-neutral-800">
+      <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <StepProgress 
             currentStep={activeStep} 
@@ -448,1118 +371,326 @@ export default function ConfiguratorSimple() {
       </div>
 
       {/* Main Content */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-20 pb-6 md:pb-8 ${shouldShowStickyPreview ? `lg:pb-6 md:pb-8 ${mainContainerPaddingBottom}` : ''}`}>
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8">
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-16 pb-12 ${shouldShowStickyPreview ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-12">
           {/* Left Column - Configuration */}
-          <div className="lg:col-span-3 space-y-4 md:space-y-5">
-            {/* Step 1: Wybór samochodu */}
-            <StepAccordion
-              ref={(el) => { stepRefs.current[1] = el; }}
-              step={1}
-              title="Wybór samochodu"
-              benefitDescription="Dopasujemy dywaniki idealnie do Twojego modelu"
-              isOpen={activeStep === 1}
-              onToggle={() => goToStep(1)}
-              isValid={isStepValid(1)}
-            >
-              <CarSelectionStep
-                config={config}
-                onUpdate={updateConfig}
-                onNext={goToNextStep}
-              />
-            </StepAccordion>
-
-            {/* Step 2: Typ dywaników */}
-            <StepAccordion
-              ref={(el) => { stepRefs.current[2] = el; }}
-              step={2}
-              title="Typ dywaników"
-              benefitDescription="Wybierz poziom ochrony i stylu"
-              isOpen={activeStep === 2}
-              onToggle={() => goToStep(2)}
-              isValid={isStepValid(2)}
-              disabled={!isStepValid(1)}
-            >
-              <MatTypeStep
-                config={config}
-                onUpdate={updateConfig}
-                onNext={goToNextStep}
-                onPrevious={goToPreviousStep}
-              />
-            </StepAccordion>
-
-            {/* Step 3: Wariant zestawu */}
-            <StepAccordion
-              ref={(el) => { stepRefs.current[3] = el; }}
-              step={3}
-              title="Wariant zestawu"
-              benefitDescription="Dostosuj zestaw do swoich potrzeb"
-              isOpen={activeStep === 3}
-              onToggle={() => goToStep(3)}
-              isValid={isStepValid(3)}
-              disabled={!isStepValid(2)}
-            >
-              <VariantStep
-                config={config}
-                onUpdate={updateConfig}
-                onNext={goToNextStep}
-                onPrevious={goToPreviousStep}
-                priceBreakdown={priceBreakdown}
-              />
-            </StepAccordion>
-
-            {/* Step 4: Struktura */}
-            <StepAccordion
-              ref={(el) => { stepRefs.current[4] = el; }}
-              step={4}
-              title="Struktura"
-              benefitDescription="Wybierz wzór komórek EVA"
-              isOpen={activeStep === 4}
-              onToggle={() => goToStep(4)}
-              isValid={isStepValid(4)}
-              disabled={!isStepValid(3)}
-            >
-              <StructureStep
-                config={config}
-                onUpdate={updateConfig}
-                onNext={goToNextStep}
-                onPrevious={goToPreviousStep}
-              />
-            </StepAccordion>
-
-            {/* Step 5: Kolory */}
-            <StepAccordion
-              ref={(el) => { stepRefs.current[5] = el; }}
-              step={5}
-              title="Kolory materiału i obszycia"
-              benefitDescription="Personalizuj wygląd dywaników"
-              isOpen={activeStep === 5}
-              onToggle={() => goToStep(5)}
-              isValid={isStepValid(5)}
-              disabled={!isStepValid(4)}
-            >
-              <CombinedColorPicker
-                config={config}
-                onUpdate={updateConfig}
-                onNext={goToNextStep}
-                onPrevious={goToPreviousStep}
-              />
-            </StepAccordion>
-
-            {/* Step 6: Dodatki */}
-            <StepAccordion
-              ref={(el) => { stepRefs.current[6] = el; }}
-              step={6}
-              title="Dodatki"
-              benefitDescription="Dodaj opcjonalne akcesoria"
-              isOpen={activeStep === 6}
-              onToggle={() => goToStep(6)}
-              isValid={isStepValid(6)}
-              disabled={!isStepValid(5)}
-            >
-              <div className="space-y-4">
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={config.heelPad}
-                    onChange={(e) => updateConfig({ heelPad: e.target.checked })}
-                    className="w-5 h-5 rounded border-gray-600 bg-neutral-800 text-red-500 focus:ring-red-500"
+          <div className="lg:col-span-3 space-y-6">
+            {[
+              { step: 1, title: "Wybór samochodu", comp: CarSelectionStep, desc: "Dopasujemy dywaniki idealnie do Twojego modelu" },
+              { step: 2, title: "Typ dywaników", comp: MatTypeStep, desc: "Wybierz poziom ochrony i stylu" },
+              { step: 3, title: "Wariant zestawu", comp: VariantStep, desc: "Dostosuj zestaw do swoich potrzeb" },
+              { step: 4, title: "Struktura", comp: StructureStep, desc: "Wybierz wzór komórek EVA" },
+              { step: 5, title: "Kolory materiału i obszycia", comp: CombinedColorPicker, desc: "Personalizuj wygląd dywaników" },
+              { step: 6, title: "Dodatki", comp: null, desc: "Dodaj opcjonalne akcesoria" },
+              { step: 7, title: "Podsumowanie", comp: SummaryStep, desc: "Sprawdź konfigurację przed zamówieniem" }
+            ].map(({ step, title, comp: Comp, desc }) => (
+              <StepAccordion
+                key={step}
+                ref={(el) => { stepRefs.current[step] = el; }}
+                step={step}
+                title={title}
+                benefitDescription={desc}
+                isOpen={activeStep === step}
+                onToggle={() => goToStep(step)}
+                isValid={isStepValid(step)}
+                disabled={!isStepValid(step - 1) && step > 1}
+              >
+                {step === 6 ? (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <label className="flex items-center justify-between p-4 rounded-lg bg-neutral-800/50 border border-neutral-700 hover:border-neutral-600 cursor-pointer group transition-all">
+                      <div className="flex items-center space-x-3">
+                        <input
+                          type="checkbox"
+                          checked={config.heelPad}
+                          onChange={(e) => updateConfig({ heelPad: e.target.checked })}
+                          className="w-5 h-5 rounded border-gray-600 bg-neutral-800 text-red-600 focus:ring-red-500/50 transition-colors"
+                        />
+                        <span className="font-medium group-hover:text-white transition-colors">Podkładka pod piętę</span>
+                      </div>
+                      {config.heelPad && <span className="text-xs font-bold text-green-400 bg-green-400/10 px-2 py-1 rounded">+ Wybrano</span>}
+                    </label>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-end pt-2">
+                      <Button onClick={goToPreviousStep} variant="outline" className="border-neutral-700 hover:bg-neutral-800">Wstecz</Button>
+                      <Button onClick={goToNextStep} disabled={!isStepValid(6)} className="bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20">Dalej</Button>
+                    </div>
+                  </div>
+                ) : Comp ? (
+                  <Comp
+                    config={config}
+                    priceBreakdown={step === 7 ? priceBreakdown : undefined}
+                    onUpdate={updateConfig}
+                    onNext={goToNextStep}
+                    onPrevious={goToPreviousStep}
+                    onAddToCart={handleAddToCart}
+                    isAddingToCart={isAddingToCart || cartLoading}
                   />
-                  <span className="text-sm md:text-base">Podkładka pod piętę</span>
-                </label>
-                <div className="flex flex-col sm:flex-row gap-3 justify-end pt-4">
-                  <Button
-                    onClick={goToPreviousStep}
-                    variant="outline"
-                    className="px-6 py-2.5 min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200"
-                  >
-                    Wstecz
-                  </Button>
-                  <Button
-                    onClick={goToNextStep}
-                    disabled={!isStepValid(6)}
-                    className="px-6 py-2.5 min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30"
-                  >
-                    Dalej
-                  </Button>
-                </div>
-              </div>
-            </StepAccordion>
-
-            {/* Step 7: Podsumowanie */}
-            <StepAccordion
-              ref={(el) => { stepRefs.current[7] = el; }}
-              step={7}
-              title="Podsumowanie"
-              benefitDescription="Sprawdź konfigurację przed zamówieniem"
-              isOpen={activeStep === 7}
-              onToggle={() => goToStep(7)}
-              isValid={isStepValid(7)}
-              disabled={!isStepValid(6)}
-            >
-              <SummaryStep
-                config={config}
-                priceBreakdown={priceBreakdown}
-                onPrevious={goToPreviousStep}
-                onAddToCart={handleAddToCart}
-                isAddingToCart={isAddingToCart || cartLoading}
-              />
-            </StepAccordion>
+                ) : null}
+              </StepAccordion>
+            ))}
           </div>
 
-          {/* Right Column - Visualization & Summary */}
-          <div className="lg:col-span-2">
-            <div className="sticky top-24 space-y-5 md:space-y-6">
-              {/* Mobile: Podgląd z przełącznikiem tabs */}
-              <div className="lg:hidden relative bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-lg p-4 md:p-5 border border-neutral-800 shadow-md group">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg md:text-xl font-semibold leading-tight">Podgląd</h3>
-                  {(activePreviewTab === 'dynamic' && config.structure && config.color && config.edgeColor) || 
-                   (activePreviewTab === 'product' && productPreviewPath) ? (
-                    <button
-                      onClick={() => {
-                        setModalImageType(activePreviewTab);
-                        setIsPreviewModalOpen(true);
-                      }}
-                      className="text-xs text-gray-400 hover:text-white transition-colors underline"
-                    >
-                      Powiększ
-                    </button>
-                  ) : null}
-                </div>
-
-                {/* Przełącznik tabs - tylko mobile */}
-                {config.matType && (
-                  <div className="flex gap-6 mb-4 border-b border-neutral-700">
-                    <button
-                      onClick={() => setActivePreviewTab('dynamic')}
-                      disabled={!hasFullPreview}
-                      className={`pb-2 text-xs font-medium transition-all duration-200 relative ${
-                        activePreviewTab === 'dynamic'
-                          ? 'text-white'
-                          : hasFullPreview
-                          ? 'text-gray-400 hover:text-gray-300'
-                          : 'text-gray-600 cursor-not-allowed'
-                      }`}
-                    >
-                      Konfiguracja
-                      {activePreviewTab === 'dynamic' && (
-                        <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-500"></span>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => setActivePreviewTab('product')}
-                      disabled={!productPreviewPath}
-                      className={`pb-2 text-xs font-medium transition-all duration-200 relative ${
-                        activePreviewTab === 'product'
-                          ? 'text-white'
-                          : productPreviewPath
-                          ? 'text-gray-400 hover:text-gray-300'
-                          : 'text-gray-600 cursor-not-allowed'
-                      }`}
-                    >
-                      Produkt
-                      {activePreviewTab === 'product' && (
-                        <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-500"></span>
-                      )}
-                    </button>
-                  </div>
-                )}
-
-                {/* Zawartość podglądu - mobile */}
-                <div 
-                  onClick={() => {
-                    if (activePreviewTab === 'dynamic' && config.structure && config.color && config.edgeColor) {
-                      setModalImageType('dynamic');
-                      setIsPreviewModalOpen(true);
-                    } else if (activePreviewTab === 'product' && productPreviewPath) {
-                      setModalImageType('product');
-                      setIsPreviewModalOpen(true);
-                    }
-                  }}
-                  className="relative aspect-square bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-lg overflow-hidden border border-neutral-700 shadow-xl cursor-pointer hover:border-red-500/50 transition-colors duration-300"
-                >
-                  {/* Dynamiczny podgląd konfiguracji */}
-                  {activePreviewTab === 'dynamic' && (
-                    <>
-                      {config.structure && config.color && config.edgeColor ? (
-                        <>
-                          <Image
-                            key={`dynamic-mobile-${config.matType}-${config.structure}-${config.color}-${config.edgeColor}`}
-                            src={dynamicPreviewPath}
-                            alt={`Dywanik ${getColorInfo(config.color).name} z obszyciem ${getColorInfo(config.edgeColor).name}`}
-                            fill
-                            className="object-contain"
-                            sizes="100vw"
-                            priority={false}
-                            loading="lazy"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.style.display = 'none';
-                              const fallback = target.nextElementSibling as HTMLElement;
-                              if (fallback) fallback.style.display = 'flex';
-                            }}
-                          />
-                          {/* Tooltip z konfiguracją */}
-                          <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                            <div className="bg-black/80 backdrop-blur-sm rounded-lg p-2 text-xs">
-                              <div className="flex items-center gap-2 justify-center">
-                                <div className="flex items-center gap-1">
-                                  <div
-                                    className="w-3 h-3 rounded border border-neutral-600"
-                                    style={{ backgroundColor: getColorInfo(config.color).color }}
-                                  />
-                                  <span className="text-gray-300">{getColorInfo(config.color).name}</span>
-                                </div>
-                                <span className="text-gray-500">•</span>
-                                <div className="flex items-center gap-1">
-                                  <div
-                                    className="w-3 h-3 rounded border border-neutral-600"
-                                    style={{ backgroundColor: getColorInfo(config.edgeColor).color }}
-                                  />
-                                  <span className="text-gray-300">{getColorInfo(config.edgeColor).name}</span>
-                                </div>
-                                <span className="text-gray-500">•</span>
-                                <span className="text-gray-300">
-                                  {config.structure === 'diamonds' ? 'Romby' : 'Plaster miodu'}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                          {/* Fallback z kolorami */}
-                          <div className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-4" style={{ display: 'none' }}>
-                            <div className="text-6xl">🚗</div>
-                            <div className="space-y-3">
-                              <div className="flex items-center justify-center gap-3">
-                                <span 
-                                  className="inline-block h-6 w-6 rounded-full border shadow-lg" 
-                                  style={{ 
-                                    backgroundColor: getColorInfo(config.color).color,
-                                    borderColor: getColorInfo(config.color).color === '#ffffff' || getColorInfo(config.color).color === '#d9d7c7' || getColorInfo(config.color).color === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
-                                  }} 
-                                />
-                                <span className="text-sm font-medium text-white">Kolor: {getColorInfo(config.color).name}</span>
-                              </div>
-                              <div className="flex items-center justify-center gap-3">
-                                <span 
-                                  className="inline-block h-6 w-6 rounded-full border shadow-lg" 
-                                  style={{ 
-                                    backgroundColor: getColorInfo(config.edgeColor).color,
-                                    borderColor: getColorInfo(config.edgeColor).color === '#ffffff' || getColorInfo(config.edgeColor).color === '#d9d7c7' || getColorInfo(config.edgeColor).color === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
-                                  }} 
-                                />
-                                <span className="text-sm font-medium text-white">Obszycie: {getColorInfo(config.edgeColor).name}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="text-center text-gray-400">
-                            <p className="text-sm">Wybierz kolory i strukturę</p>
-                            <p className="text-xs mt-2">aby zobaczyć podgląd</p>
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-
-                  {/* Zdjęcie produktu - mobile */}
-                  {activePreviewTab === 'product' && (
-                    <>
-                      {productPreviewPath ? (
-                        <>
-                          <Image
-                            key={`product-mobile-${config.matType}-${config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage}`}
-                            src={productPreviewPath}
-                            alt={config.matType === '3d-with-rims' ? 'Dywaniki 3D z rantami' : 'Dywaniki 3D bez rantów'}
-                            fill
-                            className="object-contain"
-                            sizes="100vw"
-                            priority={false}
-                            loading="lazy"
-                          />
-                          {/* Przyciski nawigacji - Mobile */}
-                          {config.matType === 'classic' && (
-                            <>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  goToPreviousClassicImage();
-                                }}
-                                className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
-                                aria-label="Poprzednie zdjęcie"
-                              >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                </svg>
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  goToNextClassicImage();
-                                }}
-                                className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
-                                aria-label="Następne zdjęcie"
-                              >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                </svg>
-                              </button>
-                            </>
-                          )}
-                          {config.matType === '3d-with-rims' && (
-                            <>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  goToPreviousRimsImage();
-                                }}
-                                className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
-                                aria-label="Poprzednie zdjęcie"
-                              >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                </svg>
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  goToNextRimsImage();
-                                }}
-                                className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
-                                aria-label="Następne zdjęcie"
-                              >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                </svg>
-                              </button>
-                            </>
-                          )}
-                        </>
-                      ) : getBrandLogo(config.brand) ? (
-                        <Image
-                          key={`brand-mobile-${config.brand}`}
-                          src={getBrandLogo(config.brand)!}
-                          alt={config.brand}
-                          fill
-                          className="object-cover"
-                          sizes="100vw"
-                          priority={false}
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="text-center text-gray-400">
-                            <p className="text-sm">Wybierz typ dywaników</p>
-                            <p className="text-xs mt-2">aby zobaczyć zdjęcie produktu</p>
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-
-                {/* Opis pod podglądem - mobile */}
-                {activePreviewTab === 'dynamic' && config.structure && config.color && config.edgeColor && (
-                  <p className="mt-3 text-xs text-gray-400 text-center leading-relaxed">
-                    Dynamiczny podgląd z wybranymi kolorami i strukturą
-                  </p>
-                )}
-                {activePreviewTab === 'product' && productPreviewPath && config.matType === '3d-with-rims' && (
-                  <p className="mt-3 text-xs text-gray-400 text-center leading-relaxed">
-                    Dywaniki 3D z wysokimi rantami
-                  </p>
-                )}
-                {activePreviewTab === 'product' && !productPreviewPath && getBrandLogo(config.brand) && (
-                  <p className="mt-3 text-xs text-gray-400 text-center leading-relaxed">
-                    {config.brand}
-                  </p>
-                )}
-                
-                {/* Galeria miniatur dla typu "classic" (bez rantów) - Mobile */}
-                {activePreviewTab === 'product' && config.matType === 'classic' && productPreviewPath && (
-                  <div className="mt-4">
-                    <div className="flex gap-1.5 justify-center">
-                      {classicProductImages.map((imagePath) => (
-                        <button
-                          key={imagePath}
-                          onClick={() => setSelectedClassicProductImage(imagePath)}
-                          className={`
-                            relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200 flex-shrink-0
-                            ${selectedClassicProductImage === imagePath
-                              ? 'border-red-500 ring-2 ring-red-500/30 scale-105'
-                              : 'border-neutral-700 hover:border-neutral-600 opacity-70 hover:opacity-100'
-                            }
-                          `}
-                        >
-                          <Image
-                            src={imagePath}
-                            alt={`Zdjęcie produktu ${imagePath.split('/').pop()}`}
-                            fill
-                            className="object-cover"
-                            sizes="48px"
-                            loading="lazy"
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {/* Galeria miniatur dla typu "3d-with-rims" (z rantami) - Mobile */}
-                {activePreviewTab === 'product' && config.matType === '3d-with-rims' && productPreviewPath && (
-                  <div className="mt-4">
-                    <div className="flex gap-1.5 justify-center">
-                      {rimsProductImages.map((imagePath) => (
-                        <button
-                          key={imagePath}
-                          onClick={() => setSelectedRimsProductImage(imagePath)}
-                          className={`
-                            relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200 flex-shrink-0
-                            ${selectedRimsProductImage === imagePath
-                              ? 'border-red-500 ring-2 ring-red-500/30 scale-105'
-                              : 'border-neutral-700 hover:border-neutral-600 opacity-70 hover:opacity-100'
-                            }
-                          `}
-                        >
-                          <Image
-                            src={imagePath}
-                            alt={`Zdjęcie produktu ${imagePath.split('/').pop()}`}
-                            fill
-                            className="object-cover"
-                            sizes="48px"
-                            loading="lazy"
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Desktop: Dwa osobne okna - jedno pod drugim */}
-              <div className="hidden lg:block space-y-5">
-                {/* Zdjęcie produktu - Desktop (na górze) */}
-                <div className="relative bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-lg p-4 md:p-5 border border-neutral-800 shadow-md">
-                  <div className="flex items-center justify-center mb-4 relative">
-                    <h3 className="text-lg md:text-xl font-semibold leading-tight">Zdjęcie produktu</h3>
-                    {productPreviewPath && (
-                      <button
-                        onClick={() => {
-                          setModalImageType('product');
-                          setIsPreviewModalOpen(true);
-                        }}
-                        className="absolute right-0 text-xs text-gray-400 hover:text-white transition-colors underline"
-                      >
-                        Powiększ
-                      </button>
-                    )}
-                  </div>
-                  <div 
-                    onClick={() => {
-                      if (productPreviewPath) {
-                        setModalImageType('product');
-                        setIsPreviewModalOpen(true);
-                      }
-                    }}
-                    className="relative aspect-square bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-lg overflow-hidden border border-neutral-700 shadow-xl cursor-pointer hover:border-red-500/50 transition-colors duration-300"
-                  >
-                    {productPreviewPath ? (
-                      <>
-                        <Image
-                          key={`product-desktop-${config.matType}-${config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage}`}
-                          src={productPreviewPath}
-                          alt={config.matType === '3d-with-rims' ? 'Dywaniki 3D z rantami' : 'Dywaniki 3D bez rantów'}
-                          fill
-                          className="object-contain"
-                          sizes="50vw"
-                          priority={false}
-                          loading="lazy"
-                        />
-                        {/* Przyciski nawigacji */}
-                        {config.matType === 'classic' && (
-                          <>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                goToPreviousClassicImage();
-                              }}
-                              className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
-                              aria-label="Poprzednie zdjęcie"
-                            >
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                              </svg>
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                goToNextClassicImage();
-                              }}
-                              className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
-                              aria-label="Następne zdjęcie"
-                            >
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </button>
-                          </>
-                        )}
-                        {config.matType === '3d-with-rims' && (
-                          <>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                goToPreviousRimsImage();
-                              }}
-                              className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
-                              aria-label="Poprzednie zdjęcie"
-                            >
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                              </svg>
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                goToNextRimsImage();
-                              }}
-                              className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
-                              aria-label="Następne zdjęcie"
-                            >
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </button>
-                          </>
-                        )}
-                      </>
-                    ) : getBrandLogo(config.brand) ? (
+          {/* Right Column - Visualization */}
+          <div className="lg:col-span-2 space-y-6 mt-8 lg:mt-0">
+            <div className="lg:sticky lg:top-28 space-y-6">
+              
+              {/* 1. Product Window (Top) */}
+              {productPreviewPath && (
+                <div className="space-y-4">
+                  <div className="relative group bg-neutral-900/50 rounded-2xl border border-white/10 overflow-hidden shadow-lg transition-all hover:shadow-red-900/5">
+                    <div className="relative aspect-square">
                       <Image
-                        key={`brand-desktop-${config.brand}`}
-                        src={getBrandLogo(config.brand)!}
-                        alt={config.brand}
+                        src={productPreviewPath}
+                        alt="Podgląd produktu"
                         fill
-                        className="object-cover"
-                        sizes="50vw"
-                        priority={false}
-                        loading="lazy"
+                        className="object-contain p-4 transition-transform duration-700 group-hover:scale-105"
+                        priority
                       />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="text-center text-gray-400">
-                          <p className="text-sm">Wybierz typ dywaników</p>
-                          <p className="text-xs mt-2">aby zobaczyć zdjęcie produktu</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  {productPreviewPath && config.matType === '3d-with-rims' && (
-                    <p className="mt-3 text-xs text-gray-400 text-center leading-relaxed">
-                      Dywaniki 3D z wysokimi rantami
-                    </p>
-                  )}
-                  {!productPreviewPath && getBrandLogo(config.brand) && (
-                    <p className="mt-3 text-xs text-gray-400 text-center leading-relaxed">
-                      {config.brand}
-                    </p>
-                  )}
-                  
-                  {/* Galeria miniatur dla typu "classic" (bez rantów) */}
-                  {config.matType === 'classic' && productPreviewPath && (
-                    <div className="mt-4">
-                      <div className="flex gap-1.5 justify-center">
-                        {classicProductImages.map((imagePath) => (
-                          <button
-                            key={imagePath}
-                            onClick={() => setSelectedClassicProductImage(imagePath)}
-                            className={`
-                              relative w-12 h-12 md:w-14 md:h-14 rounded-lg overflow-hidden border-2 transition-all duration-200 flex-shrink-0
-                              ${selectedClassicProductImage === imagePath
-                                ? 'border-red-500 ring-2 ring-red-500/30 scale-105'
-                                : 'border-neutral-700 hover:border-neutral-600 opacity-70 hover:opacity-100'
-                              }
-                            `}
-                          >
-                            <Image
-                              src={imagePath}
-                              alt={`Zdjęcie produktu ${imagePath.split('/').pop()}`}
-                              fill
-                              className="object-cover"
-                              sizes="56px"
-                              loading="lazy"
-                            />
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Galeria miniatur dla typu "3d-with-rims" (z rantami) */}
-                  {config.matType === '3d-with-rims' && productPreviewPath && (
-                    <div className="mt-4">
-                      <div className="flex gap-1.5 justify-center">
-                        {rimsProductImages.map((imagePath) => (
-                          <button
-                            key={imagePath}
-                            onClick={() => setSelectedRimsProductImage(imagePath)}
-                            className={`
-                              relative w-12 h-12 md:w-14 md:h-14 rounded-lg overflow-hidden border-2 transition-all duration-200 flex-shrink-0
-                              ${selectedRimsProductImage === imagePath
-                                ? 'border-red-500 ring-2 ring-red-500/30 scale-105'
-                                : 'border-neutral-700 hover:border-neutral-600 opacity-70 hover:opacity-100'
-                              }
-                            `}
-                          >
-                            <Image
-                              src={imagePath}
-                              alt={`Zdjęcie produktu ${imagePath.split('/').pop()}`}
-                              fill
-                              className="object-cover"
-                              sizes="56px"
-                              loading="lazy"
-                            />
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Dynamiczny podgląd konfiguracji - Desktop (na dole) */}
-                <div className="relative bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-lg p-4 md:p-5 border border-neutral-800 shadow-md group">
-                  <div className="flex items-center justify-center mb-4 relative">
-                    <h3 className="text-lg md:text-xl font-semibold leading-tight">Podgląd konfiguracji</h3>
-                    {config.structure && config.color && config.edgeColor && (
-                      <button
-                        onClick={() => {
-                          setModalImageType('dynamic');
-                          setIsPreviewModalOpen(true);
-                        }}
-                        className="absolute right-0 text-xs text-gray-400 hover:text-white transition-colors underline"
-                      >
-                        Powiększ
-                      </button>
-                    )}
-                  </div>
-                  <div 
-                    onClick={() => {
-                      if (config.structure && config.color && config.edgeColor) {
-                        setModalImageType('dynamic');
-                        setIsPreviewModalOpen(true);
-                      }
-                    }}
-                    className="relative aspect-square bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-lg overflow-hidden border border-neutral-700 shadow-xl cursor-pointer hover:border-red-500/50 transition-colors duration-300"
-                  >
-                    {config.structure && config.color && config.edgeColor ? (
-                      <>
-                        <Image
-                          key={`dynamic-desktop-${config.matType}-${config.structure}-${config.color}-${config.edgeColor}`}
-                          src={dynamicPreviewPath}
-                          alt={`Dywanik ${getColorInfo(config.color).name} z obszyciem ${getColorInfo(config.edgeColor).name}`}
-                          fill
-                          className="object-contain"
-                          sizes="50vw"
-                          priority={false}
-                          loading="lazy"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                            const fallback = target.nextElementSibling as HTMLElement;
-                            if (fallback) fallback.style.display = 'flex';
+                      
+                      {/* Overlay Controls */}
+                      <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <Button
+                          size="icon"
+                          variant="secondary"
+                          className="h-8 w-8 rounded-full bg-black/50 backdrop-blur border border-white/10 hover:bg-white/10 text-white"
+                          onClick={() => {
+                            setModalImageType('product');
+                            setIsPreviewModalOpen(true);
                           }}
-                        />
-                        {/* Tooltip z konfiguracją */}
-                        <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                          <div className="bg-black/80 backdrop-blur-sm rounded-lg p-2 text-xs">
-                            <div className="flex items-center gap-2 justify-center">
-                              <div className="flex items-center gap-1">
-                                <div
-                                  className="w-3 h-3 rounded border border-neutral-600"
-                                  style={{ backgroundColor: getColorInfo(config.color).color }}
-                                />
-                                <span className="text-gray-300">{getColorInfo(config.color).name}</span>
-                              </div>
-                              <span className="text-gray-500">•</span>
-                              <div className="flex items-center gap-1">
-                                <div
-                                  className="w-3 h-3 rounded border border-neutral-600"
-                                  style={{ backgroundColor: getColorInfo(config.edgeColor).color }}
-                                />
-                                <span className="text-gray-300">{getColorInfo(config.edgeColor).name}</span>
-                              </div>
-                              <span className="text-gray-500">•</span>
-                              <span className="text-gray-300">
-                                {config.structure === 'diamonds' ? 'Romby' : 'Plaster miodu'}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        {/* Fallback z kolorami */}
-                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-4" style={{ display: 'none' }}>
-                          <div className="text-6xl">🚗</div>
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-center gap-3">
-                              <span 
-                                className="inline-block h-6 w-6 rounded-full border shadow-lg" 
-                                style={{ 
-                                  backgroundColor: getColorInfo(config.color).color,
-                                  borderColor: getColorInfo(config.color).color === '#ffffff' || getColorInfo(config.color).color === '#d9d7c7' || getColorInfo(config.color).color === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
-                                }} 
-                              />
-                              <span className="text-sm font-medium text-white">Kolor: {getColorInfo(config.color).name}</span>
-                            </div>
-                            <div className="flex items-center justify-center gap-3">
-                              <span 
-                                className="inline-block h-6 w-6 rounded-full border shadow-lg" 
-                                style={{ 
-                                  backgroundColor: getColorInfo(config.edgeColor).color,
-                                  borderColor: getColorInfo(config.edgeColor).color === '#ffffff' || getColorInfo(config.edgeColor).color === '#d9d7c7' || getColorInfo(config.edgeColor).color === '#bdbdbd' ? '#333' : 'rgba(255,255,255,0.3)'
-                                }} 
-                              />
-                              <span className="text-sm font-medium text-white">Obszycie: {getColorInfo(config.edgeColor).name}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="text-center text-gray-400">
-                          <p className="text-sm">Wybierz kolory i strukturę</p>
-                          <p className="text-xs mt-2">aby zobaczyć podgląd</p>
-                        </div>
+                        >
+                          <ZoomIn className="w-4 h-4" />
+                        </Button>
                       </div>
-                    )}
+                    </div>
                   </div>
-                  {config.structure && config.color && config.edgeColor && (
-                    <p className="mt-3 text-xs text-gray-400 text-center leading-relaxed">
-                      Dynamiczny podgląd z wybranymi kolorami i strukturą
-                    </p>
-                  )}
-                </div>
-              </div>
 
-              {/* Modal z powiększonym podglądem */}
-              {isPreviewModalOpen && modalImageType && (
-                <div 
-                  className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300"
-                  onClick={() => {
-                    setIsPreviewModalOpen(false);
-                    setModalImageType(null);
-                  }}
-                >
-                  {/* Tło */}
-                  <div className="absolute inset-0 bg-black/90 backdrop-blur-sm animate-in fade-in duration-300"></div>
-                  
-                  {/* Modal */}
-                  <div 
-                    className="relative z-[101] max-w-4xl w-full bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-lg border border-neutral-800 shadow-2xl p-6 md:p-8 animate-in zoom-in-95 duration-300"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {/* Header */}
-                    <div className="flex items-center justify-between mb-6">
-                      <h3 className="text-xl md:text-2xl font-bold">
-                        {modalImageType === 'dynamic' ? 'Podgląd konfiguracji' : 'Zdjęcie produktu'}
-                      </h3>
-                      <button
-                        onClick={() => {
-                          setIsPreviewModalOpen(false);
-                          setModalImageType(null);
-                        }}
-                        className="text-gray-400 hover:text-white transition-colors text-2xl leading-none"
-                        aria-label="Zamknij"
-                      >
-                        ×
-                      </button>
+                  {/* Product Gallery */}
+                  {((config.matType === 'classic' && classicProductImages) || (config.matType === '3d-with-rims' && rimsProductImages)) && (
+                    <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/5 rounded-xl p-4">
+                      <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                        <RotateCcw className="w-3 h-3" />
+                        Galeria produktu
+                      </h4>
+                      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                        {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
+                          <button
+                            key={imagePath}
+                            onClick={() => config.matType === 'classic' ? setSelectedClassicProductImage(imagePath) : setSelectedRimsProductImage(imagePath)}
+                            className={`
+                              relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 flex-shrink-0
+                              ${(config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath
+                                ? 'border-red-500 shadow-lg shadow-red-500/20 scale-105'
+                                : 'border-transparent opacity-60 hover:opacity-100 hover:border-white/20'
+                              }
+                            `}
+                          >
+                            <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="64px" />
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                    
-                    {/* Powiększony obraz */}
-                    <div className="relative aspect-square bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-lg overflow-hidden border border-neutral-700">
-                      <Image
-                        key={`modal-${modalImageType}-${modalImageType === 'dynamic' ? `${config.matType}-${config.structure}-${config.color}-${config.edgeColor}` : `${config.matType}-${config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage}`}`}
-                        src={modalImageType === 'dynamic' ? dynamicPreviewPath : (productPreviewPath || '')}
-                        alt={modalImageType === 'dynamic' 
-                          ? `Dywanik ${getColorInfo(config.color || 'black').name} z obszyciem ${getColorInfo(config.edgeColor || 'black').name}`
-                          : (config.matType === '3d-with-rims' ? 'Dywaniki 3D z rantami' : 'Dywaniki 3D bez rantów')
-                        }
-                        fill
-                        className="object-contain"
-                        sizes="(max-width: 1024px) 100vw, 80vw"
-                        priority={true}
-                      />
-                    </div>
-                    
-                    {/* Galeria miniatur w modalu dla typu "classic" */}
-                    {modalImageType === 'product' && config.matType === 'classic' && (
-                      <div className="mt-4">
-                        <div className="flex gap-2 justify-center overflow-x-auto pb-2">
-                          {classicProductImages.map((imagePath) => (
-                            <button
-                              key={imagePath}
-                              onClick={() => setSelectedClassicProductImage(imagePath)}
-                              className={`
-                                relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 flex-shrink-0
-                                ${selectedClassicProductImage === imagePath
-                                  ? 'border-red-500 ring-2 ring-red-500/30 scale-105'
-                                  : 'border-neutral-700 hover:border-neutral-600 opacity-70 hover:opacity-100'
-                                }
-                              `}
-                            >
-                              <Image
-                                src={imagePath}
-                                alt={`Zdjęcie produktu ${imagePath.split('/').pop()}`}
-                                fill
-                                className="object-cover"
-                                sizes="80px"
-                                loading="lazy"
-                              />
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Galeria miniatur w modalu dla typu "3d-with-rims" */}
-                    {modalImageType === 'product' && config.matType === '3d-with-rims' && (
-                      <div className="mt-4">
-                        <div className="flex gap-2 justify-center overflow-x-auto pb-2">
-                          {rimsProductImages.map((imagePath) => (
-                            <button
-                              key={imagePath}
-                              onClick={() => setSelectedRimsProductImage(imagePath)}
-                              className={`
-                                relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 flex-shrink-0
-                                ${selectedRimsProductImage === imagePath
-                                  ? 'border-red-500 ring-2 ring-red-500/30 scale-105'
-                                  : 'border-neutral-700 hover:border-neutral-600 opacity-70 hover:opacity-100'
-                                }
-                              `}
-                            >
-                              <Image
-                                src={imagePath}
-                                alt={`Zdjęcie produktu ${imagePath.split('/').pop()}`}
-                                fill
-                                className="object-cover"
-                                sizes="80px"
-                                loading="lazy"
-                              />
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Informacje - tylko dla dynamicznego podglądu */}
-                    {modalImageType === 'dynamic' && config.structure && config.color && config.edgeColor && (
-                      <div className="mt-4 p-4 bg-neutral-800 rounded-lg border border-neutral-700">
-                        <div className="flex items-center gap-4 justify-center">
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-6 h-6 rounded border border-neutral-600"
-                              style={{ backgroundColor: getColorInfo(config.color).color }}
-                            />
-                            <span className="text-sm text-gray-300">
-                              <span className="text-gray-400">Kolor:</span> {getColorInfo(config.color).name}
-                            </span>
-                          </div>
-                          <div className="w-px h-6 bg-neutral-700"></div>
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-6 h-6 rounded border border-neutral-600"
-                              style={{ backgroundColor: getColorInfo(config.edgeColor).color }}
-                            />
-                            <span className="text-sm text-gray-300">
-                              <span className="text-gray-400">Obszycie:</span> {getColorInfo(config.edgeColor).name}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    
-                    <p className="mt-4 text-xs text-gray-400 text-center">
-                      Wizualizacja poglądowa. Docelowy kształt dopasujemy do Twojego auta.
-                    </p>
-                  </div>
+                  )}
                 </div>
               )}
+
+              {/* 2. Rug Preview Window (Bottom) */}
+              <div className="relative group bg-gradient-to-br from-neutral-900 to-black rounded-2xl p-1 border border-white/10 shadow-2xl transition-all duration-500 hover:shadow-red-900/10">
+                <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-2xl pointer-events-none" />
+                
+                <div className="relative aspect-[4/5] bg-black/50 rounded-xl overflow-hidden">
+                  {/* Preview Image */}
+                  <Image
+                    key={`dynamic-${config.color}-${config.edgeColor}`}
+                    src={dynamicPreviewPath}
+                    alt="Podgląd konfiguracji"
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    priority
+                  />
+
+                  {/* Overlay Controls */}
+                  <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="h-8 w-8 rounded-full bg-black/50 backdrop-blur border border-white/10 hover:bg-white/10 text-white"
+                      onClick={() => {
+                        setModalImageType('dynamic');
+                        setIsPreviewModalOpen(true);
+                      }}
+                    >
+                      <ZoomIn className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  {/* Config Info Badge */}
+                  {hasFullPreview && (
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <div className="bg-black/70 backdrop-blur-md border border-white/10 rounded-lg p-3 flex items-center justify-between gap-4 shadow-lg transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 rounded-full border border-white/20 shadow-inner" style={{ backgroundColor: getColorInfo(config.color).color }} />
+                          <span className="text-xs font-medium text-white">{getColorInfo(config.color).name}</span>
+                        </div>
+                        <div className="h-3 w-px bg-white/20" />
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 rounded-full border border-white/20 shadow-inner" style={{ backgroundColor: getColorInfo(config.edgeColor).color }} />
+                          <span className="text-xs font-medium text-white">{getColorInfo(config.edgeColor).name}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
 
             </div>
           </div>
         </div>
       </div>
 
-      {/* Sticky Preview Bar - Mobile Only */}
+      {/* Mobile Sticky Preview Bar */}
       {shouldShowStickyPreview && (
-        <>
-          {/* Galeria miniatur zdjęć produktu - Mobile Only */}
-          {config.matType && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 pb-safe shadow-2xl animate-in slide-in-from-bottom-full duration-500">
+          
+          {/* Product Gallery Strip */}
+          <div className="px-4 pt-3 flex gap-2 overflow-x-auto scrollbar-hide">
+            {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
+              <button
+                key={imagePath}
+                onClick={(e) => {
+                   e.stopPropagation();
+                   config.matType === 'classic' ? setSelectedClassicProductImage(imagePath) : setSelectedRimsProductImage(imagePath);
+                   if (hasFullPreview) {
+                     setModalImageType('product');
+                     setIsPreviewModalOpen(true);
+                   }
+                }}
+                className={`
+                  relative w-12 h-12 rounded-lg overflow-hidden border transition-all flex-shrink-0
+                  ${(config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath
+                    ? 'border-red-500 shadow-sm shadow-red-500/20 scale-105 ring-1 ring-red-500/50'
+                    : 'border-white/10 opacity-50 hover:opacity-100'
+                  }
+                `}
+              >
+                <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="48px" />
+              </button>
+            ))}
+          </div>
+
+          <div className="px-4 py-3 flex items-center gap-4 border-t border-white/5 mt-2">
             <div 
-              className="lg:hidden fixed bottom-[88px] left-0 right-0 z-30 bg-black/90 backdrop-blur-sm border-t border-neutral-800 shadow-lg overflow-x-auto"
-              style={{ paddingBottom: '8px' }}
+              onClick={() => {
+                setModalImageType(hasFullPreview ? 'dynamic' : 'product');
+                setIsPreviewModalOpen(true);
+              }}
+              className="relative w-14 h-14 bg-neutral-900 rounded-lg border border-white/10 overflow-hidden shadow-inner flex-shrink-0"
             >
-              <div className="px-4 py-2">
-                <div className="flex gap-2 overflow-x-auto pb-2">
-                  {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => {
-                    const isSelected = config.matType === 'classic' 
-                      ? selectedClassicProductImage === imagePath 
-                      : selectedRimsProductImage === imagePath;
-                    
-                    return (
-                      <button
-                        key={imagePath}
-                        onClick={() => {
-                          if (config.matType === 'classic') {
-                            setSelectedClassicProductImage(imagePath);
-                          } else {
-                            setSelectedRimsProductImage(imagePath);
-                          }
-                          // Otwórz modal z powiększonym zdjęciem
-                          setModalImageType('product');
-                          setIsPreviewModalOpen(true);
-                        }}
-                        className={`
-                          relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 flex-shrink-0
-                          ${isSelected
-                            ? 'border-red-500 ring-2 ring-red-500/30 scale-105'
-                            : 'border-neutral-700 hover:border-neutral-600 opacity-80 hover:opacity-100'
-                          }
-                        `}
-                      >
-                        <Image
-                          src={imagePath}
-                          alt={`Zdjęcie produktu ${imagePath.split('/').pop()}`}
-                          fill
-                          className="object-cover"
-                          sizes="80px"
-                          loading="lazy"
-                        />
-                      </button>
-                    );
-                  })}
-                </div>
+              <Image
+                src={hasFullPreview ? dynamicPreviewPath : (productPreviewPath || '')}
+                alt="Miniatura"
+                fill
+                className="object-contain p-1"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm font-bold text-white truncate">
+                  {config.brand} {config.model}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-400">
+                <span>{hasFullPreview ? `${getColorInfo(config.color).name} / ${getColorInfo(config.edgeColor).name}` : 'Konfiguruj...'}</span>
               </div>
             </div>
-          )}
-          
-          <div 
-            className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-sm border-t border-neutral-800 shadow-lg"
-            style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+            <Button 
+              size="sm" 
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/10 backdrop-blur-sm"
+              onClick={() => {
+                setModalImageType(hasFullPreview ? 'dynamic' : 'product');
+                setIsPreviewModalOpen(true);
+              }}
+            >
+              <ZoomIn className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Fullscreen Preview Modal */}
+      {isPreviewModalOpen && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md animate-in fade-in duration-300"
+          onClick={() => setIsPreviewModalOpen(false)}
+        >
+          <button 
+            className="absolute top-4 right-4 p-2 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors z-50"
+            onClick={() => setIsPreviewModalOpen(false)}
           >
-            <div className="px-4 py-3">
-              <div className="flex items-center gap-3">
-              {/* Mały obrazek podglądu - pokazuj dynamiczny podgląd jeśli dostępny, w przeciwnym razie zdjęcie produktu lub logo marki */}
-              {config.matType ? (
-                <div 
-                  onClick={() => {
-                    if (hasFullPreview) {
-                      setModalImageType('dynamic');
-                    } else if (productPreviewPath) {
-                      setModalImageType('product');
-                    }
-                    setIsPreviewModalOpen(true);
-                  }}
-                  className="relative w-16 h-16 flex-shrink-0 bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-lg overflow-hidden border border-neutral-700 cursor-pointer"
-                >
-                  <Image
-                    key={`sticky-${hasFullPreview ? 'dynamic' : 'product'}-${hasFullPreview ? `${config.matType}-${config.structure}-${config.color}-${config.edgeColor}` : config.matType}`}
-                    src={hasFullPreview ? dynamicPreviewPath : (productPreviewPath || '')}
-                    alt={hasFullPreview 
-                      ? `Dywanik ${getColorInfo(config.color || 'black').name}`
-                      : (config.matType === '3d-with-rims' ? 'Dywaniki 3D z rantami' : 'Dywaniki 3D bez rantów')
-                    }
-                    fill
-                    className="object-contain"
-                    sizes="64px"
-                    priority={false}
-                    loading="lazy"
-                  />
-                </div>
-              ) : getBrandLogo(config.brand) ? (
-                <div className="relative w-16 h-16 flex-shrink-0 bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-lg overflow-hidden border border-neutral-700">
-                  <Image
-                    key={`sticky-brand-${config.brand}`}
-                    src={getBrandLogo(config.brand)!}
-                    alt={config.brand}
-                    fill
-                    className="object-contain p-2"
-                    sizes="64px"
-                    priority={false}
-                    loading="lazy"
-                  />
-                </div>
-              ) : (
-                <div className="relative w-16 h-16 flex-shrink-0 bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-lg overflow-hidden border border-neutral-700 flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    <p className="text-[10px] leading-tight">Wybierz opcje</p>
-                  </div>
-                </div>
-              )}
+            <span className="sr-only">Zamknij</span>
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+          
+          <div className="relative w-full h-full flex flex-col" onClick={e => e.stopPropagation()}>
+            {/* Main Image Area */}
+            <div className="flex-1 relative w-full">
+              <Image
+                src={modalImageType === 'dynamic' ? dynamicPreviewPath : (productPreviewPath || '')}
+                alt="Pełny podgląd"
+                fill
+                className="object-contain p-4 md:p-12"
+                quality={100}
+                priority
+              />
+            </div>
 
-              {/* Informacje o konfiguracji */}
-              <div className="flex-1 min-w-0">
-                {hasFullPreview ? (
-                  <>
-                    <div className="flex items-center gap-2 mb-1">
-                      <div
-                        className="w-4 h-4 rounded border border-neutral-600 flex-shrink-0"
-                        style={{ backgroundColor: getColorInfo(config.color).color }}
-                      />
-                      <span className="text-xs text-gray-300 truncate">
-                        {getColorInfo(config.color).name}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-4 h-4 rounded border border-neutral-600 flex-shrink-0"
-                        style={{ backgroundColor: getColorInfo(config.edgeColor).color }}
-                      />
-                      <span className="text-xs text-gray-400 truncate">
-                        {getColorInfo(config.edgeColor).name}
-                      </span>
-                    </div>
-                  </>
-                ) : (
-                  <div className="space-y-1">
-                    <p className="text-xs text-gray-400">
-                      {config.matType ? (config.matType === '3d-with-rims' ? '3D z rantami' : 'Klasyczne') : 'Wybierz typ'}
-                    </p>
-                    {config.variant && (
-                      <p className="text-xs text-gray-500">
-                        {config.variant === 'front' ? 'Przód' : config.variant === 'basic' ? 'Podstawowy' : config.variant === 'premium' ? 'Premium' : 'Kompletny'}
-                      </p>
-                    )}
-                  </div>
+            {/* Modal Navigation - Gallery & View Switcher */}
+            <div className="flex justify-center px-4 pb-8 pt-4">
+              <div className="flex gap-2 p-2 bg-neutral-900/90 backdrop-blur-md rounded-2xl border border-white/10 overflow-x-auto max-w-full scrollbar-hide shadow-2xl">
+                
+                {/* Opcja 1: Wizualizacja (tylko jeśli dostępna) */}
+                {hasFullPreview && (
+                   <button
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        setModalImageType('dynamic');
+                     }}
+                     className={`relative w-14 h-14 rounded-xl overflow-hidden border-2 flex-shrink-0 transition-all duration-300 ${
+                       modalImageType === 'dynamic' 
+                         ? 'border-red-500 scale-105 shadow-lg shadow-red-500/20 ring-1 ring-red-500/50' 
+                         : 'border-white/10 opacity-60 hover:opacity-100 hover:border-white/30'
+                     }`}
+                   >
+                     <div className="absolute inset-0 bg-neutral-800" />
+                     <Image src={dynamicPreviewPath} alt="Wizualizacja" fill className="object-contain p-1" />
+                     {modalImageType === 'dynamic' && <div className="absolute inset-0 bg-red-500/10" />}
+                   </button>
                 )}
-              </div>
 
-              {/* Przycisk powiększ - tylko gdy wybrano typ dywaników */}
-              {config.matType ? (
-                <button
-                  onClick={() => {
-                    if (hasFullPreview) {
-                      setModalImageType('dynamic');
-                    } else if (productPreviewPath) {
+                {/* Separator jeśli mamy obie opcje */}
+                {hasFullPreview && <div className="w-px bg-white/10 mx-1 self-center h-8" />}
+
+                {/* Opcja 2: Galeria produktu */}
+                {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
+                  <button
+                    key={imagePath}
+                    onClick={(e) => {
+                      e.stopPropagation();
                       setModalImageType('product');
-                    }
-                    setIsPreviewModalOpen(true);
-                  }}
-                  className="px-3 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-xs font-medium transition-colors duration-200 flex-shrink-0 min-h-[44px] flex items-center justify-center"
-                >
-                  Powiększ podgląd
-                </button>
-              ) : (
-                <div className="px-3 py-2 bg-neutral-800 rounded-lg text-xs font-medium flex-shrink-0 min-h-[44px] flex items-center justify-center text-gray-500">
-                  ...
-                </div>
-              )}
+                      config.matType === 'classic' ? setSelectedClassicProductImage(imagePath) : setSelectedRimsProductImage(imagePath);
+                    }}
+                    className={`relative w-14 h-14 rounded-xl overflow-hidden border-2 flex-shrink-0 transition-all duration-300 ${
+                      modalImageType === 'product' && (config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath 
+                        ? 'border-red-500 scale-105 shadow-lg shadow-red-500/20 ring-1 ring-red-500/50' 
+                        : 'border-white/10 opacity-60 hover:opacity-100 hover:border-white/30'
+                    }`}
+                  >
+                    <Image src={imagePath} alt="" fill className="object-cover" />
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-        </>
       )}
     </div>
   );
 }
-

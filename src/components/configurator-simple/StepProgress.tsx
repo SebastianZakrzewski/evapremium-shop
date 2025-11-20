@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Check } from "lucide-react";
 
 interface StepProgressProps {
   currentStep: number;
@@ -11,71 +12,67 @@ interface StepProgressProps {
 
 export function StepProgress({ currentStep, totalSteps, onStepClick, isValid }: StepProgressProps) {
   return (
-    <div className="flex items-center justify-between gap-2">
+    <div className="flex items-center justify-between w-full">
       {Array.from({ length: totalSteps }, (_, i) => {
         const step = i + 1;
         const isCompleted = step < currentStep;
         const isCurrent = step === currentStep;
-        const isStepValid = isValid ? isValid(step) : false;
         const isClickable = onStepClick && (isCompleted || isCurrent);
 
         return (
           <React.Fragment key={step}>
-            <button
-              onClick={() => isClickable && onStepClick(step)}
-              disabled={!isClickable}
-              className={`
-                flex items-center justify-center
-                w-10 h-10 md:w-11 md:h-11 rounded-full
-                transition-all duration-300
-                min-w-[40px] min-h-[40px]
-                ${isCurrent 
-                  ? 'bg-red-600 text-white scale-105 shadow-md shadow-red-600/30 ring-2 ring-red-500/50' 
-                  : isCompleted 
-                  ? 'bg-red-600 text-white shadow-sm shadow-red-600/20 hover:scale-105' 
-                  : 'bg-neutral-800 text-gray-400 border border-neutral-700'
-                }
-                ${isClickable ? 'cursor-pointer hover:scale-105 active:scale-95' : 'cursor-not-allowed'}
-              `}
-            >
-              {step === totalSteps ? (
-                // Ikona flagi mety dla ostatniego kroku
-                <svg 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  className="w-5 h-5 md:w-6 md:h-6"
-                >
-                  {/* Flaga mety - wzór szachownicy */}
-                  <rect x="4" y="4" width="16" height="16" fill="currentColor" opacity="0.15"/>
-                  {/* Czarne pola szachownicy */}
-                  <rect x="4" y="4" width="4" height="4" fill="currentColor"/>
-                  <rect x="12" y="4" width="4" height="4" fill="currentColor"/>
-                  <rect x="8" y="8" width="4" height="4" fill="currentColor"/>
-                  <rect x="16" y="8" width="4" height="4" fill="currentColor"/>
-                  <rect x="4" y="12" width="4" height="4" fill="currentColor"/>
-                  <rect x="12" y="12" width="4" height="4" fill="currentColor"/>
-                  <rect x="8" y="16" width="4" height="4" fill="currentColor"/>
-                  <rect x="16" y="16" width="4" height="4" fill="currentColor"/>
-                  {/* Ramka */}
-                  <rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5"/>
-                </svg>
-              ) : (
-                <span className="text-sm md:text-base font-bold">{step}</span>
-              )}
-            </button>
-            {step < totalSteps && (
-              <div
+            <div className="flex items-center flex-1 last:flex-none">
+              <button
+                onClick={() => isClickable && onStepClick(step)}
+                disabled={!isClickable}
                 className={`
-                  flex-1 h-1 mx-2 md:mx-3 rounded-full
-                  transition-all duration-300
-                  ${isCompleted ? 'bg-red-600 shadow-sm shadow-red-600/20' : 'bg-neutral-700'}
+                  relative flex items-center justify-center
+                  w-10 h-10 md:w-12 md:h-12 rounded-full
+                  transition-all duration-500 ease-out
+                  ${isCurrent 
+                    ? 'bg-gradient-to-br from-red-600 to-red-700 text-white scale-110 shadow-[0_0_20px_rgba(220,38,38,0.5)] ring-2 ring-red-500/50 z-10' 
+                    : isCompleted 
+                    ? 'bg-neutral-800 text-red-500 border-2 border-red-500/50 hover:bg-neutral-700 hover:scale-105' 
+                    : 'bg-neutral-900 text-gray-500 border-2 border-neutral-800'
+                  }
+                  ${isClickable ? 'cursor-pointer' : 'cursor-not-allowed opacity-80'}
                 `}
-              />
-            )}
+              >
+                {isCompleted ? (
+                  <Check className="w-5 h-5 md:w-6 md:h-6 animate-in zoom-in duration-300" />
+                ) : step === totalSteps ? (
+                  <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 md:w-6 md:h-6">
+                    <path d="M4 4h16v16H4V4z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="4 4" />
+                    <path d="M4 4h4v4H4V4zm8 0h4v4h-4V4zm-8 8h4v4H4v-4zm8 0h4v4h-4v-4zm-4-4h4v4H8V8zm8 0h4v4h-4V8z" fill="currentColor" className="opacity-50" />
+                  </svg>
+                ) : (
+                  <span className={`text-sm md:text-base font-bold ${isCurrent ? 'animate-pulse' : ''}`}>
+                    {step}
+                  </span>
+                )}
+                
+                {/* Glow effect for current step */}
+                {isCurrent && (
+                  <div className="absolute inset-0 rounded-full bg-red-500/30 blur-md -z-10 animate-pulse-glow" />
+                )}
+              </button>
+              
+              {/* Progress Line */}
+              {step < totalSteps && (
+                <div className="flex-1 h-[2px] mx-2 md:mx-4 bg-neutral-800 rounded-full overflow-hidden relative">
+                  <div 
+                    className={`
+                      absolute inset-0 h-full bg-gradient-to-r from-red-600 to-red-500
+                      transition-all duration-700 ease-out origin-left
+                      ${isCompleted ? 'scale-x-100' : 'scale-x-0'}
+                    `}
+                  />
+                </div>
+              )}
+            </div>
           </React.Fragment>
         );
       })}
     </div>
   );
 }
-
