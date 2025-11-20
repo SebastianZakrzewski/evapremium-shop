@@ -66,7 +66,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
             <ShoppingBag className="w-6 h-6 text-red-500" />
             <h2 className="text-xl font-bold text-white tracking-wide">Twój Koszyk</h2>
             <span className="bg-white/10 text-white text-xs font-bold px-2 py-1 rounded-full border border-white/10">
-              {cart.totalItems}
+              {cart.itemCount}
             </span>
           </div>
           <button
