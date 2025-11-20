@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Search, X, ChevronDown, Loader2 } from "lucide-react";
+import { Search, X, ChevronDown, Loader2, Car } from "lucide-react";
 import { Brand } from "@/types/carousel";
 import { getAvailableModels } from "@/data/car-model-years.utils";
 
@@ -118,154 +118,128 @@ export default function QuickSearchBar() {
   const hasFilters = selectedBrand || selectedModel;
 
   return (
-    <section className="w-full bg-black py-8 md:py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Tytuł */}
-        <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-6 md:mb-8">
-          Dobierz dywaniki w 15 sekund
-        </h2>
+    <section className="w-full bg-black py-12 md:py-16 relative">
+      {/* Gradient line top */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
-        {/* Pasek wyszukiwania */}
-        <div className="bg-neutral-900/80 backdrop-blur-sm border border-neutral-800 rounded-xl p-4 md:p-6 shadow-lg shadow-red-500/10">
-          <div className="flex flex-col md:flex-row gap-3 md:gap-4 items-stretch md:items-center">
+      <div className="max-w-5xl mx-auto px-4 relative z-10">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 flex items-center justify-center gap-3">
+            <Car className="w-6 h-6 md:w-8 md:h-8 text-red-500" />
+            Dobierz dywaniki w <span className="text-red-500">15 sekund</span>
+          </h2>
+          <p className="text-gray-400">Wybierz markę i model, a my dopasujemy idealne dywaniki.</p>
+        </div>
+
+        {/* Search Container */}
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-2 md:p-3 shadow-2xl shadow-red-900/10">
+          <div className="flex flex-col md:flex-row gap-2">
             {/* Marka */}
-            <div className="flex-1 relative">
-              <label htmlFor="brand-select" className="sr-only">
-                Marka
-              </label>
+            <div className="flex-1 relative group">
+              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                <span className="text-gray-500 text-xs font-bold uppercase tracking-wider">Marka</span>
+              </div>
               <select
-                id="brand-select"
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
                 className="
-                  w-full
-                  px-4 py-2.5 md:py-3
-                  bg-neutral-800/50
-                  border border-neutral-700
-                  rounded-lg
-                  text-white text-sm md:text-base
-                  focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none
-                  transition-all duration-200
-                  hover:border-neutral-600
-                  appearance-none
-                  cursor-pointer
-                  min-h-[42px] md:min-h-[44px]
+                  w-full pl-20 pr-10 py-4
+                  bg-black/40 hover:bg-black/60
+                  border border-white/5 hover:border-white/20
+                  rounded-xl
+                  text-white font-medium
+                  appearance-none cursor-pointer
+                  transition-all duration-300
+                  focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent
                 "
                 disabled={brandsLoading}
               >
-                <option value="" className="bg-neutral-900 text-gray-400">
-                  {brandsLoading ? "Ładowanie..." : "Marka"}
-                </option>
+                <option value="" className="bg-neutral-900 text-gray-500">Wybierz...</option>
                 {brands.map((brand) => (
-                  <option key={brand.id} value={brand.name} className="bg-neutral-800 text-white">
+                  <option key={brand.id} value={brand.name} className="bg-neutral-900 text-white">
                     {brand.name}
                   </option>
                 ))}
               </select>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
                 {brandsLoading ? (
-                  <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
+                  <Loader2 className="w-5 h-5 text-red-500 animate-spin" />
                 ) : (
-                  <ChevronDown className="w-5 h-5 text-gray-400" />
+                  <ChevronDown className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors" />
                 )}
               </div>
             </div>
 
-            {/* Separator */}
-            <div className="hidden md:block w-px bg-neutral-700 self-stretch" />
-
             {/* Model */}
-            <div className="flex-1 relative">
-              <label htmlFor="model-select" className="sr-only">
-                Model
-              </label>
+            <div className="flex-1 relative group">
+              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                <span className="text-gray-500 text-xs font-bold uppercase tracking-wider">Model</span>
+              </div>
               <select
-                id="model-select"
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
                 disabled={!selectedBrand || availableModels.length === 0}
                 className="
-                  w-full
-                  px-4 py-2.5 md:py-3
-                  bg-neutral-800/50
-                  border border-neutral-700
-                  rounded-lg
-                  text-white text-sm md:text-base
-                  focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none
-                  transition-all duration-200
-                  hover:border-neutral-600
-                  appearance-none
-                  cursor-pointer
-                  min-h-[42px] md:min-h-[44px]
-                  disabled:bg-neutral-900/50 disabled:cursor-not-allowed disabled:text-gray-500
+                  w-full pl-20 pr-10 py-4
+                  bg-black/40 hover:bg-black/60
+                  border border-white/5 hover:border-white/20
+                  rounded-xl
+                  text-white font-medium
+                  appearance-none cursor-pointer
+                  transition-all duration-300
+                  focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent
+                  disabled:opacity-50 disabled:cursor-not-allowed
                 "
               >
-                <option value="" className="bg-neutral-900 text-gray-400">
-                  {!selectedBrand 
-                    ? "Najpierw wybierz markę" 
-                    : availableModels.length === 0
-                    ? "Brak dostępnych modeli"
-                    : "Model"}
+                <option value="" className="bg-neutral-900 text-gray-500">
+                  {!selectedBrand ? "Wybierz markę..." : "Wybierz model..."}
                 </option>
                 {availableModels.map((model) => (
-                  <option key={model.id} value={model.name} className="bg-neutral-800 text-white">
+                  <option key={model.id} value={model.name} className="bg-neutral-900 text-white">
                     {model.name}
                   </option>
                 ))}
               </select>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <ChevronDown className="w-5 h-5 text-gray-400" />
+              <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                <ChevronDown className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors" />
               </div>
             </div>
 
-            {/* Separator */}
-            <div className="hidden md:block w-px bg-neutral-700 self-stretch" />
-
-            {/* Przycisk Szukaj */}
+            {/* Button */}
             <button
               onClick={handleSearch}
               disabled={!selectedBrand}
               className="
-                px-6 md:px-8
-                py-2.5 md:py-3
-                bg-gradient-to-r from-red-500 to-red-600
-                hover:from-red-600 hover:to-red-700
-                text-white
-                font-semibold
-                rounded-lg
-                transition-all duration-200
-                shadow-md shadow-red-500/30 hover:shadow-lg hover:shadow-red-500/40
-                disabled:opacity-50 disabled:cursor-not-allowed
+                bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600
+                text-white font-bold uppercase tracking-wide
+                px-8 py-4 rounded-xl
+                shadow-lg shadow-red-900/30
+                transition-all duration-300
+                hover:scale-105 active:scale-95
+                disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
                 flex items-center justify-center gap-2
-                min-h-[42px] md:min-h-[44px]
-                text-sm md:text-base
+                md:min-w-[160px]
               "
             >
               <Search className="w-5 h-5" />
               <span>Szukaj</span>
             </button>
           </div>
-
-          {/* Przycisk Usuń filtry */}
-          {hasFilters && (
-            <div className="mt-4 flex justify-end">
-              <button
-                onClick={handleClearFilters}
-                className="
-                  flex items-center gap-2
-                  text-gray-400 hover:text-white
-                  text-sm
-                  transition-colors duration-200
-                "
-              >
-                <X className="w-4 h-4" />
-                <span>USUŃ FILTRY</span>
-              </button>
-            </div>
-          )}
         </div>
+
+        {/* Clear Filters */}
+        {hasFilters && (
+          <div className="mt-4 text-center animate-fade-in">
+            <button
+              onClick={handleClearFilters}
+              className="text-xs text-gray-500 hover:text-white transition-colors flex items-center justify-center gap-1 mx-auto uppercase tracking-wider font-bold"
+            >
+              <X className="w-3 h-3" />
+              Wyczyść filtry
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
 }
-

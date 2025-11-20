@@ -7,56 +7,43 @@ import Image from "next/image";
 const advantagesItems = [
   {
     id: 1,
-    type: "image" as const,
     src: "/images/zalety/dywanik_z_rantami.png",
     title: "Dywaniki 3D z rantami",
     description: "Zaawansowana technologia 3D zapewnia doskonałe dopasowanie i trwałość",
     icon: Sparkles,
-    color: "from-blue-500 to-purple-600"
+    targetSection: "3d-mats-section"
   },
   {
     id: 2,
-    type: "image" as const,
     src: "/images/zalety/szycie.png",
-    title: "Szyte na miarę do twojego auta",
+    title: "Szyte na miarę",
     description: "Każdy dywanik jest precyzyjnie dopasowany do konkretnego modelu samochodu",
     icon: Target,
-    color: "from-green-500 to-teal-600"
+    targetSection: "custom-fit-section"
   },
   {
     id: 3,
-    type: "image" as const,
     src: "/kolory.png",
     title: "Różnorodna kolorystyka",
     description: "Szeroka paleta kolorów dopasowana do wnętrza Twojego auta",
     icon: Star,
-    color: "from-yellow-500 to-orange-600"
+    targetSection: "roznorodna-kolorystyka-section"
   },
   {
     id: 4,
-    type: "image" as const,
     src: "/images/zalety/pianka.webp",
     title: "Nowoczesny Materiał EVA",
     description: "Specjalna struktura materiału EVA skutecznie zatrzymuje brud i wilgoć",
     icon: Zap,
-    color: "from-red-500 to-pink-600"
+    targetSection: "gleboka-struktura-komorek-section"
   }
 ];
 
 export default function AdvantagesSection() {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
-  const [clickedItem, setClickedItem] = useState<number | null>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -71,189 +58,110 @@ export default function AdvantagesSection() {
       observer.observe(section);
     }
 
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
-  const handleItemClick = (itemId: number) => {
-    setClickedItem(itemId);
-    setTimeout(() => setClickedItem(null), 300);
-
-    // Płynne przewijanie do sekcji 3D mats dla pierwszego elementu
-    if (itemId === 1) {
-      const threeDMatsSection = document.getElementById('3d-mats-section');
-      if (threeDMatsSection) {
-        threeDMatsSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    // Płynne przewijanie do sekcji custom fit dla drugiego elementu
-    if (itemId === 2) {
-      const customFitSection = document.getElementById('custom-fit-section');
-      if (customFitSection) {
-        customFitSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    // Płynne przewijanie do sekcji różnorodna kolorystyka dla trzeciego elementu
-    if (itemId === 3) {
-      const kolorystykaSection = document.getElementById('roznorodna-kolorystyka-section');
-      if (kolorystykaSection) {
-        kolorystykaSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    // Płynne przewijanie do sekcji głęboka struktura komórek dla czwartego elementu
-    if (itemId === 4) {
-      const glebokaSection = document.getElementById('gleboka-struktura-komorek-section');
-      if (glebokaSection) {
-        glebokaSection.scrollIntoView({ behavior: 'smooth' });
-      }
+  const handleItemClick = (targetId: string) => {
+    const section = document.getElementById(targetId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
-    <section id="advantages-section" className="py-8 md:py-12 bg-black relative overflow-hidden">
-      {/* Animowane tło z gradientem */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
-      
-      {/* Animowane cząsteczki tła - teraz również na mobile */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+    <section id="advantages-section" className="py-24 bg-black relative overflow-hidden">
+      {/* Background Gradients */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-900/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-900/5 rounded-full blur-3xl"></div>
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
-        {/* Header z animacją */}
-        <div className={`text-center mb-6 md:mb-10 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-6 animate-pulse-glow">
-            <Target className="w-8 h-8 text-white" />
+        {/* Header */}
+        <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full border border-red-500/30 bg-red-500/10 text-red-400 text-sm font-bold uppercase tracking-widest mb-6">
+            Dlaczego My?
           </div>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 bg-gradient-to-r from-white via-red-100 to-white bg-clip-text text-transparent">
-            POZNAJ NASZ PRODUKT
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Poznaj Nasz <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-600">Produkt</span>
           </h2>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-            Odkryj wyjątkowe cechy naszych dywaników samochodowych
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            Tworzymy dywaniki samochodowe, które łączą w sobie bezkompromisową jakość, 
+            nowoczesny design i maksymalną funkcjonalność.
           </p>
         </div>
 
-        {/* Grid z animowanymi oknami - idealnie wyrównany */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 justify-items-center items-start">
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {advantagesItems.map((item, index) => {
-            const IconComponent = item.icon;
+            const Icon = item.icon;
+            const isHoveredState = hoveredItem === item.id;
+            
             return (
               <div
                 key={item.id}
-                className={`group cursor-pointer transition-all duration-1000 ease-out w-full max-w-sm lg:max-w-none ${
-                  isVisible ? (
-                    index === 0 ? 'animate-float-in-delay-1' :
-                    index === 1 ? 'animate-float-in-delay-2' :
-                    index === 2 ? 'animate-float-in-delay-3' :
-                    'animate-float-in-delay-4'
-                  ) : 'opacity-0 translate-y-20'
-                }`}
+                className={`
+                  group relative cursor-pointer rounded-3xl p-2 transition-all duration-500 ease-out
+                  ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}
+                `}
+                style={{ transitionDelay: `${index * 100}ms` }}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
-                onClick={() => handleItemClick(item.id)}
+                onClick={() => handleItemClick(item.targetSection)}
               >
-                <div className="relative flex flex-col items-center text-center h-full p-2">
-                  {/* Główny kontener z animowanym tłem */}
-                  <div className="relative w-full h-full flex flex-col items-center">
-                    {/* Animowane tło z gradientem */}
-                    <div className={`absolute inset-0 rounded-2xl transition-all duration-700 ease-out ${
-                      hoveredItem === item.id 
-                        ? 'bg-gradient-to-br from-red-500/20 via-red-600/10 to-red-700/20 scale-105 animate-glow-border' 
-                        : 'bg-gradient-to-br from-gray-900/50 to-gray-800/30 scale-100'
-                    }`}></div>
+                {/* Card Content */}
+                <div className={`
+                  relative h-full bg-gray-900/40 backdrop-blur-md border border-white/5 rounded-2xl overflow-hidden
+                  transition-all duration-500
+                  ${isHoveredState ? 'bg-gray-800/60 border-red-500/30 transform -translate-y-2 shadow-2xl shadow-red-900/20' : 'hover:border-white/10'}
+                `}>
+                  
+                  {/* Image Area */}
+                  <div className="relative h-48 w-full overflow-hidden bg-black">
+                    <Image
+                      src={item.src}
+                      alt={item.title}
+                      fill
+                      className={`object-cover transition-transform duration-700 ${isHoveredState ? 'scale-110' : 'scale-100'}`}
+                    />
+                    <div className={`absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent transition-opacity duration-500 ${isHoveredState ? 'opacity-80' : 'opacity-60'}`}></div>
                     
-                    {/* Kontener z obrazem - wypełnia całą szerokość */}
-                    <div className={`relative mb-4 bg-black rounded-xl p-4 w-full h-40 md:h-56 lg:h-72 flex items-center justify-center border-4 transition-all duration-700 ease-out transform ${
-                      hoveredItem === item.id 
-                        ? 'border-red-500/80 scale-110 shadow-2xl shadow-red-500/30 animate-float-hover' 
-                        : 'border-red-800/50 scale-100 shadow-lg'
-                    } ${
-                      clickedItem === item.id ? 'animate-scale-bounce' : ''
-                    }`}>
-                      
-                      {/* Animowany gradient border */}
-                      <div className={`absolute inset-0 rounded-xl transition-all duration-700 ${
-                        hoveredItem === item.id 
-                          ? 'bg-gradient-to-r from-red-500 via-red-600 to-red-500 bg-[length:200%_100%] animate-shimmer' 
-                          : 'bg-transparent'
-                      }`}></div>
-                      
-                      {/* Obraz z animacją - wypełnia całą szerokość */}
-                      <div className="relative z-10 flex items-center justify-center w-full h-full">
-                        <Image
-                          src={item.src}
-                          alt={item.title}
-                          width={400}
-                          height={400}
-                          className={`transition-all duration-700 ease-out object-cover w-full h-full ${
-                            hoveredItem === item.id 
-                              ? 'scale-110 rotate-3' 
-                              : 'scale-100 rotate-0'
-                          }`}
-                        />
-                      </div>
-                      
-                      {/* Ikona z animacją - teraz również na mobile */}
-                      <div className={`absolute top-2 right-2 transition-all duration-700 ${
-                        hoveredItem === item.id 
-                          ? 'opacity-100 scale-100 rotate-12 animate-pulse' 
-                          : 'opacity-0 scale-50 rotate-0'
-                      }`}>
-                        <IconComponent className="w-6 h-6 text-red-400" />
-                      </div>
-
-                      {/* Strzałka z animacją - teraz również na mobile */}
-                      <div className={`absolute bottom-2 right-2 transition-all duration-700 ${
-                        hoveredItem === item.id 
-                          ? 'opacity-100 translate-x-0' 
-                          : 'opacity-0 translate-x-4'
-                      }`}>
-                        <ArrowRight className="w-4 h-4 text-red-400" />
-                      </div>
-                    </div>
-                    
-                    {/* Tytuł z animacją - idealnie wyśrodkowany */}
-                    <h3 className={`text-lg md:text-xl font-semibold transition-all duration-700 ease-out text-center w-full mb-2 ${
-                      hoveredItem === item.id 
-                        ? 'text-red-400 scale-105' 
-                        : 'text-white scale-100'
-                    }`}>
-                      {item.title}
-                    </h3>
-                    
-                    {/* Opis z animacją - idealnie wyśrodkowany */}
-                    <div className={`overflow-hidden transition-all duration-700 ease-out w-full text-center ${
-                      hoveredItem === item.id 
-                        ? 'max-h-32 opacity-100' 
-                        : 'max-h-32 opacity-100'
-                    }`}>
-                      <p className="text-sm text-gray-400 mt-2 max-w-xs mx-auto leading-relaxed">
-                        {item.description}
-                      </p>
+                    {/* Icon Badge */}
+                    <div className={`
+                      absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center
+                      bg-white/10 backdrop-blur-md border border-white/20 text-white
+                      transition-all duration-500
+                      ${isHoveredState ? 'bg-red-600 border-red-500 scale-110 rotate-12' : ''}
+                    `}>
+                      <Icon className="w-5 h-5" />
                     </div>
                   </div>
-                  
-                  {/* Efekt świecenia */}
-                  <div className={`absolute inset-0 rounded-2xl transition-all duration-700 ${
-                    hoveredItem === item.id 
-                      ? 'bg-gradient-to-r from-red-500/10 via-transparent to-red-500/10 animate-pulse-glow' 
-                      : 'bg-transparent'
-                  }`}></div>
+
+                  {/* Text Area */}
+                  <div className="p-6">
+                    <h3 className={`
+                      text-xl font-bold mb-2 transition-colors duration-300
+                      ${isHoveredState ? 'text-white' : 'text-gray-200'}
+                    `}>
+                      {item.title}
+                    </h3>
+                    <p className="text-sm text-gray-400 leading-relaxed mb-4">
+                      {item.description}
+                    </p>
+                    
+                    <div className={`
+                      flex items-center text-sm font-bold uppercase tracking-wider transition-all duration-300
+                      ${isHoveredState ? 'text-red-500 translate-x-2' : 'text-gray-600'}
+                    `}>
+                      Więcej <ArrowRight className="w-4 h-4 ml-2" />
+                    </div>
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
-        
       </div>
     </section>
   );
-} 
+}
