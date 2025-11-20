@@ -124,9 +124,9 @@ export default function HeroSection() {
   }, [currentSlide]);
 
   return (
-    <section className="relative min-h-[600px] md:min-h-[550px] h-[75vh] md:h-[70vh] overflow-hidden pt-20 md:pt-0 pb-12 md:pb-0 bg-black">
+    <section className="relative min-h-[750px] md:min-h-[550px] h-auto md:h-[70vh] overflow-visible md:overflow-hidden pt-24 md:pt-0 pb-20 md:pb-0 bg-black">
       {/* Carousel */}
-      <div className="container mx-auto px-4 relative h-full py-8 md:py-0">
+      <div className="container mx-auto px-4 relative min-h-[750px] md:h-full py-12 md:py-0">
         {heroSlides.map((slide, index) => {
           const isVisible = visibleSlides.includes(index);
           const isActive = index === currentSlide;
@@ -146,8 +146,8 @@ export default function HeroSection() {
               }`}
             >
               {/* Background - Video or Image */}
-              <div className="absolute inset-0 w-full h-full flex justify-center items-center md:p-8">
-                <div className="w-full h-full relative rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+              <div className="absolute inset-0 w-full h-full flex justify-center items-center p-4 md:p-8">
+                <div className="w-full h-full relative rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 min-h-[650px] md:min-h-0">
                   {isImageSlide && slide.image ? (
                     <>
                       <Image
@@ -160,6 +160,8 @@ export default function HeroSection() {
                       />
                       {/* Radial Overlay */}
                       <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/20 to-black/60"></div>
+                      {/* Overlay to hide button on image */}
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[280px] sm:w-[320px] md:w-[360px] h-12 md:h-14 bg-black/80 backdrop-blur-sm z-30"></div>
                     </>
                   ) : (
                     <>
@@ -191,68 +193,63 @@ export default function HeroSection() {
                   )}
                   
                   {/* Content */}
-                  <div className={`absolute inset-0 flex flex-col items-center justify-center text-center p-8 md:p-12 ${isImageSlide ? 'text-white' : 'text-white'}`}>
-                    <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 w-full px-2">
-                      {slide.title && (
-                        <h1 className={`text-3xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-tight animate-fade-up break-words ${isImageSlide ? 'drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]' : 'drop-shadow-2xl'}`}>
-                          {slide.title}
-                        </h1>
-                      )}
-                      
-                      {slide.subtitle && (
-                        <p className={`text-lg md:text-xl lg:text-2xl font-light tracking-wide max-w-2xl mx-auto animate-fade-in-delay ${isImageSlide ? 'text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]' : 'text-gray-200 drop-shadow-lg'}`}>
-                          {slide.subtitle}
-                        </p>
-                      )}
-                      
-                      {/* Benefits Chips */}
-                      {slide.benefits && slide.benefits.length > 0 && (
-                        <div className="animate-fade-in-delay flex flex-wrap justify-center gap-3">
-                          {slide.benefits.map((benefit, index) => (
-                            <div 
-                              key={index}
-                              className="glass-panel px-4 py-2 rounded-full flex items-center gap-2 text-sm font-medium backdrop-blur-md border-white/20 bg-white/5 hover:bg-white/10 transition-colors"
-                            >
-                              {index === 0 && <ShieldCheck className="w-4 h-4 text-red-500" />}
-                              {index === 1 && <Droplets className="w-4 h-4 text-blue-400" />}
-                              {index === 2 && <Truck className="w-4 h-4 text-green-400" />}
-                              {benefit}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      
-                      {slide.cta && (
-                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center animate-fade-in-delay-2 pt-4 pb-4 md:pb-0">
-                          <button 
-                            onClick={() => {
-                              if (slide.cta === "Skonfiguruj swój zestaw") {
-                                router.push('/dywaniki');
-                              } else if (slide.cta === "Sprawdź promocję") {
-                                router.push('/konfigurator');
-                              } else {
-                                const element = document.getElementById('products');
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  {!isImageSlide && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 md:p-12 text-white">
+                      <div className="max-w-4xl mx-auto space-y-5 md:space-y-8 w-full px-3">
+                        {slide.title && (
+                          <h1 className={`text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-tight animate-fade-up break-words mb-2 drop-shadow-2xl`}>
+                            {slide.title}
+                          </h1>
+                        )}
+                        
+                        {slide.subtitle && (
+                          <p className={`text-sm sm:text-base md:text-xl lg:text-2xl font-light tracking-wide max-w-2xl mx-auto animate-fade-in-delay mb-3 text-gray-200 drop-shadow-lg`}>
+                            {slide.subtitle}
+                          </p>
+                        )}
+                        
+                        {/* Benefits Chips */}
+                        {slide.benefits && slide.benefits.length > 0 && (
+                          <div className="animate-fade-in-delay flex flex-wrap justify-center gap-2 md:gap-3 mb-4">
+                            {slide.benefits.map((benefit, index) => (
+                              <div 
+                                key={index}
+                                className="glass-panel px-3 md:px-4 py-1.5 md:py-2 rounded-full flex items-center gap-2 text-xs md:text-sm font-medium backdrop-blur-md border-white/20 bg-white/5 hover:bg-white/10 transition-colors"
+                              >
+                                {index === 0 && <ShieldCheck className="w-3 h-3 md:w-4 md:h-4 text-red-500" />}
+                                {index === 1 && <Droplets className="w-3 h-3 md:w-4 md:h-4 text-blue-400" />}
+                                {index === 2 && <Truck className="w-3 h-3 md:w-4 md:h-4 text-green-400" />}
+                                {benefit}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {slide.cta && (
+                          <div className="flex flex-col sm:flex-row gap-3 md:gap-6 justify-center items-center animate-fade-in-delay-2 pt-2 pb-6 md:pb-0">
+                            <button 
+                              onClick={() => {
+                                if (slide.cta === "Skonfiguruj swój zestaw") {
+                                  router.push('/dywaniki');
+                                } else {
+                                  const element = document.getElementById('products');
+                                  if (element) {
+                                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                  }
                                 }
-                              }
-                            }}
-                            className={`
-                              group relative px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-bold tracking-wide transition-all duration-300 w-full sm:w-auto
-                              ${isImageSlide 
-                                ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20' 
-                                : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-xl shadow-red-900/30'
-                              }
-                              hover:scale-105 hover:shadow-2xl hover:shadow-red-600/20 active:scale-95
-                            `}
-                          >
-                            <span className="flex items-center justify-center gap-2">
-                              {slide.cta}
-                              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </span>
-                          </button>
-                          
-                          {!isImageSlide && (
+                              }}
+                              className="
+                                group relative px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-bold tracking-wide transition-all duration-300 w-full sm:w-auto
+                                bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-xl shadow-red-900/30
+                                hover:scale-105 hover:shadow-2xl hover:shadow-red-600/20 active:scale-95
+                              "
+                            >
+                              <span className="flex items-center justify-center gap-2">
+                                {slide.cta}
+                                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                              </span>
+                            </button>
+                            
                             <button 
                               onClick={() => {
                                 const element = document.getElementById('3d-mats-section');
@@ -264,11 +261,11 @@ export default function HeroSection() {
                             >
                               Dowiedz się więcej
                             </button>
-                          )}
-                        </div>
-                      )}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -298,7 +295,7 @@ export default function HeroSection() {
       </button>
 
       {/* Indicators */}
-      <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
+      <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
         {heroSlides.map((_, index) => (
           <button
             key={index}
