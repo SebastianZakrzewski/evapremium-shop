@@ -13,7 +13,8 @@ import {
   Send,
   MessageCircle,
   Building2,
-  ArrowRight
+  ArrowRight,
+  CheckCircle
 } from 'lucide-react';
 import SectionHeading from "./ui/section-heading";
 import { cn } from '@/lib/utils';
