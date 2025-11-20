@@ -16,6 +16,7 @@
     "db:setup": "node scripts/setup-car-models-database.js",
     "db:migrate": "node scripts/migrate-car-models-data.js",
     "db:create-table": "node -e \"console.log('Wykonaj SQL w Supabase Dashboard')\"",
+    "db:migrate-product-id-nullable": "node scripts/apply-product-id-nullable-migration.js",
     "supabase:migrate": "node scripts/migrate-to-supabase.js",
     "supabase:seed": "node scripts/supabase-seed.js",
     "seed:audi-mats": "node scripts/seed-audi-mats.js",

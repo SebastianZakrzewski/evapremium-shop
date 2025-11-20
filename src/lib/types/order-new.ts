@@ -32,7 +32,7 @@ export interface OrderItem {
   unitPrice: number;
   subtotal: number;
   productType: 'accessory' | 'mat';
-  productId: string;
+  productId: string | null; // UUID dla akcesoriów, null dla matów (produkty konfigurowane)
   productName: string;
   productSku?: string;
   productImage?: string;
@@ -72,7 +72,7 @@ export interface CreateOrderItemDTO {
   unitPrice: number;
   subtotal: number;
   productType: 'accessory' | 'mat';
-  productId: string;
+  productId?: string | null; // UUID dla akcesoriów (wymagany), null/undefined dla matów (produkty konfigurowane)
   productName: string;
   productSku?: string;
   productImage?: string;

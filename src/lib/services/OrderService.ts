@@ -9,6 +9,7 @@ import { dealService } from '../integrations/bitrix24/services/DealService';
 import { mapOrderToContact } from '../integrations/bitrix24/mappers/orderToContact';
 import { mapOrderToDeal, createDealProducts } from '../integrations/bitrix24/mappers/orderToDeal';
 import { stageMappingService } from '../integrations/bitrix24/services/StageMappingService';
+import { randomUUID } from 'crypto';
 
 export class OrderService {
   private repository: OrderRepository;
@@ -133,18 +134,54 @@ export class OrderService {
         configuration: item.configuration
       });
       
-      return {
+      // Używamy productId z koszyka (UUID wygenerowany w konfiguratorze)
+      // Dla matów: UUID jest generowany w konfiguratorze za pomocą crypto.randomUUID()
+      // Dla akcesoriów: UUID pochodzi z bazy danych
+      let productId: string | null = null;
+      
+      if (item.productType === 'mat') {
+        // Maty mają UUID wygenerowany w konfiguratorze (jak w starym konfiguratorze)
+        productId = item.productId || null;
+        if (!productId) {
+          // Fallback: jeśli nie ma UUID, wygeneruj nowy (nie powinno się zdarzyć)
+          console.warn('🛒 OrderService: Mat bez productId, generuję nowy UUID');
+          productId = randomUUID();
+        }
+        console.log('🛒 OrderService: Mat detected, using productId:', productId);
+      } else if (item.productType === 'accessory') {
+        // Akcesoria wymagają UUID z bazy danych
+        productId = item.productId || null;
+        if (!productId) {
+          throw new Error(`productId jest wymagany dla akcesoriów (produkt: ${item.productName})`);
+        }
+        // Walidacja formatu UUID
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!uuidRegex.test(productId)) {
+          throw new Error(`productId dla akcesorium musi być prawidłowym UUID (otrzymano: ${productId})`);
+        }
+        console.log('🛒 OrderService: Accessory detected, using productId:', productId);
+      }
+      
+      const orderItem = {
         order_id: orderId,
         quantity: item.quantity,
         unit_price: item.unitPrice,
         subtotal: item.subtotal,
         product_type: item.productType,
-        product_id: item.productId, // Używamy productId dla wszystkich typów produktów
+        product_id: productId, // UUID dla wszystkich produktów (maty: generowany w konfiguratorze, akcesoria: z bazy danych)
         product_name: item.productName,
         product_sku: item.productSku,
         product_image: item.productImage,
         configuration: item.configuration
       };
+      
+      console.log('🛒 OrderService: Prepared order item:', {
+        product_type: orderItem.product_type,
+        product_id: orderItem.product_id,
+        product_name: orderItem.product_name
+      });
+      
+      return orderItem;
     });
     
     console.log('🛒 OrderService: Order items to save:', orderItems);
