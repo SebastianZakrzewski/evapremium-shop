@@ -118,35 +118,37 @@ export default function QuickSearchBar() {
   const hasFilters = selectedBrand || selectedModel;
 
   return (
-    <section className="w-full bg-black py-12 md:py-16 relative">
+    <section className="w-full bg-black py-20 md:py-24 relative">
       {/* Gradient line top */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
-      <div className="max-w-5xl mx-auto px-4 relative z-10">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 md:mb-6 leading-tight break-words px-2">
             Dobierz dywaniki w <span className="text-red-500">15 sekund</span>
           </h2>
-          <p className="text-gray-400">Wybierz markę i model, a my dopasujemy idealne dywaniki.</p>
+          <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed px-2">
+            Wybierz markę i model, a my dopasujemy idealne dywaniki.
+          </p>
         </div>
 
         {/* Search Container */}
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-2 md:p-3 shadow-2xl shadow-red-900/10">
-          <div className="flex flex-col md:flex-row gap-2">
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-3 md:p-4 shadow-2xl shadow-red-900/10">
+          <div className="flex flex-col md:flex-row gap-3 md:gap-2">
             {/* Marka */}
             <div className="flex-1 relative group">
-              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <div className="absolute inset-y-0 left-3 md:left-4 flex items-center pointer-events-none">
                 <span className="text-gray-500 text-xs font-bold uppercase tracking-wider">Marka</span>
               </div>
               <select
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
                 className="
-                  w-full pl-20 pr-10 py-4
+                  w-full pl-16 md:pl-20 pr-10 py-3.5 md:py-4
                   bg-black/40 hover:bg-black/60
                   border border-white/5 hover:border-white/20
                   rounded-xl
-                  text-white font-medium
+                  text-white text-sm md:text-base font-medium
                   appearance-none cursor-pointer
                   transition-all duration-300
                   focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent
@@ -160,18 +162,18 @@ export default function QuickSearchBar() {
                   </option>
                 ))}
               </select>
-              <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+              <div className="absolute inset-y-0 right-3 md:right-4 flex items-center pointer-events-none">
                 {brandsLoading ? (
-                  <Loader2 className="w-5 h-5 text-red-500 animate-spin" />
+                  <Loader2 className="w-4 h-4 md:w-5 md:h-5 text-red-500 animate-spin" />
                 ) : (
-                  <ChevronDown className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors" />
+                  <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-500 group-hover:text-white transition-colors" />
                 )}
               </div>
             </div>
 
             {/* Model */}
             <div className="flex-1 relative group">
-              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <div className="absolute inset-y-0 left-3 md:left-4 flex items-center pointer-events-none">
                 <span className="text-gray-500 text-xs font-bold uppercase tracking-wider">Model</span>
               </div>
               <select
@@ -179,11 +181,11 @@ export default function QuickSearchBar() {
                 onChange={(e) => setSelectedModel(e.target.value)}
                 disabled={!selectedBrand || availableModels.length === 0}
                 className="
-                  w-full pl-20 pr-10 py-4
+                  w-full pl-16 md:pl-20 pr-10 py-3.5 md:py-4
                   bg-black/40 hover:bg-black/60
                   border border-white/5 hover:border-white/20
                   rounded-xl
-                  text-white font-medium
+                  text-white text-sm md:text-base font-medium
                   appearance-none cursor-pointer
                   transition-all duration-300
                   focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent
@@ -199,8 +201,8 @@ export default function QuickSearchBar() {
                   </option>
                 ))}
               </select>
-              <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-                <ChevronDown className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors" />
+              <div className="absolute inset-y-0 right-3 md:right-4 flex items-center pointer-events-none">
+                <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-500 group-hover:text-white transition-colors" />
               </div>
             </div>
 
@@ -211,16 +213,17 @@ export default function QuickSearchBar() {
               className="
                 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600
                 text-white font-bold uppercase tracking-wide
-                px-8 py-4 rounded-xl
+                px-6 md:px-8 py-3.5 md:py-4 rounded-xl
                 shadow-lg shadow-red-900/30
                 transition-all duration-300
                 hover:scale-105 active:scale-95
                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
                 flex items-center justify-center gap-2
-                md:min-w-[160px]
+                text-sm md:text-base
+                w-full md:w-auto md:min-w-[160px]
               "
             >
-              <Search className="w-5 h-5" />
+              <Search className="w-4 h-4 md:w-5 md:h-5" />
               <span>Szukaj</span>
             </button>
           </div>

@@ -124,9 +124,9 @@ export default function HeroSection() {
   }, [currentSlide]);
 
   return (
-    <section className="relative min-h-[550px] h-[65vh] md:h-[70vh] overflow-hidden pt-4 md:pt-0 bg-black">
+    <section className="relative min-h-[600px] md:min-h-[550px] h-[75vh] md:h-[70vh] overflow-hidden pt-20 md:pt-0 pb-12 md:pb-0 bg-black">
       {/* Carousel */}
-      <div className="container mx-auto px-4 relative h-full py-4 md:py-0">
+      <div className="container mx-auto px-4 relative h-full py-8 md:py-0">
         {heroSlides.map((slide, index) => {
           const isVisible = visibleSlides.includes(index);
           const isActive = index === currentSlide;
@@ -191,10 +191,10 @@ export default function HeroSection() {
                   )}
                   
                   {/* Content */}
-                  <div className={`absolute inset-0 flex flex-col items-center justify-center text-center p-6 md:p-12 ${isImageSlide ? 'text-white' : 'text-white'}`}>
-                    <div className="max-w-4xl mx-auto space-y-8">
+                  <div className={`absolute inset-0 flex flex-col items-center justify-center text-center p-8 md:p-12 ${isImageSlide ? 'text-white' : 'text-white'}`}>
+                    <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 w-full px-2">
                       {slide.title && (
-                        <h1 className={`text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-tight animate-fade-up ${isImageSlide ? 'drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]' : 'drop-shadow-2xl'}`}>
+                        <h1 className={`text-3xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-tight animate-fade-up break-words ${isImageSlide ? 'drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]' : 'drop-shadow-2xl'}`}>
                           {slide.title}
                         </h1>
                       )}
@@ -223,7 +223,7 @@ export default function HeroSection() {
                       )}
                       
                       {slide.cta && (
-                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center animate-fade-in-delay-2 pt-4">
+                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center animate-fade-in-delay-2 pt-4 pb-4 md:pb-0">
                           <button 
                             onClick={() => {
                               if (slide.cta === "Skonfiguruj swój zestaw") {
@@ -238,7 +238,7 @@ export default function HeroSection() {
                               }
                             }}
                             className={`
-                              group relative px-8 py-4 rounded-full text-base font-bold tracking-wide transition-all duration-300
+                              group relative px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-bold tracking-wide transition-all duration-300 w-full sm:w-auto
                               ${isImageSlide 
                                 ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20' 
                                 : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-xl shadow-red-900/30'
@@ -246,7 +246,7 @@ export default function HeroSection() {
                               hover:scale-105 hover:shadow-2xl hover:shadow-red-600/20 active:scale-95
                             `}
                           >
-                            <span className="flex items-center gap-2">
+                            <span className="flex items-center justify-center gap-2">
                               {slide.cta}
                               <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </span>
@@ -260,7 +260,7 @@ export default function HeroSection() {
                                   element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                                 }
                               }}
-                              className="glass-button px-8 py-4 rounded-full text-base font-semibold tracking-wide hover:bg-white/10 hover:border-white/40"
+                              className="glass-button px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-semibold tracking-wide hover:bg-white/10 hover:border-white/40 w-full sm:w-auto"
                             >
                               Dowiedz się więcej
                             </button>
@@ -298,7 +298,7 @@ export default function HeroSection() {
       </button>
 
       {/* Indicators */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
+      <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
         {heroSlides.map((_, index) => (
           <button
             key={index}
