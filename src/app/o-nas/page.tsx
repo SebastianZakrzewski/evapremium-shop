@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import AboutUsSection from '@/components/about-us-section';
+import PageHeroBanner from '@/components/page-hero-banner';
 
 export const metadata: Metadata = {
   title: 'O Nas - EvaPremium | Najwyższej Jakości Dywaniki Samochodowe EVA',
@@ -14,5 +15,15 @@ export const metadata: Metadata = {
 };
 
 export default function AboutUsPage() {
-  return <AboutUsSection />;
+  return (
+    <>
+      <PageHeroBanner
+        breadcrumb="O Nas"
+        title="O NAS"
+        highlight="EVAPREMIUM"
+        description="EvaPremium to polski producent innowacyjnych dywaników samochodowych. Łączymy technologię z rzemieślniczą precyzją, dostarczając produkty najwyższej jakości od 2010 roku."
+      />
+      <AboutUsSection />
+    </>
+  );
 }

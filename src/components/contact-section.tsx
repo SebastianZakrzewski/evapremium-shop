@@ -16,7 +16,6 @@ import {
   ArrowRight,
   CheckCircle
 } from 'lucide-react';
-import SectionHeading from "./ui/section-heading";
 import { cn } from '@/lib/utils';
 
 const contactInfo = [
@@ -68,12 +67,6 @@ export default function ContactSection() {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <SectionHeading
-          title="SKONTAKTUJ SIĘ"
-          highlight="Z NAMI"
-          subtitle="Masz pytania dotyczące produktów lub zamówienia? Jesteśmy tutaj, aby Ci pomóc."
-        />
-
         <div className="grid lg:grid-cols-12 gap-12">
           {/* Left Side - Contact Info & Map */}
           <div className="lg:col-span-5 space-y-8">

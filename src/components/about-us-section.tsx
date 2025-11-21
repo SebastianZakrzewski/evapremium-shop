@@ -88,13 +88,6 @@ export default function AboutUsSection() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Header */}
-        <SectionHeading
-          title="O NASZEJ"
-          highlight="MARCE"
-          subtitle="EvaPremium to polski producent innowacyjnych dywaników samochodowych. Łączymy technologię z rzemieślniczą precyzją."
-        />
-
         {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
           {stats.map((stat, idx) => {

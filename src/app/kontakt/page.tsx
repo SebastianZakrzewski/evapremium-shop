@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import ContactSection from '@/components/contact-section';
+import PageHeroBanner from '@/components/page-hero-banner';
 
 export const metadata: Metadata = {
   title: 'Kontakt - EvaPremium | Skontaktuj się z nami',
@@ -14,5 +15,15 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  return <ContactSection />;
+  return (
+    <>
+      <PageHeroBanner
+        breadcrumb="Kontakt"
+        title="KONTAKT"
+        highlight="Z NAMI"
+        description="Masz pytania dotyczące produktów lub zamówienia? Jesteśmy tutaj, aby Ci pomóc. Skontaktuj się z nami telefonicznie, mailowo lub przez formularz kontaktowy."
+      />
+      <ContactSection />
+    </>
+  );
 }

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { BrandGridCard } from "./ui/BrandGridCard";
 import { Brand } from "../types/carousel";
-import { Car, Loader2, Search, X } from "lucide-react";
+import { Loader2, Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 // Fetch function dla React Query (ten sam co ProductSelection)
@@ -149,20 +149,9 @@ export default function BrandSelectionGrid() {
       </div>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 relative z-10">
-        {/* Header z animacją */}
-        <div className="text-center mb-12 md:mb-16 animate-fade-in">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-6 animate-bounce-in">
-            <Car className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 animate-fade-in-delay bg-gradient-to-r from-white via-red-100 to-white bg-clip-text text-transparent">
-            Wybierz Markę Samochodu
-          </h2>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto animate-fade-in-delay-2">
-            Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
-          </p>
-          
-          {/* Input wyszukiwania */}
-          <div className="mt-8 max-w-md mx-auto animate-fade-in-delay-2">
+        {/* Input wyszukiwania */}
+        <div className="text-center mb-12 md:mb-16">
+          <div className="max-w-md mx-auto">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
               <Input

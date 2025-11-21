@@ -4,7 +4,6 @@ import React, { useState, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Search } from "lucide-react";
-import SectionHeading from "./ui/section-heading";
 import { cn } from "@/lib/utils";
 
 interface GalleryImage {
@@ -259,12 +258,6 @@ export default function GallerySection() {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <SectionHeading
-          title="GALERIA"
-          highlight="PRODUKTÓW"
-          subtitle="Odkryj naszą kolekcję najwyższej jakości dywaników samochodowych EVA Premium. Każdy produkt jest precyzyjnie dopasowany do Twojego auta."
-        />
-
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {galleryImages.map((image, index) => (
             <motion.div
