@@ -566,7 +566,7 @@ export default function CheckoutSectionNew() {
   // Strona sukcesu
   if (orderSuccess && orderNumber) {
     return (
-      <div className="min-h-screen bg-black py-12 relative overflow-hidden">
+      <div className="min-h-screen bg-neutral-950 py-12 relative overflow-hidden">
         {/* Animowane tło z gradientem - ciemniejszy motyw */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
         
@@ -621,7 +621,7 @@ export default function CheckoutSectionNew() {
   }
 
   return (
-    <div className="min-h-screen bg-black py-12 relative overflow-hidden pb-safe">
+    <div className="min-h-screen bg-neutral-950 py-12 relative overflow-hidden pb-safe">
       {/* Animowane tło z gradientem - ciemniejszy motyw */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
       

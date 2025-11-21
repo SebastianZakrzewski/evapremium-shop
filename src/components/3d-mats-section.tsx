@@ -109,9 +109,9 @@ export default function ThreeDMatsSection() {
   }, []);
 
   return (
-    <section id="3d-mats-section" className="py-12 md:py-16 bg-black relative overflow-hidden">
+    <section id="3d-mats-section" className="py-12 md:py-16 bg-neutral-950 relative overflow-hidden">
       {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-800/5"></div>
       
       {/* Animowane cząsteczki */}
       <div className="absolute inset-0 opacity-20">
@@ -141,7 +141,7 @@ export default function ThreeDMatsSection() {
           <div className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
             <div className="relative">
               {/* Kontener z obrazem */}
-              <div className="relative bg-black rounded-2xl p-6 border-2 border-blue-500/30 shadow-2xl shadow-blue-500/20">
+              <div className="relative bg-neutral-950 rounded-2xl p-6 border-2 border-blue-500/30 shadow-2xl shadow-blue-500/20">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 rounded-2xl animate-pulse-glow"></div>
                 
                 <div className="relative z-10">

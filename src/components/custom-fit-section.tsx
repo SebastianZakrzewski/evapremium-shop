@@ -50,7 +50,7 @@ export default function CustomFitSection() {
   }, []);
 
   return (
-    <section id="custom-fit-section" className="py-12 md:py-16 bg-black relative overflow-hidden">
+    <section id="custom-fit-section" className="py-12 md:py-16 bg-neutral-950 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -60,11 +60,11 @@ export default function CustomFitSection() {
           className="object-cover opacity-20"
           quality={90}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-neutral-950/80 to-neutral-950" />
       </div>
 
       {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-800/5"></div>
       
       {/* Animowane cząsteczki */}
       <div className="absolute inset-0 opacity-20">
@@ -104,7 +104,7 @@ export default function CustomFitSection() {
                 <div key={idx} className="group relative flex flex-col items-center gap-4 md:gap-0 w-full md:w-auto">
                   {/* Node */}
                   <div className="relative z-10 shrink-0">
-                    <div className="w-12 h-12 md:w-16 md:h-16 bg-black border-2 border-white/20 rounded-full flex items-center justify-center transition-all duration-500 group-hover:border-red-600 group-hover:shadow-[0_0_20px_rgba(220,38,38,0.5)]">
+                    <div className="w-12 h-12 md:w-16 md:h-16 bg-neutral-950 border-2 border-white/20 rounded-full flex items-center justify-center transition-all duration-500 group-hover:border-red-600 group-hover:shadow-[0_0_20px_rgba(220,38,38,0.5)]">
                       <Icon className="w-5 h-5 md:w-7 md:h-7 text-gray-400 group-hover:text-red-500 transition-colors" />
                     </div>
                   </div>

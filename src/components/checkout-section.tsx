@@ -617,7 +617,7 @@ export function CheckoutSection() {
   // Ekran potwierdzenia
   if (showConfirmation) {
     return (
-      <div className="min-h-screen bg-black py-8 flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-950 py-8 flex items-center justify-center">
         <div className="container mx-auto px-4 max-w-2xl text-center">
           <div className="bg-black/40 backdrop-blur border-gray-800 shadow-2xl rounded-2xl p-8 animate-bounce-in">
             <div className="w-24 h-24 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -660,7 +660,7 @@ export function CheckoutSection() {
   }
 
   return (
-    <div className="min-h-screen bg-black py-8">
+    <div className="min-h-screen bg-neutral-950 py-8">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Breadcrumbs */}
         <div className="mb-6">

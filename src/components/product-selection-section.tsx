@@ -385,9 +385,9 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
   // Obsługa stanu ładowania
   if (!brand) {
     return (
-      <section className="py-8 md:py-12 bg-black">
+      <section className="py-8 md:py-12 bg-neutral-950">
         <div className="container mx-auto px-4">
-          <div className="min-h-screen bg-black flex items-center justify-center">
+          <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-red-500 animate-spin mx-auto mb-4" />
               <div className="text-white text-xl">Ładowanie...</div>
@@ -400,11 +400,11 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
 
   if (loadingModels || loadingMats) {
     return (
-      <section className="py-8 md:py-12 bg-black relative overflow-hidden">
+      <section className="py-8 md:py-12 bg-neutral-950 relative overflow-hidden">
         {/* Animowane tło */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
         <div className="container mx-auto px-4">
-          <div className="min-h-screen bg-black flex items-center justify-center relative z-10">
+          <div className="min-h-screen bg-neutral-950 flex items-center justify-center relative z-10">
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-red-500 animate-spin mx-auto mb-4" />
               <div className="text-white text-xl">Ładowanie produktów...</div>
@@ -419,9 +419,9 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
   // Ale tylko jeśli nie ładują się dane (nie podczas ładowania)
   if (!loadingModels && !loadingMats && carModels.length === 0 && mats.length === 0) {
     return (
-      <section className="py-8 md:py-12 bg-black">
+      <section className="py-8 md:py-12 bg-neutral-950">
         <div className="container mx-auto px-4">
-          <div className="min-h-screen bg-black flex items-center justify-center">
+          <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
             <div className="text-center">
               <div className="text-white text-xl mb-4">Brak dostępnych produktów</div>
               <div className="text-gray-400 mb-4">
@@ -438,7 +438,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
   }
 
   return (
-    <section className="py-8 md:py-12 bg-black relative overflow-hidden">
+    <section className="py-8 md:py-12 bg-neutral-950 relative overflow-hidden">
       {/* Animowane tło z gradientem */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
       

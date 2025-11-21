@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-black relative pt-20 pb-10 overflow-hidden">
+    <footer className="bg-neutral-950 relative pt-20 pb-10 overflow-hidden">
       {/* Gradient Top Border */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
       

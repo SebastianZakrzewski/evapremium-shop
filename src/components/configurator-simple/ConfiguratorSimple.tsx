@@ -357,7 +357,7 @@ export default function ConfiguratorSimple() {
   if (brandsLoading) return <ConfiguratorLoader />;
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-red-500 selection:text-white">
+    <div className="min-h-screen bg-neutral-950 text-white selection:bg-red-500 selection:text-white">
       {/* Progress Bar */}
       <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">

@@ -59,7 +59,7 @@ export default function RoznorodnaKolorystykaSection() {
   }, []);
 
   return (
-    <section id="roznorodna-kolorystyka-section" className="py-12 md:py-16 bg-black relative overflow-hidden">
+    <section id="roznorodna-kolorystyka-section" className="py-12 md:py-16 bg-neutral-950 relative overflow-hidden">
       {/* Background Glow */}
       <div 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] blur-[120px] rounded-full opacity-20 transition-colors duration-700 pointer-events-none"
@@ -67,7 +67,7 @@ export default function RoznorodnaKolorystykaSection() {
       />
 
       {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-800/5"></div>
       
       {/* Animowane cząsteczki */}
       <div className="absolute inset-0 opacity-20">
@@ -93,8 +93,8 @@ export default function RoznorodnaKolorystykaSection() {
 
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
           {/* Preview Area */}
-          <div className="w-full lg:w-1/2 aspect-square relative bg-[#111] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-             <div className="absolute inset-0 bg-black/40 z-10 transition-opacity duration-500" />
+          <div className="w-full lg:w-1/2 aspect-square relative bg-neutral-950 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+             <div className="absolute inset-0 bg-neutral-950/40 z-10 transition-opacity duration-500" />
              {colorImages[selectedColor.name] ? (
                <Image
                  src={colorImages[selectedColor.name]}
@@ -103,14 +103,14 @@ export default function RoznorodnaKolorystykaSection() {
                  className="object-cover transition-transform duration-500 hover:scale-105"
                />
              ) : (
-               <div className="w-full h-full flex items-center justify-center bg-[#1a1a1a] text-gray-600">
+               <div className="w-full h-full flex items-center justify-center bg-neutral-950 text-gray-600">
                  <span>Brak podglądu dla koloru {selectedColor.name}</span>
                </div>
              )}
              
              {/* Label Overlay */}
              <div className="absolute bottom-6 left-6 z-20">
-               <span className="px-4 py-2 bg-black/80 backdrop-blur-md border border-white/10 rounded-lg text-white font-mono text-sm">
+               <span className="px-4 py-2 bg-neutral-950/80 backdrop-blur-md border border-white/10 rounded-lg text-white font-mono text-sm">
                  {selectedColor.name.toUpperCase()}
                </span>
              </div>
@@ -133,7 +133,7 @@ export default function RoznorodnaKolorystykaSection() {
                     style={{ backgroundColor: color.hex }}
                     aria-label={`Wybierz kolor ${color.name}`}
                   >
-                    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-white opacity-0 group-hover:opacity-100 whitespace-nowrap bg-black px-2 py-1 rounded transition-opacity pointer-events-none z-50">
+                    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-white opacity-0 group-hover:opacity-100 whitespace-nowrap bg-neutral-950 px-2 py-1 rounded transition-opacity pointer-events-none z-50">
                       {color.name}
                     </span>
                   </button>
@@ -156,7 +156,7 @@ export default function RoznorodnaKolorystykaSection() {
                     style={{ backgroundColor: color.hex }}
                     aria-label={`Wybierz kolor ${color.name}`}
                   >
-                    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-white opacity-0 group-hover:opacity-100 whitespace-nowrap bg-black px-2 py-1 rounded transition-opacity pointer-events-none z-50">
+                    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-white opacity-0 group-hover:opacity-100 whitespace-nowrap bg-neutral-950 px-2 py-1 rounded transition-opacity pointer-events-none z-50">
                       {color.name}
                     </span>
                   </button>
@@ -169,7 +169,7 @@ export default function RoznorodnaKolorystykaSection() {
                 Nie możesz się zdecydować? Sprawdź nasz konfigurator i zobacz pełną wizualizację.
               </p>
               <Link href="/konfigurator">
-                <Button className="bg-white text-black hover:bg-gray-200 px-8 py-6 text-lg rounded-full group">
+                <Button className="bg-red-600 hover:bg-red-700 text-white px-8 py-6 text-lg rounded-full group shadow-lg hover:shadow-xl hover:shadow-red-900/30 transition-all duration-300">
                   Przejdź do konfiguratora
                   <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
                 </Button>

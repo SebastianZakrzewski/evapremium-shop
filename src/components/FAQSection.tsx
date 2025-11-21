@@ -116,9 +116,9 @@ export default function FAQSection() {
   };
 
   return (
-    <section id="faq-section" className="py-16 bg-black text-white relative overflow-hidden">
+    <section id="faq-section" className="py-16 bg-neutral-950 text-white relative overflow-hidden">
       {/* Animowane tło z gradientem */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-800/5"></div>
       
       {/* Animowane cząsteczki tła */}
       <div className="absolute inset-0 opacity-20">

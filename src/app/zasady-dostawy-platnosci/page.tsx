@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function DeliveryAndPaymentTermsPage() {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-neutral-950">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-white mb-8 text-center">Zasady dostawy i płatności</h1>

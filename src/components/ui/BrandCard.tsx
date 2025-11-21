@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Brand } from "../../types/carousel";
-import { Car, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 interface BrandCardProps {
   brand: Brand;
@@ -109,13 +109,6 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
           transform translate-y-4 group-hover:translate-y-0
         ">
           Wybierz model <ChevronRight className="w-3 h-3" />
-        </div>
-      </div>
-      
-      {/* Indikator wyboru - Badge */}
-      <div className="absolute top-4 right-4 z-30 transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300">
-        <div className="bg-red-600 text-white p-2 rounded-full shadow-lg shadow-red-900/50">
-          <Car className="w-5 h-5" />
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import GallerySection from '@/components/gallery-section';
 
 export default function GaleriaPage() {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-neutral-950">
       <GallerySection />
     </div>
   );

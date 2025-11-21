@@ -251,7 +251,7 @@ export default function GallerySection() {
   }, [selectedImage, goToPrevious, goToNext, closeModal]);
 
   return (
-    <section id="galeria" className="py-20 md:py-32 bg-black relative overflow-hidden">
+    <section id="galeria" className="py-20 md:py-32 bg-neutral-950 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-red-900/5 blur-[120px] rounded-full" />

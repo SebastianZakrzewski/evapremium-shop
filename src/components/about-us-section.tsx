@@ -80,7 +80,7 @@ const values = [
 
 export default function AboutUsSection() {
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden py-20 md:py-32">
+    <div className="min-h-screen bg-neutral-950 relative overflow-hidden py-20 md:py-32">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-red-900/5 blur-[120px] rounded-full" />

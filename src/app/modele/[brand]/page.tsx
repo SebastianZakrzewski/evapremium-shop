@@ -82,7 +82,7 @@ export default function BrandPage({ params }: BrandPageProps) {
 
   if (!currentBrand) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Marka nie została znaleziona</h1>
           <Link href="/modele" className="text-red-500 hover:text-red-400">
@@ -94,7 +94,7 @@ export default function BrandPage({ params }: BrandPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-neutral-950">
       {/* Header */}
       <div className="bg-gradient-to-b from-gray-900 to-black py-8">
         <div className="container mx-auto px-4">

@@ -124,7 +124,7 @@ export default function HeroSection() {
   }, [currentSlide]);
 
   return (
-    <section className="relative min-h-[750px] md:min-h-[550px] h-auto md:h-[70vh] overflow-visible md:overflow-hidden pt-24 md:pt-0 pb-20 md:pb-0 bg-black">
+    <section className="relative min-h-[750px] md:min-h-[550px] h-auto md:h-[70vh] overflow-visible md:overflow-hidden pt-24 md:pt-0 pb-20 md:pb-0 bg-neutral-950">
       {/* Carousel */}
       <div className="container mx-auto px-4 relative min-h-[750px] md:h-full py-12 md:py-0">
         {heroSlides.map((slide, index) => {
@@ -175,7 +175,7 @@ export default function HeroSection() {
                         className="w-full h-full object-cover object-center"
                         style={{
                           objectPosition: 'center center',
-                          filter: 'brightness(0.9) contrast(1.1)'
+                          filter: 'brightness(1.2) contrast(1.1)'
                         }}
                         onLoadedData={(e) => {
                           const video = e.target as HTMLVideoElement;
@@ -187,8 +187,8 @@ export default function HeroSection() {
                         Your browser does not support the video tag.
                       </video>
                       {/* Premium Radial Overlay - Focus center */}
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent via-black/40 to-black/80"></div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent via-black/20 to-black/50"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/15"></div>
                     </>
                   )}
                   

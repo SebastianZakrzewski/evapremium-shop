@@ -32,9 +32,9 @@ export default function GlebokaStrukturaKomorekSection() {
   ];
 
   return (
-    <section id="gleboka-struktura-komorek-section" className="py-12 md:py-16 bg-black relative overflow-hidden">
+    <section id="gleboka-struktura-komorek-section" className="py-12 md:py-16 bg-neutral-950 relative overflow-hidden">
       {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-800/5"></div>
       
       {/* Animowane cząsteczki */}
       <div className="absolute inset-0 opacity-20">
@@ -62,7 +62,7 @@ export default function GlebokaStrukturaKomorekSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
           {/* Obrazek */}
           <div className="relative flex justify-center">
-            <div className="relative bg-black rounded-2xl p-6 shadow-2xl w-full max-w-lg">
+            <div className="relative bg-neutral-950 rounded-2xl p-6 shadow-2xl w-full max-w-lg">
               <Image
                 src="/images/zalety/pianka.webp"
                 alt="Nowoczesny Materiał EVA"

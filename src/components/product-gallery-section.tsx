@@ -246,7 +246,7 @@ const ProductImageCard = React.memo(({
   return (
     <div key={`${setKey}-${index}`} className="flex-shrink-0 w-80 h-64 sm:w-96 sm:h-80 mx-3 group">
       <div 
-        className="relative h-full rounded-xl overflow-hidden bg-[#111] border border-white/5 group-hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1 cursor-pointer"
+        className="relative h-full rounded-xl overflow-hidden bg-neutral-950 border border-white/5 group-hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1 cursor-pointer"
         onClick={() => onImageClick(image)}
       >
         <Image
@@ -315,7 +315,7 @@ const ImageModal = React.memo(({
         </button>
 
         {/* Kontener obrazu */}
-        <div className="relative flex-1 rounded-2xl overflow-hidden bg-[#111] shadow-2xl border border-white/10">
+        <div className="relative flex-1 rounded-2xl overflow-hidden bg-neutral-950 shadow-2xl border border-white/10">
           <Image
             src={selectedImage.src}
             alt={selectedImage.alt}
@@ -328,7 +328,7 @@ const ImageModal = React.memo(({
         </div>
 
         {/* Informacje o produkcie */}
-        <div className="mt-6 bg-[#111] border border-white/10 rounded-xl p-6 backdrop-blur-md">
+        <div className="mt-6 bg-neutral-950 border border-white/10 rounded-xl p-6 backdrop-blur-md">
           <h3 className="text-2xl font-bold text-white mb-2">
             {selectedImage.title}
           </h3>
@@ -408,7 +408,7 @@ export default function ProductGallerySection() {
   }, [openModal]);
 
   return (
-    <section data-section="product-gallery" className="py-12 md:py-16 bg-black relative overflow-hidden">
+    <section data-section="product-gallery" className="py-12 md:py-16 bg-neutral-950 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-red-900/10 blur-[100px] rounded-full" />
@@ -416,7 +416,7 @@ export default function ProductGallerySection() {
       </div>
 
       {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-800/5"></div>
       
       {/* Animowane cząsteczki */}
       <div className="absolute inset-0 opacity-20">

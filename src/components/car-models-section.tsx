@@ -162,7 +162,7 @@ export default function CarModelsSection() {
   };
 
   return (
-    <section className="py-8 md:py-12 bg-black">
+    <section className="py-8 md:py-12 bg-neutral-950">
       <div className="container mx-auto px-4">
         {/* Breadcrumbs */}
         <nav className="mb-6" aria-label="Breadcrumb">

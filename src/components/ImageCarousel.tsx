@@ -126,7 +126,7 @@ export default function ImageCarousel<T>({
   // Jeśli nie ma elementów, nie renderuj karuzeli
   if (!filteredItems || filteredItems.length === 0) {
     return (
-      <div className={`relative bg-black py-16 flex flex-col justify-center items-center ${className}`}>
+      <div className={`relative bg-neutral-950 py-16 flex flex-col justify-center items-center ${className}`}>
         <div className="relative mb-6 w-full max-w-xs">
           <input
             type="text"
@@ -184,7 +184,7 @@ export default function ImageCarousel<T>({
   };
 
   return (
-    <div className={`relative bg-black py-16 flex flex-col justify-center items-center ${className}`}>
+    <div className={`relative bg-neutral-950 py-16 flex flex-col justify-center items-center ${className}`}>
       <div className="relative mb-6 w-full max-w-xs">
         <input
           type="text"

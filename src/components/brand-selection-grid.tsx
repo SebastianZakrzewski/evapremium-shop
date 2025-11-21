@@ -103,7 +103,7 @@ export default function BrandSelectionGrid() {
 
   if (loading) {
     return (
-      <section id="brand-selection" className="bg-black py-16 md:py-24 relative overflow-hidden min-h-screen flex items-center justify-center">
+      <section id="brand-selection" className="bg-neutral-950 py-16 md:py-24 relative overflow-hidden min-h-screen flex items-center justify-center">
         {/* Animowane tło z gradientem */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
         
@@ -133,7 +133,7 @@ export default function BrandSelectionGrid() {
   return (
     <section 
       id="brand-selection" 
-      className="bg-black py-16 md:py-24 relative overflow-hidden min-h-screen"
+      className="bg-neutral-950 py-16 md:py-24 relative overflow-hidden min-h-screen"
     >
       {/* Animowane tło z gradientem */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>

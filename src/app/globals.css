@@ -86,7 +86,7 @@ button, a, input, select, textarea, [role="button"] {
   }
   
   ::-webkit-scrollbar-track {
-    @apply bg-neutral-900;
+    @apply bg-neutral-800;
   }
   
   ::-webkit-scrollbar-thumb {

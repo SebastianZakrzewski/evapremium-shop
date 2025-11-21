@@ -138,7 +138,7 @@ export default function AccessoriesSection() {
 
   if (error) {
     return (
-      <section className="min-h-[60vh] flex items-center justify-center bg-black">
+      <section className="min-h-[60vh] flex items-center justify-center bg-neutral-950">
         <div className="text-center space-y-4">
           <div className="text-red-500 text-xl font-semibold">Wystąpił błąd</div>
           <p className="text-gray-400">{error}</p>
@@ -151,7 +151,7 @@ export default function AccessoriesSection() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pb-20">
+    <div className="min-h-screen bg-neutral-950 text-white pb-20">
       {/* Hero Header */}
       <div className="relative bg-[#0a0a0a] border-b border-white/5 py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>

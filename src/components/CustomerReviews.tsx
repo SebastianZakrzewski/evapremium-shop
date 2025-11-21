@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Star, ThumbsUp, Award, CheckCircle2, Quote } from "lucide-react";
+import { Star, ThumbsUp, Quote } from "lucide-react";
 
 interface Review {
   id: number;
@@ -52,6 +52,72 @@ export default function CustomerReviews() {
       verified: true,
       helpful: 15
     },
+    {
+      id: 4,
+      name: "Katarzyna Zielińska",
+      location: "Wrocław",
+      rating: 5,
+      review: "Fantastyczna jakość! Dywaniki 3D z rantami idealnie chronią podłogę. Mój pies często wsiada z mokrymi łapami i nie ma problemu - wszystko się łatwo czyści. Polecam!",
+      carModel: "Volkswagen Golf 2023",
+      purchaseDate: "Styczeń 2025",
+      verified: true,
+      helpful: 9
+    },
+    {
+      id: 5,
+      name: "Piotr Krawczyk",
+      location: "Poznań",
+      rating: 5,
+      review: "Profesjonalna obsługa od początku do końca. Dywaniki wykonane na miarę, pasują idealnie. Materiał EVA jest bardzo trwały i wygląda elegancko. Warto każdej złotówki!",
+      carModel: "Tesla Model 3 2024",
+      purchaseDate: "Grudzień 2024",
+      verified: true,
+      helpful: 11
+    },
+    {
+      id: 6,
+      name: "Magdalena Szymańska",
+      location: "Łódź",
+      rating: 5,
+      review: "Po pół roku użytkowania mogę powiedzieć, że to najlepsza inwestycja w moje auto. Dywaniki wyglądają jak nowe, łatwo się czyści, a struktura 3D świetnie zatrzymuje brud.",
+      carModel: "Skoda Octavia 2022",
+      purchaseDate: "Październik 2024",
+      verified: true,
+      helpful: 7
+    },
+    {
+      id: 7,
+      name: "Jakub Lewandowski",
+      location: "Katowice",
+      rating: 5,
+      review: "Szybka realizacja zamówienia, dokładne dopasowanie do modelu. Dywaniki są bardzo grube i solidne. W zimie nie ma problemu z solą i śniegiem - wszystko się łatwo spłukuje.",
+      carModel: "Ford Focus 2023",
+      purchaseDate: "Styczeń 2025",
+      verified: true,
+      helpful: 6
+    },
+    {
+      id: 8,
+      name: "Aleksandra Wójcik",
+      location: "Szczecin",
+      rating: 5,
+      review: "Zamówiłam dywaniki w kolorze kości słoniowej - idealnie pasują do wnętrza mojego auta. Jakość wykonania na najwyższym poziomie, a cena bardzo przystępna. Polecam wszystkim!",
+      carModel: "Peugeot 308 2023",
+      purchaseDate: "Grudzień 2024",
+      verified: true,
+      helpful: 10
+    },
+    {
+      id: 9,
+      name: "Michał Dąbrowski",
+      location: "Lublin",
+      rating: 5,
+      review: "Ranty 3D są genialne! Chronią przed wnikaniem wody pod dywanik. Po deszczu wystarczy przetrzeć wilgotną szmatką i wygląda jak nowy. Świetna jakość za rozsądną cenę.",
+      carModel: "Hyundai i30 2022",
+      purchaseDate: "Listopad 2024",
+      verified: true,
+      helpful: 13
+    },
   ];
 
   const toggleHelpful = (reviewId: number) => {
@@ -63,18 +129,13 @@ export default function CustomerReviews() {
   };
 
   return (
-    <section id="opinie" className="py-24 bg-black relative overflow-hidden">
+    <section id="opinie" className="py-24 bg-neutral-950 relative overflow-hidden">
       {/* Decorative Elements */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[120px] pointer-events-none"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 animate-fade-in">
-            <Award className="w-4 h-4 text-yellow-500" />
-            <span className="text-sm font-medium text-gray-300">Zaufanie Klientów</span>
-          </div>
-          
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
             Opinie naszych <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-600">Klientów</span>
           </h2>
@@ -91,14 +152,6 @@ export default function CustomerReviews() {
               key={review.id}
               className="group relative bg-gray-900/40 backdrop-blur-xl border border-white/5 rounded-3xl p-8 hover:bg-gray-800/60 hover:border-white/10 transition-all duration-500 hover:-translate-y-2"
             >
-              {/* Verified Badge */}
-              {review.verified && (
-                <div className="absolute top-6 right-6 flex items-center gap-1.5 bg-green-500/10 border border-green-500/20 px-3 py-1 rounded-full">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
-                  <span className="text-xs font-medium text-green-400">Zweryfikowany</span>
-                </div>
-              )}
-
               {/* User Info */}
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 border border-white/10 flex items-center justify-center text-lg font-bold text-white shadow-lg">

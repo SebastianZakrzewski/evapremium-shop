@@ -2,7 +2,7 @@ import React from "react";
 
 export default function PartnersSection() {
   return (
-    <section className="py-8 bg-black text-white">
+    <section className="py-8 bg-neutral-950 text-white">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-2xl font-bold mb-6">Zaufali nam</h2>
         <div className="flex flex-wrap justify-center gap-8">

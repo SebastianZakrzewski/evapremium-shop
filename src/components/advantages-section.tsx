@@ -69,7 +69,7 @@ export default function AdvantagesSection() {
   };
 
   return (
-    <section id="advantages-section" className="py-12 md:py-16 bg-black relative overflow-x-hidden overflow-y-visible">
+    <section id="advantages-section" className="py-12 md:py-16 bg-neutral-950 relative overflow-x-hidden overflow-y-visible">
       {/* Background Gradients */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-900/10 rounded-full blur-3xl"></div>
@@ -77,7 +77,7 @@ export default function AdvantagesSection() {
       </div>
 
       {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-800/5"></div>
       
       {/* Animowane cząsteczki */}
       <div className="absolute inset-0 opacity-20">
@@ -127,7 +127,7 @@ export default function AdvantagesSection() {
                 `}>
                   
                   {/* Image Area */}
-                  <div className="relative h-48 w-full overflow-hidden bg-black">
+                  <div className="relative h-48 w-full overflow-hidden bg-neutral-950">
                     <Image
                       src={item.src}
                       alt={item.title}
