@@ -150,18 +150,18 @@ export default function HeroSection() {
                 <div className="w-full h-full relative rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 min-h-[650px] md:min-h-0">
                   {isImageSlide && slide.image ? (
                     <>
-                      <Image
-                        src={slide.image}
-                        alt="Black Friday"
-                        fill
-                        className="object-cover object-center"
-                        priority={index === 1}
-                        sizes="100vw"
-                      />
+                      <div className="absolute inset-0 bg-neutral-950">
+                        <Image
+                          src={slide.image}
+                          alt="Black Friday"
+                          fill
+                          className="object-contain object-center"
+                          priority={index === 1}
+                          sizes="100vw"
+                        />
+                      </div>
                       {/* Radial Overlay */}
                       <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/20 to-black/60"></div>
-                      {/* Overlay to hide button on image */}
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[280px] sm:w-[320px] md:w-[360px] h-12 md:h-14 bg-black/80 backdrop-blur-sm z-30"></div>
                     </>
                   ) : (
                     <>
