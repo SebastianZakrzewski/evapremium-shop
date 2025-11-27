@@ -186,8 +186,10 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
       throw new Error('Accessory not found');
     }
 
+    // Jeśli produkt ma nieograniczoną ilość (null), nie zmniejszamy stanu magazynowego
     if (accessory.stockQuantity === null) {
-      throw new Error('Stock quantity is unlimited');
+      console.log(`ℹ️ Skipping stock decrement for accessory ${id} - stock quantity is unlimited`);
+      return;
     }
 
     if (accessory.stockQuantity! < quantity) {
