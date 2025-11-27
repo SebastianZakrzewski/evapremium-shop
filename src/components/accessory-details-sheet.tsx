@@ -21,12 +21,14 @@ interface AccessoryDetailsSheetProps {
   accessory: Accessory | null;
   isOpen: boolean;
   onClose: () => void;
+  onAddToConfig?: (accessory: Accessory, color?: string) => void; // Callback dla konfiguratora
 }
 
 export default function AccessoryDetailsSheet({
   accessory,
   isOpen,
-  onClose
+  onClose,
+  onAddToConfig
 }: AccessoryDetailsSheetProps) {
   const { addToCart } = useCart();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -103,6 +105,14 @@ export default function AccessoryDetailsSheet({
   const handleAddToCart = async () => {
     if (isAddingToCart) return; // Zapobiegaj wielokrotnym kliknięciom
     
+    // Jeśli jest callback onAddToConfig (tryb konfiguratora), użyj go
+    if (onAddToConfig) {
+      onAddToConfig(accessory, selectedColor || undefined);
+      toast.success(`Dodano "${accessory.name}"${selectedColor ? ` w kolorze ${selectedColor}` : ''} do konfiguracji`);
+      return;
+    }
+    
+    // W przeciwnym razie dodaj bezpośrednio do koszyka
     setIsAddingToCart(true);
     try {
       await addToCart({

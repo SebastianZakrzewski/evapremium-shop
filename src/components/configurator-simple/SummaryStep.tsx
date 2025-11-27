@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { getColorInfo } from "@/lib/color-mapping";
 import type { ConfiguratorState } from "./ConfiguratorSimple";
+import { useAccessories } from "@/hooks/useAccessories";
 import { Car, Shield, Grid, Palette, Plus, CheckCircle2, ShoppingCart } from "lucide-react";
 
 interface SummaryStepProps {
@@ -43,6 +44,13 @@ export function SummaryStep({
   onAddToCart,
   isAddingToCart,
 }: SummaryStepProps) {
+  const { accessories } = useAccessories();
+  
+  // Znajdź wybraną podpiętkę
+  const selectedPodpietka = useMemo(() => {
+    if (!config.selectedPodpietka) return null;
+    return accessories.find(acc => acc.id === config.selectedPodpietka) || null;
+  }, [accessories, config.selectedPodpietka]);
   if (!priceBreakdown) {
     return null;
   }
@@ -104,15 +112,25 @@ export function SummaryStep({
             </div>
 
             {/* Extras */}
-            {config.heelPad && (
-              <div className="p-4 flex items-start gap-3 bg-red-500/5">
-                <div className="p-2 bg-red-500/10 rounded-lg text-red-400">
-                  <Plus className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-xs text-red-400/80 uppercase tracking-wider font-medium mb-0.5">Dodatki</p>
-                  <p className="text-white font-medium">Podkładka pod piętę</p>
-                </div>
+            {selectedPodpietka && (
+              <div className="space-y-2">
+                {selectedPodpietka && (
+                  <div className="p-4 flex items-start gap-3 bg-red-500/5">
+                    <div className="p-2 bg-red-500/10 rounded-lg text-red-400">
+                      <Plus className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs text-red-400/80 uppercase tracking-wider font-medium mb-0.5">Dodatki</p>
+                      <p className="text-white font-medium">{selectedPodpietka.name}</p>
+                      {config.podpietkaColor && (
+                        <p className="text-xs text-gray-400 mt-1">Kolor: {config.podpietkaColor}</p>
+                      )}
+                      <p className="text-sm text-gray-300 mt-1">
+                        {selectedPodpietka.price.toLocaleString('pl-PL')} PLN
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -141,6 +159,13 @@ export function SummaryStep({
                 </div>
               )}
               
+              {selectedPodpietka && (
+                <div className="flex justify-between text-gray-300 bg-white/5 px-2 py-1 rounded">
+                  <span className="text-sm">Podpiętka</span>
+                  <span className="text-sm font-medium">{selectedPodpietka.price.toFixed(2)} zł</span>
+                </div>
+              )}
+              
               <div className="flex justify-between text-gray-400">
                 <span>Dostawa</span>
                 <span className={priceBreakdown.shippingCost === 0 ? "text-green-400 font-medium" : ""}>
@@ -153,7 +178,7 @@ export function SummaryStep({
               <div className="flex justify-between items-end mb-1">
                 <span className="text-gray-300 font-medium">Do zapłaty</span>
                 <span className="text-3xl font-bold text-white tracking-tight">
-                  {priceBreakdown.totalPrice.toFixed(2)} <span className="text-lg text-gray-500 font-normal">zł</span>
+                  {(priceBreakdown.totalPrice + (selectedPodpietka?.price || 0)).toFixed(2)} <span className="text-lg text-gray-500 font-normal">zł</span>
                 </span>
               </div>
               <p className="text-xs text-gray-500 text-right">Zawiera podatek VAT</p>

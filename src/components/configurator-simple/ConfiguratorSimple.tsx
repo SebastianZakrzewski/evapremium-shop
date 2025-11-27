@@ -10,6 +10,7 @@ import { PricingService } from "@/lib/services/PricingService";
 import { getMatImagePath } from "@/lib/image-mapping";
 import { getColorInfo } from "@/lib/color-mapping";
 import { Brand } from "@/types/carousel";
+import { useAccessories } from "@/hooks/useAccessories";
 import { StepProgress } from "./StepProgress";
 import { StepAccordion } from "./StepAccordion";
 import { CarSelectionStep } from "./CarSelectionStep";
@@ -18,6 +19,7 @@ import { VariantStep } from "./VariantStep";
 import { StructureStep } from "./StructureStep";
 import { CombinedColorPicker } from "./CombinedColorPicker";
 import { SummaryStep } from "./SummaryStep";
+import { AccessoriesStep } from "./AccessoriesStep";
 import { ConfiguratorLoader } from "./ConfiguratorLoader";
 import { ZoomIn, ArrowLeft, ArrowRight, Info, RotateCcw } from "lucide-react";
 
@@ -45,6 +47,8 @@ export interface ConfiguratorState {
   
   // Step 7: Dodatki
   heelPad: boolean;
+  selectedPodpietka?: string; // ID wybranej podpiętki
+  podpietkaColor?: string; // Wybrany kolor podpiętki
 }
 
 const TOTAL_STEPS = 7;
@@ -67,6 +71,7 @@ const fetchBrands = async (): Promise<Brand[]> => {
 export default function ConfiguratorSimple() {
   const searchParams = useSearchParams();
   const { addToCart, isLoading: cartLoading } = useCart();
+  const { accessories } = useAccessories();
   
   // Pobierz marki
   const { data: brands = [], isLoading: brandsLoading } = useQuery<Brand[]>({
@@ -120,6 +125,8 @@ export default function ConfiguratorSimple() {
     color: 'black',
     edgeColor: 'black',
     heelPad: false,
+    selectedPodpietka: undefined,
+    podpietkaColor: undefined,
   });
 
   // Aktualny aktywny krok (dla accordion)
@@ -316,6 +323,7 @@ export default function ConfiguratorSimple() {
         config.edgeColor
       );
 
+      // Dodaj dywaniki do koszyka
       await addToCart({
         productType: 'mat',
         productId: productId,
@@ -336,9 +344,32 @@ export default function ConfiguratorSimple() {
           cellType: config.structure,
           materialColor: config.color,
           edgeColor: config.edgeColor,
-          heelPad: config.heelPad ? 'yes' : 'no',
         },
       });
+
+      // Dodaj podpiętkę do koszyka jeśli jest wybrana
+      if (config.selectedPodpietka) {
+        const selectedPodpietka = accessories.find(acc => acc.id === config.selectedPodpietka);
+        if (selectedPodpietka) {
+          const podpietkaImage = selectedPodpietka.images && selectedPodpietka.images.length > 0
+            ? selectedPodpietka.images[0]
+            : selectedPodpietka.imageSrc || '';
+          
+          await addToCart({
+            productType: 'accessory',
+            productId: selectedPodpietka.id,
+            quantity: 1,
+            unitPrice: selectedPodpietka.price,
+            productName: `${selectedPodpietka.name}${config.podpietkaColor ? ` - ${config.podpietkaColor}` : ''}`,
+            productSku: selectedPodpietka.sku,
+            productImage: podpietkaImage,
+            configuration: {
+              color: config.podpietkaColor || undefined,
+            },
+          });
+        }
+      }
+
       window.dispatchEvent(new CustomEvent('openCartModal'));
     } catch (error) {
       console.error('Error adding to cart:', error);
@@ -381,7 +412,7 @@ export default function ConfiguratorSimple() {
               { step: 3, title: "Wariant zestawu", comp: VariantStep, desc: "Dostosuj zestaw do swoich potrzeb" },
               { step: 4, title: "Struktura", comp: StructureStep, desc: "Wybierz wzór komórek EVA" },
               { step: 5, title: "Kolory materiału i obszycia", comp: CombinedColorPicker, desc: "Personalizuj wygląd dywaników" },
-              { step: 6, title: "Dodatki", comp: null, desc: "Dodaj opcjonalne akcesoria" },
+              { step: 6, title: "Dodatki", comp: AccessoriesStep, desc: "Dodaj opcjonalne akcesoria" },
               { step: 7, title: "Podsumowanie", comp: SummaryStep, desc: "Sprawdź konfigurację przed zamówieniem" }
             ].map(({ step, title, comp: Comp, desc }) => (
               <StepAccordion
@@ -395,26 +426,7 @@ export default function ConfiguratorSimple() {
                 isValid={isStepValid(step)}
                 disabled={!isStepValid(step - 1) && step > 1}
               >
-                {step === 6 ? (
-                  <div className="space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
-                    <label className="flex items-center justify-between p-4 rounded-lg bg-neutral-800/50 border border-neutral-700 hover:border-neutral-600 cursor-pointer group transition-all">
-                      <div className="flex items-center space-x-3">
-                        <input
-                          type="checkbox"
-                          checked={config.heelPad}
-                          onChange={(e) => updateConfig({ heelPad: e.target.checked })}
-                          className="w-5 h-5 rounded border-gray-600 bg-neutral-800 text-red-600 focus:ring-red-500/50 transition-colors"
-                        />
-                        <span className="font-medium group-hover:text-white transition-colors">Podkładka pod piętę</span>
-                      </div>
-                      {config.heelPad && <span className="text-xs font-bold text-green-400 bg-green-400/10 px-2 py-1 rounded">+ Wybrano</span>}
-                    </label>
-                    <div className="flex flex-col sm:flex-row gap-3 justify-end pt-2">
-                      <Button onClick={goToPreviousStep} variant="outline" className="border-neutral-700 hover:bg-neutral-800">Wstecz</Button>
-                      <Button onClick={goToNextStep} disabled={!isStepValid(6)} className="bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20">Dalej</Button>
-                    </div>
-                  </div>
-                ) : Comp ? (
+                {Comp ? (
                   <Comp
                     config={config}
                     priceBreakdown={priceBreakdown}
