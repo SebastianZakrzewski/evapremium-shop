@@ -145,26 +145,57 @@ export class DealService {
       'front': 270,
       'basic': 274,
       'premium': 276,
-      'complete': 272,
+      'complete': 288,
     };
 
     // Try cart.configuration first
     if (cart.configuration) {
       const variant = (cart.configuration as any).setVariant || (cart.configuration as any).variant || 'basic';
-      return variantMap[variant] || 274;
+      const result = variantMap[variant] || 274;
+      console.log('[DealService] extractProductVariantFromCart: Found variant in cart.configuration', {
+        variant,
+        mappedValue: result
+      });
+      return result;
     }
 
     // Fallback: try items configuration
     if (cart.items && cart.items.length > 0) {
+      console.log('[DealService] extractProductVariantFromCart: Checking items', {
+        itemsCount: cart.items.length,
+        itemTypes: cart.items.map(item => item.productType),
+        itemsWithConfig: cart.items.filter(item => !!(item as any).configuration).length
+      });
+      
       const matItem = cart.items.find(item => item.productType === 'mat');
+      console.log('[DealService] extractProductVariantFromCart: Mat item found', {
+        found: !!matItem,
+        hasConfiguration: !!(matItem && (matItem as any).configuration),
+        productName: matItem?.productName
+      });
+      
       if (matItem && (matItem as any).configuration) {
         const config = (matItem as any).configuration;
         const variant = config.setVariant || config.variant || 'basic';
-        return variantMap[variant] || 274;
+        const result = variantMap[variant] || 274;
+        console.log('[DealService] extractProductVariantFromCart: Found variant in mat item configuration', {
+          variant,
+          mappedValue: result,
+          productName: matItem.productName,
+          configKeys: Object.keys(config)
+        });
+        return result;
       }
     }
 
-    return 274; // Default
+    console.warn('[DealService] extractProductVariantFromCart: No variant found, using default "basic" (274)', {
+      hasConfiguration: !!cart.configuration,
+      configurationKeys: cart.configuration ? Object.keys(cart.configuration as any) : [],
+      itemsCount: cart.items?.length || 0,
+      hasMatItems: cart.items?.some(item => item.productType === 'mat') || false,
+      itemTypes: cart.items?.map(item => item.productType) || []
+    });
+    return 274; // Default: "Podstawowy"
   }
 
   /**
@@ -179,7 +210,12 @@ export class DealService {
     // Try cart.configuration first
     if (cart.configuration) {
       const setType = (cart.configuration as any).setType || '3d-with-rims';
-      return setTypeMap[setType] || 264;
+      const result = setTypeMap[setType] || 264;
+      console.log('[DealService] extractSetTypeFromCart: Found setType in cart.configuration', {
+        setType,
+        mappedValue: result
+      });
+      return result;
     }
 
     // Fallback: try items configuration
@@ -188,10 +224,21 @@ export class DealService {
       if (matItem && (matItem as any).configuration) {
         const config = (matItem as any).configuration;
         const setType = config.setType || '3d-with-rims';
-        return setTypeMap[setType] || 264;
+        const result = setTypeMap[setType] || 264;
+        console.log('[DealService] extractSetTypeFromCart: Found setType in mat item configuration', {
+          setType,
+          mappedValue: result,
+          productName: matItem.productName
+        });
+        return result;
       }
     }
 
+    console.warn('[DealService] extractSetTypeFromCart: No setType found, using default "3d-with-rims" (264)', {
+      hasConfiguration: !!cart.configuration,
+      itemsCount: cart.items?.length || 0,
+      hasMatItems: cart.items?.some(item => item.productType === 'mat') || false
+    });
     return 264; // Default
   }
 
@@ -199,15 +246,21 @@ export class DealService {
    * Extract cell shape (enum value) from abandoned cart
    */
   private extractCellShapeFromCart(cart: AbandonedCartRecord): number | undefined {
+    // Rzeczywiste wartości enum z Bitrix24 dla pola UF_CRM_1757177134448 (Kształt komórek)
     const shapeMap: Record<string, number> = {
-      'diamonds': 278,
-      'honey': 280,
+      'diamonds': 360,  // Romby
+      'honey': 358,     // Plaster Miodu
     };
 
     // Try cart.configuration first
     if (cart.configuration) {
       const cellShape = (cart.configuration as any).cellShape || (cart.configuration as any).cellType || 'diamonds';
-      return shapeMap[cellShape] || 278;
+      const result = shapeMap[cellShape] || 360; // Default: Romby
+      console.log('[DealService] extractCellShapeFromCart: Found cellShape in cart.configuration', {
+        cellShape,
+        mappedValue: result
+      });
+      return result;
     }
 
     // Fallback: try items configuration
@@ -216,29 +269,94 @@ export class DealService {
       if (matItem && (matItem as any).configuration) {
         const config = (matItem as any).configuration;
         const cellShape = config.cellShape || config.cellType || 'diamonds';
-        return shapeMap[cellShape] || 278;
+        const result = shapeMap[cellShape] || 360; // Default: Romby
+        console.log('[DealService] extractCellShapeFromCart: Found cellShape in mat item configuration', {
+          cellShape,
+          mappedValue: result,
+          productName: matItem.productName
+        });
+        return result;
       }
     }
 
+    console.warn('[DealService] extractCellShapeFromCart: No cellShape found, returning undefined', {
+      hasConfiguration: !!cart.configuration,
+      itemsCount: cart.items?.length || 0,
+      hasMatItems: cart.items?.some(item => item.productType === 'mat') || false
+    });
     return undefined;
+  }
+
+  /**
+   * Normalize color value (Polish to English mapping)
+   */
+  private normalizeColor(color: string | undefined): string | undefined {
+    if (!color) return undefined;
+    
+    const colorLower = color.toLowerCase().trim();
+    const polishToEnglish: Record<string, string> = {
+      'niebieski': 'blue',
+      'czarny': 'black',
+      'szary': 'gray',
+      'ciemnoszary': 'darkgray',
+      'jasnoszary': 'lightgray',
+      'brązowy': 'brown',
+      'beżowy': 'beige',
+      'jasnobeżowy': 'lightbeige',
+      'kość słoniowa': 'ivory',
+      'czerwony': 'red',
+      'granatowy': 'navy',
+      'zielony': 'green',
+      'jasnozielony': 'lightgreen',
+      'pomarańczowy': 'orange',
+      'żółty': 'yellow',
+      'bordowy': 'maroon',
+      'fioletowy': 'purple',
+      'różowy': 'pink',
+      'biały': 'white',
+      // Obsługa wariantów pisowni
+      'grey': 'gray', // brytyjska pisownia
+    };
+    
+    return polishToEnglish[colorLower] || colorLower;
   }
 
   /**
    * Extract material color (enum value) from abandoned cart
    */
   private extractMaterialColorFromCart(cart: AbandonedCartRecord): number | undefined {
+    // Rzeczywiste wartości enum z Bitrix24 dla pola UF_CRM_1757025126670 (Kolor materiału)
     const colorMap: Record<string, number> = {
-      'blue': 358,
-      'black': 360,
-      'gray': 362,
-      'brown': 364,
-      'beige': 366,
+      'black': 278,      // CZARNY
+      'brown': 280,     // BRĄZOWY
+      'darkgray': 282,   // CIEMNOSZARY
+      'navy': 284,       // GRANATOWY
+      'blue': 286,       // NIEBIESKI
+      'green': 288,      // ZIELONY
+      'red': 290,        // CZERWONY
+      'maroon': 292,     // BORDOWY
+      'lightbeige': 294, // JASNOBEŻOWY
+      'ivory': 296,      // KOŚĆ SŁONIOWA
+      'beige': 298,      // BEŻOWY
+      'purple': 300,     // FIOLETOWY
+      'lightgreen': 302, // JASNOZIELONY
+      'yellow': 304,     // ŻÓŁTY
+      'orange': 306,     // POMARAŃCZOWY
+      'white': 308,      // BIAŁY
     };
 
     // Try cart.configuration first
     if (cart.configuration) {
-      const materialColor = (cart.configuration as any).materialColor || 'black';
-      return colorMap[materialColor] || undefined;
+      const materialColorRaw = (cart.configuration as any).materialColor;
+      const materialColor = this.normalizeColor(materialColorRaw);
+      if (materialColor && colorMap[materialColor]) {
+        console.log('[DealService] extractMaterialColorFromCart: Found materialColor in cart.configuration', {
+          raw: materialColorRaw,
+          normalized: materialColor,
+          mappedValue: colorMap[materialColor]
+        });
+        return colorMap[materialColor];
+      }
     }
 
     // Fallback: try items configuration
@@ -246,8 +364,17 @@ export class DealService {
       const matItem = cart.items.find(item => item.productType === 'mat');
       if (matItem && (matItem as any).configuration) {
         const config = (matItem as any).configuration;
-        const materialColor = config.materialColor || 'black';
-        return colorMap[materialColor] || undefined;
+        const materialColorRaw = config.materialColor;
+        const materialColor = this.normalizeColor(materialColorRaw);
+        if (materialColor && colorMap[materialColor]) {
+          console.log('[DealService] extractMaterialColorFromCart: Found materialColor in mat item configuration', {
+            raw: materialColorRaw,
+            normalized: materialColor,
+            mappedValue: colorMap[materialColor],
+            productName: matItem.productName
+          });
+          return colorMap[materialColor];
+        }
       }
     }
 
@@ -258,18 +385,36 @@ export class DealService {
    * Extract trim color (enum value) from abandoned cart
    */
   private extractTrimColorFromCart(cart: AbandonedCartRecord): number | undefined {
+    // Rzeczywiste wartości enum z Bitrix24 dla pola UF_CRM_1757177281489 (Kolor obszycia)
     const trimColorMap: Record<string, number> = {
-      'blue': 368,
-      'black': 370,
-      'gray': 372,
-      'brown': 374,
-      'beige': 376,
+      'black': 362,      // CZARNY
+      'red': 364,        // CZERWONY
+      'lightgray': 366,  // JASNOSZARY
+      'darkgray': 368,   // CIEMNOSZARY
+      'brown': 370,      // BRĄZOWY
+      'beige': 372,      // BEŻOWY
+      'navy': 374,       // GRANATOWY
+      'blue': 376,       // NIEBIESKI
+      'green': 378,      // ZIELONY
+      'orange': 380,     // POMARAŃĆZOWY
+      'yellow': 382,     // ŻÓŁTY
+      'maroon': 384,     // BORDOWY
+      'purple': 386,     // FIOLETOWY
+      'pink': 388,       // RÓŻOWY
     };
 
     // Try cart.configuration first
     if (cart.configuration) {
-      const trimColor = (cart.configuration as any).trimColor || (cart.configuration as any).edgeColor || 'black';
-      return trimColorMap[trimColor] || undefined;
+      const trimColorRaw = (cart.configuration as any).trimColor || (cart.configuration as any).edgeColor;
+      const trimColor = this.normalizeColor(trimColorRaw);
+      if (trimColor && trimColorMap[trimColor]) {
+        console.log('[DealService] extractTrimColorFromCart: Found trimColor in cart.configuration', {
+          raw: trimColorRaw,
+          normalized: trimColor,
+          mappedValue: trimColorMap[trimColor]
+        });
+        return trimColorMap[trimColor];
+      }
     }
 
     // Fallback: try items configuration
@@ -277,8 +422,17 @@ export class DealService {
       const matItem = cart.items.find(item => item.productType === 'mat');
       if (matItem && (matItem as any).configuration) {
         const config = (matItem as any).configuration;
-        const trimColor = config.trimColor || config.edgeColor || 'black';
-        return trimColorMap[trimColor] || undefined;
+        const trimColorRaw = config.trimColor || config.edgeColor;
+        const trimColor = this.normalizeColor(trimColorRaw);
+        if (trimColor && trimColorMap[trimColor]) {
+          console.log('[DealService] extractTrimColorFromCart: Found trimColor in mat item configuration', {
+            raw: trimColorRaw,
+            normalized: trimColor,
+            mappedValue: trimColorMap[trimColor],
+            productName: matItem.productName
+          });
+          return trimColorMap[trimColor];
+        }
       }
     }
 
@@ -289,7 +443,20 @@ export class DealService {
    * Build deal payload from abandoned cart
    */
   async createDealForAbandonedCart(cart: AbandonedCartRecord): Promise<{ id: string; success: boolean; error?: string }> {
+    console.log('[DealService] createDealForAbandonedCart: Starting', {
+      cartId: cart.id,
+      itemsCount: cart.items?.length || 0,
+      hasConfiguration: !!cart.configuration,
+      hasCar: !!cart.car,
+      items: cart.items?.map(item => ({
+        productType: item.productType,
+        productName: item.productName,
+        hasConfiguration: !!(item as any).configuration
+      })) || []
+    });
+
     const { categoryId, stageId } = await stageMappingService.resolveStage({ type: 'abandoned_cart' });
+    console.log('[DealService] createDealForAbandonedCart: Resolved stage', { categoryId, stageId });
 
     // 0. Check if deal already exists in Bitrix24 (prevent duplicates)
     const existingDeal = await this.findByOriginId(cart.id);
@@ -446,8 +613,8 @@ export class DealService {
       // ✅ POLA PRODUKTU - mapowanie danych produktu (wartości enum)
       UF_CRM_1757024835301: setType,           // Rodzaj kompletu (setType)
       UF_CRM_1757024931236: productVariant,    // Wariant kompletu (setVariant)
-      UF_CRM_1757025126670: cellShape,         // Kształt komórek
-      UF_CRM_1757177134448: materialColor,     // Kolor materiału
+      UF_CRM_1757177134448: cellShape,         // Kształt komórek
+      UF_CRM_1757025126670: materialColor,     // Kolor materiału
       UF_CRM_1757177281489: trimColor,         // Kolor obszycia
     } as any;
 
@@ -465,8 +632,8 @@ export class DealService {
       productFields: {
         setType: cleanedDeal.UF_CRM_1757024835301,
         variant: cleanedDeal.UF_CRM_1757024931236,
-        cellShape: cleanedDeal.UF_CRM_1757025126670,
-        materialColor: cleanedDeal.UF_CRM_1757177134448,
+        cellShape: cleanedDeal.UF_CRM_1757177134448,
+        materialColor: cleanedDeal.UF_CRM_1757025126670,
         trimColor: cleanedDeal.UF_CRM_1757177281489,
       },
     });

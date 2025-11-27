@@ -38,6 +38,7 @@ import { useAbandonedCartHeartbeat } from '@/hooks/useAbandonedCartHeartbeat';
 import { HybridSessionManager } from '@/lib/utils/hybrid-session-manager';
 import { useTracking, createInitiateCheckoutData } from '@/lib/tracking';
 import { motion } from 'framer-motion';
+import { getColorInfo } from '@/lib/color-mapping';
 
 // Schema walidacji - zaktualizowany dla nowego formatu
 const checkoutSchema = z.object({
@@ -203,6 +204,23 @@ export default function CheckoutSectionNew() {
       country: watchedValues.country,
     };
     
+    // Find first mat item to extract car and configuration
+    const firstMatItem = items.find(item => item.productType === 'mat');
+    const carData = firstMatItem?.configuration?.carDetails ? {
+      make: firstMatItem.configuration.carDetails.brand,
+      model: firstMatItem.configuration.carDetails.model,
+      year: firstMatItem.configuration.carDetails.year,
+      bodyType: firstMatItem.configuration.carDetails.bodyType,
+    } : undefined;
+
+    const configurationData = firstMatItem?.configuration ? {
+      variant: firstMatItem.configuration.setVariant,
+      setType: firstMatItem.configuration.setType,
+      cellShape: firstMatItem.configuration.cellType,
+      materialColor: firstMatItem.configuration.materialColor,
+      trimColor: firstMatItem.configuration.edgeColor,
+    } : undefined;
+    
     return {
       sessionId: currentSessionId,
       stage: currentStep === 2 ? 'checkout_step2' : 'checkout_step3',
@@ -214,12 +232,16 @@ export default function CheckoutSectionNew() {
         phone: contactPhone,
       },
       address: addressData.street || addressData.city ? addressData : undefined, // Only include if at least street or city is filled
+      car: carData,
+      configuration: configurationData,
       items: items.map(i => ({ 
         productId: i.productId, 
-        productName: i.productName, 
+        productName: i.productName,
+        productType: i.productType,
         quantity: i.quantity, 
         price: i.unitPrice, 
-        currency: 'PLN' 
+        currency: 'PLN',
+        configuration: i.configuration, // Include full configuration for each item
       })),
       currency: 'PLN',
       totalAmount: finalTotal,
@@ -1174,12 +1196,21 @@ export default function CheckoutSectionNew() {
                               {item.configuration.setVariant && (
                                 <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
                                   <span className="text-sm text-neutral-300">Zestaw:</span>
-                                  <span className="text-sm font-medium text-white">
-                                    {item.configuration.setVariant === 'front' ? 'Starter (przód)' :
-                                     item.configuration.setVariant === 'basic' ? 'Podstawowy (przód + tył)' :
-                                     item.configuration.setVariant === 'premium' ? 'Premium (przód + tył + bagażnik)' :
+                                  <span className="text-sm font-medium text-white text-right">
+                                    {item.configuration.setVariant === 'front' ? 'Starter' :
+                                     item.configuration.setVariant === 'basic' ? 'Podstawowy' :
+                                     item.configuration.setVariant === 'premium' ? 'Premium' :
                                      item.configuration.setVariant === 'complete' ? 'Mata do bagażnika' :
                                      item.configuration.setVariant}
+                                    {item.configuration.setVariant === 'front' && (
+                                      <span className="block text-xs text-neutral-400 mt-0.5">(przód)</span>
+                                    )}
+                                    {item.configuration.setVariant === 'basic' && (
+                                      <span className="block text-xs text-neutral-400 mt-0.5">(przód + tył)</span>
+                                    )}
+                                    {item.configuration.setVariant === 'premium' && (
+                                      <span className="block text-xs text-neutral-400 mt-0.5">(przód + tył + bagażnik)</span>
+                                    )}
                                   </span>
                                 </div>
                               )}
@@ -1212,8 +1243,16 @@ export default function CheckoutSectionNew() {
                               {(item.configuration.materialColor || item.configuration.edgeColor) && (
                                 <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
                                   <span className="text-sm text-neutral-300">Kolor:</span>
-                                  <span className="text-sm font-medium text-white">
-                                    {item.configuration.materialColor} + {item.configuration.edgeColor} obszycie
+                                  <span className="text-sm font-medium text-white text-right">
+                                    {item.configuration.materialColor && (
+                                      <span>{getColorInfo(item.configuration.materialColor).name}</span>
+                                    )}
+                                    {item.configuration.materialColor && item.configuration.edgeColor && (
+                                      <span className="mx-1">+</span>
+                                    )}
+                                    {item.configuration.edgeColor && (
+                                      <span className="text-neutral-400">{getColorInfo(item.configuration.edgeColor).name} obszycie</span>
+                                    )}
                                   </span>
                                 </div>
                               )}
@@ -1303,10 +1342,12 @@ export default function CheckoutSectionNew() {
                         </div>
                       )}
                       <div className="flex justify-between items-center pt-3 border-t border-neutral-700">
-                        <span className="text-white font-semibold text-2xl">Razem do zapłaty</span>
-                        <span className="text-white font-bold text-3xl">
-                          {finalTotal.toFixed(2).replace('.', ',')} <span className="text-xl font-normal">PLN</span>
-                        </span>
+                        <span className="text-neutral-300 text-sm">Razem do zapłaty</span>
+                        <div className="text-right">
+                          <span className="text-white font-bold text-3xl">
+                            {finalTotal.toFixed(2).replace('.', ',')} <span className="text-neutral-300 text-sm font-normal">PLN</span>
+                          </span>
+                        </div>
                       </div>
                       {discountApplied && (
                         <p className="text-green-400 text-sm mt-2">

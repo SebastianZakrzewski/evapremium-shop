@@ -104,8 +104,8 @@ export function mapOrderToDeal(
     // ✅ POLA PRODUKTU - działają poprawnie (wartości enum)
     UF_CRM_1757024835301: setType,           // Rodzaj kompletu (setType)
     UF_CRM_1757024931236: productVariant,    // Wariant kompletu (setVariant)
-    UF_CRM_1757025126670: cellShape,         // Kształt komórek
-    UF_CRM_1757177134448: materialColor,     // Kolor materiału
+    UF_CRM_1757177134448: cellShape,         // Kształt komórek
+    UF_CRM_1757025126670: materialColor,     // Kolor materiału
     UF_CRM_1757177281489: trimColor,         // Kolor obszycia
     
     // ✅ DODATKOWE INFORMACJE
@@ -405,28 +405,38 @@ export function createDealProducts(order: Order): Array<{
 function extractProductVariant(order: Order): number | undefined {
   console.log('🔍 extractProductVariant: Starting extraction for order:', order.orderNumber);
   
-  // Mapowanie wariantu produktu na ID enum w Bitrix24
-  const variantMap: Record<string, number> = {
+  // Rzeczywiste wartości enum z Bitrix24 dla pola UF_CRM_1757024931236 (Wariant kompletu)
+  // Uwaga: Pole nie ma wartości dla "Mata do Bagażnika" (complete), więc zwracamy undefined
+  const variantMap: Record<string, number | undefined> = {
     'front': 270,      // Przód
-    'basic': 274,      // Przód + Tył
-    'premium': 276,    // Przód + Tył + Bagażnik
-    'complete': 272,   // Tył (jako fallback dla complete)
+    'basic': 274,     // Przód + Tył
+    'premium': 276,   // Przód + Tył + Bagażnik
+    'complete': undefined, // Mata do Bagażnika - brak wartości w tym polu
   };
   
   const firstItem = order.items?.[0];
   if (!firstItem) {
     console.log('🔍 extractProductVariant: No items found, using default value');
-    return 274; // Domyślnie "Przód + Tył"
+    return 274; // Domyślnie "Podstawowy"
   }
   
   // Sprawdź czy item jest typu 'mat' i ma configuration
   if (firstItem.productType !== 'mat' || !firstItem.configuration) {
     console.log('🔍 extractProductVariant: Item is not mat or has no configuration, using default value');
-    return 274; // Domyślnie "Przód + Tył"
+    return 274; // Domyślnie "Podstawowy"
   }
   
   const variant = (firstItem.configuration as any)?.setVariant || 'basic';
-  const result = variantMap[variant] || 274; // Domyślnie "Przód + Tył"
+  const result = variantMap[variant];
+  
+  // Jeśli variant to 'complete', zwróć undefined (brak wartości w Bitrix24)
+  if (variant === 'complete') {
+    console.log('🔍 extractProductVariant: Variant "complete" nie ma wartości w polu UF_CRM_1757024931236, zwracam undefined');
+    return undefined;
+  }
+  
+  // Domyślnie "Przód + Tył" jeśli variant nie istnieje w mapie
+  return result !== undefined ? result : 274;
   
   console.log('🔍 extractProductVariant: Result:', {
     firstItemProductType: firstItem.productType,
@@ -512,10 +522,10 @@ function extractSetType(order: Order): number | undefined {
 function extractCellShape(order: Order): number | undefined {
   console.log('🔍 extractCellShape: Starting extraction for order:', order.orderNumber);
   
-  // Mapowanie kształtu komórek na ID enum w Bitrix24
+  // Rzeczywiste wartości enum z Bitrix24 dla pola UF_CRM_1757177134448 (Kształt komórek)
   const shapeMap: Record<string, number> = {
-    'diamonds': 278,   // Romby
-    'honey': 280,      // Plaster miodu
+    'diamonds': 360,   // Romby
+    'honey': 358,      // Plaster Miodu
   };
   
   const firstItem = order.items?.[0];
@@ -525,7 +535,7 @@ function extractCellShape(order: Order): number | undefined {
   }
   
   const shape = (firstItem.configuration as any)?.cellType || 'diamonds';
-  const result = shapeMap[shape] || 278; // Domyślnie 278
+  const result = shapeMap[shape] || 360; // Domyślnie Romby
   
   console.log('🔍 extractCellShape: Result:', {
     firstItemProductType: firstItem.productType,
@@ -538,18 +548,63 @@ function extractCellShape(order: Order): number | undefined {
 }
 
 /**
+ * Normalize color value (Polish to English mapping)
+ */
+function normalizeColor(color: string | undefined): string | undefined {
+  if (!color) return undefined;
+  
+  const colorLower = color.toLowerCase().trim();
+  const polishToEnglish: Record<string, string> = {
+    'niebieski': 'blue',
+    'czarny': 'black',
+    'szary': 'gray',
+    'ciemnoszary': 'darkgray',
+    'jasnoszary': 'lightgray',
+    'brązowy': 'brown',
+    'beżowy': 'beige',
+    'jasnobeżowy': 'lightbeige',
+    'kość słoniowa': 'ivory',
+    'czerwony': 'red',
+    'granatowy': 'navy',
+    'zielony': 'green',
+    'jasnozielony': 'lightgreen',
+    'pomarańczowy': 'orange',
+    'żółty': 'yellow',
+    'bordowy': 'maroon',
+    'fioletowy': 'purple',
+    'różowy': 'pink',
+    'biały': 'white',
+    // Obsługa wariantów pisowni
+    'grey': 'gray', // brytyjska pisownia
+  };
+  
+  return polishToEnglish[colorLower] || colorLower;
+}
+
+/**
  * Extract material color (enum value)
  */
 function extractMaterialColor(order: Order): number | undefined {
   console.log('🔍 extractMaterialColor: Starting extraction for order:', order.orderNumber);
   
-  // Mapowanie koloru materiału na ID enum w Bitrix24
+  // Rzeczywiste wartości enum z Bitrix24 dla pola UF_CRM_1757025126670 (Kolor materiału)
   const colorMap: Record<string, number> = {
-    'blue': 358,       // Niebieski
-    'black': 360,      // Czarny
-    'gray': 362,       // Szary
-    'brown': 364,      // Brązowy
-    'beige': 366,      // Beżowy
+    'black': 278,      // CZARNY
+    'brown': 280,      // BRĄZOWY
+    'darkgray': 282,   // CIEMNOSZARY
+    'navy': 284,       // GRANATOWY
+    'blue': 286,       // NIEBIESKI
+    'green': 288,      // ZIELONY
+    'red': 290,        // CZERWONY
+    'maroon': 292,     // BORDOWY
+    'lightbeige': 294, // JASNOBEŻOWY
+    'ivory': 296,      // KOŚĆ SŁONIOWA
+    'beige': 298,      // BEŻOWY
+    'purple': 300,     // FIOLETOWY
+    'lightgreen': 302, // JASNOZIELONY
+    'yellow': 304,     // ŻÓŁTY
+    'orange': 306,     // POMARAŃCZOWY
+    'white': 308,      // BIAŁY
   };
   
   const firstItem = order.items?.[0];
@@ -559,13 +614,24 @@ function extractMaterialColor(order: Order): number | undefined {
   }
   
   const config = firstItem.configuration as any;
-  const materialColor = config.materialColor || 'black';
-  const result = colorMap[materialColor] || 358; // Domyślnie blue
+  const materialColorRaw = config.materialColor;
+  const materialColor = normalizeColor(materialColorRaw);
+  
+  if (!materialColor || !colorMap[materialColor]) {
+    console.log('🔍 extractMaterialColor: Color not found in map', {
+      raw: materialColorRaw,
+      normalized: materialColor,
+      availableColors: Object.keys(colorMap)
+    });
+    return undefined;
+  }
+  
+  const result = colorMap[materialColor];
   
   console.log('🔍 extractMaterialColor: Result:', {
     firstItemProductType: firstItem.productType,
-    configuration: firstItem.configuration,
-    materialColor,
+    raw: materialColorRaw,
+    normalized: materialColor,
     result
   });
   
@@ -578,13 +644,22 @@ function extractMaterialColor(order: Order): number | undefined {
 function extractTrimColor(order: Order): number | undefined {
   console.log('🔍 extractTrimColor: Starting extraction for order:', order.orderNumber);
   
-  // Mapowanie koloru obszycia na ID enum w Bitrix24
+  // Rzeczywiste wartości enum z Bitrix24 dla pola UF_CRM_1757177281489 (Kolor obszycia)
   const trimColorMap: Record<string, number> = {
-    'blue': 368,       // Niebieski
-    'black': 370,      // Czarny
-    'gray': 372,       // Szary
-    'brown': 374,      // Brązowy
-    'beige': 376,      // Beżowy
+    'black': 362,      // CZARNY
+    'red': 364,        // CZERWONY
+    'lightgray': 366,  // JASNOSZARY
+    'darkgray': 368,   // CIEMNOSZARY
+    'brown': 370,      // BRĄZOWY
+    'beige': 372,      // BEŻOWY
+    'navy': 374,       // GRANATOWY
+    'blue': 376,       // NIEBIESKI
+    'green': 378,      // ZIELONY
+    'orange': 380,     // POMARAŃĆZOWY
+    'yellow': 382,     // ŻÓŁTY
+    'maroon': 384,     // BORDOWY
+    'purple': 386,     // FIOLETOWY
+    'pink': 388,       // RÓŻOWY
   };
   
   const firstItem = order.items?.[0];
@@ -594,13 +669,24 @@ function extractTrimColor(order: Order): number | undefined {
   }
   
   const config = firstItem.configuration as any;
-  const trimColor = config.edgeColor || 'black';
-  const result = trimColorMap[trimColor] || 370; // Domyślnie black
+  const trimColorRaw = config.edgeColor;
+  const trimColor = normalizeColor(trimColorRaw);
+  
+  if (!trimColor || !trimColorMap[trimColor]) {
+    console.log('🔍 extractTrimColor: Color not found in map', {
+      raw: trimColorRaw,
+      normalized: trimColor,
+      availableColors: Object.keys(trimColorMap)
+    });
+    return undefined;
+  }
+  
+  const result = trimColorMap[trimColor];
   
   console.log('🔍 extractTrimColor: Result:', {
     firstItemProductType: firstItem.productType,
-    configuration: firstItem.configuration,
-    trimColor,
+    raw: trimColorRaw,
+    normalized: trimColor,
     result
   });
   

@@ -31,6 +31,7 @@ export const abandonedCartItemSchema = z.object({
   quantity: z.number().int().min(1).optional(),
   price: z.number().min(0).optional(),
   currency: z.string().max(8).optional(),
+  configuration: z.any().optional(), // JSONB for mat configuration
 }).strict();
 
 export const abandonedCartAddressSchema = z.object({
