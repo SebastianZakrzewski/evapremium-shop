@@ -22,3 +22,4 @@ COMMENT ON COLUMN order_items.product_id IS 'ID z tabeli accessories (dla akceso
 
 
 
+

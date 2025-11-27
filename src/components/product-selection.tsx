@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import ImageCarousel from './ImageCarousel';
 import { BrandCard } from './ui/BrandCard';
 import { Brand } from '../types/carousel';
@@ -53,6 +54,7 @@ const fallbackBrands: Brand[] = [
 ];
 
 export default function ProductSelection() {
+  const router = useRouter();
   const [clickedCardId, setClickedCardId] = useState<number | null>(null);
 
   // Użyj React Query do cache'owania brandów
@@ -71,10 +73,12 @@ export default function ProductSelection() {
     // Animacja kliknięcia - reset po 300ms
     setTimeout(() => {
       setClickedCardId(null);
-      // Przekierowanie do konfiguratora z parametrem marki
-      window.location.href = `/konfigurator?brand=${encodeURIComponent(brand.name.toLowerCase())}`;
+      
+      // Tymczasowe przekierowanie do konfiguratora (do czasu implementacji kart produktów)
+      const brandSlug = brand.name.toLowerCase();
+      router.push(`/konfigurator?brand=${encodeURIComponent(brandSlug)}`);
     }, 300);
-  }, []);
+  }, [router]);
 
   if (loading) {
     return (

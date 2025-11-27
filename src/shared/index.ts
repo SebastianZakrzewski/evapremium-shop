@@ -19,6 +19,20 @@ export { default as WindowCard } from '../components/ui/WindowCard';
 // Utils (tymczasowo z oryginalnych lokalizacji)
 export { cn } from '../lib/utils';
 
+// Brand helpers
+export {
+  getBrandMetaBySlug,
+  mapSlugToCanonicalBrand,
+  humanizeBrandSlug,
+  supportedBrands,
+} from './brands/brandNormalizer';
+export {
+  fetchCarModelsByApiName,
+  fetchCarModelsBySlug,
+  resolveBrandApiName,
+  buildCarModelsApiUrl,
+} from './brands/carModelsApi';
+
 // Hooks (będą dodane po migracji)
 // export { useLocalStorage } from './hooks/useLocalStorage';
 // export { useDebounce } from './hooks/useDebounce';
