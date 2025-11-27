@@ -139,7 +139,7 @@ export default function AccessoryDetailsSheet({
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent 
-        className="w-full sm:max-w-xl bg-neutral-950 border-l border-white/10 text-white p-0 flex flex-col h-full"
+        className="w-full sm:max-w-xl bg-neutral-950 border-l border-white/10 text-white p-0 flex flex-col h-full [&>button]:hidden md:[&>button]:block"
         aria-labelledby="accessory-details-title"
         aria-describedby="accessory-details-description"
       >
@@ -181,12 +181,21 @@ export default function AccessoryDetailsSheet({
               )}
               {/* Badges Overlay */}
               <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
-                {accessory.category?.name && (
+                {accessory.category?.name && accessory.productType !== 'podpietka' && (
                   <Badge variant="secondary" className="bg-black/70 backdrop-blur-sm text-white border-white/10">
                     {accessory.category.name}
                   </Badge>
                 )}
               </div>
+              
+              {/* Mobile Close Button - bardziej widoczny na urządzeniach mobilnych */}
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 z-20 md:hidden bg-red-600/90 backdrop-blur-md border-2 border-red-500/50 rounded-full p-3.5 shadow-xl hover:bg-red-600 hover:border-red-400 transition-all duration-200 active:scale-95 ring-2 ring-red-500/30"
+                aria-label="Zamknij"
+              >
+                <XIcon className="h-7 w-7 text-white" strokeWidth={3} />
+              </button>
             </div>
 
             {/* Thumbnail Carousel - zawsze widoczna z placeholderami */}

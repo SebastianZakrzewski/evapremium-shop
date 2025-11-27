@@ -19,40 +19,95 @@ interface CarSelectionStepProps {
 
 // Mapowanie nazw marek (takie samo jak w Configuratorze)
 const mapBrandNameForData = (brandName: string): string => {
+  if (!brandName) return "";
+  
+  // Normalizuj input (trim + lowercase) dla lepszego dopasowania
+  const normalizedInput = brandName.toLowerCase().trim();
+  
   const brandMappings: Record<string, string> = {
+    // Mercedes - wszystkie warianty
+    "mercedes": "Mercedes-Benz",
+    "mercedes-benz": "Mercedes-Benz",
+    "mercedes benz": "Mercedes-Benz",
     "Mercedes": "Mercedes-Benz",
     "Mercedes-Benz": "Mercedes-Benz",
+    "Mercedes Benz": "Mercedes-Benz",
+    // BMW
+    "bmw": "Bmw",
     "BMW": "Bmw",
     "Bmw": "Bmw",
+    // Pozostałe marki
+    "audi": "Audi",
     "Audi": "Audi",
+    "tesla": "Tesla",
     "Tesla": "Tesla",
+    "porsche": "Porsche",
     "Porsche": "Porsche",
+    "volkswagen": "Volkswagen",
     "Volkswagen": "Volkswagen",
+    "ford": "Ford",
     "Ford": "Ford",
+    "opel": "Opel",
     "Opel": "Opel",
+    "peugeot": "Peugeot",
     "Peugeot": "Peugeot",
+    "renault": "Renault",
     "Renault": "Renault",
+    "fiat": "Fiat",
     "Fiat": "Fiat",
+    "alfa romeo": "Alfa romeo",
     "Alfa Romeo": "Alfa romeo",
+    "aston martin": "Aston martin",
     "Aston Martin": "Aston martin",
+    "acura": "Acura",
     "Acura": "Acura",
+    "bentley": "Bentley",
     "Bentley": "Bentley",
+    "ferrari": "Ferrari",
     "Ferrari": "Ferrari",
+    "lamborghini": "Lamborghini",
     "Lamborghini": "Lamborghini",
+    "mclaren": "McLaren",
     "McLaren": "McLaren",
+    "maserati": "Maserati",
     "Maserati": "Maserati",
+    "rolls-royce": "Rolls-Royce",
     "Rolls-Royce": "Rolls-Royce",
+    "lexus": "Lexus",
     "Lexus": "Lexus",
+    "infiniti": "Infiniti",
     "Infiniti": "Infiniti",
+    "cadillac": "Cadillac",
     "Cadillac": "Cadillac",
+    "lincoln": "Lincoln",
     "Lincoln": "Lincoln",
+    "jaguar": "Jaguar",
     "Jaguar": "Jaguar",
+    "land rover": "Land rover",
     "Land Rover": "Land rover",
+    "mini": "Mini",
     "Mini": "Mini",
+    "smart": "Smart",
     "Smart": "Smart"
   };
   
-  return brandMappings[brandName] || brandName;
+  // Najpierw sprawdź znormalizowany input
+  const mapped = brandMappings[normalizedInput];
+  if (mapped) {
+    console.log(`🔍 CarSelectionStep: Mapped brand "${brandName}" -> "${mapped}"`);
+    return mapped;
+  }
+  
+  // Jeśli nie ma w mapowaniu, sprawdź oryginalną nazwę (case-sensitive)
+  const originalMapped = brandMappings[brandName];
+  if (originalMapped) {
+    console.log(`🔍 CarSelectionStep: Mapped brand "${brandName}" -> "${originalMapped}" (exact match)`);
+    return originalMapped;
+  }
+  
+  // Fallback - zwróć oryginalną nazwę
+  console.log(`⚠️ CarSelectionStep: No mapping for "${brandName}", using original`);
+  return brandName;
 };
 
 const fetchBrands = async (): Promise<Brand[]> => {

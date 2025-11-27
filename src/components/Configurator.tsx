@@ -155,8 +155,12 @@ export default function Configurator() {
   const getBrandNameForAPI = (brandParam: string | null) => {
     if (!brandParam) return "";
     
+    const normalizedParam = brandParam.toLowerCase().trim();
+    
     const brandMappings: Record<string, string> = {
       "mercedes": "Mercedes-Benz",
+      "mercedes-benz": "Mercedes-Benz",
+      "mercedes benz": "Mercedes-Benz",
       "bmw": "Bmw", 
       "audi": "Audi",
       "tesla": "Tesla",
@@ -186,7 +190,15 @@ export default function Configurator() {
       "smart": "Smart"
     };
     
-    return brandMappings[brandParam.toLowerCase()] || brandParam.charAt(0).toUpperCase() + brandParam.slice(1);
+    const mapped = brandMappings[normalizedParam];
+    if (mapped) {
+      console.log(`🔍 Configurator: Mapped brand "${brandParam}" -> "${mapped}"`);
+      return mapped;
+    }
+    
+    const fallback = brandParam.charAt(0).toUpperCase() + brandParam.slice(1);
+    console.log(`⚠️ Configurator: No mapping for "${brandParam}", using fallback: "${fallback}"`);
+    return fallback;
   };
 
   const [selectedCarBrand, setSelectedCarBrand] = useState<string>(getBrandNameForAPI(brandParam));

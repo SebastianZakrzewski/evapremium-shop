@@ -33,24 +33,24 @@ export function StructureStep({ config, onUpdate, onNext, onPrevious }: Structur
   const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+    <div className="space-y-4 md:space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
         {structures.map((structure) => (
           <Card
             key={structure.id}
             onClick={() => onUpdate({ structure: structure.id })}
             className={`
-              p-4 md:p-5 cursor-pointer transition-all duration-300
+              p-3 md:p-5 cursor-pointer transition-all duration-300
               ${config.structure === structure.id
                 ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
                 : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm'
               }
             `}
           >
-            <div className="space-y-3">
+            <div className="space-y-2 md:space-y-3">
               <div>
-                <h3 className="text-lg md:text-xl font-semibold mb-1.5 leading-tight">{structure.name}</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">{structure.description}</p>
+                <h3 className="text-base md:text-xl font-semibold mb-1 md:mb-1.5 leading-tight">{structure.name}</h3>
+                <p className="text-gray-300 text-xs md:text-sm leading-relaxed">{structure.description}</p>
               </div>
               <div 
                 onClick={(e) => {
@@ -63,7 +63,7 @@ export function StructureStep({ config, onUpdate, onNext, onPrevious }: Structur
                   src={structure.image}
                   alt={structure.name}
                   fill
-                  className="object-contain p-2"
+                  className="object-contain p-1.5 md:p-2"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
                 <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-sm rounded px-2 py-1 text-xs text-white opacity-0 hover:opacity-100 transition-opacity">
