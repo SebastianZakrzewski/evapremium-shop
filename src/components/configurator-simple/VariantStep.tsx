@@ -61,7 +61,7 @@ export function VariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdo
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-4">
         {variants.map((variant) => {
           const variantPrice = getVariantPrice(variant.id);
           return (
@@ -69,31 +69,31 @@ export function VariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdo
               key={variant.id}
               onClick={() => onUpdate({ variant: variant.id })}
               className={`
-                p-3 md:p-4 cursor-pointer transition-all duration-300
+                p-2 md:p-4 cursor-pointer transition-all duration-300 md:flex md:flex-col md:h-full
                 ${config.variant === variant.id
                   ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
                   : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm'
                 }
               `}
             >
-              <div className="space-y-2">
-                <div>
-                  <h3 className="text-base md:text-lg font-semibold mb-1 leading-tight">{variant.name}</h3>
-                  <p className="text-gray-300 text-xs leading-relaxed">{variant.description}</p>
+              <div className="space-y-1.5 md:space-y-2 md:flex md:flex-col md:h-full">
+                <div className="md:flex-shrink-0">
+                  <h3 className="text-xs md:text-lg font-semibold mb-0.5 md:mb-1 leading-tight">{variant.name}</h3>
+                  <p className="text-gray-300 text-[10px] md:text-xs leading-tight md:leading-relaxed line-clamp-2 md:line-clamp-none">{variant.description}</p>
                 </div>
-                <div className="aspect-video bg-gradient-to-br from-neutral-700 to-neutral-800 rounded-lg overflow-hidden border border-neutral-700 relative">
+                <div className="aspect-video bg-gradient-to-br from-neutral-700 to-neutral-800 rounded-md md:rounded-lg overflow-hidden border border-neutral-700 relative md:flex-1 md:min-h-0">
                   <Image
                     src={variant.image}
                     alt={variant.name}
                     fill
-                    className="object-contain"
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-contain p-1 md:p-0"
+                    sizes="(max-width: 768px) 50vw, 25vw"
                   />
                 </div>
-                <div className="pt-2 border-t border-neutral-700">
+                <div className="pt-1.5 md:pt-2 border-t border-neutral-700 md:flex-shrink-0">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-400 text-xs">Cena:</span>
-                    <span className="text-base md:text-lg font-bold text-white">
+                    <span className="text-gray-400 text-[10px] md:text-xs">Cena:</span>
+                    <span className="text-xs md:text-lg font-bold text-white">
                       {variantPrice.toFixed(2)} zł
                     </span>
                   </div>

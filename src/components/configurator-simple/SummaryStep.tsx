@@ -1,11 +1,15 @@
 "use client";
 
 import React, { useMemo } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { getColorInfo } from "@/lib/color-mapping";
+import { getMatImagePath } from "@/lib/image-mapping";
 import type { ConfiguratorState } from "./ConfiguratorSimple";
 import { useAccessories } from "@/hooks/useAccessories";
-import { Car, Shield, Grid, Palette, Plus, CheckCircle2, ShoppingCart } from "lucide-react";
+import { Plus, CheckCircle2, ShoppingCart } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Brand } from "@/types/carousel";
 
 interface SummaryStepProps {
   config: ConfiguratorState;
@@ -37,6 +41,14 @@ const structureNames: Record<string, string> = {
   honey: "Plaster miodu",
 };
 
+const fetchBrands = async (): Promise<Brand[]> => {
+  const response = await fetch('/api/car-brands');
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
 export function SummaryStep({
   config,
   priceBreakdown,
@@ -46,11 +58,46 @@ export function SummaryStep({
 }: SummaryStepProps) {
   const { accessories } = useAccessories();
   
+  // Pobierz marki
+  const { data: brands = [] } = useQuery<Brand[]>({
+    queryKey: ['car-brands'],
+    queryFn: fetchBrands,
+    staleTime: 10 * 60 * 1000,
+  });
+  
   // Znajdź wybraną podpiętkę
   const selectedPodpietka = useMemo(() => {
     if (!config.selectedPodpietka) return null;
     return accessories.find(acc => acc.id === config.selectedPodpietka) || null;
   }, [accessories, config.selectedPodpietka]);
+  
+  // Pobierz logo marki
+  const brandLogo = useMemo(() => {
+    if (!config.brand || !brands.length) return null;
+    const brand = brands.find(b => b.name.toLowerCase() === config.brand.toLowerCase());
+    return brand?.logo || null;
+  }, [config.brand, brands]);
+  
+  // Generuj miniaturkę dywanika
+  const matThumbnail = useMemo(() => {
+    if (!config.structure || !config.color || !config.edgeColor) return null;
+    const matType = config.matType === '3d-with-rims' ? '3d' : 'classic';
+    return getMatImagePath(
+      matType,
+      config.structure as 'diamonds' | 'honey',
+      config.color,
+      config.edgeColor
+    );
+  }, [config.matType, config.structure, config.color, config.edgeColor]);
+  
+  // Ścieżka do miniaturki struktury
+  const structureThumbnail = useMemo(() => {
+    if (!config.structure) return null;
+    return config.structure === 'diamonds' 
+      ? '/images/konfigurator/struktura komorek/romby.png'
+      : '/images/konfigurator/struktura komorek/plaster.png';
+  }, [config.structure]);
+  
   if (!priceBreakdown) {
     return null;
   }
@@ -68,8 +115,20 @@ export function SummaryStep({
           <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm">
             {/* Car Info */}
             <div className="p-4 border-b border-white/5 flex items-start gap-3">
-              <div className="p-2 bg-white/5 rounded-lg text-red-400">
-                <Car className="w-5 h-5" />
+              <div className="relative w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
+                {brandLogo ? (
+                  <Image
+                    src={brandLogo}
+                    alt={config.brand}
+                    fill
+                    className="object-contain p-1.5"
+                    sizes="56px"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-red-400">
+                    <span className="text-xs">🚗</span>
+                  </div>
+                )}
               </div>
               <div>
                 <p className="text-xs text-gray-400 uppercase tracking-wider font-medium mb-0.5">Samochód</p>
@@ -80,8 +139,20 @@ export function SummaryStep({
 
             {/* Product Details */}
             <div className="p-4 border-b border-white/5 flex items-start gap-3">
-              <div className="p-2 bg-white/5 rounded-lg text-blue-400">
-                <Shield className="w-5 h-5" />
+              <div className="relative w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
+                {matThumbnail ? (
+                  <Image
+                    src={matThumbnail}
+                    alt={`${matTypeNames[config.matType]} - ${variantNames[config.variant]}`}
+                    fill
+                    className="object-contain p-1"
+                    sizes="56px"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-blue-400">
+                    <span className="text-xs">🛡️</span>
+                  </div>
+                )}
               </div>
               <div>
                 <p className="text-xs text-gray-400 uppercase tracking-wider font-medium mb-0.5">Produkt</p>
@@ -92,8 +163,20 @@ export function SummaryStep({
 
             {/* Structure & Colors */}
             <div className="p-4 border-b border-white/5 flex items-start gap-3">
-              <div className="p-2 bg-white/5 rounded-lg text-yellow-400">
-                <Grid className="w-5 h-5" />
+              <div className="relative w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
+                {structureThumbnail ? (
+                  <Image
+                    src={structureThumbnail}
+                    alt={structureNames[config.structure]}
+                    fill
+                    className="object-contain p-1.5"
+                    sizes="56px"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-yellow-400">
+                    <span className="text-xs">⚙️</span>
+                  </div>
+                )}
               </div>
               <div>
                 <p className="text-xs text-gray-400 uppercase tracking-wider font-medium mb-0.5">Wykończenie</p>
@@ -116,8 +199,28 @@ export function SummaryStep({
               <div className="space-y-2">
                 {selectedPodpietka && (
                   <div className="p-4 flex items-start gap-3 bg-red-500/5">
-                    <div className="p-2 bg-red-500/10 rounded-lg text-red-400">
-                      <Plus className="w-5 h-5" />
+                    <div className="relative w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
+                      {selectedPodpietka.images && selectedPodpietka.images.length > 0 ? (
+                        <Image
+                          src={selectedPodpietka.images[0]}
+                          alt={selectedPodpietka.name}
+                          fill
+                          className="object-contain p-1.5"
+                          sizes="56px"
+                        />
+                      ) : selectedPodpietka.imageSrc ? (
+                        <Image
+                          src={selectedPodpietka.imageSrc}
+                          alt={selectedPodpietka.name}
+                          fill
+                          className="object-contain p-1.5"
+                          sizes="56px"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-red-400">
+                          <Plus className="w-5 h-5" />
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1">
                       <p className="text-xs text-red-400/80 uppercase tracking-wider font-medium mb-0.5">Dodatki</p>

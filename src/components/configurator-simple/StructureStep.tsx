@@ -18,13 +18,13 @@ const structures = [
   {
     id: "diamonds" as const,
     name: "Romby",
-    description: "Struktura rombowa - klasyczny wygląd",
+    description: "Klasyczny wygląd",
     image: "/images/konfigurator/struktura komorek/romby.png",
   },
   {
     id: "honey" as const,
     name: "Plaster miodu",
-    description: "Struktura plastra miodu - nowoczesny design",
+    description: "Nowoczesny design",
     image: "/images/konfigurator/struktura komorek/plaster.png",
   },
 ];
@@ -33,40 +33,40 @@ export function StructureStep({ config, onUpdate, onNext, onPrevious }: Structur
   const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
   return (
-    <div className="space-y-4 md:space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
+    <div className="space-y-3 md:space-y-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-5">
         {structures.map((structure) => (
           <Card
             key={structure.id}
             onClick={() => onUpdate({ structure: structure.id })}
             className={`
-              p-3 md:p-5 cursor-pointer transition-all duration-300
+              p-2 md:p-5 cursor-pointer transition-all duration-300 md:flex md:flex-col md:h-full
               ${config.structure === structure.id
                 ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
                 : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm'
               }
             `}
           >
-            <div className="space-y-2 md:space-y-3">
-              <div>
-                <h3 className="text-base md:text-xl font-semibold mb-1 md:mb-1.5 leading-tight">{structure.name}</h3>
-                <p className="text-gray-300 text-xs md:text-sm leading-relaxed">{structure.description}</p>
+            <div className="space-y-1.5 md:space-y-3 md:flex md:flex-col md:h-full">
+              <div className="md:flex-shrink-0">
+                <h3 className="text-sm md:text-xl font-semibold mb-0.5 md:mb-1.5 leading-tight">{structure.name}</h3>
+                <p className="text-gray-300 text-[10px] md:text-sm leading-tight md:leading-relaxed line-clamp-1 md:line-clamp-none">{structure.description}</p>
               </div>
               <div 
                 onClick={(e) => {
                   e.stopPropagation();
                   setExpandedImage(structure.image);
                 }}
-                className="aspect-video bg-gradient-to-br from-neutral-700 to-neutral-800 rounded-lg overflow-hidden border border-neutral-700 relative cursor-zoom-in hover:border-red-500/50 transition-colors"
+                className="aspect-video bg-gradient-to-br from-neutral-700 to-neutral-800 rounded-md md:rounded-lg overflow-hidden border border-neutral-700 relative cursor-zoom-in hover:border-red-500/50 transition-colors md:flex-1 md:min-h-0"
               >
                 <Image
                   src={structure.image}
                   alt={structure.name}
                   fill
-                  className="object-contain p-1.5 md:p-2"
+                  className="object-contain p-1 md:p-2"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
-                <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-sm rounded px-2 py-1 text-xs text-white opacity-0 hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-1 right-1 bg-black/60 backdrop-blur-sm rounded px-1.5 py-0.5 text-[10px] md:text-xs text-white opacity-0 hover:opacity-100 transition-opacity">
                   Kliknij, aby powiększyć
                 </div>
               </div>
