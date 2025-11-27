@@ -39,6 +39,7 @@ export interface Accessory {
   categoryId: number;
   category?: AccessoryCategory;
   categorySlug?: string; // For easier filtering
+  productType?: 'organizer' | 'podpietka'; // Typ produktu dla filtrowania
   createdAt: Date;
   updatedAt: Date;
 }

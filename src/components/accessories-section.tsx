@@ -14,6 +14,7 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { SlidersHorizontal, X } from "lucide-react";
 import AccessoryCard from "./accessory-card";
+import AccessoryDetailsSheet from "./accessory-details-sheet";
 
 interface FilterState {
   categories: string[];
@@ -42,18 +43,110 @@ export default function AccessoriesSection() {
   });
 
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null);
 
+  // Główne kategorie (Organizery vs Podpiętki)
+  const MAIN_CATEGORIES = ['Organizery do Bagażnika', 'Podpiętki'];
+  
+  // Sprawdź które główne kategorie są wybrane
+  const selectedMainCategories = useMemo(() => {
+    return filters.categories.filter(cat => MAIN_CATEGORIES.includes(cat));
+  }, [filters.categories]);
+
+  // Podkategorie - pokazuj tylko te, które należą do wybranych głównych kategorii
   const availableCategories = useMemo(() => {
-    return categories.map(cat => cat.name).sort();
-  }, [categories]);
+    let filtered = categories;
+    
+    // Jeśli wybrano główną kategorię, pokaż tylko podkategorie z tej głównej kategorii
+    if (selectedMainCategories.length > 0) {
+      filtered = categories.filter(cat => {
+        // Jeśli kategoria jest główną kategorią, nie pokazuj jej w podkategoriach
+        if (MAIN_CATEGORIES.includes(cat.name)) {
+          return false;
+        }
+        
+        // Sprawdź czy kategoria należy do którejś z wybranych głównych kategorii
+        return selectedMainCategories.some(mainCat => {
+          const catNameLower = cat.name.toLowerCase();
+          const mainCatLower = mainCat.toLowerCase();
+          
+          if (mainCatLower.includes('organizer')) {
+            return catNameLower.includes('organizer') || catNameLower.includes('bagażnik');
+          } else if (mainCatLower.includes('podpięt')) {
+            return catNameLower.includes('podpięt') || catNameLower.includes('podpiet');
+          }
+          return false;
+        });
+      });
+    } else {
+      // Jeśli nie wybrano głównej kategorii, pokaż wszystkie oprócz głównych
+      filtered = categories.filter(cat => !MAIN_CATEGORIES.includes(cat.name));
+    }
+    
+    return filtered.map(cat => cat.name).sort();
+  }, [categories, selectedMainCategories]);
 
   const filteredAccessories = useMemo(() => {
     let filtered = accessories;
 
+    // Filtruj po kategoriach (główne + podkategorie)
     if (filters.categories.length > 0) {
-      filtered = filtered.filter(accessory => 
-        accessory.category && filters.categories.includes(accessory.category.name)
-      );
+      filtered = filtered.filter(accessory => {
+        if (!accessory.category) return false;
+        
+        const categoryName = accessory.category.name;
+        
+        // Sprawdź główne kategorie przez productType (PRIORYTET)
+        const hasOrganizerFilter = filters.categories.includes('Organizery do Bagażnika');
+        const hasPodpietkaFilter = filters.categories.includes('Podpiętki');
+        
+        // Jeśli wybrano główną kategorię, sprawdź productType najpierw
+        if (hasOrganizerFilter || hasPodpietkaFilter) {
+          // Użyj productType jeśli jest dostępny (priorytet)
+          if (accessory.productType) {
+            // Debug: sprawdź wartości
+            if (hasOrganizerFilter && accessory.productType === 'organizer') {
+              return true;
+            }
+            if (hasPodpietkaFilter && accessory.productType === 'podpietka') {
+              return true;
+            }
+            // Jeśli productType istnieje ale nie pasuje do żadnej wybranej głównej kategorii
+            // Debug: loguj niepasujące produkty
+            console.log('ProductType mismatch:', {
+              name: accessory.name,
+              productType: accessory.productType,
+              hasOrganizerFilter,
+              hasPodpietkaFilter
+            });
+            return false;
+          }
+          // Fallback do sprawdzania nazwy kategorii (dla produktów bez productType)
+          else {
+            const catNameLower = categoryName.toLowerCase();
+            
+            if (hasOrganizerFilter) {
+              if (catNameLower.includes('organizer') || catNameLower.includes('bagażnik')) {
+                return true;
+              }
+            }
+            if (hasPodpietkaFilter) {
+              if (catNameLower.includes('podpięt') || catNameLower.includes('podpiet')) {
+                return true;
+              }
+            }
+            // Jeśli nie pasuje do żadnej głównej kategorii
+            return false;
+          }
+        }
+        
+        // Sprawdź czy produkt należy do wybranej kategorii (dokładne dopasowanie dla podkategorii)
+        if (filters.categories.includes(categoryName)) {
+          return true;
+        }
+        
+        return false;
+      });
     }
 
     const [minPrice, maxPrice] = filters.priceRange;
@@ -226,24 +319,82 @@ export default function AccessoriesSection() {
               <div className="space-y-4">
                 <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Kategorie</h4>
                 <div className="space-y-3">
-                  {availableCategories.map((category) => (
-                    <div key={category} className="flex items-center space-x-3 group">
-                      <Checkbox
-                        id={`category-${category}`}
-                        checked={filters.categories.includes(category)}
-                        onCheckedChange={(checked) => 
-                          handleCategoryChange(category, checked as boolean)
-                        }
-                        className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
-                      />
-                      <Label 
-                        htmlFor={`category-${category}`}
-                        className="text-gray-300 group-hover:text-white cursor-pointer transition-colors"
-                      >
-                        {category}
-                      </Label>
-                    </div>
-                  ))}
+                  {/* Główne kategorie */}
+                  {categories
+                    .filter(cat => MAIN_CATEGORIES.includes(cat.name))
+                    .map((category) => (
+                      <div key={category.name} className="flex items-center space-x-3 group">
+                        <Checkbox
+                          id={`category-${category.name}`}
+                          checked={filters.categories.includes(category.name)}
+                          onCheckedChange={(checked) => 
+                            handleCategoryChange(category.name, checked as boolean)
+                          }
+                          className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                        />
+                        <Label 
+                          htmlFor={`category-${category.name}`}
+                          className="text-gray-300 group-hover:text-white cursor-pointer transition-colors font-medium"
+                        >
+                          {category.name}
+                        </Label>
+                      </div>
+                    ))}
+                  
+                  {/* Podkategorie - pokazuj tylko jeśli wybrano główną kategorię */}
+                  {selectedMainCategories.length > 0 && availableCategories.length > 0 && (
+                    <>
+                      <div className="pt-2 border-t border-white/10 mt-2">
+                        <div className="text-xs text-gray-500 uppercase tracking-wider mb-2 px-1">
+                          Podkategorie
+                        </div>
+                        <div className="space-y-2 pl-4">
+                          {availableCategories.map((category) => (
+                            <div key={category} className="flex items-center space-x-3 group">
+                              <Checkbox
+                                id={`subcategory-${category}`}
+                                checked={filters.categories.includes(category)}
+                                onCheckedChange={(checked) => 
+                                  handleCategoryChange(category, checked as boolean)
+                                }
+                                className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                              />
+                              <Label 
+                                htmlFor={`subcategory-${category}`}
+                                className="text-gray-400 group-hover:text-gray-300 cursor-pointer transition-colors text-sm"
+                              >
+                                {category}
+                              </Label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  
+                  {/* Jeśli nie wybrano głównej kategorii, pokaż inne kategorie */}
+                  {selectedMainCategories.length === 0 && availableCategories.length > 0 && (
+                    <>
+                      {availableCategories.map((category) => (
+                        <div key={category} className="flex items-center space-x-3 group">
+                          <Checkbox
+                            id={`category-${category}`}
+                            checked={filters.categories.includes(category)}
+                            onCheckedChange={(checked) => 
+                              handleCategoryChange(category, checked as boolean)
+                            }
+                            className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                          />
+                          <Label 
+                            htmlFor={`category-${category}`}
+                            className="text-gray-300 group-hover:text-white cursor-pointer transition-colors"
+                          >
+                            {category}
+                          </Label>
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -332,6 +483,7 @@ export default function AccessoriesSection() {
                       key={accessory.id} 
                       accessory={accessory}
                       onAddToCart={(e) => handleAddToCart(accessory, e)}
+                      onView={() => setSelectedAccessory(accessory)}
                     />
                   ))}
                 </div>
@@ -354,6 +506,12 @@ export default function AccessoriesSection() {
           </main>
         </div>
       </div>
+
+      <AccessoryDetailsSheet 
+        accessory={selectedAccessory}
+        isOpen={!!selectedAccessory}
+        onClose={() => setSelectedAccessory(null)}
+      />
     </div>
   );
 }

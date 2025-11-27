@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Accessory } from "@/lib/types/accessory";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,22 +7,40 @@ import { ShoppingCart } from "lucide-react";
 interface AccessoryCardProps {
   accessory: Accessory;
   onAddToCart: (e: React.MouseEvent) => void;
+  onView?: () => void;
 }
 
-export default function AccessoryCard({ accessory, onAddToCart }: AccessoryCardProps) {
+export default function AccessoryCard({ accessory, onAddToCart, onView }: AccessoryCardProps) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onView?.();
+    }
+  };
+
+  // Wybierz obraz do wyświetlenia: pierwszy z tablicy images lub imageSrc
+  const displayImage = accessory.images && accessory.images.length > 0 
+    ? accessory.images[0] 
+    : accessory.imageSrc;
+
   return (
-    <Link 
-      href={`/akcesoria/${accessory.category?.slug || 'all'}`}
-      className="group block h-full"
+    <div 
+      onClick={onView}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={`Zobacz szczegóły produktu ${accessory.name}, cena ${accessory.price.toLocaleString('pl-PL')} PLN`}
+      className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-neutral-950 rounded-xl"
     >
       <article className="h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1">
         {/* Image Container */}
         <div className="relative aspect-square bg-gradient-to-br from-gray-900 to-black overflow-hidden">
-          {accessory.imageSrc ? (
+          {displayImage ? (
             <Image
-              src={accessory.imageSrc}
+              src={displayImage}
               alt={accessory.name}
               fill
+              loading="lazy"
               className="object-cover transition-transform duration-500 group-hover:scale-110"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
@@ -69,9 +86,13 @@ export default function AccessoryCard({ accessory, onAddToCart }: AccessoryCardP
             </div>
             
             <Button
-              onClick={onAddToCart}
+              onClick={(e) => {
+                e.stopPropagation(); // Zatrzymaj propagację - przycisk nie otwiera Sheet
+                onAddToCart(e);
+              }}
               disabled={!accessory.inStock}
               size="sm"
+              aria-label={`Dodaj ${accessory.name} do koszyka`}
               className={`
                 shrink-0 gap-2 transition-all duration-300
                 ${!accessory.inStock 
@@ -80,13 +101,13 @@ export default function AccessoryCard({ accessory, onAddToCart }: AccessoryCardP
                 }
               `}
             >
-              <ShoppingCart className="w-4 h-4" />
+              <ShoppingCart className="w-4 h-4" aria-hidden="true" />
               <span className="hidden sm:inline">Do koszyka</span>
             </Button>
           </div>
         </div>
       </article>
-    </Link>
+    </div>
   );
 }
 

@@ -24,18 +24,18 @@ async function updateOrganizerImages() {
     
     const slug = 'organizer-do-bagaznika-klasyczny-xl';
     
-    // Lista obrazów
+    // Lista obrazów z folderu podpietki/organizer-klasyczny-XL
     const images = [
-      '/images/accessories/organizer-klasyczny-xl-1.webp',
-      '/images/accessories/organizer-klasyczny-xl-2.webp',
-      '/images/accessories/organizer-klasyczny-xl-3.webp',
-      '/images/accessories/organizer-klasyczny-xl-4.webp',
-      '/images/accessories/organizer-klasyczny-xl-5.webp',
-      '/images/accessories/organizer-klasyczny-xl-6.webp',
-      '/images/accessories/organizer-klasyczny-xl-7.webp',
-      '/images/accessories/organizer-klasyczny-xl-8.webp',
-      '/images/accessories/organizer-klasyczny-xl-9.webp',
-      '/images/accessories/organizer-klasyczny-xl-10.webp'
+      '/images/accessories/podpietki/organizer-klasyczny-XL/IMG_4814_7910116f-058f-4877-af5f-aff121e45415.webp',
+      '/images/accessories/podpietki/organizer-klasyczny-XL/IMG_4815_6d741f20-0a37-4c9e-b0b3-c884c7f7426a.webp',
+      '/images/accessories/podpietki/organizer-klasyczny-XL/IMG_4816_5d9ec7b3-13a3-4cb8-b80b-20081274428e.webp',
+      '/images/accessories/podpietki/organizer-klasyczny-XL/IMG_4817_763254d3-8b59-4de9-b386-17558a143795.webp',
+      '/images/accessories/podpietki/organizer-klasyczny-XL/IMG_4818_02d0205b-7c40-45e5-bcb2-90c7abce276a.webp',
+      '/images/accessories/podpietki/organizer-klasyczny-XL/IMG_4819.webp',
+      '/images/accessories/podpietki/organizer-klasyczny-XL/IMG_4820_f10f08ba-c791-4801-82da-bcd45c4b22fd.webp',
+      '/images/accessories/podpietki/organizer-klasyczny-XL/IMG_4821_529e5450-2986-4fdc-9c16-5beff7bbf609.webp',
+      '/images/accessories/podpietki/organizer-klasyczny-XL/IMG_4822_ee22d8f2-be43-4fa2-b125-82b47f63e84e.webp',
+      '/images/accessories/podpietki/organizer-klasyczny-XL/IMG_4823_fc120fc8-1355-4366-bbec-e5c3b4a67644.webp'
     ];
     
     console.log(`\n🔍 Wyszukiwanie organizera o slug: ${slug}...`);

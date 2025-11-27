@@ -4,6 +4,62 @@ import { Accessory, AccessoryFilters } from '../types/accessory';
 export class AccessoryRepository extends BaseRepository<Accessory> {
   protected tableName = 'accessories';
 
+  /**
+   * Mapuj dane z Supabase (snake_case) na typ Accessory (camelCase)
+   */
+  private mapAccessoryFromDb(item: any): Accessory {
+    // Usuń pola snake_case z obiektu, żeby nie było duplikatów
+    const {
+      image_src,
+      available_colors,
+      color_images,
+      in_stock,
+      stock_quantity,
+      is_active,
+      category_id,
+      created_at,
+      updated_at,
+      product_type,
+      accessory_categories,
+      ...rest
+    } = item;
+
+    return {
+      ...rest,
+      // Mapuj pola snake_case na camelCase
+      imageSrc: image_src,
+      images: item.images || [],
+      availableColors: available_colors || [],
+      colorImages: color_images || {},
+      inStock: in_stock !== null && in_stock !== undefined ? in_stock : true, // Domyślnie true jeśli null/undefined
+      stockQuantity: stock_quantity !== null && stock_quantity !== undefined ? stock_quantity : null,
+      isActive: is_active !== null && is_active !== undefined ? is_active : true,
+      categoryId: category_id,
+      productType: product_type 
+        ? (product_type.toString().toLowerCase().trim() === 'organizer' || product_type.toString().toLowerCase().trim() === 'podpietka')
+          ? product_type.toString().toLowerCase().trim()
+          : undefined
+        : undefined,
+      // Usuń product_type z rest jeśli istnieje, żeby nie było duplikatu
+      product_type: undefined,
+      createdAt: created_at ? new Date(created_at) : new Date(),
+      updatedAt: updated_at ? new Date(updated_at) : new Date(),
+      // Mapuj kategorię jeśli istnieje
+      category: accessory_categories ? {
+        id: accessory_categories.id,
+        name: accessory_categories.name,
+        slug: accessory_categories.slug,
+        description: accessory_categories.description,
+        icon: accessory_categories.icon,
+        isActive: accessory_categories.is_active,
+        sortOrder: accessory_categories.sort_order,
+        parentId: accessory_categories.parent_id,
+        createdAt: new Date(accessory_categories.created_at),
+        updatedAt: new Date(accessory_categories.updated_at)
+      } : undefined,
+    } as Accessory;
+  }
+
   async findByCategory(categorySlug: string): Promise<Accessory[]> {
     const { data, error } = await this.supabase
       .from(this.tableName)
@@ -18,30 +74,7 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
       throw new Error(`Error finding accessories by category: ${error.message}`);
     }
 
-    // Mapuj dane z Supabase na typ Accessory
-    const mappedData = (data || []).map(item => ({
-      ...item,
-      imageSrc: item.image_src, // Mapuj image_src na imageSrc
-      images: item.images || [], // Tablica obrazów
-      availableColors: item.available_colors || [], // Dostępne kolory
-      colorImages: item.color_images || {}, // Mapowanie kolor -> obraz
-      category: item.accessory_categories ? {
-        id: item.accessory_categories.id,
-        name: item.accessory_categories.name,
-        slug: item.accessory_categories.slug,
-        description: item.accessory_categories.description,
-        icon: item.accessory_categories.icon,
-        isActive: item.accessory_categories.is_active,
-        sortOrder: item.accessory_categories.sort_order,
-        parentId: item.accessory_categories.parent_id,
-        createdAt: new Date(item.accessory_categories.created_at),
-        updatedAt: new Date(item.accessory_categories.updated_at)
-      } : null,
-      // Usuń accessory_categories z obiektu
-      accessory_categories: undefined
-    }));
-
-    return mappedData;
+    return (data || []).map(item => this.mapAccessoryFromDb(item));
   }
 
   async findBySlug(slug: string): Promise<Accessory | null> {
@@ -61,30 +94,7 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
       throw new Error(`Error finding accessory by slug: ${error.message}`);
     }
 
-    // Mapuj dane z Supabase na typ Accessory
-    const mappedData = {
-      ...data,
-      imageSrc: data.image_src, // Mapuj image_src na imageSrc
-      images: data.images || [], // Tablica obrazów
-      availableColors: data.available_colors || [], // Dostępne kolory
-      colorImages: data.color_images || {}, // Mapowanie kolor -> obraz
-      category: data.accessory_categories ? {
-        id: data.accessory_categories.id,
-        name: data.accessory_categories.name,
-        slug: data.accessory_categories.slug,
-        description: data.accessory_categories.description,
-        icon: data.accessory_categories.icon,
-        isActive: data.accessory_categories.is_active,
-        sortOrder: data.accessory_categories.sort_order,
-        parentId: data.accessory_categories.parent_id,
-        createdAt: new Date(data.accessory_categories.created_at),
-        updatedAt: new Date(data.accessory_categories.updated_at)
-      } : null,
-      // Usuń accessory_categories z obiektu
-      accessory_categories: undefined
-    };
-
-    return mappedData;
+    return this.mapAccessoryFromDb(data);
   }
 
   async findMany(filters?: AccessoryFilters): Promise<Accessory[]> {
@@ -93,7 +103,8 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
       .select(`
         *,
         accessory_categories(*)
-      `);
+      `)
+      .eq('is_active', true); // Tylko aktywne produkty
 
     if (filters?.categories && filters.categories.length > 0) {
       query = query.in('accessory_categories.name', filters.categories);
@@ -122,36 +133,16 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
       throw new Error(`Error finding accessories: ${error.message}`);
     }
 
-    // Mapuj dane z Supabase na typ Accessory
-    const mappedData = (data || []).map(item => ({
-      ...item,
-      imageSrc: item.image_src, // Mapuj image_src na imageSrc
-      images: item.images || [], // Tablica obrazów
-      availableColors: item.available_colors || [], // Dostępne kolory
-      colorImages: item.color_images || {}, // Mapowanie kolor -> obraz
-      category: item.accessory_categories ? {
-        id: item.accessory_categories.id,
-        name: item.accessory_categories.name,
-        slug: item.accessory_categories.slug,
-        description: item.accessory_categories.description,
-        icon: item.accessory_categories.icon,
-        isActive: item.accessory_categories.is_active,
-        sortOrder: item.accessory_categories.sort_order,
-        parentId: item.accessory_categories.parent_id,
-        createdAt: new Date(item.accessory_categories.created_at),
-        updatedAt: new Date(item.accessory_categories.updated_at)
-      } : null,
-      // Usuń accessory_categories z obiektu
-      accessory_categories: undefined
-    }));
-
-    return mappedData;
+    return (data || []).map(item => this.mapAccessoryFromDb(item));
   }
 
   async findBySku(sku: string): Promise<Accessory | null> {
     const { data, error } = await this.supabase
       .from(this.tableName)
-      .select('*')
+      .select(`
+        *,
+        accessory_categories(*)
+      `)
       .eq('sku', sku)
       .single();
 
@@ -162,7 +153,30 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
       throw new Error(`Error finding accessory by SKU: ${error.message}`);
     }
 
-    return data;
+    return this.mapAccessoryFromDb(data);
+  }
+
+  /**
+   * Nadpisz findById aby używał mapowania
+   */
+  async findById(id: string): Promise<Accessory | null> {
+    const { data, error } = await this.supabase
+      .from(this.tableName)
+      .select(`
+        *,
+        accessory_categories(*)
+      `)
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return null; // Not found
+      }
+      throw new Error(`Error finding accessory by id: ${error.message}`);
+    }
+
+    return this.mapAccessoryFromDb(data);
   }
 
   async decrementStock(id: string, quantity: number): Promise<void> {
