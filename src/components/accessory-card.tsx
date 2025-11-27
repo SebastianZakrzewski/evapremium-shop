@@ -52,11 +52,6 @@ export default function AccessoryCard({ accessory, onAddToCart, onView }: Access
           
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2">
-            {accessory.category?.name && (
-              <Badge variant="secondary" className="bg-black/70 backdrop-blur-sm text-white border-white/10 hover:bg-black/90">
-                {accessory.category.name}
-              </Badge>
-            )}
             {!accessory.inStock && (
               <Badge variant="destructive" className="bg-red-900/90 backdrop-blur-sm">
                 Niedostępny
