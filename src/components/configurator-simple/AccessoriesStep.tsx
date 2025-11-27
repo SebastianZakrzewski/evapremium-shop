@@ -71,7 +71,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious }: Access
             <p>Brak dostępnych podpiętek</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {podpietki.map((podpietka) => {
               const isSelected = config.selectedPodpietka === podpietka.id;
               const displayImage = podpietka.images && podpietka.images.length > 0 
@@ -91,46 +91,46 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious }: Access
                   onClick={() => handlePodpietkaClick(podpietka)}
                 >
                   {/* Obraz */}
-                  <div className="relative aspect-square bg-neutral-900">
+                  <div className="relative aspect-square bg-neutral-900 max-h-[180px]">
                     {displayImage ? (
                       <Image
                         src={displayImage}
                         alt={podpietka.name}
                         fill
-                        className="object-cover"
+                        className="object-cover scale-90"
                         sizes="(max-width: 768px) 100vw, 50vw"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-600">
-                        <span className="text-4xl">📦</span>
+                        <span className="text-3xl">📦</span>
                       </div>
                     )}
                     
                     {/* Badge wybranego */}
                     {isSelected && (
                       <div className="absolute top-2 right-2">
-                        <Badge className="bg-red-600 text-white">Wybrano</Badge>
+                        <Badge className="bg-red-600 text-white text-xs">Wybrano</Badge>
                       </div>
                     )}
                   </div>
 
                   {/* Informacje */}
-                  <div className="p-4">
-                    <h4 className="font-semibold text-white mb-1">{podpietka.name}</h4>
+                  <div className="p-3">
+                    <h4 className="font-medium text-white mb-1 text-sm">{podpietka.name}</h4>
                     {podpietka.description && (
-                      <p className="text-sm text-gray-400 line-clamp-2 mb-2">{podpietka.description}</p>
+                      <p className="text-xs text-gray-400 line-clamp-2 mb-2">{podpietka.description}</p>
                     )}
                     
                     {/* Dostępne kolory */}
                     {podpietka.availableColors && podpietka.availableColors.length > 0 && (
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-1.5 mb-2">
                         <span className="text-xs text-gray-500">Kolory:</span>
                         <div className="flex gap-1 flex-wrap">
                           {podpietka.availableColors.slice(0, 5).map((color) => (
                             <div
                               key={color}
                               className={`
-                                w-4 h-4 rounded-full border border-white/20
+                                w-3.5 h-3.5 rounded-full border border-white/20
                                 ${config.podpietkaColor === color ? 'ring-2 ring-red-500' : ''}
                               `}
                               style={{
@@ -151,20 +151,20 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious }: Access
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-lg font-bold text-white">
-                        {podpietka.price.toLocaleString('pl-PL')} <span className="text-sm text-gray-400">PLN</span>
+                    <div className="flex items-center justify-between mt-1.5">
+                      <span className="text-base font-bold text-white">
+                        {podpietka.price.toLocaleString('pl-PL')} <span className="text-xs text-gray-400">PLN</span>
                       </span>
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-neutral-600 hover:bg-neutral-700"
+                        className="border-neutral-600 hover:bg-neutral-700 h-8 text-xs px-2"
                         onClick={(e) => {
                           e.stopPropagation();
                           handlePodpietkaClick(podpietka);
                         }}
                       >
-                        <ExternalLink className="w-4 h-4 mr-1" />
+                        <ExternalLink className="w-3 h-3 mr-1" />
                         Zobacz
                       </Button>
                     </div>
