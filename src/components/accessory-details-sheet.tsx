@@ -33,6 +33,7 @@ export default function AccessoryDetailsSheet({
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
 
   // Przygotuj listę zdjęć - użyj useMemo aby uniknąć problemów z hookami
   const productImages = useMemo(() => {
@@ -70,6 +71,7 @@ export default function AccessoryDetailsSheet({
   useEffect(() => {
     if (isOpen) {
       setSelectedImageIndex(0);
+      setImageError(false); // Reset błędu obrazu przy otwarciu
     }
   }, [isOpen, selectedColor]);
 
@@ -138,7 +140,7 @@ export default function AccessoryDetailsSheet({
           <div className="relative w-full bg-neutral-900">
             {/* Main Image */}
             <div className="relative aspect-video w-full">
-              {currentImage ? (
+              {currentImage && !imageError ? (
                 <Image
                   key={`${currentImage}-${selectedColor || 'default'}`}
                   src={currentImage}
@@ -147,10 +149,24 @@ export default function AccessoryDetailsSheet({
                   className="object-cover transition-opacity duration-300"
                   priority={selectedImageIndex === 0}
                   unoptimized={false}
+                  onError={() => {
+                    console.error(`Błąd ładowania obrazu: ${currentImage}`);
+                    setImageError(true);
+                  }}
+                  onLoad={() => {
+                    setImageError(false);
+                  }}
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-neutral-700">
-                  <span className="text-6xl">📦</span>
+                <div className="w-full h-full flex flex-col items-center justify-center text-neutral-700 bg-neutral-800/50">
+                  <span className="text-6xl mb-2">📦</span>
+                  {currentImage && (
+                    <p className="text-xs text-neutral-600 text-center px-4">
+                      Obraz nie został znaleziony
+                      <br />
+                      <span className="text-[10px] font-mono">{currentImage}</span>
+                    </p>
+                  )}
                 </div>
               )}
               {/* Badges Overlay */}
