@@ -21,6 +21,9 @@ export interface Accessory {
   sku: string;
   imageSrc?: string;
   imageUrl?: string; // Alias for imageSrc for compatibility
+  images?: string[]; // Tablica wielu obrazów
+  availableColors?: string[]; // Dostępne kolory wariantu
+  colorImages?: Record<string, string>; // Mapowanie kolor -> obraz
   features: string[];
   inStock: boolean;
   stockQuantity?: number;

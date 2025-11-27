@@ -27,6 +27,7 @@
     "add:organizer-klasyczny-xl": "node scripts/add-organizer-klasyczny-xl.js",
     "db:add-images-column": "node scripts/add-images-column.js",
     "update:organizer-images": "node scripts/update-organizer-images.js",
+    "consolidate:podpietki-gumowe": "node scripts/consolidate-podpietki-gumowe.js",
     "supabase:migrate": "node scripts/migrate-to-supabase.js",
     "supabase:seed": "node scripts/supabase-seed.js",
     "seed:audi-mats": "node scripts/seed-audi-mats.js",

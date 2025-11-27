@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { Accessory } from "@/lib/types/accessory";
 import { useCart } from "@/hooks/useCart.new";
@@ -32,24 +32,71 @@ export default function AccessoryDetailsSheet({
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
-  if (!accessory) return null;
+  // Przygotuj listę zdjęć - użyj useMemo aby uniknąć problemów z hookami
+  const productImages = useMemo(() => {
+    if (!accessory) return [];
+    
+    // PRIORYTET 1: Jeśli wybrano kolor i są dostępne obrazy dla kolorów, użyj obrazu dla wybranego koloru
+    if (selectedColor && accessory.colorImages) {
+      const colorImage = accessory.colorImages[selectedColor];
+      if (colorImage) {
+        return [colorImage];
+      }
+    }
+    
+    // PRIORYTET 2: Jeśli są dostępne obrazy w tablicy images
+    if (accessory.images && accessory.images.length > 0) {
+      return accessory.images;
+    }
+    
+    // PRIORYTET 3: Użyj głównego obrazu
+    if (accessory.imageSrc) {
+      return [accessory.imageSrc];
+    }
+    
+    return [];
+  }, [accessory, selectedColor]);
 
-  // Przygotuj listę zdjęć - na razie tylko imageSrc, ale gotowe na rozszerzenie o images[]
-  const productImages = accessory.imageSrc 
-    ? [accessory.imageSrc] 
-    : [];
+  // Ustaw domyślny kolor przy otwarciu
+  useEffect(() => {
+    if (isOpen && accessory?.availableColors && accessory.availableColors.length > 0 && !selectedColor) {
+      setSelectedColor(accessory.availableColors[0]);
+    }
+  }, [isOpen, accessory?.availableColors, selectedColor]);
 
-  // Resetuj wybrane zdjęcie przy otwarciu
-  if (isOpen && selectedImageIndex >= productImages.length) {
-    setSelectedImageIndex(0);
-  }
+  // Resetuj indeks obrazu przy zmianie koloru lub otwarciu
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedImageIndex(0);
+    }
+  }, [isOpen, selectedColor]);
 
-  const currentImage = productImages[selectedImageIndex] || accessory.imageSrc;
+  // Resetuj wybrane zdjęcie jeśli indeks jest poza zakresem
+  useEffect(() => {
+    if (isOpen && productImages.length > 0 && selectedImageIndex >= productImages.length) {
+      setSelectedImageIndex(0);
+    }
+  }, [isOpen, productImages.length, selectedImageIndex]);
+
+  // Wybierz aktualny obraz - priorytet dla wybranego koloru
+  const currentImage = useMemo(() => {
+    if (!accessory) return '';
+    if (productImages.length > 0 && selectedImageIndex < productImages.length) {
+      return productImages[selectedImageIndex];
+    }
+    // Fallback do głównego obrazu
+    return accessory.imageSrc || '';
+  }, [accessory, productImages, selectedImageIndex]);
 
   // Maksymalna liczba slotów w karuzeli (pokazujemy placeholdery jeśli mniej zdjęć)
   const MAX_THUMBNAILS = 4;
-  const thumbnailSlots = Math.max(productImages.length, MAX_THUMBNAILS);
+  const thumbnailSlots = useMemo(() => {
+    return Math.max(productImages.length, MAX_THUMBNAILS);
+  }, [productImages.length]);
+
+  if (!accessory) return null;
 
   const handleAddToCart = async () => {
     if (isAddingToCart) return; // Zapobiegaj wielokrotnym kliknięciom
@@ -93,11 +140,13 @@ export default function AccessoryDetailsSheet({
             <div className="relative aspect-video w-full">
               {currentImage ? (
                 <Image
+                  key={`${currentImage}-${selectedColor || 'default'}`}
                   src={currentImage}
-                  alt={`Zdjęcie produktu ${accessory.name} ${selectedImageIndex + 1} z ${productImages.length}`}
+                  alt={`Zdjęcie produktu ${accessory.name}${selectedColor ? ` w kolorze ${selectedColor}` : ''} ${selectedImageIndex + 1} z ${productImages.length}`}
                   fill
                   className="object-cover transition-opacity duration-300"
                   priority={selectedImageIndex === 0}
+                  unoptimized={false}
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-neutral-700">
@@ -219,6 +268,38 @@ export default function AccessoryDetailsSheet({
               {accessory.description || "Brak opisu produktu."}
             </SheetDescription>
           </div>
+
+          {/* Color Selection */}
+          {accessory.availableColors && accessory.availableColors.length > 0 && (
+            <>
+              <Separator className="bg-white/10" />
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Kolor</h4>
+                <div className="flex flex-wrap gap-3">
+                  {accessory.availableColors.map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => {
+                        setSelectedColor(color);
+                        setSelectedImageIndex(0); // Resetuj indeks obrazu przy zmianie koloru
+                      }}
+                      className={`
+                        px-4 py-2 rounded-lg border-2 transition-all text-sm font-medium
+                        ${selectedColor === color
+                          ? 'border-red-500 bg-red-500/10 text-white'
+                          : 'border-white/20 hover:border-white/40 text-gray-300'
+                        }
+                      `}
+                      aria-label={`Wybierz kolor ${color}`}
+                      aria-pressed={selectedColor === color}
+                    >
+                      {color}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
 
           {accessory.features && accessory.features.length > 0 && (
             <>

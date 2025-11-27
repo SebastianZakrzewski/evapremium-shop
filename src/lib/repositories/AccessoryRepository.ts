@@ -22,6 +22,9 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
     const mappedData = (data || []).map(item => ({
       ...item,
       imageSrc: item.image_src, // Mapuj image_src na imageSrc
+      images: item.images || [], // Tablica obrazów
+      availableColors: item.available_colors || [], // Dostępne kolory
+      colorImages: item.color_images || {}, // Mapowanie kolor -> obraz
       category: item.accessory_categories ? {
         id: item.accessory_categories.id,
         name: item.accessory_categories.name,
@@ -62,6 +65,9 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
     const mappedData = {
       ...data,
       imageSrc: data.image_src, // Mapuj image_src na imageSrc
+      images: data.images || [], // Tablica obrazów
+      availableColors: data.available_colors || [], // Dostępne kolory
+      colorImages: data.color_images || {}, // Mapowanie kolor -> obraz
       category: data.accessory_categories ? {
         id: data.accessory_categories.id,
         name: data.accessory_categories.name,
@@ -120,6 +126,9 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
     const mappedData = (data || []).map(item => ({
       ...item,
       imageSrc: item.image_src, // Mapuj image_src na imageSrc
+      images: item.images || [], // Tablica obrazów
+      availableColors: item.available_colors || [], // Dostępne kolory
+      colorImages: item.color_images || {}, // Mapowanie kolor -> obraz
       category: item.accessory_categories ? {
         id: item.accessory_categories.id,
         name: item.accessory_categories.name,
