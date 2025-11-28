@@ -125,6 +125,17 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-[750px] md:min-h-[550px] h-auto md:h-[70vh] overflow-visible md:overflow-hidden pt-24 md:pt-0 pb-20 md:pb-0 bg-neutral-950">
+      {/* Phone number - Mobile only */}
+      <div className="md:hidden absolute top-4 left-0 right-0 z-30 px-4">
+        <a 
+          href="tel:+48570123635"
+          className="flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2.5 rounded-full shadow-lg shadow-red-900/50 hover:from-red-500 hover:to-red-600 transition-all duration-300 active:scale-95"
+        >
+          <Phone className="w-4 h-4" />
+          <span className="font-semibold text-sm">+48 570 123 635</span>
+        </a>
+      </div>
+
       {/* Carousel */}
       <div className="container mx-auto px-4 relative min-h-[750px] md:h-full py-12 md:py-0">
         {heroSlides.map((slide, index) => {
