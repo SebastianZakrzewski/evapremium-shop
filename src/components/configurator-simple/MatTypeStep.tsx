@@ -35,7 +35,7 @@ export function MatTypeStep({ config, onUpdate, onNext, onPrevious }: MatTypeSte
             key={type.id}
             onClick={() => onUpdate({ matType: type.id })}
             className={`
-              p-4 md:p-5 cursor-pointer transition-all duration-300
+              p-4 md:p-5 cursor-pointer transition-all duration-300 min-h-[120px] md:min-h-[100px] active:scale-[0.98]
               ${config.matType === type.id
                 ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
                 : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm'
@@ -54,7 +54,7 @@ export function MatTypeStep({ config, onUpdate, onNext, onPrevious }: MatTypeSte
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="px-6 py-2.5 min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200"
+          className="px-6 py-3 min-h-[44px] md:min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200 active:scale-95"
         >
           Wstecz
         </Button>
@@ -65,7 +65,7 @@ export function MatTypeStep({ config, onUpdate, onNext, onPrevious }: MatTypeSte
           <Button
             onClick={onNext}
             disabled={!config.matType}
-            className="px-6 py-2.5 min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30"
+            className="px-6 py-3 min-h-[44px] md:min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30 active:scale-95"
           >
             Dalej
           </Button>

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart.new";
 import { PricingService } from "@/lib/services/PricingService";
 import { getMatImagePath } from "@/lib/image-mapping";
-import { getColorInfo } from "@/lib/color-mapping";
+import { getColorInfo, getAvailableMaterialColorsForEdge, getAvailableColors } from "@/lib/color-mapping";
 import { Brand } from "@/types/carousel";
 import { useAccessories } from "@/hooks/useAccessories";
 import { StepProgress } from "./StepProgress";
@@ -21,7 +21,9 @@ import { CombinedColorPicker } from "./CombinedColorPicker";
 import { SummaryStep } from "./SummaryStep";
 import { AccessoriesStep } from "./AccessoriesStep";
 import { ConfiguratorLoader } from "./ConfiguratorLoader";
-import { ZoomIn, ArrowLeft, ArrowRight, Info, RotateCcw } from "lucide-react";
+import { StickyBottomCTA } from "./StickyBottomCTA";
+import { ImageZoom } from "./ImageZoom";
+import { ZoomIn, ZoomOut, ArrowLeft, ArrowRight, Info, RotateCcw, Maximize2, Minimize2 } from "lucide-react";
 
 export interface ConfiguratorState {
   // Step 1: Wybór samochodu
@@ -161,6 +163,9 @@ export default function ConfiguratorSimple() {
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [modalImageType, setModalImageType] = useState<'dynamic' | 'product' | null>(null);
   
+  // Stan powiększonego podglądu (expand preview)
+  const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
+  
   // Stan aktywnego widoku podglądu (tabs)
   const [activePreviewTab, setActivePreviewTab] = useState<'dynamic' | 'product'>('dynamic');
   
@@ -292,6 +297,18 @@ export default function ConfiguratorSimple() {
   const goToPreviousStep = () => activeStep > 1 && setActiveStep(prev => prev - 1);
   const goToStep = (step: number) => step >= 1 && step <= TOTAL_STEPS && setActiveStep(step);
 
+  // Auto-close/auto-open akordeonów - tylko dla step 1 (wybór samochodu) po wyborze wszystkich pól
+  useEffect(() => {
+    // Automatycznie przejdź do następnego step tylko dla step 1 gdy wszystkie pola są wypełnione
+    if (activeStep === 1 && isStepValid(1) && activeStep < TOTAL_STEPS) {
+      const timer = setTimeout(() => {
+        setActiveStep(2);
+      }, 600);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [config.brand, config.model, config.year, config.bodyType, activeStep, isStepValid]);
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => e.key === 'Escape' && setIsPreviewModalOpen(false);
     window.addEventListener('keydown', handleEscape);
@@ -378,20 +395,16 @@ export default function ConfiguratorSimple() {
     }
   };
 
-  const shouldShowStickyPreview = activeStep >= 2;
-  const mainContainerPaddingBottom = shouldShowStickyPreview && config.matType 
-    ? 'pb-[180px]' 
-    : shouldShowStickyPreview 
-    ? 'pb-[100px]' 
-    : '';
+  const shouldShowStickyCTA = activeStep >= 2;
+  const mainContainerPaddingBottom = shouldShowStickyCTA ? 'pb-[140px]' : '';
 
   if (brandsLoading) return <ConfiguratorLoader />;
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white selection:bg-red-500 selection:text-white">
       {/* Progress Bar */}
-      <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-200 will-change-transform">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-4">
           <StepProgress 
             currentStep={activeStep} 
             totalSteps={TOTAL_STEPS}
@@ -402,10 +415,18 @@ export default function ConfiguratorSimple() {
       </div>
 
       {/* Main Content */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-16 pb-12 ${shouldShowStickyPreview ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-12">
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-16 pb-12 ${shouldShowStickyCTA ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
+        <div className={`grid grid-cols-1 gap-6 md:gap-8 xl:gap-12 transition-all duration-500 ease-in-out ${
+          isPreviewExpanded 
+            ? 'lg:grid-cols-12' 
+            : 'lg:grid-cols-5'
+        }`}>
           {/* Left Column - Configuration */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className={`space-y-4 md:space-y-6 transition-all duration-500 ${
+            isPreviewExpanded 
+              ? 'lg:col-span-4 opacity-90' 
+              : 'lg:col-span-3 opacity-100'
+          }`}>
             {[
               { step: 1, title: "Wybór samochodu", comp: CarSelectionStep, desc: "Dopasujemy dywaniki idealnie do Twojego modelu" },
               { step: 2, title: "Typ dywaników", comp: MatTypeStep, desc: "Wybierz poziom ochrony i stylu" },
@@ -442,20 +463,29 @@ export default function ConfiguratorSimple() {
           </div>
 
           {/* Right Column - Visualization */}
-          <div className="lg:col-span-2 space-y-6 mt-8 lg:mt-0">
-            <div className="lg:sticky lg:top-28 space-y-6">
+          <div className={`space-y-6 mt-8 lg:mt-0 transition-all duration-500 ${
+            isPreviewExpanded 
+              ? 'lg:col-span-8' 
+              : 'lg:col-span-2'
+          }`}>
+            <div className={`space-y-6 transition-all duration-500 ${
+              isPreviewExpanded 
+                ? 'lg:sticky lg:top-28' 
+                : 'lg:sticky lg:top-28'
+            }`}>
               
               {/* 1. Product Window (Top) */}
-              {productPreviewPath && (
+              {productPreviewPath && !isPreviewExpanded && (
                 <div className="space-y-4">
                   <div className="relative group bg-neutral-900/50 rounded-2xl border border-white/10 overflow-hidden shadow-lg transition-all hover:shadow-red-900/5">
                     <div className="relative aspect-square">
-                      <Image
+                      <ImageZoom
                         src={productPreviewPath}
                         alt="Podgląd produktu"
                         fill
-                        className="object-contain p-4 transition-transform duration-700 group-hover:scale-105"
+                        className="object-contain p-4 md:group-hover:scale-105 transition-transform duration-300"
                         priority
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                       
                       {/* Overlay Controls */}
@@ -505,32 +535,55 @@ export default function ConfiguratorSimple() {
               )}
 
               {/* 2. Rug Preview Window (Bottom) */}
-              <div className="relative group bg-gradient-to-br from-neutral-900 to-black rounded-2xl p-1 border border-white/10 shadow-2xl transition-all duration-500 hover:shadow-red-900/10">
+              <div className={`relative group bg-gradient-to-br from-neutral-900 to-black rounded-2xl p-1 border border-white/10 shadow-2xl transition-all duration-500 hover:shadow-red-900/10 ${
+                isPreviewExpanded ? 'ring-2 ring-red-500/50' : ''
+              }`}>
                 <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-2xl pointer-events-none" />
                 
-                <div className="relative aspect-[4/5] bg-black/50 rounded-xl overflow-hidden">
-                  {/* Preview Image */}
-                  <Image
+                <div className={`relative bg-black/50 rounded-xl overflow-hidden transition-all duration-500 will-change-transform ${
+                  isPreviewExpanded ? 'aspect-[16/10] min-h-[600px]' : 'aspect-[4/5]'
+                }`}>
+                  {/* Preview Image with Mobile Zoom */}
+                  <ImageZoom
                     key={`dynamic-${config.color}-${config.edgeColor}`}
                     src={dynamicPreviewPath}
                     alt="Podgląd konfiguracji"
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-contain md:group-hover:scale-105 transition-transform duration-300"
                     priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
 
                   {/* Overlay Controls */}
-                  <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className={`absolute top-4 right-4 flex flex-col gap-2 transition-opacity duration-300 z-10 ${
+                    isPreviewExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                  }`}>
                     <Button
                       size="icon"
                       variant="secondary"
-                      className="h-8 w-8 rounded-full bg-black/50 backdrop-blur border border-white/10 hover:bg-white/10 text-white"
+                      className="h-10 w-10 rounded-full bg-black/70 backdrop-blur border border-white/20 hover:bg-white/20 text-white shadow-lg min-h-[44px] min-w-[44px]"
+                      onClick={() => {
+                        setIsPreviewExpanded(!isPreviewExpanded);
+                      }}
+                      title={isPreviewExpanded ? "Zmniejsz podgląd" : "Powiększ podgląd"}
+                    >
+                      {isPreviewExpanded ? (
+                        <Minimize2 className="w-5 h-5" />
+                      ) : (
+                        <Maximize2 className="w-5 h-5" />
+                      )}
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="h-10 w-10 rounded-full bg-black/70 backdrop-blur border border-white/20 hover:bg-white/20 text-white shadow-lg min-h-[44px] min-w-[44px]"
                       onClick={() => {
                         setModalImageType('dynamic');
                         setIsPreviewModalOpen(true);
                       }}
+                      title="Pełnoekranowy podgląd"
                     >
-                      <ZoomIn className="w-4 h-4" />
+                      <ZoomIn className="w-5 h-5" />
                     </Button>
                   </div>
 
@@ -558,73 +611,29 @@ export default function ConfiguratorSimple() {
         </div>
       </div>
 
-      {/* Mobile Sticky Preview Bar */}
-      {shouldShowStickyPreview && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 pb-safe shadow-2xl animate-in slide-in-from-bottom-full duration-500">
-          
-          {/* Product Gallery Strip */}
-          <div className="px-4 pt-3 flex gap-2 overflow-x-auto scrollbar-hide">
-            {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
-              <button
-                key={imagePath}
-                onClick={(e) => {
-                   e.stopPropagation();
-                   config.matType === 'classic' ? setSelectedClassicProductImage(imagePath) : setSelectedRimsProductImage(imagePath);
-                   if (hasFullPreview) {
-                     setModalImageType('product');
-                     setIsPreviewModalOpen(true);
-                   }
-                }}
-                className={`
-                  relative w-12 h-12 rounded-lg overflow-hidden border transition-all flex-shrink-0
-                  ${(config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath
-                    ? 'border-red-500 shadow-sm shadow-red-500/20 scale-105 ring-1 ring-red-500/50'
-                    : 'border-white/10 opacity-50 hover:opacity-100'
-                  }
-                `}
-              >
-                <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="48px" />
-              </button>
-            ))}
-          </div>
-
-          <div className="px-4 py-3 flex items-center gap-4 border-t border-white/5 mt-2">
-            <div 
-              onClick={() => {
-                setModalImageType(hasFullPreview ? 'dynamic' : 'product');
-                setIsPreviewModalOpen(true);
-              }}
-              className="relative w-14 h-14 bg-neutral-900 rounded-lg border border-white/10 overflow-hidden shadow-inner flex-shrink-0"
-            >
-              <Image
-                src={hasFullPreview ? dynamicPreviewPath : (productPreviewPath || '')}
-                alt="Miniatura"
-                fill
-                className="object-contain p-1"
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-bold text-white truncate">
-                  {config.brand} {config.model}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-gray-400">
-                <span>{hasFullPreview ? `${getColorInfo(config.color).name} / ${getColorInfo(config.edgeColor).name}` : 'Konfiguruj...'}</span>
-              </div>
-            </div>
-            <Button 
-              size="sm" 
-              className="bg-white/10 hover:bg-white/20 text-white border border-white/10 backdrop-blur-sm"
-              onClick={() => {
-                setModalImageType(hasFullPreview ? 'dynamic' : 'product');
-                setIsPreviewModalOpen(true);
-              }}
-            >
-              <ZoomIn className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
+      {/* Mobile Sticky Bottom CTA */}
+      {shouldShowStickyCTA && (
+        <StickyBottomCTA
+          priceBreakdown={priceBreakdown}
+          config={{
+            brand: config.brand,
+            model: config.model,
+            color: config.color,
+            edgeColor: config.edgeColor,
+            matType: config.matType,
+          }}
+          dynamicPreviewPath={dynamicPreviewPath}
+          productPreviewPath={productPreviewPath}
+          hasFullPreview={hasFullPreview}
+          currentStep={activeStep}
+          totalSteps={TOTAL_STEPS}
+          isAddingToCart={isAddingToCart || cartLoading}
+          onAddToCart={activeStep === TOTAL_STEPS ? handleAddToCart : goToNextStep}
+          onPreviewClick={() => {
+            setModalImageType(hasFullPreview ? 'dynamic' : 'product');
+            setIsPreviewModalOpen(true);
+          }}
+        />
       )}
 
       {/* Fullscreen Preview Modal */}
@@ -648,9 +657,10 @@ export default function ConfiguratorSimple() {
                 src={modalImageType === 'dynamic' ? dynamicPreviewPath : (productPreviewPath || '')}
                 alt="Pełny podgląd"
                 fill
-                className="object-contain p-4 md:p-12"
+                className="object-contain p-4 md:p-12 transition-opacity duration-300 will-change-opacity"
                 quality={100}
                 priority
+                loading="eager"
               />
             </div>
 

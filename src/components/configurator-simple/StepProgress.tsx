@@ -27,8 +27,8 @@ export function StepProgress({ currentStep, totalSteps, onStepClick, isValid }: 
                 disabled={!isClickable}
                 className={`
                   relative flex items-center justify-center
-                  w-10 h-10 md:w-12 md:h-12 rounded-full
-                  transition-all duration-500 ease-out
+                  w-8 h-8 md:w-12 md:h-12 rounded-full
+                  transition-all duration-300 ease-out will-change-transform
                   ${isCurrent 
                     ? 'bg-gradient-to-br from-red-600 to-red-700 text-white scale-110 shadow-[0_0_20px_rgba(220,38,38,0.5)] ring-2 ring-red-500/50 z-10' 
                     : isCompleted 
@@ -63,7 +63,7 @@ export function StepProgress({ currentStep, totalSteps, onStepClick, isValid }: 
                   <div 
                     className={`
                       absolute inset-0 h-full bg-gradient-to-r from-red-600 to-red-500
-                      transition-all duration-700 ease-out origin-left
+                      transition-all duration-500 ease-out origin-left will-change-transform
                       ${isCompleted ? 'scale-x-100' : 'scale-x-0'}
                     `}
                   />

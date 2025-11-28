@@ -27,7 +27,7 @@ export const StepAccordion = React.forwardRef<HTMLDivElement, StepAccordionProps
     <div
       ref={ref}
       className={`
-        bg-neutral-900 rounded-lg border transition-all duration-300
+        bg-neutral-900 rounded-lg border transition-all duration-200 will-change-transform
         ${isOpen ? 'border-red-500/50 shadow-lg shadow-red-500/10' : 'border-neutral-800'}
         ${disabled ? 'opacity-50 pointer-events-none' : ''}
       `}
@@ -35,7 +35,7 @@ export const StepAccordion = React.forwardRef<HTMLDivElement, StepAccordionProps
       <button
         onClick={onToggle}
         disabled={disabled}
-        className="w-full flex items-center justify-between p-4 md:p-5 text-left hover:bg-neutral-800/50 transition-colors duration-200"
+        className="w-full flex items-center justify-between p-3 md:p-5 text-left hover:bg-neutral-800/50 transition-colors duration-200 min-h-[44px] md:min-h-[56px] active:bg-neutral-800/70"
       >
         <div className="flex items-center gap-3 md:gap-4">
           <div
@@ -83,13 +83,13 @@ export const StepAccordion = React.forwardRef<HTMLDivElement, StepAccordionProps
             )}
           </div>
         </div>
-        <span className={`text-gray-400 text-base md:text-lg transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+        <span className={`text-gray-400 text-base md:text-lg transition-transform duration-200 will-change-transform ${isOpen ? 'rotate-180' : ''}`}>
           ▼
         </span>
       </button>
       
       {isOpen && (
-        <div className="px-4 md:px-5 pb-4 md:pb-5 border-t border-neutral-800 pt-4 md:pt-5 animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="px-3 md:px-5 pb-3 md:pb-5 border-t border-neutral-800 pt-3 md:pt-5 animate-in fade-in slide-in-from-top-2 duration-200 will-change-transform">
           {children}
         </div>
       )}

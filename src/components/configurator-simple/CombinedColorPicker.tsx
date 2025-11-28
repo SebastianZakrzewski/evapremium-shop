@@ -56,7 +56,47 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
       <div className="space-y-2">
         <div>
           <h4 className="text-xs font-semibold mb-1.5 text-gray-200">Kolor dywaników</h4>
-          <div className="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-14 xl:grid-cols-16 gap-1.5">
+          {/* Mobile: Horizontal Scroll */}
+          <div className="md:hidden relative">
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth pb-2 -mx-1 px-1 snap-x snap-mandatory">
+              {availableMatColors.map((colorKey) => {
+                const colorInfo = getColorInfo(colorKey);
+                const isSelected = config.color === colorKey;
+                
+                return (
+                  <button
+                    key={colorKey}
+                    onClick={() => handleMatColorSelect(colorKey)}
+                    className={`
+                      flex-shrink-0 rounded-lg border transition-all duration-200 snap-center
+                      min-w-[44px] min-h-[44px] w-[44px] h-[44px]
+                      ${isSelected
+                        ? 'border-red-500 ring-2 ring-red-500/50 scale-110 shadow-lg shadow-red-500/20'
+                        : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
+                      }
+                    `}
+                    style={{
+                      backgroundColor: colorInfo.color,
+                    }}
+                    title={colorInfo.name}
+                  >
+                    {isSelected && (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <div className="w-3 h-3 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
+                          <span className="text-red-600 text-[10px] font-bold">✓</span>
+                        </div>
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            {/* Fade edges indicator */}
+            <div className="absolute left-0 top-0 bottom-2 w-8 bg-gradient-to-r from-neutral-950 to-transparent pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-neutral-950 to-transparent pointer-events-none" />
+          </div>
+          {/* Desktop: Grid Layout */}
+          <div className="hidden md:grid grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-1.5">
             {availableMatColors.map((colorKey) => {
               const colorInfo = getColorInfo(colorKey);
               const isSelected = config.color === colorKey;
@@ -109,7 +149,47 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
       <div className="space-y-2">
         <div>
           <h4 className="text-xs font-semibold mb-1.5 text-gray-200">Kolor obszycia</h4>
-          <div className="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-14 xl:grid-cols-16 gap-1.5">
+          {/* Mobile: Horizontal Scroll */}
+          <div className="md:hidden relative">
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth pb-2 -mx-1 px-1 snap-x snap-mandatory">
+              {availableEdgeColors.map((colorKey) => {
+                const colorInfo = getColorInfo(colorKey);
+                const isSelected = config.edgeColor === colorKey;
+                
+                return (
+                  <button
+                    key={colorKey}
+                    onClick={() => handleEdgeColorSelect(colorKey)}
+                    className={`
+                      flex-shrink-0 rounded-lg border transition-all duration-200 snap-center
+                      min-w-[44px] min-h-[44px] w-[44px] h-[44px]
+                      ${isSelected
+                        ? 'border-red-500 ring-2 ring-red-500/50 scale-110 shadow-lg shadow-red-500/20'
+                        : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
+                      }
+                    `}
+                    style={{
+                      backgroundColor: colorInfo.color,
+                    }}
+                    title={colorInfo.name}
+                  >
+                    {isSelected && (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <div className="w-3 h-3 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
+                          <span className="text-red-600 text-[10px] font-bold">✓</span>
+                        </div>
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            {/* Fade edges indicator */}
+            <div className="absolute left-0 top-0 bottom-2 w-8 bg-gradient-to-r from-neutral-950 to-transparent pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-neutral-950 to-transparent pointer-events-none" />
+          </div>
+          {/* Desktop: Grid Layout */}
+          <div className="hidden md:grid grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-1.5">
             {availableEdgeColors.map((colorKey) => {
               const colorInfo = getColorInfo(colorKey);
               const isSelected = config.edgeColor === colorKey;
@@ -162,7 +242,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="px-6 py-2.5 min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200"
+          className="px-6 py-3 min-h-[44px] md:min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200 active:scale-95"
         >
           Wstecz
         </Button>
@@ -177,7 +257,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
           <Button
             onClick={onNext}
             disabled={!isStepComplete}
-            className="px-6 py-2.5 min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30"
+            className="px-6 py-3 min-h-[44px] md:min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30 active:scale-95"
           >
             Dalej
           </Button>

@@ -82,7 +82,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious }: Access
                 <div
                   key={podpietka.id}
                   className={`
-                    relative group cursor-pointer rounded-lg border-2 overflow-hidden transition-all
+                    relative group cursor-pointer rounded-lg border-2 overflow-hidden transition-all min-h-[200px] active:scale-[0.98]
                     ${isSelected 
                       ? 'border-red-600 bg-red-600/10' 
                       : 'border-neutral-700 bg-neutral-800/50 hover:border-neutral-600'
@@ -204,10 +204,10 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious }: Access
 
       {/* Nawigacja */}
       <div className="flex flex-col sm:flex-row gap-3 justify-end pt-2">
-        <Button onClick={onPrevious} variant="outline" className="border-neutral-700 hover:bg-neutral-800">
+        <Button onClick={onPrevious} variant="outline" className="px-6 py-3 min-h-[44px] md:min-h-[40px] border-neutral-700 hover:bg-neutral-800 active:scale-95">
           Wstecz
         </Button>
-        <Button onClick={onNext} className="bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20">
+        <Button onClick={onNext} className="px-6 py-3 min-h-[44px] md:min-h-[40px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20 active:scale-95">
           Dalej
         </Button>
       </div>
