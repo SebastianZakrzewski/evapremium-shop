@@ -448,9 +448,10 @@ export default function ConfiguratorSimple() {
         </div>
       </div>
 
-      {/* Mobile Fixed Header with Product Image */}
+      {/* Mobile Fixed Header with Product Image and Gallery */}
       {shouldShowStickyPreview && (
-        <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg">
+        <div className="lg:hidden fixed top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg">
+          {/* Main Product Image */}
           <div className="relative w-full h-[40vh] min-h-[300px] max-h-[400px]">
             <Image
               src={stickyHeaderImage}
@@ -484,11 +485,44 @@ export default function ConfiguratorSimple() {
               </Button>
             </div>
           </div>
+
+          {/* Product Gallery - Sticky under main image, always visible */}
+          {productPreviewPath && (
+            <div className="px-4 py-3 bg-black/95 border-t border-white/10">
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+                {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
+                  <button
+                    key={imagePath}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Zmień wybrane zdjęcie i otwórz modal z powiększonym zdjęciem
+                      if (config.matType === 'classic') {
+                        setSelectedClassicProductImage(imagePath);
+                      } else {
+                        setSelectedRimsProductImage(imagePath);
+                      }
+                      setModalImageType('product');
+                      setIsPreviewModalOpen(true);
+                    }}
+                    className={`
+                      relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 active:scale-95
+                      ${(config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath
+                        ? 'border-red-500 shadow-lg shadow-red-500/20 scale-105 ring-1 ring-red-500/50'
+                        : 'border-white/10 opacity-60 active:opacity-100'
+                      }
+                    `}
+                  >
+                    <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="64px" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
       {/* Main Content */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${shouldShowStickyPreview ? 'pt-[calc(40vh+1rem)]' : 'pt-12'} lg:pt-12 pb-12 ${shouldShowStickyPreview ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${shouldShowStickyPreview ? 'pt-[calc(40vh+5rem+4rem)]' : 'pt-12'} lg:pt-12 pb-12 ${shouldShowStickyPreview ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-12">
           {/* Mobile: Krokowe etapy - jeden krok na raz (4 kroki) */}
           <div className="lg:hidden">
