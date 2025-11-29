@@ -20,6 +20,8 @@ import { StructureStep } from "./StructureStep";
 import { CombinedColorPicker } from "./CombinedColorPicker";
 import { SummaryStep } from "./SummaryStep";
 import { AccessoriesStep } from "./AccessoriesStep";
+import { MatTypeVariantStep } from "./MatTypeVariantStep";
+import { StructureColorStep } from "./StructureColorStep";
 import { ConfiguratorLoader } from "./ConfiguratorLoader";
 import { ZoomIn, ArrowLeft, ArrowRight, Info, RotateCcw, ShoppingCart } from "lucide-react";
 
@@ -51,7 +53,8 @@ export interface ConfiguratorState {
   podpietkaColor?: string; // Wybrany kolor podpiętki
 }
 
-const TOTAL_STEPS = 7;
+const TOTAL_STEPS_DESKTOP = 7;
+const TOTAL_STEPS_MOBILE = 4;
 
 // Mapowanie ID na typy dla funkcji getMatImagePath
 const getMatTypeForImage = (setTypeId: string): '3d' | 'classic' => {
@@ -274,8 +277,8 @@ export default function ConfiguratorSimple() {
     setConfig(prev => ({ ...prev, ...updates }));
   };
 
-  // Walidacja kroku
-  const isStepValid = (step: number): boolean => {
+  // Walidacja kroku - desktop (7 kroków)
+  const isStepValidDesktop = (step: number): boolean => {
     switch (step) {
       case 1: return !!(config.brand && config.model && config.year && config.bodyType);
       case 2: return !!config.matType;
@@ -283,14 +286,47 @@ export default function ConfiguratorSimple() {
       case 4: return !!config.structure;
       case 5: return !!(config.color && config.edgeColor);
       case 6: return true;
-      case 7: return isStepValid(1) && isStepValid(2) && isStepValid(3) && isStepValid(4) && isStepValid(5);
+      case 7: return isStepValidDesktop(1) && isStepValidDesktop(2) && isStepValidDesktop(3) && isStepValidDesktop(4) && isStepValidDesktop(5);
       default: return false;
     }
   };
 
-  const goToNextStep = () => activeStep < TOTAL_STEPS && isStepValid(activeStep) && setActiveStep(prev => prev + 1);
+  // Walidacja kroku - mobile (4 kroki)
+  const isStepValidMobile = (step: number): boolean => {
+    switch (step) {
+      case 1: return !!(config.brand && config.model && config.year && config.bodyType);
+      case 2: return !!(config.matType && config.variant);
+      case 3: return !!(config.structure && config.color && config.edgeColor);
+      case 4: return true; // Dodatki są opcjonalne
+      default: return false;
+    }
+  };
+
+  // Uniwersalna walidacja (używana w różnych miejscach)
+  const isStepValid = (step: number): boolean => {
+    // Dla mobile używamy mobile validation, dla desktop desktop validation
+    if (step <= 4) {
+      return isStepValidMobile(step);
+    }
+    return isStepValidDesktop(step);
+  };
+
+  const goToNextStep = () => {
+    // Na mobile max 4 kroki, na desktop max 7 kroków
+    // Sprawdzamy obie walidacje - jeśli któraś przejdzie, pozwalamy na następny krok
+    const canGoNextMobile = activeStep < TOTAL_STEPS_MOBILE && isStepValidMobile(activeStep);
+    const canGoNextDesktop = activeStep < TOTAL_STEPS_DESKTOP && isStepValidDesktop(activeStep);
+    if (canGoNextMobile || canGoNextDesktop) {
+      setActiveStep(prev => prev + 1);
+    }
+  };
   const goToPreviousStep = () => activeStep > 1 && setActiveStep(prev => prev - 1);
-  const goToStep = (step: number) => step >= 1 && step <= TOTAL_STEPS && setActiveStep(step);
+  const goToStep = (step: number) => {
+    // Pozwalamy na przejście do kroku jeśli jest w zakresie mobile lub desktop
+    if ((step >= 1 && step <= TOTAL_STEPS_MOBILE) || (step >= 1 && step <= TOTAL_STEPS_DESKTOP)) {
+      setActiveStep(step);
+    }
+  };
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => e.key === 'Escape' && setIsPreviewModalOpen(false);
@@ -311,7 +347,10 @@ export default function ConfiguratorSimple() {
   }, [activeStep]);
 
   const handleAddToCart = async () => {
-    if (!isStepValid(7)) return;
+    // Walidacja dla desktop (wymaga kroku 7) lub mobile (wymaga kroków 1-3)
+    const isValidDesktop = isStepValidDesktop(7);
+    const isValidMobile = isStepValidMobile(1) && isStepValidMobile(2) && isStepValidMobile(3);
+    if (!isValidDesktop && !isValidMobile) return;
     setIsAddingToCart(true);
     try {
       const productId = crypto.randomUUID();
@@ -378,7 +417,8 @@ export default function ConfiguratorSimple() {
     }
   };
 
-  const shouldShowStickyPreview = activeStep >= 2;
+  // Pokazuj sticky preview gdy wybrano typ i wariant (mobile) lub gdy jesteśmy na kroku 2+ (desktop)
+  const shouldShowStickyPreview = isStepValidMobile(2) || activeStep >= 2;
   const mainContainerPaddingBottom = shouldShowStickyPreview && config.matType 
     ? 'pb-[180px]' 
     : shouldShowStickyPreview 
@@ -401,9 +441,9 @@ export default function ConfiguratorSimple() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <StepProgress 
             currentStep={activeStep} 
-            totalSteps={TOTAL_STEPS}
+            totalSteps={TOTAL_STEPS_DESKTOP}
             onStepClick={goToStep}
-            isValid={isStepValid}
+            isValid={isStepValidDesktop}
           />
         </div>
       </div>
@@ -450,8 +490,99 @@ export default function ConfiguratorSimple() {
       {/* Main Content */}
       <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${shouldShowStickyPreview ? 'pt-[calc(40vh+1rem)]' : 'pt-12'} lg:pt-12 pb-12 ${shouldShowStickyPreview ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-12">
-          {/* Left Column - Configuration */}
-          <div className="lg:col-span-3 space-y-6">
+          {/* Mobile: Krokowe etapy - jeden krok na raz (4 kroki) */}
+          <div className="lg:hidden">
+            {/* Step 1: Wybór samochodu */}
+            {activeStep === 1 && (
+              <div
+                ref={(el) => { stepRefs.current[1] = el; }}
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(1) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
+                    <span className="text-sm font-bold">1</span>
+                  </div>
+                  <h2 className="text-xl font-semibold">Wybór samochodu</h2>
+                </div>
+                <CarSelectionStep
+                  config={config}
+                  onUpdate={updateConfig}
+                  onNext={goToNextStep}
+                />
+              </div>
+            )}
+
+            {/* Step 2: Typ i wariant zestawu */}
+            {activeStep === 2 && (
+              <div
+                ref={(el) => { stepRefs.current[2] = el; }}
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(2) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
+                    <span className="text-sm font-bold">2</span>
+                  </div>
+                  <h2 className="text-xl font-semibold">Typ i wariant zestawu</h2>
+                </div>
+                <MatTypeVariantStep
+                  config={config}
+                  onUpdate={updateConfig}
+                  onNext={goToNextStep}
+                  onPrevious={goToPreviousStep}
+                />
+              </div>
+            )}
+
+            {/* Step 3: Struktura i kolory */}
+            {activeStep === 3 && (
+              <div
+                ref={(el) => { stepRefs.current[3] = el; }}
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(3) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
+                    <span className="text-sm font-bold">3</span>
+                  </div>
+                  <h2 className="text-xl font-semibold">Struktura i kolory</h2>
+                </div>
+                <StructureColorStep
+                  config={{
+                    matType: config.matType,
+                    structure: config.structure,
+                    color: config.color,
+                    edgeColor: config.edgeColor,
+                  }}
+                  onUpdate={updateConfig}
+                  onNext={goToNextStep}
+                  onPrevious={goToPreviousStep}
+                />
+              </div>
+            )}
+
+            {/* Step 4: Dodatki */}
+            {activeStep === 4 && (
+              <div
+                ref={(el) => { stepRefs.current[4] = el; }}
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(4) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
+                    <span className="text-sm font-bold">4</span>
+                  </div>
+                  <h2 className="text-xl font-semibold">Dodatki (opcjonalne)</h2>
+                </div>
+                <AccessoriesStep
+                  config={config}
+                  onUpdate={updateConfig}
+                  onNext={goToNextStep}
+                  onPrevious={goToPreviousStep}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Desktop: Poprzednie rozwiązanie z accordion (7 kroków) */}
+          <div className="hidden lg:block lg:col-span-3 space-y-6">
             {[
               { step: 1, title: "Wybór samochodu", comp: CarSelectionStep, desc: "Dopasujemy dywaniki idealnie do Twojego modelu" },
               { step: 2, title: "Typ dywaników", comp: MatTypeStep, desc: "Wybierz poziom ochrony i stylu" },
@@ -469,7 +600,7 @@ export default function ConfiguratorSimple() {
                 benefitDescription={desc}
                 isOpen={activeStep === step}
                 onToggle={() => goToStep(step)}
-                isValid={isStepValid(step)}
+                isValid={isStepValidDesktop(step)}
               >
                 {Comp ? (
                   <Comp
@@ -610,7 +741,7 @@ export default function ConfiguratorSimple() {
           <div className="h-1 bg-neutral-800">
             <div
               className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-300 ease-out"
-              style={{ width: `${(activeStep / TOTAL_STEPS) * 100}%` }}
+              style={{ width: `${(activeStep / TOTAL_STEPS_MOBILE) * 100}%` }}
             />
           </div>
 
@@ -619,7 +750,7 @@ export default function ConfiguratorSimple() {
             {/* Price and CTA Row */}
             <div className="flex items-center gap-3">
               {/* Price Section */}
-              {activeStep >= 3 ? (
+              {(isStepValidMobile(2) || isStepValidDesktop(3)) ? (
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline gap-2">
                     <span className="text-xs text-gray-400">Cena:</span>
@@ -643,7 +774,7 @@ export default function ConfiguratorSimple() {
 
               {/* Mini Progress Dots */}
               <div className="flex items-center gap-1.5 px-2">
-                {Array.from({ length: TOTAL_STEPS }, (_, i) => {
+                {Array.from({ length: TOTAL_STEPS_MOBILE }, (_, i) => {
                   const step = i + 1;
                   const isCompleted = step < activeStep;
                   const isCurrent = step === activeStep;
@@ -667,7 +798,7 @@ export default function ConfiguratorSimple() {
               {/* CTA Button */}
               <Button
                 onClick={handleAddToCart}
-                disabled={isAddingToCart || !isStepValid(7)}
+                disabled={isAddingToCart || (!isStepValidDesktop(7) && !(isStepValidMobile(1) && isStepValidMobile(2) && isStepValidMobile(3)))}
                 className="min-h-[48px] min-w-[140px] bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold shadow-lg shadow-red-900/30 hover:shadow-red-900/50 transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isAddingToCart ? (
@@ -675,7 +806,7 @@ export default function ConfiguratorSimple() {
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     <span className="text-sm">Dodawanie...</span>
                   </div>
-                ) : !isStepValid(7) ? (
+                ) : (!isStepValidDesktop(7) && !(isStepValidMobile(1) && isStepValidMobile(2) && isStepValidMobile(3))) ? (
                   <span className="text-sm">Kontynuuj</span>
                 ) : (
                   <span className="flex items-center gap-2 text-sm">
