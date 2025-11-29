@@ -21,7 +21,7 @@ import { CombinedColorPicker } from "./CombinedColorPicker";
 import { SummaryStep } from "./SummaryStep";
 import { AccessoriesStep } from "./AccessoriesStep";
 import { ConfiguratorLoader } from "./ConfiguratorLoader";
-import { ZoomIn, ArrowLeft, ArrowRight, Info, RotateCcw } from "lucide-react";
+import { ZoomIn, ArrowLeft, ArrowRight, Info, RotateCcw, ShoppingCart } from "lucide-react";
 
 export interface ConfiguratorState {
   // Step 1: Wybór samochodu
@@ -385,12 +385,19 @@ export default function ConfiguratorSimple() {
     ? 'pb-[100px]' 
     : '';
 
+  // Determine best image for sticky header
+  const stickyHeaderImage = useMemo(() => {
+    if (hasFullPreview && dynamicPreviewPath) return dynamicPreviewPath;
+    if (productPreviewPath) return productPreviewPath;
+    return '/dywaniki/3d/diamonds/black/5os-3d-diamonds-black-black.webp'; // Fallback
+  }, [hasFullPreview, dynamicPreviewPath, productPreviewPath]);
+
   if (brandsLoading) return <ConfiguratorLoader />;
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white selection:bg-red-500 selection:text-white">
-      {/* Progress Bar */}
-      <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
+      {/* Progress Bar - Desktop only */}
+      <div className="hidden lg:block sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <StepProgress 
             currentStep={activeStep} 
@@ -401,8 +408,47 @@ export default function ConfiguratorSimple() {
         </div>
       </div>
 
+      {/* Mobile Fixed Header with Product Image */}
+      {shouldShowStickyPreview && (
+        <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg">
+          <div className="relative w-full h-[40vh] min-h-[300px] max-h-[400px]">
+            <Image
+              src={stickyHeaderImage}
+              alt="Podgląd produktu"
+              fill
+              className="object-contain p-4"
+              priority
+            />
+            {/* Click to open modal */}
+            <button
+              onClick={() => {
+                setModalImageType(hasFullPreview ? 'dynamic' : 'product');
+                setIsPreviewModalOpen(true);
+              }}
+              className="absolute inset-0 w-full h-full"
+              aria-label="Powiększ obraz"
+            />
+            {/* Zoom hint */}
+            <div className="absolute top-4 right-4">
+              <Button
+                size="icon"
+                variant="secondary"
+                className="h-10 w-10 rounded-full bg-black/50 backdrop-blur border border-white/20 hover:bg-white/10 text-white"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setModalImageType(hasFullPreview ? 'dynamic' : 'product');
+                  setIsPreviewModalOpen(true);
+                }}
+              >
+                <ZoomIn className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-16 pb-12 ${shouldShowStickyPreview ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${shouldShowStickyPreview ? 'pt-[calc(40vh+1rem)]' : 'pt-12'} lg:pt-12 pb-12 ${shouldShowStickyPreview ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-12">
           {/* Left Column - Configuration */}
           <div className="lg:col-span-3 space-y-6">
@@ -424,7 +470,6 @@ export default function ConfiguratorSimple() {
                 isOpen={activeStep === step}
                 onToggle={() => goToStep(step)}
                 isValid={isStepValid(step)}
-                disabled={!isStepValid(step - 1) && step > 1}
               >
                 {Comp ? (
                   <Comp
@@ -558,71 +603,88 @@ export default function ConfiguratorSimple() {
         </div>
       </div>
 
-      {/* Mobile Sticky Preview Bar */}
+      {/* Mobile Sticky Bottom Bar with Price and CTA */}
       {shouldShowStickyPreview && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 pb-safe shadow-2xl animate-in slide-in-from-bottom-full duration-500">
-          
-          {/* Product Gallery Strip */}
-          <div className="px-4 pt-3 flex gap-2 overflow-x-auto scrollbar-hide">
-            {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
-              <button
-                key={imagePath}
-                onClick={(e) => {
-                   e.stopPropagation();
-                   config.matType === 'classic' ? setSelectedClassicProductImage(imagePath) : setSelectedRimsProductImage(imagePath);
-                   if (hasFullPreview) {
-                     setModalImageType('product');
-                     setIsPreviewModalOpen(true);
-                   }
-                }}
-                className={`
-                  relative w-12 h-12 rounded-lg overflow-hidden border transition-all flex-shrink-0
-                  ${(config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath
-                    ? 'border-red-500 shadow-sm shadow-red-500/20 scale-105 ring-1 ring-red-500/50'
-                    : 'border-white/10 opacity-50 hover:opacity-100'
-                  }
-                `}
-              >
-                <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="48px" />
-              </button>
-            ))}
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 pb-safe shadow-2xl">
+          {/* Mini Progress Indicator */}
+          <div className="h-1 bg-neutral-800">
+            <div
+              className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-300 ease-out"
+              style={{ width: `${(activeStep / TOTAL_STEPS) * 100}%` }}
+            />
           </div>
 
-          <div className="px-4 py-3 flex items-center gap-4 border-t border-white/5 mt-2">
-            <div 
-              onClick={() => {
-                setModalImageType(hasFullPreview ? 'dynamic' : 'product');
-                setIsPreviewModalOpen(true);
-              }}
-              className="relative w-14 h-14 bg-neutral-900 rounded-lg border border-white/10 overflow-hidden shadow-inner flex-shrink-0"
-            >
-              <Image
-                src={hasFullPreview ? dynamicPreviewPath : (productPreviewPath || '')}
-                alt="Miniatura"
-                fill
-                className="object-contain p-1"
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-bold text-white truncate">
-                  {config.brand} {config.model}
-                </span>
+          {/* Main Content */}
+          <div className="px-4 py-3">
+            {/* Price and CTA Row */}
+            <div className="flex items-center gap-3">
+              {/* Price Section */}
+              {activeStep >= 3 ? (
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xs text-gray-400">Cena:</span>
+                    <span className="text-xl font-bold text-white">
+                      {priceBreakdown.totalPrice.toFixed(2)} zł
+                    </span>
+                  </div>
+                  {priceBreakdown.discount > 0 && (
+                    <div className="text-xs text-green-400 mt-0.5">
+                      Rabat: -{priceBreakdown.discount.toFixed(2)} zł
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-gray-500">
+                    Wybierz zestaw aby zobaczyć cenę
+                  </div>
+                </div>
+              )}
+
+              {/* Mini Progress Dots */}
+              <div className="flex items-center gap-1.5 px-2">
+                {Array.from({ length: TOTAL_STEPS }, (_, i) => {
+                  const step = i + 1;
+                  const isCompleted = step < activeStep;
+                  const isCurrent = step === activeStep;
+                  return (
+                    <div
+                      key={step}
+                      className={`
+                        w-1.5 h-1.5 rounded-full transition-all duration-300
+                        ${isCurrent 
+                          ? 'bg-red-500 w-2 h-2' 
+                          : isCompleted 
+                          ? 'bg-red-500/50' 
+                          : 'bg-neutral-600'
+                        }
+                      `}
+                    />
+                  );
+                })}
               </div>
-              <div className="flex items-center gap-2 text-xs text-gray-400">
-                <span>{hasFullPreview ? `${getColorInfo(config.color).name} / ${getColorInfo(config.edgeColor).name}` : 'Konfiguruj...'}</span>
-              </div>
+
+              {/* CTA Button */}
+              <Button
+                onClick={handleAddToCart}
+                disabled={isAddingToCart || !isStepValid(7)}
+                className="min-h-[48px] min-w-[140px] bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold shadow-lg shadow-red-900/30 hover:shadow-red-900/50 transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isAddingToCart ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span className="text-sm">Dodawanie...</span>
+                  </div>
+                ) : !isStepValid(7) ? (
+                  <span className="text-sm">Kontynuuj</span>
+                ) : (
+                  <span className="flex items-center gap-2 text-sm">
+                    <ShoppingCart className="w-4 h-4" />
+                    Do koszyka
+                  </span>
+                )}
+              </Button>
             </div>
-            <Button 
-              size="sm" 
-              className="bg-white/10 hover:bg-white/20 text-white border border-white/10 backdrop-blur-sm"
-              onClick={() => {
-                setModalImageType(hasFullPreview ? 'dynamic' : 'product');
-                setIsPreviewModalOpen(true);
-              }}
-            >
-              <ZoomIn className="w-4 h-4" />
-            </Button>
           </div>
         </div>
       )}
