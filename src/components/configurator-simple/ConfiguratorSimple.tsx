@@ -444,27 +444,38 @@ export default function ConfiguratorSimple() {
           const elementRect = stepElement.getBoundingClientRect();
           
           if (isMobile) {
-            // Sprawdź czy element jest już widoczny na ekranie - jeśli tak, nie przewijaj
-            const isElementVisible = elementRect.top >= 0 && elementRect.top < window.innerHeight;
-            
-            // Jeśli element jest już widoczny i jesteśmy na początku strony, nie przewijaj
-            if (isElementVisible && window.scrollY < 100) {
-              return;
-            }
-
-            // Na mobile przewijaj do góry sekcji z uwzględnieniem sticky header
             // Pobierz pozycję elementu względem viewport
             const currentScrollY = window.pageYOffset || window.scrollY;
             const elementTop = elementRect.top + currentScrollY;
             
             // Oblicz wysokość sticky header dla konkretnego kroku
             // Krok 1: tylko navbar (64px)
-            // Kroki 2-5: navbar (64px) + sticky preview (25vh + galeria ~60px)
+            // Krok 5: tylko navbar (64px) - brak sticky preview
+            // Kroki 2-4: navbar (64px) + sticky preview (25vh + galeria ~60px)
             const navbarHeight = 64; // h-16
             let stickyHeaderHeight = navbarHeight;
             
-            if (activeStep >= 2) {
-              // Dla kroków 2-5 sprawdź czy sticky preview jest widoczny
+            // Dla kroku 5 (podsumowanie) zawsze przewijaj do początku sekcji
+            if (activeStep === 5) {
+              // Tylko navbar, bez sticky preview
+              stickyHeaderHeight = navbarHeight;
+              const scrollPosition = elementTop - stickyHeaderHeight - 20;
+              if (scrollPosition >= 0 && scrollPosition < document.documentElement.scrollHeight) {
+                window.scrollTo({ top: Math.max(0, scrollPosition), behavior: 'smooth' });
+              }
+              return;
+            }
+            
+            // Dla innych kroków sprawdź czy element jest już widoczny
+            const isElementVisible = elementRect.top >= 0 && elementRect.top < window.innerHeight;
+            
+            // Jeśli element jest już widoczny i jesteśmy na początku strony, nie przewijaj
+            if (isElementVisible && window.scrollY < 100) {
+              return;
+            }
+            
+            // Dla kroków 2-4 sprawdź czy sticky preview jest widoczny
+            if (activeStep >= 2 && activeStep < 5) {
               const hasStickyPreview = isStepValidMobile(2) || activeStep >= 2;
               if (hasStickyPreview) {
                 // Oblicz rzeczywistą wysokość sticky header

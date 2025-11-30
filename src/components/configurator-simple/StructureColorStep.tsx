@@ -82,8 +82,8 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
     <div className="space-y-6">
       {/* Struktura */}
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-white/90">Struktura komórek</h3>
-        <div className="grid grid-cols-2 gap-1.5 sm:gap-3">
+        <h3 className="text-base font-semibold mb-2 text-white/90">Struktura komórek</h3>
+        <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
           {structures.map((structure) => {
             const isAvailable = isStructureAvailable[structure.id];
             const isSelected = config.structure === structure.id;
@@ -111,7 +111,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                   }
                 }}
                 className={`
-                  p-1.5 sm:p-4 transition-all duration-300 flex flex-col h-full min-h-[80px] sm:min-h-[140px] relative
+                  p-1.5 sm:p-3 transition-all duration-300 flex flex-col h-full min-h-[70px] sm:min-h-[120px] relative
                   ${isSelected
                     ? 'border-red-500 bg-red-500/10 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
                     : isDisabled
@@ -120,10 +120,10 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                   }
                 `}
               >
-              <div className="space-y-0.5 sm:space-y-2 flex flex-col h-full">
+              <div className="space-y-0.5 sm:space-y-1.5 flex flex-col h-full">
                 <div className="flex-shrink-0">
-                  <h4 className="text-xs sm:text-base font-semibold mb-0 sm:mb-1 leading-tight">{structure.name}</h4>
-                  <p className="text-gray-300 text-[10px] sm:text-sm leading-tight sm:leading-relaxed">{structure.description}</p>
+                  <h4 className="text-[11px] sm:text-base font-semibold mb-0 sm:mb-1 leading-tight">{structure.name}</h4>
+                  <p className="text-gray-300 text-[9px] sm:text-sm leading-tight sm:leading-relaxed">{structure.description}</p>
                 </div>
                 <div 
                   className="aspect-video bg-gradient-to-br from-neutral-700 to-neutral-800 rounded sm:rounded-md overflow-hidden border border-neutral-700 relative flex-1 min-h-0"
@@ -132,7 +132,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                     src={structure.image}
                     alt={structure.name}
                     fill
-                    className="object-contain p-0.5 sm:p-2"
+                    className="object-contain p-0.5 sm:p-1.5"
                     sizes="(max-width: 768px) 50vw, 50vw"
                   />
                 </div>
@@ -156,83 +156,87 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
           {/* Kolor materiału */}
           <div>
             <h3 className="text-lg font-semibold mb-3 text-white/90">Kolor materiału</h3>
-            <RadioGroup
-              value={config.color}
-              onValueChange={(value) => onUpdate({ color: value })}
-              className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3 sm:gap-3"
-            >
-              {availableMatColors.map((colorKey) => {
-                const colorInfo = getColorInfo(colorKey);
-                return (
-                  <div key={colorKey} className="flex flex-col items-center gap-0.5 sm:gap-2">
-                    <Label
-                      htmlFor={`material-${colorKey}`}
-                      className={`
-                        relative w-full aspect-square rounded sm:rounded-lg overflow-hidden border sm:border-2 cursor-pointer transition-all duration-200
-                        ${config.color === colorKey
-                          ? 'border-red-500 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-105'
-                          : 'border-neutral-700 hover:border-neutral-600 active:scale-95'
-                        }
-                      `}
-                    >
-                      <RadioGroupItem value={colorKey} id={`material-${colorKey}`} className="sr-only" />
-                      <div
-                        className="w-full h-full"
-                        style={{ backgroundColor: colorInfo.color }}
-                      />
-                    </Label>
-                    <span className="text-[9px] sm:text-xs text-gray-400 text-center leading-tight">{colorInfo.name}</span>
-                  </div>
-                );
-              })}
-            </RadioGroup>
+            <div className="overflow-x-auto scrollbar-hide pb-2 sm:pb-0">
+              <RadioGroup
+                value={config.color}
+                onValueChange={(value) => onUpdate({ color: value })}
+                className="flex sm:grid sm:grid-cols-5 md:grid-cols-6 gap-3 sm:gap-3 min-w-max sm:min-w-0"
+              >
+                {availableMatColors.map((colorKey) => {
+                  const colorInfo = getColorInfo(colorKey);
+                  return (
+                    <div key={colorKey} className="flex flex-col items-center gap-0.5 sm:gap-2 flex-shrink-0 sm:flex-shrink">
+                      <Label
+                        htmlFor={`material-${colorKey}`}
+                        className={`
+                          relative w-14 h-14 sm:w-full aspect-square rounded sm:rounded-lg overflow-hidden border sm:border-2 cursor-pointer transition-all duration-200
+                          ${config.color === colorKey
+                            ? 'border-red-500 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-105'
+                            : 'border-neutral-700 hover:border-neutral-600 active:scale-95'
+                          }
+                        `}
+                      >
+                        <RadioGroupItem value={colorKey} id={`material-${colorKey}`} className="sr-only" />
+                        <div
+                          className="w-full h-full"
+                          style={{ backgroundColor: colorInfo.color }}
+                        />
+                      </Label>
+                      <span className="text-[9px] sm:text-xs text-gray-400 text-center leading-tight whitespace-nowrap">{colorInfo.name}</span>
+                    </div>
+                  );
+                })}
+              </RadioGroup>
+            </div>
           </div>
 
           {/* Kolor obszycia */}
           {config.color && (
             <div>
               <h3 className="text-lg font-semibold mb-3 text-white/90">Kolor obszycia</h3>
-              <RadioGroup
-                value={config.edgeColor}
-                onValueChange={(value) => {
-                  onUpdate({ edgeColor: value });
-                  // Resetuj kolor materiału jeśli nie jest dostępny dla nowego koloru obszycia
-                  const newAvailableMatColors = getAvailableMaterialColorsForEdge(
-                    config.structure,
-                    config.matType || '3d-with-rims',
-                    value
-                  );
-                  if (!newAvailableMatColors.includes(config.color)) {
-                    onUpdate({ color: newAvailableMatColors[0] || 'black' });
-                  }
-                }}
-                className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3 sm:gap-3"
-              >
-                {availableEdgeColors.map((colorKey) => {
-                  const colorInfo = getColorInfo(colorKey);
-                  return (
-                    <div key={colorKey} className="flex flex-col items-center gap-0.5 sm:gap-2">
-                      <Label
-                        htmlFor={`edge-${colorKey}`}
-                        className={`
-                          relative w-full aspect-square rounded sm:rounded-lg overflow-hidden border sm:border-2 cursor-pointer transition-all duration-200
-                          ${config.edgeColor === colorKey
-                            ? 'border-red-500 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-105'
-                            : 'border-neutral-700 hover:border-neutral-600 active:scale-95'
-                          }
-                        `}
-                      >
-                        <RadioGroupItem value={colorKey} id={`edge-${colorKey}`} className="sr-only" />
-                        <div
-                          className="w-full h-full"
-                          style={{ backgroundColor: colorInfo.color }}
-                        />
-                      </Label>
-                      <span className="text-[9px] sm:text-xs text-gray-400 text-center leading-tight">{colorInfo.name}</span>
-                    </div>
-                  );
-                })}
-              </RadioGroup>
+              <div className="overflow-x-auto scrollbar-hide pb-2 sm:pb-0">
+                <RadioGroup
+                  value={config.edgeColor}
+                  onValueChange={(value) => {
+                    onUpdate({ edgeColor: value });
+                    // Resetuj kolor materiału jeśli nie jest dostępny dla nowego koloru obszycia
+                    const newAvailableMatColors = getAvailableMaterialColorsForEdge(
+                      config.structure,
+                      config.matType || '3d-with-rims',
+                      value
+                    );
+                    if (!newAvailableMatColors.includes(config.color)) {
+                      onUpdate({ color: newAvailableMatColors[0] || 'black' });
+                    }
+                  }}
+                  className="flex sm:grid sm:grid-cols-5 md:grid-cols-6 gap-3 sm:gap-3 min-w-max sm:min-w-0"
+                >
+                  {availableEdgeColors.map((colorKey) => {
+                    const colorInfo = getColorInfo(colorKey);
+                    return (
+                      <div key={colorKey} className="flex flex-col items-center gap-0.5 sm:gap-2 flex-shrink-0 sm:flex-shrink">
+                        <Label
+                          htmlFor={`edge-${colorKey}`}
+                          className={`
+                            relative w-14 h-14 sm:w-full aspect-square rounded sm:rounded-lg overflow-hidden border sm:border-2 cursor-pointer transition-all duration-200
+                            ${config.edgeColor === colorKey
+                              ? 'border-red-500 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-105'
+                              : 'border-neutral-700 hover:border-neutral-600 active:scale-95'
+                            }
+                          `}
+                        >
+                          <RadioGroupItem value={colorKey} id={`edge-${colorKey}`} className="sr-only" />
+                          <div
+                            className="w-full h-full"
+                            style={{ backgroundColor: colorInfo.color }}
+                          />
+                        </Label>
+                        <span className="text-[9px] sm:text-xs text-gray-400 text-center leading-tight whitespace-nowrap">{colorInfo.name}</span>
+                      </div>
+                    );
+                  })}
+                </RadioGroup>
+              </div>
             </div>
           )}
         </>

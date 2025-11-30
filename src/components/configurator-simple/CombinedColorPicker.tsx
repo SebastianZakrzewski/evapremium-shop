@@ -56,38 +56,40 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
       <div className="space-y-2">
         <div>
           <h4 className="text-xs font-semibold mb-1.5 text-gray-200">Kolor dywaników</h4>
-          {/* Grid Layout - Mobile i Desktop */}
-          <div className="grid grid-cols-4 sm:grid-cols-7 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-3 md:gap-1.5">
-            {availableMatColors.map((colorKey) => {
-              const colorInfo = getColorInfo(colorKey);
-              const isSelected = config.color === colorKey;
-              
-              return (
-                <button
-                  key={colorKey}
-                  onClick={() => handleMatColorSelect(colorKey)}
-                  className={`
-                    aspect-square rounded-lg border transition-all duration-300 min-w-[48px] min-h-[48px] md:min-w-[18px] md:min-h-[18px]
-                    ${isSelected
-                      ? 'border-red-500 ring-2 ring-red-500/40 md:ring-1 scale-105 md:scale-110'
-                      : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
-                    }
-                  `}
-                  style={{
-                    backgroundColor: colorInfo.color,
-                  }}
-                  title={colorInfo.name}
-                >
-                  {isSelected && (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="w-4 h-4 md:w-2 md:h-2 rounded-full bg-white/90 md:bg-white/40 backdrop-blur-sm flex items-center justify-center shadow-sm">
-                        <span className="text-red-600 md:text-white text-xs md:text-[8px] font-bold">✓</span>
+          {/* Horizontal Scroll on Mobile, Grid on Desktop */}
+          <div className="overflow-x-auto scrollbar-hide pb-2 md:pb-0">
+            <div className="flex md:grid md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-3 md:gap-1.5 min-w-max md:min-w-0">
+              {availableMatColors.map((colorKey) => {
+                const colorInfo = getColorInfo(colorKey);
+                const isSelected = config.color === colorKey;
+                
+                return (
+                  <button
+                    key={colorKey}
+                    onClick={() => handleMatColorSelect(colorKey)}
+                    className={`
+                      aspect-square rounded-lg border transition-all duration-300 w-12 h-12 md:min-w-[18px] md:min-h-[18px] flex-shrink-0 md:flex-shrink
+                      ${isSelected
+                        ? 'border-red-500 ring-2 ring-red-500/40 md:ring-1 scale-105 md:scale-110'
+                        : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
+                      }
+                    `}
+                    style={{
+                      backgroundColor: colorInfo.color,
+                    }}
+                    title={colorInfo.name}
+                  >
+                    {isSelected && (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <div className="w-4 h-4 md:w-2 md:h-2 rounded-full bg-white/90 md:bg-white/40 backdrop-blur-sm flex items-center justify-center shadow-sm">
+                          <span className="text-red-600 md:text-white text-xs md:text-[8px] font-bold">✓</span>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </button>
-              );
-            })}
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
           {config.color && (
             <div className="mt-1.5 p-1.5 bg-neutral-800 rounded border border-neutral-700">
@@ -110,38 +112,40 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
       <div className="space-y-2">
         <div>
           <h4 className="text-xs font-semibold mb-1.5 text-gray-200">Kolor obszycia</h4>
-          {/* Grid Layout - Mobile i Desktop */}
-          <div className="grid grid-cols-4 sm:grid-cols-7 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-3 md:gap-1.5">
-            {availableEdgeColors.map((colorKey) => {
-              const colorInfo = getColorInfo(colorKey);
-              const isSelected = config.edgeColor === colorKey;
-              
-              return (
-                <button
-                  key={colorKey}
-                  onClick={() => handleEdgeColorSelect(colorKey)}
-                  className={`
-                    aspect-square rounded-lg border transition-all duration-300 min-w-[48px] min-h-[48px] md:min-w-[18px] md:min-h-[18px]
-                    ${isSelected
-                      ? 'border-red-500 ring-2 ring-red-500/40 md:ring-1 scale-105 md:scale-110'
-                      : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
-                    }
-                  `}
-                  style={{
-                    backgroundColor: colorInfo.color,
-                  }}
-                  title={colorInfo.name}
-                >
-                  {isSelected && (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="w-4 h-4 md:w-2 md:h-2 rounded-full bg-white/90 md:bg-white/40 backdrop-blur-sm flex items-center justify-center shadow-sm">
-                        <span className="text-red-600 md:text-white text-xs md:text-[8px] font-bold">✓</span>
+          {/* Horizontal Scroll on Mobile, Grid on Desktop */}
+          <div className="overflow-x-auto scrollbar-hide pb-2 md:pb-0">
+            <div className="flex md:grid md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-3 md:gap-1.5 min-w-max md:min-w-0">
+              {availableEdgeColors.map((colorKey) => {
+                const colorInfo = getColorInfo(colorKey);
+                const isSelected = config.edgeColor === colorKey;
+                
+                return (
+                  <button
+                    key={colorKey}
+                    onClick={() => handleEdgeColorSelect(colorKey)}
+                    className={`
+                      aspect-square rounded-lg border transition-all duration-300 w-12 h-12 md:min-w-[18px] md:min-h-[18px] flex-shrink-0 md:flex-shrink
+                      ${isSelected
+                        ? 'border-red-500 ring-2 ring-red-500/40 md:ring-1 scale-105 md:scale-110'
+                        : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
+                      }
+                    `}
+                    style={{
+                      backgroundColor: colorInfo.color,
+                    }}
+                    title={colorInfo.name}
+                  >
+                    {isSelected && (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <div className="w-4 h-4 md:w-2 md:h-2 rounded-full bg-white/90 md:bg-white/40 backdrop-blur-sm flex items-center justify-center shadow-sm">
+                          <span className="text-red-600 md:text-white text-xs md:text-[8px] font-bold">✓</span>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </button>
-              );
-            })}
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
           {config.edgeColor && (
             <div className="mt-1.5 p-1.5 bg-neutral-800 rounded border border-neutral-700">

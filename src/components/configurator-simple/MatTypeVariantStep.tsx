@@ -69,22 +69,22 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
     <div className="space-y-6">
       {/* Typ dywaników */}
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-white/90">Typ dywaników</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <h3 className="text-base font-semibold mb-2 text-white/90">Typ dywaników</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {matTypes.map((type) => (
             <Card
               key={type.id}
               onClick={() => onUpdate({ matType: type.id })}
               className={`
-                p-4 cursor-pointer transition-all duration-300 min-h-[100px] active:scale-[0.98]
+                p-3 cursor-pointer transition-all duration-300 min-h-[80px] active:scale-[0.98]
                 ${config.matType === type.id
                   ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
                   : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm'
                 }
               `}
             >
-              <h4 className="text-lg font-semibold mb-1.5 leading-tight">{type.name}</h4>
-              <p className="text-gray-300 text-sm leading-relaxed">{type.description}</p>
+              <h4 className="text-base font-semibold mb-1 leading-tight">{type.name}</h4>
+              <p className="text-gray-300 text-xs leading-relaxed">{type.description}</p>
             </Card>
           ))}
         </div>
@@ -93,8 +93,8 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
       {/* Wariant zestawu */}
       {config.matType && (
         <div>
-          <h3 className="text-lg font-semibold mb-3 text-white/90">Wariant zestawu</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <h3 className="text-base font-semibold mb-2 text-white/90">Wariant zestawu</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
             {variants.map((variant) => {
               const variantPrice = getVariantPrice(variant.id);
               return (
@@ -102,31 +102,31 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
                   key={variant.id}
                   onClick={() => onUpdate({ variant: variant.id })}
                   className={`
-                    p-3 cursor-pointer transition-all duration-300 flex flex-col h-full min-h-[160px]
+                    p-2 md:p-3 cursor-pointer transition-all duration-300 flex flex-col h-full min-h-[140px] md:min-h-[160px]
                     ${config.variant === variant.id
                       ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
                       : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm active:scale-[0.98]'
                     }
                   `}
                 >
-                  <div className="flex flex-col h-full space-y-2">
+                  <div className="flex flex-col h-full space-y-1.5 md:space-y-2">
                     <div className="flex-shrink-0">
-                      <h4 className="text-sm md:text-base font-semibold mb-1 leading-tight">{variant.name}</h4>
-                      <p className="text-gray-300 text-xs leading-tight line-clamp-2">{variant.description}</p>
+                      <h4 className="text-xs md:text-base font-semibold mb-0.5 md:mb-1 leading-tight">{variant.name}</h4>
+                      <p className="text-gray-300 text-[10px] md:text-xs leading-tight line-clamp-2">{variant.description}</p>
                     </div>
-                    <div className="aspect-video bg-gradient-to-br from-neutral-700 to-neutral-800 rounded-md overflow-hidden border border-neutral-700 relative flex-1 min-h-0">
+                    <div className="aspect-video bg-gradient-to-br from-neutral-700 to-neutral-800 rounded md:rounded-md overflow-hidden border border-neutral-700 relative flex-1 min-h-0">
                       <Image
                         src={variant.image}
                         alt={variant.name}
                         fill
-                        className="object-contain p-1"
+                        className="object-contain p-0.5 md:p-1"
                         sizes="(max-width: 768px) 50vw, 25vw"
                       />
                     </div>
-                    <div className="pt-2 border-t border-neutral-700 flex-shrink-0">
+                    <div className="pt-1.5 md:pt-2 border-t border-neutral-700 flex-shrink-0">
                       <div className="flex items-center justify-between">
-                        <span className="text-gray-400 text-xs">Cena:</span>
-                        <span className="text-sm md:text-base font-bold text-white">
+                        <span className="text-gray-400 text-[10px] md:text-xs">Cena:</span>
+                        <span className="text-xs md:text-base font-bold text-white">
                           {variantPrice.toFixed(2)} zł
                         </span>
                       </div>
