@@ -53,24 +53,73 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
     return getAvailableColors(config.structure, 'border');
   }, [config.structure]);
 
+  // Sprawdź czy wybrany kolor jest dostępny dla każdej struktury
+  const isStructureAvailable = useMemo(() => {
+    if (!config.color || !config.edgeColor) {
+      // Jeśli nie wybrano koloru, wszystkie struktury są dostępne
+      return { diamonds: true, honey: true };
+    }
+
+    // Sprawdź dostępność koloru dla każdej struktury
+    const diamondsColors = getAvailableMaterialColorsForEdge(
+      'diamonds',
+      config.matType || '3d-with-rims',
+      config.edgeColor
+    );
+    const honeyColors = getAvailableMaterialColorsForEdge(
+      'honey',
+      config.matType || '3d-with-rims',
+      config.edgeColor
+    );
+
+    return {
+      diamonds: diamondsColors.includes(config.color),
+      honey: honeyColors.includes(config.color),
+    };
+  }, [config.color, config.edgeColor, config.matType]);
+
   return (
     <div className="space-y-6">
       {/* Struktura */}
       <div>
         <h3 className="text-lg font-semibold mb-3 text-white/90">Struktura komórek</h3>
         <div className="grid grid-cols-2 gap-1.5 sm:gap-3">
-          {structures.map((structure) => (
-            <Card
-              key={structure.id}
-              onClick={() => onUpdate({ structure: structure.id })}
-              className={`
-                p-1.5 sm:p-4 cursor-pointer transition-all duration-300 flex flex-col h-full min-h-[80px] sm:min-h-[140px] active:scale-[0.98]
-                ${config.structure === structure.id
-                  ? 'border-red-500 bg-red-500/10 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
-                  : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm'
-                }
-              `}
-            >
+          {structures.map((structure) => {
+            const isAvailable = isStructureAvailable[structure.id];
+            const isSelected = config.structure === structure.id;
+            const isDisabled = !isAvailable && config.color && config.edgeColor;
+
+            return (
+              <Card
+                key={structure.id}
+                onClick={() => {
+                  if (!isDisabled) {
+                    // Jeśli zmieniamy strukturę i kolor nie jest dostępny dla nowej struktury, zresetuj kolor
+                    const newAvailableColors = getAvailableMaterialColorsForEdge(
+                      structure.id,
+                      config.matType || '3d-with-rims',
+                      config.edgeColor || 'black'
+                    );
+                    if (config.color && !newAvailableColors.includes(config.color)) {
+                      onUpdate({ 
+                        structure: structure.id,
+                        color: newAvailableColors[0] || 'black'
+                      });
+                    } else {
+                      onUpdate({ structure: structure.id });
+                    }
+                  }
+                }}
+                className={`
+                  p-1.5 sm:p-4 transition-all duration-300 flex flex-col h-full min-h-[80px] sm:min-h-[140px] relative
+                  ${isSelected
+                    ? 'border-red-500 bg-red-500/10 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
+                    : isDisabled
+                    ? 'border-neutral-800 bg-neutral-900/50 opacity-50 cursor-not-allowed'
+                    : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm cursor-pointer active:scale-[0.98]'
+                  }
+                `}
+              >
               <div className="space-y-0.5 sm:space-y-2 flex flex-col h-full">
                 <div className="flex-shrink-0">
                   <h4 className="text-xs sm:text-base font-semibold mb-0 sm:mb-1 leading-tight">{structure.name}</h4>
@@ -88,8 +137,16 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                   />
                 </div>
               </div>
+              {isDisabled && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-lg">
+                  <p className="text-xs text-gray-400 text-center px-2">
+                    Kolor niedostępny dla tej struktury
+                  </p>
+                </div>
+              )}
             </Card>
-          ))}
+            );
+          })}
         </div>
       </div>
 
