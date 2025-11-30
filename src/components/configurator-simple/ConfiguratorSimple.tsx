@@ -643,10 +643,10 @@ export default function ConfiguratorSimple() {
   const shouldHideDesktopBars = isCartOpen || isOnCheckout || isProductModalOpen;
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white selection:bg-red-500 selection:text-white">
+    <div className="min-h-screen bg-neutral-950 text-white selection:bg-red-500 selection:text-white lg:overflow-hidden">
       {/* Progress Bar - Desktop only */}
       {!shouldHideDesktopBars && (
-      <div className="hidden lg:block fixed top-24 left-0 right-0 z-[60] bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
+      <div className="hidden lg:block fixed top-24 left-0 right-0 z-[60] bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300 lg:scale-[0.85] lg:origin-top lg:w-[117.647%] lg:left-1/2 lg:-translate-x-1/2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <StepProgress 
             currentStep={activeStep} 
@@ -742,7 +742,7 @@ export default function ConfiguratorSimple() {
       )}
 
       {/* Main Content */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:scale-[0.75] lg:origin-top lg:w-[133.333%] ${
         shouldShowStickyPreview && activeStep !== 5 
           ? 'pt-[calc(30vh+5rem+3rem)] sm:pt-[calc(33vh+5rem+3rem)] md:pt-[calc(36vh+5rem+3rem)]' 
           : 'pt-12'
@@ -1073,7 +1073,7 @@ export default function ConfiguratorSimple() {
       {/* Desktop Sticky Bottom Bar with Price and CTA */}
       {/* Pokazuje się dopiero po przejściu do sekcji "Typ dywaników" (krok 2) */}
       {(activeStep >= 2 && !shouldHideDesktopBars && activeStep !== 7) && (
-        <div className="hidden lg:block fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 shadow-2xl">
+        <div className="hidden lg:block fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 shadow-2xl lg:scale-[0.75] lg:origin-bottom lg:w-[133.333%] lg:left-1/2 lg:-translate-x-1/2">
           {/* Main Content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between gap-6">
