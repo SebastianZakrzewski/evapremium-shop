@@ -159,7 +159,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
             <RadioGroup
               value={config.color}
               onValueChange={(value) => onUpdate({ color: value })}
-              className="grid grid-cols-6 sm:grid-cols-5 md:grid-cols-6 gap-2 sm:gap-3"
+              className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3 sm:gap-3"
             >
               {availableMatColors.map((colorKey) => {
                 const colorInfo = getColorInfo(colorKey);
@@ -206,7 +206,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                     onUpdate({ color: newAvailableMatColors[0] || 'black' });
                   }
                 }}
-                className="grid grid-cols-6 sm:grid-cols-5 md:grid-cols-6 gap-2 sm:gap-3"
+                className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3 sm:gap-3"
               >
                 {availableEdgeColors.map((colorKey) => {
                   const colorInfo = getColorInfo(colorKey);

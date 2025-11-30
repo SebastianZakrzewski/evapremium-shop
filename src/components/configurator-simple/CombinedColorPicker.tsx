@@ -57,7 +57,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
         <div>
           <h4 className="text-xs font-semibold mb-1.5 text-gray-200">Kolor dywaników</h4>
           {/* Grid Layout - Mobile i Desktop */}
-          <div className="grid grid-cols-6 sm:grid-cols-7 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-2 md:gap-1.5">
+          <div className="grid grid-cols-4 sm:grid-cols-7 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-3 md:gap-1.5">
             {availableMatColors.map((colorKey) => {
               const colorInfo = getColorInfo(colorKey);
               const isSelected = config.color === colorKey;
@@ -67,7 +67,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
                   key={colorKey}
                   onClick={() => handleMatColorSelect(colorKey)}
                   className={`
-                    aspect-square rounded-lg border transition-all duration-300 min-w-[36px] min-h-[36px] md:min-w-[18px] md:min-h-[18px]
+                    aspect-square rounded-lg border transition-all duration-300 min-w-[48px] min-h-[48px] md:min-w-[18px] md:min-h-[18px]
                     ${isSelected
                       ? 'border-red-500 ring-2 ring-red-500/40 md:ring-1 scale-105 md:scale-110'
                       : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
@@ -111,7 +111,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
         <div>
           <h4 className="text-xs font-semibold mb-1.5 text-gray-200">Kolor obszycia</h4>
           {/* Grid Layout - Mobile i Desktop */}
-          <div className="grid grid-cols-6 sm:grid-cols-7 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-2 md:gap-1.5">
+          <div className="grid grid-cols-4 sm:grid-cols-7 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-3 md:gap-1.5">
             {availableEdgeColors.map((colorKey) => {
               const colorInfo = getColorInfo(colorKey);
               const isSelected = config.edgeColor === colorKey;
@@ -121,7 +121,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
                   key={colorKey}
                   onClick={() => handleEdgeColorSelect(colorKey)}
                   className={`
-                    aspect-square rounded-lg border transition-all duration-300 min-w-[36px] min-h-[36px] md:min-w-[18px] md:min-h-[18px]
+                    aspect-square rounded-lg border transition-all duration-300 min-w-[48px] min-h-[48px] md:min-w-[18px] md:min-h-[18px]
                     ${isSelected
                       ? 'border-red-500 ring-2 ring-red-500/40 md:ring-1 scale-105 md:scale-110'
                       : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'

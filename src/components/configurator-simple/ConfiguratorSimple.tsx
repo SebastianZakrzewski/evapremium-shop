@@ -459,7 +459,7 @@ export default function ConfiguratorSimple() {
             
             // Oblicz wysokość sticky header dla konkretnego kroku
             // Krok 1: tylko navbar (64px)
-            // Kroki 2-5: navbar (64px) + sticky preview (40vh + galeria ~80px)
+            // Kroki 2-5: navbar (64px) + sticky preview (25vh + galeria ~60px)
             const navbarHeight = 64; // h-16
             let stickyHeaderHeight = navbarHeight;
             
@@ -468,8 +468,8 @@ export default function ConfiguratorSimple() {
               const hasStickyPreview = isStepValidMobile(2) || activeStep >= 2;
               if (hasStickyPreview) {
                 // Oblicz rzeczywistą wysokość sticky header
-                // 40vh + galeria (~80px) + navbar (64px)
-                stickyHeaderHeight = Math.round(window.innerHeight * 0.4) + 80 + navbarHeight;
+                // 25vh + galeria (~60px) + navbar (64px)
+                stickyHeaderHeight = Math.round(window.innerHeight * 0.25) + 60 + navbarHeight;
               } else {
                 stickyHeaderHeight = navbarHeight;
               }
@@ -639,7 +639,7 @@ export default function ConfiguratorSimple() {
       {shouldShowStickyPreview && (
         <div className="lg:hidden fixed top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg">
           {/* Main Product Image */}
-          <div className="relative w-full h-[40vh] min-h-[300px] max-h-[400px]">
+          <div className="relative w-full h-[25vh] min-h-[180px] max-h-[250px]">
             <Image
               src={stickyHeaderImage}
               alt="Podgląd produktu"
@@ -675,7 +675,7 @@ export default function ConfiguratorSimple() {
 
           {/* Product Gallery - Sticky under main image, always visible */}
           {productPreviewPath && (
-            <div className="px-4 py-3 bg-black/95 border-t border-white/10">
+            <div className="px-4 py-2 bg-black/95 border-t border-white/10">
               <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
                 {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
                   <button
@@ -692,14 +692,14 @@ export default function ConfiguratorSimple() {
                       setIsPreviewModalOpen(true);
                     }}
                     className={`
-                      relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 active:scale-95
+                      relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 active:scale-95
                       ${(config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath
                         ? 'border-red-500 shadow-lg shadow-red-500/20 scale-105 ring-1 ring-red-500/50'
                         : 'border-white/10 opacity-60 active:opacity-100'
                       }
                     `}
                   >
-                    <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="64px" />
+                    <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="48px" />
                   </button>
                 ))}
               </div>
@@ -711,7 +711,7 @@ export default function ConfiguratorSimple() {
       {/* Main Content */}
       <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
         shouldShowStickyPreview && activeStep !== 5 
-          ? 'pt-[calc(40vh+5rem+4rem)]' 
+          ? 'pt-[calc(25vh+5rem+3rem)]' 
           : 'pt-12'
       } lg:pt-32 pb-12 ${shouldShowStickyPreview ? `lg:pb-24 ${mainContainerPaddingBottom}` : ''}`}>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-12">
@@ -744,7 +744,7 @@ export default function ConfiguratorSimple() {
             {activeStep === 2 && (
               <div
                 ref={(el) => { stepRefs.current[2] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(40vh+5rem+4rem)]"
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(25vh+5rem+3rem)]"
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[2] = el; }}
@@ -768,7 +768,7 @@ export default function ConfiguratorSimple() {
             {activeStep === 3 && (
               <div
                 ref={(el) => { stepRefs.current[3] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(40vh+5rem+4rem)]"
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(25vh+5rem+3rem)]"
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[3] = el; }}
@@ -797,7 +797,7 @@ export default function ConfiguratorSimple() {
             {activeStep === 4 && (
               <div
                 ref={(el) => { stepRefs.current[4] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(40vh+5rem+4rem)]"
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(25vh+5rem+3rem)]"
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[4] = el; }}
