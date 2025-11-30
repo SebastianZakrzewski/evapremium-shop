@@ -104,6 +104,7 @@ export default function CheckoutSectionNew() {
   const [discountApplied, setDiscountApplied] = useState(false);
   const [discountAmount, setDiscountAmount] = useState<number>(0);
   const [discountError, setDiscountError] = useState<string | null>(null);
+  const [discountSource, setDiscountSource] = useState<string | null>(null);
   const [priorityStartAt, setPriorityStartAt] = useState<number | null>(null);
   const [remainingMs, setRemainingMs] = useState<number>(15 * 60 * 1000);
   // Heartbeat (przeniesiony niżej po zainicjalizowaniu formularza, aby dołączyć dane kontaktowe)
@@ -288,6 +289,8 @@ export default function CheckoutSectionNew() {
 
     const savedDiscountCode = localStorage.getItem('discountCode');
     const savedDiscountAmount = localStorage.getItem('discountAmount');
+    const discountSource = localStorage.getItem('discountSource');
+    
     if (savedDiscountCode && savedDiscountAmount) {
       // Użyj cart.subtotal jako głównego źródła (tak jak w cart-modal)
       // Fallback do obliczenia z items tylko jeśli cart.subtotal jest 0 lub undefined
@@ -316,11 +319,13 @@ export default function CheckoutSectionNew() {
         // Użyj zapisanej kwoty zniżki z localStorage (to jest ta sama kwota która była w koszyku)
         setDiscountAmount(savedAmount);
         setValue('discountCode', savedDiscountCode);
+        setDiscountSource(discountSource);
         console.log('✅ CheckoutSection: Discount code loaded from localStorage', {
           code: savedDiscountCode,
           savedAmount,
           calculatedAmount: validation.discountAmount,
-          subtotal: currentSubtotal
+          subtotal: currentSubtotal,
+          source: discountSource
         });
       } else {
         // Kod nie jest już ważny, usuń z localStorage
@@ -332,6 +337,9 @@ export default function CheckoutSectionNew() {
         });
         localStorage.removeItem('discountCode');
         localStorage.removeItem('discountAmount');
+        localStorage.removeItem('discountSource');
+        setDiscountSource(null);
+        setDiscountSource(null);
       }
     }
   }, [items, cart.subtotal, discountApplied, setValue]);
@@ -351,6 +359,7 @@ export default function CheckoutSectionNew() {
 
     const savedDiscountCode = localStorage.getItem('discountCode');
     const savedDiscountAmount = localStorage.getItem('discountAmount');
+    const discountSource = localStorage.getItem('discountSource');
     
     if (savedDiscountCode && savedDiscountAmount) {
       const savedAmount = parseFloat(savedDiscountAmount);
@@ -364,15 +373,28 @@ export default function CheckoutSectionNew() {
         setDiscountApplied(true);
         setDiscountAmount(savedAmount);
         setValue('discountCode', savedDiscountCode);
+        setDiscountSource(discountSource);
         console.log('✅ CheckoutSection: Discount code loaded from localStorage (fallback)', {
           code: savedDiscountCode,
           savedAmount,
           calculatedAmount: validation.discountAmount,
-          subtotal: cart.subtotal
+          subtotal: cart.subtotal,
+          source: discountSource
         });
       }
     }
   }, [cart.subtotal, discountApplied, setValue]);
+
+  // Synchronizuj discountSource z localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const source = localStorage.getItem('discountSource');
+      setDiscountSource(source);
+    }
+  }, [discountApplied]);
+
+  // Sprawdź czy kod został wprowadzony w cart (zapobieganie duplikacji)
+  const isDiscountFromCart = discountSource === 'cart';
 
   // Oblicz subtotal i total z uwzględnieniem zniżki
   // Używamy cart.subtotal i cart.total jako głównego źródła (tak jak w cart-modal)
@@ -440,6 +462,12 @@ export default function CheckoutSectionNew() {
       return;
     }
 
+    // Sprawdź czy kod nie został już wprowadzony w cart
+    if (isDiscountFromCart) {
+      setDiscountError('Kod rabatowy został już wprowadzony w koszyku');
+      return;
+    }
+
     const validation = PricingService.validateDiscountCode(discountCode.trim(), subtotal);
     
     if (validation.isValid) {
@@ -447,6 +475,18 @@ export default function CheckoutSectionNew() {
       setDiscountAmount(validation.discountAmount);
       setDiscountError(null);
       setValue('discountCode', discountCode.trim());
+      
+      // Zapisz do localStorage z flagą źródła
+      localStorage.setItem('discountCode', discountCode.trim());
+      localStorage.setItem('discountAmount', validation.discountAmount.toString());
+      localStorage.setItem('discountSource', 'checkout');
+      setDiscountSource('checkout');
+      
+      console.log('✅ CheckoutSection: Discount code applied', {
+        code: discountCode.trim(),
+        amount: validation.discountAmount,
+        subtotal: subtotal
+      });
     } else {
       setDiscountApplied(false);
       setDiscountAmount(0);
@@ -461,6 +501,16 @@ export default function CheckoutSectionNew() {
       setDiscountApplied(false);
       setDiscountAmount(0);
       setDiscountError(null);
+      // Usuń z localStorage jeśli użytkownik zmienia kod
+      if (typeof window !== 'undefined') {
+        const currentSource = localStorage.getItem('discountSource');
+        if (currentSource === 'checkout') {
+          localStorage.removeItem('discountCode');
+          localStorage.removeItem('discountAmount');
+          localStorage.removeItem('discountSource');
+          setDiscountSource(null);
+        }
+      }
     }
   };
 
@@ -1466,12 +1516,12 @@ export default function CheckoutSectionNew() {
                         className={`min-h-[40px] h-10 md:h-11 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm md:text-base ${
                           discountError ? 'border-red-500' : discountApplied ? 'border-green-500' : ''
                         }`}
-                        disabled={discountApplied}
+                        disabled={discountApplied || isDiscountFromCart}
                       />
                       <Button 
                         type="button"
                         onClick={applyDiscountCode}
-                        disabled={discountApplied || !discountCode.trim()}
+                        disabled={discountApplied || !discountCode.trim() || isDiscountFromCart}
                         className="h-10 md:h-11 bg-red-600 border-red-500 text-white hover:bg-red-700 rounded-lg px-4 md:px-5 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {discountApplied ? '✓' : 'Zastosuj'}
@@ -1480,10 +1530,17 @@ export default function CheckoutSectionNew() {
                     {discountError && (
                       <p className="text-red-400 text-xs md:text-sm">{discountError}</p>
                     )}
-                    {discountApplied && (
+                    {isDiscountFromCart && (
+                      <div className="bg-blue-900/20 border border-blue-500/50 rounded-lg p-2 md:p-2.5">
+                        <p className="text-blue-400 text-xs md:text-sm font-medium">
+                          Kod rabatowy został wprowadzony w koszyku
+                        </p>
+                      </div>
+                    )}
+                    {discountApplied && !isDiscountFromCart && (
                       <div className="bg-green-900/20 border border-green-500/50 rounded-lg p-2 md:p-2.5">
                         <p className="text-green-400 text-xs md:text-sm font-medium">
-                          ✓ Kod zastosowany! Zniżka: -{discountAmount.toFixed(2)} PLN
+                          ✓ Kod zastosowany! Zniżka: -{PricingService.formatPrice(discountAmount)}
                         </p>
                       </div>
                     )}

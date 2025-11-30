@@ -8,6 +8,8 @@ import { CartItem } from "@/components/cart/CartItem";
 import { PricingService } from "@/lib/services/PricingService";
 import { debugLog } from "@/lib/config/features";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -37,10 +39,12 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
     clearCart 
   } = useCart();
 
-  // Stan kodu rabatowego - tylko do wyświetlania (kod wprowadzany tylko w checkout)
+  // Stan kodu rabatowego
   const [discountCode, setDiscountCode] = useState<string>('');
   const [discountApplied, setDiscountApplied] = useState(false);
   const [discountAmount, setDiscountAmount] = useState<number>(0);
+  const [discountError, setDiscountError] = useState<string | null>(null);
+  const [discountSource, setDiscountSource] = useState<string | null>(null);
 
   // Listen for cart updates
   useEffect(() => {
@@ -60,6 +64,8 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
     if (isOpen) {
       const savedDiscountCode = localStorage.getItem('discountCode');
       const savedDiscountAmount = localStorage.getItem('discountAmount');
+      const savedDiscountSource = localStorage.getItem('discountSource');
+      
       if (savedDiscountCode && savedDiscountAmount) {
         // Sprawdź czy kod jest nadal ważny
         const validation = PricingService.validateDiscountCode(savedDiscountCode, cart.subtotal);
@@ -67,14 +73,58 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
           setDiscountCode(savedDiscountCode);
           setDiscountApplied(true);
           setDiscountAmount(parseFloat(savedDiscountAmount));
+          setDiscountError(null);
+          setDiscountSource(savedDiscountSource);
         } else {
           // Kod nie jest już ważny, usuń z localStorage
           localStorage.removeItem('discountCode');
           localStorage.removeItem('discountAmount');
+          localStorage.removeItem('discountSource');
+          setDiscountCode('');
+          setDiscountApplied(false);
+          setDiscountAmount(0);
+          setDiscountSource(null);
+          setDiscountError(null);
         }
+      } else {
+        // Resetuj stan jeśli nie ma kodu w localStorage
+        setDiscountCode('');
+        setDiscountApplied(false);
+        setDiscountAmount(0);
+        setDiscountError(null);
+        setDiscountSource(null);
       }
     }
   }, [isOpen, cart.subtotal]);
+
+  // Resetuj kod rabatowy jeśli subtotal zmienił się znacząco (np. produkt usunięty)
+  useEffect(() => {
+    if (discountApplied && cart.subtotal > 0) {
+      const validation = PricingService.validateDiscountCode(discountCode, cart.subtotal);
+      if (!validation.isValid) {
+        // Kod przestał być ważny, usuń go
+        localStorage.removeItem('discountCode');
+        localStorage.removeItem('discountAmount');
+        localStorage.removeItem('discountSource');
+        setDiscountCode('');
+        setDiscountApplied(false);
+        setDiscountAmount(0);
+        setDiscountSource(null);
+        setDiscountError('Kod rabatowy przestał być ważny po zmianie zawartości koszyka');
+      }
+    }
+  }, [cart.subtotal, discountApplied, discountCode]);
+
+  // Synchronizuj discountSource z localStorage
+  useEffect(() => {
+    if (isOpen && typeof window !== 'undefined') {
+      const source = localStorage.getItem('discountSource');
+      setDiscountSource(source);
+    }
+  }, [isOpen, discountApplied]);
+
+  // Sprawdź czy kod został wprowadzony w checkout (zapobieganie duplikacji)
+  const isDiscountFromCheckout = discountSource === 'checkout';
 
   const handleCheckout = () => {
     onClose(); // Zamknij modal koszyka
@@ -101,6 +151,69 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
     }
   };
 
+  // Funkcja do zastosowania kodu rabatowego
+  const applyDiscountCode = () => {
+    if (!discountCode.trim()) {
+      setDiscountError('Wprowadź kod rabatowy');
+      return;
+    }
+
+    // Sprawdź czy kod nie został już wprowadzony w checkout
+    if (isDiscountFromCheckout) {
+      setDiscountError('Kod rabatowy został już wprowadzony w sekcji checkout');
+      return;
+    }
+
+    const validation = PricingService.validateDiscountCode(discountCode.trim(), cart.subtotal);
+    
+    if (validation.isValid) {
+      setDiscountApplied(true);
+      setDiscountAmount(validation.discountAmount);
+      setDiscountError(null);
+      
+      // Zapisz do localStorage z flagą źródła
+      localStorage.setItem('discountCode', discountCode.trim());
+      localStorage.setItem('discountAmount', validation.discountAmount.toString());
+      localStorage.setItem('discountSource', 'cart');
+      setDiscountSource('cart');
+      
+      console.log('✅ CartModal: Discount code applied', {
+        code: discountCode.trim(),
+        amount: validation.discountAmount,
+        subtotal: cart.subtotal
+      });
+    } else {
+      setDiscountApplied(false);
+      setDiscountAmount(0);
+      setDiscountError(validation.message || 'Nieprawidłowy kod rabatowy');
+    }
+  };
+
+  // Reset zniżki gdy kod się zmienia
+  const handleDiscountCodeChange = (value: string) => {
+    setDiscountCode(value);
+    if (discountApplied) {
+      setDiscountApplied(false);
+      setDiscountAmount(0);
+      setDiscountError(null);
+      // Usuń z localStorage jeśli użytkownik zmienia kod
+      if (typeof window !== 'undefined') {
+        const currentSource = localStorage.getItem('discountSource');
+        if (currentSource === 'cart') {
+          localStorage.removeItem('discountCode');
+          localStorage.removeItem('discountAmount');
+          localStorage.removeItem('discountSource');
+          setDiscountSource(null);
+        }
+      }
+    }
+  };
+
+  // Oblicz finalną cenę z uwzględnieniem zniżki
+  const finalTotal = discountApplied && discountAmount > 0
+    ? Math.max(0, cart.subtotal - discountAmount)
+    : total;
+
   return (
     <>
       {/* Overlay */}
@@ -113,12 +226,12 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       
       {/* Modal */}
       <div 
-        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-neutral-950 border-l border-neutral-800 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-neutral-950 border-l border-neutral-800 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-neutral-800">
+        <div className="flex-shrink-0 flex items-center justify-between p-6 border-b border-neutral-800">
           <h2 className="text-2xl font-bold text-white">
             Koszyk {itemCount > 0 && `(${itemCount})`}
           </h2>
@@ -131,7 +244,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
         </div>
 
         {/* Content */}
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col flex-1 min-h-0">
           {/* Items List */}
           <div className="flex-1 overflow-y-auto p-6">
             {isLoading && (
@@ -180,7 +293,48 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
 
           {/* Footer - tylko gdy są produkty */}
           {!isLoading && !error && items.length > 0 && (
-            <div className="border-t border-neutral-800 p-6 space-y-4">
+            <div className="flex-shrink-0 border-t border-neutral-800 p-6 space-y-4 bg-neutral-950">
+              {/* Discount Code Input */}
+              <div className="space-y-2">
+                <Label className="text-white text-sm font-medium">Kod rabatowy</Label>
+                <div className="flex space-x-2">
+                  <Input 
+                    value={discountCode}
+                    onChange={(e) => handleDiscountCodeChange(e.target.value)}
+                    placeholder="Wprowadź kod (np. LISTOPAD5)"
+                    className={`min-h-[40px] h-10 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm ${
+                      discountError ? 'border-red-500' : discountApplied ? 'border-green-500' : ''
+                    }`}
+                    disabled={discountApplied || isDiscountFromCheckout}
+                  />
+                  <Button 
+                    type="button"
+                    onClick={applyDiscountCode}
+                    disabled={discountApplied || !discountCode.trim() || isDiscountFromCheckout}
+                    className="h-10 bg-red-600 border-red-500 text-white hover:bg-red-700 rounded-lg px-4 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {discountApplied ? '✓' : 'Zastosuj'}
+                  </Button>
+                </div>
+                {discountError && (
+                  <p className="text-red-400 text-xs">{discountError}</p>
+                )}
+                {isDiscountFromCheckout && (
+                  <div className="bg-blue-900/20 border border-blue-500/50 rounded-lg p-2">
+                    <p className="text-blue-400 text-xs font-medium">
+                      Kod rabatowy został wprowadzony w sekcji checkout
+                    </p>
+                  </div>
+                )}
+                {discountApplied && !isDiscountFromCheckout && (
+                  <div className="bg-green-900/20 border border-green-500/50 rounded-lg p-2">
+                    <p className="text-green-400 text-xs font-medium">
+                      ✓ Kod zastosowany! Zniżka: -{PricingService.formatPrice(discountAmount)}
+                    </p>
+                  </div>
+                )}
+              </div>
+
               {/* Podsumowanie */}
               <div className="space-y-2">
                 <div className="flex justify-between text-neutral-300">
@@ -195,7 +349,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 )}
                 <div className="flex justify-between text-lg font-bold text-white border-t border-neutral-700 pt-2">
                   <span>Razem:</span>
-                  <span>{PricingService.formatPrice(discountApplied ? cart.subtotal - discountAmount : total)}</span>
+                  <span>{PricingService.formatPrice(finalTotal)}</span>
                 </div>
               </div>
 
