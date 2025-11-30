@@ -836,7 +836,6 @@ export default function ConfiguratorSimple() {
                 <SummaryStep
                   config={config}
                   priceBreakdown={priceBreakdown}
-                  onUpdate={updateConfig}
                   onPrevious={goToPreviousStep}
                   onAddToCart={handleAddToCart}
                   isAddingToCart={isAddingToCart || cartLoading}
