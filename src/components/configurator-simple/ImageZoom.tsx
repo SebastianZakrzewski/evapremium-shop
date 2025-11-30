@@ -42,14 +42,14 @@ export function ImageZoom({
   };
 
   // Calculate distance between two touches
-  const getDistance = (touch1: Touch, touch2: Touch): number => {
+  const getDistance = (touch1: React.Touch, touch2: React.Touch): number => {
     const dx = touch2.clientX - touch1.clientX;
     const dy = touch2.clientY - touch1.clientY;
     return Math.sqrt(dx * dx + dy * dy);
   };
 
   // Calculate center point between two touches
-  const getCenter = (touch1: Touch, touch2: Touch): { x: number; y: number } => {
+  const getCenter = (touch1: React.Touch, touch2: React.Touch): { x: number; y: number } => {
     return {
       x: (touch1.clientX + touch2.clientX) / 2,
       y: (touch1.clientY + touch2.clientY) / 2,
