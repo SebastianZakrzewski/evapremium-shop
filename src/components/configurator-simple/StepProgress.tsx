@@ -27,26 +27,26 @@ export function StepProgress({ currentStep, totalSteps, onStepClick, isValid }: 
                 disabled={!isClickable}
                 className={`
                   relative flex items-center justify-center
-                  w-8 h-8 md:w-12 md:h-12 rounded-full
+                  w-6 h-6 md:w-8 md:h-8 rounded-full
                   transition-all duration-300 ease-out will-change-transform
                   ${isCurrent 
-                    ? 'bg-gradient-to-br from-red-600 to-red-700 text-white scale-110 shadow-[0_0_20px_rgba(220,38,38,0.5)] ring-2 ring-red-500/50 z-10' 
+                    ? 'bg-gradient-to-br from-red-600 to-red-700 text-white scale-110 shadow-[0_0_15px_rgba(220,38,38,0.4)] ring-1 ring-red-500/50 z-10' 
                     : isCompleted 
-                    ? 'bg-neutral-800 text-red-500 border-2 border-red-500/50 hover:bg-neutral-700 hover:scale-105' 
-                    : 'bg-neutral-900 text-gray-500 border-2 border-neutral-800'
+                    ? 'bg-neutral-800 text-red-500 border border-red-500/50 hover:bg-neutral-700 hover:scale-105' 
+                    : 'bg-neutral-900 text-gray-500 border border-neutral-800'
                   }
                   ${isClickable ? 'cursor-pointer' : 'cursor-not-allowed opacity-80'}
                 `}
               >
                 {isCompleted ? (
-                  <Check className="w-5 h-5 md:w-6 md:h-6 animate-in zoom-in duration-300" />
+                  <Check className="w-3.5 h-3.5 md:w-4 md:h-4 animate-in zoom-in duration-300" />
                 ) : step === totalSteps ? (
-                  <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 md:w-6 md:h-6">
+                  <svg viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5 md:w-4 md:h-4">
                     <path d="M4 4h16v16H4V4z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="4 4" />
                     <path d="M4 4h4v4H4V4zm8 0h4v4h-4V4zm-8 8h4v4H4v-4zm8 0h4v4h-4v-4zm-4-4h4v4H8V8zm8 0h4v4h-4V8z" fill="currentColor" className="opacity-50" />
                   </svg>
                 ) : (
-                  <span className={`text-sm md:text-base font-bold ${isCurrent ? 'animate-pulse' : ''}`}>
+                  <span className={`text-xs md:text-sm font-bold ${isCurrent ? 'animate-pulse' : ''}`}>
                     {step}
                   </span>
                 )}
@@ -59,7 +59,7 @@ export function StepProgress({ currentStep, totalSteps, onStepClick, isValid }: 
               
               {/* Progress Line */}
               {step < totalSteps && (
-                <div className="flex-1 h-[2px] mx-2 md:mx-4 bg-neutral-800 rounded-full overflow-hidden relative">
+                <div className="flex-1 h-[1.5px] mx-1.5 md:mx-2 bg-neutral-800 rounded-full overflow-hidden relative">
                   <div 
                     className={`
                       absolute inset-0 h-full bg-gradient-to-r from-red-600 to-red-500
