@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,9 +15,10 @@ interface AccessoriesStepProps {
   onUpdate: (updates: Partial<ConfiguratorState>) => void;
   onNext: () => void;
   onPrevious: () => void;
+  onProductModalOpenChange?: (isOpen: boolean) => void;
 }
 
-export function AccessoriesStep({ config, onUpdate, onNext, onPrevious }: AccessoriesStepProps) {
+export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProductModalOpenChange }: AccessoriesStepProps) {
   const { accessories, isLoading } = useAccessories();
   const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -36,6 +37,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious }: Access
   const handlePodpietkaClick = (podpietka: Accessory) => {
     setSelectedAccessory(podpietka);
     setIsSheetOpen(true);
+    onProductModalOpenChange?.(true);
   };
 
   const handleAddPodpietka = (podpietka: Accessory, color?: string) => {
@@ -44,6 +46,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious }: Access
       podpietkaColor: color || undefined
     });
     setIsSheetOpen(false);
+    onProductModalOpenChange?.(false);
   };
 
   const handleRemovePodpietka = () => {
@@ -52,6 +55,13 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious }: Access
       podpietkaColor: undefined
     });
   };
+
+  // Synchronizuj stan modala z rodzicem - zawsze aktualizuj gdy isSheetOpen się zmienia
+  useEffect(() => {
+    if (onProductModalOpenChange) {
+      onProductModalOpenChange(isSheetOpen);
+    }
+  }, [isSheetOpen, onProductModalOpenChange]);
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
@@ -230,6 +240,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious }: Access
           onClose={() => {
             setIsSheetOpen(false);
             setSelectedAccessory(null);
+            onProductModalOpenChange?.(false);
           }}
           onAddToConfig={(accessory, color) => {
             handleAddPodpietka(accessory, color);
