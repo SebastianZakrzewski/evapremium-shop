@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -73,6 +73,7 @@ const fetchBrands = async (): Promise<Brand[]> => {
 
 export default function ConfiguratorSimple() {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { addToCart, isLoading: cartLoading } = useCart();
   const { accessories } = useAccessories();
   
@@ -139,6 +140,8 @@ export default function ConfiguratorSimple() {
   
   // Stan czy koszyk jest otwarty (ukrywa sticky bottom bar)
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+  // Stan czy modal produktu (np. podpiętki) jest otwarty
+  const [isProductModalOpen, setIsProductModalOpen] = useState<boolean>(false);
 
   // Refs dla każdego kroku (do przewijania)
   const stepRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
@@ -206,6 +209,17 @@ export default function ConfiguratorSimple() {
   const priceBreakdown = useMemo(() => {
     return PricingService.calculateConfiguratorPrice(config.matType, config.variant);
   }, [config.matType, config.variant]);
+
+  // Znajdź wybraną podpiętkę
+  const selectedPodpietka = useMemo(() => {
+    if (!config.selectedPodpietka) return null;
+    return accessories.find(acc => acc.id === config.selectedPodpietka) || null;
+  }, [accessories, config.selectedPodpietka]);
+
+  // Oblicz całkowitą cenę z podpiętką
+  const totalPriceWithAccessories = useMemo(() => {
+    return priceBreakdown.totalPrice + (selectedPodpietka?.price || 0);
+  }, [priceBreakdown.totalPrice, selectedPodpietka?.price]);
 
   // Generuj ścieżkę do dynamicznego obrazu dywanika (zmienia się z kolorami/strukturą)
   const dynamicPreviewPath = useMemo(() => {
@@ -362,30 +376,38 @@ export default function ConfiguratorSimple() {
       }
     };
     
+    // Nasłuchuj na event cartModalStateChange z navbar (główny mechanizm synchronizacji)
+    const handleCartModalStateChange = (event: CustomEvent) => {
+      const { isOpen } = event.detail;
+      setIsCartOpen(isOpen);
+      // Jeśli koszyk się zamyka i użytkownik był w kroku 5 (podsumowanie), cofnij się do kroku 4
+      if (!isOpen && activeStep === 5) {
+        setActiveStep(4);
+      }
+    };
+    
     window.addEventListener('openCartModal', handleCartOpen);
     window.addEventListener('closeCartModal', handleCartClose);
+    window.addEventListener('cartModalStateChange', handleCartModalStateChange as EventListener);
     
     return () => {
       window.removeEventListener('openCartModal', handleCartOpen);
       window.removeEventListener('closeCartModal', handleCartClose);
+      window.removeEventListener('cartModalStateChange', handleCartModalStateChange as EventListener);
     };
   }, [activeStep]);
 
-  // Resetuj stan koszyka gdy zmieniamy krok (cofamy się z podsumowania)
   useEffect(() => {
-    if (activeStep !== 5 && isCartOpen) {
-      setIsCartOpen(false);
-    }
-  }, [activeStep, isCartOpen]);
-
-  useEffect(() => {
-    // Na desktopie nie wykonujemy automatycznego przewijania - użytkownik przewija ręcznie
-    if (window.innerWidth >= 1024) {
+    const isMobile = window.innerWidth < 1024;
+    
+    // Na mobile pomiń przewijanie przy pierwszym renderowaniu
+    if (isMobile && isInitialMount.current) {
+      isInitialMount.current = false;
       return;
     }
-
-    // Pomiń przewijanie przy pierwszym renderowaniu (gdy użytkownik wchodzi na stronę)
-    if (isInitialMount.current) {
+    
+    // Na desktop zawsze przewijaj gdy zmienia się krok (ale nie przy pierwszym załadowaniu)
+    if (!isMobile && isInitialMount.current) {
       isInitialMount.current = false;
       return;
     }
@@ -393,53 +415,111 @@ export default function ConfiguratorSimple() {
     // Najpierw spróbuj użyć ref nagłówka, jeśli nie ma, użyj ref całego elementu
     const headerElement = stepHeaderRefs.current[activeStep];
     const stepElement = headerElement || stepRefs.current[activeStep];
-    if (!stepElement) return;
+    if (!stepElement) {
+      // Jeśli element nie istnieje, spróbuj ponownie po krótkim opóźnieniu
+      setTimeout(() => {
+        const retryElement = stepHeaderRefs.current[activeStep] || stepRefs.current[activeStep];
+        if (retryElement && !isMobile) {
+          const navbarHeight = 96;
+          const progressBarHeight = 80;
+          const topOffset = navbarHeight + progressBarHeight + 20;
+          const elementRect = retryElement.getBoundingClientRect();
+          const currentScrollY = window.pageYOffset || window.scrollY;
+          const elementTop = elementRect.top + currentScrollY;
+          const scrollPosition = elementTop - topOffset;
+          if (scrollPosition >= 0 && scrollPosition < document.documentElement.scrollHeight) {
+            window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+          }
+        }
+      }, 500);
+      return;
+    }
     
     // Użyj requestAnimationFrame + setTimeout aby upewnić się, że element jest już w DOM i wyrenderowany
+    const delay = isMobile ? 150 : 400; // Większe opóźnienie na desktop aby accordion zdążył się otworzyć
+    
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         setTimeout(() => {
-          // Sprawdź czy element jest już widoczny na ekranie - jeśli tak, nie przewijaj
           const elementRect = stepElement.getBoundingClientRect();
-          const isElementVisible = elementRect.top >= 0 && elementRect.top < window.innerHeight;
           
-          // Jeśli element jest już widoczny i jesteśmy na początku strony, nie przewijaj
-          if (isElementVisible && window.scrollY < 100) {
-            return;
-          }
+          if (isMobile) {
+            // Sprawdź czy element jest już widoczny na ekranie - jeśli tak, nie przewijaj
+            const isElementVisible = elementRect.top >= 0 && elementRect.top < window.innerHeight;
+            
+            // Jeśli element jest już widoczny i jesteśmy na początku strony, nie przewijaj
+            if (isElementVisible && window.scrollY < 100) {
+              return;
+            }
 
-          // Na mobile przewijaj do góry sekcji z uwzględnieniem sticky header
-          // Pobierz pozycję elementu względem viewport
-          const currentScrollY = window.pageYOffset || window.scrollY;
-          const elementTop = elementRect.top + currentScrollY;
-          
-          // Oblicz wysokość sticky header dla konkretnego kroku
-          // Krok 1: tylko navbar (64px)
-          // Kroki 2-5: navbar (64px) + sticky preview (40vh + galeria ~80px)
-          const navbarHeight = 64; // h-16
-          let stickyHeaderHeight = navbarHeight;
-          
-          if (activeStep >= 2) {
-            // Dla kroków 2-5 sprawdź czy sticky preview jest widoczny
-            const hasStickyPreview = isStepValidMobile(2) || activeStep >= 2;
-            if (hasStickyPreview) {
-              // Oblicz rzeczywistą wysokość sticky header
-              // 40vh + galeria (~80px) + navbar (64px)
-              stickyHeaderHeight = Math.round(window.innerHeight * 0.4) + 80 + navbarHeight;
+            // Na mobile przewijaj do góry sekcji z uwzględnieniem sticky header
+            // Pobierz pozycję elementu względem viewport
+            const currentScrollY = window.pageYOffset || window.scrollY;
+            const elementTop = elementRect.top + currentScrollY;
+            
+            // Oblicz wysokość sticky header dla konkretnego kroku
+            // Krok 1: tylko navbar (64px)
+            // Kroki 2-5: navbar (64px) + sticky preview (40vh + galeria ~80px)
+            const navbarHeight = 64; // h-16
+            let stickyHeaderHeight = navbarHeight;
+            
+            if (activeStep >= 2) {
+              // Dla kroków 2-5 sprawdź czy sticky preview jest widoczny
+              const hasStickyPreview = isStepValidMobile(2) || activeStep >= 2;
+              if (hasStickyPreview) {
+                // Oblicz rzeczywistą wysokość sticky header
+                // 40vh + galeria (~80px) + navbar (64px)
+                stickyHeaderHeight = Math.round(window.innerHeight * 0.4) + 80 + navbarHeight;
+              } else {
+                stickyHeaderHeight = navbarHeight;
+              }
+            }
+            
+            // Oblicz pozycję scrollu tak, aby element był widoczny pod sticky header
+            // Dodajemy 20px odstępu dla lepszej czytelności
+            const scrollPosition = elementTop - stickyHeaderHeight - 20;
+            
+            // Przewiń do pozycji z uwzględnieniem sticky header (tylko jeśli pozycja jest sensowna)
+            if (scrollPosition >= 0 && scrollPosition < document.documentElement.scrollHeight) {
+              window.scrollTo({ top: Math.max(0, scrollPosition), behavior: 'smooth' });
+            }
+          } else {
+            // Na desktop przewijaj płynnie do sekcji z uwzględnieniem navbar + pasek postępu
+            const navbarHeight = 96; // lg:h-24 = 96px
+            const progressBarHeight = 80; // wysokość paska postępu (~80px)
+            const topOffset = navbarHeight + progressBarHeight + 40; // navbar + pasek + odstęp
+            
+            // Oblicz pozycję elementu względem dokumentu
+            const currentScrollY = window.pageYOffset || window.scrollY;
+            const elementTop = elementRect.top + currentScrollY;
+            const scrollPosition = elementTop - topOffset;
+            
+            // Sprawdź czy element jest już w pełni widoczny w viewport
+            const viewportTop = currentScrollY + topOffset;
+            const viewportBottom = currentScrollY + window.innerHeight;
+            const elementBottom = elementTop + elementRect.height;
+            const isFullyVisible = elementTop >= viewportTop && elementBottom <= viewportBottom;
+            
+            // Dla kroku 7 (podsumowanie) zawsze przewijaj do sekcji, jeśli nie jest w pełni widoczna
+            if (activeStep === 7) {
+              if (!isFullyVisible && scrollPosition >= 0 && scrollPosition < document.documentElement.scrollHeight) {
+                window.scrollTo({ 
+                  top: scrollPosition, 
+                  behavior: 'smooth' 
+                });
+              }
             } else {
-              stickyHeaderHeight = navbarHeight;
+              // Dla innych kroków przewijaj w dół tylko jeśli element jest poniżej aktualnej pozycji scrollu
+              // To zapewnia, że zawsze przewijamy w dół, a nie w górę
+              if (scrollPosition > currentScrollY && scrollPosition < document.documentElement.scrollHeight) {
+                window.scrollTo({ 
+                  top: scrollPosition, 
+                  behavior: 'smooth' 
+                });
+              }
             }
           }
-          
-          // Oblicz pozycję scrollu tak, aby element był widoczny pod sticky header
-          // Dodajemy 20px odstępu dla lepszej czytelności
-          const scrollPosition = elementTop - stickyHeaderHeight - 20;
-          
-          // Przewiń do pozycji z uwzględnieniem sticky header (tylko jeśli pozycja jest sensowna)
-          if (scrollPosition >= 0 && scrollPosition < document.documentElement.scrollHeight) {
-            window.scrollTo({ top: Math.max(0, scrollPosition), behavior: 'smooth' });
-          }
-        }, 150); // Zwiększony timeout dla lepszej niezawodności
+        }, delay);
       });
     });
   }, [activeStep, config.matType]);
@@ -507,6 +587,8 @@ export default function ConfiguratorSimple() {
         }
       }
 
+      // Ustaw isCartOpen na true przed wysłaniem eventu, aby sticky bottom bar zniknął natychmiast
+      setIsCartOpen(true);
       window.dispatchEvent(new CustomEvent('openCartModal'));
     } catch (error) {
       console.error('Error adding to cart:', error);
@@ -516,7 +598,8 @@ export default function ConfiguratorSimple() {
   };
 
   // Pokazuj sticky preview gdy wybrano typ i wariant (mobile) lub gdy jesteśmy na kroku 2+ (desktop)
-  const shouldShowStickyPreview = (isStepValidMobile(2) || activeStep >= 2) && !isCartOpen && activeStep !== 5;
+  // Na mobile sticky bottom bar pojawia się dopiero od sekcji 2 (activeStep >= 2)
+  const shouldShowStickyPreview = activeStep >= 2 && !isCartOpen && activeStep !== 5;
   const mainContainerPaddingBottom = shouldShowStickyPreview && config.matType 
     ? 'pb-[180px]' 
     : shouldShowStickyPreview 
@@ -532,9 +615,14 @@ export default function ConfiguratorSimple() {
 
   if (brandsLoading) return <ConfiguratorLoader />;
 
+  // Sprawdź czy jesteśmy na checkout - jeśli tak, nie renderuj progress bar i sticky bottom bar
+  const isOnCheckout = pathname === '/checkout';
+  const shouldHideDesktopBars = isCartOpen || isOnCheckout || isProductModalOpen;
+
   return (
     <div className="min-h-screen bg-neutral-950 text-white selection:bg-red-500 selection:text-white">
       {/* Progress Bar - Desktop only */}
+      {!shouldHideDesktopBars && (
       <div className="hidden lg:block fixed top-24 left-0 right-0 z-[60] bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <StepProgress 
@@ -545,6 +633,7 @@ export default function ConfiguratorSimple() {
           />
         </div>
       </div>
+      )}
 
       {/* Mobile Fixed Header with Product Image and Gallery */}
       {shouldShowStickyPreview && (
@@ -624,7 +713,7 @@ export default function ConfiguratorSimple() {
         shouldShowStickyPreview && activeStep !== 5 
           ? 'pt-[calc(40vh+5rem+4rem)]' 
           : 'pt-12'
-      } lg:pt-32 pb-12 ${shouldShowStickyPreview ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
+      } lg:pt-32 pb-12 ${shouldShowStickyPreview ? `lg:pb-24 ${mainContainerPaddingBottom}` : ''}`}>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-12">
           {/* Mobile: Krokowe etapy - jeden krok na raz (4 kroki) */}
           <div className="lg:hidden">
@@ -724,6 +813,7 @@ export default function ConfiguratorSimple() {
                   onUpdate={updateConfig}
                   onNext={goToNextStep}
                   onPrevious={goToPreviousStep}
+                  onProductModalOpenChange={setIsProductModalOpen}
                 />
               </div>
             )}
@@ -777,15 +867,25 @@ export default function ConfiguratorSimple() {
                 isValid={isStepValidDesktop(step)}
               >
                 {Comp ? (
-                  <Comp
-                    config={config}
-                    priceBreakdown={priceBreakdown}
-                    onUpdate={updateConfig}
-                    onNext={goToNextStep}
-                    onPrevious={goToPreviousStep}
-                    onAddToCart={handleAddToCart}
-                    isAddingToCart={isAddingToCart || cartLoading}
-                  />
+                  step === 6 ? (
+                    <AccessoriesStep
+                      config={config}
+                      onUpdate={updateConfig}
+                      onNext={goToNextStep}
+                      onPrevious={goToPreviousStep}
+                      onProductModalOpenChange={setIsProductModalOpen}
+                    />
+                  ) : (
+                    <Comp
+                      config={config}
+                      priceBreakdown={priceBreakdown}
+                      onUpdate={updateConfig}
+                      onNext={goToNextStep}
+                      onPrevious={goToPreviousStep}
+                      onAddToCart={handleAddToCart}
+                      isAddingToCart={isAddingToCart || cartLoading}
+                    />
+                  )
                 ) : null}
               </StepAccordion>
             ))}
@@ -908,9 +1008,64 @@ export default function ConfiguratorSimple() {
         </div>
       </div>
 
+      {/* Desktop Sticky Bottom Bar with Price and CTA */}
+      {/* Pokazuje się dopiero po przejściu do sekcji "Typ dywaników" (krok 2) */}
+      {(activeStep >= 2 && !shouldHideDesktopBars && activeStep !== 7) && (
+        <div className="hidden lg:block fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 shadow-2xl">
+          {/* Main Content */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between gap-6">
+              {/* Price Section - tylko gdy wybrano wariant zestawu */}
+              {config.variant ? (
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-sm text-gray-400">Cena:</span>
+                    <span className="text-2xl font-bold text-white">
+                      {totalPriceWithAccessories.toFixed(2)} zł
+                    </span>
+                  </div>
+                  {priceBreakdown.discount > 0 && (
+                    <div className="text-sm text-green-400 mt-1">
+                      Rabat: -{priceBreakdown.discount.toFixed(2)} zł
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm text-gray-500">
+                    Wybierz zestaw aby zobaczyć cenę
+                  </div>
+                </div>
+              )}
+
+              {/* CTA Button */}
+              <Button
+                onClick={handleAddToCart}
+                disabled={isAddingToCart || !isStepValidDesktop(7)}
+                className="min-h-[48px] min-w-[180px] bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold shadow-lg shadow-red-900/30 hover:shadow-red-900/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isAddingToCart ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>Dodawanie...</span>
+                  </div>
+                ) : !isStepValidDesktop(7) ? (
+                  <span>Kontynuuj konfigurację</span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <ShoppingCart className="w-5 h-5" />
+                    Dodaj do koszyka
+                  </span>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mobile Sticky Bottom Bar with Price and CTA */}
-      {shouldShowStickyPreview && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 pb-safe shadow-2xl">
+      {shouldShowStickyPreview && !isCartOpen && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-xl border-t border-white/10 pb-safe shadow-2xl">
           {/* Mini Progress Indicator */}
           <div className="h-1 bg-neutral-800">
             <div
@@ -929,7 +1084,7 @@ export default function ConfiguratorSimple() {
                   <div className="flex items-baseline gap-2">
                     <span className="text-xs text-gray-400">Cena:</span>
                     <span className="text-xl font-bold text-white">
-                      {priceBreakdown.totalPrice.toFixed(2)} zł
+                      {totalPriceWithAccessories.toFixed(2)} zł
                     </span>
                   </div>
                   {priceBreakdown.discount > 0 && (

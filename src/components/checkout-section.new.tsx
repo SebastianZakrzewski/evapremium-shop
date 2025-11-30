@@ -91,7 +91,7 @@ type CheckoutFormData = z.infer<typeof checkoutSchema>;
  */
 export default function CheckoutSectionNew() {
   const router = useRouter();
-  const { items, total, itemCount, clearCart } = useCart();
+  const { items, cart, total, itemCount, clearCart, refreshCart } = useCart();
   const { createOrder, saveOrder, isLoading: orderLoading, error: orderError } = useOrder();
   const { trackInitiateCheckout, trackAddPaymentInfo, createInitiateCheckoutData: createInitiateCheckout } = useTracking();
   
@@ -108,6 +108,9 @@ export default function CheckoutSectionNew() {
   const [remainingMs, setRemainingMs] = useState<number>(15 * 60 * 1000);
   // Heartbeat (przeniesiony niżej po zainicjalizowaniu formularza, aby dołączyć dane kontaktowe)
   const sessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : '';
+
+  // Hook useCart automatycznie ładuje koszyk z localStorage przy mount
+  // Nie trzeba wywoływać refreshCart() - może powodować konflikty
 
   // Priority window countdown (15 minutes) - active on step 2
   // Start/reset countdown when entering step 2
@@ -275,9 +278,160 @@ export default function CheckoutSectionNew() {
   const contactEmail = watch("email");
   const contactPhone = watch("phone");
 
+  // Załaduj zapisany kod rabatowy z localStorage przy załadowaniu checkout
+  // Musi być po inicjalizacji formularza, aby mieć dostęp do setValue
+  useEffect(() => {
+    // Nie ładuj jeśli kod już został zastosowany
+    if (discountApplied) {
+      return;
+    }
+
+    const savedDiscountCode = localStorage.getItem('discountCode');
+    const savedDiscountAmount = localStorage.getItem('discountAmount');
+    if (savedDiscountCode && savedDiscountAmount) {
+      // Użyj cart.subtotal jako głównego źródła (tak jak w cart-modal)
+      // Fallback do obliczenia z items tylko jeśli cart.subtotal jest 0 lub undefined
+      const calculatedFromItems = items.reduce((sum, item) => {
+        return sum + (item.subtotal || (item.unitPrice * item.quantity) || 0);
+      }, 0);
+      
+      const currentSubtotal = (cart.subtotal && cart.subtotal > 0) 
+        ? cart.subtotal 
+        : (calculatedFromItems > 0 ? calculatedFromItems : 0);
+      
+      // Jeśli subtotal jest jeszcze 0, poczekaj na załadowanie danych
+      if (currentSubtotal === 0) {
+        return;
+      }
+      
+      const savedAmount = parseFloat(savedDiscountAmount);
+      
+      // Sprawdź czy kod jest nadal ważny (sprawdzamy tylko czy kod istnieje i subtotal >= minAmount)
+      const validation = PricingService.validateDiscountCode(savedDiscountCode, currentSubtotal);
+      
+      // Jeśli kod jest ważny, zastosuj zapisaną kwotę zniżki (nawet jeśli różni się o kilka groszy przez zaokrąglenia)
+      if (validation.isValid && savedAmount > 0) {
+        setDiscountCode(savedDiscountCode);
+        setDiscountApplied(true);
+        // Użyj zapisanej kwoty zniżki z localStorage (to jest ta sama kwota która była w koszyku)
+        setDiscountAmount(savedAmount);
+        setValue('discountCode', savedDiscountCode);
+        console.log('✅ CheckoutSection: Discount code loaded from localStorage', {
+          code: savedDiscountCode,
+          savedAmount,
+          calculatedAmount: validation.discountAmount,
+          subtotal: currentSubtotal
+        });
+      } else {
+        // Kod nie jest już ważny, usuń z localStorage
+        console.log('❌ CheckoutSection: Discount code invalid, removing from localStorage', {
+          code: savedDiscountCode,
+          validation,
+          currentSubtotal,
+          savedAmount
+        });
+        localStorage.removeItem('discountCode');
+        localStorage.removeItem('discountAmount');
+      }
+    }
+  }, [items, cart.subtotal, discountApplied, setValue]);
+
+  // Dodatkowe zabezpieczenie: ponownie załaduj kod rabatowy gdy cart.subtotal będzie dostępne
+  // To jest fallback na wypadek gdyby pierwszy useEffect nie zadziałał (np. gdy cart.subtotal był jeszcze 0)
+  useEffect(() => {
+    // Nie ładuj jeśli kod już został zastosowany
+    if (discountApplied) {
+      return;
+    }
+
+    // Nie ładuj jeśli cart.subtotal jest jeszcze 0 lub undefined
+    if (!cart.subtotal || cart.subtotal === 0) {
+      return;
+    }
+
+    const savedDiscountCode = localStorage.getItem('discountCode');
+    const savedDiscountAmount = localStorage.getItem('discountAmount');
+    
+    if (savedDiscountCode && savedDiscountAmount) {
+      const savedAmount = parseFloat(savedDiscountAmount);
+      
+      // Sprawdź czy kod jest nadal ważny używając cart.subtotal
+      const validation = PricingService.validateDiscountCode(savedDiscountCode, cart.subtotal);
+      
+      // Jeśli kod jest ważny, zastosuj zapisaną kwotę zniżki
+      if (validation.isValid && savedAmount > 0) {
+        setDiscountCode(savedDiscountCode);
+        setDiscountApplied(true);
+        setDiscountAmount(savedAmount);
+        setValue('discountCode', savedDiscountCode);
+        console.log('✅ CheckoutSection: Discount code loaded from localStorage (fallback)', {
+          code: savedDiscountCode,
+          savedAmount,
+          calculatedAmount: validation.discountAmount,
+          subtotal: cart.subtotal
+        });
+      }
+    }
+  }, [cart.subtotal, discountApplied, setValue]);
+
   // Oblicz subtotal i total z uwzględnieniem zniżki
-  const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
-  const finalTotal = discountApplied ? subtotal - discountAmount : subtotal;
+  // Używamy cart.subtotal i cart.total jako głównego źródła (tak jak w cart-modal)
+  // Obliczamy z items tylko jako fallback jeśli cart.subtotal jest 0 lub undefined
+  const calculatedSubtotal = items.length > 0 
+    ? items.reduce((sum, item) => {
+        // Użyj item.subtotal jeśli jest dostępne, w przeciwnym razie oblicz z unitPrice * quantity
+        const itemSubtotal = item.subtotal || (item.unitPrice * item.quantity) || 0;
+        return sum + itemSubtotal;
+      }, 0)
+    : 0;
+  
+  // Używamy cart.subtotal jako głównego źródła (tak jak w cart-modal)
+  // Fallback do obliczonej wartości tylko jeśli cart.subtotal jest 0 lub undefined
+  const subtotal = (cart.subtotal && cart.subtotal > 0) 
+    ? cart.subtotal 
+    : (calculatedSubtotal > 0 ? calculatedSubtotal : 0);
+  
+  // FinalTotal uwzględnia zniżkę z kodu rabatowego
+  // Jeśli jest zniżka, zawsze obliczamy subtotal - discountAmount (tak jak w cart-modal)
+  // W przeciwnym razie używamy cart.total jako głównego źródła, z fallbackiem do subtotal
+  const finalTotal = discountApplied && discountAmount > 0
+    ? Math.max(0, subtotal - discountAmount) // Upewnij się że nie jest ujemne
+    : (cart.total && cart.total > 0 ? cart.total : subtotal);
+
+  // Debug: loguj wartości cen
+  useEffect(() => {
+    const savedDiscountCode = localStorage.getItem('discountCode');
+    const savedDiscountAmount = localStorage.getItem('discountAmount');
+    const calculatedFinalTotal = discountApplied && discountAmount > 0 
+      ? Math.max(0, subtotal - discountAmount) 
+      : finalTotal;
+    
+    console.log('💰 CheckoutSection: Price calculation', {
+      itemsCount: items.length,
+      calculatedSubtotal,
+      cartSubtotal: cart.subtotal,
+      cartTotal: cart.total,
+      subtotal,
+      finalTotal,
+      calculatedFinalTotal,
+      discountApplied,
+      discountAmount,
+      discountCode,
+      'localStorage.discountCode': savedDiscountCode,
+      'localStorage.discountAmount': savedDiscountAmount,
+      'shouldApplyDiscount': discountApplied && discountAmount > 0
+    });
+    
+    // Ostrzeżenie jeśli kod rabatowy jest w localStorage ale nie został zastosowany
+    if (savedDiscountCode && savedDiscountAmount && !discountApplied) {
+      console.warn('⚠️ CheckoutSection: Discount code found in localStorage but not applied!', {
+        code: savedDiscountCode,
+        amount: savedDiscountAmount,
+        subtotal,
+        cartSubtotal: cart.subtotal
+      });
+    }
+  }, [items.length, calculatedSubtotal, cart.subtotal, cart.total, subtotal, finalTotal, discountApplied, discountAmount, discountCode]);
 
   // Funkcja do zastosowania kodu rabatowego
   const applyDiscountCode = () => {
@@ -716,16 +870,20 @@ export default function CheckoutSectionNew() {
         <div className="grid grid-cols-1 lg:grid-cols-5 xl:grid-cols-3 gap-8 xl:gap-12">
           {/* Form */}
           <div className="lg:col-span-3 xl:col-span-2">
-            <form onSubmit={handleSubmit(
-              (data) => {
-                console.log('🛒 CheckoutSection: onSubmit called with valid data:', data);
-                onSubmit(data);
-              },
-              (errors) => {
-                console.log('🛒 CheckoutSection: Form validation failed with errors:', errors);
-                console.log('🛒 CheckoutSection: Please fix the form errors before submitting');
-              }
-            )} className="space-y-8">
+            <form 
+              id="checkout-form"
+              onSubmit={handleSubmit(
+                (data) => {
+                  console.log('🛒 CheckoutSection: onSubmit called with valid data:', data);
+                  onSubmit(data);
+                },
+                (errors) => {
+                  console.log('🛒 CheckoutSection: Form validation failed with errors:', errors);
+                  console.log('🛒 CheckoutSection: Please fix the form errors before submitting');
+                }
+              )} 
+              className="space-y-8"
+            >
               {/* Step 1: Dane kontaktowe */}
               {currentStep === 1 && (
                 <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
@@ -1071,55 +1229,7 @@ export default function CheckoutSectionNew() {
                 </Card>
               )}
 
-              {/* Navigation */}
-              <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 pt-6 md:pt-8">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={prevStep}
-                  disabled={currentStep === 1}
-                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-4 sm:px-8 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto"
-                >
-                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
-                  Wstecz
-                </Button>
-
-                {currentStep < 3 ? (
-                  <Button
-                    type="button"
-                    onClick={nextStep}
-                    disabled={!isCurrentStepValid()}
-                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-6 sm:px-10 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto"
-                  >
-                    Dalej
-                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3" />
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting || orderLoading}
-                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-6 sm:px-10 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto"
-                    onClick={() => {
-                      console.log('🛒 CheckoutSection: Submit button clicked');
-                      console.log('🛒 CheckoutSection: isSubmitting:', isSubmitting);
-                      console.log('🛒 CheckoutSection: orderLoading:', orderLoading);
-                      console.log('🛒 CheckoutSection: disabled:', isSubmitting || orderLoading);
-                    }}
-                  >
-                    {isSubmitting || orderLoading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white mr-2 sm:mr-3" />
-                        Przetwarzanie...
-                      </>
-                    ) : (
-                      <>
-                        <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
-                        Zapłać teraz
-                      </>
-                    )}
-                  </Button>
-                )}
-              </div>
+              {/* Navigation - Desktop only (mobile ma przyciski pod podsumowaniem) */}
 
               {orderError && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -1333,25 +1443,33 @@ export default function CheckoutSectionNew() {
                     <div className="pt-6 border-t border-neutral-700 bg-neutral-800/40 p-6 rounded-lg space-y-3">
                       <div className="flex justify-between items-center text-neutral-300">
                         <span className="text-base">Wartość produktów:</span>
-                        <span className="text-base">{subtotal.toFixed(2).replace('.', ',')} PLN</span>
+                        <span className="text-base">
+                          {PricingService.formatPrice(subtotal || cart.subtotal || 0)}
+                        </span>
                       </div>
                       {discountApplied && (
                         <div className="flex justify-between items-center text-green-400">
                           <span className="text-base">Zniżka ({discountCode}):</span>
-                          <span className="text-base font-semibold">-{discountAmount.toFixed(2).replace('.', ',')} PLN</span>
+                          <span className="text-base font-semibold">-{PricingService.formatPrice(discountAmount)}</span>
                         </div>
                       )}
                       <div className="flex justify-between items-center pt-3 border-t border-neutral-700">
                         <span className="text-neutral-300 text-sm">Razem do zapłaty</span>
                         <div className="text-right">
                           <span className="text-white font-bold text-3xl">
-                            {finalTotal.toFixed(2).replace('.', ',')} <span className="text-neutral-300 text-sm font-normal">PLN</span>
+                            {PricingService.formatPrice(
+                              discountApplied && discountAmount > 0 
+                                ? Math.max(0, subtotal - discountAmount)
+                                : (finalTotal > 0 ? finalTotal : (subtotal > 0 ? subtotal : 0))
+                            )}
+                            {' '}
+                            <span className="text-neutral-300 text-sm font-normal">PLN</span>
                           </span>
                         </div>
                       </div>
                       {discountApplied && (
                         <p className="text-green-400 text-sm mt-2">
-                          Oszczędzasz {discountAmount.toFixed(2).replace('.', ',')} PLN!
+                          Oszczędzasz {PricingService.formatPrice(discountAmount)}!
                         </p>
                       )}
                     </div>
@@ -1359,8 +1477,118 @@ export default function CheckoutSectionNew() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Navigation - Mobile only (pod podsumowaniem zamówienia) */}
+            <div className="lg:hidden mt-6">
+              <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={prevStep}
+                  disabled={currentStep === 1}
+                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-4 sm:px-8 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto"
+                >
+                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
+                  Wstecz
+                </Button>
+
+                {currentStep < 3 ? (
+                  <Button
+                    type="button"
+                    onClick={nextStep}
+                    disabled={!isCurrentStepValid()}
+                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-6 sm:px-10 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto"
+                  >
+                    Dalej
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3" />
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    form="checkout-form"
+                    disabled={isSubmitting || orderLoading}
+                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-6 sm:px-10 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto"
+                    onClick={() => {
+                      console.log('🛒 CheckoutSection: Submit button clicked (mobile)');
+                      console.log('🛒 CheckoutSection: isSubmitting:', isSubmitting);
+                      console.log('🛒 CheckoutSection: orderLoading:', orderLoading);
+                      console.log('🛒 CheckoutSection: disabled:', isSubmitting || orderLoading);
+                    }}
+                  >
+                    {isSubmitting || orderLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white mr-2 sm:mr-3" />
+                        Przetwarzanie...
+                      </>
+                    ) : (
+                      <>
+                        <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
+                        Zapłać teraz
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* Sticky Bottom Bar - Desktop only, visible from step 2 */}
+        {currentStep >= 2 && (
+          <div className="hidden lg:block fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-red-900/30 shadow-2xl">
+            <div className="max-w-7xl mx-auto px-6 py-4">
+              <div className="flex flex-row justify-between items-center gap-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={prevStep}
+                  disabled={currentStep === 1}
+                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-8 py-4 text-base"
+                >
+                  <ArrowLeft className="w-5 h-5 mr-3" />
+                  Wstecz
+                </Button>
+
+                {currentStep < 3 ? (
+                  <Button
+                    type="button"
+                    onClick={nextStep}
+                    disabled={!isCurrentStepValid()}
+                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-10 py-4 text-base"
+                  >
+                    Dalej
+                    <ArrowRight className="w-5 h-5 ml-3" />
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    form="checkout-form"
+                    disabled={isSubmitting || orderLoading}
+                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-10 py-4 text-base"
+                    onClick={() => {
+                      console.log('🛒 CheckoutSection: Submit button clicked (sticky bar)');
+                      console.log('🛒 CheckoutSection: isSubmitting:', isSubmitting);
+                      console.log('🛒 CheckoutSection: orderLoading:', orderLoading);
+                      console.log('🛒 CheckoutSection: disabled:', isSubmitting || orderLoading);
+                    }}
+                  >
+                    {isSubmitting || orderLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3" />
+                        Przetwarzanie...
+                      </>
+                    ) : (
+                      <>
+                        <Check className="w-5 h-5 mr-3" />
+                        Zapłać teraz
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
       </div>
     </div>

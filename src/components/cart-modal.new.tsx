@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { X, ShoppingBag } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/hooks/useCart.new";
 import { CartItem } from "@/components/cart/CartItem";
 import { PricingService } from "@/lib/services/PricingService";
 import { debugLog } from "@/lib/config/features";
+import { Button } from "@/components/ui/button";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -36,6 +37,11 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
     clearCart 
   } = useCart();
 
+  // Stan kodu rabatowego - tylko do wyświetlania (kod wprowadzany tylko w checkout)
+  const [discountCode, setDiscountCode] = useState<string>('');
+  const [discountApplied, setDiscountApplied] = useState(false);
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
+
   // Listen for cart updates
   useEffect(() => {
     const handleCartUpdate = (event: CustomEvent) => {
@@ -48,6 +54,27 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       window.removeEventListener('cartUpdated', handleCartUpdate as EventListener);
     };
   }, []);
+
+  // Załaduj zapisany kod rabatowy z localStorage przy otwarciu modala
+  useEffect(() => {
+    if (isOpen) {
+      const savedDiscountCode = localStorage.getItem('discountCode');
+      const savedDiscountAmount = localStorage.getItem('discountAmount');
+      if (savedDiscountCode && savedDiscountAmount) {
+        // Sprawdź czy kod jest nadal ważny
+        const validation = PricingService.validateDiscountCode(savedDiscountCode, cart.subtotal);
+        if (validation.isValid && Math.abs(validation.discountAmount - parseFloat(savedDiscountAmount)) < 0.01) {
+          setDiscountCode(savedDiscountCode);
+          setDiscountApplied(true);
+          setDiscountAmount(parseFloat(savedDiscountAmount));
+        } else {
+          // Kod nie jest już ważny, usuń z localStorage
+          localStorage.removeItem('discountCode');
+          localStorage.removeItem('discountAmount');
+        }
+      }
+    }
+  }, [isOpen, cart.subtotal]);
 
   const handleCheckout = () => {
     onClose(); // Zamknij modal koszyka
@@ -160,9 +187,15 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                   <span>Dywaniki:</span>
                   <span>{PricingService.formatPrice(cart.subtotal)}</span>
                 </div>
+                {discountApplied && (
+                  <div className="flex justify-between text-green-400 text-sm">
+                    <span>Zniżka ({discountCode}):</span>
+                    <span>-{PricingService.formatPrice(discountAmount)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-lg font-bold text-white border-t border-neutral-700 pt-2">
                   <span>Razem:</span>
-                  <span>{PricingService.formatPrice(total)}</span>
+                  <span>{PricingService.formatPrice(discountApplied ? cart.subtotal - discountAmount : total)}</span>
                 </div>
               </div>
 
