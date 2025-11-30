@@ -170,7 +170,14 @@ export default function Navbar() {
       </nav>
 
       {/* Cart Modal */}
-      <CartModalWrapper isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <CartModalWrapper 
+        isOpen={isCartOpen} 
+        onClose={() => {
+          setIsCartOpen(false);
+          // Wysyłaj event o zamknięciu koszyka
+          window.dispatchEvent(new CustomEvent('closeCartModal'));
+        }} 
+      />
     </>
   );
 }

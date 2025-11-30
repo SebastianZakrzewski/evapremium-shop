@@ -54,7 +54,7 @@ export interface ConfiguratorState {
 }
 
 const TOTAL_STEPS_DESKTOP = 7;
-const TOTAL_STEPS_MOBILE = 4;
+const TOTAL_STEPS_MOBILE = 5;
 
 // Mapowanie ID na typy dla funkcji getMatImagePath
 const getMatTypeForImage = (setTypeId: string): '3d' | 'classic' => {
@@ -134,9 +134,14 @@ export default function ConfiguratorSimple() {
 
   // Aktualny aktywny krok (dla accordion)
   const [activeStep, setActiveStep] = useState<number>(1);
+  
+  // Stan czy koszyk jest otwarty (ukrywa sticky bottom bar)
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
   // Refs dla każdego kroku (do przewijania)
   const stepRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
+  // Ref dla nagłówków sekcji (tytuł + numer) - do dokładnego przewijania
+  const stepHeaderRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
   // Mapuj parametr marki z URL na właściwą nazwę marki z listy
   useEffect(() => {
@@ -291,13 +296,14 @@ export default function ConfiguratorSimple() {
     }
   };
 
-  // Walidacja kroku - mobile (4 kroki)
+  // Walidacja kroku - mobile (5 kroków)
   const isStepValidMobile = (step: number): boolean => {
     switch (step) {
       case 1: return !!(config.brand && config.model && config.year && config.bodyType);
       case 2: return !!(config.matType && config.variant);
       case 3: return !!(config.structure && config.color && config.edgeColor);
       case 4: return true; // Dodatki są opcjonalne
+      case 5: return isStepValidMobile(1) && isStepValidMobile(2) && isStepValidMobile(3); // Podsumowanie - wszystkie wymagane kroki muszą być wypełnione
       default: return false;
     }
   };
@@ -320,7 +326,15 @@ export default function ConfiguratorSimple() {
       setActiveStep(prev => prev + 1);
     }
   };
-  const goToPreviousStep = () => activeStep > 1 && setActiveStep(prev => prev - 1);
+  const goToPreviousStep = () => {
+    if (activeStep > 1) {
+      setActiveStep(prev => prev - 1);
+      // Resetuj stan koszyka gdy cofamy się z podsumowania
+      if (activeStep === 5) {
+        setIsCartOpen(false);
+      }
+    }
+  };
   const goToStep = (step: number) => {
     // Pozwalamy na przejście do kroku jeśli jest w zakresie mobile lub desktop
     if ((step >= 1 && step <= TOTAL_STEPS_MOBILE) || (step >= 1 && step <= TOTAL_STEPS_DESKTOP)) {
@@ -334,17 +348,86 @@ export default function ConfiguratorSimple() {
     return () => window.removeEventListener('keydown', handleEscape);
   }, []);
 
+  // Nasłuchuj na otwarcie/zamknięcie koszyka
   useEffect(() => {
-    const stepElement = stepRefs.current[activeStep];
-    if (!stepElement) return;
-    const scrollTimeout = setTimeout(() => {
-      const topOffset = 100;
-      const elementRect = stepElement.getBoundingClientRect();
-      const elementTop = elementRect.top + window.pageYOffset;
-      window.scrollTo({ top: elementTop - topOffset, behavior: 'smooth' });
-    }, 150);
-    return () => clearTimeout(scrollTimeout);
+    const handleCartOpen = () => setIsCartOpen(true);
+    const handleCartClose = () => {
+      setIsCartOpen(false);
+      // Jeśli użytkownik był w kroku 5 (podsumowanie), cofnij się do kroku 4
+      // aby sticky header mógł się pojawić
+      if (activeStep === 5) {
+        setActiveStep(4);
+      }
+    };
+    
+    window.addEventListener('openCartModal', handleCartOpen);
+    window.addEventListener('closeCartModal', handleCartClose);
+    
+    return () => {
+      window.removeEventListener('openCartModal', handleCartOpen);
+      window.removeEventListener('closeCartModal', handleCartClose);
+    };
   }, [activeStep]);
+
+  // Resetuj stan koszyka gdy zmieniamy krok (cofamy się z podsumowania)
+  useEffect(() => {
+    if (activeStep !== 5 && isCartOpen) {
+      setIsCartOpen(false);
+    }
+  }, [activeStep, isCartOpen]);
+
+  useEffect(() => {
+    // Najpierw spróbuj użyć ref nagłówka, jeśli nie ma, użyj ref całego elementu
+    const headerElement = stepHeaderRefs.current[activeStep];
+    const stepElement = headerElement || stepRefs.current[activeStep];
+    if (!stepElement) return;
+    
+    // Użyj requestAnimationFrame + setTimeout aby upewnić się, że element jest już w DOM i wyrenderowany
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          // Na mobile przewijaj do góry sekcji z uwzględnieniem sticky header
+          if (window.innerWidth < 1024) {
+            // Pobierz pozycję elementu względem viewport
+            const elementRect = stepElement.getBoundingClientRect();
+            const currentScrollY = window.pageYOffset || window.scrollY;
+            const elementTop = elementRect.top + currentScrollY;
+            
+            // Oblicz wysokość sticky header dla konkretnego kroku
+            // Krok 1: tylko navbar (64px)
+            // Kroki 2-5: navbar (64px) + sticky preview (40vh + galeria ~80px)
+            const navbarHeight = 64; // h-16
+            let stickyHeaderHeight = navbarHeight;
+            
+            if (activeStep >= 2) {
+              // Dla kroków 2-5 sprawdź czy sticky preview jest widoczny
+              const hasStickyPreview = isStepValidMobile(2) || activeStep >= 2;
+              if (hasStickyPreview) {
+                // Oblicz rzeczywistą wysokość sticky header
+                // 40vh + galeria (~80px) + navbar (64px)
+                stickyHeaderHeight = Math.round(window.innerHeight * 0.4) + 80 + navbarHeight;
+              } else {
+                stickyHeaderHeight = navbarHeight;
+              }
+            }
+            
+            // Oblicz pozycję scrollu tak, aby element był widoczny pod sticky header
+            // Dodajemy 20px odstępu dla lepszej czytelności
+            const scrollPosition = elementTop - stickyHeaderHeight - 20;
+            
+            // Przewiń do pozycji z uwzględnieniem sticky header
+            window.scrollTo({ top: Math.max(0, scrollPosition), behavior: 'smooth' });
+          } else {
+            // Na desktop standardowe przewijanie
+            const topOffset = 100;
+            const elementRect = stepElement.getBoundingClientRect();
+            const elementTop = elementRect.top + window.pageYOffset;
+            window.scrollTo({ top: elementTop - topOffset, behavior: 'smooth' });
+          }
+        }, 150); // Zwiększony timeout dla lepszej niezawodności
+      });
+    });
+  }, [activeStep, config.matType]);
 
   const handleAddToCart = async () => {
     // Walidacja dla desktop (wymaga kroku 7) lub mobile (wymaga kroków 1-3)
@@ -418,7 +501,7 @@ export default function ConfiguratorSimple() {
   };
 
   // Pokazuj sticky preview gdy wybrano typ i wariant (mobile) lub gdy jesteśmy na kroku 2+ (desktop)
-  const shouldShowStickyPreview = isStepValidMobile(2) || activeStep >= 2;
+  const shouldShowStickyPreview = (isStepValidMobile(2) || activeStep >= 2) && !isCartOpen && activeStep !== 5;
   const mainContainerPaddingBottom = shouldShowStickyPreview && config.matType 
     ? 'pb-[180px]' 
     : shouldShowStickyPreview 
@@ -522,7 +605,11 @@ export default function ConfiguratorSimple() {
       )}
 
       {/* Main Content */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${shouldShowStickyPreview ? 'pt-[calc(40vh+5rem+4rem)]' : 'pt-12'} lg:pt-12 pb-12 ${shouldShowStickyPreview ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
+        shouldShowStickyPreview && activeStep !== 5 
+          ? 'pt-[calc(40vh+5rem+4rem)]' 
+          : 'pt-12'
+      } lg:pt-12 pb-12 ${shouldShowStickyPreview ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-12">
           {/* Mobile: Krokowe etapy - jeden krok na raz (4 kroki) */}
           <div className="lg:hidden">
@@ -530,9 +617,12 @@ export default function ConfiguratorSimple() {
             {activeStep === 1 && (
               <div
                 ref={(el) => { stepRefs.current[1] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200"
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-16"
               >
-                <div className="flex items-center gap-3 mb-4">
+                <div 
+                  ref={(el) => { stepHeaderRefs.current[1] = el; }}
+                  className="flex items-center gap-3 mb-4"
+                >
                   <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(1) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
                     <span className="text-sm font-bold">1</span>
                   </div>
@@ -550,9 +640,12 @@ export default function ConfiguratorSimple() {
             {activeStep === 2 && (
               <div
                 ref={(el) => { stepRefs.current[2] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200"
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(40vh+5rem+4rem)]"
               >
-                <div className="flex items-center gap-3 mb-4">
+                <div 
+                  ref={(el) => { stepHeaderRefs.current[2] = el; }}
+                  className="flex items-center gap-3 mb-4"
+                >
                   <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(2) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
                     <span className="text-sm font-bold">2</span>
                   </div>
@@ -571,9 +664,12 @@ export default function ConfiguratorSimple() {
             {activeStep === 3 && (
               <div
                 ref={(el) => { stepRefs.current[3] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200"
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(40vh+5rem+4rem)]"
               >
-                <div className="flex items-center gap-3 mb-4">
+                <div 
+                  ref={(el) => { stepHeaderRefs.current[3] = el; }}
+                  className="flex items-center gap-3 mb-4"
+                >
                   <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(3) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
                     <span className="text-sm font-bold">3</span>
                   </div>
@@ -597,9 +693,12 @@ export default function ConfiguratorSimple() {
             {activeStep === 4 && (
               <div
                 ref={(el) => { stepRefs.current[4] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200"
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(40vh+5rem+4rem)]"
               >
-                <div className="flex items-center gap-3 mb-4">
+                <div 
+                  ref={(el) => { stepHeaderRefs.current[4] = el; }}
+                  className="flex items-center gap-3 mb-4"
+                >
                   <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(4) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
                     <span className="text-sm font-bold">4</span>
                   </div>
@@ -610,6 +709,32 @@ export default function ConfiguratorSimple() {
                   onUpdate={updateConfig}
                   onNext={goToNextStep}
                   onPrevious={goToPreviousStep}
+                />
+              </div>
+            )}
+
+            {/* Step 5: Podsumowanie */}
+            {activeStep === 5 && (
+              <div
+                ref={(el) => { stepRefs.current[5] = el; }}
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-16"
+              >
+                <div 
+                  ref={(el) => { stepHeaderRefs.current[5] = el; }}
+                  className="flex items-center gap-3 mb-4"
+                >
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(5) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
+                    <span className="text-sm font-bold">5</span>
+                  </div>
+                  <h2 className="text-xl font-semibold">Podsumowanie</h2>
+                </div>
+                <SummaryStep
+                  config={config}
+                  priceBreakdown={priceBreakdown}
+                  onUpdate={updateConfig}
+                  onPrevious={goToPreviousStep}
+                  onAddToCart={handleAddToCart}
+                  isAddingToCart={isAddingToCart || cartLoading}
                 />
               </div>
             )}
@@ -651,8 +776,8 @@ export default function ConfiguratorSimple() {
             ))}
           </div>
 
-          {/* Right Column - Visualization */}
-          <div className="lg:col-span-2 space-y-6 mt-8 lg:mt-0">
+          {/* Right Column - Visualization - Desktop only */}
+          <div className="hidden lg:block lg:col-span-2 space-y-6 mt-8 lg:mt-0">
             <div className="lg:sticky lg:top-28 space-y-6">
               
               {/* 1. Product Window (Top) */}
@@ -783,8 +908,8 @@ export default function ConfiguratorSimple() {
           <div className="px-4 py-3">
             {/* Price and CTA Row */}
             <div className="flex items-center gap-3">
-              {/* Price Section */}
-              {(isStepValidMobile(2) || isStepValidDesktop(3)) ? (
+              {/* Price Section - tylko gdy wybrano wariant zestawu */}
+              {config.variant ? (
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline gap-2">
                     <span className="text-xs text-gray-400">Cena:</span>
@@ -832,7 +957,7 @@ export default function ConfiguratorSimple() {
               {/* CTA Button */}
               <Button
                 onClick={handleAddToCart}
-                disabled={isAddingToCart || (!isStepValidDesktop(7) && !(isStepValidMobile(1) && isStepValidMobile(2) && isStepValidMobile(3)))}
+                disabled={isAddingToCart || (!isStepValidDesktop(7) && !isStepValidMobile(5))}
                 className="min-h-[48px] min-w-[140px] bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold shadow-lg shadow-red-900/30 hover:shadow-red-900/50 transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isAddingToCart ? (
@@ -840,7 +965,7 @@ export default function ConfiguratorSimple() {
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     <span className="text-sm">Dodawanie...</span>
                   </div>
-                ) : (!isStepValidDesktop(7) && !(isStepValidMobile(1) && isStepValidMobile(2) && isStepValidMobile(3))) ? (
+                ) : (!isStepValidDesktop(7) && !isStepValidMobile(5)) ? (
                   <span className="text-sm">Kontynuuj</span>
                 ) : (
                   <span className="flex items-center gap-2 text-sm">

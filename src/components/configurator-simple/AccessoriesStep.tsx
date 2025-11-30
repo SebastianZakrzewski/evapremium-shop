@@ -59,7 +59,17 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious }: Access
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-white">Podpiętki</h3>
-          <span className="text-sm text-gray-400">Opcjonalne</span>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-400">Opcjonalne</span>
+            <Button
+              onClick={onNext}
+              variant="outline"
+              size="sm"
+              className="border-neutral-600 hover:bg-neutral-700 hover:text-white text-gray-300 h-8 px-4 text-sm font-medium"
+            >
+              Pomiń
+            </Button>
+          </div>
         </div>
 
         {isLoading ? (
@@ -204,10 +214,10 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious }: Access
 
       {/* Nawigacja */}
       <div className="flex flex-col sm:flex-row gap-3 justify-end pt-2">
-        <Button onClick={onPrevious} variant="outline" className="px-6 py-3 min-h-[44px] md:min-h-[40px] border-neutral-700 hover:bg-neutral-800 active:scale-95">
+        <Button onClick={onPrevious} variant="outline" className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-neutral-700 hover:bg-neutral-800 active:scale-95">
           Wstecz
         </Button>
-        <Button onClick={onNext} className="px-6 py-3 min-h-[44px] md:min-h-[40px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20 active:scale-95">
+        <Button onClick={onNext} className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20 active:scale-95">
           Dalej
         </Button>
       </div>

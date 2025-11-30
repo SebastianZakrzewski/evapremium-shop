@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -36,7 +36,6 @@ const structures = [
 ];
 
 export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: StructureColorStepProps) {
-  const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
   // Pobierz dostępne kolory materiału na podstawie wybranego koloru obszycia
   const availableMatColors = useMemo(() => {
@@ -59,36 +58,32 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
       {/* Struktura */}
       <div>
         <h3 className="text-lg font-semibold mb-3 text-white/90">Struktura komórek</h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-1.5 sm:gap-3">
           {structures.map((structure) => (
             <Card
               key={structure.id}
               onClick={() => onUpdate({ structure: structure.id })}
               className={`
-                p-4 cursor-pointer transition-all duration-300 flex flex-col h-full min-h-[140px] active:scale-[0.98]
+                p-1.5 sm:p-4 cursor-pointer transition-all duration-300 flex flex-col h-full min-h-[80px] sm:min-h-[140px] active:scale-[0.98]
                 ${config.structure === structure.id
-                  ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
+                  ? 'border-red-500 bg-red-500/10 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
                   : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm'
                 }
               `}
             >
-              <div className="space-y-2 flex flex-col h-full">
+              <div className="space-y-0.5 sm:space-y-2 flex flex-col h-full">
                 <div className="flex-shrink-0">
-                  <h4 className="text-base font-semibold mb-1 leading-tight">{structure.name}</h4>
-                  <p className="text-gray-300 text-sm leading-relaxed">{structure.description}</p>
+                  <h4 className="text-xs sm:text-base font-semibold mb-0 sm:mb-1 leading-tight">{structure.name}</h4>
+                  <p className="text-gray-300 text-[10px] sm:text-sm leading-tight sm:leading-relaxed">{structure.description}</p>
                 </div>
                 <div 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setExpandedImage(structure.image);
-                  }}
-                  className="aspect-video bg-gradient-to-br from-neutral-700 to-neutral-800 rounded-md overflow-hidden border border-neutral-700 relative cursor-zoom-in hover:border-red-500/50 transition-colors flex-1 min-h-0"
+                  className="aspect-video bg-gradient-to-br from-neutral-700 to-neutral-800 rounded sm:rounded-md overflow-hidden border border-neutral-700 relative flex-1 min-h-0"
                 >
                   <Image
                     src={structure.image}
                     alt={structure.name}
                     fill
-                    className="object-contain p-2"
+                    className="object-contain p-0.5 sm:p-2"
                     sizes="(max-width: 768px) 50vw, 50vw"
                   />
                 </div>
@@ -107,18 +102,18 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
             <RadioGroup
               value={config.color}
               onValueChange={(value) => onUpdate({ color: value })}
-              className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3"
+              className="grid grid-cols-6 sm:grid-cols-5 md:grid-cols-6 gap-2 sm:gap-3"
             >
               {availableMatColors.map((colorKey) => {
                 const colorInfo = getColorInfo(colorKey);
                 return (
-                  <div key={colorKey} className="flex flex-col items-center gap-2">
+                  <div key={colorKey} className="flex flex-col items-center gap-0.5 sm:gap-2">
                     <Label
                       htmlFor={`material-${colorKey}`}
                       className={`
-                        relative w-full aspect-square rounded-lg overflow-hidden border-2 cursor-pointer transition-all duration-200
+                        relative w-full aspect-square rounded sm:rounded-lg overflow-hidden border sm:border-2 cursor-pointer transition-all duration-200
                         ${config.color === colorKey
-                          ? 'border-red-500 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-105'
+                          ? 'border-red-500 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-105'
                           : 'border-neutral-700 hover:border-neutral-600 active:scale-95'
                         }
                       `}
@@ -129,7 +124,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                         style={{ backgroundColor: colorInfo.color }}
                       />
                     </Label>
-                    <span className="text-xs text-gray-400 text-center">{colorInfo.name}</span>
+                    <span className="text-[9px] sm:text-xs text-gray-400 text-center leading-tight">{colorInfo.name}</span>
                   </div>
                 );
               })}
@@ -154,18 +149,18 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                     onUpdate({ color: newAvailableMatColors[0] || 'black' });
                   }
                 }}
-                className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3"
+                className="grid grid-cols-6 sm:grid-cols-5 md:grid-cols-6 gap-2 sm:gap-3"
               >
                 {availableEdgeColors.map((colorKey) => {
                   const colorInfo = getColorInfo(colorKey);
                   return (
-                    <div key={colorKey} className="flex flex-col items-center gap-2">
+                    <div key={colorKey} className="flex flex-col items-center gap-0.5 sm:gap-2">
                       <Label
                         htmlFor={`edge-${colorKey}`}
                         className={`
-                          relative w-full aspect-square rounded-lg overflow-hidden border-2 cursor-pointer transition-all duration-200
+                          relative w-full aspect-square rounded sm:rounded-lg overflow-hidden border sm:border-2 cursor-pointer transition-all duration-200
                           ${config.edgeColor === colorKey
-                            ? 'border-red-500 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-105'
+                            ? 'border-red-500 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-105'
                             : 'border-neutral-700 hover:border-neutral-600 active:scale-95'
                           }
                         `}
@@ -176,7 +171,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                           style={{ backgroundColor: colorInfo.color }}
                         />
                       </Label>
-                      <span className="text-xs text-gray-400 text-center">{colorInfo.name}</span>
+                      <span className="text-[9px] sm:text-xs text-gray-400 text-center leading-tight">{colorInfo.name}</span>
                     </div>
                   );
                 })}
@@ -186,58 +181,23 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
         </>
       )}
 
-      {/* Modal z powiększonym zdjęciem */}
-      {expandedImage && (
-        <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in duration-300"
-          onClick={() => setExpandedImage(null)}
-        >
-          <div 
-            className="relative max-w-4xl w-full bg-neutral-900 rounded-lg border border-neutral-800 shadow-2xl p-6 animate-in zoom-in-95 duration-300"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold">
-                {structures.find(s => s.image === expandedImage)?.name}
-              </h3>
-              <button
-                onClick={() => setExpandedImage(null)}
-                className="text-gray-400 hover:text-white transition-colors text-2xl leading-none"
-                aria-label="Zamknij"
-              >
-                ×
-              </button>
-            </div>
-            <div className="relative aspect-video bg-neutral-950 rounded-lg overflow-hidden border border-neutral-700">
-              <Image
-                src={expandedImage}
-                alt={structures.find(s => s.image === expandedImage)?.name || 'Struktura'}
-                fill
-                className="object-contain p-4"
-                sizes="(max-width: 1024px) 100vw, 80vw"
-                priority
-              />
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="flex flex-col sm:flex-row gap-3 justify-end pt-4">
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="px-6 py-3 min-h-[44px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200 active:scale-95"
+          className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200 active:scale-95"
         >
           Wstecz
         </Button>
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex flex-col items-end gap-2 flex-1 sm:flex-initial">
           {(!config.structure || !config.color || !config.edgeColor) && (
             <p className="text-xs text-gray-400 text-right">Wybierz strukturę i kolory aby kontynuować</p>
           )}
           <Button
             onClick={onNext}
             disabled={!config.structure || !config.color || !config.edgeColor}
-            className="px-6 py-3 min-h-[44px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30 active:scale-95"
+            className="w-full sm:w-auto px-6 py-3 min-h-[44px] md:min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30 active:scale-95"
           >
             Dalej
           </Button>
