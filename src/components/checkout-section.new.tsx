@@ -1229,8 +1229,6 @@ export default function CheckoutSectionNew() {
                 </Card>
               )}
 
-              {/* Navigation - Desktop only (mobile ma przyciski pod podsumowaniem) */}
-
               {orderError && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                   <p className="text-red-800">
@@ -1238,41 +1236,94 @@ export default function CheckoutSectionNew() {
                   </p>
                 </div>
               )}
+
+              {/* Navigation - Desktop only (pod formularzem) */}
+              <div className="hidden lg:block mt-8">
+                <div className="flex flex-row justify-between items-center gap-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={prevStep}
+                    disabled={currentStep === 1}
+                    className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-8 py-4 text-base"
+                  >
+                    <ArrowLeft className="w-5 h-5 mr-3" />
+                    Wstecz
+                  </Button>
+
+                  {currentStep < 3 ? (
+                    <Button
+                      type="button"
+                      onClick={nextStep}
+                      disabled={!isCurrentStepValid()}
+                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-10 py-4 text-base"
+                    >
+                      Dalej
+                      <ArrowRight className="w-5 h-5 ml-3" />
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      form="checkout-form"
+                      disabled={isSubmitting || orderLoading}
+                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-10 py-4 text-base"
+                      onClick={() => {
+                        console.log('🛒 CheckoutSection: Submit button clicked (desktop)');
+                        console.log('🛒 CheckoutSection: isSubmitting:', isSubmitting);
+                        console.log('🛒 CheckoutSection: orderLoading:', orderLoading);
+                        console.log('🛒 CheckoutSection: disabled:', isSubmitting || orderLoading);
+                      }}
+                    >
+                      {isSubmitting || orderLoading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3" />
+                          Przetwarzanie...
+                        </>
+                      ) : (
+                        <>
+                          <Check className="w-5 h-5 mr-3" />
+                          Zapłać teraz
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+              </div>
             </form>
           </div>
 
           {/* Order Summary */}
-          <div className="lg:col-span-2 xl:col-span-1">
-            <Card className="sticky top-0 md:top-4 bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300 max-h-[calc(100vh-100px)] md:max-h-none overflow-y-auto md:overflow-visible">
-              <CardHeader className="border-b border-neutral-700 px-4 md:px-8 py-4 md:py-6">
+          <div className="lg:col-span-2 xl:col-span-1 flex flex-col">
+            <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
+              <CardHeader className="border-b border-neutral-700 px-4 md:px-6 py-3 md:py-4">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg md:text-xl text-white">Podsumowanie zamówienia</CardTitle>
-                  <div className="w-3 h-3 md:w-4 md:h-4 bg-red-500 rounded-full animate-pulse"></div>
+                  <CardTitle className="text-base md:text-lg text-white">Podsumowanie zamówienia</CardTitle>
+                  <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-red-500 rounded-full animate-pulse"></div>
                 </div>
               </CardHeader>
-              <CardContent className="p-4 md:p-8">
-                <div className="space-y-8">
+              <CardContent className="p-3 md:p-4">
+                <div className="space-y-3 md:space-y-4">
                   {/* Items */}
-                  <div className="space-y-6">
+                  <div className="space-y-2 md:space-y-3">
                     {items.map((item, index) => (
-                      <div key={item.id} className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700 rounded-xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                      <div key={item.id} className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700 rounded-lg p-3 md:p-4 shadow-lg hover:shadow-xl transition-all duration-300">
                         {/* Header z nazwą produktu */}
-                        <div className="flex items-start justify-between mb-3 md:mb-4">
+                        <div className="flex items-start justify-between mb-2 md:mb-3">
                           <div className="flex-1">
-                            <h3 className="text-lg md:text-xl font-bold text-white mb-2">
+                            <h3 className="text-base md:text-lg font-bold text-white mb-1">
                               {item.productType === 'mat' ? 'Dywaniki samochodowe' : item.productName}
                             </h3>
                             
                             {/* Szczegóły samochodu */}
                             {item.configuration?.carDetails && (
-                              <div className="text-sm text-neutral-300">
+                              <div className="text-xs md:text-sm text-neutral-300">
                                 <p className="font-medium">
                                   {item.configuration.carDetails.brand} {item.configuration.carDetails.model}
                                   {item.configuration.carDetails.generation && ` ${item.configuration.carDetails.generation}`}
                                   {item.configuration.carDetails.year && ` (${item.configuration.carDetails.year})`}
                                 </p>
                                 {item.configuration.carDetails.bodyType && (
-                                  <p className="text-xs text-neutral-400 capitalize mt-1">
+                                  <p className="text-xs text-neutral-400 capitalize mt-0.5">
                                     {item.configuration.carDetails.bodyType}
                                   </p>
                                 )}
@@ -1281,8 +1332,8 @@ export default function CheckoutSectionNew() {
                           </div>
 
                           {/* Obraz produktu */}
-                          <div className="ml-3 md:ml-4 flex-shrink-0">
-                            <div className="w-12 h-12 md:w-16 md:h-16 bg-neutral-700 rounded-lg flex items-center justify-center overflow-hidden">
+                          <div className="ml-2 md:ml-3 flex-shrink-0">
+                            <div className="w-10 h-10 md:w-14 md:h-14 bg-neutral-700 rounded-lg flex items-center justify-center overflow-hidden">
                               {item.productImage ? (
                                 <img 
                                   src={item.productImage} 
@@ -1300,26 +1351,26 @@ export default function CheckoutSectionNew() {
 
                         {/* Konfiguracja dywaników */}
                         {item.configuration && item.productType === 'mat' && (
-                          <div className="mb-4">
-                            <div className="grid grid-cols-1 gap-3">
+                          <div className="mb-2 md:mb-3">
+                            <div className="grid grid-cols-1 gap-2">
                               {/* Wariant zestawu */}
                               {item.configuration.setVariant && (
-                                <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
-                                  <span className="text-sm text-neutral-300">Zestaw:</span>
-                                  <span className="text-sm font-medium text-white text-right">
+                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-neutral-800 rounded-lg">
+                                  <span className="text-xs md:text-sm text-neutral-300">Zestaw:</span>
+                                  <span className="text-xs md:text-sm font-medium text-white text-right">
                                     {item.configuration.setVariant === 'front' ? 'Starter' :
                                      item.configuration.setVariant === 'basic' ? 'Podstawowy' :
                                      item.configuration.setVariant === 'premium' ? 'Premium' :
                                      item.configuration.setVariant === 'complete' ? 'Mata do bagażnika' :
                                      item.configuration.setVariant}
                                     {item.configuration.setVariant === 'front' && (
-                                      <span className="block text-xs text-neutral-400 mt-0.5">(przód)</span>
+                                      <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">(przód)</span>
                                     )}
                                     {item.configuration.setVariant === 'basic' && (
-                                      <span className="block text-xs text-neutral-400 mt-0.5">(przód + tył)</span>
+                                      <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">(przód + tył)</span>
                                     )}
                                     {item.configuration.setVariant === 'premium' && (
-                                      <span className="block text-xs text-neutral-400 mt-0.5">(przód + tył + bagażnik)</span>
+                                      <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">(przód + tył + bagażnik)</span>
                                     )}
                                   </span>
                                 </div>
@@ -1327,9 +1378,9 @@ export default function CheckoutSectionNew() {
 
                               {/* Typ dywaników */}
                               {item.configuration.setType && (
-                                <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
-                                  <span className="text-sm text-neutral-300">Typ:</span>
-                                  <span className="text-sm font-medium text-white">
+                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-neutral-800 rounded-lg">
+                                  <span className="text-xs md:text-sm text-neutral-300">Typ:</span>
+                                  <span className="text-xs md:text-sm font-medium text-white">
                                     {item.configuration.setType === '3d-with-rims' ? '3D z rantami' :
                                      item.configuration.setType === 'classic' ? '3D bez rantów' :
                                      item.configuration.setType}
@@ -1339,9 +1390,9 @@ export default function CheckoutSectionNew() {
 
                               {/* Struktura komórek */}
                               {item.configuration.cellType && (
-                                <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
-                                  <span className="text-sm text-neutral-300">Struktura:</span>
-                                  <span className="text-sm font-medium text-white">
+                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-neutral-800 rounded-lg">
+                                  <span className="text-xs md:text-sm text-neutral-300">Struktura:</span>
+                                  <span className="text-xs md:text-sm font-medium text-white">
                                     {item.configuration.cellType === 'diamonds' ? 'Romby' :
                                      item.configuration.cellType === 'honey' ? 'Plaster miodu' :
                                      item.configuration.cellType}
@@ -1351,9 +1402,9 @@ export default function CheckoutSectionNew() {
 
                               {/* Kolory */}
                               {(item.configuration.materialColor || item.configuration.edgeColor) && (
-                                <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
-                                  <span className="text-sm text-neutral-300">Kolor:</span>
-                                  <span className="text-sm font-medium text-white text-right">
+                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-neutral-800 rounded-lg">
+                                  <span className="text-xs md:text-sm text-neutral-300">Kolor:</span>
+                                  <span className="text-xs md:text-sm font-medium text-white text-right">
                                     {item.configuration.materialColor && (
                                       <span>{getColorInfo(item.configuration.materialColor).name}</span>
                                     )}
@@ -1369,9 +1420,9 @@ export default function CheckoutSectionNew() {
 
                               {/* Ochraniacze pięt */}
                               {item.configuration.heelPad === 'yes' && (
-                                <div className="flex items-center justify-between py-2 px-3 bg-orange-900/20 border border-orange-700/30 rounded-lg">
-                                  <span className="text-sm text-orange-300">Dodatki:</span>
-                                  <span className="text-sm font-medium text-orange-200">
+                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-orange-900/20 border border-orange-700/30 rounded-lg">
+                                  <span className="text-xs md:text-sm text-orange-300">Dodatki:</span>
+                                  <span className="text-xs md:text-sm font-medium text-orange-200">
                                     Ochraniacze pod piętę
                                   </span>
                                 </div>
@@ -1381,19 +1432,19 @@ export default function CheckoutSectionNew() {
                         )}
 
                         {/* Footer z ilością i ceną */}
-                        <div className="flex items-center justify-between pt-4 border-t border-neutral-700">
-                          <div className="flex items-center space-x-3">
-                            <span className="text-neutral-300 text-sm">Ilość:</span>
-                            <span className="w-8 text-center font-semibold text-white text-lg bg-neutral-800 rounded px-2 py-1">
+                        <div className="flex items-center justify-between pt-3 border-t border-neutral-700">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-neutral-300 text-xs md:text-sm">Ilość:</span>
+                            <span className="w-7 text-center font-semibold text-white text-base md:text-lg bg-neutral-800 rounded px-1.5 py-0.5">
                               {item.quantity}
                             </span>
                           </div>
 
                           <div className="text-right">
-                            <p className="text-xl font-bold text-white">
+                            <p className="text-lg md:text-xl font-bold text-white">
                               {PricingService.formatPrice(item.subtotal)}
                             </p>
-                            <p className="text-sm text-neutral-400">
+                            <p className="text-xs md:text-sm text-neutral-400">
                               {PricingService.formatPrice(item.unitPrice)} × {item.quantity}
                             </p>
                           </div>
@@ -1402,17 +1453,17 @@ export default function CheckoutSectionNew() {
                     ))}
                   </div>
 
-                  <Separator className="bg-neutral-700 my-6" />
+                  <Separator className="bg-neutral-700 my-2 md:my-3" />
 
                   {/* Discount Code */}
-                  <div className="space-y-4">
-                    <Label className="text-white text-base font-medium">Kod rabatowy</Label>
-                    <div className="flex space-x-3">
+                  <div className="space-y-1.5 md:space-y-2">
+                    <Label className="text-white text-sm md:text-base font-medium">Kod rabatowy</Label>
+                    <div className="flex space-x-2">
                       <Input 
                         value={discountCode}
                         onChange={(e) => handleDiscountCodeChange(e.target.value)}
                         placeholder="Wprowadź kod (np. LISTOPAD5)"
-                        className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-base ${
+                        className={`min-h-[40px] h-10 md:h-11 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm md:text-base ${
                           discountError ? 'border-red-500' : discountApplied ? 'border-green-500' : ''
                         }`}
                         disabled={discountApplied}
@@ -1421,17 +1472,17 @@ export default function CheckoutSectionNew() {
                         type="button"
                         onClick={applyDiscountCode}
                         disabled={discountApplied || !discountCode.trim()}
-                        className="h-12 bg-red-600 border-red-500 text-white hover:bg-red-700 rounded-lg px-6 text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="h-10 md:h-11 bg-red-600 border-red-500 text-white hover:bg-red-700 rounded-lg px-4 md:px-5 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {discountApplied ? '✓' : 'Zastosuj'}
                       </Button>
                     </div>
                     {discountError && (
-                      <p className="text-red-400 text-sm">{discountError}</p>
+                      <p className="text-red-400 text-xs md:text-sm">{discountError}</p>
                     )}
                     {discountApplied && (
-                      <div className="bg-green-900/20 border border-green-500/50 rounded-lg p-3">
-                        <p className="text-green-400 text-sm font-medium">
+                      <div className="bg-green-900/20 border border-green-500/50 rounded-lg p-2 md:p-2.5">
+                        <p className="text-green-400 text-xs md:text-sm font-medium">
                           ✓ Kod zastosowany! Zniżka: -{discountAmount.toFixed(2)} PLN
                         </p>
                       </div>
@@ -1439,36 +1490,36 @@ export default function CheckoutSectionNew() {
                   </div>
 
                   {/* Totals */}
-                  <div className="space-y-5 pt-6">
-                    <div className="pt-6 border-t border-neutral-700 bg-neutral-800/40 p-6 rounded-lg space-y-3">
+                  <div className="space-y-2 md:space-y-3 pt-2 md:pt-3">
+                    <div className="pt-2 md:pt-3 border-t border-neutral-700 bg-neutral-800/40 p-3 md:p-4 rounded-lg space-y-1.5 md:space-y-2">
                       <div className="flex justify-between items-center text-neutral-300">
-                        <span className="text-base">Wartość produktów:</span>
-                        <span className="text-base">
+                        <span className="text-sm md:text-base">Wartość produktów:</span>
+                        <span className="text-sm md:text-base">
                           {PricingService.formatPrice(subtotal || cart.subtotal || 0)}
                         </span>
                       </div>
                       {discountApplied && (
                         <div className="flex justify-between items-center text-green-400">
-                          <span className="text-base">Zniżka ({discountCode}):</span>
-                          <span className="text-base font-semibold">-{PricingService.formatPrice(discountAmount)}</span>
+                          <span className="text-sm md:text-base">Zniżka ({discountCode}):</span>
+                          <span className="text-sm md:text-base font-semibold">-{PricingService.formatPrice(discountAmount)}</span>
                         </div>
                       )}
-                      <div className="flex justify-between items-center pt-3 border-t border-neutral-700">
-                        <span className="text-neutral-300 text-sm">Razem do zapłaty</span>
+                      <div className="flex justify-between items-center pt-2 border-t border-neutral-700">
+                        <span className="text-neutral-300 text-xs md:text-sm">Razem do zapłaty</span>
                         <div className="text-right">
-                          <span className="text-white font-bold text-3xl">
+                          <span className="text-white font-bold text-2xl md:text-3xl">
                             {PricingService.formatPrice(
                               discountApplied && discountAmount > 0 
                                 ? Math.max(0, subtotal - discountAmount)
                                 : (finalTotal > 0 ? finalTotal : (subtotal > 0 ? subtotal : 0))
                             )}
                             {' '}
-                            <span className="text-neutral-300 text-sm font-normal">PLN</span>
+                            <span className="text-neutral-300 text-xs md:text-sm font-normal">PLN</span>
                           </span>
                         </div>
                       </div>
                       {discountApplied && (
-                        <p className="text-green-400 text-sm mt-2">
+                        <p className="text-green-400 text-xs md:text-sm mt-2 mb-2 px-2 py-1.5">
                           Oszczędzasz {PricingService.formatPrice(discountAmount)}!
                         </p>
                       )}
@@ -1478,17 +1529,17 @@ export default function CheckoutSectionNew() {
               </CardContent>
             </Card>
 
-            {/* Navigation - Mobile only (pod podsumowaniem zamówienia) */}
-            <div className="lg:hidden mt-6">
+            {/* Navigation - Pod podsumowaniem zamówienia (tylko mobile) */}
+            <div className="lg:hidden mt-6 flex-shrink-0">
               <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={prevStep}
                   disabled={currentStep === 1}
-                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-4 sm:px-8 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto"
+                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-4 sm:px-8 lg:px-8 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
                 >
-                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
+                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 mr-2 sm:mr-3 lg:mr-3" />
                   Wstecz
                 </Button>
 
@@ -1497,19 +1548,19 @@ export default function CheckoutSectionNew() {
                     type="button"
                     onClick={nextStep}
                     disabled={!isCurrentStepValid()}
-                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-6 sm:px-10 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto"
+                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-6 sm:px-10 lg:px-10 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
                   >
                     Dalej
-                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3" />
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 ml-2 sm:ml-3 lg:ml-3" />
                   </Button>
                 ) : (
                   <Button
                     type="submit"
                     form="checkout-form"
                     disabled={isSubmitting || orderLoading}
-                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-6 sm:px-10 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto"
+                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-6 sm:px-10 lg:px-10 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
                     onClick={() => {
-                      console.log('🛒 CheckoutSection: Submit button clicked (mobile)');
+                      console.log('🛒 CheckoutSection: Submit button clicked');
                       console.log('🛒 CheckoutSection: isSubmitting:', isSubmitting);
                       console.log('🛒 CheckoutSection: orderLoading:', orderLoading);
                       console.log('🛒 CheckoutSection: disabled:', isSubmitting || orderLoading);
@@ -1517,12 +1568,12 @@ export default function CheckoutSectionNew() {
                   >
                     {isSubmitting || orderLoading ? (
                       <>
-                        <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white mr-2 sm:mr-3" />
+                        <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 lg:h-5 lg:w-5 border-b-2 border-white mr-2 sm:mr-3 lg:mr-3" />
                         Przetwarzanie...
                       </>
                     ) : (
                       <>
-                        <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
+                        <Check className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 mr-2 sm:mr-3 lg:mr-3" />
                         Zapłać teraz
                       </>
                     )}
@@ -1533,62 +1584,6 @@ export default function CheckoutSectionNew() {
           </div>
         </div>
 
-        {/* Sticky Bottom Bar - Desktop only, visible from step 2 */}
-        {currentStep >= 2 && (
-          <div className="hidden lg:block fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-red-900/30 shadow-2xl">
-            <div className="max-w-7xl mx-auto px-6 py-4">
-              <div className="flex flex-row justify-between items-center gap-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={prevStep}
-                  disabled={currentStep === 1}
-                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-8 py-4 text-base"
-                >
-                  <ArrowLeft className="w-5 h-5 mr-3" />
-                  Wstecz
-                </Button>
-
-                {currentStep < 3 ? (
-                  <Button
-                    type="button"
-                    onClick={nextStep}
-                    disabled={!isCurrentStepValid()}
-                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-10 py-4 text-base"
-                  >
-                    Dalej
-                    <ArrowRight className="w-5 h-5 ml-3" />
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    form="checkout-form"
-                    disabled={isSubmitting || orderLoading}
-                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-10 py-4 text-base"
-                    onClick={() => {
-                      console.log('🛒 CheckoutSection: Submit button clicked (sticky bar)');
-                      console.log('🛒 CheckoutSection: isSubmitting:', isSubmitting);
-                      console.log('🛒 CheckoutSection: orderLoading:', orderLoading);
-                      console.log('🛒 CheckoutSection: disabled:', isSubmitting || orderLoading);
-                    }}
-                  >
-                    {isSubmitting || orderLoading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3" />
-                        Przetwarzanie...
-                      </>
-                    ) : (
-                      <>
-                        <Check className="w-5 h-5 mr-3" />
-                        Zapłać teraz
-                      </>
-                    )}
-                  </Button>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
 
       </div>
     </div>
