@@ -451,7 +451,7 @@ export default function ConfiguratorSimple() {
             // Oblicz wysokość sticky header dla konkretnego kroku
             // Krok 1: tylko navbar (64px)
             // Krok 5: tylko navbar (64px) - brak sticky preview
-            // Kroki 2-4: navbar (64px) + sticky preview (25vh + galeria ~60px)
+            // Kroki 2-4: navbar (64px) + sticky preview (30vh + galeria ~60px)
             const navbarHeight = 64; // h-16
             let stickyHeaderHeight = navbarHeight;
             
@@ -479,8 +479,8 @@ export default function ConfiguratorSimple() {
               const hasStickyPreview = isStepValidMobile(2) || activeStep >= 2;
               if (hasStickyPreview) {
                 // Oblicz rzeczywistą wysokość sticky header
-                // 25vh + galeria (~60px) + navbar (64px)
-                stickyHeaderHeight = Math.round(window.innerHeight * 0.25) + 60 + navbarHeight;
+                // 30vh + galeria (~60px) + navbar (64px)
+                stickyHeaderHeight = Math.round(window.innerHeight * 0.30) + 60 + navbarHeight;
               } else {
                 stickyHeaderHeight = navbarHeight;
               }
@@ -650,12 +650,12 @@ export default function ConfiguratorSimple() {
       {shouldShowStickyPreview && (
         <div className="lg:hidden fixed top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg">
           {/* Main Product Image */}
-          <div className="relative w-full h-[25vh] min-h-[180px] max-h-[250px]">
+          <div className="relative w-full h-[30vh] min-h-[220px] max-h-[300px] group">
             <Image
               src={stickyHeaderImage}
               alt="Podgląd produktu"
               fill
-              className="object-contain p-4"
+              className="object-contain p-4 transition-transform duration-300 group-active:scale-105"
               priority
             />
             {/* Click to open modal */}
@@ -667,12 +667,17 @@ export default function ConfiguratorSimple() {
               className="absolute inset-0 w-full h-full"
               aria-label="Powiększ obraz"
             />
-            {/* Zoom hint */}
-            <div className="absolute top-4 right-4">
+            {/* Zoom hint badge */}
+            <div className="absolute top-2 left-2 bg-black/80 backdrop-blur-sm px-2 py-1 rounded-lg border border-white/20 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-2 duration-500">
+              <ZoomIn className="w-3.5 h-3.5 text-white animate-pulse" />
+              <span className="text-xs text-white font-medium">Kliknij aby powiększyć</span>
+            </div>
+            {/* Zoom button */}
+            <div className="absolute top-2 right-2">
               <Button
                 size="icon"
                 variant="secondary"
-                className="h-10 w-10 rounded-full bg-black/50 backdrop-blur border border-white/20 hover:bg-white/10 text-white"
+                className="h-10 w-10 rounded-full bg-red-600/90 backdrop-blur border-2 border-red-500/50 hover:bg-red-500 text-white shadow-lg shadow-red-500/30 animate-pulse"
                 onClick={(e) => {
                   e.stopPropagation();
                   setModalImageType(hasFullPreview ? 'dynamic' : 'product');
@@ -722,7 +727,7 @@ export default function ConfiguratorSimple() {
       {/* Main Content */}
       <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
         shouldShowStickyPreview && activeStep !== 5 
-          ? 'pt-[calc(25vh+5rem+3rem)]' 
+          ? 'pt-[calc(30vh+5rem+3rem)]' 
           : 'pt-12'
       } lg:pt-32 pb-12 ${shouldShowStickyPreview ? `lg:pb-24 ${mainContainerPaddingBottom}` : ''}`}>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-12">
@@ -755,7 +760,7 @@ export default function ConfiguratorSimple() {
             {activeStep === 2 && (
               <div
                 ref={(el) => { stepRefs.current[2] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(25vh+5rem+3rem)]"
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(30vh+5rem+3rem)]"
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[2] = el; }}
@@ -779,7 +784,7 @@ export default function ConfiguratorSimple() {
             {activeStep === 3 && (
               <div
                 ref={(el) => { stepRefs.current[3] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(25vh+5rem+3rem)]"
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(30vh+5rem+3rem)]"
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[3] = el; }}
@@ -808,7 +813,7 @@ export default function ConfiguratorSimple() {
             {activeStep === 4 && (
               <div
                 ref={(el) => { stepRefs.current[4] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(25vh+5rem+3rem)]"
+                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(30vh+5rem+3rem)]"
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[4] = el; }}
@@ -908,7 +913,13 @@ export default function ConfiguratorSimple() {
               {/* 1. Product Window (Top) */}
               {productPreviewPath && (
                 <div className="space-y-4">
-                  <div className="relative group bg-neutral-900/50 rounded-2xl border border-white/10 overflow-hidden shadow-lg transition-all hover:shadow-red-900/5">
+                  <div 
+                    className="relative group bg-neutral-900/50 rounded-2xl border border-white/10 overflow-hidden shadow-lg transition-all hover:shadow-red-900/5 cursor-pointer"
+                    onClick={() => {
+                      setModalImageType('product');
+                      setIsPreviewModalOpen(true);
+                    }}
+                  >
                     <div className="relative aspect-square">
                       <Image
                         src={productPreviewPath}
@@ -918,18 +929,27 @@ export default function ConfiguratorSimple() {
                         priority
                       />
                       
+                      {/* Click hint overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4 pointer-events-none">
+                        <div className="bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-2">
+                          <ZoomIn className="w-4 h-4 text-white" />
+                          <span className="text-xs text-white font-medium">Kliknij aby powiększyć</span>
+                        </div>
+                      </div>
+                      
                       {/* Overlay Controls */}
                       <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <Button
                           size="icon"
                           variant="secondary"
-                          className="h-8 w-8 rounded-full bg-black/50 backdrop-blur border border-white/10 hover:bg-white/10 text-white"
-                          onClick={() => {
+                          className="h-10 w-10 rounded-full bg-red-600/90 backdrop-blur border-2 border-red-500/50 hover:bg-red-500 text-white shadow-lg shadow-red-500/30"
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setModalImageType('product');
                             setIsPreviewModalOpen(true);
                           }}
                         >
-                          <ZoomIn className="w-4 h-4" />
+                          <ZoomIn className="w-5 h-5" />
                         </Button>
                       </div>
                     </div>
@@ -965,7 +985,13 @@ export default function ConfiguratorSimple() {
               )}
 
               {/* 2. Rug Preview Window (Bottom) */}
-              <div className="relative group bg-gradient-to-br from-neutral-900 to-black rounded-2xl p-1 border border-white/10 shadow-2xl transition-all duration-500 hover:shadow-red-900/10">
+              <div 
+                className="relative group bg-gradient-to-br from-neutral-900 to-black rounded-2xl p-1 border border-white/10 shadow-2xl transition-all duration-500 hover:shadow-red-900/10 cursor-pointer"
+                onClick={() => {
+                  setModalImageType('dynamic');
+                  setIsPreviewModalOpen(true);
+                }}
+              >
                 <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-2xl pointer-events-none" />
                 
                 <div className="relative aspect-[4/5] bg-black/50 rounded-xl overflow-hidden">
@@ -979,18 +1005,27 @@ export default function ConfiguratorSimple() {
                     priority
                   />
 
+                  {/* Click hint overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4 pointer-events-none">
+                    <div className="bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-2">
+                      <ZoomIn className="w-4 h-4 text-white" />
+                      <span className="text-xs text-white font-medium">Kliknij aby powiększyć</span>
+                    </div>
+                  </div>
+
                   {/* Overlay Controls */}
                   <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <Button
                       size="icon"
                       variant="secondary"
-                      className="h-8 w-8 rounded-full bg-black/50 backdrop-blur border border-white/10 hover:bg-white/10 text-white"
-                      onClick={() => {
+                      className="h-10 w-10 rounded-full bg-red-600/90 backdrop-blur border-2 border-red-500/50 hover:bg-red-500 text-white shadow-lg shadow-red-500/30"
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setModalImageType('dynamic');
                         setIsPreviewModalOpen(true);
                       }}
                     >
-                      <ZoomIn className="w-4 h-4" />
+                      <ZoomIn className="w-5 h-5" />
                     </Button>
                   </div>
 
@@ -1085,34 +1120,34 @@ export default function ConfiguratorSimple() {
           </div>
 
           {/* Main Content */}
-          <div className="px-4 py-3">
+          <div className="px-3 py-2.5">
             {/* Price and CTA Row */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {/* Price Section - tylko gdy wybrano wariant zestawu */}
               {config.variant ? (
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xs text-gray-400">Cena:</span>
-                    <span className="text-xl font-bold text-white">
+                <div className="flex-1 min-w-0 overflow-hidden">
+                  <div className="flex items-baseline gap-1.5 min-w-0">
+                    <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0">Cena:</span>
+                    <span className="text-lg font-bold text-white truncate">
                       {totalPriceWithAccessories.toFixed(2)} zł
                     </span>
                   </div>
                   {priceBreakdown.discount > 0 && (
-                    <div className="text-xs text-green-400 mt-0.5">
+                    <div className="text-xs text-green-400 mt-0.5 truncate">
                       Rabat: -{priceBreakdown.discount.toFixed(2)} zł
                     </div>
                   )}
                 </div>
               ) : (
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-gray-500 truncate">
                     Wybierz zestaw aby zobaczyć cenę
                   </div>
                 </div>
               )}
 
               {/* Mini Progress Dots */}
-              <div className="flex items-center gap-1.5 px-2">
+              <div className="flex items-center gap-1 flex-shrink-0">
                 {Array.from({ length: TOTAL_STEPS_MOBILE }, (_, i) => {
                   const step = i + 1;
                   const isCompleted = step < activeStep;
@@ -1138,7 +1173,7 @@ export default function ConfiguratorSimple() {
               <Button
                 onClick={handleAddToCart}
                 disabled={isAddingToCart || (!isStepValidDesktop(7) && !isStepValidMobile(5))}
-                className="min-h-[48px] min-w-[140px] bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold shadow-lg shadow-red-900/30 hover:shadow-red-900/50 transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="min-h-[44px] min-w-[120px] max-w-[140px] flex-shrink-0 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold shadow-lg shadow-red-900/30 hover:shadow-red-900/50 transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
               >
                 {isAddingToCart ? (
                   <div className="flex items-center gap-2">
