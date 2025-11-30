@@ -742,7 +742,7 @@ export default function ConfiguratorSimple() {
       )}
 
       {/* Main Content */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:scale-[0.75] lg:origin-top lg:w-[133.333%] ${
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:scale-[0.8] lg:origin-top lg:w-[125%] ${
         shouldShowStickyPreview && activeStep !== 5 
           ? 'pt-[calc(30vh+5rem+3rem)] sm:pt-[calc(33vh+5rem+3rem)] md:pt-[calc(36vh+5rem+3rem)]' 
           : 'pt-12'
@@ -1073,7 +1073,7 @@ export default function ConfiguratorSimple() {
       {/* Desktop Sticky Bottom Bar with Price and CTA */}
       {/* Pokazuje się dopiero po przejściu do sekcji "Typ dywaników" (krok 2) */}
       {(activeStep >= 2 && !shouldHideDesktopBars && activeStep !== 7) && (
-        <div className="hidden lg:block fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 shadow-2xl lg:scale-[0.75] lg:origin-bottom lg:w-[133.333%] lg:left-1/2 lg:-translate-x-1/2">
+        <div className="hidden lg:block fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 shadow-2xl lg:scale-[0.8] lg:origin-bottom lg:w-[125%] lg:left-1/2 lg:-translate-x-1/2">
           {/* Main Content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between gap-6">

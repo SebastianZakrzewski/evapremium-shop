@@ -963,7 +963,7 @@ export default function Configurator() {
 
   return (
     <section className="w-full bg-neutral-950 text-white md:flex md:items-start md:justify-center md:min-h-screen md:overflow-hidden">
-      <div className="max-w-[1024px] 2xl:max-w-[1280px] mx-auto px-4 sm:px-8 py-6 md:py-[38.4px] lg:py-[51.2px] 2xl:py-[51.2px] md:scale-[0.75] md:origin-top md:w-[133.333%] md:max-w-[1280px] 2xl:max-w-[1600px]">
+      <div className="max-w-[1024px] 2xl:max-w-[1280px] mx-auto px-4 sm:px-8 py-6 md:py-[38.4px] lg:py-[51.2px] 2xl:py-[51.2px] md:scale-[0.8] md:origin-top md:w-[125%] md:max-w-[1280px] 2xl:max-w-[1600px]">
         <div className="flex flex-col md:flex-row gap-6 lg:gap-8 2xl:gap-[38.4px]">
           {/* Lewa strona - wizualizacja */}
           <div className="w-full lg:w-[720px] xl:w-[800px] 2xl:w-[880px]">
