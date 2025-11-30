@@ -114,7 +114,7 @@ export function SummaryStep({
           
           <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm">
             {/* Car Info */}
-            <div className="p-4 border-b border-white/5 flex items-start gap-3">
+            <div className="p-3 border-b border-white/5 flex items-start gap-3">
               <div className="relative w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
                 {brandLogo ? (
                   <Image
@@ -138,7 +138,7 @@ export function SummaryStep({
             </div>
 
             {/* Product Details */}
-            <div className="p-4 border-b border-white/5 flex items-start gap-3">
+            <div className="p-3 border-b border-white/5 flex items-start gap-3">
               <div className="relative w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
                 {matThumbnail ? (
                   <Image
@@ -162,7 +162,7 @@ export function SummaryStep({
             </div>
 
             {/* Structure & Colors */}
-            <div className="p-4 border-b border-white/5 flex items-start gap-3">
+            <div className="p-3 border-b border-white/5 flex items-start gap-3">
               <div className="relative w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
                 {structureThumbnail ? (
                   <Image
@@ -198,7 +198,7 @@ export function SummaryStep({
             {selectedPodpietka && (
               <div className="space-y-2">
                 {selectedPodpietka && (
-                  <div className="p-4 flex items-start gap-3 bg-red-500/5">
+                  <div className="p-3 flex items-start gap-3 bg-red-500/5">
                     <div className="relative w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
                       {selectedPodpietka.images && selectedPodpietka.images.length > 0 ? (
                         <Image
@@ -246,7 +246,7 @@ export function SummaryStep({
             Podsumowanie
           </h3>
           
-          <div className="flex-1 bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl p-6 shadow-xl flex flex-col justify-between relative overflow-hidden group">
+          <div className="flex-1 bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl p-4 shadow-xl flex flex-col justify-between relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:bg-red-500/10 transition-colors duration-700"></div>
             
             <div className="space-y-3 relative z-10">
@@ -295,14 +295,14 @@ export function SummaryStep({
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="flex-1 h-12 border-white/10 hover:bg-white/5 hover:text-white text-gray-400 transition-all duration-300"
+          className="flex-1 h-10 py-2 border-white/10 hover:bg-white/5 hover:text-white text-gray-400 transition-all duration-300"
         >
           Wróć do edycji
         </Button>
         <Button
           onClick={onAddToCart}
           disabled={isAddingToCart}
-          className="flex-[2] h-12 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold shadow-lg shadow-red-900/20 hover:shadow-red-900/40 transition-all duration-300 transform hover:-translate-y-0.5"
+          className="flex-[2] h-10 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold shadow-lg shadow-red-900/20 hover:shadow-red-900/40 transition-all duration-300 transform hover:-translate-y-0.5"
         >
           {isAddingToCart ? (
             <div className="flex items-center gap-2">

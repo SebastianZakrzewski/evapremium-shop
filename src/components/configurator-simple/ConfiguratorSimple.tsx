@@ -134,6 +134,8 @@ export default function ConfiguratorSimple() {
 
   // Aktualny aktywny krok (dla accordion)
   const [activeStep, setActiveStep] = useState<number>(1);
+  // Flaga czy to pierwsze renderowanie (aby nie przewijać przy pierwszym załadowaniu)
+  const isInitialMount = useRef(true);
   
   // Stan czy koszyk jest otwarty (ukrywa sticky bottom bar)
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
@@ -377,6 +379,17 @@ export default function ConfiguratorSimple() {
   }, [activeStep, isCartOpen]);
 
   useEffect(() => {
+    // Na desktopie nie wykonujemy automatycznego przewijania - użytkownik przewija ręcznie
+    if (window.innerWidth >= 1024) {
+      return;
+    }
+
+    // Pomiń przewijanie przy pierwszym renderowaniu (gdy użytkownik wchodzi na stronę)
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     // Najpierw spróbuj użyć ref nagłówka, jeśli nie ma, użyj ref całego elementu
     const headerElement = stepHeaderRefs.current[activeStep];
     const stepElement = headerElement || stepRefs.current[activeStep];
@@ -386,43 +399,45 @@ export default function ConfiguratorSimple() {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         setTimeout(() => {
+          // Sprawdź czy element jest już widoczny na ekranie - jeśli tak, nie przewijaj
+          const elementRect = stepElement.getBoundingClientRect();
+          const isElementVisible = elementRect.top >= 0 && elementRect.top < window.innerHeight;
+          
+          // Jeśli element jest już widoczny i jesteśmy na początku strony, nie przewijaj
+          if (isElementVisible && window.scrollY < 100) {
+            return;
+          }
+
           // Na mobile przewijaj do góry sekcji z uwzględnieniem sticky header
-          if (window.innerWidth < 1024) {
-            // Pobierz pozycję elementu względem viewport
-            const elementRect = stepElement.getBoundingClientRect();
-            const currentScrollY = window.pageYOffset || window.scrollY;
-            const elementTop = elementRect.top + currentScrollY;
-            
-            // Oblicz wysokość sticky header dla konkretnego kroku
-            // Krok 1: tylko navbar (64px)
-            // Kroki 2-5: navbar (64px) + sticky preview (40vh + galeria ~80px)
-            const navbarHeight = 64; // h-16
-            let stickyHeaderHeight = navbarHeight;
-            
-            if (activeStep >= 2) {
-              // Dla kroków 2-5 sprawdź czy sticky preview jest widoczny
-              const hasStickyPreview = isStepValidMobile(2) || activeStep >= 2;
-              if (hasStickyPreview) {
-                // Oblicz rzeczywistą wysokość sticky header
-                // 40vh + galeria (~80px) + navbar (64px)
-                stickyHeaderHeight = Math.round(window.innerHeight * 0.4) + 80 + navbarHeight;
-              } else {
-                stickyHeaderHeight = navbarHeight;
-              }
+          // Pobierz pozycję elementu względem viewport
+          const currentScrollY = window.pageYOffset || window.scrollY;
+          const elementTop = elementRect.top + currentScrollY;
+          
+          // Oblicz wysokość sticky header dla konkretnego kroku
+          // Krok 1: tylko navbar (64px)
+          // Kroki 2-5: navbar (64px) + sticky preview (40vh + galeria ~80px)
+          const navbarHeight = 64; // h-16
+          let stickyHeaderHeight = navbarHeight;
+          
+          if (activeStep >= 2) {
+            // Dla kroków 2-5 sprawdź czy sticky preview jest widoczny
+            const hasStickyPreview = isStepValidMobile(2) || activeStep >= 2;
+            if (hasStickyPreview) {
+              // Oblicz rzeczywistą wysokość sticky header
+              // 40vh + galeria (~80px) + navbar (64px)
+              stickyHeaderHeight = Math.round(window.innerHeight * 0.4) + 80 + navbarHeight;
+            } else {
+              stickyHeaderHeight = navbarHeight;
             }
-            
-            // Oblicz pozycję scrollu tak, aby element był widoczny pod sticky header
-            // Dodajemy 20px odstępu dla lepszej czytelności
-            const scrollPosition = elementTop - stickyHeaderHeight - 20;
-            
-            // Przewiń do pozycji z uwzględnieniem sticky header
+          }
+          
+          // Oblicz pozycję scrollu tak, aby element był widoczny pod sticky header
+          // Dodajemy 20px odstępu dla lepszej czytelności
+          const scrollPosition = elementTop - stickyHeaderHeight - 20;
+          
+          // Przewiń do pozycji z uwzględnieniem sticky header (tylko jeśli pozycja jest sensowna)
+          if (scrollPosition >= 0 && scrollPosition < document.documentElement.scrollHeight) {
             window.scrollTo({ top: Math.max(0, scrollPosition), behavior: 'smooth' });
-          } else {
-            // Na desktop standardowe przewijanie
-            const topOffset = 100;
-            const elementRect = stepElement.getBoundingClientRect();
-            const elementTop = elementRect.top + window.pageYOffset;
-            window.scrollTo({ top: elementTop - topOffset, behavior: 'smooth' });
           }
         }, 150); // Zwiększony timeout dla lepszej niezawodności
       });
@@ -520,7 +535,7 @@ export default function ConfiguratorSimple() {
   return (
     <div className="min-h-screen bg-neutral-950 text-white selection:bg-red-500 selection:text-white">
       {/* Progress Bar - Desktop only */}
-      <div className="hidden lg:block sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
+      <div className="hidden lg:block fixed top-24 left-0 right-0 z-[60] bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <StepProgress 
             currentStep={activeStep} 
@@ -609,7 +624,7 @@ export default function ConfiguratorSimple() {
         shouldShowStickyPreview && activeStep !== 5 
           ? 'pt-[calc(40vh+5rem+4rem)]' 
           : 'pt-12'
-      } lg:pt-12 pb-12 ${shouldShowStickyPreview ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
+      } lg:pt-32 pb-12 ${shouldShowStickyPreview ? `lg:pb-12 ${mainContainerPaddingBottom}` : ''}`}>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-12">
           {/* Mobile: Krokowe etapy - jeden krok na raz (4 kroki) */}
           <div className="lg:hidden">
