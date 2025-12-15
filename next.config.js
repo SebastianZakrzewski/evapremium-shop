@@ -27,6 +27,8 @@ const nextConfig = {
     }
     return config;
   },
+  // Next.js 16 uses Turbopack by default, add empty config to silence warning
+  turbopack: {},
 };
 
 module.exports = nextConfig;
