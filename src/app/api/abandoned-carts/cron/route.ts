@@ -12,13 +12,12 @@ export async function POST(_request: NextRequest) {
     const bufferTime = new Date(Date.now() - 60 * 1000).toISOString();
     console.log('[AbandonedCart:Cron] Starting cron job', { now: nowIso, bufferTime });
 
-    const { data: carts, error } = await supabase
+    const { data: allCarts, error } = await supabase
       .from('abandoned_carts')
       .select('*')
       .eq('status', 'pending')
       .lte('expire_at', bufferTime) // Use buffer time instead of current time
       .is('bitrix_deal_id', null)
-      .contains('metadata', { stage: 'checkout_step2' })
       .limit(50);
 
     if (error) {
@@ -26,7 +25,18 @@ export async function POST(_request: NextRequest) {
       return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 
-    console.log('[AbandonedCart:Cron] Found expired carts', { count: carts?.length || 0 });
+    // Filter carts by stage (checkout_step2 or checkout_step3)
+    // This ensures carts abandoned at payment stage (step 3) are also processed
+    const carts = (allCarts || []).filter(cart => {
+      const metadata = cart.metadata as Record<string, unknown> | null;
+      const stage = metadata?.stage;
+      return stage === 'checkout_step2' || stage === 'checkout_step3';
+    });
+
+    console.log('[AbandonedCart:Cron] Found expired carts', { 
+      total: allCarts?.length || 0, 
+      filtered: carts.length 
+    });
 
     const results: Array<{ id: string; bitrixDealId?: string; error?: string }> = [];
 
