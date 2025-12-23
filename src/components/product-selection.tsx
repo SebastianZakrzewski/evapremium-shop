@@ -74,9 +74,9 @@ export default function ProductSelection() {
     setTimeout(() => {
       setClickedCardId(null);
       
-      // Tymczasowe przekierowanie do konfiguratora (do czasu implementacji kart produktów)
+      // Przekierowanie do strony z produktami modeli dla danej marki
       const brandSlug = brand.name.toLowerCase();
-      router.push(`/konfigurator?brand=${encodeURIComponent(brandSlug)}`);
+      router.push(`/modele/${encodeURIComponent(brandSlug)}`);
     }, 300);
   }, [router]);
 

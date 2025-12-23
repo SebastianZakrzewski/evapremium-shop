@@ -171,7 +171,7 @@ export default function SearchDropdown() {
 
   const handleResultClick = useCallback((result: { type: 'brand' | 'model' | 'product'; data: any }) => {
     if (result.type === 'brand') {
-      router.push(`/konfigurator?brand=${encodeURIComponent(result.data.name.toLowerCase())}`);
+      router.push(`/modele/${encodeURIComponent(result.data.name.toLowerCase())}`);
     } else if (result.type === 'model') {
       router.push(`/konfigurator?brand=${encodeURIComponent(result.data.brand.toLowerCase())}&model=${encodeURIComponent(result.data.model)}`);
     } else if (result.type === 'product') {

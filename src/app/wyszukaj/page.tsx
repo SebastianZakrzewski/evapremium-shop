@@ -181,7 +181,7 @@ function SearchPageContent() {
                   {results.brands.map((brand) => (
                     <Link
                       key={brand.id}
-                      href={`/konfigurator?brand=${encodeURIComponent(brand.name.toLowerCase())}`}
+                      href={`/modele/${encodeURIComponent(brand.name.toLowerCase())}`}
                       className="
                         group relative
                         bg-gray-900/80 backdrop-blur-xl

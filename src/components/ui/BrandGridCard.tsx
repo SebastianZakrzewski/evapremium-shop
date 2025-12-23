@@ -27,8 +27,8 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
     if (onClick) {
       onClick(brand);
     } else {
-      // Default behavior - redirect to configurator with selected brand
-      router.push(`/konfigurator?brand=${encodeURIComponent(brand.name.toLowerCase())}`);
+      // Default behavior - redirect to models page with selected brand
+      router.push(`/modele/${encodeURIComponent(brand.name.toLowerCase())}`);
     }
   };
 

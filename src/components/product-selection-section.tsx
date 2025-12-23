@@ -9,7 +9,8 @@ import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
-import { Loader2, Car, ChevronDown, ChevronUp } from "lucide-react";
+import { Badge } from "./ui/badge";
+import { Loader2, Car, SlidersHorizontal } from "lucide-react";
 
 interface FilterState {
   bodyTypes: string[];
@@ -142,7 +143,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
   const [brand, setBrand] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [selectedBodyType, setSelectedBodyType] = useState<string | null>(null);
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState<boolean>(false);
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     bodyTypes: [],
     yearRanges: [],
@@ -437,228 +438,108 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
     );
   }
 
+  const activeFiltersCount = filters.bodyTypes.length + filters.yearRanges.length + (selectedModel ? 1 : 0);
+
   return (
-    <section className="py-8 md:py-12 bg-neutral-950 relative overflow-hidden">
-      {/* Animowane tło z gradientem */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
-      
-      {/* Animowane cząsteczki tła */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
+    <div className="min-h-screen bg-neutral-950 text-white pb-20">
+      {/* Hero Header */}
+      <div className="relative bg-[#0a0a0a] border-b border-white/5 py-16 md:py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <span>/</span>
+            <Link href="/modele" className="hover:text-white transition-colors">Modele aut</Link>
+            <span>/</span>
+            <span className="text-white">{currentBrand.displayName}</span>
+          </nav>
+          
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-6 mb-6">
+              {currentBrand.logo && (
+                <div className="w-20 h-20 relative">
+                  <Image
+                    src={currentBrand.logo}
+                    alt={`${currentBrand.displayName} logo`}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              )}
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+              DYWANIKI <span className="text-red-600">{currentBrand.displayName.toUpperCase()}</span>
+            </h1>
+            <p className="text-lg text-gray-400 leading-relaxed">
+              Precyzyjnie dopasowane dywaniki samochodowe EVA Premium dla modeli {currentBrand.displayName}. Najwyższa jakość materiałów, precyzyjne dopasowanie i trwałość na lata.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Breadcrumbs */}
-        <nav className="mb-6" aria-label="Breadcrumb">
-          <ol className="flex items-center space-x-2 text-sm text-gray-400">
-            <li>
-              <Link href="/" className="hover:text-white transition-colors">
-                Strona główna
-              </Link>
-            </li>
-            <li className="text-gray-600">/</li>
-            <li>
-              <Link href="/dywaniki" className="hover:text-white transition-colors">
-                Dywaniki Samochodowe
-              </Link>
-            </li>
-            <li className="text-gray-600">/</li>
-            <li className="text-white font-medium">{currentBrand.displayName}</li>
-          </ol>
-        </nav>
-
-        {/* Header */}
-        <div className="mb-8 md:mb-12">
-          <div className="flex items-center gap-6 mb-6">
-            {currentBrand.logo && (
-              <div className="w-20 h-20 relative">
-                <Image
-                  src={currentBrand.logo}
-                  alt={`${currentBrand.displayName} logo`}
-                  fill
-                  className="object-contain"
-                />
-              </div>
-            )}
-            <div>
-              <h1 className="text-3xl md:text-5xl font-bold text-white mb-2">
-                Dywaniki do {currentBrand.displayName} - jakie wybrać?
-              </h1>
-            </div>
-          </div>
+      <div className="container mx-auto px-4 py-12">
+        <div className="flex flex-col lg:flex-row gap-10">
           
-          {/* Sekcja z opisem marki */}
-          <div className="bg-gray-900/50 rounded-lg p-6 mb-8">
-            {/* Pierwszy akapit - zawsze widoczny */}
-            <p className="text-white text-base md:text-lg leading-relaxed mb-4">
-              Właściciele samochodów marki {currentBrand.displayName} przykładają dużą wagę do właściwej pielęgnacji swojego pojazdu. Jednak utrzymanie auta w idealnym stanie nie zawsze jest łatwe. Kierowcy, którzy spędzają wiele godzin za kierownicą, doskonale znają problemy związane z utrzymaniem czystości w kabinie. Deszczowa pogoda, błotniste drogi czy konieczność odśnieżania pojazdu sprawiają, że nawet najbardziej staranne czyszczenie obuwia nie gwarantuje, że do wnętrza nie przedostaną się zanieczyszczenia. Tradycyjne dywaniki samochodowe dostępne na rynku – czy to gumowe, czy welurowe – często nie spełniają oczekiwań. W odpowiedzi na te potrzeby wprowadziliśmy innowacyjne rozwiązanie: dywaniki wykonane z materiału EVA, które gwarantują czystość, są bezpieczne dla zdrowia i hipoalergiczne.
-            </p>
-            
-            {/* Reszta tekstu - zwijana/rozwijana */}
-            <div className={`overflow-hidden transition-all duration-300 ${isDescriptionExpanded ? 'max-h-[2000px]' : 'max-h-0'}`}>
-              <h3 className="text-white text-xl md:text-2xl font-semibold mb-3 mt-6">
-                Dywaniki samochodowe do {currentBrand.displayName} – czy znajdę dywaniki do swojego modelu?
-              </h3>
-              
-              <p className="text-white text-base md:text-lg leading-relaxed mb-4">
-                W naszym sklepie internetowym znajdą Państwo dywanik samochodowy do {currentBrand.displayName} w różnych jego wariantach. Przede wszystkim wykonujemy dywaniki na wymiar do najbardziej popularnych modeli tych pojazdów. Znajdą Państwo u nas produkty dopasowane do:
-              </p>
-              
-              {/* Lista dostępnych modeli */}
-              {availableModels.length > 0 && (
-                <div className="mb-4">
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {Array.from(new Set(availableModels.map(m => m.model)))
-                      .sort()
-                      .map((model) => (
-                        <span
-                          key={model}
-                          className="px-3 py-1 bg-red-600/20 border border-red-600/30 rounded-lg text-white text-sm font-medium"
-                        >
-                          {model.toUpperCase()}
-                        </span>
-                      ))}
-                  </div>
-                </div>
-              )}
-              
-              {/* Statyczna lista modeli dla Audi jeśli nie ma dostępnych modeli */}
-              {availableModels.length === 0 && currentBrand.displayName.toLowerCase() === 'audi' && (
-                <div className="mb-4">
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {['100', '80', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'E-TRON', 'Q2', 'Q3', 'Q4 E-Tron', 'Q5', 'Q7', 'Q8', 'RS3', 'RS5', 'RS6', 'S3', 'S5', 'S6', 'TT'].map((model) => (
-                      <span
-                        key={model}
-                        className="px-3 py-1 bg-red-600/20 border border-red-600/30 rounded-lg text-white text-sm font-medium"
-                      >
-                        {model}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              <p className="text-white text-base md:text-lg leading-relaxed mb-4">
-                Oprócz tego staramy się na bieżąco uzupełniać nasz magazyn w dywaniki, które idealnie pasują do innych modeli. Podczas składania zamówienia prosimy o podanie szczegółowych informacji o pojeździe, takich jak rocznik produkcji, rodzaj silnika, typ napędu oraz inne istotne parametry techniczne. Dlaczego to ma znaczenie? Ponieważ naszym celem jest zapewnienie, aby dywaniki samochodowe zakrywały jak największą powierzchnię oryginalnej wykładziny, oferując maksymalną ochronę.
-              </p>
-              
-              <h3 className="text-white text-xl md:text-2xl font-semibold mb-3 mt-6">
-                Gdzie kupić dywaniki do {currentBrand.displayName}?
-              </h3>
-              
-              <p className="text-white text-base md:text-lg leading-relaxed">
-                Nasz sklep internetowy oferuje nie tylko kompleksową gamę dywaników samochodowych. W asortymencie znajdą Państwo również maty zabezpieczające bagażnik oraz praktyczne organizery do przewożenia płynów, narzędzi czy oleju. Każdy produkt jest wykonywany na wymiar, a dodatkowo oferujemy bogaty wybór wariantów kolorystycznych. Oznacza to, że dywaniki samochodowe dostępne w naszej ofercie łączą w sobie najwyższą funkcjonalność z eleganckim wyglądem, idealnie komponując się z wnętrzem Twojego {currentBrand.displayName}.
-              </p>
-            </div>
-            
-            {/* Przycisk Czytaj więcej/mniej */}
-            <button
-              onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-              className="mt-4 flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors duration-200 font-medium"
+          {/* Mobile Filter Toggle */}
+          <div className="lg:hidden mb-6">
+            <Button 
+              onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
+              variant="outline" 
+              className="w-full flex items-center justify-between border-white/20 bg-transparent text-white hover:bg-white/5"
             >
-              {isDescriptionExpanded ? (
-                <>
-                  <span>Czytaj mniej</span>
-                  <ChevronUp className="w-4 h-4" />
-                </>
-              ) : (
-                <>
-                  <span>Czytaj więcej</span>
-                  <ChevronDown className="w-4 h-4" />
-                </>
+              <span className="flex items-center gap-2">
+                <SlidersHorizontal className="w-4 h-4" />
+                Filtry
+              </span>
+              {activeFiltersCount > 0 && (
+                <Badge variant="secondary" className="bg-red-600 text-white hover:bg-red-700 border-none">
+                  {activeFiltersCount}
+                </Badge>
               )}
-            </button>
+            </Button>
           </div>
 
-          {/* Grid z buttonami modeli */}
-          {availableModels.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-white mb-4">Wybierz model {currentBrand.displayName}</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                <Link
-                  href="/dywaniki"
-                  className="px-4 py-3 rounded-lg font-medium transition-all duration-200 bg-gray-700 text-white hover:bg-gray-600 text-center"
-                >
-                  Powrót
-                </Link>
-                <button
-                  onClick={() => {
-                    setSelectedModel(null);
-                    setSelectedBodyType(null);
-                  }}
-                  className={`px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
-                    selectedModel === null && selectedBodyType === null
-                      ? 'bg-red-600 text-white shadow-lg shadow-red-500/50'
-                      : 'bg-white text-black hover:bg-gray-200'
-                  }`}
-                >
-                  Wszystkie
-                </button>
-                {availableModels.map(({ model, bodyType, count }) => {
-                  const key = `${model}-${bodyType}`;
-                  const isSelected = selectedModel === model && selectedBodyType === bodyType;
-                  const bodyTypeDisplay = formatBodyType(bodyType);
-                  
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => {
-                        setSelectedModel(model);
-                        setSelectedBodyType(bodyType);
-                      }}
-                      className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 text-xs ${
-                        isSelected
-                          ? 'bg-red-600 text-white shadow-lg shadow-red-500/50'
-                          : 'bg-white text-black hover:bg-gray-200'
-                      }`}
-                      title={`${model.toUpperCase()} - ${bodyTypeDisplay}`}
-                    >
-                      <div className="flex flex-col items-center text-center">
-                        <span className="font-bold leading-tight">{model.toUpperCase()}</span>
-                        <span className="text-[10px] mt-0.5 leading-tight">{bodyTypeDisplay}</span>
-                        <span className="text-[10px] mt-0.5 opacity-70">({count})</span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Panel filtrowania - lewa strona */}
-          <div className="lg:w-1/4">
-            <div className="bg-gray-900 rounded-lg p-6 sticky top-4">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-white">Filtry</h2>
-                <button
-                  onClick={clearFilters}
-                  className="text-red-400 hover:text-red-300 text-sm font-medium"
-                >
-                  Wyczyść wszystkie
-                </button>
+          {/* Sidebar Filters */}
+          <aside className={`
+            lg:w-72 shrink-0 space-y-8
+            ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}
+          `}>
+            <div className="sticky top-24 space-y-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Filtrowanie</h3>
+                {activeFiltersCount > 0 && (
+                  <button 
+                    onClick={() => {
+                      clearFilters();
+                      setSelectedModel(null);
+                      setSelectedBodyType(null);
+                    }}
+                    className="text-xs text-red-400 hover:text-red-300 font-medium transition-colors"
+                  >
+                    WYCZYŚĆ
+                  </button>
+                )}
               </div>
 
               {/* Typ nadwozia */}
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-white mb-3">Typ nadwozia</h3>
-                <div className="space-y-2">
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Typ nadwozia</h4>
+                <div className="space-y-3">
                   {availableBodyTypes.map(({ bodyType, count }) => (
-                    <div key={bodyType} className="flex items-center space-x-2">
+                    <div key={bodyType} className="flex items-center space-x-3 group">
                       <Checkbox
                         id={`bodyType-${bodyType}`}
                         checked={filters.bodyTypes.includes(bodyType)}
                         onCheckedChange={(checked) =>
                           handleBodyTypeChange(bodyType, checked as boolean)
                         }
+                        className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                       />
                       <Label
                         htmlFor={`bodyType-${bodyType}`}
-                        className="text-gray-300 hover:text-white cursor-pointer flex-1"
+                        className="text-gray-300 group-hover:text-white cursor-pointer transition-colors font-medium"
                       >
                         {formatBodyType(bodyType)} ({count})
                       </Label>
@@ -667,24 +548,25 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
                 </div>
               </div>
 
-              <Separator className="bg-gray-700 mb-6" />
+              <Separator className="bg-white/10" />
 
               {/* Rok produkcji */}
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-white mb-3">Rok produkcji</h3>
-                <div className="space-y-2 max-h-64 overflow-y-auto">
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Rok produkcji</h4>
+                <div className="space-y-3 max-h-64 overflow-y-auto">
                   {availableYearRanges.map(({ range, count }) => (
-                    <div key={range} className="flex items-center space-x-2">
+                    <div key={range} className="flex items-center space-x-3 group">
                       <Checkbox
                         id={`yearRange-${range}`}
                         checked={filters.yearRanges.includes(range)}
                         onCheckedChange={(checked) =>
                           handleYearRangeChange(range, checked as boolean)
                         }
+                        className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                       />
                       <Label
                         htmlFor={`yearRange-${range}`}
-                        className="text-gray-300 hover:text-white cursor-pointer flex-1"
+                        className="text-gray-300 group-hover:text-white cursor-pointer transition-colors"
                       >
                         {range} ({count})
                       </Label>
@@ -692,19 +574,29 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
                   ))}
                 </div>
               </div>
-
-              {/* Liczba wyników */}
-              <div className="text-center">
-                <p className="text-gray-400 text-sm">
-                  Znaleziono: <span className="text-white font-semibold">{filteredProducts.length}</span> produktów
-                </p>
-              </div>
             </div>
-          </div>
+          </aside>
 
-          {/* Grid z produktami - prawa strona */}
-          <div className="lg:w-3/4">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <main className="flex-1">
+            {/* Results Header */}
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+              <p className="text-gray-400">
+                Znaleziono <span className="text-white font-semibold">{filteredProducts.length}</span> produktów
+              </p>
+            </div>
+
+            {/* Loading State */}
+            {(loadingModels || loadingMats) ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="h-[400px] bg-white/5 rounded-xl animate-pulse" />
+                ))}
+              </div>
+            ) : (
+              <>
+                {/* Product Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredProducts.map((product) => {
                 const configuratorUrl = `/konfigurator?brand=${encodeURIComponent(brandSlug)}&model=${encodeURIComponent(product.model.toLowerCase())}${product.generation ? `&generation=${encodeURIComponent(product.generation)}` : ""}${product.bodyType ? `&bodyType=${encodeURIComponent(product.bodyType)}` : ""}`;
 
@@ -764,15 +656,32 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
               })}
             </div>
 
-            {filteredProducts.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-gray-400 text-lg">Nie znaleziono produktów spełniających kryteria</p>
-              </div>
+                {/* Empty State */}
+                {filteredProducts.length === 0 && (
+                  <div className="py-20 text-center border border-dashed border-white/10 rounded-xl">
+                    <div className="text-4xl mb-4">🔍</div>
+                    <h3 className="text-xl font-semibold text-white mb-2">Nie znaleziono produktów</h3>
+                    <p className="text-gray-400 max-w-md mx-auto mb-6">
+                      Spróbuj zmienić kryteria wyszukiwania lub usuń filtry, aby zobaczyć więcej wyników.
+                    </p>
+                    <Button 
+                      onClick={() => {
+                        clearFilters();
+                        setSelectedModel(null);
+                        setSelectedBodyType(null);
+                      }} 
+                      variant="secondary"
+                    >
+                      Wyczyść wszystkie filtry
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
-          </div>
+          </main>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
