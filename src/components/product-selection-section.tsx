@@ -68,34 +68,73 @@ function getBrandInfo(brandSlug: string): { displayName: string; logo: string; a
   return brandMapping[normalized] || null;
 }
 
-// Mapowanie typów nadwozia na polskie nazwy
-const bodyTypeMapping: Record<string, string> = {
+// Mapowanie typów nadwozia na podstawowe kategorie
+const normalizeBodyType = (bodyType: string): string => {
+  if (!bodyType) return '';
+  
+  const normalized = bodyType.toLowerCase().trim();
+  
+  // Normalizacja do podstawowych typów nadwozia
+  if (normalized.includes('hatchback') || normalized.includes('hatch')) {
+    return 'hatchback';
+  }
+  if (normalized.includes('suv')) {
+    return 'suv';
+  }
+  if (normalized.includes('sedan')) {
+    return 'sedan';
+  }
+  if (normalized.includes('kombi') || normalized.includes('estate') || normalized.includes('wagon')) {
+    return 'kombi';
+  }
+  if (normalized.includes('minivan') || normalized.includes('mpv')) {
+    return 'minivan';
+  }
+  if (normalized.includes('van') || normalized.includes('dostawczak')) {
+    return 'van';
+  }
+  if (normalized.includes('coupe')) {
+    return 'coupe';
+  }
+  if (normalized.includes('cabrio') || normalized.includes('convertible')) {
+    return 'kabriolet';
+  }
+  if (normalized.includes('roadster')) {
+    return 'roadster';
+  }
+  if (normalized.includes('fastback')) {
+    return 'fastback';
+  }
+  if (normalized.includes('liftback')) {
+    return 'liftback';
+  }
+  if (normalized.includes('shooting brake')) {
+    return 'shooting brake';
+  }
+  
+  // Fallback - zwróć znormalizowaną wersję
+  return normalized;
+};
+
+// Mapowanie znormalizowanych typów nadwozia na polskie nazwy wyświetlane
+const bodyTypeDisplayNames: Record<string, string> = {
   'sedan': 'Sedan',
   'suv': 'SUV',
   'hatchback': 'Hatchback',
-  'coupe': 'Coupe',
-  'roadster': 'Roadster',
-  'cabrio': 'Kabriolet',
   'kombi': 'Kombi',
   'minivan': 'Minivan',
   'van': 'Van',
-  'dostawczak': 'Dostawczak',
+  'coupe': 'Coupe',
+  'kabriolet': 'Kabriolet',
+  'roadster': 'Roadster',
   'fastback': 'Fastback',
   'liftback': 'Liftback',
-  'hatchback 2drzwi': 'Hatchback 2-drzwiowy',
-  'hatchback 3drzwi': 'Hatchback 3-drzwiowy',
-  'hatchback 5drzwi': 'Hatchback 5-drzwiowy',
-  'hatchback 3/5drzwi': 'Hatchback 3/5-drzwiowy',
-  'SUV 5os.': 'SUV 5-osobowy',
-  'SUV 7os.': 'SUV 7-osobowy',
-  'kombi/ sedan': 'Kombi/Sedan',
-  'van 4drzwi': 'Van 4-drzwiowy',
   'shooting brake': 'Shooting Brake',
 };
 
 function formatBodyType(bodyType: string): string {
-  const normalized = bodyType.toLowerCase().trim();
-  return bodyTypeMapping[normalized] || bodyType.charAt(0).toUpperCase() + bodyType.slice(1).toLowerCase();
+  const normalized = normalizeBodyType(bodyType);
+  return bodyTypeDisplayNames[normalized] || normalized.charAt(0).toUpperCase() + normalized.slice(1);
 }
 
 // Funkcja do pobierania modeli - używa car_models_extended z Supabase
@@ -257,20 +296,32 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
     return Array.from(productsMap.values());
   }, [mats, carModels, currentBrand, brand]);
 
-  // Dostępne typy nadwozia z liczbą produktów
+  // Dostępne typy nadwozia z liczbą produktów (znormalizowane do podstawowych typów)
   const availableBodyTypes = useMemo(() => {
     const bodyTypeCounts = new Map<string, number>();
     
     displayProducts.forEach((product) => {
       if (product.bodyType) {
-        const count = bodyTypeCounts.get(product.bodyType) || 0;
-        bodyTypeCounts.set(product.bodyType, count + 1);
+        const normalizedType = normalizeBodyType(product.bodyType);
+        if (normalizedType) {
+          const count = bodyTypeCounts.get(normalizedType) || 0;
+          bodyTypeCounts.set(normalizedType, count + 1);
+        }
       }
     });
 
+    // Sortuj według kolejności podstawowych typów
+    const order = ['sedan', 'hatchback', 'kombi', 'suv', 'minivan', 'van', 'coupe', 'kabriolet', 'roadster', 'fastback', 'liftback', 'shooting brake'];
     return Array.from(bodyTypeCounts.entries())
       .map(([bodyType, count]) => ({ bodyType, count }))
-      .sort((a, b) => a.bodyType.localeCompare(b.bodyType));
+      .sort((a, b) => {
+        const indexA = order.indexOf(a.bodyType);
+        const indexB = order.indexOf(b.bodyType);
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+        if (indexA !== -1) return -1;
+        if (indexB !== -1) return 1;
+        return a.bodyType.localeCompare(b.bodyType);
+      });
   }, [displayProducts]);
 
   // Dostępne zakresy lat z liczbą produktów
@@ -294,18 +345,18 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
       });
   }, [displayProducts]);
 
-  // Wyodrębnij unikalne kombinacje modelu i typu nadwozia z produktów
+  // Wyodrębnij unikalne kombinacje modelu i typu nadwozia z produktów (użyj znormalizowanych typów)
   const availableModels = useMemo(() => {
     const modelBodyTypeMap = new Map<string, { model: string; bodyType: string; count: number }>();
     displayProducts.forEach((product) => {
       const modelName = product.model;
-      const bodyType = product.bodyType || 'universal';
-      const key = `${modelName}-${bodyType}`;
+      const normalizedBodyType = product.bodyType ? normalizeBodyType(product.bodyType) : 'universal';
+      const key = `${modelName}-${normalizedBodyType}`;
       
       if (!modelBodyTypeMap.has(key)) {
         modelBodyTypeMap.set(key, {
           model: modelName,
-          bodyType: bodyType,
+          bodyType: normalizedBodyType,
           count: 1
         });
       } else {
@@ -328,20 +379,30 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
   const filteredProducts = useMemo(() => {
     let filtered = displayProducts;
 
-    // Filtrowanie według wybranego modelu i typu nadwozia
+    // Filtrowanie według wybranego modelu i typu nadwozia (użyj znormalizowanych typów)
     if (selectedModel && selectedBodyType) {
       filtered = filtered.filter(
-        (product) => product.model === selectedModel && (product.bodyType || 'universal') === selectedBodyType
+        (product) => {
+          if (product.model !== selectedModel) return false;
+          if (!product.bodyType) return false;
+          const normalizedProductType = normalizeBodyType(product.bodyType);
+          const normalizedSelectedType = normalizeBodyType(selectedBodyType);
+          return normalizedProductType === normalizedSelectedType;
+        }
       );
     } else if (selectedModel) {
       // Jeśli wybrano tylko model (bez typu nadwozia), pokaż wszystkie warianty tego modelu
       filtered = filtered.filter((product) => product.model === selectedModel);
     }
 
-    // Filtrowanie według typu nadwozia (dodatkowe filtry)
+    // Filtrowanie według typu nadwozia (dodatkowe filtry) - użyj znormalizowanych typów
     if (filters.bodyTypes.length > 0) {
       filtered = filtered.filter(
-        (product) => product.bodyType && filters.bodyTypes.includes(product.bodyType)
+        (product) => {
+          if (!product.bodyType) return false;
+          const normalizedType = normalizeBodyType(product.bodyType);
+          return filters.bodyTypes.includes(normalizedType);
+        }
       );
     }
 
