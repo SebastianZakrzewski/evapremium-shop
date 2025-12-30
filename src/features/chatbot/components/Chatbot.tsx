@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo } from "react";
-import { X, Send, User, Phone, User as UserIcon } from "lucide-react";
+import { X, Send, User, Phone, User as UserIcon, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ContactInfo, ContactFormData } from "@/types/contact";
@@ -272,14 +272,8 @@ export default function Chatbot() {
         {showTooltip && !isOpen && (
           <div className={`absolute bottom-20 md:bottom-20 bg-neutral-900 text-white px-3 py-2 md:px-5 md:py-3 rounded-xl shadow-2xl border border-white/10 max-w-[200px] sm:max-w-sm animate-bounce sm:block ${isCartOpen ? 'left-0' : 'right-0'}`}>
             <div className="flex items-center space-x-2 md:space-x-3">
-              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden flex-shrink-0">
-                <Image
-                  src="/chat.webp"
-                  alt="EVA Premium Chat"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden flex-shrink-0 bg-red-600 flex items-center justify-center">
+                <MessageCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs md:text-sm font-semibold text-white">Potrzebujesz pomocy?</p>
@@ -309,16 +303,7 @@ export default function Chatbot() {
           {isOpen ? (
             <X className="w-6 h-6 md:w-8 md:h-8" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center p-2">
-              <Image
-                src="/chat.webp"
-                alt="EVA Premium Chat"
-                width={48}
-                height={48}
-                className="rounded-full drop-shadow-lg w-10 h-10 md:w-12 md:h-12"
-                style={{ width: "auto", height: "auto" }}
-              />
-            </div>
+            <MessageCircle className="w-8 h-8 md:w-10 md:h-10" />
           )}
         </button>
       </div>

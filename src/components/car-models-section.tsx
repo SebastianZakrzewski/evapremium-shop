@@ -842,10 +842,11 @@ export default function CarModelsSection() {
                           <h3 className="text-base md:text-lg font-semibold text-white mb-3 line-clamp-2">
                             {model.brand} {model.name}
                           </h3>
-                          <div className="text-xs md:text-sm text-gray-300 mb-4 flex-1">
-                            <p className="leading-relaxed">
-                              <span className="text-red-500 font-semibold">od 150.00 zł</span>
-                              <span className="mx-2">•</span>
+                          <div className="mb-4 flex-1">
+                            <div className="text-white font-semibold text-base md:text-lg mb-2">
+                              od 150.00 zł
+                            </div>
+                            <div className="text-xs md:text-sm text-gray-300 leading-relaxed">
                               {formatGeneration(model.generation, model.yearFrom, model.yearTo) && (
                                 <span>{formatGeneration(model.generation, model.yearFrom, model.yearTo)} </span>
                               )}
@@ -853,7 +854,7 @@ export default function CarModelsSection() {
                               <span>{getEngineType(model.name, model.brand)} </span>
                               {model.bodyType && <span className="uppercase">{model.bodyType} </span>}
                               {model.bodyType && <span>{getDoorsCount(model.bodyType)} drzwi</span>}
-                            </p>
+                            </div>
                           </div>
 
                           {/* Przycisk do konfiguratora */}
