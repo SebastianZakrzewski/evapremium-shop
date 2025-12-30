@@ -1,4 +1,4 @@
-import { Brand, Model, CarouselItem } from '../types/carousel';
+import { Brand, Model, CarouselItem } from '@/entities/car';
 
 // Marki samochodów z rzeczywistymi zdjęciami
 export const brands: Brand[] = [

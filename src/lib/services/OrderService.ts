@@ -27,97 +27,120 @@ export class OrderService {
   /**
    * Utwórz nowe zamówienie
    */
-  async createOrder(data: CreateOrderDTO): Promise<Order> {
+  async createOrder(data: CreateOrderDTO, maxRetries: number = 3): Promise<Order> {
     console.log('🛒 OrderService: createOrder called with data:', data);
     
-    try {
-      // 1. Walidacja pozycji
-      console.log('🛒 OrderService: Validating order items...');
-      await this.validateOrderItems(data.items);
-      
-      // 2. Oblicz ceny
-      console.log('🛒 OrderService: Calculating pricing...');
-      const pricing = await this.calculateOrderPricing(data.items, data.discountCode, data.discountAmount);
-      console.log('🛒 OrderService: Pricing calculated:', pricing);
-      
-      // 3. Generuj numer zamówienia
-      console.log('🛒 OrderService: Generating order number...');
-      const orderNumber = await this.generateOrderNumber();
-      console.log('🛒 OrderService: Order number generated:', orderNumber);
-      
-      // 4. Przygotuj dane do zapisu
-      const orderData = {
-        orderNumber,
-        status: 'pending' as OrderStatus,
-        paymentStatus: 'pending' as const,
-        customer: data.customer,
-        shippingAddress: data.shippingAddress,
-        billingAddress: data.billingAddress,
-        subtotal: pricing.subtotal,
-        shippingCost: pricing.shippingCost,
-        tax: pricing.tax,
-        discount: pricing.discount,
-        total: pricing.total,
-        paymentMethod: data.paymentMethod,
-        notes: data.notes,
-        items: data.items
-      };
-      console.log('🛒 OrderService: Order data prepared:', orderData);
-      
-      // 5. Zapisz zamówienie (bez items)
-      const { items: orderItems, ...orderDataWithoutItems } = orderData;
-      
-      // Mapuj camelCase na snake_case dla bazy danych
-      const orderDataForDB = {
-        order_number: orderDataWithoutItems.orderNumber,
-        status: orderDataWithoutItems.status,
-        payment_status: orderDataWithoutItems.paymentStatus,
-        customer: orderDataWithoutItems.customer,
-        shipping_address: orderDataWithoutItems.shippingAddress,
-        billing_address: orderDataWithoutItems.billingAddress,
-        subtotal: orderDataWithoutItems.subtotal,
-        shipping_cost: orderDataWithoutItems.shippingCost,
-        tax: orderDataWithoutItems.tax,
-        discount: orderDataWithoutItems.discount,
-        total: orderDataWithoutItems.total,
-        payment_method: orderDataWithoutItems.paymentMethod,
-        notes: orderDataWithoutItems.notes
-      };
-      
-      console.log('🛒 OrderService: Saving order to database...');
-      console.log('🛒 OrderService: Order data for DB:', orderDataForDB);
-      const order = await this.repository.create(orderDataForDB);
-      console.log('🛒 OrderService: Order saved successfully:', order);
-      console.log('🛒 OrderService: Order ID type:', typeof order.id, 'value:', order.id);
-      
-      // 6. Zapisz pozycje zamówienia
-      console.log('🛒 OrderService: Saving order items...');
-      await this.saveOrderItems(order.id, orderItems);
-      console.log('🛒 OrderService: Order items saved successfully');
-      
-      // 7. Zaktualizuj stan magazynowy (dla akcesoriów)
-      console.log('🛒 OrderService: Updating inventory...');
-      await this.updateInventory(data.items);
-      console.log('🛒 OrderService: Inventory updated');
+    let lastError: Error | null = null;
+    
+    // Retry logic dla race condition przy generowaniu numeru zamówienia
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        // 1. Walidacja pozycji
+        console.log('🛒 OrderService: Validating order items...');
+        await this.validateOrderItems(data.items);
+        
+        // 2. Oblicz ceny
+        console.log('🛒 OrderService: Calculating pricing...');
+        const pricing = await this.calculateOrderPricing(data.items, data.discountCode, data.discountAmount);
+        console.log('🛒 OrderService: Pricing calculated:', pricing);
+        
+        // 3. Generuj numer zamówienia
+        console.log('🛒 OrderService: Generating order number...');
+        const orderNumber = await this.generateOrderNumber();
+        console.log('🛒 OrderService: Order number generated:', orderNumber);
+        
+        // 4. Przygotuj dane do zapisu
+        const orderData = {
+          orderNumber,
+          status: 'pending' as OrderStatus,
+          paymentStatus: 'pending' as const,
+          customer: data.customer,
+          shippingAddress: data.shippingAddress,
+          billingAddress: data.billingAddress,
+          subtotal: pricing.subtotal,
+          shippingCost: pricing.shippingCost,
+          tax: pricing.tax,
+          discount: pricing.discount,
+          total: pricing.total,
+          paymentMethod: data.paymentMethod,
+          notes: data.notes,
+          items: data.items
+        };
+        console.log('🛒 OrderService: Order data prepared:', orderData);
+        
+        // 5. Zapisz zamówienie (bez items)
+        const { items: orderItems, ...orderDataWithoutItems } = orderData;
+        
+        // Mapuj camelCase na snake_case dla bazy danych
+        const orderDataForDB = {
+          order_number: orderDataWithoutItems.orderNumber,
+          status: orderDataWithoutItems.status,
+          payment_status: orderDataWithoutItems.paymentStatus,
+          customer: orderDataWithoutItems.customer,
+          shipping_address: orderDataWithoutItems.shippingAddress,
+          billing_address: orderDataWithoutItems.billingAddress,
+          subtotal: orderDataWithoutItems.subtotal,
+          shipping_cost: orderDataWithoutItems.shippingCost,
+          tax: orderDataWithoutItems.tax,
+          discount: orderDataWithoutItems.discount,
+          total: orderDataWithoutItems.total,
+          payment_method: orderDataWithoutItems.paymentMethod,
+          notes: orderDataWithoutItems.notes
+        };
+        
+        console.log('🛒 OrderService: Saving order to database...');
+        console.log('🛒 OrderService: Order data for DB:', orderDataForDB);
+        const order = await this.repository.create(orderDataForDB);
+        console.log('🛒 OrderService: Order saved successfully:', order);
+        console.log('🛒 OrderService: Order ID type:', typeof order.id, 'value:', order.id);
+        
+        // 6. Zapisz pozycje zamówienia
+        console.log('🛒 OrderService: Saving order items...');
+        await this.saveOrderItems(order.id, orderItems);
+        console.log('🛒 OrderService: Order items saved successfully');
+        
+        // 7. Zaktualizuj stan magazynowy (dla akcesoriów)
+        console.log('🛒 OrderService: Updating inventory...');
+        await this.updateInventory(data.items);
+        console.log('🛒 OrderService: Inventory updated');
 
-      // 8. Synchronizuj z Bitrix24 (jeśli włączone)
-      const bitrix24Config = getBitrix24Config();
-      if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders) {
-        console.log('🛒 OrderService: Syncing order to Bitrix24...');
-        try {
-          await this.syncOrderToBitrix24(order);
-          console.log('✅ OrderService: Order synced to Bitrix24 successfully');
-        } catch (error) {
-          console.error('❌ OrderService: Failed to sync order to Bitrix24:', error);
-          // Nie blokujemy procesu zamówienia w przypadku błędu integracji
+        // 8. Synchronizuj z Bitrix24 (jeśli włączone)
+        const bitrix24Config = getBitrix24Config();
+        if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders) {
+          console.log('🛒 OrderService: Syncing order to Bitrix24...');
+          try {
+            await this.syncOrderToBitrix24(order);
+            console.log('✅ OrderService: Order synced to Bitrix24 successfully');
+          } catch (error) {
+            console.error('❌ OrderService: Failed to sync order to Bitrix24:', error);
+            // Nie blokujemy procesu zamówienia w przypadku błędu integracji
+          }
         }
-      }
 
-      return order;
-    } catch (error) {
-      console.error('❌ OrderService: Error in createOrder:', error);
-      throw error;
+        return order;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        const isDuplicateKeyError = errorMessage.includes('duplicate key value violates unique constraint') ||
+                                   errorMessage.includes('orders_order_number_key');
+        
+        if (isDuplicateKeyError && attempt < maxRetries - 1) {
+          // Race condition - spróbuj ponownie z nowym numerem
+          console.warn(`⚠️ OrderService: Duplicate order number detected (attempt ${attempt + 1}/${maxRetries}), retrying...`);
+          lastError = error instanceof Error ? error : new Error(errorMessage);
+          
+          // Krótkie opóźnienie przed ponowną próbą
+          await new Promise(resolve => setTimeout(resolve, 100 * (attempt + 1)));
+          continue;
+        }
+        
+        // Jeśli to nie jest błąd duplikatu lub wyczerpaliśmy próby, rzuć błąd
+        console.error('❌ OrderService: Error in createOrder:', error);
+        throw error;
+      }
     }
+    
+    // Jeśli wszystkie próby się nie powiodły
+    throw lastError || new Error('Failed to create order after multiple retries');
   }
 
   /**
@@ -302,12 +325,31 @@ export class OrderService {
 
   /**
    * Generuj unikalny numer zamówienia
+   * 
+   * Używa retry logic aby uniknąć race condition przy równoczesnych żądaniach.
+   * Jeśli numer już istnieje, próbuje ponownie z kolejnym numerem.
    */
-  private async generateOrderNumber(): Promise<string> {
+  private async generateOrderNumber(maxRetries: number = 5): Promise<string> {
     const year = new Date().getFullYear();
-    const count = await this.repository.countOrdersThisYear();
-    const number = String(count + 1).padStart(6, '0');
-    return `ORD-${year}-${number}`;
+    
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      const count = await this.repository.countOrdersThisYear();
+      const number = String(count + 1 + attempt).padStart(6, '0');
+      const orderNumber = `ORD-${year}-${number}`;
+      
+      // Sprawdź czy numer już istnieje
+      const existingOrder = await this.repository.findByOrderNumber(orderNumber);
+      if (!existingOrder) {
+        return orderNumber;
+      }
+      
+      // Jeśli istnieje, spróbuj kolejny numer
+      console.warn(`⚠️ OrderService: Order number ${orderNumber} already exists, trying next number...`);
+    }
+    
+    // Jeśli wszystkie próby się nie powiodły, użyj timestamp jako fallback
+    const timestamp = Date.now();
+    return `ORD-${year}-${String(timestamp).slice(-6)}`;
   }
 
   /**

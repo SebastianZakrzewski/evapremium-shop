@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 import { Search, X, ChevronDown, Loader2 } from "lucide-react";
-import { Brand } from "@/types/carousel";
+import { Brand } from "@/entities/car";
 import { getAvailableModels } from "@/data/car-model-years.utils";
+import { useBrands } from "@/features/brands/hooks/useBrands";
 
 // Mapowanie nazw marek z API na nazwy w bazie danych (takie samo jak w Configuratorze)
 const mapBrandNameForData = (brandName: string): string => {
@@ -45,29 +45,13 @@ const mapBrandNameForData = (brandName: string): string => {
   return brandMappings[brandName] || brandName;
 };
 
-// Fetch function dla marek
-const fetchBrands = async (): Promise<Brand[]> => {
-  const response = await fetch('/api/car-brands');
-  
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-  
-  return response.json();
-};
-
 export default function QuickSearchBar() {
   const router = useRouter();
   const [selectedBrand, setSelectedBrand] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
 
-  // Pobierz marki
-  const { data: brands = [], isLoading: brandsLoading } = useQuery<Brand[]>({
-    queryKey: ['car-brands'],
-    queryFn: fetchBrands,
-    staleTime: 10 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
-  });
+  // Pobierz marki używając hooka useBrands
+  const { brands, isLoading: brandsLoading } = useBrands();
 
   // Pobierz dostępne modele dla wybranej marki (używając tej samej logiki co Configurator)
   const availableModels = useMemo(() => {

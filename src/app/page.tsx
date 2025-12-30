@@ -1,11 +1,11 @@
 "use client";
 
-import HeroSection from "@/components/hero-section";
+import HeroSection from "@/components/marketing/hero-section";
 import QuickSearchBar from "@/components/quick-search-bar";
-import AdvantagesSection from "@/components/advantages-section";
+import AdvantagesSection from "@/components/marketing/advantages-section";
 import ThreeDMatsSection from "@/components/3d-mats-section";
-import ProductGallerySection from "@/components/product-gallery-section";
-import ProductSelection from "@/components/product-selection";
+import ProductGallerySection from "@/components/products/product-gallery-section";
+import ProductSelection from "@/components/products/product-selection";
 import CustomFitSection from "@/components/custom-fit-section";
 import RoznorodnaKolorystykaSection from "@/components/roznorodna-kolorystyka-section";
 import GlebokaStrukturaKomorekSection from "@/components/gleboka-struktura-komorek-section";

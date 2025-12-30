@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { WindowCard } from "./ui/WindowCard";
-import { ImageCarouselProps } from "../types/carousel";
+import { ImageCarouselProps } from "@/entities/car";
 
 const POSITIONS = [
   "far-left",

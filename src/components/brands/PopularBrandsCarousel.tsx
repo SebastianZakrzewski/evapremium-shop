@@ -1,0 +1,119 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import ImageCarousel from "../ImageCarousel";
+import { BrandCard } from "../ui/BrandCard";
+import { Brand } from "@/entities/car";
+import { Car, Loader2 } from "lucide-react";
+import { useBrands } from "@/features/brands/hooks/useBrands";
+
+export default function PopularBrandsCarousel() {
+  // Pobierz marki używając hooka useBrands
+  const { brands, isLoading: loading, error: fetchError } = useBrands();
+  const error = fetchError ? 'Nie udało się pobrać marek samochodów' : null;
+
+  // Handler dla kliknięcia w markę
+  const handleBrandClick = (brand: Brand) => {
+    // Przekieruj do strony z produktami modeli dla danej marki
+    window.location.href = `/modele/${encodeURIComponent(brand.name.toLowerCase())}`;
+  };
+
+  // Renderowanie karty marki
+  const renderBrandCard = (brand: Brand, index: number, position: string) => {
+    return (
+      <BrandCard
+        brand={brand}
+        className={`transition-all duration-700 ease-out ${
+          position === 'center' 
+            ? 'scale-100 opacity-100' 
+            : position === 'left' || position === 'right'
+            ? 'scale-95 opacity-90'
+            : 'scale-90 opacity-70'
+        }`}
+      />
+    );
+  };
+
+  if (loading) {
+    return (
+      <section className="py-20 bg-neutral-950 relative overflow-hidden">
+        <div className="container mx-auto px-4 text-center">
+          <div className="flex flex-col items-center justify-center min-h-[400px]">
+            <Loader2 className="w-12 h-12 text-red-500 animate-spin mb-4" />
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Popularne Marki Samochodów
+            </h2>
+            <p className="text-gray-300 text-lg">
+              Ładowanie dostępnych marek...
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error && brands.length === 0) {
+    return (
+      <section className="py-20 bg-neutral-950 relative overflow-hidden">
+        <div className="container mx-auto px-4 text-center">
+          <div className="flex flex-col items-center justify-center min-h-[400px]">
+            <Car className="w-16 h-16 text-red-500 mb-4" />
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Popularne Marki Samochodów
+            </h2>
+            <p className="text-red-400 text-lg mb-4">
+              {error}
+            </p>
+            <p className="text-gray-300">
+              Spróbuj odświeżyć stronę lub skontaktuj się z nami.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="py-20 bg-neutral-950 relative overflow-hidden">
+      {/* Tło z gradientem */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
+      
+      {/* Nagłówek sekcji */}
+      <div className="container mx-auto px-4 relative z-10 mb-12">
+        <div className="text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Popularne Marki <span className="text-red-500">Samochodów</span>
+          </h2>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            Wybierz markę swojego auta i odkryj nasze precyzyjnie dopasowane dywaniki samochodowe. 
+            Oferujemy rozwiązania dla ponad {brands.length} marek samochodów.
+          </p>
+          {error && (
+            <p className="text-yellow-400 text-sm mt-2">
+              ⚠️ Używamy ograniczonych danych (API tymczasowo niedostępne)
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Carousel z markami */}
+      <div className="relative z-10">
+        <ImageCarousel
+          items={brands}
+          onItemClick={handleBrandClick}
+          renderItem={renderBrandCard}
+          className=""
+        />
+      </div>
+
+      {/* Dodatkowe informacje */}
+      <div className="container mx-auto px-4 relative z-10 mt-12">
+        <div className="text-center">
+          <p className="text-gray-400 text-sm">
+            Kliknij na markę, aby zobaczyć dostępne modele i spersonalizować dywaniki
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}

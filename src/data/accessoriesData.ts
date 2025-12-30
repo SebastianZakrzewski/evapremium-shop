@@ -1,4 +1,4 @@
-import { Accessory, AccessoryCategory } from '../types/accessory';
+import { Accessory, AccessoryCategory } from '@/entities/product';
 
 // Kategorie akcesoriów samochodowych
 export const accessoryCategories: AccessoryCategory[] = [

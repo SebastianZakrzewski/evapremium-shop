@@ -3,7 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Brand } from "../../types/carousel";
+import { Brand } from "@/entities/car";
 import { Car } from "lucide-react";
 
 interface BrandGridCardProps {

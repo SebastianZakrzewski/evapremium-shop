@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AccessoryService } from '@/lib/services/AccessoryService';
-import { AccessoryFilters } from '@/lib/types/accessory';
+import { AccessoryFilters } from '@/entities/product';
 
 const accessoryService = new AccessoryService();
 

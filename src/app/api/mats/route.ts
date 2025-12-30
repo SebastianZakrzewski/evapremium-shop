@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MatService } from '@/lib/services/MatService';
-import { MatFilters } from '@/lib/types/mat';
+import { MatFilters } from '@/entities/product';
 
 const matService = new MatService();
 

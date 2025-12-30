@@ -1,36 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import BrandProductsSection from "@/components/brand-products-section";
+import { useRouter, useSearchParams } from "next/navigation";
+import CarModelsSection from "@/components/car-models-section";
 
 export default function BrandProductsPage({
   params,
 }: {
   params: Promise<{ brand: string }>;
 }) {
-  const [brand, setBrand] = useState<string>("");
+  const router = useRouter();
+  const [isRedirecting, setIsRedirecting] = useState(true);
 
-  // Pobierz brand z params
   useEffect(() => {
-    const getParams = async () => {
+    const redirectToQueryParam = async () => {
       const resolvedParams = await params;
-      setBrand(resolvedParams.brand);
+      const brandName = resolvedParams.brand;
+      // Przekieruj do /dywaniki?brand=... żeby użyć CarModelsSection z query parameter
+      router.replace(`/dywaniki?brand=${encodeURIComponent(brandName)}`);
+      setIsRedirecting(false);
     };
-    getParams();
-  }, [params]);
+    redirectToQueryParam();
+  }, [params, router]);
 
-  if (!brand) {
+  if (isRedirecting) {
     return (
       <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
-        <div className="text-white text-xl">Ładowanie produktów...</div>
+        <div className="text-white text-xl">Przekierowywanie...</div>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-neutral-950">
-      <BrandProductsSection brandSlug={brand} />
-    </div>
-  );
+  return <CarModelsSection />;
 }
 

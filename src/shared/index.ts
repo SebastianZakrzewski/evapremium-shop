@@ -2,8 +2,8 @@
 // Re-eksportuje wszystkie wspólne komponenty, hooki, serwisy i typy
 
 // Tymczasowo importujemy z oryginalnych lokalizacji, aby zachować kompatybilność
-export { default as Navbar } from '../components/navbar';
-export { default as Footer } from '../components/footer';
+export { default as Navbar } from '../components/layout/navbar';
+export { default as Footer } from '../components/layout/footer';
 
 // UI Components (tymczasowo z oryginalnych lokalizacji)
 export { Button, buttonVariants } from '../components/ui/button';

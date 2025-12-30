@@ -1,5 +1,5 @@
 import { BaseRepository } from './BaseRepository';
-import { Accessory, AccessoryFilters } from '../types/accessory';
+import { Accessory, AccessoryFilters } from '@/entities/product';
 
 export class AccessoryRepository extends BaseRepository<Accessory> {
   protected tableName = 'accessories';

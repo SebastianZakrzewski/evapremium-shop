@@ -53,10 +53,17 @@ export function getAvailableBrands(): string[] {
  * Pobiera wszystkie dostępne modele dla danej marki
  */
 export function getAvailableModels(brandName: string): string[] {
+  console.log('🔍 getAvailableModels: Looking for brand:', brandName);
+  console.log('🔍 getAvailableModels: Available brands:', Object.keys(carModelYearsData).slice(0, 10));
   const brand = carModelYearsData[brandName];
-  if (!brand) return [];
+  if (!brand) {
+    console.log('⚠️ getAvailableModels: Brand not found:', brandName);
+    return [];
+  }
   
-  return Object.keys(brand);
+  const models = Object.keys(brand);
+  console.log('✅ getAvailableModels: Found models for', brandName, ':', models);
+  return models;
 }
 
 /**

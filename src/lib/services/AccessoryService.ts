@@ -1,6 +1,6 @@
 import { AccessoryRepository } from '../repositories/AccessoryRepository';
 import { AccessoryCategoryRepository } from '../repositories/AccessoryCategoryRepository';
-import { Accessory, AccessoryCategory, AccessoryFilters, CreateAccessoryDTO, UpdateAccessoryDTO } from '../types/accessory';
+import { Accessory, AccessoryCategory, AccessoryFilters, CreateAccessoryDTO, UpdateAccessoryDTO } from '@/entities/product';
 
 export class AccessoryService {
   private repository: AccessoryRepository;

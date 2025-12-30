@@ -1,6 +1,6 @@
 import { MatRepository } from '../repositories/MatRepository';
 import { PricingService } from './PricingService';
-import { Mat, MatConfiguration, MatFilters, CreateMatDTO, UpdateMatDTO } from '../types/mat';
+import { Mat, MatConfiguration, MatFilters, CreateMatDTO, UpdateMatDTO } from '@/entities/product';
 
 export class MatService {
   private repository: MatRepository;

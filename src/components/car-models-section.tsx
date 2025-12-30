@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useQuery, useQueries } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { Model, Brand } from "../types/carousel";
+import { Model, Brand } from "@/entities/car";
 import { getAllModels, brands } from "../data/carouselData";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
@@ -15,6 +15,7 @@ import { BrandGridCard } from "./ui/BrandGridCard";
 import { fetchBrands, getFallbackBrands } from "@/lib/api/brands";
 import { fetchCarModels } from "@/lib/api/models";
 import { getBrandInfo, normalizeBrandName } from "@/shared/brands";
+import { apiGet } from "@/lib/api/client";
 import { Car, Loader2, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -24,10 +25,156 @@ interface FilterState {
   generations: string[];
 }
 
+/**
+ * Normalizuje typ nadwozia do podstawowego typu (usuwa szczegóły jak "5drzwi", "3/5drzwi" itp.)
+ */
+function normalizeBodyType(bodyType: string): string {
+  if (!bodyType) return '';
+  
+  const normalized = bodyType.toLowerCase().trim();
+  
+  // Normalizacja do podstawowych typów nadwozia
+  if (normalized.includes('hatchback') || normalized.includes('hatch')) {
+    return 'Hatchback';
+  }
+  if (normalized.includes('suv')) {
+    return 'SUV';
+  }
+  if (normalized.includes('sedan')) {
+    return 'Sedan';
+  }
+  if (normalized.includes('kombi') || normalized.includes('estate') || normalized.includes('wagon')) {
+    return 'Kombi';
+  }
+  if (normalized.includes('minivan') || normalized.includes('mpv')) {
+    return 'Minivan';
+  }
+  if (normalized.includes('van') || normalized.includes('dostawczak')) {
+    return 'Van';
+  }
+  if (normalized.includes('coupe')) {
+    return 'Coupe';
+  }
+  if (normalized.includes('cabrio') || normalized.includes('convertible')) {
+    return 'Kabriolet';
+  }
+  if (normalized.includes('roadster')) {
+    return 'Roadster';
+  }
+  if (normalized.includes('fastback')) {
+    return 'Fastback';
+  }
+  if (normalized.includes('liftback')) {
+    return 'Liftback';
+  }
+  if (normalized.includes('shooting brake')) {
+    return 'Shooting Brake';
+  }
+  
+  // Fallback - zwróć z pierwszą literą wielką
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
+/**
+ * Mapuje typ nadwozia na liczbę drzwi
+ */
+function getDoorsCount(bodyType: string): string {
+  const bodyTypeLower = bodyType.toLowerCase();
+  if (bodyTypeLower.includes('hatchback') || bodyTypeLower.includes('sedan') || bodyTypeLower.includes('wagon')) {
+    return '5';
+  }
+  if (bodyTypeLower.includes('coupe') || bodyTypeLower.includes('convertible')) {
+    return '3';
+  }
+  if (bodyTypeLower.includes('suv') || bodyTypeLower.includes('pickup') || bodyTypeLower.includes('van')) {
+    return '5';
+  }
+  return '5'; // Domyślnie 5 drzwi
+}
+
+/**
+ * Formatuje typ silnika na podstawie nazwy modelu lub zwraca domyślną wartość
+ */
+function getEngineType(modelName: string, brand: string): string {
+  const nameLower = modelName.toLowerCase();
+  const brandLower = brand.toLowerCase();
+  
+  // Sprawdź czy model jest elektryczny
+  if (nameLower.includes('electric') || nameLower.includes('ev') || nameLower.includes('e-') || 
+      nameLower.includes('spring') || nameLower.includes('tesla') || nameLower.includes('id.')) {
+    return 'Electro';
+  }
+  
+  // Sprawdź czy model jest hybrydowy
+  if (nameLower.includes('hybrid') || nameLower.includes('phev') || nameLower.includes('plug-in')) {
+    return 'Hybrid';
+  }
+  
+  // Domyślnie - można rozszerzyć o więcej logiki
+  return 'Electro'; // Dla większości nowoczesnych modeli
+}
+
+/**
+ * Formatuje generację na podstawie lat produkcji
+ * Zwraca zakres lat (np. "2021-2025") lub "rocznik+" (np. "2021+")
+ */
+function formatGeneration(
+  generation: string | null | undefined,
+  yearFrom?: number,
+  yearTo?: number
+): string {
+  // Jeśli mamy zakres lat, użyj go
+  if (yearFrom && yearTo) {
+    // Jeśli rok końcowy jest w przyszłości lub bardzo duży, użyj formatu "rocznik+"
+    const currentYear = new Date().getFullYear();
+    if (yearTo >= currentYear || yearTo - yearFrom > 10) {
+      return `${yearFrom}+`;
+    }
+    // W przeciwnym razie użyj zakresu lat
+    return `${yearFrom}-${yearTo}`;
+  }
+  
+  // Jeśli mamy tylko rok początkowy
+  if (yearFrom) {
+    return `${yearFrom}+`;
+  }
+  
+  // Jeśli mamy generację jako string, spróbuj wyciągnąć rok
+  if (generation && generation.trim() !== '') {
+    const genTrimmed = generation.trim();
+    
+    // Jeśli generacja zawiera "+", użyj formatu "rocznik+"
+    if (genTrimmed.includes('+')) {
+      const match = genTrimmed.match(/^(\d{4})/);
+      if (match) {
+        return `${match[1]}+`;
+      }
+    }
+    
+    // Jeśli generacja jest rokiem (4 cyfry), użyj formatu "rocznik+"
+    if (/^\d{4}$/.test(genTrimmed)) {
+      return `${genTrimmed}+`;
+    }
+  }
+  
+  return '';
+}
+
 export default function CarModelsSection() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
   const brandParam = searchParams.get('brand');
+  
+  // Określ bazową ścieżkę na podstawie aktualnej lokalizacji
+  const basePath = useMemo(() => {
+    // Jeśli jesteśmy na stronie /dywaniki, użyj /dywaniki
+    if (pathname?.startsWith('/dywaniki')) {
+      return '/dywaniki';
+    }
+    // W przeciwnym razie użyj /modele
+    return '/modele';
+  }, [pathname]);
   
   // Fallback do statycznych danych
   const allModels = getAllModels();
@@ -61,9 +208,9 @@ export default function CarModelsSection() {
     setTimeout(() => {
       setClickedBrandId(null);
       // Przekierowanie do strony z modelami dla danej marki (używamy query parameter)
-      router.push(`/modele?brand=${encodeURIComponent(brand.name)}`);
+      router.push(`${basePath}?brand=${encodeURIComponent(brand.name)}`);
     }, 300);
-  }, [router]);
+  }, [router, basePath]);
 
   // Pobierz informacje o marce
   const brandSlug = brandParam ? brandParam.toLowerCase().trim() : '';
@@ -138,6 +285,10 @@ export default function CarModelsSection() {
       yearTo?: number;
       imageSrc: string;
       generation: string;
+      // Dodatkowe pola do pobierania zdjęć
+      brandForImage: string;
+      modelForImage: string;
+      yearForImage?: number;
     }> = [];
 
     apiModels.forEach((model: any, modelIndex: number) => {
@@ -155,8 +306,11 @@ export default function CarModelsSection() {
             bodyType: gen.bodyType || '',
             yearFrom: gen.yearFrom,
             yearTo: gen.yearTo,
-            imageSrc: brandInfo?.logo || '/images/products/audi.jpg',
+            imageSrc: brandInfo?.logo || '/images/products/audi.jpg', // Fallback, będzie nadpisane
             generation: gen.generation || '',
+            brandForImage: brandSlug || brandParam?.toLowerCase() || modelBrand?.toLowerCase() || '',
+            modelForImage: modelName.toLowerCase(), // Konwertuj na małe litery dla API
+            yearForImage: gen.yearFrom, // Użyj pierwszego roku z zakresu
           });
         });
       } else {
@@ -168,8 +322,11 @@ export default function CarModelsSection() {
           bodyType: model.bodyType || model.bodyTypes?.[0] || '',
           yearFrom: model.yearFrom,
           yearTo: model.yearTo,
-          imageSrc: brandInfo?.logo || '/images/products/audi.jpg',
+          imageSrc: brandInfo?.logo || '/images/products/audi.jpg', // Fallback, będzie nadpisane
           generation: model.generation || '',
+            brandForImage: brandSlug || brandParam?.toLowerCase() || modelBrand?.toLowerCase() || '',
+            modelForImage: modelName.toLowerCase(), // Konwertuj na małe litery dla API
+            yearForImage: model.yearFrom,
         });
       }
     });
@@ -177,13 +334,163 @@ export default function CarModelsSection() {
     return models;
   }, [apiModels, brandParam, brandInfo]);
 
-  // Dostępne typy nadwozia
+  // Pobierz unikalne kombinacje modeli do zapytania o zdjęcia
+  const uniqueModelQueries = useMemo(() => {
+    const uniqueModels = new Map<string, typeof displayModels[0]>();
+    
+    displayModels.forEach((model) => {
+      // Normalizuj generację - jeśli jest null, undefined, pusty string lub zawiera "+", użyj pustego stringa
+      const normalizedGeneration = (model.generation && model.generation.trim() && !model.generation.includes('+')) ? model.generation : '';
+      // Klucz: brand-model-year-generation-bodyType (używamy znormalizowanej generacji)
+      const key = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${normalizedGeneration}-${model.bodyType || ''}`;
+      if (!uniqueModels.has(key)) {
+        uniqueModels.set(key, model);
+      }
+    });
+    
+    const queries = Array.from(uniqueModels.values());
+    
+    // Debug logowanie dla Spring
+    queries.forEach((model) => {
+      if (model.modelForImage?.toLowerCase().includes('spring')) {
+        const normalizedGeneration = (model.generation && model.generation.trim() && !model.generation.includes('+')) ? model.generation : '';
+        console.log('🔍 CarModelsSection: Unique query for Spring:', {
+          name: model.name,
+          brandForImage: model.brandForImage,
+          modelForImage: model.modelForImage,
+          yearForImage: model.yearForImage,
+          generation: model.generation,
+          normalizedGeneration,
+          bodyType: model.bodyType,
+          brandParam,
+          brandSlug,
+        });
+      }
+    });
+    
+    return queries;
+  }, [displayModels, brandParam, brandSlug]);
+
+  // Pobierz zdjęcia dla każdego unikalnego modelu
+  const imageQueries = useQueries({
+    queries: uniqueModelQueries.map((model) => ({
+      queryKey: ['mat-product-images', model.brandForImage, model.modelForImage, model.yearForImage, model.generation, model.bodyType],
+      queryFn: async () => {
+        const searchParams = new URLSearchParams();
+        if (model.brandForImage) searchParams.set('brand', model.brandForImage);
+        if (model.modelForImage) searchParams.set('model', model.modelForImage);
+        if (model.yearForImage) searchParams.set('year', model.yearForImage.toString());
+        // Nie przekazuj generacji jeśli jest null, undefined, pusty string lub zawiera "+" (np. "2021+")
+        // W bazie danych generation jest null dla Dacia Spring
+        if (model.generation && model.generation.trim() && !model.generation.includes('+')) {
+          searchParams.set('generation', model.generation);
+        }
+        if (model.bodyType) searchParams.set('bodyType', model.bodyType);
+        
+        const url = `/api/mat-product-images?${searchParams.toString()}`;
+        console.log(`🔍 CarModelsSection: Fetching images for model: ${model.name}, URL: ${url}`);
+        
+        const data = await apiGet<{ images: Array<{ image_url: string; [key: string]: any }>; count: number }>(url);
+        
+        // Użyj normalizowanego klucza (bez generacji jeśli jest null lub zawiera "+")
+        const normalizedGeneration = (model.generation && model.generation.trim() && !model.generation.includes('+')) ? model.generation : '';
+        const modelKey = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${normalizedGeneration}-${model.bodyType || ''}`;
+        
+        return { 
+          modelKey,
+          images: data.images || [] 
+        };
+      },
+      enabled: !!model.brandForImage && !!model.modelForImage && !!brandParam,
+      // Dodaj logowanie dla Spring
+      onSuccess: (data) => {
+        if (model.modelForImage?.toLowerCase().includes('spring')) {
+          console.log(`✅ CarModelsSection: Successfully fetched images for Spring:`, {
+            modelKey: data.modelKey,
+            imagesCount: data.images.length,
+            images: data.images.map(img => img.image_url),
+          });
+        }
+      },
+      onError: (error) => {
+        if (model.modelForImage?.toLowerCase().includes('spring')) {
+          console.error(`❌ CarModelsSection: Error fetching images for Spring:`, error);
+        }
+      },
+      staleTime: 10 * 60 * 1000,
+      gcTime: 30 * 60 * 1000,
+    })),
+  });
+
+  // Stwórz mapę zdjęć dla każdego modelu
+  const imagesMap = useMemo(() => {
+    const map = new Map<string, string>();
+    
+    imageQueries.forEach((query, index) => {
+      if (query.data?.images && query.data.images.length > 0) {
+        // Użyj pierwszego dostępnego zdjęcia
+        const imageUrl = query.data.images[0].image_url;
+        map.set(query.data.modelKey, imageUrl);
+        console.log(`✅ CarModelsSection: Found image for model key "${query.data.modelKey}": ${imageUrl}`);
+      } else if (query.isError) {
+        console.error(`❌ CarModelsSection: Error fetching images for query ${index}:`, query.error);
+      } else if (query.isSuccess && (!query.data?.images || query.data.images.length === 0)) {
+        console.warn(`⚠️ CarModelsSection: No images found for model key "${query.data?.modelKey || 'unknown'}"`);
+      }
+    });
+    
+    console.log(`📊 CarModelsSection: Images map size: ${map.size}, total queries: ${imageQueries.length}`);
+    return map;
+  }, [imageQueries]);
+
+  // Mapuj zdjęcia do modeli
+  const modelsWithImages = useMemo(() => {
+    return displayModels.map((model) => {
+      // Normalizuj generację - jeśli jest null, undefined, pusty string lub zawiera "+", użyj pustego stringa
+      const normalizedGeneration = (model.generation && model.generation.trim() && !model.generation.includes('+')) ? model.generation : '';
+      const modelKey = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${normalizedGeneration}-${model.bodyType || ''}`;
+      const imageUrl = imagesMap.get(modelKey);
+      
+      // Debug logowanie dla wszystkich modeli Spring
+      if (model.modelForImage?.toLowerCase().includes('spring')) {
+        console.log('🔍 CarModelsSection: Mapping images for Spring model:', {
+          modelName: model.name,
+          brandForImage: model.brandForImage,
+          modelForImage: model.modelForImage,
+          yearForImage: model.yearForImage,
+          generation: model.generation,
+          bodyType: model.bodyType,
+          modelKey,
+          imageUrl: imageUrl || 'NOT FOUND',
+          imagesMapSize: imagesMap.size,
+          allKeysInMap: Array.from(imagesMap.keys()),
+          imageQueriesStatus: imageQueries.map(q => ({
+            isLoading: q.isLoading,
+            isError: q.isError,
+            isSuccess: q.isSuccess,
+            data: q.data?.modelKey,
+          })),
+        });
+      }
+      
+      return {
+        ...model,
+        imageSrc: imageUrl || model.imageSrc, // Fallback do logo marki jeśli brak zdjęcia
+      };
+    });
+  }, [displayModels, imagesMap, imageQueries]);
+
+  // Dostępne typy nadwozia (znormalizowane - tylko ogólne typy bez szczegółów jak "5drzwi")
   const availableBodyTypes = useMemo(() => {
     if (brandParam && displayModels.length > 0) {
       const types = new Set<string>();
       displayModels.forEach(model => {
         if (model.bodyType) {
-          types.add(model.bodyType);
+          // Normalizuj typ nadwozia do podstawowego typu (np. "Hatchback 5drzwi" -> "Hatchback")
+          const normalizedType = normalizeBodyType(model.bodyType);
+          if (normalizedType) {
+            types.add(normalizedType);
+          }
         }
       });
       return Array.from(types).sort();
@@ -207,14 +514,18 @@ export default function CarModelsSection() {
 
   // Filtrowanie modeli
   const filteredModels = useMemo(() => {
-    if (!brandParam || displayModels.length === 0) {
+    if (!brandParam || modelsWithImages.length === 0) {
       return [];
     }
 
-    return displayModels.filter(model => {
-      // Filtrowanie po typie nadwozia
+    return modelsWithImages.filter(model => {
+      // Filtrowanie po typie nadwozia (użyj znormalizowanych typów)
       if (filters.bodyTypes.length > 0) {
-        if (!model.bodyType || !filters.bodyTypes.includes(model.bodyType)) {
+        if (!model.bodyType) {
+          return false;
+        }
+        const normalizedModelType = normalizeBodyType(model.bodyType);
+        if (!filters.bodyTypes.includes(normalizedModelType)) {
           return false;
         }
       }
@@ -228,7 +539,7 @@ export default function CarModelsSection() {
 
       return true;
     });
-  }, [displayModels, filters, brandParam]);
+  }, [modelsWithImages, filters, brandParam]);
 
   // Handlery dla filtrów
   const handleBodyTypeChange = (type: string, checked: boolean) => {
@@ -333,7 +644,9 @@ export default function CarModelsSection() {
           <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>
-            <Link href="/modele" className="hover:text-white transition-colors">Modele aut</Link>
+            <Link href={basePath} className="hover:text-white transition-colors">
+              {basePath === '/dywaniki' ? 'Dywaniki' : 'Modele aut'}
+            </Link>
             {brandParam && (
               <>
                 <span>/</span>
@@ -475,7 +788,7 @@ export default function CarModelsSection() {
               
               {brandParam && (
                 <Link 
-                  href="/modele" 
+                  href={basePath} 
                   className="text-sm text-red-400 hover:text-red-300 flex items-center gap-1 transition-colors"
                 >
                   <X className="w-4 h-4" />
@@ -486,56 +799,67 @@ export default function CarModelsSection() {
 
             {/* Loading State */}
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="h-[400px] bg-white/5 rounded-xl animate-pulse" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6">
+                {[...Array(10)].map((_, i) => (
+                  <div key={i} className="bg-white/5 rounded-xl animate-pulse overflow-hidden flex flex-col">
+                    <div className="w-full h-64 md:h-72 bg-white/10" />
+                    <div className="p-4 md:p-5 flex-1 flex flex-col">
+                      <div className="h-5 bg-white/10 rounded mb-2" />
+                      <div className="h-4 bg-white/10 rounded mb-4 flex-1" />
+                      <div className="h-10 bg-white/10 rounded mt-auto" />
+                    </div>
+                  </div>
                 ))}
               </div>
             ) : (
               <>
                 {/* Model Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6">
                   {filteredModels.map((model) => {
-                    const configuratorUrl = `/konfigurator?brand=${encodeURIComponent(brandSlug)}&model=${encodeURIComponent(model.name.toLowerCase())}${model.generation ? `&generation=${encodeURIComponent(model.generation)}` : ""}${model.bodyType ? `&bodyType=${encodeURIComponent(model.bodyType)}` : ""}`;
+                    const yearParam = model.yearFrom ? `&year=${model.yearFrom}` : '';
+                    const configuratorUrl = `/konfigurator?brand=${encodeURIComponent(brandSlug)}&model=${encodeURIComponent(model.name.toLowerCase())}${yearParam}${model.generation ? `&generation=${encodeURIComponent(model.generation)}` : ""}${model.bodyType ? `&bodyType=${encodeURIComponent(model.bodyType)}` : ""}`;
 
                     return (
                       <article
                         key={model.id}
-                        className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group"
+                        className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group flex flex-col"
                       >
                         {/* Car Model Image */}
-                        <div className="relative w-full h-48 bg-gray-100">
+                        <div className="relative w-full h-64 md:h-72 bg-gray-100 overflow-hidden">
                           <Image
                             src={model.imageSrc}
                             alt={`Dywaniki do ${model.brand} ${model.name} - Spersonalizowane dywaniki samochodowe`}
                             fill
-                            className="object-contain p-4"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            className="object-cover group-hover:scale-110 transition-transform duration-300"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, (max-width: 1536px) 25vw, 20vw"
                             priority={parseInt(String(model.id)) <= 6}
                             quality={95}
                           />
                         </div>
                         
                         {/* Car Model Info */}
-                        <div className="p-6">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                            {model.name}
-                            {model.generation && ` (${model.generation})`}
+                        <div className="p-4 md:p-5 flex-1 flex flex-col bg-black">
+                          <h3 className="text-base md:text-lg font-semibold text-white mb-3 line-clamp-2">
+                            {model.brand} {model.name}
                           </h3>
-                          <div className="text-sm text-gray-600 mb-4">
-                            <p className="mb-1">{model.brand}</p>
-                            {model.yearFrom && model.yearTo && (
-                              <p className="mb-1">{model.yearFrom}-{model.yearTo} rok</p>
-                            )}
-                            {model.bodyType && (
-                              <p className="uppercase text-xs font-medium">{model.bodyType}</p>
-                            )}
+                          <div className="text-xs md:text-sm text-gray-300 mb-4 flex-1">
+                            <p className="leading-relaxed">
+                              <span className="text-red-500 font-semibold">od 150.00 zł</span>
+                              <span className="mx-2">•</span>
+                              {formatGeneration(model.generation, model.yearFrom, model.yearTo) && (
+                                <span>{formatGeneration(model.generation, model.yearFrom, model.yearTo)} </span>
+                              )}
+                              <span>rok </span>
+                              <span>{getEngineType(model.name, model.brand)} </span>
+                              {model.bodyType && <span className="uppercase">{model.bodyType} </span>}
+                              {model.bodyType && <span>{getDoorsCount(model.bodyType)} drzwi</span>}
+                            </p>
                           </div>
 
                           {/* Przycisk do konfiguratora */}
-                          <Link href={configuratorUrl}>
+                          <Link href={configuratorUrl} className="mt-auto">
                             <Button
-                              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 md:py-2.5 px-2 md:px-3 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-[10px] md:text-xs leading-tight"
                               size="lg"
                             >
                               WYBIERZ KOLORY I ZESTAW
@@ -559,7 +883,7 @@ export default function CarModelsSection() {
                       }
                     </p>
                     {displayModels.length === 0 ? (
-                      <Link href="/modele">
+                      <Link href={basePath}>
                         <Button variant="secondary">
                           ← Wróć do wyboru marki
                         </Button>

@@ -1,5 +1,5 @@
 import { BaseRepository } from './BaseRepository';
-import { Mat, MatFilters } from '../types/mat';
+import { Mat, MatFilters } from '@/entities/product';
 
 export class MatRepository extends BaseRepository<Mat> {
   protected tableName = 'mats';

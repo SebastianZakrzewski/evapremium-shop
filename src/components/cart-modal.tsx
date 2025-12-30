@@ -1,225 +1,378 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { X, Minus, Plus, ShoppingBag, Trash2, ArrowRight } from "lucide-react";
+import { X, ShoppingBag } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCart } from "@/hooks/useCart.new";
-import Image from "next/image";
+import { useCart } from "@/features/shopping-cart/hooks/useCart";
+import { CartItem } from "@/components/cart/CartItem";
+import { PricingService } from "@/lib/services/PricingService";
+import { debugLog } from "@/lib/config/features";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface CartModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+/**
+ * Cart Modal używający V2 backendu
+ * 
+ * Funkcjonalności:
+ * - Używa useCart hook
+ * - Używa nowego komponentu CartItem
+ * - Wyświetla polimorficzne produkty (dywaniki + akcesoria)
+ * - Używa PricingService do formatowania cen
+ */
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
   const router = useRouter();
-  const { cart, removeFromCart, updateQuantity } = useCart();
-  const [isClosing, setIsClosing] = useState(false);
+  const { 
+    cart,
+    items, 
+    total, 
+    itemCount, 
+    isLoading, 
+    error,
+    removeFromCart, 
+    updateQuantity,
+    clearCart 
+  } = useCart();
 
-  // Obsługa zamykania z animacją
-  const handleClose = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsClosing(false);
-      onClose();
-    }, 300);
-  };
+  // Stan kodu rabatowego
+  const [discountCode, setDiscountCode] = useState<string>('');
+  const [discountApplied, setDiscountApplied] = useState(false);
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
+  const [discountError, setDiscountError] = useState<string | null>(null);
+  const [discountSource, setDiscountSource] = useState<string | null>(null);
 
-  // Reset isClosing gdy modal się otwiera
+  // Listen for cart updates
   useEffect(() => {
-    if (isOpen) setIsClosing(false);
-  }, [isOpen]);
+    const handleCartUpdate = (event: CustomEvent) => {
+      // Cart will be updated automatically via useCart hook
+    };
+
+    window.addEventListener('cartUpdated', handleCartUpdate as EventListener);
+    
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate as EventListener);
+    };
+  }, []);
+
+  // Załaduj zapisany kod rabatowy z localStorage przy otwarciu modala
+  useEffect(() => {
+    if (isOpen) {
+      const savedDiscountCode = localStorage.getItem('discountCode');
+      const savedDiscountAmount = localStorage.getItem('discountAmount');
+      const savedDiscountSource = localStorage.getItem('discountSource');
+      
+      if (savedDiscountCode && savedDiscountAmount) {
+        // Sprawdź czy kod jest nadal ważny
+        const validation = PricingService.validateDiscountCode(savedDiscountCode, cart.subtotal);
+        if (validation.isValid && Math.abs(validation.discountAmount - parseFloat(savedDiscountAmount)) < 0.01) {
+          setDiscountCode(savedDiscountCode);
+          setDiscountApplied(true);
+          setDiscountAmount(parseFloat(savedDiscountAmount));
+          setDiscountError(null);
+          setDiscountSource(savedDiscountSource);
+        } else {
+          // Kod nie jest już ważny, usuń z localStorage
+          localStorage.removeItem('discountCode');
+          localStorage.removeItem('discountAmount');
+          localStorage.removeItem('discountSource');
+          setDiscountCode('');
+          setDiscountApplied(false);
+          setDiscountAmount(0);
+          setDiscountSource(null);
+          setDiscountError(null);
+        }
+      } else {
+        // Resetuj stan jeśli nie ma kodu w localStorage
+        setDiscountCode('');
+        setDiscountApplied(false);
+        setDiscountAmount(0);
+        setDiscountError(null);
+        setDiscountSource(null);
+      }
+    }
+  }, [isOpen, cart.subtotal]);
+
+  // Resetuj kod rabatowy jeśli subtotal zmienił się znacząco (np. produkt usunięty)
+  useEffect(() => {
+    if (discountApplied && cart.subtotal > 0) {
+      const validation = PricingService.validateDiscountCode(discountCode, cart.subtotal);
+      if (!validation.isValid) {
+        // Kod przestał być ważny, usuń go
+        localStorage.removeItem('discountCode');
+        localStorage.removeItem('discountAmount');
+        localStorage.removeItem('discountSource');
+        setDiscountCode('');
+        setDiscountApplied(false);
+        setDiscountAmount(0);
+        setDiscountSource(null);
+        setDiscountError('Kod rabatowy przestał być ważny po zmianie zawartości koszyka');
+      }
+    }
+  }, [cart.subtotal, discountApplied, discountCode]);
+
+  // Synchronizuj discountSource z localStorage
+  useEffect(() => {
+    if (isOpen && typeof window !== 'undefined') {
+      const source = localStorage.getItem('discountSource');
+      setDiscountSource(source);
+    }
+  }, [isOpen, discountApplied]);
+
+  // Sprawdź czy kod został wprowadzony w checkout (zapobieganie duplikacji)
+  const isDiscountFromCheckout = discountSource === 'checkout';
 
   const handleCheckout = () => {
-    handleClose();
-    setTimeout(() => router.push('/checkout'), 300);
+    onClose(); // Zamknij modal koszyka
+    router.push('/checkout'); // Przekieruj do strony checkout
   };
 
   const handleContinueShopping = () => {
-    handleClose();
+    onClose(); // Zamknij modal i kontynuuj zakupy
   };
 
-  if (!isOpen && !isClosing) return null;
+  const handleRemoveItem = async (itemId: string) => {
+    try {
+      await removeFromCart(itemId);
+    } catch (err) {
+      console.error('Error removing item:', err);
+    }
+  };
+
+  const handleUpdateQuantity = async (itemId: string, quantity: number) => {
+    try {
+      await updateQuantity(itemId, quantity);
+    } catch (err) {
+      console.error('Error updating quantity:', err);
+    }
+  };
+
+  // Funkcja do zastosowania kodu rabatowego
+  const applyDiscountCode = () => {
+    if (!discountCode.trim()) {
+      setDiscountError('Wprowadź kod rabatowy');
+      return;
+    }
+
+    // Sprawdź czy kod nie został już wprowadzony w checkout
+    if (isDiscountFromCheckout) {
+      setDiscountError('Kod rabatowy został już wprowadzony w sekcji checkout');
+      return;
+    }
+
+    const validation = PricingService.validateDiscountCode(discountCode.trim(), cart.subtotal);
+    
+    if (validation.isValid) {
+      setDiscountApplied(true);
+      setDiscountAmount(validation.discountAmount);
+      setDiscountError(null);
+      
+      // Zapisz do localStorage z flagą źródła
+      localStorage.setItem('discountCode', discountCode.trim());
+      localStorage.setItem('discountAmount', validation.discountAmount.toString());
+      localStorage.setItem('discountSource', 'cart');
+      setDiscountSource('cart');
+      
+      console.log('✅ CartModal: Discount code applied', {
+        code: discountCode.trim(),
+        amount: validation.discountAmount,
+        subtotal: cart.subtotal
+      });
+    } else {
+      setDiscountApplied(false);
+      setDiscountAmount(0);
+      setDiscountError(validation.message || 'Nieprawidłowy kod rabatowy');
+    }
+  };
+
+  // Reset zniżki gdy kod się zmienia
+  const handleDiscountCodeChange = (value: string) => {
+    setDiscountCode(value);
+    if (discountApplied) {
+      setDiscountApplied(false);
+      setDiscountAmount(0);
+      setDiscountError(null);
+      // Usuń z localStorage jeśli użytkownik zmienia kod
+      if (typeof window !== 'undefined') {
+        const currentSource = localStorage.getItem('discountSource');
+        if (currentSource === 'cart') {
+          localStorage.removeItem('discountCode');
+          localStorage.removeItem('discountAmount');
+          localStorage.removeItem('discountSource');
+          setDiscountSource(null);
+        }
+      }
+    }
+  };
+
+  // Oblicz finalną cenę z uwzględnieniem zniżki
+  const finalTotal = discountApplied && discountAmount > 0
+    ? Math.max(0, cart.subtotal - discountAmount)
+    : total;
 
   return (
-    <div className="fixed inset-0 z-[100] flex justify-end pointer-events-none">
-      {/* Backdrop */}
+    <>
+      {/* Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/70 z-50 transition-opacity duration-300"
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Modal */}
       <div 
-        className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 pointer-events-auto ${
-          isOpen && !isClosing ? "opacity-100" : "opacity-0"
+        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-neutral-950 border-l border-neutral-800 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
-        onClick={handleClose}
-      />
-
-      {/* Modal Panel */}
-      <div 
-        className={`
-          relative w-full max-w-md h-full bg-black/90 backdrop-blur-xl border-l border-white/10 shadow-2xl 
-          transform transition-transform duration-300 ease-out pointer-events-auto flex flex-col
-          ${isOpen && !isClosing ? "translate-x-0" : "translate-x-full"}
-        `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
-          <div className="flex items-center gap-3">
-            <ShoppingBag className="w-6 h-6 text-red-500" />
-            <h2 className="text-xl font-bold text-white tracking-wide">Twój Koszyk</h2>
-            <span className="bg-white/10 text-white text-xs font-bold px-2 py-1 rounded-full border border-white/10">
-              {cart.itemCount}
-            </span>
-          </div>
+        <div className="flex-shrink-0 flex items-center justify-between p-6 border-b border-neutral-800">
+          <h2 className="text-2xl font-bold text-white">
+            Koszyk {itemCount > 0 && `(${itemCount})`}
+          </h2>
           <button
-            onClick={handleClose}
-            className="p-2 hover:bg-white/10 rounded-full transition-colors text-gray-400 hover:text-white group"
+            onClick={onClose}
+            className="text-neutral-400 hover:text-white transition-colors"
           >
-            <X className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+            <X className="h-6 w-6" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
-          {cart.items.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
-              <div className="w-24 h-24 bg-gradient-to-br from-gray-800 to-black rounded-full flex items-center justify-center border border-white/5 shadow-inner">
-                <ShoppingBag className="w-10 h-10 text-gray-600" />
+        <div className="flex flex-col flex-1 min-h-0">
+          {/* Items List */}
+          <div className="flex-1 overflow-y-auto p-6">
+            {isLoading && (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
               </div>
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">Twój koszyk jest pusty</h3>
-                <p className="text-gray-400 max-w-[250px] mx-auto">
-                  Wygląda na to, że nie dodałeś jeszcze żadnych produktów.
+            )}
+
+            {error && (
+              <div className="text-red-400 text-center py-4">
+                Błąd: {error}
+              </div>
+            )}
+
+            {!isLoading && !error && items.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <ShoppingBag className="h-16 w-16 text-neutral-600 mb-4" />
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  Twój koszyk jest pusty
+                </h3>
+                <p className="text-neutral-400 mb-6">
+                  Dodaj produkty do koszyka, aby je zobaczyć tutaj
                 </p>
-              </div>
-              <Button 
-                variant="premium" 
-                onClick={handleContinueShopping}
-                className="mt-4"
-              >
-                Rozpocznij zakupy
-              </Button>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {cart.items.map((item) => (
-                <div 
-                  key={item.id} 
-                  className="group relative bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 rounded-2xl p-4 transition-all duration-300 animate-fade-in"
+                <button
+                  onClick={handleContinueShopping}
+                  className="px-6 py-2 bg-white text-black rounded-lg hover:bg-neutral-200 transition-colors"
                 >
-                  <div className="flex gap-4">
-                    {/* Image */}
-                    <div className="w-24 h-24 bg-black rounded-xl overflow-hidden flex-shrink-0 border border-white/10 relative">
-                      {item.productImage ? (
-                        <Image 
-                          src={item.productImage} 
-                          alt={item.productName}
-                          fill
-                          className="object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-neutral-900">
-                          <span className="text-2xl">📦</span>
-                        </div>
-                      )}
-                    </div>
+                  Kontynuuj zakupy
+                </button>
+              </div>
+            )}
 
-                    {/* Details */}
-                    <div className="flex-1 flex flex-col justify-between">
-                      <div>
-                        <div className="flex justify-between items-start gap-2">
-                          <h3 className="font-bold text-white leading-tight line-clamp-2">
-                            {item.productName}
-                          </h3>
-                          <button 
-                            onClick={() => removeFromCart(item.id)}
-                            className="text-gray-500 hover:text-red-500 transition-colors p-1"
-                            aria-label="Usuń produkt"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                        <p className="text-sm text-gray-400 mt-1">
-                          {item.productType === 'accessory' ? 'Akcesoria' : 'Dywaniki'}
-                        </p>
-                      </div>
+            {!isLoading && !error && items.length > 0 && (
+              <div className="space-y-4">
+                {items.map((item) => (
+                  <CartItem
+                    key={item.id}
+                    item={item}
+                    onRemove={handleRemoveItem}
+                    onUpdateQuantity={handleUpdateQuantity}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
 
-                      <div className="flex items-end justify-between mt-2">
-                        <div className="flex items-center bg-black/40 rounded-lg border border-white/10 p-1">
-                          <button 
-                            onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                            className="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded-md transition-colors disabled:opacity-50"
-                            disabled={item.quantity <= 1}
-                          >
-                            <Minus className="w-3 h-3" />
-                          </button>
-                          <span className="w-8 text-center text-sm font-medium text-white">
-                            {item.quantity}
-                          </span>
-                          <button 
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded-md transition-colors"
-                          >
-                            <Plus className="w-3 h-3" />
-                          </button>
-                        </div>
-                        
-                        <div className="text-right">
-                          <p className="text-sm text-gray-400 line-through">
-                            {(item.unitPrice * 1.2).toLocaleString('pl-PL')} zł
-                          </p>
-                          <p className="text-lg font-bold text-red-500">
-                            {item.unitPrice.toLocaleString('pl-PL')} zł
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+          {/* Footer - tylko gdy są produkty */}
+          {!isLoading && !error && items.length > 0 && (
+            <div className="flex-shrink-0 border-t border-neutral-800 p-6 space-y-4 bg-neutral-950">
+              {/* Discount Code Input */}
+              <div className="space-y-2">
+                <Label className="text-white text-sm font-medium">Kod rabatowy</Label>
+                <div className="flex space-x-2">
+                  <Input 
+                    value={discountCode}
+                    onChange={(e) => handleDiscountCodeChange(e.target.value)}
+                    placeholder="Wprowadź kod (np. LISTOPAD5)"
+                    className={`min-h-[40px] h-10 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm ${
+                      discountError ? 'border-red-500' : discountApplied ? 'border-green-500' : ''
+                    }`}
+                    disabled={discountApplied || isDiscountFromCheckout}
+                  />
+                  <Button 
+                    type="button"
+                    onClick={applyDiscountCode}
+                    disabled={discountApplied || !discountCode.trim() || isDiscountFromCheckout}
+                    className="h-10 bg-red-600 border-red-500 text-white hover:bg-red-700 rounded-lg px-4 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {discountApplied ? '✓' : 'Zastosuj'}
+                  </Button>
                 </div>
-              ))}
+                {discountError && (
+                  <p className="text-red-400 text-xs">{discountError}</p>
+                )}
+                {isDiscountFromCheckout && (
+                  <div className="bg-blue-900/20 border border-blue-500/50 rounded-lg p-2">
+                    <p className="text-blue-400 text-xs font-medium">
+                      Kod rabatowy został wprowadzony w sekcji checkout
+                    </p>
+                  </div>
+                )}
+                {discountApplied && !isDiscountFromCheckout && (
+                  <div className="bg-green-900/20 border border-green-500/50 rounded-lg p-2">
+                    <p className="text-green-400 text-xs font-medium">
+                      ✓ Kod zastosowany! Zniżka: -{PricingService.formatPrice(discountAmount)}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Podsumowanie */}
+              <div className="space-y-2">
+                <div className="flex justify-between text-neutral-300">
+                  <span>Dywaniki:</span>
+                  <span>{PricingService.formatPrice(cart.subtotal)}</span>
+                </div>
+                {discountApplied && (
+                  <div className="flex justify-between text-green-400 text-sm">
+                    <span>Zniżka ({discountCode}):</span>
+                    <span>-{PricingService.formatPrice(discountAmount)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-lg font-bold text-white border-t border-neutral-700 pt-2">
+                  <span>Razem:</span>
+                  <span>{PricingService.formatPrice(finalTotal)}</span>
+                </div>
+              </div>
+
+              {/* Przyciski */}
+              <div className="space-y-3">
+                <button
+                  onClick={handleCheckout}
+                  className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-red-500/25"
+                >
+                  Przejdź do kasy
+                </button>
+                
+                <button
+                  onClick={handleContinueShopping}
+                  className="w-full border border-neutral-600 text-white py-3 px-6 rounded-lg hover:bg-neutral-800 transition-colors"
+                >
+                  Kontynuuj zakupy
+                </button>
+              </div>
             </div>
           )}
         </div>
-
-        {/* Footer */}
-        {cart.items.length > 0 && (
-          <div className="p-6 border-t border-white/10 bg-black/40 backdrop-blur-md">
-            <div className="space-y-3 mb-6">
-              <div className="flex justify-between text-gray-400 text-sm">
-                <span>Suma częściowa</span>
-                <span>{cart.subtotal.toLocaleString('pl-PL')} zł</span>
-              </div>
-              <div className="flex justify-between text-gray-400 text-sm">
-                <span>Dostawa</span>
-                <span className="text-green-400 font-medium">Darmowa</span>
-              </div>
-              <div className="flex justify-between items-end pt-3 border-t border-white/10">
-                <span className="text-white font-medium">Do zapłaty</span>
-                <span className="text-3xl font-bold text-white tracking-tight">
-                  {cart.total.toLocaleString('pl-PL')} <span className="text-lg font-normal text-gray-400">PLN</span>
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <Button 
-                onClick={handleCheckout}
-                className="w-full h-14 text-lg font-bold bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 shadow-lg shadow-red-900/30 rounded-xl"
-              >
-                <span className="flex items-center gap-2">
-                  Przejdź do kasy
-                  <ArrowRight className="w-5 h-5" />
-                </span>
-              </Button>
-              <Button 
-                variant="ghost"
-                onClick={handleContinueShopping}
-                className="w-full text-gray-400 hover:text-white hover:bg-white/5"
-              >
-                Kontynuuj zakupy
-              </Button>
-            </div>
-          </div>
-        )}
       </div>
-    </div>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Brand } from "../../types/carousel";
+import { Brand } from "@/entities/car";
 import { ChevronRight } from "lucide-react";
 
 interface BrandCardProps {
