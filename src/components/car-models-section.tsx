@@ -19,6 +19,7 @@ import { apiGet } from "@/lib/api/client";
 import { Car, Loader2, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import ModelNavigationBar from "./model-navigation-bar";
 
 interface FilterState {
   bodyTypes: string[];
@@ -189,6 +190,9 @@ export default function CarModelsSection() {
   });
 
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  
+  // Stan dla wybranego modelu (filtrowanie)
+  const [selectedModel, setSelectedModel] = useState<string | null>(null);
 
   // Pobierz marki dla sekcji wyboru marek
   const { data: availableBrands = getFallbackBrands(), isLoading: loadingBrands } = useQuery({
@@ -403,7 +407,7 @@ export default function CarModelsSection() {
       },
       enabled: !!model.brandForImage && !!model.modelForImage && !!brandParam,
       // Dodaj logowanie dla Spring
-      onSuccess: (data) => {
+      onSuccess: (data: { modelKey: string; images: Array<{ image_url: string; [key: string]: unknown }> }) => {
         if (model.modelForImage?.toLowerCase().includes('spring')) {
           console.log(`✅ CarModelsSection: Successfully fetched images for Spring:`, {
             modelKey: data.modelKey,
@@ -412,7 +416,7 @@ export default function CarModelsSection() {
           });
         }
       },
-      onError: (error) => {
+      onError: (error: Error) => {
         if (model.modelForImage?.toLowerCase().includes('spring')) {
           console.error(`❌ CarModelsSection: Error fetching images for Spring:`, error);
         }
@@ -519,6 +523,13 @@ export default function CarModelsSection() {
     }
 
     return modelsWithImages.filter(model => {
+      // Filtrowanie po wybranym modelu
+      if (selectedModel) {
+        if (model.name.toLowerCase() !== selectedModel.toLowerCase()) {
+          return false;
+        }
+      }
+      
       // Filtrowanie po typie nadwozia (użyj znormalizowanych typów)
       if (filters.bodyTypes.length > 0) {
         if (!model.bodyType) {
@@ -539,7 +550,7 @@ export default function CarModelsSection() {
 
       return true;
     });
-  }, [modelsWithImages, filters, brandParam]);
+  }, [modelsWithImages, filters, brandParam, selectedModel]);
 
   // Handlery dla filtrów
   const handleBodyTypeChange = (type: string, checked: boolean) => {
@@ -565,9 +576,24 @@ export default function CarModelsSection() {
       bodyTypes: [],
       generations: []
     });
+    setSelectedModel(null);
   };
 
-  const activeFiltersCount = filters.bodyTypes.length + filters.generations.length;
+  const activeFiltersCount = filters.bodyTypes.length + filters.generations.length + (selectedModel ? 1 : 0);
+  
+  // Pobierz unikalne nazwy modeli dla nawigacji
+  const uniqueModelNames = useMemo(() => {
+    if (!brandParam || modelsWithImages.length === 0) {
+      return [];
+    }
+    const modelNames = new Set<string>();
+    modelsWithImages.forEach(model => {
+      if (model.name) {
+        modelNames.add(model.name);
+      }
+    });
+    return Array.from(modelNames).sort();
+  }, [modelsWithImages, brandParam]);
 
   // Jeśli nie ma wybranej marki, pokaż sekcję wyboru marek
   if (!brandParam) {
@@ -677,6 +703,15 @@ export default function CarModelsSection() {
           </div>
         </div>
       </div>
+
+      {/* Model Navigation Bar */}
+      {uniqueModelNames.length > 0 && (
+        <ModelNavigationBar
+          models={uniqueModelNames}
+          selectedModel={selectedModel}
+          onModelSelect={setSelectedModel}
+        />
+      )}
 
       <div className="container mx-auto px-4 py-12">
         <div className="flex flex-col lg:flex-row gap-10">
