@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { X, ShoppingBag } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/features/shopping-cart/hooks/useCart";
-import { CartItem } from "@/components/cart/CartItem";
+import { CartItem } from "@/features/shopping-cart/components/CartItem";
 import { PricingService } from "@/lib/services/PricingService";
 import { debugLog } from "@/lib/config/features";
 import { Button } from "@/components/ui/button";

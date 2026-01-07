@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo, useMemo, useCallback } from "react";
 import { X, ShoppingBag } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCart } from "../hooks/useCart";
-import { CartItem } from "../../../components/cart/CartItem";
+import { CartItem } from "./CartItem";
 import { PricingService } from "@/lib/services/PricingService";
 import { debugLog } from "@/lib/config/features";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ interface CartModalProps {
  * - Wyświetla polimorficzne produkty (dywaniki + akcesoria)
  * - Używa PricingService do formatowania cen
  */
-export default function CartModal({ isOpen, onClose }: CartModalProps) {
+function CartModal({ isOpen, onClose }: CartModalProps) {
   const router = useRouter();
   const { 
     cart,
@@ -126,30 +126,30 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
   // Sprawdź czy kod został wprowadzony w checkout (zapobieganie duplikacji)
   const isDiscountFromCheckout = discountSource === 'checkout';
 
-  const handleCheckout = () => {
+  const handleCheckout = useCallback(() => {
     onClose(); // Zamknij modal koszyka
     router.push('/checkout'); // Przekieruj do strony checkout
-  };
+  }, [onClose, router]);
 
-  const handleContinueShopping = () => {
+  const handleContinueShopping = useCallback(() => {
     onClose(); // Zamknij modal i kontynuuj zakupy
-  };
+  }, [onClose]);
 
-  const handleRemoveItem = async (itemId: string) => {
+  const handleRemoveItem = useCallback(async (itemId: string) => {
     try {
       await removeFromCart(itemId);
     } catch (err) {
       console.error('Error removing item:', err);
     }
-  };
+  }, [removeFromCart]);
 
-  const handleUpdateQuantity = async (itemId: string, quantity: number) => {
+  const handleUpdateQuantity = useCallback(async (itemId: string, quantity: number) => {
     try {
       await updateQuantity(itemId, quantity);
     } catch (err) {
       console.error('Error updating quantity:', err);
     }
-  };
+  }, [updateQuantity]);
 
   // Funkcja do zastosowania kodu rabatowego
   const applyDiscountCode = () => {
@@ -210,9 +210,11 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
   };
 
   // Oblicz finalną cenę z uwzględnieniem zniżki
-  const finalTotal = discountApplied && discountAmount > 0
-    ? Math.max(0, cart.subtotal - discountAmount)
-    : total;
+  const finalTotal = useMemo(() => {
+    return discountApplied && discountAmount > 0
+      ? Math.max(0, cart.subtotal - discountAmount)
+      : total;
+  }, [discountApplied, discountAmount, cart.subtotal, total]);
 
   return (
     <>
@@ -376,3 +378,5 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
     </>
   );
 }
+
+export default memo(CartModal);

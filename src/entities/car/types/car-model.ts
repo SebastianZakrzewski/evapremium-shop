@@ -28,3 +28,12 @@ export interface ImageCarouselProps<T> {
 
 
 
+
+
+
+
+
+
+
+
+

@@ -1,59 +1,80 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { MatService } from '@/lib/services/MatService';
 import { MatFilters } from '@/entities/product';
 
 const matService = new MatService();
 
+const matsQuerySchema = z.object({
+  brandSlug: z.string().trim().min(1).optional(),
+  modelSlug: z.string().trim().min(1).optional(),
+  generation: z.string().trim().min(1).optional(),
+  bodyType: z.string().trim().min(1).optional(),
+  yearFrom: z.coerce.number().int().optional(),
+  yearTo: z.coerce.number().int().optional(),
+  isActive: z
+    .union([z.boolean(), z.enum(['true', 'false'])])
+    .optional()
+    .transform((val) => (typeof val === 'string' ? val === 'true' : val)),
+  orderBy: z.string().trim().optional(),
+  orderDirection: z.enum(['asc', 'desc']).optional(),
+});
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    
+
+    const parsed = matsQuerySchema.safeParse(Object.fromEntries(searchParams.entries()));
+    if (!parsed.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Invalid query parameters',
+          errors: parsed.error.flatten().fieldErrors,
+        },
+        { status: 400 },
+      );
+    }
+
+    const payload = parsed.data;
+
     // Parse filters from query parameters
     const filters: MatFilters = {};
 
-    const brandSlug = searchParams.get('brandSlug');
-    if (brandSlug) {
-      filters.carBrandSlug = brandSlug;
+    if (payload.brandSlug) {
+      filters.carBrandSlug = payload.brandSlug;
     }
 
-    const modelSlug = searchParams.get('modelSlug');
-    if (modelSlug) {
-      filters.carModelSlug = modelSlug;
+    if (payload.modelSlug) {
+      filters.carModelSlug = payload.modelSlug;
     }
 
-    const generation = searchParams.get('generation');
-    if (generation) {
-      filters.generation = generation;
+    if (payload.generation) {
+      filters.generation = payload.generation;
     }
 
-    const bodyType = searchParams.get('bodyType');
-    if (bodyType) {
-      filters.bodyType = bodyType;
+    if (payload.bodyType) {
+      filters.bodyType = payload.bodyType;
     }
 
-    const yearFrom = searchParams.get('yearFrom');
-    if (yearFrom) {
-      filters.yearFrom = parseInt(yearFrom);
+    if (payload.yearFrom !== undefined) {
+      filters.yearFrom = payload.yearFrom;
     }
 
-    const yearTo = searchParams.get('yearTo');
-    if (yearTo) {
-      filters.yearTo = parseInt(yearTo);
+    if (payload.yearTo !== undefined) {
+      filters.yearTo = payload.yearTo;
     }
 
-    const isActive = searchParams.get('isActive');
-    if (isActive !== null) {
-      filters.isActive = isActive === 'true';
+    if (payload.isActive !== undefined) {
+      filters.isActive = payload.isActive;
     }
 
-    const orderBy = searchParams.get('orderBy') as any;
-    if (orderBy) {
-      filters.orderBy = orderBy;
+    if (payload.orderBy) {
+      filters.orderBy = payload.orderBy as any;
     }
 
-    const orderDirection = searchParams.get('orderDirection') as any;
-    if (orderDirection) {
-      filters.orderDirection = orderDirection;
+    if (payload.orderDirection) {
+      filters.orderDirection = payload.orderDirection as any;
     }
 
     console.log('🔍 API /api/mats: Fetching mats with filters:', filters);

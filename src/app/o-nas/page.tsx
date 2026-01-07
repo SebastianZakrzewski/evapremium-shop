@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import AboutUsSection from '@/components/marketing/about-us-section';
+import { AboutUsSection } from '@/features/marketing';
 import PageHeroBanner from '@/components/page-hero-banner';
 
 export const metadata: Metadata = {

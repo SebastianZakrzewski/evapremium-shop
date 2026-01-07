@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, memo } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Search, X, Car, Loader2 } from "lucide-react";
@@ -59,7 +59,7 @@ const fetchSearchResults = async (query: string): Promise<SearchResults> => {
   return await searchApi.search(query);
 };
 
-export default function SearchDropdown() {
+function SearchDropdown() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -453,4 +453,6 @@ export default function SearchDropdown() {
     </>
   );
 }
+
+export default memo(SearchDropdown);
 

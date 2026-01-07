@@ -33,6 +33,14 @@ export {
   buildCarModelsApiUrl,
 } from './brands/carModelsApi';
 
+// Vehicle helpers
+export {
+  normalizeBodyTypeKey,
+  formatBodyTypeLabel,
+  getDoorsCount,
+  formatGenerationLabel,
+} from './vehicle/bodyType';
+
 // Hooks (będą dodane po migracji)
 // export { useLocalStorage } from './hooks/useLocalStorage';
 // export { useDebounce } from './hooks/useDebounce';

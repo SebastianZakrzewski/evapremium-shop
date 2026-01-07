@@ -1,9 +1,8 @@
 // Product Gallery feature - Public API
 // Re-eksportuje wszystkie komponenty, hooki i typy z feature product-gallery
 
-// Tymczasowo importujemy z oryginalnych lokalizacji, aby zachować kompatybilność
-export { default as ProductGallerySection } from '../../components/products/product-gallery-section';
-export { default as ProductSelection } from '../../components/products/product-selection';
+// Re-eksport z features/products
+export { ProductGallerySection, ProductSelection } from '../products';
 export { default as ImageCarousel } from '../../components/ImageCarousel';
 
 // Types (tymczasowo z oryginalnych lokalizacji)

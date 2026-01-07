@@ -827,14 +827,12 @@ export default function ConfiguratorSimple() {
                     key={imagePath}
                     onClick={(e) => {
                       e.stopPropagation();
-                      // Zmień wybrane zdjęcie i otwórz modal z powiększonym zdjęciem
+                      // Zmień wybrane zdjęcie bez otwierania modala
                       if (config.matType === 'classic') {
                         setSelectedClassicProductImage(imagePath);
                       } else {
                         setSelectedRimsProductImage(imagePath);
                       }
-                      setModalImageType('product');
-                      setIsPreviewModalOpen(true);
                     }}
                     className={`
                       relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 active:scale-95
@@ -1083,6 +1081,33 @@ export default function ConfiguratorSimple() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Product Gallery - pod zdjęciem modelu na tle dywaników */}
+                  {config.matType && ((config.matType === 'classic' && classicProductImages) || (config.matType === '3d-with-rims' && rimsProductImages)) && (
+                    <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/5 rounded-xl p-4">
+                      <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                        <RotateCcw className="w-3 h-3" />
+                        Galeria produktu
+                      </h4>
+                      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                        {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
+                          <button
+                            key={imagePath}
+                            onClick={() => config.matType === 'classic' ? setSelectedClassicProductImage(imagePath) : setSelectedRimsProductImage(imagePath)}
+                            className={`
+                              relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 flex-shrink-0
+                              ${(config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath
+                                ? 'border-red-500 shadow-lg shadow-red-500/20 scale-105'
+                                : 'border-transparent opacity-60 hover:opacity-100 hover:border-white/20'
+                              }
+                            `}
+                          >
+                            <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="64px" />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -1092,7 +1117,7 @@ export default function ConfiguratorSimple() {
                   <div 
                     className="relative group bg-neutral-900/50 rounded-2xl border border-white/10 overflow-hidden shadow-lg transition-all hover:shadow-red-900/5 cursor-pointer"
                     onClick={() => {
-                      setModalImageType('mat-product');
+                      setModalImageType('product');
                       setIsPreviewModalOpen(true);
                     }}
                   >
@@ -1121,7 +1146,7 @@ export default function ConfiguratorSimple() {
                           className="h-10 w-10 rounded-full bg-red-600/90 backdrop-blur border-2 border-red-500/50 hover:bg-red-500 text-white shadow-lg shadow-red-500/30"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setModalImageType('mat-product');
+                            setModalImageType('product');
                             setIsPreviewModalOpen(true);
                           }}
                         >
@@ -1130,33 +1155,6 @@ export default function ConfiguratorSimple() {
                       </div>
                     </div>
                   </div>
-
-                  {/* Product Gallery */}
-                  {((config.matType === 'classic' && classicProductImages) || (config.matType === '3d-with-rims' && rimsProductImages)) && (
-                    <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/5 rounded-xl p-4">
-                      <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
-                        <RotateCcw className="w-3 h-3" />
-                        Galeria produktu
-                      </h4>
-                      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                        {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
-                          <button
-                            key={imagePath}
-                            onClick={() => config.matType === 'classic' ? setSelectedClassicProductImage(imagePath) : setSelectedRimsProductImage(imagePath)}
-                            className={`
-                              relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 flex-shrink-0
-                              ${(config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath
-                                ? 'border-red-500 shadow-lg shadow-red-500/20 scale-105'
-                                : 'border-transparent opacity-60 hover:opacity-100 hover:border-white/20'
-                              }
-                            `}
-                          >
-                            <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="64px" />
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
 

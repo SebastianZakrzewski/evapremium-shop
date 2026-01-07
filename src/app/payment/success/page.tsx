@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { PaymentSuccess } from '@/components/payment-success';
+import { PaymentSuccess } from '@/features/checkout';
 
 export default function PaymentSuccessPage() {
   return (

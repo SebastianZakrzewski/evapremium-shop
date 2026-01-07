@@ -3,6 +3,6 @@
 export { useCart } from '@/features/shopping-cart/hooks/useCart';
 export { useOrder } from '@/features/orders/hooks/useOrder';
 export { useAccessories } from '@/features/accessories/hooks/useAccessories';
-export { useAbandonedCartHeartbeat } from './useAbandonedCartHeartbeat';
-export { useMat } from './useMat';
+export { useAbandonedCartHeartbeat } from '@/features/shopping-cart/hooks/useAbandonedCartHeartbeat';
+export { useMat, useAvailableBodyTypes } from '@/features/mats/hooks/useMat';
 

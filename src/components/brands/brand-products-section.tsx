@@ -12,8 +12,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Car, SlidersHorizontal } from "lucide-react";
 import { getBrandInfo } from '@/shared/brands';
+import { normalizeBodyTypeKey, formatBodyTypeLabel } from '@/shared';
 import { fetchCarModels } from '@/lib/api/models';
 import { apiGet } from '@/lib/api/client';
+import { useProductSelectionFilters } from '@/features/products/hooks';
 
 interface FilterState {
   bodyTypes: string[];
@@ -30,75 +32,6 @@ interface ProductDisplayItem {
   yearTo?: number;
   price: number;
   imageSrc?: string;
-}
-
-// Mapowanie typów nadwozia na podstawowe kategorie
-const normalizeBodyType = (bodyType: string): string => {
-  if (!bodyType) return '';
-  
-  const normalized = bodyType.toLowerCase().trim();
-  
-  // Normalizacja do podstawowych typów nadwozia
-  if (normalized.includes('hatchback') || normalized.includes('hatch')) {
-    return 'hatchback';
-  }
-  if (normalized.includes('suv')) {
-    return 'suv';
-  }
-  if (normalized.includes('sedan')) {
-    return 'sedan';
-  }
-  if (normalized.includes('kombi') || normalized.includes('estate') || normalized.includes('wagon')) {
-    return 'kombi';
-  }
-  if (normalized.includes('minivan') || normalized.includes('mpv')) {
-    return 'minivan';
-  }
-  if (normalized.includes('van') || normalized.includes('dostawczak')) {
-    return 'van';
-  }
-  if (normalized.includes('coupe')) {
-    return 'coupe';
-  }
-  if (normalized.includes('cabrio') || normalized.includes('convertible')) {
-    return 'kabriolet';
-  }
-  if (normalized.includes('roadster')) {
-    return 'roadster';
-  }
-  if (normalized.includes('fastback')) {
-    return 'fastback';
-  }
-  if (normalized.includes('liftback')) {
-    return 'liftback';
-  }
-  if (normalized.includes('shooting brake')) {
-    return 'shooting brake';
-  }
-  
-  // Fallback - zwróć znormalizowaną wersję
-  return normalized;
-};
-
-// Mapowanie znormalizowanych typów nadwozia na polskie nazwy wyświetlane
-const bodyTypeDisplayNames: Record<string, string> = {
-  'sedan': 'Sedan',
-  'suv': 'SUV',
-  'hatchback': 'Hatchback',
-  'kombi': 'Kombi',
-  'minivan': 'Minivan',
-  'van': 'Van',
-  'coupe': 'Coupe',
-  'kabriolet': 'Kabriolet',
-  'roadster': 'Roadster',
-  'fastback': 'Fastback',
-  'liftback': 'Liftback',
-  'shooting brake': 'Shooting Brake',
-};
-
-function formatBodyType(bodyType: string): string {
-  const normalized = normalizeBodyType(bodyType);
-  return bodyTypeDisplayNames[normalized] || normalized.charAt(0).toUpperCase() + normalized.slice(1);
 }
 
 // Funkcja do pobierania produktów (dywaników)
@@ -320,97 +253,18 @@ export default function BrandProductsSection({ brandSlug }: BrandProductsSection
     });
   }, [displayProducts, imagesMap, currentBrand]);
 
-  // Dostępne typy nadwozia z liczbą produktów (znormalizowane do podstawowych typów)
-  const availableBodyTypes = useMemo(() => {
-    const bodyTypeCounts = new Map<string, number>();
-    
-    productsWithImages.forEach((product) => {
-      if (product.bodyType) {
-        const normalizedType = normalizeBodyType(product.bodyType);
-        if (normalizedType) {
-          const count = bodyTypeCounts.get(normalizedType) || 0;
-          bodyTypeCounts.set(normalizedType, count + 1);
-        }
-      }
-    });
-
-    // Sortuj według kolejności podstawowych typów
-    const order = ['sedan', 'hatchback', 'kombi', 'suv', 'minivan', 'van', 'coupe', 'kabriolet', 'roadster', 'fastback', 'liftback', 'shooting brake'];
-    return Array.from(bodyTypeCounts.entries())
-      .map(([bodyType, count]) => ({ bodyType, count }))
-      .sort((a, b) => {
-        const indexA = order.indexOf(a.bodyType);
-        const indexB = order.indexOf(b.bodyType);
-        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-        if (indexA !== -1) return -1;
-        if (indexB !== -1) return 1;
-        return a.bodyType.localeCompare(b.bodyType);
-      });
-  }, [productsWithImages]);
-
-  // Dostępne zakresy lat z liczbą produktów
-  const availableYearRanges = useMemo(() => {
-    const yearRangeCounts = new Map<string, number>();
-
-    productsWithImages.forEach((product) => {
-      if (product.yearFrom && product.yearTo) {
-        const range = `${product.yearFrom}-${product.yearTo}`;
-        const count = yearRangeCounts.get(range) || 0;
-        yearRangeCounts.set(range, count + 1);
-      }
-    });
-
-    return Array.from(yearRangeCounts.entries())
-      .map(([range, count]) => ({ range, count }))
-      .sort((a, b) => {
-        const aStart = parseInt(a.range.split("-")[0]);
-        const bStart = parseInt(b.range.split("-")[0]);
-        return bStart - aStart; // Sortuj od najnowszych
-      });
-  }, [productsWithImages]);
-
-  // Filtrowanie produktów
-  const filteredProducts = useMemo(() => {
-    let filtered = productsWithImages;
-
-    // Filtrowanie według wybranego modelu i typu nadwozia (użyj znormalizowanych typów)
-    if (selectedModel && selectedBodyType) {
-      filtered = filtered.filter(
-        (product) => {
-          if (product.model !== selectedModel) return false;
-          if (!product.bodyType) return false;
-          const normalizedProductType = normalizeBodyType(product.bodyType);
-          const normalizedSelectedType = normalizeBodyType(selectedBodyType);
-          return normalizedProductType === normalizedSelectedType;
-        }
-      );
-    } else if (selectedModel) {
-      // Jeśli wybrano tylko model (bez typu nadwozia), pokaż wszystkie warianty tego modelu
-      filtered = filtered.filter((product) => product.model === selectedModel);
-    }
-
-    // Filtrowanie według typu nadwozia (dodatkowe filtry) - użyj znormalizowanych typów
-    if (filters.bodyTypes.length > 0) {
-      filtered = filtered.filter(
-        (product) => {
-          if (!product.bodyType) return false;
-          const normalizedType = normalizeBodyType(product.bodyType);
-          return filters.bodyTypes.includes(normalizedType);
-        }
-      );
-    }
-
-    // Filtrowanie według zakresu lat
-    if (filters.yearRanges.length > 0) {
-      filtered = filtered.filter((product) => {
-        if (!product.yearFrom || !product.yearTo) return false;
-        const productRange = `${product.yearFrom}-${product.yearTo}`;
-        return filters.yearRanges.includes(productRange);
-      });
-    }
-
-    return filtered;
-  }, [productsWithImages, selectedModel, selectedBodyType, filters]);
+  const {
+    availableBodyTypes,
+    availableYearRanges,
+    availableModels,
+    filteredProducts,
+    activeFiltersCount,
+  } = useProductSelectionFilters({
+    products: productsWithImages,
+    filters,
+    selectedModel,
+    selectedBodyType,
+  });
 
   // Obsługa filtrów
   const handleBodyTypeChange = (bodyType: string, checked: boolean) => {
@@ -484,8 +338,6 @@ export default function BrandProductsSection({ brandSlug }: BrandProductsSection
       </section>
     );
   }
-
-  const activeFiltersCount = filters.bodyTypes.length + filters.yearRanges.length + (selectedModel ? 1 : 0);
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white pb-20">
@@ -574,21 +426,21 @@ export default function BrandProductsSection({ brandSlug }: BrandProductsSection
               <div className="space-y-4">
                 <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Typ nadwozia</h4>
                 <div className="space-y-3">
-                  {availableBodyTypes.map(({ bodyType, count }) => (
-                    <div key={bodyType} className="flex items-center space-x-3 group">
+                  {availableBodyTypes.map(({ key, label, count }) => (
+                    <div key={key} className="flex items-center space-x-3 group">
                       <Checkbox
-                        id={`bodyType-${bodyType}`}
-                        checked={filters.bodyTypes.includes(bodyType)}
+                        id={`bodyType-${key}`}
+                        checked={filters.bodyTypes.includes(key)}
                         onCheckedChange={(checked) =>
-                          handleBodyTypeChange(bodyType, checked as boolean)
+                          handleBodyTypeChange(key, checked as boolean)
                         }
                         className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                       />
                       <Label
-                        htmlFor={`bodyType-${bodyType}`}
+                        htmlFor={`bodyType-${key}`}
                         className="text-gray-300 group-hover:text-white cursor-pointer transition-colors font-medium"
                       >
-                        {formatBodyType(bodyType)} ({count})
+                        {label} ({count})
                       </Label>
                     </div>
                   ))}
@@ -680,7 +532,7 @@ export default function BrandProductsSection({ brandSlug }: BrandProductsSection
                           <p>{product.yearFrom}-{product.yearTo} rok</p>
                         )}
                         {product.bodyType && (
-                          <p className="uppercase">{formatBodyType(product.bodyType)}</p>
+                          <p className="uppercase">{formatBodyTypeLabel(product.bodyType)}</p>
                         )}
                       </div>
 

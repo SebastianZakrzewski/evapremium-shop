@@ -1,5 +1,15 @@
 // Checkout components - Public API
-export { default as CheckoutSection } from './checkout-section';
+// Re-export from features (canonical location)
+export { CheckoutSection, PaymentSuccess } from '@/features/checkout';
+
+
+
+
+
+
+
+
+
 
 
 

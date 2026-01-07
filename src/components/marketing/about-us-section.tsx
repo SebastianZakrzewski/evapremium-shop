@@ -15,7 +15,7 @@ import {
   Globe,
   ArrowRight
 } from 'lucide-react';
-import SectionHeading from "./ui/section-heading";
+import SectionHeading from "@/components/ui/section-heading";
 import { cn } from '@/lib/utils';
 
 const stats = [

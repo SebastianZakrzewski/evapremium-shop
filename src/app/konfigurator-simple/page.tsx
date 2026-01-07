@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import ConfiguratorSimple from "@/components/configurator-simple/ConfiguratorSimple";
+import ConfiguratorSimple from "@/components/configurator/configurator-simple/ConfiguratorSimple";
 
 export const metadata: Metadata = {
   title: "Nowy Konfigurator Dywaników | EvaPremium",

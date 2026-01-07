@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import CartModal from "./cart-modal";
+import { CartModal } from "@/features/shopping-cart/components";
 
 interface CartModalProps {
   isOpen: boolean;

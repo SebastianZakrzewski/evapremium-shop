@@ -5,7 +5,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { Model, Brand } from "@/entities/car";
+import { Brand } from "@/entities/car";
 import { getAllModels, brands } from "../data/carouselData";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
@@ -15,6 +15,8 @@ import { BrandGridCard } from "./ui/BrandGridCard";
 import { fetchBrands, getFallbackBrands } from "@/lib/api/brands";
 import { fetchCarModels } from "@/lib/api/models";
 import { getBrandInfo, normalizeBrandName } from "@/shared/brands";
+import { getDoorsCount, formatGenerationLabel } from "@/shared";
+import { useCarModelsFilters } from "@/features/brands/hooks";
 import { apiGet } from "@/lib/api/client";
 import { Car, Loader2, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "./ui/button";
@@ -25,76 +27,9 @@ interface FilterState {
   bodyTypes: string[];
   generations: string[];
 }
-
-/**
- * Normalizuje typ nadwozia do podstawowego typu (usuwa szczegóły jak "5drzwi", "3/5drzwi" itp.)
- */
-function normalizeBodyType(bodyType: string): string {
-  if (!bodyType) return '';
   
-  const normalized = bodyType.toLowerCase().trim();
-  
-  // Normalizacja do podstawowych typów nadwozia
-  if (normalized.includes('hatchback') || normalized.includes('hatch')) {
-    return 'Hatchback';
-  }
-  if (normalized.includes('suv')) {
-    return 'SUV';
-  }
-  if (normalized.includes('sedan')) {
-    return 'Sedan';
-  }
-  if (normalized.includes('kombi') || normalized.includes('estate') || normalized.includes('wagon')) {
-    return 'Kombi';
-  }
-  if (normalized.includes('minivan') || normalized.includes('mpv')) {
-    return 'Minivan';
-  }
-  if (normalized.includes('van') || normalized.includes('dostawczak')) {
-    return 'Van';
-  }
-  if (normalized.includes('coupe')) {
-    return 'Coupe';
-  }
-  if (normalized.includes('cabrio') || normalized.includes('convertible')) {
-    return 'Kabriolet';
-  }
-  if (normalized.includes('roadster')) {
-    return 'Roadster';
-  }
-  if (normalized.includes('fastback')) {
-    return 'Fastback';
-  }
-  if (normalized.includes('liftback')) {
-    return 'Liftback';
-  }
-  if (normalized.includes('shooting brake')) {
-    return 'Shooting Brake';
-  }
-  
-  // Fallback - zwróć z pierwszą literą wielką
-  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
-}
-
 /**
- * Mapuje typ nadwozia na liczbę drzwi
- */
-function getDoorsCount(bodyType: string): string {
-  const bodyTypeLower = bodyType.toLowerCase();
-  if (bodyTypeLower.includes('hatchback') || bodyTypeLower.includes('sedan') || bodyTypeLower.includes('wagon')) {
-    return '5';
-  }
-  if (bodyTypeLower.includes('coupe') || bodyTypeLower.includes('convertible')) {
-    return '3';
-  }
-  if (bodyTypeLower.includes('suv') || bodyTypeLower.includes('pickup') || bodyTypeLower.includes('van')) {
-    return '5';
-  }
-  return '5'; // Domyślnie 5 drzwi
-}
-
-/**
- * Formatuje typ silnika na podstawie nazwy modelu lub zwraca domyślną wartość
+ * Formatuje typ silnika na podstawie nazwy modelu lub zwraca pusty string jeśli nie można określić
  */
 function getEngineType(modelName: string, brand: string): string {
   const nameLower = modelName.toLowerCase();
@@ -111,55 +46,13 @@ function getEngineType(modelName: string, brand: string): string {
     return 'Hybrid';
   }
   
-  // Domyślnie - można rozszerzyć o więcej logiki
-  return 'Electro'; // Dla większości nowoczesnych modeli
+  // Zwróć pusty string jeśli nie można określić typu silnika
+  return '';
 }
 
 /**
- * Formatuje generację na podstawie lat produkcji
- * Zwraca zakres lat (np. "2021-2025") lub "rocznik+" (np. "2021+")
+ * Formatuje typ silnika na podstawie nazwy modelu lub zwraca pusty string jeśli nie można określić
  */
-function formatGeneration(
-  generation: string | null | undefined,
-  yearFrom?: number,
-  yearTo?: number
-): string {
-  // Jeśli mamy zakres lat, użyj go
-  if (yearFrom && yearTo) {
-    // Jeśli rok końcowy jest w przyszłości lub bardzo duży, użyj formatu "rocznik+"
-    const currentYear = new Date().getFullYear();
-    if (yearTo >= currentYear || yearTo - yearFrom > 10) {
-      return `${yearFrom}+`;
-    }
-    // W przeciwnym razie użyj zakresu lat
-    return `${yearFrom}-${yearTo}`;
-  }
-  
-  // Jeśli mamy tylko rok początkowy
-  if (yearFrom) {
-    return `${yearFrom}+`;
-  }
-  
-  // Jeśli mamy generację jako string, spróbuj wyciągnąć rok
-  if (generation && generation.trim() !== '') {
-    const genTrimmed = generation.trim();
-    
-    // Jeśli generacja zawiera "+", użyj formatu "rocznik+"
-    if (genTrimmed.includes('+')) {
-      const match = genTrimmed.match(/^(\d{4})/);
-      if (match) {
-        return `${match[1]}+`;
-      }
-    }
-    
-    // Jeśli generacja jest rokiem (4 cyfry), użyj formatu "rocznik+"
-    if (/^\d{4}$/.test(genTrimmed)) {
-      return `${genTrimmed}+`;
-    }
-  }
-  
-  return '';
-}
 
 export default function CarModelsSection() {
   const searchParams = useSearchParams();
@@ -295,6 +188,9 @@ export default function CarModelsSection() {
       yearForImage?: number;
     }> = [];
 
+    // Map do deduplikacji modeli - klucz: brand-name-bodyType-generation-yearFrom
+    const uniqueModelsMap = new Map<string, typeof models[0]>();
+
     apiModels.forEach((model: any, modelIndex: number) => {
       // API zwraca zgrupowane modele z tablicą generations
       const modelName = model.model || model.name || `Model ${modelIndex + 1}`;
@@ -303,50 +199,69 @@ export default function CarModelsSection() {
       // Jeśli model ma tablicę generations, rozpakuj je
       if (model.generations && Array.isArray(model.generations)) {
         model.generations.forEach((gen: any, genIndex: number) => {
-          models.push({
-            id: `${modelIndex}-${genIndex}-${gen.bodyType || ''}-${gen.generation || ''}`,
-            name: modelName,
-            brand: modelBrand,
-            bodyType: gen.bodyType || '',
-            yearFrom: gen.yearFrom,
-            yearTo: gen.yearTo,
-            imageSrc: brandInfo?.logo || '/images/products/audi.jpg', // Fallback, będzie nadpisane
-            generation: gen.generation || '',
-            brandForImage: brandSlug || brandParam?.toLowerCase() || modelBrand?.toLowerCase() || '',
-            modelForImage: modelName.toLowerCase(), // Konwertuj na małe litery dla API
-            yearForImage: gen.yearFrom, // Użyj pierwszego roku z zakresu
-          });
+          // Utwórz unikalny klucz dla deduplikacji
+          const normalizedGeneration = gen.generation || '';
+          const uniqueKey = `${modelBrand.toLowerCase()}-${modelName.toLowerCase()}-${gen.bodyType || ''}-${normalizedGeneration}-${gen.yearFrom || ''}`;
+          
+          // Sprawdź czy model już istnieje
+          if (!uniqueModelsMap.has(uniqueKey)) {
+            const modelData = {
+              id: `${modelIndex}-${genIndex}-${gen.bodyType || ''}-${gen.generation || ''}`,
+              name: modelName,
+              brand: modelBrand,
+              bodyType: gen.bodyType || '',
+              yearFrom: gen.yearFrom,
+              yearTo: gen.yearTo,
+              imageSrc: brandInfo?.logo || '/images/products/audi.jpg', // Fallback, będzie nadpisane
+              generation: gen.generation || '',
+              brandForImage: brandSlug || brandParam?.toLowerCase() || modelBrand?.toLowerCase() || '',
+              modelForImage: modelName.toLowerCase(), // Konwertuj na małe litery dla API
+              yearForImage: gen.yearFrom, // Użyj pierwszego roku z zakresu
+            };
+            uniqueModelsMap.set(uniqueKey, modelData);
+            models.push(modelData);
+          }
         });
       } else {
         // Fallback dla modeli bez generations (stary format)
-        models.push({
-          id: `${modelIndex}-${model.id || modelIndex}`,
-          name: modelName,
-          brand: modelBrand,
-          bodyType: model.bodyType || model.bodyTypes?.[0] || '',
-          yearFrom: model.yearFrom,
-          yearTo: model.yearTo,
-          imageSrc: brandInfo?.logo || '/images/products/audi.jpg', // Fallback, będzie nadpisane
-          generation: model.generation || '',
+        const normalizedGeneration = model.generation || '';
+        const uniqueKey = `${modelBrand.toLowerCase()}-${modelName.toLowerCase()}-${model.bodyType || model.bodyTypes?.[0] || ''}-${normalizedGeneration}-${model.yearFrom || ''}`;
+        
+        // Sprawdź czy model już istnieje
+        if (!uniqueModelsMap.has(uniqueKey)) {
+          const modelData = {
+            id: `${modelIndex}-${model.id || modelIndex}`,
+            name: modelName,
+            brand: modelBrand,
+            bodyType: model.bodyType || model.bodyTypes?.[0] || '',
+            yearFrom: model.yearFrom,
+            yearTo: model.yearTo,
+            imageSrc: brandInfo?.logo || '/images/products/audi.jpg', // Fallback, będzie nadpisane
+            generation: model.generation || '',
             brandForImage: brandSlug || brandParam?.toLowerCase() || modelBrand?.toLowerCase() || '',
             modelForImage: modelName.toLowerCase(), // Konwertuj na małe litery dla API
             yearForImage: model.yearFrom,
-        });
+          };
+          uniqueModelsMap.set(uniqueKey, modelData);
+          models.push(modelData);
+        }
       }
     });
 
     return models;
-  }, [apiModels, brandParam, brandInfo]);
+  }, [apiModels, brandParam, brandInfo, brandSlug]);
 
   // Pobierz unikalne kombinacje modeli do zapytania o zdjęcia
   const uniqueModelQueries = useMemo(() => {
     const uniqueModels = new Map<string, typeof displayModels[0]>();
     
     displayModels.forEach((model) => {
-      // Normalizuj generację - jeśli jest null, undefined, pusty string lub zawiera "+", użyj pustego stringa
-      const normalizedGeneration = (model.generation && model.generation.trim() && !model.generation.includes('+')) ? model.generation : '';
-      // Klucz: brand-model-year-generation-bodyType (używamy znormalizowanej generacji)
-      const key = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${normalizedGeneration}-${model.bodyType || ''}`;
+      // Użyj pełnej generacji (włączając "+" jak "2024+") - nie usuwaj jej
+      const generation = (model.generation && model.generation.trim()) ? model.generation : '';
+      // Normalizuj bodyType do lowercase (jak w bazie danych)
+      const normalizedBodyType = (model.bodyType && model.bodyType.trim()) ? model.bodyType.toLowerCase() : '';
+      // Klucz: brand-model-year-generation-bodyType (używamy pełnej generacji i znormalizowanego bodyType)
+      const key = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${generation}-${normalizedBodyType}`;
       if (!uniqueModels.has(key)) {
         uniqueModels.set(key, model);
       }
@@ -354,18 +269,20 @@ export default function CarModelsSection() {
     
     const queries = Array.from(uniqueModels.values());
     
-    // Debug logowanie dla Spring
+    // Debug logowanie dla Spring i Duster
     queries.forEach((model) => {
-      if (model.modelForImage?.toLowerCase().includes('spring')) {
-        const normalizedGeneration = (model.generation && model.generation.trim() && !model.generation.includes('+')) ? model.generation : '';
-        console.log('🔍 CarModelsSection: Unique query for Spring:', {
+      if (model.modelForImage?.toLowerCase().includes('spring') || model.modelForImage?.toLowerCase().includes('duster')) {
+        const generation = (model.generation && model.generation.trim()) ? model.generation : '';
+        const normalizedBodyType = (model.bodyType && model.bodyType.trim()) ? model.bodyType.toLowerCase() : '';
+        console.log(`🔍 CarModelsSection: Unique query for ${model.name}:`, {
           name: model.name,
           brandForImage: model.brandForImage,
           modelForImage: model.modelForImage,
           yearForImage: model.yearForImage,
           generation: model.generation,
-          normalizedGeneration,
+          generationKey: generation,
           bodyType: model.bodyType,
+          normalizedBodyType,
           brandParam,
           brandSlug,
         });
@@ -384,9 +301,8 @@ export default function CarModelsSection() {
         if (model.brandForImage) searchParams.set('brand', model.brandForImage);
         if (model.modelForImage) searchParams.set('model', model.modelForImage);
         if (model.yearForImage) searchParams.set('year', model.yearForImage.toString());
-        // Nie przekazuj generacji jeśli jest null, undefined, pusty string lub zawiera "+" (np. "2021+")
-        // W bazie danych generation jest null dla Dacia Spring
-        if (model.generation && model.generation.trim() && !model.generation.includes('+')) {
+        // Przekazuj generację jeśli istnieje (włączając "+" jak "2024+")
+        if (model.generation && model.generation.trim()) {
           searchParams.set('generation', model.generation);
         }
         if (model.bodyType) searchParams.set('bodyType', model.bodyType);
@@ -396,9 +312,11 @@ export default function CarModelsSection() {
         
         const data = await apiGet<{ images: Array<{ image_url: string; [key: string]: any }>; count: number }>(url);
         
-        // Użyj normalizowanego klucza (bez generacji jeśli jest null lub zawiera "+")
-        const normalizedGeneration = (model.generation && model.generation.trim() && !model.generation.includes('+')) ? model.generation : '';
-        const modelKey = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${normalizedGeneration}-${model.bodyType || ''}`;
+        // Użyj pełnej generacji w kluczu (włączając "+")
+        const generation = (model.generation && model.generation.trim()) ? model.generation : '';
+        // Normalizuj bodyType do lowercase (jak w bazie danych)
+        const normalizedBodyType = (model.bodyType && model.bodyType.trim()) ? model.bodyType.toLowerCase() : '';
+        const modelKey = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${generation}-${normalizedBodyType}`;
         
         return { 
           modelKey,
@@ -450,20 +368,24 @@ export default function CarModelsSection() {
   // Mapuj zdjęcia do modeli
   const modelsWithImages = useMemo(() => {
     return displayModels.map((model) => {
-      // Normalizuj generację - jeśli jest null, undefined, pusty string lub zawiera "+", użyj pustego stringa
-      const normalizedGeneration = (model.generation && model.generation.trim() && !model.generation.includes('+')) ? model.generation : '';
-      const modelKey = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${normalizedGeneration}-${model.bodyType || ''}`;
+      // Użyj pełnej generacji w kluczu (włączając "+")
+      const generation = (model.generation && model.generation.trim()) ? model.generation : '';
+      // Normalizuj bodyType do lowercase (jak w bazie danych)
+      const normalizedBodyType = (model.bodyType && model.bodyType.trim()) ? model.bodyType.toLowerCase() : '';
+      const modelKey = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${generation}-${normalizedBodyType}`;
       const imageUrl = imagesMap.get(modelKey);
       
-      // Debug logowanie dla wszystkich modeli Spring
-      if (model.modelForImage?.toLowerCase().includes('spring')) {
-        console.log('🔍 CarModelsSection: Mapping images for Spring model:', {
+      // Debug logowanie dla wszystkich modeli Spring i Duster
+      if (model.modelForImage?.toLowerCase().includes('spring') || model.modelForImage?.toLowerCase().includes('duster')) {
+        console.log(`🔍 CarModelsSection: Mapping images for ${model.name}:`, {
           modelName: model.name,
           brandForImage: model.brandForImage,
           modelForImage: model.modelForImage,
           yearForImage: model.yearForImage,
           generation: model.generation,
+          generationKey: generation,
           bodyType: model.bodyType,
+          normalizedBodyType,
           modelKey,
           imageUrl: imageUrl || 'NOT FOUND',
           imagesMapSize: imagesMap.size,
@@ -473,6 +395,7 @@ export default function CarModelsSection() {
             isError: q.isError,
             isSuccess: q.isSuccess,
             data: q.data?.modelKey,
+            imagesCount: q.data?.images?.length || 0,
           })),
         });
       }
@@ -484,73 +407,18 @@ export default function CarModelsSection() {
     });
   }, [displayModels, imagesMap, imageQueries]);
 
-  // Dostępne typy nadwozia (znormalizowane - tylko ogólne typy bez szczegółów jak "5drzwi")
-  const availableBodyTypes = useMemo(() => {
-    if (brandParam && displayModels.length > 0) {
-      const types = new Set<string>();
-      displayModels.forEach(model => {
-        if (model.bodyType) {
-          // Normalizuj typ nadwozia do podstawowego typu (np. "Hatchback 5drzwi" -> "Hatchback")
-          const normalizedType = normalizeBodyType(model.bodyType);
-          if (normalizedType) {
-            types.add(normalizedType);
-          }
-        }
-      });
-      return Array.from(types).sort();
-    }
-    return [];
-  }, [displayModels, brandParam]);
-
-  // Dostępne generacje
-  const availableGenerations = useMemo(() => {
-    if (brandParam && displayModels.length > 0) {
-      const generations = new Set<string>();
-      displayModels.forEach(model => {
-        if (model.generation) {
-          generations.add(model.generation);
-        }
-      });
-      return Array.from(generations).sort();
-    }
-    return [];
-  }, [displayModels, brandParam]);
-
-  // Filtrowanie modeli
-  const filteredModels = useMemo(() => {
-    if (!brandParam || modelsWithImages.length === 0) {
-      return [];
-    }
-
-    return modelsWithImages.filter(model => {
-      // Filtrowanie po wybranym modelu
-      if (selectedModel) {
-        if (model.name.toLowerCase() !== selectedModel.toLowerCase()) {
-          return false;
-        }
-      }
-      
-      // Filtrowanie po typie nadwozia (użyj znormalizowanych typów)
-      if (filters.bodyTypes.length > 0) {
-        if (!model.bodyType) {
-          return false;
-        }
-        const normalizedModelType = normalizeBodyType(model.bodyType);
-        if (!filters.bodyTypes.includes(normalizedModelType)) {
-          return false;
-        }
-      }
-      
-      // Filtrowanie po generacji
-      if (filters.generations.length > 0) {
-        if (!model.generation || !filters.generations.includes(model.generation)) {
-          return false;
-        }
-      }
-
-      return true;
-    });
-  }, [modelsWithImages, filters, brandParam, selectedModel]);
+  const {
+    availableBodyTypes,
+    availableGenerations,
+    filteredModels,
+    activeFiltersCount,
+  } = useCarModelsFilters({
+    brandParam,
+    displayModels,
+    modelsWithImages,
+    filters,
+    selectedModel,
+  });
 
   // Handlery dla filtrów
   const handleBodyTypeChange = (type: string, checked: boolean) => {
@@ -579,8 +447,6 @@ export default function CarModelsSection() {
     setSelectedModel(null);
   };
 
-  const activeFiltersCount = filters.bodyTypes.length + filters.generations.length + (selectedModel ? 1 : 0);
-  
   // Pobierz unikalne nazwy modeli dla nawigacji
   const uniqueModelNames = useMemo(() => {
     if (!brandParam || modelsWithImages.length === 0) {
@@ -758,21 +624,21 @@ export default function CarModelsSection() {
                 <div className="space-y-4">
                   <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Typ nadwozia</h4>
                   <div className="space-y-3">
-                    {availableBodyTypes.map((type) => (
-                      <div key={type} className="flex items-center space-x-3 group">
+                    {availableBodyTypes.map(({ key, label }) => (
+                      <div key={key} className="flex items-center space-x-3 group">
                         <Checkbox
-                          id={`bodyType-${type}`}
-                          checked={filters.bodyTypes.includes(type)}
+                          id={`bodyType-${key}`}
+                          checked={filters.bodyTypes.includes(key)}
                           onCheckedChange={(checked) =>
-                            handleBodyTypeChange(type, checked as boolean)
+                            handleBodyTypeChange(key, checked as boolean)
                           }
                           className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                         />
                         <Label
-                          htmlFor={`bodyType-${type}`}
+                          htmlFor={`bodyType-${key}`}
                           className="text-gray-300 group-hover:text-white cursor-pointer transition-colors font-medium"
                         >
-                          {type}
+                          {label}
                         </Label>
                       </div>
                     ))}
@@ -853,6 +719,8 @@ export default function CarModelsSection() {
                   {filteredModels.map((model) => {
                     const yearParam = model.yearFrom ? `&year=${model.yearFrom}` : '';
                     const configuratorUrl = `/konfigurator?brand=${encodeURIComponent(brandSlug)}&model=${encodeURIComponent(model.name.toLowerCase())}${yearParam}${model.generation ? `&generation=${encodeURIComponent(model.generation)}` : ""}${model.bodyType ? `&bodyType=${encodeURIComponent(model.bodyType)}` : ""}`;
+                    const imageSrc = model.imageSrc || '/vercel.svg';
+                    const brandLabel = model.brand || '';
 
                     return (
                       <article
@@ -862,8 +730,8 @@ export default function CarModelsSection() {
                         {/* Car Model Image */}
                         <div className="relative w-full h-64 md:h-72 bg-gray-100 overflow-hidden">
                           <Image
-                            src={model.imageSrc}
-                            alt={`Dywaniki do ${model.brand} ${model.name} - Spersonalizowane dywaniki samochodowe`}
+                            src={imageSrc}
+                            alt={`Dywaniki do ${brandLabel} ${model.name} - Spersonalizowane dywaniki samochodowe`}
                             fill
                             className="object-cover group-hover:scale-110 transition-transform duration-300"
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, (max-width: 1536px) 25vw, 20vw"
@@ -882,11 +750,13 @@ export default function CarModelsSection() {
                               od 150.00 zł
                             </div>
                             <div className="text-xs md:text-sm text-gray-300 leading-relaxed">
-                              {formatGeneration(model.generation, model.yearFrom, model.yearTo) && (
-                                <span>{formatGeneration(model.generation, model.yearFrom, model.yearTo)} </span>
+                              {formatGenerationLabel(model.generation, model.yearFrom, model.yearTo) && (
+                                <span>{formatGenerationLabel(model.generation, model.yearFrom, model.yearTo)} </span>
                               )}
                               <span>rok </span>
-                              <span>{getEngineType(model.name, model.brand)} </span>
+                            {getEngineType(model.name, brandLabel) && (
+                              <span>{getEngineType(model.name, brandLabel)} </span>
+                              )}
                               {model.bodyType && <span className="uppercase">{model.bodyType} </span>}
                               {model.bodyType && <span>{getDoorsCount(model.bodyType)} drzwi</span>}
                             </div>
