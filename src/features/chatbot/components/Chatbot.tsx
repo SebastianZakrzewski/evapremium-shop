@@ -5,6 +5,7 @@ import { X, Send, User, Phone, User as UserIcon, MessageCircle } from "lucide-re
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ContactInfo, ContactFormData } from "@/types/contact";
+import { bitrix24Api } from "@/lib/api";
 
 interface Message {
   id: string;
@@ -207,24 +208,11 @@ export default function Chatbot() {
       }
 
       // Send data to API
-      const response = await fetch('/api/bitrix24/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: contactData.name.trim(),
-          phone: contactData.phone.trim(),
-          message: contactData.message || undefined,
-        }),
+      const result = await bitrix24Api.sendChatMessage({
+        name: contactData.name.trim(),
+        phone: contactData.phone.trim(),
+        message: contactData.message || undefined,
       });
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        const errorMessage = result?.error || 'Failed to submit contact form';
-        throw new Error(errorMessage);
-      }
 
       // Add success message
       const successMessage: Message = {

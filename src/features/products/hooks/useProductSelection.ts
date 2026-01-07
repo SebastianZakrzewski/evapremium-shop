@@ -6,7 +6,7 @@
 
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiGet } from '@/lib/api/client';
+import { matsApi } from '@/lib/api';
 import { Mat } from '@/entities/product';
 
 export interface UseProductSelectionParams {
@@ -34,10 +34,7 @@ export interface UseProductSelectionReturn {
  */
 async function fetchMats(brandSlug: string): Promise<Mat[]> {
   try {
-    const response = await apiGet<{ success: boolean; data: Mat[] }>(
-      `/api/mats?carBrandSlug=${encodeURIComponent(brandSlug)}`
-    );
-    return response.data ?? [];
+    return await matsApi.getMats({ carBrandSlug: brandSlug });
   } catch (error) {
     console.error('Error fetching mats:', error);
     return [];
@@ -107,6 +104,15 @@ export function useProductSelection(
     filteredMats,
   };
 }
+
+
+
+
+
+
+
+
+
 
 
 

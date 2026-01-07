@@ -52,19 +52,11 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
+import { searchApi } from '@/lib/api';
+
 // Funkcja do pobierania wyników wyszukiwania
 const fetchSearchResults = async (query: string): Promise<SearchResults> => {
-  if (!query.trim()) {
-    return { brands: [], models: [], products: [] };
-  }
-
-  const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-  
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-  
-  return response.json();
+  return await searchApi.search(query);
 };
 
 export default function SearchDropdown() {

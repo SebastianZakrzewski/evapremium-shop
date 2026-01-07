@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { OrderV2 as Order, CreateOrderDTO, OrderStatusV2 as OrderStatus } from '@/lib/types';
 import { debugLog } from '@/lib/config/features';
+import { ordersApi } from '@/lib/api';
 
 export interface UseOrderReturn {
   order: Order | null;
@@ -56,25 +57,7 @@ export function useOrder(): UseOrderReturn {
     debugLog('useOrder: Creating order', orderData);
 
     try {
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderData),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Nie udało się utworzyć zamówienia');
-      }
-
-      if (!result.success || !result.data) {
-        throw new Error('Nieprawidłowa odpowiedź serwera');
-      }
-
-      const newOrder = result.data;
+      const newOrder = await ordersApi.createOrder(orderData);
       setOrder(newOrder);
       debugLog('useOrder: Order created successfully', newOrder);
 
@@ -98,24 +81,14 @@ export function useOrder(): UseOrderReturn {
     debugLog('useOrder: Getting order', orderNumber);
 
     try {
-      const response = await fetch(`/api/orders/${orderNumber}`);
-      const result = await response.json();
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          debugLog('useOrder: Order not found', orderNumber);
-          return null;
-        }
-        throw new Error(result.error || 'Nie udało się pobrać zamówienia');
+      const foundOrder = await ordersApi.getOrder(orderNumber);
+      
+      if (foundOrder) {
+        setOrder(foundOrder);
+        debugLog('useOrder: Order retrieved successfully', foundOrder);
+      } else {
+        debugLog('useOrder: Order not found', orderNumber);
       }
-
-      if (!result.success || !result.data) {
-        throw new Error('Nieprawidłowa odpowiedź serwera');
-      }
-
-      const foundOrder = result.data;
-      setOrder(foundOrder);
-      debugLog('useOrder: Order retrieved successfully', foundOrder);
 
       return foundOrder;
     } catch (err) {
@@ -137,18 +110,7 @@ export function useOrder(): UseOrderReturn {
     debugLog('useOrder: Getting customer orders', email);
 
     try {
-      const response = await fetch(`/api/orders?email=${encodeURIComponent(email)}`);
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Nie udało się pobrać zamówień');
-      }
-
-      if (!result.success) {
-        throw new Error('Nieprawidłowa odpowiedź serwera');
-      }
-
-      const orders = result.data || [];
+      const orders = await ordersApi.getCustomerOrders(email);
       debugLog('useOrder: Customer orders retrieved', orders);
 
       return orders;
@@ -198,21 +160,8 @@ export function useOrderStatus() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/orders/${orderNumber}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status, trackingNumber }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Nie udało się zaktualizować statusu');
-      }
-
-      return result.data;
+      const updatedOrder = await ordersApi.updateOrderStatus(orderNumber, status);
+      return updatedOrder;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Nieznany błąd';
       console.error('useOrderStatus: Error updating status:', err);
