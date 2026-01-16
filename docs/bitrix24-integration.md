@@ -51,7 +51,7 @@ Add the following variables to your `.env` file:
 
 ```bash
 # Bitrix24 Configuration
-BITRIX24_WEBHOOK_URL=https://your-domain.bitrix24.com/rest/1/xxxxx/
+BITRIX24_WEBHOOK_URL=https://evapremium.bitrix24.pl/rest/1/xxxxx/
 BITRIX24_WEBHOOK_ENABLED=true
 BITRIX24_AUTO_SYNC_ORDERS=true
 BITRIX24_AUTO_SYNC_LEADS=true
@@ -284,7 +284,7 @@ Health check for webhook endpoint.
 
 2. **"Configuration validation failed"**
    - Verify `BITRIX24_WEBHOOK_URL` is set and valid
-   - Ensure webhook URL contains `bitrix24.com`
+   - Ensure webhook URL contains `bitrix24.com` or `bitrix24.pl`
 
 3. **"Connection test failed"**
    - Check webhook URL is correct

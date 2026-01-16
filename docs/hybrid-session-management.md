@@ -153,7 +153,7 @@ REDIS_PASSWORD=
 REDIS_DB=0
 
 # Bitrix24 Integration
-BITRIX_WEBHOOK_URL=https://your-domain.bitrix24.pl/rest/1/your-webhook-key
+BITRIX_WEBHOOK_URL=https://evapremium.bitrix24.pl/rest/1/your-webhook-key
 BITRIX_DEAL_STAGE_ID=NEW
 BITRIX_ASSIGNED_BY_ID=1
 ```
