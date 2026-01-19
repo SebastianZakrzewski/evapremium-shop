@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useMemo } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { BrandGridCard } from "../ui/BrandGridCard";
 import { Brand } from "@/entities/car";
 import { Loader2, Search, X } from "lucide-react";
@@ -10,22 +10,11 @@ import { useBrands } from "@/features/brands/hooks/useBrands";
 
 export default function BrandSelectionGrid() {
   const router = useRouter();
-  const pathname = usePathname();
   const [clickedBrandId, setClickedBrandId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   // Użyj hooka useBrands do pobierania marek
   const { brands, isLoading: loading, error } = useBrands();
-
-  // Określ bazową ścieżkę na podstawie aktualnej lokalizacji
-  const basePath = useMemo(() => {
-    // Jeśli jesteśmy na stronie /dywaniki, przekieruj do /dywaniki/[brand]
-    if (pathname?.startsWith('/dywaniki')) {
-      return '/dywaniki';
-    }
-    // W przeciwnym razie użyj /modele/[brand] (domyślnie)
-    return '/modele';
-  }, [pathname]);
 
   // Filtrowanie marek na podstawie wyszukiwania
   const filteredBrands = useMemo(() => {
@@ -46,10 +35,10 @@ export default function BrandSelectionGrid() {
     // Animacja kliknięcia - reset po 300ms
     setTimeout(() => {
       setClickedBrandId(null);
-      // Przekierowanie do odpowiedniej strony w zależności od kontekstu
-      router.push(`${basePath}/${encodeURIComponent(brand.name.toLowerCase())}`);
+      // Przekierowanie bezpośrednio do konfiguratora (sekcja wyboru modelu jest w fazie produkcji)
+      router.push(`/konfigurator?brand=${encodeURIComponent(brand.name.toLowerCase())}`);
     }, 300);
-  }, [router, basePath]);
+  }, [router]);
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
