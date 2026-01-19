@@ -42,7 +42,7 @@ export { default as ImageCarousel } from './ImageCarousel';
 export { default as PageHeroBanner } from './page-hero-banner';
 export { default as ModelNavigationBar } from './model-navigation-bar';
 export { default as SearchDropdown } from './search-dropdown';
-export { default as TrackingProvider } from './tracking-provider';
+export { TrackingProvider } from './tracking-provider';
 export { default as Chatbot } from './Chatbot';
 
 // Re-exports from features (for backward compatibility)

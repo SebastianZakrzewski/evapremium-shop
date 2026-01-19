@@ -638,3 +638,5 @@ stateDiagram-v2
 
 **Koniec dokumentacji**
 
+
+

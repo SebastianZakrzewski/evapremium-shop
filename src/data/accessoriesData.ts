@@ -5,19 +5,87 @@ export const accessoryCategories: AccessoryCategory[] = [
   {
     id: 1,
     name: "Organizery do Bagażnika",
+    slug: "organizery-do-bagaznika",
     description: "Praktyczne organizery i systemy do organizacji bagażnika",
-    icon: "📦"
+    icon: "📦",
+    isActive: true,
+    sortOrder: 1,
+    createdAt: new Date(),
+    updatedAt: new Date()
   },
   {
     id: 2,
     name: "Podpiętki",
+    slug: "podpietki",
     description: "Eleganckie podpiętki do dywaników samochodowych",
-    icon: "🔗"
+    icon: "🔗",
+    isActive: true,
+    sortOrder: 2,
+    createdAt: new Date(),
+    updatedAt: new Date()
   }
 ];
 
-// Akcesoria samochodowe pogrupowane według kategorii
-export const accessoriesByCategory: Record<string, Accessory[]> = {
+// Helper function to convert price string to number
+const parsePrice = (priceStr: string): number => {
+  return parseFloat(priceStr.replace(' PLN', '').replace(',', '.'));
+};
+
+// Helper function to create slug from name
+const createSlug = (name: string): string => {
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+};
+
+// Helper function to create SKU from id and name
+const createSku = (id: number, name: string): string => {
+  const prefix = name.substring(0, 3).toUpperCase().replace(/[^A-Z]/g, '');
+  return `ACC-${prefix}-${id.toString().padStart(4, '0')}`;
+};
+
+// Raw accessory data (simplified structure)
+type RawAccessory = {
+  id: number;
+  name: string;
+  category: string;
+  price: string;
+  imageSrc?: string;
+  description?: string;
+  features: string[];
+  inStock: boolean;
+  rating?: number;
+};
+
+// Convert raw accessory to full Accessory type
+const createAccessory = (raw: RawAccessory, categoryId: number): Accessory => {
+  const slug = createSlug(raw.name);
+  return {
+    id: raw.id.toString(),
+    name: raw.name,
+    slug,
+    description: raw.description,
+    price: parsePrice(raw.price),
+    sku: createSku(raw.id, raw.name),
+    imageSrc: raw.imageSrc,
+    imageUrl: raw.imageSrc,
+    features: raw.features,
+    inStock: raw.inStock,
+    isActive: true,
+    rating: raw.rating,
+    reviewCount: 0,
+    categoryId,
+    categorySlug: createSlug(raw.category),
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
+};
+
+// Raw accessory data
+const rawAccessories: Record<string, RawAccessory[]> = {
   "Organizery do Bagażnika": [
     {
       id: 1,
@@ -134,6 +202,16 @@ export const accessoriesByCategory: Record<string, Accessory[]> = {
   ]
 };
 
+// Convert raw accessories to full Accessory objects
+export const accessoriesByCategory: Record<string, Accessory[]> = {
+  "Organizery do Bagażnika": rawAccessories["Organizery do Bagażnika"].map(raw => 
+    createAccessory(raw, 1)
+  ),
+  "Podpiętki": rawAccessories["Podpiętki"].map(raw => 
+    createAccessory(raw, 2)
+  )
+};
+
 // Funkcje pomocnicze
 export const getAccessoriesByCategory = (categoryName: string): Accessory[] => {
   return accessoriesByCategory[categoryName] || [];
@@ -147,6 +225,6 @@ export const getAllAccessories = (): Accessory[] => {
   return Object.values(accessoriesByCategory).flat();
 };
 
-export const getAccessoryById = (id: number): Accessory | undefined => {
+export const getAccessoryById = (id: string): Accessory | undefined => {
   return getAllAccessories().find(accessory => accessory.id === id);
 };

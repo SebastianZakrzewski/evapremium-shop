@@ -11,7 +11,7 @@ export { useCart } from './hooks/useCart';
 export { CartService } from '../../lib/services/CartService';
 
 // Types (tymczasowo z oryginalnych lokalizacji)
-export type { CartItem as CartItemType, Cart } from '../../entities/order';
+export type { CartItemType, Cart } from '../../entities/order';
 
 // Components (będą dodane po migracji)
 // export { CartItem } from './components/CartItem';

@@ -18,11 +18,9 @@ export type { TextareaProps } from './textarea';
 
 // Label
 export { Label } from './label';
-export type { LabelProps } from './label';
 
 // Checkbox
 export { Checkbox } from './checkbox';
-export type { CheckboxProps } from './checkbox';
 
 // Radio Group
 export { RadioGroup, RadioGroupItem } from './radio-group';
@@ -33,7 +31,6 @@ export type { BadgeProps } from './badge';
 
 // Separator
 export { Separator } from './separator';
-export type { SeparatorProps } from './separator';
 
 // Sheet
 export {

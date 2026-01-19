@@ -6,7 +6,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { fetchCarModels } from '@/lib/api/models';
-import { Model } from '@/entities/car';
+import { CarModel } from '@/lib/types/car-model';
 
 export interface UseCarModelsReturn {
   models: CarModel[];

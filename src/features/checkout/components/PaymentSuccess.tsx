@@ -12,7 +12,7 @@ import { useTracking, createPurchaseData } from '@/lib/tracking';
 import { useOrder } from '@/features/orders/hooks/useOrder';
 
 interface PaymentStatus {
-  status: 'pending' | 'paid' | 'failed' | 'cancelled';
+  status: 'pending' | 'paid' | 'failed' | 'cancelled' | 'refunded';
   orderId?: string;
   orderNumber?: string;
   transactionId?: number;
@@ -139,7 +139,7 @@ export function PaymentSuccess() {
         }
         
         setPaymentStatus({
-          status: order.paymentStatus || 'pending',
+          status: (order.paymentStatus as PaymentStatus['status']) || 'pending',
           orderId: order.id,
           orderNumber: order.orderNumber,
           p24OrderId: order.p24OrderId,
@@ -157,7 +157,7 @@ export function PaymentSuccess() {
           paymentStatus: order.paymentStatus,
           trackingNumber: order.trackingNumber,
           notes: order.notes,
-          createdAt: order.createdAt,
+          createdAt: order.createdAt ? (typeof order.createdAt === 'string' ? order.createdAt : order.createdAt.toISOString()) : undefined,
           items: order.items || []
         });
 
@@ -188,8 +188,6 @@ export function PaymentSuccess() {
             console.error('[Tracking] Error tracking Purchase:', error);
           }
         }
-      } else {
-        throw new Error(data.error || 'Błąd podczas pobierania zamówienia');
       }
     } catch (err) {
       console.error('❌ PaymentSuccess: Error checking payment status:', err);
