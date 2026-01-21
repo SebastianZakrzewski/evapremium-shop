@@ -5,14 +5,14 @@ import { useSearchParams, usePathname } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/features/shopping-cart/hooks/useCart";
-import { PricingService } from "@/lib/services/PricingService";
+import { calculatePriceBreakdown } from "@/features/car-configurator/domain/pricing";
 import { getMatImagePath } from "@/lib/image-mapping";
 import { getColorInfo } from "@/lib/color-mapping";
-import { Brand } from "@/entities/car";
 import { useAccessories } from "@/features/accessories/hooks/useAccessories";
 import { useBrands } from "@/features/brands/hooks/useBrands";
 import { useMatProductImages } from "@/features/mat-product-images";
-import { findGenerationByYear, getYearsForModel } from "@/data/car-model-years.utils";
+import { useConfiguratorState } from "@/features/car-configurator/hooks/useConfiguratorState";
+import { findGenerationByYear } from "@/data/car-model-years.utils";
 import { normalizeBrandName } from "@/shared/brands";
 import { StepProgress } from "./StepProgress";
 import { StepAccordion } from "./StepAccordion";
@@ -27,34 +27,7 @@ import { MatTypeVariantStep } from "./MatTypeVariantStep";
 import { StructureColorStep } from "./StructureColorStep";
 import { ConfiguratorLoader } from "./ConfiguratorLoader";
 import { ZoomIn, ArrowLeft, ArrowRight, Info, RotateCcw, ShoppingCart } from "lucide-react";
-
-export interface ConfiguratorState {
-  // Step 1: Wybór samochodu
-  brand: string;
-  model: string;
-  year: string;
-  bodyType: string;
-  
-  // Step 2: Typ dywaników
-  matType: "3d-with-rims" | "classic";
-  
-  // Step 3: Wariant zestawu
-  variant: "front" | "basic" | "premium" | "complete";
-  
-  // Step 4: Struktura
-  structure: "diamonds" | "honey";
-  
-  // Step 5: Kolor dywaników
-  color: string;
-  
-  // Step 6: Kolor obszycia
-  edgeColor: string;
-  
-  // Step 7: Dodatki
-  heelPad: boolean;
-  selectedPodpietka?: string; // ID wybranej podpiętki
-  podpietkaColor?: string; // Wybrany kolor podpiętki
-}
+import { getStickyMainImage, getStickyPreviewImage, StickyPreviewTab } from "./stickyPreview";
 
 const TOTAL_STEPS_DESKTOP = 7;
 const TOTAL_STEPS_MOBILE = 5;
@@ -71,6 +44,10 @@ export default function ConfiguratorSimple() {
   const { addToCart, isLoading: cartLoading } = useCart();
   const { accessories } = useAccessories();
   const { brands, isLoading: brandsLoading } = useBrands();
+  const { config, updateConfig } = useConfiguratorState({
+    searchParams,
+    brands,
+  });
   
   // Funkcja do pobierania logo marki
   const getBrandLogo = (brandName: string): string | null => {
@@ -105,22 +82,6 @@ export default function ConfiguratorSimple() {
     setSelectedRimsProductImage(rimsProductImages[nextIndex]);
   };
   
-  // Stan konfiguracji
-  const [config, setConfig] = useState<ConfiguratorState>({
-    brand: searchParams.get('brand') || '',
-    model: searchParams.get('model') || '',
-    year: searchParams.get('year') || '',
-    bodyType: searchParams.get('bodyType') || '',
-    matType: '3d-with-rims',
-    variant: 'front',
-    structure: 'diamonds',
-    color: 'black',
-    edgeColor: 'black',
-    heelPad: false,
-    selectedPodpietka: undefined,
-    podpietkaColor: undefined,
-  });
-
   // Aktualny aktywny krok (dla accordion)
   const [activeStep, setActiveStep] = useState<number>(1);
   // Flaga czy to pierwsze renderowanie (aby nie przewijać przy pierwszym załadowaniu)
@@ -136,76 +97,15 @@ export default function ConfiguratorSimple() {
   // Ref dla nagłówków sekcji (tytuł + numer) - do dokładnego przewijania
   const stepHeaderRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
-  // Mapuj wszystkie parametry z URL synchronicznie przy każdej zmianie searchParams
   useEffect(() => {
-    const brandParam = searchParams.get('brand');
-    const modelParam = searchParams.get('model');
-    const yearParam = searchParams.get('year');
-    const bodyTypeParam = searchParams.get('bodyType');
-    
-    console.log('🔍 ConfiguratorSimple: Syncing params from URL:', {
-      brandParam,
-      modelParam,
-      yearParam,
-      bodyTypeParam,
+    console.log("🔍 ConfiguratorSimple: Syncing params from URL:", {
+      brandParam: searchParams.get("brand"),
+      modelParam: searchParams.get("model"),
+      yearParam: searchParams.get("year"),
+      bodyTypeParam: searchParams.get("bodyType"),
       brandsCount: brands.length,
     });
-    
-    setConfig(prev => {
-      const updates: Partial<ConfiguratorState> = {};
-      let hasChanges = false;
-      
-      // Mapuj markę - zawsze aktualizuj jeśli jest w URL
-      if (brandParam) {
-        let newBrand = brandParam;
-        if (brands.length > 0) {
-          const foundBrand = brands.find(b => b.name.toLowerCase() === brandParam.toLowerCase());
-          if (foundBrand) {
-            newBrand = foundBrand.name;
-          } else {
-            newBrand = brandParam.charAt(0).toUpperCase() + brandParam.slice(1);
-          }
-        } else {
-          newBrand = brandParam.charAt(0).toUpperCase() + brandParam.slice(1);
-        }
-        
-        if (prev.brand !== newBrand) {
-          updates.brand = newBrand;
-          hasChanges = true;
-          console.log('✅ ConfiguratorSimple: Updating brand:', prev.brand, '->', newBrand);
-        }
-      }
-      
-      // Mapuj model - aktualizuj jeśli jest w URL (niezależnie od tego czy marka jest już zaktualizowana)
-      if (modelParam) {
-        if (prev.model !== modelParam) {
-          updates.model = modelParam;
-          hasChanges = true;
-          console.log('✅ ConfiguratorSimple: Updating model:', prev.model, '->', modelParam);
-        }
-      }
-      
-      // Mapuj rok - aktualizuj jeśli jest w URL
-      if (yearParam) {
-        if (prev.year !== yearParam) {
-          updates.year = yearParam;
-          hasChanges = true;
-          console.log('✅ ConfiguratorSimple: Updating year:', prev.year, '->', yearParam);
-        }
-      }
-      
-      // Mapuj typ nadwozia - aktualizuj jeśli jest w URL
-      if (bodyTypeParam) {
-        if (prev.bodyType !== bodyTypeParam) {
-          updates.bodyType = bodyTypeParam;
-          hasChanges = true;
-          console.log('✅ ConfiguratorSimple: Updating bodyType:', prev.bodyType, '->', bodyTypeParam);
-        }
-      }
-      
-      return hasChanges ? { ...prev, ...updates } : prev;
-    });
-  }, [searchParams, brands]);
+  }, [searchParams, brands.length]);
 
 
   // Oblicz generację na podstawie roku
@@ -287,7 +187,7 @@ export default function ConfiguratorSimple() {
   const [modalImageType, setModalImageType] = useState<'dynamic' | 'product' | 'mat-product' | null>(null);
   
   // Stan aktywnego widoku podglądu (tabs)
-  const [activePreviewTab, setActivePreviewTab] = useState<'dynamic' | 'product'>('dynamic');
+  const [activePreviewTab, setActivePreviewTab] = useState<StickyPreviewTab>('dynamic');
   
   // Stan wybranego zdjęcia produktu dla typu "classic" (bez rantów)
   const [selectedClassicProductImage, setSelectedClassicProductImage] = useState<string>('/bezrantowprodukt/1_-_1.webp');
@@ -319,8 +219,12 @@ export default function ConfiguratorSimple() {
 
   // Oblicz cenę na podstawie konfiguracji
   const priceBreakdown = useMemo(() => {
-    return PricingService.calculateConfiguratorPrice(config.matType, config.variant);
-  }, [config.matType, config.variant]);
+    return calculatePriceBreakdown(config.matType, config.variant, {
+      brand: config.brand,
+      model: config.model,
+      bodyType: config.bodyType,
+    });
+  }, [config.matType, config.variant, config.brand, config.model, config.bodyType]);
 
   // Znajdź wybraną podpiętkę
   const selectedPodpietka = useMemo(() => {
@@ -377,38 +281,6 @@ export default function ConfiguratorSimple() {
     }
   }, [activePreviewTab, hasFullPreview, productPreviewPath]);
 
-  // Zapisz konfigurację do localStorage
-  useEffect(() => {
-    localStorage.setItem('configurator-simple-state', JSON.stringify(config));
-  }, [config]);
-
-  // Załaduj konfigurację z localStorage przy starcie (ale nie nadpisuj wartości z URL)
-  useEffect(() => {
-    const brandParam = searchParams.get('brand');
-    const modelParam = searchParams.get('model');
-    const bodyTypeParam = searchParams.get('bodyType');
-    
-    const saved = localStorage.getItem('configurator-simple-state');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setConfig(prev => {
-          const updates: Partial<ConfiguratorState> = { ...parsed };
-          if (brandParam) delete updates.brand;
-          if (modelParam) updates.model = modelParam;
-          if (bodyTypeParam) updates.bodyType = bodyTypeParam;
-          return { ...prev, ...updates };
-        });
-      } catch (e) {
-        console.error('Error loading saved config:', e);
-      }
-    }
-  }, [searchParams]);
-
-  // Aktualizuj konfigurację
-  const updateConfig = (updates: Partial<ConfiguratorState>) => {
-    setConfig(prev => ({ ...prev, ...updates }));
-  };
 
   // Walidacja kroku - desktop (7 kroków)
   const isStepValidDesktop = (step: number): boolean => {
@@ -742,11 +614,21 @@ export default function ConfiguratorSimple() {
     : '';
 
   // Determine best image for sticky header
+  const stickyPreviewFallback = "/dywaniki/3d/diamonds/black/5os-3d-diamonds-black-black.webp";
   const stickyHeaderImage = useMemo(() => {
-    if (hasFullPreview && dynamicPreviewPath) return dynamicPreviewPath;
-    if (productPreviewPath) return productPreviewPath;
-    return '/dywaniki/3d/diamonds/black/5os-3d-diamonds-black-black.webp'; // Fallback
-  }, [hasFullPreview, dynamicPreviewPath, productPreviewPath]);
+    return getStickyMainImage({
+      hasFullPreview,
+      dynamicPreviewPath,
+      fallbackPath: stickyPreviewFallback,
+    });
+  }, [hasFullPreview, dynamicPreviewPath, stickyPreviewFallback]);
+
+  const mobileModalImageType = useMemo(() => {
+    if (activePreviewTab === "product" && productPreviewPath) return "product";
+    if (activePreviewTab === "dynamic") return "dynamic";
+    if (productPreviewPath) return "product";
+    return "dynamic";
+  }, [activePreviewTab, productPreviewPath]);
 
   if (brandsLoading) return <ConfiguratorLoader />;
 
@@ -790,7 +672,8 @@ export default function ConfiguratorSimple() {
             {/* Click to open modal */}
             <button
               onClick={() => {
-                setModalImageType(hasFullPreview ? 'dynamic' : 'product');
+                setActivePreviewTab("dynamic");
+                setModalImageType("dynamic");
                 setIsPreviewModalOpen(true);
               }}
               className="absolute inset-0 w-full h-full"
@@ -809,7 +692,8 @@ export default function ConfiguratorSimple() {
                 className="h-10 w-10 rounded-full bg-red-600/90 backdrop-blur border-2 border-red-500/50 hover:bg-red-500 text-white shadow-lg shadow-red-500/30 animate-pulse"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setModalImageType(hasFullPreview ? 'dynamic' : 'product');
+                  setActivePreviewTab("dynamic");
+                  setModalImageType("dynamic");
                   setIsPreviewModalOpen(true);
                 }}
               >
@@ -819,20 +703,45 @@ export default function ConfiguratorSimple() {
           </div>
 
           {/* Product Gallery - Sticky under main image, always visible */}
-          {productPreviewPath && (
-            <div className="px-4 py-2 bg-black/95 border-t border-white/10">
-              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
-                {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
+          <div className="px-4 py-2 bg-black/95 border-t border-white/10">
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActivePreviewTab("dynamic");
+                  setModalImageType("dynamic");
+                  setIsPreviewModalOpen(true);
+                }}
+                className={`
+                      relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 active:scale-95
+                      ${activePreviewTab === "dynamic"
+                        ? 'border-red-500 shadow-lg shadow-red-500/20 scale-105 ring-1 ring-red-500/50'
+                        : 'border-white/10 opacity-60 active:opacity-100'
+                      }
+                    `}
+                aria-label="Podgląd dywanika"
+              >
+                <Image
+                  src={stickyHeaderImage}
+                  alt="Miniatura podglądu dywanika"
+                  fill
+                  className="object-cover"
+                  sizes="48px"
+                />
+              </button>
+              {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
                   <button
                     key={imagePath}
                     onClick={(e) => {
                       e.stopPropagation();
-                      // Zmień wybrane zdjęcie bez otwierania modala
+                      setActivePreviewTab("product");
                       if (config.matType === 'classic') {
                         setSelectedClassicProductImage(imagePath);
                       } else {
                         setSelectedRimsProductImage(imagePath);
                       }
+                      setModalImageType("product");
+                      setIsPreviewModalOpen(true);
                     }}
                     className={`
                       relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 active:scale-95
@@ -845,9 +754,8 @@ export default function ConfiguratorSimple() {
                     <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="48px" />
                   </button>
                 ))}
-              </div>
             </div>
-          )}
+          </div>
         </div>
       )}
 

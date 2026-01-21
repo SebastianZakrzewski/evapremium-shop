@@ -11,6 +11,15 @@ import { getAvailableColors, getColorInfo, getAvailableMaterialColorsForEdge } f
 import { getMatImagePath } from "@/lib/image-mapping";
 import { useCart } from "@/features/shopping-cart/hooks/useCart";
 import { useBrands } from "@/features/brands/hooks/useBrands";
+import {
+  calculatePriceBreakdown,
+  calculateVariantBasePrice,
+  calculateVariantPrice,
+  getBasePrice,
+  type PricingContext,
+  type SetTypeId,
+  type SetVariantId,
+} from "@/features/car-configurator/domain/pricing";
 import { ConfiguratorService } from "@/lib/services/ConfiguratorService";
 import { PricingService } from "@/lib/services/PricingService";
 import { MatService } from "@/lib/services/MatService";
@@ -46,7 +55,7 @@ type EdgeColor = {
 };
 
 type SetType = {
-  id: string;
+  id: SetTypeId;
   name: string;
   description: string;
   priceModifier: number;
@@ -60,29 +69,13 @@ type CellType = {
 };
 
 type SetVariant = {
-  id: string;
+  id: SetVariantId;
   name: string;
   description: string;
   priceModifier: number;
 };
 
 // Kolory będą generowane dynamicznie na podstawie wybranej struktury komórek
-
-// Struktura cenowa - sztywne ceny za komplety + rabaty
-const PRICING = {
-  basePrice: {
-    'classic': { front: 290, basic: 510, premium: 710, complete: 350 },
-    '3d-with-rims': { front: 550, basic: 910, premium: 1210, complete: 350 }
-  },
-  // Rabat zależny od wartości: -30% dla ≥910 zł, -20% dla <910 zł
-  getDiscount: (basePrice: number) => {
-    return basePrice >= 910 ? 0.30 : 0.20;
-  },
-  shipping: {
-    cost: 27,
-    freeForVariants: ['basic', 'premium', 'complete'] as const  // Darmowa dla basic, premium, complete
-  }
-};
 
 const setTypes: SetType[] = [
   { id: "3d-with-rims", name: "3D z rantami", description: "Dywaniki 3D z wysokimi rantami", priceModifier: 0 },
@@ -179,9 +172,9 @@ export default function Configurator() {
   const [selectedMat, setSelectedMat] = useState<string>("black");
   const [selectedEdge, setSelectedEdge] = useState<string>("black");
   const [selectedHeelPad, setSelectedHeelPad] = useState<string>("brak");
-  const [selectedSetType, setSelectedSetType] = useState<string>(setTypes[0].id);
+  const [selectedSetType, setSelectedSetType] = useState<SetTypeId>(setTypes[0].id);
   const [selectedCellType, setSelectedCellType] = useState<string>(cellTypes[0].id);
-  const [selectedSetVariant, setSelectedSetVariant] = useState<string>(setVariants[0].id);
+  const [selectedSetVariant, setSelectedSetVariant] = useState<SetVariantId>(setVariants[0].id);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isVisualizationExpanded, setIsVisualizationExpanded] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -210,27 +203,30 @@ export default function Configurator() {
   const [isPriceLoading, setIsPriceLoading] = useState(false);
 
   // Funkcja do obliczania ceny dla konkretnego wariantu (do wyświetlania w UI)
-  const getVariantPrice = useCallback((
-    setType: string,
-    setVariant: string
-  ): number => {
-    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
-    const discount = PRICING.getDiscount(basePrice);
-    const priceAfterDiscount = basePrice * (1 - discount);
-    const shippingCost = PRICING.shipping.freeForVariants.includes(setVariant as any) ? 0 : PRICING.shipping.cost;
-    return Math.round(priceAfterDiscount + shippingCost);
-  }, []);
+  const getVariantPrice = useCallback(
+    (setType: SetTypeId, setVariant: SetVariantId): number => {
+      const context: PricingContext = {
+        brand: selectedCarBrand,
+        model: selectedCarModel,
+        bodyType: selectedBodyType,
+      };
+      return calculateVariantPrice(setType, setVariant, context);
+    },
+    [selectedCarBrand, selectedCarModel, selectedBodyType]
+  );
 
   // Funkcja do obliczania ceny bazowej bez wysyłki (do wyświetlania w sekcji wyboru zestawu)
-  const getVariantBasePrice = useCallback((
-    setType: string,
-    setVariant: string
-  ): number => {
-    const basePrice = PRICING.basePrice[setType as keyof typeof PRICING.basePrice]?.[setVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
-    const discount = PRICING.getDiscount(basePrice);
-    const priceAfterDiscount = basePrice * (1 - discount);
-    return Math.round(priceAfterDiscount);
-  }, []);
+  const getVariantBasePrice = useCallback(
+    (setType: SetTypeId, setVariant: SetVariantId): number => {
+      const context: PricingContext = {
+        brand: selectedCarBrand,
+        model: selectedCarModel,
+        bodyType: selectedBodyType,
+      };
+      return calculateVariantBasePrice(setType, setVariant, context);
+    },
+    [selectedCarBrand, selectedCarModel, selectedBodyType]
+  );
 
   // Funkcja do pobierania opisu ilości dywaników na podstawie wariantu zestawu
   const getVariantMatsDescription = useCallback((variantId: string): string => {
@@ -245,23 +241,24 @@ export default function Configurator() {
 
   // Funkcje do obliczania składowych ceny
   const priceBreakdown = useMemo(() => {
-    if (!selectedSetType || !selectedSetVariant) return { basePrice: 0, discount: 0, priceAfterDiscount: 0, shippingCost: 0, totalPrice: 0 };
-    
-    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
-    const discount = PRICING.getDiscount(basePrice);
-    const discountAmount = basePrice * discount;
-    const priceAfterDiscount = basePrice - discountAmount;
-    const shippingCost = PRICING.shipping.freeForVariants.includes(selectedSetVariant as any) ? 0 : PRICING.shipping.cost;
-    const totalPrice = Math.round(priceAfterDiscount + shippingCost);
-    
-    return {
-      basePrice: Math.round(basePrice),
-      discount: Math.round(discountAmount),
-      priceAfterDiscount: Math.round(priceAfterDiscount),
-      shippingCost,
-      totalPrice
+    if (!selectedSetType || !selectedSetVariant) {
+      return {
+        basePrice: 0,
+        discount: 0,
+        priceAfterDiscount: 0,
+        shippingCost: 0,
+        totalPrice: 0,
+      };
+    }
+
+    const context: PricingContext = {
+      brand: selectedCarBrand,
+      model: selectedCarModel,
+      bodyType: selectedBodyType,
     };
-  }, [selectedSetType, selectedSetVariant]);
+
+    return calculatePriceBreakdown(selectedSetType, selectedSetVariant, context);
+  }, [selectedSetType, selectedSetVariant, selectedCarBrand, selectedCarModel, selectedBodyType]);
 
   // Debug: wyświetl informacje o wybranej marce
   useEffect(() => {
@@ -450,7 +447,11 @@ export default function Configurator() {
       
       // Jeśli nie wybrano rocznika, użyj domyślnej ceny
       if (!selectedCarYear) {
-        const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
+        const basePrice = getBasePrice(selectedSetType, selectedSetVariant, 300, {
+          brand: selectedCarBrand,
+          model: selectedCarModel,
+          bodyType: selectedBodyType,
+        });
         const matConfiguration = {
           setType: selectedSetVariant || 'basic',
           cellType: selectedCellType || 'diamonds',
@@ -503,7 +504,11 @@ export default function Configurator() {
           debugLog('💰 Używam ceny z bazy danych:', basePrice);
         } else {
           // Użyj domyślnej ceny bazowej z nowego systemu
-          basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
+          basePrice = getBasePrice(selectedSetType, selectedSetVariant, 300, {
+            brand: selectedCarBrand,
+            model: selectedCarModel,
+            bodyType: selectedBodyType,
+          });
           debugLog('💰 Używam domyślnej ceny bazowej:', basePrice);
         }
 
@@ -520,7 +525,11 @@ export default function Configurator() {
       } catch (error) {
         console.error('❌ Błąd podczas pobierania dywaników:', error);
         // W przypadku błędu, użyj domyślnej ceny z nowego systemu
-        const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
+        const basePrice = getBasePrice(selectedSetType, selectedSetVariant, 300, {
+          brand: selectedCarBrand,
+          model: selectedCarModel,
+          bodyType: selectedBodyType,
+        });
         setBaseMatPrice(basePrice);
         debugLog('💰 Używam domyślnej ceny po błędzie:', basePrice);
       } finally {
@@ -619,7 +628,11 @@ export default function Configurator() {
       if (baseMatPrice === 0) {
         console.warn('⚠️ Używam domyślnej ceny');
         // Użyj domyślnej ceny zamiast blokować
-        const defaultPrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 300;
+        const defaultPrice = getBasePrice(selectedSetType, selectedSetVariant, 300, {
+          brand: selectedCarBrand,
+          model: selectedCarModel,
+          bodyType: selectedBodyType,
+        });
         setBaseMatPrice(defaultPrice);
       }
 
@@ -643,7 +656,11 @@ export default function Configurator() {
       
       console.log('💰 Configurator handleAddToCart - Ceny:', {
         selectedSetVariant,
-        basePrice: PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'],
+        basePrice: getBasePrice(selectedSetType, selectedSetVariant, 0, {
+          brand: selectedCarBrand,
+          model: selectedCarModel,
+          bodyType: selectedBodyType,
+        }),
         price,
         finalPrice,
         baseMatPrice
@@ -795,33 +812,27 @@ export default function Configurator() {
 
   const price = useMemo(() => {
     if (!selectedSetType || !selectedSetVariant) return 0;
-    
-    // 1. Pobierz bazową cenę kompletu
-    const basePrice = PRICING.basePrice[selectedSetType as keyof typeof PRICING.basePrice]?.[selectedSetVariant as 'front' | 'basic' | 'premium' | 'complete'] || 0;
-    
-    // 2. Oblicz rabat (zależny od wartości: ≥910 zł = -30%, <910 zł = -20%)
-    const discount = PRICING.getDiscount(basePrice);
-    const priceAfterDiscount = basePrice * (1 - discount);
-    
-    // 3. Dodaj koszt wysyłki (27 zł tylko dla 'front', darmowa dla 'basic', 'premium', 'complete')
-    const shippingCost = PRICING.shipping.freeForVariants.includes(selectedSetVariant as any) 
-      ? 0 
-      : PRICING.shipping.cost;
-    
-    const totalPrice = Math.round((priceAfterDiscount + shippingCost) * 100) / 100;
-    
+
+    const breakdown = calculatePriceBreakdown(selectedSetType, selectedSetVariant, {
+      brand: selectedCarBrand,
+      model: selectedCarModel,
+      bodyType: selectedBodyType,
+    });
+    const discountRate =
+      breakdown.basePrice > 0 ? breakdown.discount / breakdown.basePrice : 0;
+
     console.log('💰 Configurator price useMemo - Kalkulacja ceny:', {
       setType: selectedSetType,
       setVariant: selectedSetVariant,
-      basePrice,
-      discount: `${discount * 100}%`,
-      priceAfterDiscount: Math.round(priceAfterDiscount * 100) / 100,
-      shippingCost,
-      totalPrice
+      basePrice: breakdown.basePrice,
+      discount: `${Math.round(discountRate * 100)}%`,
+      priceAfterDiscount: breakdown.priceAfterDiscount,
+      shippingCost: breakdown.shippingCost,
+      totalPrice: breakdown.totalPrice
     });
-    
-    return totalPrice;
-  }, [selectedSetType, selectedSetVariant]);
+
+    return breakdown.totalPrice;
+  }, [selectedSetType, selectedSetVariant, selectedCarBrand, selectedCarModel, selectedBodyType]);
 
   // Track ViewContent gdy konfiguracja jest kompletna (model i typ nadwozia są wymagane, rocznik opcjonalny)
   useEffect(() => {
@@ -1198,7 +1209,11 @@ export default function Configurator() {
               <div ref={(el) => { sectionRefs.current[1] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 <div>
                   <h3 className="text-base font-medium mb-3">Wybierz rodzaj dywaników</h3>
-                  <RadioGroup value={selectedSetType} onValueChange={setSelectedSetType} className="space-y-3">
+                  <RadioGroup
+                    value={selectedSetType}
+                    onValueChange={(value) => setSelectedSetType(value as SetTypeId)}
+                    className="space-y-3"
+                  >
                     {setTypes.map((s) => {
                       // W nowym systemie nie ma modyfikatorów za typ zestawu
                       const modifier = { modifier: 0, label: '+0 zł' };
@@ -1235,7 +1250,11 @@ export default function Configurator() {
               <div ref={(el) => { sectionRefs.current[3] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 <div>
                   <h3 className="text-base font-medium mb-3">Wybierz rodzaj zestawu</h3>
-                  <RadioGroup value={selectedSetVariant} onValueChange={setSelectedSetVariant} className="space-y-3">
+                  <RadioGroup
+                    value={selectedSetVariant}
+                    onValueChange={(value) => setSelectedSetVariant(value as SetVariantId)}
+                    className="space-y-3"
+                  >
                     {setVariants.map((v) => {
                       // Oblicz cenę bazową bez wysyłki (do wyświetlania w sekcji wyboru zestawu)
                       const displayPrice = selectedSetType 

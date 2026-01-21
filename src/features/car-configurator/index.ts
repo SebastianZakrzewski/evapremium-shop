@@ -14,4 +14,8 @@ export type { Product, ProductConfiguration, ProductPricing, CarDetails, Configu
 export type { ConfiguratorState, SetType, CellType, SetVariant } from '../../lib/types/configurator';
 
 // Hooks (będą dodane po migracji)
-// export { useConfigurator } from './hooks/useConfigurator';
+export { useConfiguratorState } from "./hooks/useConfiguratorState";
+export type { ConfiguratorState } from "./utils/configuratorState";
+
+// Domain
+export * from "./domain/pricing";

@@ -140,6 +140,20 @@
 - Wszystkie skrypty zostały usunięte z głównego katalogu
 - Pliki konfiguracyjne zostały zachowane (next.config.js, tailwind.config.js, etc.)
 
+### Faza 5: Modularizacja konfiguratora ⏳
+
+#### 5.1 Wydzielenie logiki cenowej ✅
+
+**Zmiany (2026-01-21):**
+- ✅ Wydzielono logikę cenową do `src/features/car-configurator/domain/pricing.ts`
+- ✅ Dodano testy jednostkowe `src/features/car-configurator/domain/__tests__/pricing.test.ts`
+- ✅ `Configurator.tsx` korzysta z domenowych funkcji cenowych (bez logiki cenowej w UI)
+- ✅ Ujednolicono typy `SetTypeId`, `SetVariantId` w komponencie
+- ✅ Publiczne API feature eksportuje moduł domenowy
+
+**Testy (do uruchomienia):**
+- `npx vitest run src/features/car-configurator/domain/__tests__/pricing.test.ts`
+
 ## Metryki
 
 - ✅ Usunięto ~90 linii zduplikowanego kodu (brand mapping)
