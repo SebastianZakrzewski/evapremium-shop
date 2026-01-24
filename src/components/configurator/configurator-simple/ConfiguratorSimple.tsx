@@ -270,7 +270,7 @@ export default function ConfiguratorSimple() {
   }, [config.matType, selectedClassicProductImage, selectedRimsProductImage]);
 
   // Sprawdź czy mamy pełny podgląd (wszystkie opcje wybrane)
-  const hasFullPreview = config.structure && config.color && config.edgeColor;
+  const hasFullPreview = !!(config.structure && config.color && config.edgeColor);
 
   // Automatyczne przełączanie na dostępny tab
   useEffect(() => {

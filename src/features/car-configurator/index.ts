@@ -11,7 +11,7 @@ export { CarMatService } from '../../lib/services/carmat-service';
 
 // Types (tymczasowo z oryginalnych lokalizacji)
 export type { Product, ProductConfiguration, ProductPricing, CarDetails, ConfigurationData } from '../../entities/product';
-export type { ConfiguratorState, SetType, CellType, SetVariant } from '../../lib/types/configurator';
+export type { SetType, CellType, SetVariant } from '../../lib/types/configurator';
 
 // Hooks (będą dodane po migracji)
 export { useConfiguratorState } from "./hooks/useConfiguratorState";

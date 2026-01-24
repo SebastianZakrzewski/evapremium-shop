@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { getColorInfo } from "@/lib/color-mapping";
 import { getMatImagePath } from "@/lib/image-mapping";
-import type { ConfiguratorState } from "./ConfiguratorSimple";
+import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState";
 import { useAccessories } from "@/features/accessories/hooks/useAccessories";
 import { Plus, CheckCircle2, ShoppingCart } from "lucide-react";
 import { Brand } from "@/entities/car";

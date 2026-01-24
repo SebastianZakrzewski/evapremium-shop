@@ -8,7 +8,7 @@ import { useAccessories } from "@/features/accessories/hooks/useAccessories";
 import { Accessory } from "@/entities/product";
 import AccessoryDetailsSheet from "@/components/products/accessories/accessory-details-sheet";
 import { ShoppingCart, ExternalLink, Loader2 } from "lucide-react";
-import type { ConfiguratorState } from "./ConfiguratorSimple";
+import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState";
 
 interface AccessoriesStepProps {
   config: ConfiguratorState;
