@@ -92,8 +92,8 @@ export default function DeliveryAndPaymentTermsPage() {
                       evapremium.kontakt@gmail.com
                     </a>
                     {' '}lub telefonicznie pod numerem 
-                    <a href="tel:+48570123635" className="text-blue-400 hover:underline ml-1">
-                      +48 570 123 635
+                    <a href="tel:+48793993430" className="text-blue-400 hover:underline ml-1">
+                      +48 793 993 430
                     </a>.
                   </p>
                 </div>
@@ -193,8 +193,8 @@ export default function DeliveryAndPaymentTermsPage() {
                   </a>
                 </p>
                 <p><strong>Telefon:</strong> 
-                  <a href="tel:+48570123635" className="text-blue-400 hover:underline ml-1">
-                    +48 570 123 635
+                  <a href="tel:+48793993430" className="text-blue-400 hover:underline ml-1">
+                    +48 793 993 430
                   </a>
                 </p>
                 <p><strong>Adres:</strong> ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze</p>

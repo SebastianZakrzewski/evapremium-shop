@@ -205,7 +205,7 @@ export default function AboutUsSection() {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
               <a 
-                href="tel:+48570123635" 
+                href="tel:+48793993430" 
                 className="border border-white/20 hover:bg-white/10 text-white px-8 py-4 rounded-full font-semibold transition-colors"
               >
                 Zadzwoń do nas

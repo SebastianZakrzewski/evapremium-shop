@@ -128,11 +128,11 @@ export default function HeroSection() {
       {/* Phone number - Mobile only */}
       <div className="md:hidden absolute top-4 left-0 right-0 z-30 px-4">
         <a 
-          href="tel:+48570123635"
+          href="tel:+48793993430"
           className="flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2.5 rounded-full shadow-lg shadow-red-900/50 hover:from-red-500 hover:to-red-600 transition-all duration-300 active:scale-95"
         >
           <Phone className="w-4 h-4" />
-          <span className="font-semibold text-sm">+48 570 123 635</span>
+          <span className="font-semibold text-sm">+48 793 993 430</span>
         </a>
       </div>
 

@@ -80,7 +80,7 @@ export default function ReturnsAndExchangesPage() {
                     <p>ul. Tadeusza Kościuszki 34/1</p>
                     <p>81-198 Pogórze</p>
                     <p>NIP: 5871715880</p>
-                    <p>tel. +48 570 123 635</p>
+                    <p>tel. +48 793 993 430</p>
                     <p>e-mail: 
                       <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-400 hover:underline ml-1">
                         evapremium.kontakt@gmail.com
@@ -202,7 +202,7 @@ export default function ReturnsAndExchangesPage() {
                     evapremium.kontakt@gmail.com
                   </a>
                 </p>
-                <p><strong>Telefon:</strong> +48 570 123 635</p>
+                <p><strong>Telefon:</strong> +48 793 993 430</p>
                 <p><strong>Adres:</strong> ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze</p>
                 <p><strong>NIP:</strong> 5871715880</p>
               </div>

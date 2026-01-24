@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
                   adres do doręczeń: <strong>ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze</strong>, 
                   NIP: <strong>5871715880</strong>, REGON: <strong>380082236</strong>, 
                   adres poczty elektronicznej (e-mail): <strong>evapremium.kontakt@gmail.com</strong> 
-                  numer telefonu: <strong>+48 570 123 635</strong>, zwana dalej &quot;Administratorem&quot; i będąca jednocześnie &quot;Usługodawcą&quot;.
+                  numer telefonu: <strong>+48 793 993 430</strong>, zwana dalej &quot;Administratorem&quot; i będąca jednocześnie &quot;Usługodawcą&quot;.
                 </p>
                 <p>
                   <strong>2.</strong> Dane osobowe zbierane przez Administratora za pośrednictwem strony internetowej są
@@ -275,7 +275,7 @@ export default function PrivacyPolicyPage() {
               <h3 className="text-lg font-semibold text-white mb-3">Kontakt w sprawach ochrony danych</h3>
               <div className="text-gray-300 space-y-2">
                 <p><strong>Email:</strong> evapremium.kontakt@gmail.com</p>
-                <p><strong>Telefon:</strong> +48 570 123 635</p>
+                <p><strong>Telefon:</strong> +48 793 993 430</p>
                 <p><strong>Adres:</strong> ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze</p>
                 <p><strong>NIP:</strong> 5871715880</p>
                 <p><strong>REGON:</strong> 380082236</p>

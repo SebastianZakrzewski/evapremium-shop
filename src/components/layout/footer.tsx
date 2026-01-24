@@ -132,8 +132,8 @@ export default function Footer() {
               </li>
               <li className="group">
                 <span className="block text-xs uppercase text-gray-500 mb-1 tracking-wide">Telefon</span>
-                <a href="tel:+48570123635" className="text-white hover:text-red-500 transition-colors font-medium text-lg">
-                  +48 570 123 635
+                <a href="tel:+48793993430" className="text-white hover:text-red-500 transition-colors font-medium text-lg">
+                  +48 793 993 430
                 </a>
               </li>
               <li>

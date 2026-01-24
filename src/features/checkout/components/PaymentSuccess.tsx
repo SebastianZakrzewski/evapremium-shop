@@ -792,12 +792,12 @@ export function PaymentSuccess() {
                 <span className="text-sm">evapremium.kontakt@gmail.com</span>
               </a>
               <a 
-                href="tel:+48123456789" 
+                href="tel:+48793993430" 
                 className="flex items-center justify-center gap-2 text-red-400 hover:text-red-300 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black rounded-lg p-2"
                 aria-label="Zadzwoń do nas"
               >
                 <Phone className="h-4 w-4" />
-                <span className="text-sm">+48 123 456 789</span>
+                <span className="text-sm">+48 793 993 430</span>
               </a>
             </div>
           </div>

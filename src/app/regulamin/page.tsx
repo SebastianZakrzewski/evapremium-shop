@@ -27,7 +27,7 @@ export default function TermsOfServicePage() {
                   Sklep internetowy działający pod adresem www.evapremium.pl prowadzony jest przez Klaudię Lewandowską, 
                   prowadzącą działalność gospodarczą w formie jednoosobowej działalności gospodarczej, z siedzibą przy 
                   ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze, Gdynia, NIP: 5871715880, REGON: 380082236, 
-                  adres e-mail: kontakt.evapremium@gmail.com, numer telefonu: +48 570 123 635.
+                  adres e-mail: kontakt.evapremium@gmail.com, numer telefonu: +48 793 993 430.
                 </p>
                 <p>
                   Niniejszy Regulamin określa warunki zawierania i rozwiązywania Umów Sprzedaży Produktów, 
@@ -67,7 +67,7 @@ export default function TermsOfServicePage() {
                 <p><strong>FORMULARZ ZAMÓWIENIA</strong> – formularz umożliwiający złożenie Zamówienia.</p>
                 <p><strong>SYSTEM OPINII</strong> – usługa umożliwiająca publikowanie opinii o produktach.</p>
                 <p><strong>NEWSLETTER</strong> – usługa umożliwiająca subskrypcję bezpłatnych informacji o produktach.</p>
-                <p><strong>SPRZEDAWCA / USŁUGODAWCA</strong> – Klaudia Lewandowska, prowadząca jednoosobową działalność gospodarczą, ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze, Gdynia, NIP: 5871715880, REGON: 380082236, e-mail: kontakt.evapremium@gmail.com, tel. +48 570 123 635.</p>
+                <p><strong>SPRZEDAWCA / USŁUGODAWCA</strong> – Klaudia Lewandowska, prowadząca jednoosobową działalność gospodarczą, ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze, Gdynia, NIP: 5871715880, REGON: 380082236, e-mail: kontakt.evapremium@gmail.com, tel. +48 793 993 430.</p>
                 <p><strong>USŁUGOBIORCA</strong> – osoba fizyczna, prawna lub jednostka organizacyjna korzystająca z Usług Elektronicznych.</p>
                 <p><strong>KLIENT</strong> – Usługobiorca, który zamierza zawrzeć lub zawarł Umowę Sprzedaży.</p>
                 <p><strong>KONSUMENT</strong> – osoba fizyczna dokonująca czynności niezwiązanej z działalnością gospodarczą lub zawodową.</p>
@@ -93,7 +93,7 @@ export default function TermsOfServicePage() {
                   <li>przez stronę internetową (formularz zamówienia) – 24/7,</li>
                   <li>e-mailem na adres kontakt.evapremium@gmail.com,</li>
                   <li>przez formularz wyceny,</li>
-                  <li>telefonicznie lub SMS na numer +48 570 123 635,</li>
+                  <li>telefonicznie lub SMS na numer +48 793 993 430,</li>
                   <li>przez portale społecznościowe (Facebook, Messenger, Instagram, TikTok, WhatsApp).</li>
                 </ul>
                 <p>Warunkiem złożenia zamówienia jest akceptacja Regulaminu.</p>
@@ -380,7 +380,7 @@ export default function TermsOfServicePage() {
               <h3 className="text-lg font-semibold text-white mb-3">Kontakt w sprawach regulaminu</h3>
               <div className="text-gray-300 space-y-2">
                 <p><strong>Email:</strong> kontakt.evapremium@gmail.com</p>
-                <p><strong>Telefon:</strong> +48 570 123 635</p>
+                <p><strong>Telefon:</strong> +48 793 993 430</p>
                 <p><strong>Adres:</strong> ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze, Gdynia</p>
                 <p><strong>NIP:</strong> 5871715880</p>
                 <p><strong>REGON:</strong> 380082236</p>
