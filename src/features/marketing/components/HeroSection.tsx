@@ -31,29 +31,11 @@ const heroSlides: HeroSlide[] = [
     id: 2,
     title: "",
     subtitle: "",
-    image: "/blackfriday.png",
-    cta: "Sprawdź promocję",
+    image: "/hero2.png",
+    cta: "",
     price: "",
     benefits: [],
     isImageSlide: true
-  },
-  {
-    id: 3,
-    title: "Najwyższa Jakość Materiałów EVA",
-    subtitle: "Profesjonalne dywaniki samochodowe najwyższej jakości",
-    video: "/images/hero/video.mp4",
-    cta: "Poznaj Materiały",
-    price: "Gwarancja 2 lata",
-    benefits: ["Materiał EVA", "Odporność na wilgoć", "Trwałość"]
-  },
-  {
-    id: 4,
-    title: "Spersonalizowane Dywaniki Samochodowe",
-    subtitle: "Dokładnie dopasowane do modelu Twojego auta",
-    video: "/images/hero/video.mp4",
-    cta: "Wybierz Model",
-    price: "Dostawa 24h",
-    benefits: ["Precyzyjne dopasowanie", "Szybka dostawa", "5000+ zadowolonych klientów"]
   }
 ];
 
@@ -164,11 +146,12 @@ export default function HeroSection() {
                       <div className="absolute inset-0 bg-neutral-950">
                         <Image
                           src={slide.image}
-                          alt="Black Friday"
+                          alt=""
                           fill
                           className="object-contain object-center"
                           priority={index === 1}
-                          sizes="100vw"
+                          quality={90}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1920px"
                         />
                       </div>
                       {/* Radial Overlay */}
