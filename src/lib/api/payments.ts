@@ -19,23 +19,29 @@ export interface P24PaymentResponse {
 
 /**
  * Register P24 payment
+ * API zwraca: { success, paymentUrl, token } – nie { success, data: {...} }
  */
 export async function registerP24Payment(orderId: string): Promise<P24PaymentResponse> {
   try {
-    const response = await apiPost<ApiResponse<P24PaymentResponse>>(
-      '/api/payments/p24/register',
-      { orderId }
-    );
-    
-    if (!response.success || !response.data) {
+    const response = await apiPost<
+      ApiResponse<P24PaymentResponse> & { paymentUrl?: string; token?: string }
+    >('/api/payments/p24/register', { orderId });
+
+    if (!response.success) {
       throw new ApiError(
         response.error || 'Błąd rejestracji płatności',
         400,
         response
       );
     }
-    
-    return response.data;
+
+    // API zwraca paymentUrl i token na top-level (nie w data)
+    const paymentUrl = response.data?.paymentUrl ?? response.paymentUrl ?? '';
+    const token = response.data?.token ?? response.token ?? '';
+    if (!paymentUrl || !token) {
+      throw new ApiError('Brak URL płatności w odpowiedzi', 500, response);
+    }
+    return { paymentUrl, token };
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;

@@ -166,15 +166,36 @@ export class Przelewy24Service {
       const requestData = this.buildRegisterRequest(transactionData, sign)
       
       const response = await this.sendRegisterRequest(requestData)
-      const responseData = await response.json()
-      console.log(requestData)
+      const responseText = await response.text()
+      let responseData: Record<string, unknown>
+      try {
+        responseData = responseText ? JSON.parse(responseText) : {}
+      } catch (parseError) {
+        console.error('❌ P24Service: Nieprawidłowa odpowiedź JSON z P24', {
+          status: response.status,
+          statusText: response.statusText,
+          bodyPreview: responseText?.substring(0, 200),
+          parseError: parseError instanceof Error ? parseError.message : String(parseError)
+        })
+        return {
+          success: false,
+          error: `P24 zwróciło nieprawidłową odpowiedź (HTTP ${response.status}). Sprawdź konfigurację API.`
+        }
+      }
 
       if (!this.isSuccessfulResponse(response, responseData)) {
         return this.createErrorResult(responseData, response)
       }
-      
 
-      return this.createSuccessResult(responseData.data.token)
+      const token = responseData.data && typeof responseData.data === 'object' && 'token' in responseData.data
+        ? String((responseData.data as { token: unknown }).token)
+        : ''
+      if (!token) {
+        console.error('❌ P24Service: Brak tokenu w odpowiedzi', responseData)
+        return { success: false, error: 'P24 nie zwróciło tokenu płatności' }
+      }
+
+      return this.createSuccessResult(token)
       
     } catch (error) {
       return this.createErrorResultFromException(error)
@@ -233,18 +254,47 @@ export class Przelewy24Service {
   /**
    * Sprawdza czy odpowiedź jest sukcesem
    */
-  private isSuccessfulResponse(response: Response, responseData: any): boolean {
+  private isSuccessfulResponse(response: Response, responseData: Record<string, unknown>): boolean {
     return response.ok && responseData.responseCode === 0
   }
 
   /**
    * Tworzy wynik błędu z odpowiedzi API
+   * P24 może zwracać błędy w polach: error, errorMessage, errors, message
    */
-  private createErrorResult(responseData: any, response: Response): P24PaymentResult {
+  private createErrorResult(responseData: Record<string, unknown>, response: Response): P24PaymentResult {
+    const errorMessage = this.extractP24ErrorMessage(responseData, response)
+    console.error('❌ P24Service: Błąd rejestracji transakcji', {
+      httpStatus: response.status,
+      responseCode: responseData.responseCode,
+      error: responseData.error,
+      errorMessage: responseData.errorMessage,
+      fullResponse: JSON.stringify(responseData)
+    })
     return {
       success: false,
-      error: responseData.error || `HTTP ${response.status}: ${response.statusText}`
+      error: errorMessage
     }
+  }
+
+  /**
+   * Ekstrahuje komunikat błędu z odpowiedzi P24 (różne formaty)
+   */
+  private extractP24ErrorMessage(responseData: Record<string, unknown>, response: Response): string {
+    const err = responseData.error
+    const errMsg = responseData.errorMessage
+    const msg = responseData.message
+    const errors = responseData.errors
+
+    if (typeof err === 'string' && err) return err
+    if (typeof errMsg === 'string' && errMsg) return errMsg
+    if (typeof msg === 'string' && msg) return msg
+    if (Array.isArray(errors) && errors.length > 0) {
+      const first = errors[0]
+      return typeof first === 'string' ? first : (first && typeof first === 'object' && 'message' in first ? String((first as { message: unknown }).message) : 'Błąd walidacji')
+    }
+
+    return `HTTP ${response.status}: ${response.statusText}`
   }
 
   /**

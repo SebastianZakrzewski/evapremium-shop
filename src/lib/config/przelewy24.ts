@@ -29,9 +29,10 @@ function validateEnvVars() {
 
   const required = [
     'P24_MERCHANT_ID',
-    'P24_POS_ID', 
+    'P24_POS_ID',
     'P24_CRC_KEY',
     'P24_API_KEY',
+    'P24_REPORT_KEY',
     'P24_ENVIRONMENT',
     'P24_URL_RETURN',
     'P24_URL_STATUS'

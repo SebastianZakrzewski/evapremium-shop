@@ -301,7 +301,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                   <Input 
                     value={discountCode}
                     onChange={(e) => handleDiscountCodeChange(e.target.value)}
-                    placeholder="Wprowadź kod (np. LISTOPAD5)"
+                    placeholder=""
                     className={`min-h-[40px] h-10 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm ${
                       discountError ? 'border-red-500' : discountApplied ? 'border-green-500' : ''
                     }`}

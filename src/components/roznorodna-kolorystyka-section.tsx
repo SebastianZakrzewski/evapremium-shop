@@ -94,7 +94,6 @@ export default function RoznorodnaKolorystykaSection() {
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
           {/* Preview Area */}
           <div className="w-full lg:w-1/2 aspect-square relative bg-neutral-950 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-             <div className="absolute inset-0 bg-neutral-950/40 z-10 transition-opacity duration-500" />
              {colorImages[selectedColor.name] ? (
                <Image
                  src={colorImages[selectedColor.name]}

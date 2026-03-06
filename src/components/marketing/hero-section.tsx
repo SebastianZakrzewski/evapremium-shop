@@ -31,6 +31,16 @@ const heroSlides: HeroSlide[] = [
     id: 2,
     title: "",
     subtitle: "",
+    image: "/hero2.png",
+    cta: "",
+    price: "",
+    benefits: [],
+    isImageSlide: true
+  },
+  {
+    id: 3,
+    title: "",
+    subtitle: "",
     image: "/blackfriday.png",
     cta: "Sprawdź promocję",
     price: "",
@@ -38,7 +48,7 @@ const heroSlides: HeroSlide[] = [
     isImageSlide: true
   },
   {
-    id: 3,
+    id: 4,
     title: "Najwyższa Jakość Materiałów EVA",
     subtitle: "Profesjonalne dywaniki samochodowe najwyższej jakości",
     video: "/images/hero/video.mp4",
@@ -47,7 +57,7 @@ const heroSlides: HeroSlide[] = [
     benefits: ["Materiał EVA", "Odporność na wilgoć", "Trwałość"]
   },
   {
-    id: 4,
+    id: 5,
     title: "Spersonalizowane Dywaniki Samochodowe",
     subtitle: "Dokładnie dopasowane do modelu Twojego auta",
     video: "/images/hero/video.mp4",
@@ -164,9 +174,9 @@ export default function HeroSection() {
                       <div className="absolute inset-0 bg-neutral-950">
                         <Image
                           src={slide.image}
-                          alt="Black Friday"
+                          alt=""
                           fill
-                          className="object-contain object-center"
+                          className="object-[scale-down] object-center"
                           priority={index === 1}
                           sizes="100vw"
                         />

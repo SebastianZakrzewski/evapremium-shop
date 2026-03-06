@@ -119,11 +119,12 @@ export async function POST(request: NextRequest) {
     const paymentResult = await p24Service.registerTransaction(transactionData)
     
     if (!paymentResult.success) {
-      console.error('❌ P24 Register API: Błąd rejestracji płatności', paymentResult.error)
+      const errorMsg = paymentResult.error || 'Błąd rejestracji płatności'
+      console.error('❌ P24 Register API: Błąd rejestracji płatności:', errorMsg)
       return NextResponse.json(
         { 
           success: false, 
-          error: paymentResult.error || 'Błąd rejestracji płatności' 
+          error: errorMsg 
         },
         { status: 500 }
       )
