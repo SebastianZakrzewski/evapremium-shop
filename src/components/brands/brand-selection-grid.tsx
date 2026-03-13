@@ -35,8 +35,8 @@ export default function BrandSelectionGrid() {
     // Animacja kliknięcia - reset po 300ms
     setTimeout(() => {
       setClickedBrandId(null);
-      // Przekierowanie bezpośrednio do konfiguratora (sekcja wyboru modelu jest w fazie produkcji)
-      router.push(`/konfigurator?brand=${encodeURIComponent(brand.name.toLowerCase())}`);
+      // Przekierowanie do sekcji produktów (tak jak w karuzeli marek)
+      router.push(`/modele?brand=${encodeURIComponent(brand.name.toLowerCase())}`);
     }, 300);
   }, [router]);
 
