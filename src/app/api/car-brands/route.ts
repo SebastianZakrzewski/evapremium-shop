@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/config/env';
+import { resolveBrandLogo } from '@/shared/brands';
 
 const supabase = createClient(env.supabase.url, env.supabase.anonKey);
 
@@ -104,12 +105,12 @@ export async function GET(request: NextRequest) {
       }
     });
     
-    // Konwertuj na listę marek
+    // Konwertuj na listę marek z poprawnym mapowaniem logo
     const uniqueBrands = Array.from(brandMap.values())
       .map((brand, index) => ({
         id: index + 1,
         name: brand.brand_name,
-        logo: brand.brand_image || `/modele/${brand.brand_name.toLowerCase().replace(/\s+/g, '_')}.jpg`,
+        logo: resolveBrandLogo(brand.brand_name, brand.brand_image),
         description: `Dywaniki samochodowe dla marki ${brand.brand_name}`
       }));
 

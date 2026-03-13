@@ -21,40 +21,16 @@ export async function fetchBrands(): Promise<Brand[]> {
 }
 
 /**
- * Fallback brands used when API is unavailable
+ * Fallback brands used when API is unavailable.
+ * Zdjęcia marek znajdują się w katalogu public/modele/
  */
 export function getFallbackBrands(): Brand[] {
   return [
-    {
-      id: 1,
-      name: "BMW",
-      logo: "/images/products/bmw.png",
-      description: "Niemiecka marka sportowa"
-    },
-    {
-      id: 2,
-      name: "Mercedes",
-      logo: "/images/products/mercedes.jpg",
-      description: "Niemiecka marka luksusowa"
-    },
-    {
-      id: 3,
-      name: "Audi",
-      logo: "/images/products/audi.jpg",
-      description: "Niemiecka marka premium"
-    },
-    {
-      id: 4,
-      name: "Tesla",
-      logo: "/images/products/tesla.avif",
-      description: "Amerykańska marka elektryczna"
-    },
-    {
-      id: 5,
-      name: "Porsche",
-      logo: "/images/products/porsche.png",
-      description: "Niemiecka marka sportowa"
-    }
+    { id: 1, name: "BMW", logo: "/modele/bmw.png", description: "Niemiecka marka sportowa" },
+    { id: 2, name: "Mercedes", logo: "/modele/mercedes_benz.jpg", description: "Niemiecka marka luksusowa" },
+    { id: 3, name: "Audi", logo: "/modele/audi.avif", description: "Niemiecka marka premium" },
+    { id: 4, name: "Tesla", logo: "/modele/tesla.avif", description: "Amerykańska marka elektryczna" },
+    { id: 5, name: "Porsche", logo: "/modele/porsche.jpg", description: "Niemiecka marka sportowa" }
   ];
 }
 

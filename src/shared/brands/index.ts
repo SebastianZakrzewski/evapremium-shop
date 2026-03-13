@@ -6,6 +6,7 @@ export {
   mapSlugToCanonicalBrand,
   getBrandMetaBySlug,
   supportedBrands,
+  MODELE_IMAGE_MAP,
   type BrandMeta,
 } from './brandNormalizer';
 
@@ -16,6 +17,7 @@ export {
   getBrandDisplayName,
   getBrandLogo,
   getBrandApiName,
+  resolveBrandLogo,
   type BrandMappingInfo,
 } from './brandMapper';
 

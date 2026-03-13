@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Brand } from "@/entities/car";
@@ -22,6 +22,7 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
   isPriority = false
 }) => {
   const router = useRouter();
+  const [imageError, setImageError] = useState(false);
   
   const handleClick = () => {
     if (onClick) {
@@ -86,7 +87,13 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
 
       {/* Zdjęcie/Logo marki */}
       <div className="relative w-full h-full flex items-center justify-center p-3 sm:p-4 md:p-6 z-20">
-        {isImage ? (
+        {imageError ? (
+          <div className="w-full h-full flex items-center justify-center bg-gray-800/50 rounded-lg">
+            <span className="text-4xl md:text-6xl font-bold text-red-500/80 select-none">
+              {brand.name.charAt(0)}
+            </span>
+          </div>
+        ) : isImage ? (
           <Image
             src={brand.logo}
             alt={`${brand.name} logo`}
@@ -100,9 +107,11 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
             sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
             quality={100}
             loading={isPriority ? "eager" : "lazy"}
-            placeholder="blur"
+            placeholder={isBrandImage ? "empty" : "blur"}
             priority={isPriority}
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+            unoptimized={isBrandImage}
+            onError={() => setImageError(true)}
           />
         ) : (
           <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-32 md:h-32 lg:w-40 lg:h-40 flex items-center justify-center">
@@ -113,10 +122,8 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
               height={160}
               className="object-contain transition-all duration-500 group-hover:scale-110 drop-shadow-[0_0_20px_rgba(220,38,38,0.3)] w-full h-full"
               quality={100}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-              }}
+              unoptimized={isBrandImage}
+              onError={() => setImageError(true)}
             />
           </div>
         )}

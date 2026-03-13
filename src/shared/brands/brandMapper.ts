@@ -1,4 +1,4 @@
-import { getBrandMetaBySlug, mapSlugToCanonicalBrand, BrandMeta } from './brandNormalizer';
+import { getBrandMetaBySlug, mapSlugToCanonicalBrand, MODELE_IMAGE_MAP, BrandMeta } from './brandNormalizer';
 
 /**
  * Brand mapping information
@@ -31,9 +31,10 @@ export function getBrandInfo(brandSlug: string): BrandMappingInfo | null {
     return null;
   }
 
+  const logoFromMap = MODELE_IMAGE_MAP[meta.slug.replace(/-/g, '_')];
   return {
     displayName: meta.displayName,
-    logo: meta.logo || `/images/products/${meta.slug}.png`,
+    logo: meta.logo || (logoFromMap ? `/modele/${logoFromMap}` : `/modele/${meta.slug.replace(/-/g, '_')}.jpg`),
     apiName: meta.apiName,
   };
 }
@@ -84,6 +85,56 @@ export function getBrandLogo(brandSlug: string): string | null {
  */
 export function getBrandApiName(brandSlug: string): string | null {
   return normalizeBrandName(brandSlug);
+}
+
+/**
+ * Konwertuje nazwę marki na slug do wyszukiwania w mapowaniu
+ * np. "Alfa Romeo" -> "alfa-romeo", "Mercedes-Benz" -> "mercedes-benz"
+ */
+function brandNameToSlug(brandName: string): string {
+  return brandName
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Konwertuje slug na nazwę pliku w katalogu modele (np. "alfa-romeo" -> "alfa_romeo")
+ */
+function slugToModeleFilename(slug: string): string {
+  return slug.replace(/-/g, '_');
+}
+
+/**
+ * Rozwiązuje ścieżkę logo dla marki.
+ * Priorytet: 1) mapowanie marek (brandNormalizer), 2) brand_image z bazy, 3) fallback /modele/{slug}.jpg
+ * Zdjęcia marek znajdują się w katalogu public/modele/
+ *
+ * @param brandName - Nazwa marki (np. "BMW", "Alfa Romeo")
+ * @param dbBrandImage - Wartość brand_image z bazy (może być null/undefined)
+ * @returns Ścieżka do logo
+ */
+export function resolveBrandLogo(
+  brandName: string,
+  dbBrandImage?: string | null
+): string {
+  const slug = brandNameToSlug(brandName);
+  const meta = getBrandMetaBySlug(slug);
+  if (meta?.logo) {
+    return meta.logo;
+  }
+  if (dbBrandImage && dbBrandImage.trim().length > 0) {
+    return dbBrandImage;
+  }
+  const slugUnderscore = slugToModeleFilename(slug);
+  const filename = MODELE_IMAGE_MAP[slugUnderscore];
+  if (filename) {
+    return `/modele/${filename}`;
+  }
+  return `/modele/${slugUnderscore}.jpg`;
 }
 
 
