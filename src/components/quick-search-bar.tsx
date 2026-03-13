@@ -1,77 +1,29 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Search, X, ChevronDown, Loader2 } from "lucide-react";
-import { Brand } from "@/entities/car";
-import { getAvailableModels } from "@/data/car-model-years.utils";
 import { useBrands } from "@/features/brands/hooks/useBrands";
-
-// Mapowanie nazw marek z API na nazwy w bazie danych (takie samo jak w Configuratorze)
-const mapBrandNameForData = (brandName: string): string => {
-  const brandMappings: Record<string, string> = {
-    "Mercedes": "Mercedes-Benz",
-    "Mercedes-Benz": "Mercedes-Benz",
-    "BMW": "Bmw",
-    "Bmw": "Bmw",
-    "Audi": "Audi",
-    "Tesla": "Tesla",
-    "Porsche": "Porsche",
-    "Volkswagen": "Volkswagen",
-    "Ford": "Ford",
-    "Opel": "Opel",
-    "Peugeot": "Peugeot",
-    "Renault": "Renault",
-    "Fiat": "Fiat",
-    "Alfa Romeo": "Alfa romeo",
-    "Aston Martin": "Aston martin",
-    "Acura": "Acura",
-    "Bentley": "Bentley",
-    "Ferrari": "Ferrari",
-    "Lamborghini": "Lamborghini",
-    "McLaren": "McLaren",
-    "Maserati": "Maserati",
-    "Rolls-Royce": "Rolls-Royce",
-    "Lexus": "Lexus",
-    "Infiniti": "Infiniti",
-    "Cadillac": "Cadillac",
-    "Lincoln": "Lincoln",
-    "Jaguar": "Jaguar",
-    "Land Rover": "Land rover",
-    "Mini": "Mini",
-    "Smart": "Smart"
-  };
-  
-  return brandMappings[brandName] || brandName;
-};
+import { useConfiguratorCarData } from "@/features/car-configurator";
+import { normalizeBrandName } from "@/shared/brands";
 
 export default function QuickSearchBar() {
   const router = useRouter();
   const [selectedBrand, setSelectedBrand] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
 
-  // Pobierz marki używając hooka useBrands
   const { brands, isLoading: brandsLoading } = useBrands();
 
-  // Pobierz dostępne modele dla wybranej marki (używając tej samej logiki co Configurator)
-  const availableModels = useMemo(() => {
-    if (!selectedBrand) return [];
-    
-    try {
-      // Mapuj nazwę marki do formatu używanego w danych (takie samo jak w Configuratorze)
-      const mappedBrandName = mapBrandNameForData(selectedBrand);
-      const modelNames = getAvailableModels(mappedBrandName);
-      
-      // Konwertuj do formatu oczekiwanego przez komponent
-      return modelNames.map(modelName => ({
-        id: modelName,
-        name: modelName
-      }));
-    } catch (error) {
-      console.error('Error getting models:', error);
-      return [];
-    }
-  }, [selectedBrand]);
+  const brandApiName = selectedBrand
+    ? (normalizeBrandName(selectedBrand.toLowerCase().trim()) ?? selectedBrand)
+    : "";
+
+  const { models: apiModels, isLoading: modelsLoading } = useConfiguratorCarData({
+    brandApiName,
+    enabled: !!brandApiName,
+  });
+
+  const availableModels = apiModels.map((name) => ({ id: name, name }));
 
 
   // Resetuj model gdy zmienia się marka
@@ -163,7 +115,7 @@ export default function QuickSearchBar() {
               <select
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
-                disabled={!selectedBrand || availableModels.length === 0}
+                disabled={!selectedBrand || modelsLoading}
                 className="
                   w-full pl-16 md:pl-20 pr-10 py-3.5 md:py-4
                   bg-black/40 hover:bg-black/60
@@ -177,7 +129,11 @@ export default function QuickSearchBar() {
                 "
               >
                 <option value="" className="bg-neutral-900 text-gray-500">
-                  {!selectedBrand ? "Wybierz markę..." : "Wybierz model..."}
+                  {!selectedBrand
+                    ? "Wybierz markę..."
+                    : modelsLoading
+                      ? "Ładowanie..."
+                      : "Wybierz model..."}
                 </option>
                 {availableModels.map((model) => (
                   <option key={model.id} value={model.name} className="bg-neutral-900 text-white">
@@ -186,7 +142,11 @@ export default function QuickSearchBar() {
                 ))}
               </select>
               <div className="absolute inset-y-0 right-3 md:right-4 flex items-center pointer-events-none">
-                <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-500 group-hover:text-white transition-colors" />
+                {modelsLoading ? (
+                  <Loader2 className="w-4 h-4 md:w-5 md:h-5 text-red-500 animate-spin" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-500 group-hover:text-white transition-colors" />
+                )}
               </div>
             </div>
 

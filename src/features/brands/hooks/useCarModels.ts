@@ -6,10 +6,10 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { fetchCarModels } from '@/lib/api/models';
-import { CarModel } from '@/lib/types/car-model';
+import type { CarModelApiResponse } from '@/lib/types/api';
 
 export interface UseCarModelsReturn {
-  models: CarModel[];
+  models: CarModelApiResponse[];
   isLoading: boolean;
   error: Error | null;
 }

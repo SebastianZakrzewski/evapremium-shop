@@ -15,7 +15,9 @@ export type { SetType, CellType, SetVariant } from '../../lib/types/configurator
 
 // Hooks (będą dodane po migracji)
 export { useConfiguratorState } from "./hooks/useConfiguratorState";
+export { useConfiguratorCarData } from "./hooks/useConfiguratorCarData";
 export type { ConfiguratorState } from "./utils/configuratorState";
+export type { UseConfiguratorCarDataReturn, UseConfiguratorCarDataParams } from "./hooks/useConfiguratorCarData";
 
 // Domain
 export * from "./domain/pricing";

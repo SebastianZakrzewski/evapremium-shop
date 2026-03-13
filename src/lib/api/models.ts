@@ -1,19 +1,19 @@
 /**
  * Car Models API functions
- * 
+ *
  * Centralized API calls for car model-related endpoints
  */
 
 import { apiGet } from './client';
-import { CarModel } from '@/lib/types/car-model';
+import type { CarModelApiResponse } from '@/lib/types/api';
 
 /**
  * Fetch car models by brand API name
- * 
+ *
  * @param brandName - Brand API name (e.g., "Bmw", "Mercedes-Benz")
- * @returns Array of car models
+ * @returns Array of car models with generations
  */
-export async function fetchCarModels(brandName: string): Promise<CarModel[]> {
+export async function fetchCarModels(brandName: string): Promise<CarModelApiResponse[]> {
   if (!brandName) {
     console.warn('fetchCarModels: brandName is required');
     return [];
@@ -21,7 +21,7 @@ export async function fetchCarModels(brandName: string): Promise<CarModel[]> {
 
   try {
     // API endpoint /api/models oczekuje parametru 'brand', nie 'brandName'
-    const models = await apiGet<CarModel[]>(`/api/models?brand=${encodeURIComponent(brandName)}`);
+    const models = await apiGet<CarModelApiResponse[]>(`/api/models?brand=${encodeURIComponent(brandName)}`);
     return Array.isArray(models) ? models : [];
   } catch (error) {
     console.error('Error fetching car models:', error);
@@ -35,7 +35,7 @@ export async function fetchCarModels(brandName: string): Promise<CarModel[]> {
  * @param brandSlug - Brand slug from URL (e.g., "bmw", "mercedes-benz")
  * @returns Array of car models
  */
-export async function fetchCarModelsBySlug(brandSlug: string): Promise<CarModel[]> {
+export async function fetchCarModelsBySlug(brandSlug: string): Promise<CarModelApiResponse[]> {
   if (!brandSlug) {
     console.warn('fetchCarModelsBySlug: brandSlug is required');
     return [];

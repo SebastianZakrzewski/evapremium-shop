@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { env } from '@/config/env';
+import {
+  CAR_MODELS_EXTENDED_SELECT,
+  CAR_MODELS_EXTENDED_SELECT_MINIMAL,
+} from '@/lib/validators/car-models-extended';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -33,7 +37,7 @@ export async function GET(request: NextRequest) {
     // Budowanie zapytania
     let query = supabase
       .from('car_models_extended')
-      .select('brand_name, model_name, generation, body_type, year_from, year_to, is_currently_produced')
+      .select(CAR_MODELS_EXTENDED_SELECT)
       .order('brand_name', { ascending: true })
       .order('model_name', { ascending: true })
       .order('generation', { ascending: true });
@@ -63,7 +67,27 @@ export async function GET(request: NextRequest) {
       query = query.eq('is_currently_produced', validatedParams.isCurrentlyProduced);
     }
 
-    const { data, error } = await query;
+    let result = await query;
+    let { data, error } = result;
+    if (error && (error.message?.includes('column') || error.message?.includes('does not exist'))) {
+      query = supabase
+        .from('car_models_extended')
+        .select(CAR_MODELS_EXTENDED_SELECT_MINIMAL)
+        .order('brand_name', { ascending: true })
+        .order('model_name', { ascending: true })
+        .order('generation', { ascending: true });
+      if (validatedParams.brand) query = query.eq('brand_name', validatedParams.brand);
+      if (validatedParams.model) query = query.eq('model_name', validatedParams.model);
+      if (validatedParams.bodyType) query = query.eq('body_type', validatedParams.bodyType);
+      if (validatedParams.yearFrom) query = query.gte('year_from', validatedParams.yearFrom);
+      if (validatedParams.yearTo) query = query.lte('year_to', validatedParams.yearTo);
+      if (validatedParams.isCurrentlyProduced !== undefined) {
+        query = query.eq('is_currently_produced', validatedParams.isCurrentlyProduced);
+      }
+      result = await query;
+      data = result.data;
+      error = result.error;
+    }
 
     if (error) {
       console.error('Supabase error:', error);
@@ -78,46 +102,110 @@ export async function GET(request: NextRequest) {
     }
 
     // Grupowanie generacji po marce, modelu i generacji
-    const groupedGenerations = data.reduce((acc: any, item: any) => {
-      const key = `${item.brand_name}-${item.model_name}-${item.generation}`;
-      
+    const dataList = Array.isArray(data) ? (data as unknown[]) : [];
+    const groupedGenerations = dataList.reduce((acc: Record<string, {
+      brand: string;
+      model: string;
+      generation: string | null;
+      yearFrom: number | null;
+      yearTo: number | null;
+      isCurrentlyProduced: boolean | null;
+      templateAvailable?: boolean | null;
+      templateLocation?: string | null;
+      stoperType?: string | null;
+      stoperCount?: number | null;
+      notesGeneral?: string | null;
+      notesFront?: string | null;
+      notesRear?: string | null;
+      notesTrunk?: string | null;
+      hasHookMount?: boolean | null;
+      matFormat?: string | null;
+      completeness?: string | null;
+      hasTunnelMat?: boolean | null;
+      velcroNotes?: string | null;
+      bodyTypes: Set<string>;
+      years: Set<number>;
+    }>, item: unknown) => {
+      const row = item as Record<string, unknown>;
+      const key = `${row.brand_name}-${row.model_name}-${row.generation}`;
       if (!acc[key]) {
         acc[key] = {
-          brand: item.brand_name,
-          model: item.model_name,
-          generation: item.generation,
-          yearFrom: item.year_from,
-          yearTo: item.year_to,
-          isCurrentlyProduced: item.is_currently_produced,
+          brand: row.brand_name as string,
+          model: row.model_name as string,
+          generation: row.generation as string | null,
+          yearFrom: row.year_from as number | null,
+          yearTo: row.year_to as number | null,
+          isCurrentlyProduced: row.is_currently_produced as boolean | null,
+          templateAvailable: row.template_available as boolean | null | undefined,
+          templateLocation: row.template_location as string | null | undefined,
+          stoperType: row.stoper_type as string | null | undefined,
+          stoperCount: row.stoper_count as number | null | undefined,
+          notesGeneral: row.notes_general as string | null | undefined,
+          notesFront: row.notes_front as string | null | undefined,
+          notesRear: row.notes_rear as string | null | undefined,
+          notesTrunk: row.notes_trunk as string | null | undefined,
+          hasHookMount: row.has_hook_mount as boolean | null | undefined,
+          matFormat: row.mat_format as string | null | undefined,
+          completeness: row.completeness as string | null | undefined,
+          hasTunnelMat: row.has_tunnel_mat as boolean | null | undefined,
+          velcroNotes: row.velcro_notes as string | null | undefined,
           bodyTypes: new Set(),
-          years: new Set()
+          years: new Set(),
         };
       }
-      
-      // Dodaj typ nadwozia
-      if (item.body_type) {
-        acc[key].bodyTypes.add(item.body_type);
-      }
-      
-      // Dodaj lata
-      if (item.year_from) {
-        acc[key].years.add(item.year_from);
-      }
-      if (item.year_to) {
-        acc[key].years.add(item.year_to);
-      }
-      
+      if (row.body_type) acc[key].bodyTypes.add(row.body_type as string);
+      if (row.year_from != null) acc[key].years.add(row.year_from as number);
+      if (row.year_to != null) acc[key].years.add(row.year_to as number);
       return acc;
-    }, {});
+    }, {} as Record<string, {
+      brand: string;
+      model: string;
+      generation: string | null;
+      yearFrom: number | null;
+      yearTo: number | null;
+      isCurrentlyProduced: boolean | null;
+      templateAvailable?: boolean | null;
+      templateLocation?: string | null;
+      stoperType?: string | null;
+      stoperCount?: number | null;
+      notesGeneral?: string | null;
+      notesFront?: string | null;
+      notesRear?: string | null;
+      notesTrunk?: string | null;
+      hasHookMount?: boolean | null;
+      matFormat?: string | null;
+      completeness?: string | null;
+      hasTunnelMat?: boolean | null;
+      velcroNotes?: string | null;
+      bodyTypes: Set<string>;
+      years: Set<number>;
+    }>);
 
-    // Konwersja do formatu odpowiedzi
-    const result = Object.values(groupedGenerations).map((generation: any) => ({
-      ...generation,
-      bodyTypes: Array.from(generation.bodyTypes).sort(),
-      years: Array.from(generation.years).sort((a: any, b: any) => b - a)
+    const response = Object.values(groupedGenerations).map((gen) => ({
+      brand: gen.brand,
+      model: gen.model,
+      generation: gen.generation,
+      yearFrom: gen.yearFrom,
+      yearTo: gen.yearTo,
+      isCurrentlyProduced: gen.isCurrentlyProduced,
+      templateAvailable: gen.templateAvailable,
+      templateLocation: gen.templateLocation,
+      stoperType: gen.stoperType,
+      stoperCount: gen.stoperCount,
+      notesGeneral: gen.notesGeneral,
+      notesFront: gen.notesFront,
+      notesRear: gen.notesRear,
+      notesTrunk: gen.notesTrunk,
+      hasHookMount: gen.hasHookMount,
+      matFormat: gen.matFormat,
+      completeness: gen.completeness,
+      hasTunnelMat: gen.hasTunnelMat,
+      velcroNotes: gen.velcroNotes,
+      bodyTypes: Array.from(gen.bodyTypes).sort(),
+      years: Array.from(gen.years).sort((a, b) => b - a),
     }));
 
-    return NextResponse.json(result);
+    return NextResponse.json(response);
   } catch (error) {
     console.error('API error:', error);
     return NextResponse.json(

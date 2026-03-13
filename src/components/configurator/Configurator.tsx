@@ -26,10 +26,9 @@ import { MatService } from "@/lib/services/MatService";
 import { ConfigurationData } from "@/entities/product";
 import { debugLog } from "@/lib/config/features";
 import { useTracking } from "@/lib/tracking";
-import { getModelsByBrand } from "@/data/carouselData";
 import { Brand, Model } from "@/entities/car";
-import { getYearsForModel, getModelData, findGenerationByYear, getAvailableModels, getBodyTypesForYear, getBodyTypesForModel } from "@/data/car-model-years.utils";
 import { normalizeBrandName } from "@/shared/brands";
+import { useConfiguratorCarData } from "@/features/car-configurator";
 
 // Dodaj event do otwierania modala koszyka
 const openCartModal = () => {
@@ -149,16 +148,13 @@ export default function Configurator() {
     }
   }, [brandParam]);
   
-  // Resetuj modele gdy marka się zmieni (ale zachowaj wartości z URL jeśli są dostępne)
+  // Resetuj wybory gdy marka się zmieni (ale zachowaj wartości z URL jeśli są dostępne)
   useEffect(() => {
     if (selectedCarBrand) {
-      setAvailableModels([]);
-      // Resetuj tylko jeśli nie ma wartości z URL
       if (!modelParam) {
         setSelectedCarModel("");
       }
-      setSelectedCarYear(""); // Zawsze resetuj rocznik - jest do wyboru
-      // Resetuj typ nadwozia tylko jeśli nie ma wartości z URL
+      setSelectedCarYear("");
       if (!bodyTypeParam) {
         setSelectedBodyType("");
       }
@@ -190,15 +186,58 @@ export default function Configurator() {
   // Funkcja pomocnicza do sprawdzania czy jesteśmy na mobile
   const isMobileCheck = useCallback(() => typeof window !== 'undefined' && window.innerWidth < 768, []);
 
-  // Nowe stany dla danych z Supabase
+  // Dane samochodowe z car_models_extended (API)
+  const {
+    models: apiModels,
+    getYearsForModel,
+    getBodyTypesForModel,
+    getBodyTypesForYear,
+    findGenerationByYear,
+    isLoading: carDataLoading,
+  } = useConfiguratorCarData({
+    brandApiName: selectedCarBrand,
+    enabled: !!selectedCarBrand,
+  });
+
+  const availableModels = useMemo(
+    () => apiModels.map((name) => ({ id: name, name })),
+    [apiModels]
+  );
+
+  const availableYears = useMemo(() => {
+    if (!selectedCarModel) return [];
+    const years = getYearsForModel(selectedCarModel);
+    return years
+      .sort((a, b) => b - a)
+      .map((y) => ({ id: String(y), name: String(y) }));
+  }, [selectedCarModel, getYearsForModel]);
+
+  const defaultBodyTypes = [
+    { id: "sedan", name: "Sedan" },
+    { id: "hatchback", name: "Hatchback" },
+    { id: "suv", name: "SUV" },
+    { id: "kombi", name: "Kombi" },
+    { id: "coupe", name: "Coupe" },
+  ];
+
+  const availableBodyTypes = useMemo(() => {
+    if (!selectedCarModel) return [];
+    const types = getBodyTypesForModel(selectedCarModel);
+    if (types.length > 0) {
+      return types.map((t) => ({
+        id: t.toLowerCase().replace(/\s+/g, "-"),
+        name: t,
+      }));
+    }
+    return defaultBodyTypes;
+  }, [selectedCarModel, getBodyTypesForModel]);
+
+  const loadingModels = carDataLoading;
+  const loadingYears = carDataLoading;
+  const loadingBodyTypes = carDataLoading;
+
   const [availableBrands, setAvailableBrands] = useState<any[]>([]);
-  const [availableModels, setAvailableModels] = useState<any[]>([]);
-  const [availableYears, setAvailableYears] = useState<any[]>([]);
-  const [availableBodyTypes, setAvailableBodyTypes] = useState<any[]>([]);
   const [loadingBrands, setLoadingBrands] = useState(false);
-  const [loadingModels, setLoadingModels] = useState(false);
-  const [loadingYears, setLoadingYears] = useState(false);
-  const [loadingBodyTypes, setLoadingBodyTypes] = useState(false);
   const [baseMatPrice, setBaseMatPrice] = useState<number>(0);
   const [isPriceLoading, setIsPriceLoading] = useState(false);
 
@@ -282,43 +321,6 @@ export default function Configurator() {
 
   const totalSections = 7;
 
-  // Pobierz modele z nowych danych JSON
-  useEffect(() => {
-    const loadModels = () => {
-      if (!selectedCarBrand) {
-        console.log('Brak wybranej marki, czyszczę modele');
-        setAvailableModels([]);
-        return;
-      }
-
-      console.log('Ładowanie modeli dla marki:', selectedCarBrand);
-      setLoadingModels(true);
-      
-      try {
-        // Użyj nowych funkcji pomocniczych
-        const modelNames = getAvailableModels(selectedCarBrand);
-        console.log('Dostępne modele:', modelNames);
-        
-        // Konwertuj do formatu oczekiwanego przez komponent
-        const models = modelNames.map(modelName => ({
-          id: modelName,
-          name: modelName
-        }));
-        
-        console.log('Przetworzone modele:', models);
-        setAvailableModels(models);
-        
-      } catch (error) {
-        console.error('Błąd podczas ładowania modeli:', error);
-        setAvailableModels([]);
-      } finally {
-        setLoadingModels(false);
-      }
-    };
-
-    loadModels();
-  }, [selectedCarBrand]);
-
   // Inicjalizuj model i typ nadwozia z URL po załadowaniu modeli
   useEffect(() => {
     if (modelParam && selectedCarBrand && availableModels.length > 0) {
@@ -355,75 +357,6 @@ export default function Configurator() {
       }
     }
   }, [bodyTypeParam, selectedCarBrand, selectedCarModel, availableBodyTypes, selectedBodyType]);
-
-  // Pobierz roczniki z nowych danych JSON
-  useEffect(() => {
-    const loadModelYears = () => {
-      if (!selectedCarBrand || !selectedCarModel) {
-        setAvailableYears([]);
-        setAvailableBodyTypes([]);
-        return;
-      }
-
-      setLoadingYears(true);
-      setLoadingBodyTypes(true);
-      
-      try {
-        // Użyj nowych funkcji pomocniczych
-        const availableYears = getYearsForModel(selectedCarBrand, selectedCarModel);
-        const modelData = getModelData(selectedCarBrand, selectedCarModel);
-        
-        console.log('Dostępne roczniki dla', selectedCarBrand, selectedCarModel, ':', availableYears);
-        
-        // Konwertuj roczniki do formatu oczekiwanego przez komponent
-        const yearsData = availableYears
-          .sort((a, b) => b - a) // Sortuj malejąco (najnowsze pierwsze)
-          .map(year => ({
-            id: year.toString(),
-            name: year.toString()
-          }));
-        
-        setAvailableYears(yearsData);
-        
-        // Pobierz rzeczywiste typy nadwozia dla modelu
-        const allBodyTypes = getBodyTypesForModel(selectedCarBrand, selectedCarModel);
-        
-        if (allBodyTypes.length > 0) {
-          // Konwertuj typy nadwozia do formatu komponentu
-          const bodyTypesData = allBodyTypes.map(type => ({
-            id: type.toLowerCase().replace(/\s+/g, '-'),
-            name: type
-          }));
-          
-          setAvailableBodyTypes(bodyTypesData);
-          console.log('Dostępne typy nadwozia:', allBodyTypes);
-        } else {
-          // Fallback: domyślne typy jeśli brak danych
-          const defaultBodyTypes = [
-            { id: 'sedan', name: 'Sedan' },
-            { id: 'hatchback', name: 'Hatchback' },
-            { id: 'suv', name: 'SUV' },
-            { id: 'kombi', name: 'Kombi' },
-            { id: 'coupe', name: 'Coupe' }
-          ];
-          setAvailableBodyTypes(defaultBodyTypes);
-          console.log('Używam domyślnych typów nadwozia (brak danych)');
-        }
-        
-        console.log('Załadowano roczniki:', yearsData.length, 'lat');
-        
-      } catch (error) {
-        console.error('Błąd podczas ładowania roczników:', error);
-        setAvailableYears([]);
-        setAvailableBodyTypes([]);
-      } finally {
-        setLoadingYears(false);
-        setLoadingBodyTypes(false);
-      }
-    };
-
-    loadModelYears();
-  }, [selectedCarBrand, selectedCarModel]);
 
   // Resetuj rocznik przy zmianie typu nadwozia
   useEffect(() => {
@@ -542,8 +475,8 @@ export default function Configurator() {
 
   // Aktualizuj generację gdy zmienia się rocznik
   useEffect(() => {
-    if (selectedCarYear && selectedCarBrand && selectedCarModel) {
-      const generation = findGenerationByYear(selectedCarBrand, selectedCarModel, parseInt(selectedCarYear));
+    if (selectedCarYear && selectedCarModel) {
+      const generation = findGenerationByYear(selectedCarModel, parseInt(selectedCarYear, 10));
       if (generation && generation !== selectedGeneration) {
         setSelectedGeneration(generation);
         console.log('Aktualizacja generacji na podstawie rocznika:', selectedCarYear, '->', generation);
@@ -552,13 +485,13 @@ export default function Configurator() {
       // Resetuj generację jeśli rocznik został usunięty
       setSelectedGeneration("");
     }
-  }, [selectedCarYear, selectedCarBrand, selectedCarModel, selectedGeneration]);
+  }, [selectedCarYear, selectedCarModel, selectedGeneration, findGenerationByYear]);
 
   // Filtruj dostępne roczniki po wybraniu typu nadwozia (opcjonalnie)
   useEffect(() => {
-    if (selectedCarBrand && selectedCarModel && selectedBodyType && selectedCarYear) {
-      const year = parseInt(selectedCarYear);
-      const bodyTypesForYear = getBodyTypesForYear(selectedCarBrand, selectedCarModel, year);
+    if (selectedCarModel && selectedBodyType && selectedCarYear) {
+      const year = parseInt(selectedCarYear, 10);
+      const bodyTypesForYear = getBodyTypesForYear(selectedCarModel, year);
       
       // Sprawdź czy wybrany typ nadwozia jest dostępny dla wybranego rocznika
       if (bodyTypesForYear.length > 0 && !bodyTypesForYear.some(type => 
@@ -569,7 +502,7 @@ export default function Configurator() {
         setSelectedCarYear("");
       }
     }
-  }, [selectedCarBrand, selectedCarModel, selectedBodyType, selectedCarYear]);
+  }, [selectedCarModel, selectedBodyType, selectedCarYear, getBodyTypesForYear]);
 
   const nextSection = useCallback(() => {
     if (currentSection < totalSections - 1) {
@@ -1008,8 +941,8 @@ export default function Configurator() {
                     Dopasowane dywaniki EVA Premium dla marki {selectedCarBrand.toUpperCase()}.
                     {(() => {
                       // Pobierz generację - z URL lub oblicz na podstawie rocznika
-                      const generation = selectedGeneration || (selectedCarYear && selectedCarBrand && selectedCarModel 
-                        ? findGenerationByYear(selectedCarBrand, selectedCarModel, parseInt(selectedCarYear))
+                      const generation = selectedGeneration || (selectedCarYear && selectedCarModel
+                        ? findGenerationByYear(selectedCarModel, parseInt(selectedCarYear, 10))
                         : null);
                       return generation ? ` Generacja: ${generation}.` : '';
                     })()}

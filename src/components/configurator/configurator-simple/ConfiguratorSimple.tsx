@@ -12,7 +12,7 @@ import { useAccessories } from "@/features/accessories/hooks/useAccessories";
 import { useBrands } from "@/features/brands/hooks/useBrands";
 import { useMatProductImages } from "@/features/mat-product-images";
 import { useConfiguratorState } from "@/features/car-configurator/hooks/useConfiguratorState";
-import { findGenerationByYear } from "@/data/car-model-years.utils";
+import { useConfiguratorCarData } from "@/features/car-configurator";
 import { normalizeBrandName } from "@/shared/brands";
 import { StepProgress } from "./StepProgress";
 import { StepAccordion } from "./StepAccordion";
@@ -47,6 +47,19 @@ export default function ConfiguratorSimple() {
   const { config, updateConfig } = useConfiguratorState({
     searchParams,
     brands,
+  });
+
+  const brandApiName = useMemo(
+    () =>
+      normalizeBrandName(
+        (searchParams.get("brand") || config.brand || "").toLowerCase()
+      ) ?? config.brand,
+    [config.brand, searchParams]
+  );
+
+  const { findGenerationByYear } = useConfiguratorCarData({
+    brandApiName,
+    enabled: !!brandApiName,
   });
   
   // Funkcja do pobierania logo marki
@@ -108,29 +121,13 @@ export default function ConfiguratorSimple() {
   }, [searchParams, brands.length]);
 
 
-  // Oblicz generację na podstawie roku
+  // Oblicz generację na podstawie roku (z car_models_extended przez API)
   const generation = useMemo(() => {
-    if (!config.brand || !config.model || !config.year) return undefined;
-    try {
-      // Użyj slug marki z URL, nie nazwy marki z listy
-      const brandSlug = searchParams.get('brand') || config.brand.toLowerCase();
-      const mappedBrandName = normalizeBrandName(brandSlug) || brandSlug;
-      const year = parseInt(config.year);
-      if (isNaN(year)) return undefined;
-      const gen = findGenerationByYear(mappedBrandName, config.model, year) || undefined;
-      console.log('🔍 ConfiguratorSimple: Generation calculated:', {
-        brandSlug,
-        mappedBrandName,
-        model: config.model,
-        year,
-        generation: gen,
-      });
-      return gen;
-    } catch (error) {
-      console.error('Error finding generation:', error);
-      return undefined;
-    }
-  }, [config.brand, config.model, config.year, searchParams]);
+    if (!config.model || !config.year) return undefined;
+    const year = parseInt(config.year, 10);
+    if (isNaN(year)) return undefined;
+    return findGenerationByYear(config.model, year) ?? undefined;
+  }, [config.model, config.year, findGenerationByYear]);
 
   // Normalizuj markę dla API (użyj slug z URL)
   const brandForImage = useMemo(() => {

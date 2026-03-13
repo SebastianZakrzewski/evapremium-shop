@@ -1,5 +1,41 @@
 // Typy dla nowych API samochodów
 
+/** Odpowiedź API – pojedyncza generacja modelu (z car_models_extended) */
+export interface CarGenerationApiResponse {
+  generation: string;
+  bodyType: string;
+  yearFrom?: number | null;
+  yearTo?: number | null;
+  isCurrentlyProduced: boolean;
+  templateAvailable?: boolean | null;
+  templateLocation?: string | null;
+  stoperType?: string | null;
+  stoperCount?: number | null;
+  notesGeneral?: string | null;
+  notesFront?: string | null;
+  notesRear?: string | null;
+  notesTrunk?: string | null;
+  hasHookMount?: boolean | null;
+  matFormat?: string | null;
+  completeness?: string | null;
+  hasTunnelMat?: boolean | null;
+  velcroNotes?: string | null;
+}
+
+/** Odpowiedź API – model auta z zgrupowanymi generacjami */
+export interface CarModelApiResponse {
+  brand: string;
+  model: string;
+  brandImage?: string | null;
+  modelImage?: string | null;
+  vehicleCategory?: string | null;
+  bodyTypes: string[];
+  years: number[];
+  isCurrentlyProduced: boolean;
+  generations: CarGenerationApiResponse[];
+}
+
+/** @deprecated Użyj CarModelApiResponse */
 export interface CarModel {
   brand: string;
   model: string;
@@ -9,6 +45,7 @@ export interface CarModel {
   isCurrentlyProduced: boolean;
 }
 
+/** @deprecated Użyj CarGenerationApiResponse */
 export interface CarGeneration {
   brand: string;
   model: string;

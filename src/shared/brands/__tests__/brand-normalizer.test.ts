@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getBrandMetaBySlug,
+  mapApiNameToDbName,
   mapSlugToCanonicalBrand,
 } from "@/shared/brands/brandNormalizer";
 
@@ -51,6 +52,39 @@ describe("getBrandMetaBySlug", () => {
 
   it("returns null for unknown brands", () => {
     expect(getBrandMetaBySlug("unknown-brand-xyz")).toBeNull();
+  });
+});
+
+describe("mapApiNameToDbName", () => {
+  it("maps Bmw to BMW for database (DB stores uppercase)", () => {
+    expect(mapApiNameToDbName("Bmw")).toBe("BMW");
+  });
+
+  it("returns apiName when dbName is not set", () => {
+    expect(mapApiNameToDbName("Audi")).toBe("Audi");
+    expect(mapApiNameToDbName("Mercedes-Benz")).toBe("Mercedes-Benz");
+  });
+
+  it("maps Baic to DB format (Baic)", () => {
+    expect(mapApiNameToDbName("Baic")).toBe("Baic");
+  });
+
+  it("maps Byd to DB format", () => {
+    expect(mapApiNameToDbName("Byd")).toBe("Byd");
+  });
+
+  it("maps MG to uppercase (DB uses MG)", () => {
+    expect(mapApiNameToDbName("MG")).toBe("MG");
+  });
+
+  it("returns null for empty input", () => {
+    expect(mapApiNameToDbName("")).toBeNull();
+    expect(mapApiNameToDbName(null)).toBeNull();
+    expect(mapApiNameToDbName(undefined)).toBeNull();
+  });
+
+  it("returns apiName for unknown brand", () => {
+    expect(mapApiNameToDbName("UnknownBrand")).toBe("UnknownBrand");
   });
 });
 

@@ -1,13 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
+import React, { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Brand } from "@/entities/car";
-import { getAvailableModels, getYearsForModel, getBodyTypesForModel, getBodyTypesForYear, findGenerationByYear } from "@/data/car-model-years.utils";
 import { normalizeBrandName } from "@/shared/brands";
 import { useBrands } from "@/features/brands/hooks/useBrands";
+import { useConfiguratorCarData } from "@/features/car-configurator";
 
 interface CarSelectionStepProps {
   config: {
@@ -20,83 +17,49 @@ interface CarSelectionStepProps {
   onNext: () => void;
 }
 
-// Mapowanie nazw marek - używa shared utilities
-const mapBrandNameForData = (brandName: string): string => {
+const mapBrandNameForApi = (brandName: string): string => {
   if (!brandName) return "";
-  
   const normalized = normalizeBrandName(brandName.toLowerCase().trim());
-  if (normalized) {
-    console.log(`🔍 CarSelectionStep: Mapped brand "${brandName}" -> "${normalized}"`);
-    return normalized;
-  }
-  
-  // Fallback - zwróć oryginalną nazwę z kapitalizacją
-  const fallback = brandName.charAt(0).toUpperCase() + brandName.slice(1);
-  console.log(`⚠️ CarSelectionStep: No mapping for "${brandName}", using fallback: "${fallback}"`);
-  return fallback;
+  return normalized ?? brandName.charAt(0).toUpperCase() + brandName.slice(1);
 };
 
 export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepProps) {
   const { brands, isLoading: brandsLoading } = useBrands();
+  const brandApiName = mapBrandNameForApi(config.brand);
 
-  // Pobierz dostępne modele dla wybranej marki
-  const availableModels = useMemo(() => {
-    if (!config.brand) {
-      console.log('⚠️ CarSelectionStep: No brand in config');
-      return [];
-    }
-    try {
-      const mappedBrandName = mapBrandNameForData(config.brand);
-      console.log('🔍 CarSelectionStep: Getting models for brand:', {
-        originalBrand: config.brand,
-        mappedBrandName,
-      });
-      const models = getAvailableModels(mappedBrandName);
-      console.log('✅ CarSelectionStep: Available models:', models);
-      return models;
-    } catch (error) {
-      console.error('❌ CarSelectionStep: Error getting models:', error);
-      return [];
-    }
-  }, [config.brand]);
+  const {
+    models: apiModels,
+    getYearsForModel,
+    getBodyTypesForModel,
+    getBodyTypesForYear,
+    findGenerationByYear,
+    isLoading: modelsLoading,
+  } = useConfiguratorCarData({
+    brandApiName,
+    enabled: !!config.brand,
+  });
 
-  // Pobierz dostępne lata dla wybranego modelu
+  const availableModels = apiModels;
+
   const availableYears = useMemo(() => {
-    if (!config.brand || !config.model) return [];
-    try {
-      const mappedBrandName = mapBrandNameForData(config.brand);
-      const years = getYearsForModel(mappedBrandName, config.model);
-      console.log('🔍 CarSelectionStep: Available years for', config.brand, config.model, ':', years);
-      return years;
-    } catch (error) {
-      console.error('Error getting years:', error);
-      return [];
-    }
-  }, [config.brand, config.model]);
+    if (!config.model) return [];
+    return getYearsForModel(config.model);
+  }, [config.model, getYearsForModel]);
 
-  // Pobierz dostępne typy nadwozia dla wybranego modelu i roku
   const availableBodyTypes = useMemo(() => {
-    if (!config.brand || !config.model || !config.year) return [];
-    try {
-      const mappedBrandName = mapBrandNameForData(config.brand);
-      const year = parseInt(config.year);
-      if (isNaN(year)) {
-        console.log('⚠️ CarSelectionStep: Invalid year:', config.year);
-        return [];
-      }
-      // Najpierw spróbuj dla konkretnego roku
-      const bodyTypesForYear = getBodyTypesForYear(mappedBrandName, config.model, year);
-      console.log('🔍 CarSelectionStep: Body types for year', year, ':', bodyTypesForYear);
-      if (bodyTypesForYear.length > 0) return bodyTypesForYear;
-      // Jeśli brak, użyj wszystkich dostępnych dla modelu
-      const allBodyTypes = getBodyTypesForModel(mappedBrandName, config.model);
-      console.log('🔍 CarSelectionStep: All body types for model:', allBodyTypes);
-      return allBodyTypes;
-    } catch (error) {
-      console.error('Error getting body types:', error);
-      return [];
-    }
-  }, [config.brand, config.model, config.year]);
+    if (!config.model || !config.year) return [];
+    const year = parseInt(config.year, 10);
+    if (isNaN(year)) return [];
+    const forYear = getBodyTypesForYear(config.model, year);
+    return forYear.length > 0 ? forYear : getBodyTypesForModel(config.model);
+  }, [config.model, config.year, getBodyTypesForYear, getBodyTypesForModel]);
+
+  const generation = useMemo(() => {
+    if (!config.model || !config.year) return undefined;
+    const year = parseInt(config.year, 10);
+    if (isNaN(year)) return undefined;
+    return findGenerationByYear(config.model, year) ?? undefined;
+  }, [config.model, config.year, findGenerationByYear]);
 
   // Normalizuj wartość modelu z URL do wartości w liście dostępnych modeli
   const normalizedModel = useMemo(() => {
@@ -152,15 +115,6 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
     }
   }, [config.model, availableYears, config.year]);
 
-  // Pobierz generację dla wybranego roku
-  const generation = useMemo(() => {
-    if (!config.brand || !config.model || !config.year) return undefined;
-    const mappedBrandName = mapBrandNameForData(config.brand);
-    const year = parseInt(config.year);
-    if (isNaN(year)) return undefined;
-    return findGenerationByYear(mappedBrandName, config.model, year) || undefined;
-  }, [config.brand, config.model, config.year]);
-
   const isStepComplete = !!(config.brand && config.model && config.year && config.bodyType);
 
   return (
@@ -175,7 +129,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
             value={config.brand}
             onChange={(e) => onUpdate({ brand: e.target.value, model: '', year: '', bodyType: '' })}
             className="w-full px-4 py-3 min-h-[44px] md:min-h-[40px] bg-neutral-800 border border-neutral-700 rounded-lg text-white text-sm appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200"
-            disabled={brandsLoading}
+            disabled={brandsLoading || modelsLoading}
           >
             <option value="">Wybierz markę</option>
             {brands.map((brand) => (

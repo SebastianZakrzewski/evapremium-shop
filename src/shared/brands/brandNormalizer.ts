@@ -2,6 +2,8 @@ export interface BrandMeta {
   slug: string;
   apiName: string;
   displayName: string;
+  /** Nazwa w bazie danych (np. "BMW") – gdy różna od apiName, używana w zapytaniach */
+  dbName?: string;
   logo?: string;
   aliases: string[];
 }
@@ -125,7 +127,7 @@ export const MODELE_IMAGE_MAP: Record<string, string> = {
 };
 
 const BRAND_DEFINITIONS: BrandMeta[] = [
-  { slug: "bmw", apiName: "Bmw", displayName: "BMW", logo: `${MODELE_LOGO_BASE}/bmw.png`, aliases: ["bmw"] },
+  { slug: "bmw", apiName: "Bmw", displayName: "BMW", dbName: "BMW", logo: `${MODELE_LOGO_BASE}/bmw.png`, aliases: ["bmw"] },
   { slug: "mercedes", apiName: "Mercedes-Benz", displayName: "Mercedes", logo: `${MODELE_LOGO_BASE}/mercedes_benz.jpg`, aliases: ["mercedes", "mercedes-benz", "mercedes benz", "mercedes_benz"] },
   { slug: "audi", apiName: "Audi", displayName: "Audi", logo: `${MODELE_LOGO_BASE}/audi.avif`, aliases: ["audi"] },
   { slug: "porsche", apiName: "Porsche", displayName: "Porsche", logo: `${MODELE_LOGO_BASE}/porsche.jpg`, aliases: ["porsche"] },
@@ -174,10 +176,10 @@ const BRAND_DEFINITIONS: BrandMeta[] = [
   { slug: "infiniti", apiName: "Infiniti", displayName: "Infiniti", logo: `${MODELE_LOGO_BASE}/infiniti.jpg`, aliases: ["infiniti"] },
   { slug: "lancia", apiName: "Lancia", displayName: "Lancia", logo: `${MODELE_LOGO_BASE}/lancia.jpg`, aliases: ["lancia"] },
   { slug: "maserati", apiName: "Maserati", displayName: "Maserati", logo: `${MODELE_LOGO_BASE}/maserati.jpg`, aliases: ["maserati"] },
-  { slug: "mg", apiName: "MG", displayName: "MG", logo: `${MODELE_LOGO_BASE}/mg.jpg`, aliases: ["mg"] },
+  { slug: "mg", apiName: "MG", displayName: "MG", dbName: "MG", logo: `${MODELE_LOGO_BASE}/mg.jpg`, aliases: ["mg"] },
   { slug: "ssangyong", apiName: "SsangYong", displayName: "SsangYong", logo: `${MODELE_LOGO_BASE}/ssangyong.avif`, aliases: ["ssangyong", "ssang yong"] },
-  { slug: "baic", apiName: "BAIC", displayName: "BAIC", logo: `${MODELE_LOGO_BASE}/baic.webp`, aliases: ["baic"] },
-  { slug: "byd", apiName: "BYD", displayName: "BYD", logo: `${MODELE_LOGO_BASE}/byd.webp`, aliases: ["byd"] },
+  { slug: "baic", apiName: "Baic", displayName: "BAIC", dbName: "Baic", logo: `${MODELE_LOGO_BASE}/baic.webp`, aliases: ["baic"] },
+  { slug: "byd", apiName: "Byd", displayName: "BYD", dbName: "Byd", logo: `${MODELE_LOGO_BASE}/byd.webp`, aliases: ["byd"] },
   { slug: "daihatsu", apiName: "Daihatsu", displayName: "Daihatsu", logo: `${MODELE_LOGO_BASE}/Daihatsu.jpeg`, aliases: ["daihatsu"] },
   { slug: "ineos", apiName: "Ineos", displayName: "Ineos", logo: `${MODELE_LOGO_BASE}/ineos.webp`, aliases: ["ineos"] },
   { slug: "maxus", apiName: "Maxus", displayName: "Maxus", logo: `${MODELE_LOGO_BASE}/maxus.webp`, aliases: ["maxus"] },
@@ -211,6 +213,19 @@ BRAND_DEFINITIONS.forEach((brand) => {
     }
   });
 });
+
+const API_NAME_TO_META = new Map<string, BrandMeta>();
+BRAND_DEFINITIONS.forEach((b) => API_NAME_TO_META.set(b.apiName, b));
+
+/**
+ * Zwraca nazwę marki do zapytań do bazy (np. "BMW" zamiast "Bmw").
+ * Gdy dbName jest ustawione w definicji marki, zwraca je; w przeciwnym razie apiName.
+ */
+export function mapApiNameToDbName(apiName?: string | null): string | null {
+  if (!apiName) return null;
+  const meta = API_NAME_TO_META.get(apiName);
+  return meta?.dbName ?? meta?.apiName ?? apiName;
+}
 
 export function mapSlugToCanonicalBrand(slug?: string | null): string | null {
   if (!slug) {

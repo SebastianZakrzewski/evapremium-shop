@@ -4,6 +4,7 @@
 export {
   humanizeBrandSlug,
   mapSlugToCanonicalBrand,
+  mapApiNameToDbName,
   getBrandMetaBySlug,
   supportedBrands,
   MODELE_IMAGE_MAP,

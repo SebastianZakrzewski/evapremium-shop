@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { env } from '@/config/env';
-import { humanizeBrandSlug, mapSlugToCanonicalBrand } from '@/shared/brands/brandNormalizer';
+import { humanizeBrandSlug, mapApiNameToDbName, mapSlugToCanonicalBrand } from '@/shared/brands/brandNormalizer';
+import {
+  CAR_MODELS_EXTENDED_SELECT,
+  CAR_MODELS_EXTENDED_SELECT_MINIMAL,
+} from '@/lib/validators/car-models-extended';
 
 // Debug: loguj konfigurację Supabase przy inicjalizacji modułu
 if (typeof window === 'undefined') {
@@ -60,61 +64,34 @@ export async function GET(request: NextRequest) {
     const requestedBrand = validatedParams.brand?.trim() || "";
     const canonicalBrandName = requestedBrand ? mapSlugToCanonicalBrand(requestedBrand) : null;
     const brandNameForDb = requestedBrand
-      ? canonicalBrandName ?? humanizeBrandSlug(requestedBrand)
+      ? (canonicalBrandName ? mapApiNameToDbName(canonicalBrandName) ?? canonicalBrandName : humanizeBrandSlug(requestedBrand))
       : null;
     const brandFilterValue = requestedBrand ? (brandNameForDb || requestedBrand) : "";
 
-    // Budowanie zapytania
-    // UWAGA: order() musi być wywołane PO wszystkich filtrach w Supabase!
-    let query = supabase
-      .from('car_models_extended')
-      .select('brand_name, model_name, generation, body_type, year_from, year_to, is_currently_produced');
+    // Budowanie zapytania – ilike dla brand_name (case-insensitive: BMW/Bmw/bmw w DB)
+    const buildQuery = (selectColumns: string) => {
+      let q = supabase.from('car_models_extended').select(selectColumns);
+      if (requestedBrand) q = q.ilike('brand_name', brandNameForDb!);
+      if (validatedParams.bodyType) q = q.eq('body_type', validatedParams.bodyType);
+      if (validatedParams.yearFrom) q = q.gte('year_from', validatedParams.yearFrom);
+      if (validatedParams.yearTo) q = q.lte('year_to', validatedParams.yearTo);
+      if (validatedParams.isCurrentlyProduced !== undefined) {
+        q = q.eq('is_currently_produced', validatedParams.isCurrentlyProduced);
+      }
+      if (validatedParams.brand) {
+        q = q.order('model_name', { ascending: true });
+      } else {
+        q = q.order('brand_name', { ascending: true }).order('model_name', { ascending: true });
+      }
+      return q;
+    };
 
-    // Dodawanie filtrów
-    if (requestedBrand) {
-      console.log(`🔍 API /api/models: Searching for brand: "${requestedBrand}"`);
-      console.log(`🔍 API /api/models: Canonical brand: "${canonicalBrandName ?? "N/A"}"`);
-      console.log(`🔍 API /api/models: Final brand_name used: "${brandNameForDb}"`);
-      
-      query = query.eq('brand_name', brandNameForDb!);
-      
-      console.log(`🔍 API /api/models: Using eq query for brand_name: "${brandNameForDb}"`);
-      console.log(`🔍 API /api/models: Query builder before execution:`, {
-        table: 'car_models_extended',
-        select: 'brand_name, model_name, generation, body_type, year_from, year_to, is_currently_produced',
-        filter: `brand_name = "${brandNameForDb}"`,
-      });
-    }
-    
-    if (validatedParams.bodyType) {
-      query = query.eq('body_type', validatedParams.bodyType);
-    }
-    
-    if (validatedParams.yearFrom) {
-      query = query.gte('year_from', validatedParams.yearFrom);
-    }
-    
-    if (validatedParams.yearTo) {
-      query = query.lte('year_to', validatedParams.yearTo);
-    }
-    
-    if (validatedParams.isCurrentlyProduced !== undefined) {
-      query = query.eq('is_currently_produced', validatedParams.isCurrentlyProduced);
-    }
-
-    // Dodaj sortowanie PO wszystkich filtrach
-    // Jeśli filtrujemy po marce, sortowanie po brand_name jest zbędne (wszystkie wyniki mają tę samą markę)
-    if (validatedParams.brand) {
-      // Sortuj tylko po nazwie modelu gdy filtrujemy po marce
-      query = query.order('model_name', { ascending: true });
-    } else {
-      // Sortuj po marce i modelu gdy nie ma filtra marki
-      query = query.order('brand_name', { ascending: true })
-                    .order('model_name', { ascending: true });
-    }
+    let query = buildQuery(CAR_MODELS_EXTENDED_SELECT);
 
     console.log(`🔍 API /api/models: Executing query with filters:`, {
-      brand: validatedParams.brand,
+      requestedBrand,
+      canonicalBrandName,
+      brandNameForDb,
       bodyType: validatedParams.bodyType,
       yearFrom: validatedParams.yearFrom,
       yearTo: validatedParams.yearTo,
@@ -124,33 +101,24 @@ export async function GET(request: NextRequest) {
     console.log(`🔍 API /api/models: Supabase URL: ${env.supabase.url.substring(0, 30)}...`);
     console.log(`🔍 API /api/models: Supabase key exists: ${!!env.supabase.anonKey}`);
 
-    // Wykonaj zapytanie
-    const { data, error } = await query;
-    
-    // Debug: loguj dokładnie co zwraca Supabase
-    console.log(`🔍 API /api/models: Supabase response:`, {
-      hasData: !!data,
-      dataLength: data?.length || 0,
-      dataType: typeof data,
-      isArray: Array.isArray(data),
-      hasError: !!error,
-      errorCode: error?.code,
-      errorMessage: error?.message,
-    });
-    
-    // Jeśli jest błąd, zwróć go natychmiast
+    // Wykonaj zapytanie – fallback na minimalny SELECT jeśli kolumny rozszerzone nie istnieją
+    let queryResult = await query;
+    let { data, error } = queryResult;
+
+    if (error && (error.message?.includes('column') || error.message?.includes('does not exist'))) {
+      console.warn('⚠️ API /api/models: Extended columns not found, falling back to minimal select');
+      queryResult = await buildQuery(CAR_MODELS_EXTENDED_SELECT_MINIMAL);
+      data = queryResult.data;
+      error = queryResult.error;
+    }
+
     if (error) {
       console.error('❌ API /api/models: Supabase error occurred!');
       console.error('Error details:', JSON.stringify(error, null, 2));
-      console.error('Error code:', error.code);
-      console.error('Error message:', error.message);
-      
-      // Jeśli tabela nie istnieje lub brak uprawnień, zwróć pustą tablicę zamiast błędu
-      if (error.code === 'PGRST116' || error.message.includes('relation') || error.message.includes('does not exist') || error.message.includes('permission denied')) {
+      if (error.code === 'PGRST116' || error.message?.includes('relation') || error.message?.includes('does not exist') || error.message?.includes('permission denied')) {
         console.warn('⚠️ Table car_models_extended may not exist or be accessible, returning empty array');
         return NextResponse.json([]);
       }
-      
       return NextResponse.json(
         { error: `Błąd podczas pobierania modeli: ${error.message}` },
         { status: 500 }
@@ -191,7 +159,7 @@ export async function GET(request: NextRequest) {
       const { data: testData, error: testError } = await supabase
         .from('car_models_extended')
         .select('brand_name, model_name')
-        .eq('brand_name', brandFilterValue)
+        .ilike('brand_name', brandFilterValue)
         .limit(5);
       
       console.log('🔍 API /api/models: Direct test query result:', {
@@ -246,13 +214,13 @@ export async function GET(request: NextRequest) {
             const { data: directData, error: directError } = await supabase
               .from('car_models_extended')
               .select('brand_name, model_name')
-              .eq('brand_name', mappedBrand)
+              .ilike('brand_name', mappedBrand)
               .limit(5);
             
             if (directError) {
               console.error('❌ API /api/models: Direct query error:', directError);
             } else {
-              console.log(`🔍 API /api/models: Direct query with eq returned ${directData?.length || 0} rows`);
+              console.log(`🔍 API /api/models: Direct query with ilike returned ${directData?.length || 0} rows`);
               if (directData && directData.length > 0) {
                 console.log(`📊 API /api/models: Direct query sample:`, directData[0]);
               }
@@ -271,58 +239,109 @@ export async function GET(request: NextRequest) {
     }
 
     // Grupowanie modeli po marce i nazwie
-    const groupedModels = data.reduce((acc: any, item: any) => {
-      const key = `${item.brand_name}-${item.model_name}`;
-      
+    const dataList = Array.isArray(data) ? (data as unknown[]) : [];
+    const groupedModels = dataList.reduce((acc: Record<string, {
+      brand: string;
+      model: string;
+      brandImage?: string | null;
+      modelImage?: string | null;
+      vehicleCategory?: string | null;
+      generations: Array<{
+        generation: string | null;
+        bodyType: string | null;
+        yearFrom: number | null;
+        yearTo: number | null;
+        isCurrentlyProduced: boolean | null;
+        templateAvailable?: boolean | null;
+        templateLocation?: string | null;
+        stoperType?: string | null;
+        stoperCount?: number | null;
+        notesGeneral?: string | null;
+        notesFront?: string | null;
+        notesRear?: string | null;
+        notesTrunk?: string | null;
+        hasHookMount?: boolean | null;
+        matFormat?: string | null;
+        completeness?: string | null;
+        hasTunnelMat?: boolean | null;
+        velcroNotes?: string | null;
+      }>;
+      bodyTypes: Set<string>;
+      years: Set<number>;
+      isCurrentlyProduced: boolean;
+    }>, item: unknown) => {
+      const row = item as Record<string, unknown>;
+      const key = `${row.brand_name}-${row.model_name}`;
+
       if (!acc[key]) {
         acc[key] = {
-          brand: item.brand_name,
-          model: item.model_name,
+          brand: row.brand_name as string,
+          model: row.model_name as string,
+          brandImage: (row.brand_image as string | null) ?? null,
+          modelImage: (row.model_image as string | null) ?? null,
+          vehicleCategory: (row.vehicle_category as string | null) ?? null,
           generations: [],
           bodyTypes: new Set(),
           years: new Set(),
-          isCurrentlyProduced: false
+          isCurrentlyProduced: false,
         };
       }
-      
-      // Dodaj generację
+
       acc[key].generations.push({
-        generation: item.generation,
-        bodyType: item.body_type,
-        yearFrom: item.year_from,
-        yearTo: item.year_to,
-        isCurrentlyProduced: item.is_currently_produced
+        generation: row.generation as string | null,
+        bodyType: row.body_type as string | null,
+        yearFrom: row.year_from as number | null,
+        yearTo: row.year_to as number | null,
+        isCurrentlyProduced: row.is_currently_produced as boolean | null,
+        templateAvailable: row.template_available as boolean | null | undefined,
+        templateLocation: row.template_location as string | null | undefined,
+        stoperType: row.stoper_type as string | null | undefined,
+        stoperCount: row.stoper_count as number | null | undefined,
+        notesGeneral: row.notes_general as string | null | undefined,
+        notesFront: row.notes_front as string | null | undefined,
+        notesRear: row.notes_rear as string | null | undefined,
+        notesTrunk: row.notes_trunk as string | null | undefined,
+        hasHookMount: row.has_hook_mount as boolean | null | undefined,
+        matFormat: row.mat_format as string | null | undefined,
+        completeness: row.completeness as string | null | undefined,
+        hasTunnelMat: row.has_tunnel_mat as boolean | null | undefined,
+        velcroNotes: row.velcro_notes as string | null | undefined,
       });
-      
-      // Dodaj typ nadwozia
-      if (item.body_type) {
-        acc[key].bodyTypes.add(item.body_type);
+
+      if (row.body_type) {
+        acc[key].bodyTypes.add(row.body_type as string);
       }
-      
-      // Dodaj lata
-      if (item.year_from) {
-        acc[key].years.add(item.year_from);
+      // Pełny zakres lat generacji (np. 2001–2008 → 2001, 2002, …, 2008)
+      const yFrom = row.year_from as number | null;
+      const yTo = row.year_to as number | null;
+      if (yFrom != null && yTo != null) {
+        for (let y = yFrom; y <= yTo; y++) acc[key].years.add(y);
+      } else if (yFrom != null) {
+        acc[key].years.add(yFrom);
+      } else if (yTo != null) {
+        acc[key].years.add(yTo);
       }
-      if (item.year_to) {
-        acc[key].years.add(item.year_to);
-      }
-      
-      // Ustaw flagę czy jest produkowany
-      if (item.is_currently_produced) {
+      if (row.is_currently_produced) {
         acc[key].isCurrentlyProduced = true;
       }
-      
+
       return acc;
     }, {});
 
     // Konwersja do formatu odpowiedzi
-    const result = Object.values(groupedModels).map((model: any) => ({
-      ...model,
+    const response = Object.values(groupedModels).map((model) => ({
+      brand: model.brand,
+      model: model.model,
+      brandImage: model.brandImage,
+      modelImage: model.modelImage,
+      vehicleCategory: model.vehicleCategory,
       bodyTypes: Array.from(model.bodyTypes).sort(),
-      years: Array.from(model.years).sort((a: any, b: any) => b - a)
+      years: Array.from(model.years).sort((a, b) => b - a),
+      isCurrentlyProduced: model.isCurrentlyProduced,
+      generations: model.generations,
     }));
 
-    return NextResponse.json(result);
+    return NextResponse.json(response);
   } catch (error) {
     console.error('❌ API error:', error);
     
