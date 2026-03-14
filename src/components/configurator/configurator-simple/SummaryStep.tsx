@@ -101,7 +101,7 @@ export function SummaryStep({
             Twoja konfiguracja
           </h3>
           
-          <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm">
+          <div className="bg-[#111] border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm">
             {/* Car Info */}
             <div className="p-3 border-b border-white/5 flex items-start gap-3">
               <div className="relative w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
@@ -235,7 +235,7 @@ export function SummaryStep({
             Podsumowanie
           </h3>
           
-          <div className="flex-1 bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl p-4 shadow-xl flex flex-col justify-between relative overflow-hidden group">
+          <div className="flex-1 bg-[#111] border border-white/10 rounded-2xl p-4 shadow-xl flex flex-col justify-between relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:bg-red-500/10 transition-colors duration-700"></div>
             
             <div className="space-y-3 relative z-10">

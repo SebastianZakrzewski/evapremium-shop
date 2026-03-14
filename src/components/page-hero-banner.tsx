@@ -17,10 +17,12 @@ export default function PageHeroBanner({
   description,
 }: PageHeroBannerProps) {
   return (
-    <div className="relative bg-[#0a0a0a] border-b border-white/5 py-16 md:py-24 overflow-hidden">
+    <div className="relative bg-neutral-950 border-b border-white/5 py-16 md:py-24 overflow-hidden">
+      {/* Gradient background – spójny z Galeria i O nas */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-900/5 opacity-50"></div>
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
-      
+
       <div className="container mx-auto px-4 relative z-10">
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
           <Link href="/" className="hover:text-white transition-colors">Home</Link>
@@ -40,4 +42,3 @@ export default function PageHeroBanner({
     </div>
   );
 }
-

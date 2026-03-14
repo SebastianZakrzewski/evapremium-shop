@@ -115,8 +115,8 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                   ${isSelected
                     ? 'border-red-500 bg-red-500/10 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
                     : isDisabled
-                    ? 'border-neutral-800 bg-neutral-900/50 opacity-50 cursor-not-allowed'
-                    : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm cursor-pointer active:scale-[0.98]'
+                    ? 'border-white/10 bg-[#111]/50 opacity-50 cursor-not-allowed'
+                    : 'border-white/10 bg-[#111] hover:border-white/20 hover:bg-white/5 hover:shadow-sm cursor-pointer active:scale-[0.98]'
                   }
                 `}
               >
@@ -126,7 +126,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                   <p className="text-gray-300 text-[9px] sm:text-sm leading-tight sm:leading-relaxed">{structure.description}</p>
                 </div>
                 <div 
-                  className="aspect-video bg-gradient-to-br from-neutral-700 to-neutral-800 rounded sm:rounded-md overflow-hidden border border-neutral-700 relative flex-1 min-h-0"
+                  className="aspect-video bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] rounded sm:rounded-md overflow-hidden border border-white/10 relative flex-1 min-h-0"
                 >
                   <Image
                     src={structure.image}
@@ -172,7 +172,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                           relative w-14 h-14 sm:w-full aspect-square rounded sm:rounded-lg overflow-hidden border sm:border-2 cursor-pointer transition-all duration-200
                           ${config.color === colorKey
                             ? 'border-red-500 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-105'
-                            : 'border-neutral-700 hover:border-neutral-600 active:scale-95'
+                            : 'border-white/10 hover:border-white/20 active:scale-95'
                           }
                         `}
                       >
@@ -221,7 +221,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                             relative w-14 h-14 sm:w-full aspect-square rounded sm:rounded-lg overflow-hidden border sm:border-2 cursor-pointer transition-all duration-200
                             ${config.edgeColor === colorKey
                               ? 'border-red-500 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-105'
-                              : 'border-neutral-700 hover:border-neutral-600 active:scale-95'
+                              : 'border-white/10 hover:border-white/20 active:scale-95'
                             }
                           `}
                         >
@@ -247,7 +247,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200 active:scale-95"
+          className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-white/10 hover:bg-white/5 text-sm font-medium transition-all duration-200 active:scale-95"
         >
           Wstecz
         </Button>

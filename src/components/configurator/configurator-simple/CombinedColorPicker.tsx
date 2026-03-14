@@ -55,7 +55,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
       {/* Kolor dywaników */}
       <div className="space-y-2">
         <div>
-          <h4 className="text-xs font-semibold mb-1.5 text-gray-200">Kolor dywaników</h4>
+          <h4 className="text-xs font-semibold mb-1.5 text-gray-300">Kolor dywaników</h4>
           {/* Horizontal Scroll on Mobile, Grid on Desktop */}
           <div className="overflow-x-auto scrollbar-hide pb-2 md:pb-0">
             <div className="flex md:grid md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-3 md:gap-1.5 min-w-max md:min-w-0">
@@ -111,7 +111,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
       {/* Kolor obszycia */}
       <div className="space-y-2">
         <div>
-          <h4 className="text-xs font-semibold mb-1.5 text-gray-200">Kolor obszycia</h4>
+          <h4 className="text-xs font-semibold mb-1.5 text-gray-300">Kolor obszycia</h4>
           {/* Horizontal Scroll on Mobile, Grid on Desktop */}
           <div className="overflow-x-auto scrollbar-hide pb-2 md:pb-0">
             <div className="flex md:grid md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-3 md:gap-1.5 min-w-max md:min-w-0">
@@ -168,7 +168,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200 active:scale-95"
+          className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-white/10 hover:bg-white/5 text-sm font-medium transition-all duration-200 active:scale-95"
         >
           Wstecz
         </Button>

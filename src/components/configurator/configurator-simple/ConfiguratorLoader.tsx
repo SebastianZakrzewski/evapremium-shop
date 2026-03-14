@@ -8,7 +8,7 @@ export function ConfiguratorLoader() {
       <div className="text-center space-y-6">
         {/* Spinner */}
         <div className="relative w-16 h-16 mx-auto">
-          <div className="absolute inset-0 border-4 border-neutral-800 rounded-full"></div>
+          <div className="absolute inset-0 border-4 border-white/10 rounded-full"></div>
           <div className="absolute inset-0 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
         

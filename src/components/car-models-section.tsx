@@ -18,7 +18,7 @@ import { getBrandInfo, normalizeBrandName } from "@/shared/brands";
 import { getDoorsCount, formatGenerationLabel } from "@/shared";
 import { useCarModelsFilters } from "@/features/brands/hooks";
 import { apiGet } from "@/lib/api/client";
-import { Car, Loader2, SlidersHorizontal, X } from "lucide-react";
+import { Car, Loader2, SlidersHorizontal, X, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import ModelNavigationBar from "./model-navigation-bar";
@@ -49,10 +49,6 @@ function getEngineType(modelName: string, brand: string): string {
   // Zwróć pusty string jeśli nie można określić typu silnika
   return '';
 }
-
-/**
- * Formatuje typ silnika na podstawie nazwy modelu lub zwraca pusty string jeśli nie można określić
- */
 
 export default function CarModelsSection() {
   const searchParams = useSearchParams();
@@ -116,14 +112,12 @@ export default function CarModelsSection() {
   // Użyj normalizeBrandName jako fallback jeśli getBrandInfo nie znajdzie mapowania
   const brandApiName = useMemo(() => {
     if (brandInfo?.apiName) {
-      console.log(`🔍 CarModelsSection: Found brand info for "${brandParam}" -> apiName: "${brandInfo.apiName}"`);
       return brandInfo.apiName;
     }
     
     if (brandSlug) {
       const normalized = normalizeBrandName(brandSlug);
       if (normalized) {
-        console.log(`🔍 CarModelsSection: Normalized "${brandSlug}" -> "${normalized}"`);
         return normalized;
       }
     }
@@ -132,7 +126,6 @@ export default function CarModelsSection() {
     const fallback = brandParam 
       ? brandParam.charAt(0).toUpperCase() + brandParam.slice(1).toLowerCase()
       : '';
-    console.log(`⚠️ CarModelsSection: No mapping found for "${brandParam}", using fallback: "${fallback}"`);
     return fallback;
   }, [brandParam, brandSlug, brandInfo]);
 
@@ -141,31 +134,14 @@ export default function CarModelsSection() {
     queryKey: ['car-models', brandApiName],
     queryFn: () => {
       if (!brandApiName) {
-        console.warn('🔍 CarModelsSection: No brandApiName, returning empty array');
         return Promise.resolve([]);
       }
-      console.log(`🔍 CarModelsSection: Fetching models for brandApiName: "${brandApiName}"`);
       return fetchCarModels(brandApiName);
     },
     enabled: !!brandParam && !!brandApiName,
     staleTime: 5 * 60 * 1000, // 5 minut
     gcTime: 10 * 60 * 1000, // 10 minut cache
   });
-
-  // Debug logowanie
-  useEffect(() => {
-    if (brandParam) {
-      console.log('🔍 CarModelsSection Debug:', {
-        brandParam,
-        brandSlug,
-        brandInfo,
-        brandApiName,
-        apiModelsCount: apiModels.length,
-        loading,
-        modelsError
-      });
-    }
-  }, [brandParam, brandSlug, brandInfo, brandApiName, apiModels.length, loading, modelsError]);
 
   // Przygotuj modele do wyświetlenia - API zwraca zgrupowane modele, więc musimy je rozpakować
   const displayModels = useMemo(() => {
@@ -267,29 +243,7 @@ export default function CarModelsSection() {
       }
     });
     
-    const queries = Array.from(uniqueModels.values());
-    
-    // Debug logowanie dla Spring i Duster
-    queries.forEach((model) => {
-      if (model.modelForImage?.toLowerCase().includes('spring') || model.modelForImage?.toLowerCase().includes('duster')) {
-        const generation = (model.generation && model.generation.trim()) ? model.generation : '';
-        const normalizedBodyType = (model.bodyType && model.bodyType.trim()) ? model.bodyType.toLowerCase() : '';
-        console.log(`🔍 CarModelsSection: Unique query for ${model.name}:`, {
-          name: model.name,
-          brandForImage: model.brandForImage,
-          modelForImage: model.modelForImage,
-          yearForImage: model.yearForImage,
-          generation: model.generation,
-          generationKey: generation,
-          bodyType: model.bodyType,
-          normalizedBodyType,
-          brandParam,
-          brandSlug,
-        });
-      }
-    });
-    
-    return queries;
+    return Array.from(uniqueModels.values());
   }, [displayModels, brandParam, brandSlug]);
 
   // Pobierz zdjęcia dla każdego unikalnego modelu
@@ -308,7 +262,6 @@ export default function CarModelsSection() {
         if (model.bodyType) searchParams.set('bodyType', model.bodyType);
         
         const url = `/api/mat-product-images?${searchParams.toString()}`;
-        console.log(`🔍 CarModelsSection: Fetching images for model: ${model.name}, URL: ${url}`);
         
         const data = await apiGet<{ images: Array<{ image_url: string; [key: string]: any }>; count: number }>(url);
         
@@ -324,21 +277,6 @@ export default function CarModelsSection() {
         };
       },
       enabled: !!model.brandForImage && !!model.modelForImage && !!brandParam,
-      // Dodaj logowanie dla Spring
-      onSuccess: (data: { modelKey: string; images: Array<{ image_url: string; [key: string]: unknown }> }) => {
-        if (model.modelForImage?.toLowerCase().includes('spring')) {
-          console.log(`✅ CarModelsSection: Successfully fetched images for Spring:`, {
-            modelKey: data.modelKey,
-            imagesCount: data.images.length,
-            images: data.images.map(img => img.image_url),
-          });
-        }
-      },
-      onError: (error: Error) => {
-        if (model.modelForImage?.toLowerCase().includes('spring')) {
-          console.error(`❌ CarModelsSection: Error fetching images for Spring:`, error);
-        }
-      },
       staleTime: 10 * 60 * 1000,
       gcTime: 30 * 60 * 1000,
     })),
@@ -348,20 +286,14 @@ export default function CarModelsSection() {
   const imagesMap = useMemo(() => {
     const map = new Map<string, string>();
     
-    imageQueries.forEach((query, index) => {
+    imageQueries.forEach((query) => {
       if (query.data?.images && query.data.images.length > 0) {
         // Użyj pierwszego dostępnego zdjęcia
         const imageUrl = query.data.images[0].image_url;
         map.set(query.data.modelKey, imageUrl);
-        console.log(`✅ CarModelsSection: Found image for model key "${query.data.modelKey}": ${imageUrl}`);
-      } else if (query.isError) {
-        console.error(`❌ CarModelsSection: Error fetching images for query ${index}:`, query.error);
-      } else if (query.isSuccess && (!query.data?.images || query.data.images.length === 0)) {
-        console.warn(`⚠️ CarModelsSection: No images found for model key "${query.data?.modelKey || 'unknown'}"`);
       }
     });
     
-    console.log(`📊 CarModelsSection: Images map size: ${map.size}, total queries: ${imageQueries.length}`);
     return map;
   }, [imageQueries]);
 
@@ -374,31 +306,6 @@ export default function CarModelsSection() {
       const normalizedBodyType = (model.bodyType && model.bodyType.trim()) ? model.bodyType.toLowerCase() : '';
       const modelKey = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${generation}-${normalizedBodyType}`;
       const imageUrl = imagesMap.get(modelKey);
-      
-      // Debug logowanie dla wszystkich modeli Spring i Duster
-      if (model.modelForImage?.toLowerCase().includes('spring') || model.modelForImage?.toLowerCase().includes('duster')) {
-        console.log(`🔍 CarModelsSection: Mapping images for ${model.name}:`, {
-          modelName: model.name,
-          brandForImage: model.brandForImage,
-          modelForImage: model.modelForImage,
-          yearForImage: model.yearForImage,
-          generation: model.generation,
-          generationKey: generation,
-          bodyType: model.bodyType,
-          normalizedBodyType,
-          modelKey,
-          imageUrl: imageUrl || 'NOT FOUND',
-          imagesMapSize: imagesMap.size,
-          allKeysInMap: Array.from(imagesMap.keys()),
-          imageQueriesStatus: imageQueries.map(q => ({
-            isLoading: q.isLoading,
-            isError: q.isError,
-            isSuccess: q.isSuccess,
-            data: q.data?.modelKey,
-            imagesCount: q.data?.images?.length || 0,
-          })),
-        });
-      }
       
       return {
         ...model,
@@ -488,7 +395,7 @@ export default function CarModelsSection() {
               Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
             </p>
             <div className="mt-6 text-xs md:text-sm text-gray-400 px-4">
-              <span className="bg-gray-800/50 px-3 py-2 md:px-4 md:py-2 rounded-full border border-gray-700 inline-block">
+              <span className="bg-white/5 px-3 py-2 md:px-4 md:py-2 rounded-full border border-white/10 inline-block backdrop-blur-sm">
                 🚗 Dostępne marki: {availableBrands.length} producentów samochodów
               </span>
             </div>
@@ -528,10 +435,12 @@ export default function CarModelsSection() {
   return (
     <div className="min-h-screen bg-neutral-950 text-white pb-20">
       {/* Hero Header */}
-      <div className="relative bg-[#0a0a0a] border-b border-white/5 py-16 md:py-24 overflow-hidden">
+      <div className="relative bg-neutral-950 border-b border-white/5 py-16 md:py-24 overflow-hidden">
+        {/* Gradient background – spójny z hero (H1 + opis) na Galeria / O nas */}
+        <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-900/5 opacity-50"></div>
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
-        
+
         <div className="container mx-auto px-4 relative z-10">
           <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
@@ -550,12 +459,12 @@ export default function CarModelsSection() {
           <div className="max-w-3xl">
             {brandInfo?.logo && (
               <div className="flex items-center gap-6 mb-6">
-                <div className="w-20 h-20 relative">
+                <div className="w-20 h-20 relative p-2 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
                   <Image
                     src={brandInfo.logo}
                     alt={`${brandInfo.displayName} logo`}
                     fill
-                    className="object-contain"
+                    className="object-contain p-2"
                   />
                 </div>
               </div>
@@ -654,7 +563,7 @@ export default function CarModelsSection() {
               {availableGenerations.length > 0 && (
                 <div className="space-y-4">
                   <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Generacja</h4>
-                  <div className="space-y-3 max-h-64 overflow-y-auto">
+                  <div className="space-y-3 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent pr-2">
                     {availableGenerations.map((generation) => (
                       <div key={generation} className="flex items-center space-x-3 group">
                         <Checkbox
@@ -700,7 +609,7 @@ export default function CarModelsSection() {
 
             {/* Loading State */}
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {[...Array(10)].map((_, i) => (
                   <div key={i} className="bg-white/5 rounded-xl animate-pulse overflow-hidden flex flex-col">
                     <div className="w-full h-64 md:h-72 bg-white/10" />
@@ -715,7 +624,7 @@ export default function CarModelsSection() {
             ) : (
               <>
                 {/* Model Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {filteredModels.map((model) => {
                     const yearParam = model.yearFrom ? `&year=${model.yearFrom}` : '';
                     const configuratorUrl = `/konfigurator?brand=${encodeURIComponent(brandSlug)}&model=${encodeURIComponent(model.name.toLowerCase())}${yearParam}${model.generation ? `&generation=${encodeURIComponent(model.generation)}` : ""}${model.bodyType ? `&bodyType=${encodeURIComponent(model.bodyType)}` : ""}`;
@@ -725,52 +634,62 @@ export default function CarModelsSection() {
                     return (
                       <article
                         key={model.id}
-                        className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group flex flex-col"
+                        className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-neutral-950 rounded-xl"
                       >
-                        {/* Car Model Image */}
-                        <div className="relative w-full h-64 md:h-72 bg-gray-100 overflow-hidden">
-                          <Image
-                            src={imageSrc}
-                            alt={`Dywaniki do ${brandLabel} ${model.name} - Spersonalizowane dywaniki samochodowe`}
-                            fill
-                            className="object-cover group-hover:scale-110 transition-transform duration-300"
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, (max-width: 1536px) 25vw, 20vw"
-                            priority={parseInt(String(model.id)) <= 6}
-                            quality={95}
-                          />
-                        </div>
-                        
-                        {/* Car Model Info */}
-                        <div className="p-4 md:p-5 flex-1 flex flex-col bg-black">
-                          <h3 className="text-base md:text-lg font-semibold text-white mb-3 line-clamp-2">
-                            {model.brand} {model.name}
-                          </h3>
-                          <div className="mb-4 flex-1">
-                            <div className="text-white font-semibold text-base md:text-lg mb-2">
-                              od 150.00 zł
+                        <div className="h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1">
+                          {/* Car Model Image */}
+                          <div className="relative aspect-square bg-gradient-to-br from-gray-900 to-black overflow-hidden">
+                            <Image
+                              src={imageSrc}
+                              alt={`Dywaniki do ${brandLabel} ${model.name} - Spersonalizowane dywaniki samochodowe`}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover:scale-110"
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                              priority={parseInt(String(model.id)) <= 6}
+                              quality={90}
+                            />
+                          </div>
+                          
+                          {/* Car Model Info */}
+                          <div className="flex-1 flex flex-col p-5">
+                            <div className="mb-2">
+                              <h3 className="text-lg font-bold text-white leading-tight group-hover:text-red-500 transition-colors line-clamp-2">
+                                {model.brand} {model.name}
+                              </h3>
                             </div>
-                            <div className="text-xs md:text-sm text-gray-300 leading-relaxed">
-                              {formatGenerationLabel(model.generation, model.yearFrom, model.yearTo) && (
-                                <span>{formatGenerationLabel(model.generation, model.yearFrom, model.yearTo)} </span>
-                              )}
-                              <span>rok </span>
-                            {getEngineType(model.name, brandLabel) && (
-                              <span>{getEngineType(model.name, brandLabel)} </span>
-                              )}
-                              {model.bodyType && <span className="uppercase">{model.bodyType} </span>}
-                              {model.bodyType && <span>{getDoorsCount(model.bodyType)} drzwi</span>}
+                            
+                            <div className="text-sm text-gray-400 mb-4 flex-1">
+                              <div className="flex flex-wrap gap-2">
+                                {formatGenerationLabel(model.generation, model.yearFrom, model.yearTo) && (
+                                  <span>{formatGenerationLabel(model.generation, model.yearFrom, model.yearTo)}</span>
+                                )}
+                                {getEngineType(model.name, brandLabel) && (
+                                  <span>{getEngineType(model.name, brandLabel)}</span>
+                                )}
+                                {model.bodyType && <span className="uppercase">{model.bodyType}</span>}
+                              </div>
+                            </div>
+
+                            <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between gap-3">
+                              <div className="flex flex-col">
+                                <span className="text-xs text-gray-500">Cena od</span>
+                                <span className="text-xl font-bold text-white">
+                                  150.00 <span className="text-red-500">PLN</span>
+                                </span>
+                              </div>
+
+                              {/* Przycisk do konfiguratora */}
+                              <Link href={configuratorUrl}>
+                                <Button
+                                  className="shrink-0 gap-2 transition-all duration-300 bg-white text-black hover:bg-red-600 hover:text-white"
+                                  size="sm"
+                                >
+                                  <ShoppingCart className="w-4 h-4" aria-hidden="true" />
+                                  <span className="hidden sm:inline">Skonfiguruj</span>
+                                </Button>
+                              </Link>
                             </div>
                           </div>
-
-                          {/* Przycisk do konfiguratora */}
-                          <Link href={configuratorUrl} className="mt-auto">
-                            <Button
-                              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 md:py-2.5 px-2 md:px-3 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-[10px] md:text-xs leading-tight"
-                              size="lg"
-                            >
-                              WYBIERZ KOLORY I ZESTAW
-                            </Button>
-                          </Link>
                         </div>
                       </article>
                     );
@@ -808,4 +727,4 @@ export default function CarModelsSection() {
       </div>
     </div>
   );
-} 
+}

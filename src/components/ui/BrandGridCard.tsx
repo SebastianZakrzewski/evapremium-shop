@@ -48,18 +48,17 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
       onClick={handleClick}
       className={`
         group relative aspect-square w-full
-        bg-gradient-to-br from-gray-900/90 via-gray-800/80 to-gray-900/90
-        backdrop-blur-xl
-        border border-gray-700/50
-        rounded-xl sm:rounded-2xl
+        bg-white/5 backdrop-blur-md
+        border border-white/10
+        rounded-3xl
         overflow-hidden
         cursor-pointer
         transition-all duration-500 ease-out
         transform-gpu
         ${isClicked ? 'scale-95' : 'scale-100'}
         hover:scale-105
-        hover:border-red-500/70
-        hover:shadow-2xl hover:shadow-red-500/30
+        hover:border-red-500/30
+        hover:shadow-2xl hover:shadow-red-900/20 hover:-translate-y-1
         focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-black
         ${className}
       `}
@@ -77,19 +76,19 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
         }
       }}
     >
-      {/* Gradient border glow przy hover */}
-      <div className="absolute inset-0 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-        <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-red-500/50 via-red-600/50 to-red-500/50 blur-sm" />
+      {/* Shine Effect */}
+      <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+        <div className="absolute inset-0 transform -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
 
       {/* Overlay przy hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 z-0" />
 
       {/* Zdjęcie/Logo marki */}
-      <div className="relative w-full h-full flex items-center justify-center p-3 sm:p-4 md:p-6 z-20">
+      <div className="relative w-full h-full flex items-center justify-center p-6 z-10">
         {imageError ? (
-          <div className="w-full h-full flex items-center justify-center bg-gray-800/50 rounded-lg">
-            <span className="text-4xl md:text-6xl font-bold text-red-500/80 select-none">
+          <div className="w-full h-full flex items-center justify-center bg-white/5 rounded-2xl">
+            <span className="text-4xl md:text-6xl font-bold text-white/20 select-none">
               {brand.name.charAt(0)}
             </span>
           </div>
@@ -99,13 +98,13 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
             alt={`${brand.name} logo`}
             fill
             className={`
-              transition-all duration-500
+              transition-all duration-700
               ${isBrandImage ? 'object-cover object-center' : 'object-contain'}
               group-hover:scale-110
-              drop-shadow-[0_0_20px_rgba(220,38,38,0.3)]
+              brightness-100 group-hover:brightness-110
             `}
             sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            quality={100}
+            quality={90}
             loading={isPriority ? "eager" : "lazy"}
             placeholder={isBrandImage ? "empty" : "blur"}
             priority={isPriority}
@@ -114,13 +113,13 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-32 md:h-32 lg:w-40 lg:h-40 flex items-center justify-center">
+          <div className="w-24 h-24 sm:w-32 sm:h-32 flex items-center justify-center">
             <Image
               src={brand.logo}
               alt={`${brand.name} logo`}
-              width={160}
-              height={160}
-              className="object-contain transition-all duration-500 group-hover:scale-110 drop-shadow-[0_0_20px_rgba(220,38,38,0.3)] w-full h-full"
+              width={128}
+              height={128}
+              className="object-contain transition-all duration-700 group-hover:scale-110 w-full h-full brightness-100 group-hover:brightness-125"
               quality={100}
               unoptimized={isBrandImage}
               onError={() => setImageError(true)}
@@ -130,30 +129,17 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
       </div>
 
       {/* Nazwa marki na dole */}
-      <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 md:p-4 bg-gradient-to-t from-black/80 via-black/60 to-transparent z-30">
-        <h3 className="text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl text-center drop-shadow-2xl">
+      <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
+        <h3 className="text-white font-bold text-lg text-center drop-shadow-md transform transition-transform duration-300 group-hover:-translate-y-1">
           {brand.name}
         </h3>
         {brand.description && (
-          <p className="text-gray-300 text-[10px] sm:text-xs md:text-sm text-center mt-0.5 sm:mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <p className="text-gray-300 text-xs text-center mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
             {brand.description}
           </p>
         )}
       </div>
 
-      {/* Indikator wyboru przy hover */}
-      <div className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-40">
-        <Car className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-white" />
-      </div>
-
-      {/* 3D transform effect przy hover */}
-      <div 
-        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{
-          transform: 'perspective(1000px) rotateX(2deg) rotateY(-2deg)',
-          transformStyle: 'preserve-3d',
-        }}
-      />
     </div>
   );
 }, (prevProps, nextProps) => {
@@ -166,4 +152,3 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
 BrandGridCard.displayName = 'BrandGridCard';
 
 export default BrandGridCard;
-

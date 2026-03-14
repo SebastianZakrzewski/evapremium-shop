@@ -651,7 +651,7 @@ export default function ConfiguratorSimple() {
 
       {/* Mobile Fixed Header with Product Image and Gallery */}
       {shouldShowStickyPreview && (
-        <div className="lg:hidden fixed top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg">
+        <div className="lg:hidden fixed top-16 left-0 right-0 z-40 bg-neutral-950/95 backdrop-blur-md border-b border-white/10 shadow-lg">
           {/* Main Product Image */}
           {/* Optimal preview size: 30vh (small) -> 33vh (medium) -> 36vh (large)
               Balances product visibility with menu accessibility
@@ -700,7 +700,7 @@ export default function ConfiguratorSimple() {
           </div>
 
           {/* Product Gallery - Sticky under main image, always visible */}
-          <div className="px-4 py-2 bg-black/95 border-t border-white/10">
+          <div className="px-4 py-2 bg-neutral-950/95 border-t border-white/10">
             <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
               <button
                 onClick={(e) => {
@@ -769,16 +769,16 @@ export default function ConfiguratorSimple() {
             {activeStep === 1 && (
               <div
                 ref={(el) => { stepRefs.current[1] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-16"
+                className="bg-[#111] rounded-xl border border-white/10 p-6 transition-all duration-200 scroll-mt-16"
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[1] = el; }}
                   className="flex items-center gap-3 mb-4"
                 >
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(1) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(1) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-500 border border-white/10'}`}>
                     <span className="text-sm font-bold">1</span>
                   </div>
-                  <h2 className="text-xl font-semibold">Wybór samochodu</h2>
+                  <h2 className="text-xl font-semibold text-white">Wybór samochodu</h2>
                 </div>
                 <CarSelectionStep
                   config={config}
@@ -792,16 +792,16 @@ export default function ConfiguratorSimple() {
             {activeStep === 2 && (
               <div
                 ref={(el) => { stepRefs.current[2] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(30vh+5rem+3rem)] sm:scroll-mt-[calc(33vh+5rem+3rem)] md:scroll-mt-[calc(36vh+5rem+3rem)]"
+                className="bg-[#111] rounded-xl border border-white/10 p-6 transition-all duration-200 scroll-mt-[calc(30vh+5rem+3rem)] sm:scroll-mt-[calc(33vh+5rem+3rem)] md:scroll-mt-[calc(36vh+5rem+3rem)]"
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[2] = el; }}
                   className="flex items-center gap-3 mb-4"
                 >
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(2) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(2) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-500 border border-white/10'}`}>
                     <span className="text-sm font-bold">2</span>
                   </div>
-                  <h2 className="text-xl font-semibold">Typ i wariant zestawu</h2>
+                  <h2 className="text-xl font-semibold text-white">Typ i wariant zestawu</h2>
                 </div>
                 <MatTypeVariantStep
                   config={config}
@@ -816,16 +816,16 @@ export default function ConfiguratorSimple() {
             {activeStep === 3 && (
               <div
                 ref={(el) => { stepRefs.current[3] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(30vh+5rem+3rem)] sm:scroll-mt-[calc(33vh+5rem+3rem)] md:scroll-mt-[calc(36vh+5rem+3rem)]"
+                className="bg-[#111] rounded-xl border border-white/10 p-6 transition-all duration-200 scroll-mt-[calc(30vh+5rem+3rem)] sm:scroll-mt-[calc(33vh+5rem+3rem)] md:scroll-mt-[calc(36vh+5rem+3rem)]"
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[3] = el; }}
                   className="flex items-center gap-3 mb-4"
                 >
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(3) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(3) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-500 border border-white/10'}`}>
                     <span className="text-sm font-bold">3</span>
                   </div>
-                  <h2 className="text-xl font-semibold">Struktura i kolory</h2>
+                  <h2 className="text-xl font-semibold text-white">Struktura i kolory</h2>
                 </div>
                 <StructureColorStep
                   config={{
@@ -845,16 +845,16 @@ export default function ConfiguratorSimple() {
             {activeStep === 4 && (
               <div
                 ref={(el) => { stepRefs.current[4] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-[calc(30vh+5rem+3rem)] sm:scroll-mt-[calc(33vh+5rem+3rem)] md:scroll-mt-[calc(36vh+5rem+3rem)]"
+                className="bg-[#111] rounded-xl border border-white/10 p-6 transition-all duration-200 scroll-mt-[calc(30vh+5rem+3rem)] sm:scroll-mt-[calc(33vh+5rem+3rem)] md:scroll-mt-[calc(36vh+5rem+3rem)]"
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[4] = el; }}
                   className="flex items-center gap-3 mb-4"
                 >
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(4) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(4) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-500 border border-white/10'}`}>
                     <span className="text-sm font-bold">4</span>
                   </div>
-                  <h2 className="text-xl font-semibold">Dodatki (opcjonalne)</h2>
+                  <h2 className="text-xl font-semibold text-white">Dodatki (opcjonalne)</h2>
                 </div>
                 <AccessoriesStep
                   config={config}
@@ -870,16 +870,16 @@ export default function ConfiguratorSimple() {
             {activeStep === 5 && (
               <div
                 ref={(el) => { stepRefs.current[5] = el; }}
-                className="bg-neutral-900 rounded-xl border border-neutral-800 p-6 transition-all duration-200 scroll-mt-16"
+                className="bg-[#111] rounded-xl border border-white/10 p-6 transition-all duration-200 scroll-mt-16"
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[5] = el; }}
                   className="flex items-center gap-3 mb-4"
                 >
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(5) ? 'bg-red-500 text-white' : 'bg-neutral-800 text-gray-500'}`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(5) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-500 border border-white/10'}`}>
                     <span className="text-sm font-bold">5</span>
                   </div>
-                  <h2 className="text-xl font-semibold">Podsumowanie</h2>
+                  <h2 className="text-xl font-semibold text-white">Podsumowanie</h2>
                 </div>
                 <SummaryStep
                   config={config}
@@ -946,7 +946,7 @@ export default function ConfiguratorSimple() {
               {matProductImage && (
                 <div className="space-y-4">
                   <div 
-                    className="relative group bg-neutral-900/50 rounded-2xl border border-white/10 overflow-hidden shadow-lg transition-all hover:shadow-red-900/5 cursor-pointer"
+                    className="relative group bg-white/5 rounded-2xl border border-white/10 overflow-hidden shadow-lg backdrop-blur-sm transition-all hover:shadow-red-900/5 cursor-pointer"
                     onClick={() => {
                       setModalImageType('mat-product');
                       setIsPreviewModalOpen(true);
@@ -989,7 +989,7 @@ export default function ConfiguratorSimple() {
 
                   {/* Product Gallery - pod zdjęciem modelu na tle dywaników */}
                   {config.matType && ((config.matType === 'classic' && classicProductImages) || (config.matType === '3d-with-rims' && rimsProductImages)) && (
-                    <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/5 rounded-xl p-4">
+                    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
                       <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
                         <RotateCcw className="w-3 h-3" />
                         Galeria produktu
@@ -1020,7 +1020,7 @@ export default function ConfiguratorSimple() {
               {productPreviewPath && (
                 <div className="space-y-4">
                   <div 
-                    className="relative group bg-neutral-900/50 rounded-2xl border border-white/10 overflow-hidden shadow-lg transition-all hover:shadow-red-900/5 cursor-pointer"
+                    className="relative group bg-white/5 rounded-2xl border border-white/10 overflow-hidden shadow-lg backdrop-blur-sm transition-all hover:shadow-red-900/5 cursor-pointer"
                     onClick={() => {
                       setModalImageType('product');
                       setIsPreviewModalOpen(true);
@@ -1065,7 +1065,7 @@ export default function ConfiguratorSimple() {
 
               {/* 2. Rug Preview Window (Bottom) */}
               <div 
-                className="relative group bg-gradient-to-br from-neutral-900 to-black rounded-2xl p-1 border border-white/10 shadow-2xl transition-all duration-500 hover:shadow-red-900/10 cursor-pointer"
+                className="relative group bg-[#111] rounded-2xl p-1 border border-white/10 shadow-2xl transition-all duration-500 hover:shadow-red-900/10 cursor-pointer"
                 onClick={() => {
                   setModalImageType('dynamic');
                   setIsPreviewModalOpen(true);
@@ -1135,7 +1135,7 @@ export default function ConfiguratorSimple() {
       {/* Desktop Sticky Bottom Bar with Price and CTA */}
       {/* Pokazuje się dopiero po przejściu do sekcji "Typ dywaników" (krok 2) */}
       {(activeStep >= 2 && !shouldHideDesktopBars && activeStep !== 7) && (
-        <div className="hidden lg:block fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 shadow-2xl lg:scale-[0.8] lg:origin-bottom lg:w-[125%] lg:left-1/2 lg:-translate-x-1/2">
+        <div className="hidden lg:block fixed bottom-0 left-0 right-0 z-50 bg-neutral-950/95 backdrop-blur-xl border-t border-white/10 shadow-2xl lg:scale-[0.8] lg:origin-bottom lg:w-[125%] lg:left-1/2 lg:-translate-x-1/2">
           {/* Main Content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between gap-6">
@@ -1189,7 +1189,7 @@ export default function ConfiguratorSimple() {
 
       {/* Mobile Sticky Bottom Bar with Price and CTA */}
       {shouldShowStickyPreview && !isCartOpen && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-xl border-t border-white/10 pb-safe shadow-2xl">
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-neutral-950/95 backdrop-blur-xl border-t border-white/10 pb-safe shadow-2xl">
           {/* Mini Progress Indicator */}
           <div className="h-1 bg-neutral-800">
             <div

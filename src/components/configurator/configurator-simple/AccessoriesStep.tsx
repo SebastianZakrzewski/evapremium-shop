@@ -75,7 +75,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
               onClick={onNext}
               variant="outline"
               size="sm"
-              className="border-neutral-600 hover:bg-neutral-700 hover:text-white text-gray-300 h-7 px-3 text-xs font-medium"
+              className="border-white/10 hover:bg-white/5 hover:text-white text-gray-300 h-7 px-3 text-xs font-medium"
             >
               Pomiń
             </Button>
@@ -105,13 +105,13 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
                     relative group cursor-pointer rounded-lg border-2 overflow-hidden transition-all min-h-[160px] active:scale-[0.98]
                     ${isSelected 
                       ? 'border-red-600 bg-red-600/10' 
-                      : 'border-neutral-700 bg-neutral-800/50 hover:border-neutral-600'
+                      : 'border-white/10 bg-[#111] hover:border-white/20 hover:bg-white/5'
                     }
                   `}
                   onClick={() => handlePodpietkaClick(podpietka)}
                 >
                   {/* Obraz */}
-                  <div className="relative aspect-square bg-neutral-900 max-h-[140px]">
+                  <div className="relative aspect-square bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] max-h-[140px]">
                     {displayImage ? (
                       <Image
                         src={displayImage}
@@ -178,7 +178,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-neutral-600 hover:bg-neutral-700 h-7 text-[10px] px-2"
+                        className="border-white/10 hover:bg-white/5 h-7 text-[10px] px-2"
                         onClick={(e) => {
                           e.stopPropagation();
                           handlePodpietkaClick(podpietka);
@@ -224,7 +224,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
 
       {/* Nawigacja */}
       <div className="flex flex-col sm:flex-row gap-3 justify-end pt-2">
-        <Button onClick={onPrevious} variant="outline" className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-neutral-700 hover:bg-neutral-800 active:scale-95">
+        <Button onClick={onPrevious} variant="outline" className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-white/10 hover:bg-white/5 active:scale-95">
           Wstecz
         </Button>
         <Button onClick={onNext} className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20 active:scale-95">

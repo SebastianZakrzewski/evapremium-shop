@@ -52,17 +52,6 @@ export default function BrandSelectionGrid() {
   if (loading) {
     return (
       <section id="brand-selection" className="bg-neutral-950 py-16 md:py-24 relative overflow-hidden min-h-screen flex items-center justify-center">
-        {/* Animowane tło z gradientem */}
-        <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
-        
-        {/* Animowane cząsteczki */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-          <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-          <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
-        </div>
-
         <div className="w-full max-w-7xl mx-auto px-4 text-center relative z-10">
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <Loader2 className="w-12 h-12 text-red-500 animate-spin mb-4" />
@@ -83,25 +72,12 @@ export default function BrandSelectionGrid() {
       id="brand-selection" 
       className="bg-neutral-950 py-16 md:py-24 relative overflow-hidden min-h-screen"
     >
-      {/* Animowane tło z gradientem */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
-      
-      {/* Animowane cząsteczki */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
-        <div className="absolute top-60 left-1/3 w-1 h-1 bg-red-500 rounded-full animate-float-hover" style={{animationDelay: '1.5s'}}></div>
-        <div className="absolute bottom-60 right-1/4 w-1.5 h-1.5 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.8s'}}></div>
-      </div>
-
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 relative z-10">
         {/* Input wyszukiwania */}
         <div className="text-center mb-12 md:mb-16">
           <div className="max-w-md mx-auto">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
+            <div className="relative group">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-10 group-focus-within:text-red-500 transition-colors" />
               <Input
                 type="text"
                 placeholder="Szukaj marki..."
@@ -110,14 +86,15 @@ export default function BrandSelectionGrid() {
                 className="
                   pl-12 pr-12
                   h-14
-                  bg-gray-900/80 backdrop-blur-xl
-                  border-gray-700/50
+                  bg-[#0a0a0a]
+                  border-white/10
                   text-white
                   placeholder:text-gray-400
-                  focus:border-red-500/70 focus:ring-2 focus:ring-red-500/30
-                  rounded-xl
+                  focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20
+                  rounded-full
                   text-base
                   transition-all duration-300
+                  shadow-xl
                 "
               />
               {searchQuery && (
@@ -154,13 +131,13 @@ export default function BrandSelectionGrid() {
 
         {/* Grid z kartami marek */}
         {!searchQuery || filteredBrands.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {filteredBrands.map((brand, index) => (
               <div
                 key={brand.id}
                 className="animate-fade-in"
                 style={{
-                  animationDelay: `${index * 0.1}s`,
+                  animationDelay: `${index * 0.05}s`,
                 }}
               >
                 <BrandGridCard
@@ -178,4 +155,3 @@ export default function BrandSelectionGrid() {
     </section>
   );
 }
-

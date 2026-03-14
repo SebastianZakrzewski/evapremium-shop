@@ -79,7 +79,7 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
                 p-3 cursor-pointer transition-all duration-300 min-h-[80px] active:scale-[0.98]
                 ${config.matType === type.id
                   ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
-                  : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm'
+                  : 'border-white/10 bg-[#111] hover:border-white/20 hover:bg-white/5 hover:shadow-sm'
                 }
               `}
             >
@@ -105,7 +105,7 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
                     p-2 md:p-3 cursor-pointer transition-all duration-300 flex flex-col h-full min-h-[140px] md:min-h-[160px]
                     ${config.variant === variant.id
                       ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
-                      : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm active:scale-[0.98]'
+                      : 'border-white/10 bg-[#111] hover:border-white/20 hover:bg-white/5 hover:shadow-sm active:scale-[0.98]'
                     }
                   `}
                 >
@@ -114,7 +114,7 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
                       <h4 className="text-xs md:text-base font-semibold mb-0.5 md:mb-1 leading-tight">{variant.name}</h4>
                       <p className="text-gray-300 text-[10px] md:text-xs leading-tight line-clamp-2">{variant.description}</p>
                     </div>
-                    <div className="aspect-video bg-gradient-to-br from-neutral-700 to-neutral-800 rounded md:rounded-md overflow-hidden border border-neutral-700 relative flex-1 min-h-0">
+                    <div className="aspect-video bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] rounded md:rounded-md overflow-hidden border border-white/10 relative flex-1 min-h-0">
                       <Image
                         src={variant.image}
                         alt={variant.name}
@@ -123,7 +123,7 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
                         sizes="(max-width: 768px) 50vw, 25vw"
                       />
                     </div>
-                    <div className="pt-1.5 md:pt-2 border-t border-neutral-700 flex-shrink-0">
+                    <div className="pt-1.5 md:pt-2 border-t border-white/10 flex-shrink-0">
                       <div className="flex items-center justify-between">
                         <span className="text-gray-400 text-[10px] md:text-xs">Cena:</span>
                         <span className="text-xs md:text-base font-bold text-white">
@@ -143,7 +143,7 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200 active:scale-95"
+          className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-white/10 hover:bg-white/5 text-sm font-medium transition-all duration-200 active:scale-95"
         >
           Wstecz
         </Button>

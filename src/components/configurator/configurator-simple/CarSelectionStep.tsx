@@ -121,14 +121,14 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
     <div className="space-y-6">
       {/* Marka */}
       <div>
-        <label className="block text-sm font-medium text-gray-200 mb-2">
+        <label className="block text-sm font-medium text-gray-300 mb-2">
           Marka *
         </label>
         <div className="relative">
           <select
             value={config.brand}
             onChange={(e) => onUpdate({ brand: e.target.value, model: '', year: '', bodyType: '' })}
-            className="w-full px-4 py-3 min-h-[44px] md:min-h-[40px] bg-neutral-800 border border-neutral-700 rounded-lg text-white text-sm appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200"
+            className="w-full px-4 py-3 min-h-[44px] md:min-h-[40px] bg-[#111] border border-white/10 rounded-lg text-white text-sm appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200"
             disabled={brandsLoading || modelsLoading}
           >
             <option value="">Wybierz markę</option>
@@ -150,7 +150,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
 
       {/* Model */}
       <div>
-        <label className="block text-sm font-medium text-gray-200 mb-2">
+        <label className="block text-sm font-medium text-gray-300 mb-2">
           Model *
         </label>
         <div className="relative">
@@ -158,7 +158,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
             value={normalizedModel || config.model}
             onChange={(e) => onUpdate({ model: e.target.value, year: '', bodyType: '' })}
             disabled={!config.brand || availableModels.length === 0}
-            className="w-full px-4 py-3 md:py-4 min-h-[44px] bg-neutral-800 border border-neutral-700 rounded-lg text-white text-base appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="w-full px-4 py-3 md:py-4 min-h-[44px] bg-[#111] border border-white/10 rounded-lg text-white text-base appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             <option value="">
               {!config.brand 
@@ -181,7 +181,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
 
       {/* Rok produkcji */}
       <div>
-        <label className="block text-sm font-medium text-gray-200 mb-2">
+        <label className="block text-sm font-medium text-gray-300 mb-2">
           Rok produkcji *
         </label>
         <div className="relative">
@@ -192,7 +192,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
               onUpdate({ year: e.target.value, bodyType: '' });
             }}
             disabled={!config.model || availableYears.length === 0}
-            className="w-full px-4 py-3 md:py-4 min-h-[44px] bg-neutral-800 border border-neutral-700 rounded-lg text-white text-base appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="w-full px-4 py-3 md:py-4 min-h-[44px] bg-[#111] border border-white/10 rounded-lg text-white text-base appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             <option value="">
               {!config.model 
@@ -215,7 +215,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
 
       {/* Typ nadwozia */}
       <div>
-        <label className="block text-sm font-medium text-gray-200 mb-2">
+        <label className="block text-sm font-medium text-gray-300 mb-2">
           Typ nadwozia *
         </label>
         <div className="relative">
@@ -223,7 +223,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
             value={normalizedBodyType || config.bodyType}
             onChange={(e) => onUpdate({ bodyType: e.target.value })}
             disabled={!config.year || availableBodyTypes.length === 0}
-            className="w-full px-4 py-3 md:py-4 min-h-[44px] bg-neutral-800 border border-neutral-700 rounded-lg text-white text-base appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="w-full px-4 py-3 md:py-4 min-h-[44px] bg-[#111] border border-white/10 rounded-lg text-white text-base appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             <option value="">
               {!config.year 
