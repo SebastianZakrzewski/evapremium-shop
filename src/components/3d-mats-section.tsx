@@ -174,8 +174,9 @@ export default function ThreeDMatsSection() {
                     src={mainImage}
                     alt="Dywaniki 3D z rantami"
                     fill
-                    className="object-cover transition-all duration-500 opacity-100"
+                    className="object-contain transition-all duration-500 opacity-100"
                     style={{ transition: 'opacity 0.4s' }}
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   
                   {/* Overlay gradient - spójny z resztą */}
