@@ -76,7 +76,7 @@ export default function CustomFitSection() {
                   <div 
                     key={step.id}
                     className={`
-                      group flex items-center p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 
+                      group flex items-center p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 shadow-xl shadow-red-900/30
                       transition-all duration-700 cursor-default
                       ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}
                     `}
@@ -133,7 +133,7 @@ export default function CustomFitSection() {
           <div className={`order-1 lg:order-2 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             <div className="relative group">
               {/* Glass Container */}
-              <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
+              <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-xl shadow-red-900/30 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
                 <div className="relative rounded-2xl overflow-hidden aspect-[4/5] lg:aspect-[3/4] bg-neutral-900">
                   <Image
                     src="/images/zalety/szycie.png"

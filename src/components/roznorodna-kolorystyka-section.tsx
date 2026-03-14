@@ -78,7 +78,7 @@ export default function RoznorodnaKolorystykaSection() {
           <div className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
             <div className="relative group">
               {/* Glass Container - Consistent with other sections */}
-              <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
+              <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-xl shadow-red-900/30 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
                 <div className="relative rounded-2xl overflow-hidden aspect-square bg-neutral-900">
                   {colorImages[selectedColor.name] ? (
                     <Image
@@ -120,7 +120,7 @@ export default function RoznorodnaKolorystykaSection() {
             <div className="space-y-10">
               
               {/* Classic Colors */}
-              <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-6 border border-white/5">
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-6 border border-white/5 shadow-xl shadow-red-900/30">
                 <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-6 flex items-center">
                   <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2"></div>
                   Klasyczne Odcienie
@@ -148,7 +148,7 @@ export default function RoznorodnaKolorystykaSection() {
               </div>
 
               {/* Vibrant Colors */}
-              <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-6 border border-white/5">
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-6 border border-white/5 shadow-xl shadow-red-900/30">
                 <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-6 flex items-center">
                   <div className="w-1.5 h-1.5 bg-red-500 rounded-full mr-2"></div>
                   Żywe Barwy

@@ -24,7 +24,7 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
         rounded-3xl overflow-hidden 
         bg-gradient-to-br from-gray-900 to-black 
         border border-white/10
-        shadow-2xl shadow-black/50
+        shadow-xl shadow-red-900/30
         hover:shadow-red-900/20 hover:border-white/20
         transition-all duration-500 ease-out
         cursor-pointer 

@@ -167,7 +167,7 @@ export default function ThreeDMatsSection() {
           <div className={`transition-all duration-1000 ease-out sticky top-24 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
             <div className="relative group">
               {/* Kontener z obrazem - spójny z BrandCard/Gallery */}
-              <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
+              <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-xl shadow-red-900/30 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
                 <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-neutral-900">
                   <Image
                     ref={imageRef}
@@ -190,7 +190,7 @@ export default function ThreeDMatsSection() {
               </div>
               
               {/* Opis pod zdjęciem (tylko desktop) */}
-              <div className="mt-8 hidden lg:block p-6 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10">
+              <div className="mt-8 hidden lg:block p-6 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 shadow-xl shadow-red-900/30">
                 <h3 className="text-2xl font-bold text-white mb-4 transition-all duration-500">
                   {mainTitle}
                 </h3>
@@ -220,7 +220,7 @@ export default function ThreeDMatsSection() {
           {/* Prawa strona - Lista korzyści */}
           <div className={`transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             {/* Opis mobilny (nad listą) */}
-            <div className="lg:hidden mb-8 p-6 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10">
+            <div className="lg:hidden mb-8 p-6 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 shadow-xl shadow-red-900/30">
               <h3 className="text-xl font-bold text-white mb-3">
                 {mainTitle}
               </h3>
@@ -241,8 +241,8 @@ export default function ThreeDMatsSection() {
                     className={`
                       group cursor-pointer relative rounded-2xl transition-all duration-300 ease-out
                       ${isActive 
-                        ? 'bg-white/10 border-red-500/50 shadow-lg shadow-red-900/20 translate-x-2' 
-                        : 'bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/20'}
+? 'bg-white/10 border-red-500/50 shadow-lg shadow-red-900/20 translate-x-2'
+                        : 'bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/20 shadow-xl shadow-red-900/30'}
                       border
                     `}
                     tabIndex={0}

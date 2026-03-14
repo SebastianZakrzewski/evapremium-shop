@@ -77,7 +77,7 @@ export default function ProductSelection() {
             Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
           </p>
           <div className="mt-6 text-xs md:text-sm text-gray-400 px-4">
-            <span className="bg-white/5 backdrop-blur-md border border-white/10 px-3 py-2 md:px-4 md:py-2 rounded-full inline-block max-w-full md:max-w-none whitespace-normal break-words text-center leading-relaxed">
+            <span className="bg-white/5 backdrop-blur-md border border-white/10 shadow-xl shadow-red-900/30 px-3 py-2 md:px-4 md:py-2 rounded-full inline-block max-w-full md:max-w-none whitespace-normal break-words text-center leading-relaxed">
               Dostępne marki: {brands.length} producentów samochodów
             </span>
           </div>
@@ -89,7 +89,7 @@ export default function ProductSelection() {
         </div>
 
         {/* Wyszukiwarka marek */}
-        <div className="relative mb-6 w-full max-w-xs mx-auto">
+        <div className="relative mb-6 w-full max-w-xs mx-auto shadow-xl shadow-red-900/30 rounded-xl">
           <input
             type="text"
             placeholder="Szukaj marki..."

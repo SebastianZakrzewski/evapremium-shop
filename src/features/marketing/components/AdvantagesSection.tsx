@@ -120,7 +120,7 @@ export default function AdvantagesSection() {
                   transition-all duration-500
                   ${isHoveredState 
                     ? 'bg-white/10 border-red-500/30 transform -translate-y-2 shadow-2xl shadow-red-900/20' 
-                    : 'hover:border-white/20 shadow-xl shadow-black/50'}
+                    : 'hover:border-white/20 shadow-xl shadow-red-900/30'}
                 `}>
                   
                   {/* Image Area */}

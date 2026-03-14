@@ -250,7 +250,7 @@ const ProductImageCard = React.memo(({
           bg-white/5 backdrop-blur-md border border-white/10 
           group-hover:border-red-500/30 
           transition-all duration-500 ease-out
-          shadow-2xl shadow-black/50
+          shadow-xl shadow-red-900/30
           group-hover:shadow-red-900/20 group-hover:-translate-y-2 
           cursor-pointer
         "
