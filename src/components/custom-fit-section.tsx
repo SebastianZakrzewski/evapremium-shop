@@ -72,10 +72,15 @@ export default function CustomFitSection() {
 
               {/* Clean Numbered List */}
               <div className="space-y-3">
-                {processSteps.map((step) => (
+                {processSteps.map((step, index) => (
                   <div 
                     key={step.id}
-                    className="group flex items-center p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 transition-all duration-300 cursor-default"
+                    className={`
+                      group flex items-center p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 
+                      transition-all duration-500 cursor-default
+                      ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}
+                    `}
+                    style={{ transitionDelay: `${600 + (index * 150)}ms` }}
                     onMouseEnter={() => setActiveStep(step.id)}
                     onMouseLeave={() => setActiveStep(null)}
                   >
