@@ -273,16 +273,6 @@ const ProductImageCard = React.memo(({
         <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
           <div className="absolute inset-0 transform -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         </div>
-        
-        {/* Tekst na obrazie */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white translate-y-4 group-hover:translate-y-0 transition-transform duration-500 z-20">
-          <h3 className="text-xl font-bold mb-2 text-white group-hover:text-red-500 transition-colors duration-300">
-            {image.title}
-          </h3>
-          <p className="text-sm text-gray-300 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-            {image.description}
-          </p>
-        </div>
       </div>
     </div>
   );
