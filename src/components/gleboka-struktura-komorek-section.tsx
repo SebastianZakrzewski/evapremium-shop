@@ -1,152 +1,129 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Zap, Shield, Droplets, Sparkles, CheckCircle, Star, ArrowRight } from "lucide-react";
 
 export default function GlebokaStrukturaKomorekSection() {
-  const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const section = document.getElementById('gleboka-struktura-komorek-section');
+    if (section) {
+      observer.observe(section);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const features = [
     {
-      id: 1,
-      icon: Droplets,
       title: "Niezwykła Elastyczność",
-      description: "Pianka EVA odzyskuje kształt po każdym nacisku - jak nowa przez lata",
-      color: "from-red-500 to-red-600"
+      description: "Pianka EVA odzyskuje kształt po każdym nacisku. Nie odkształca się trwale nawet po długotrwałym użytkowaniu, zachowując estetyczny wygląd przez lata."
     },
     {
-      id: 2,
-      icon: Shield,
       title: "Doskonała Izolacja",
-      description: "Zatrzymuje ciepło zimą, chłód latem - komfort w każdych warunkach",
-      color: "from-red-600 to-red-700"
+      description: "Materiał skutecznie izoluje od temperatur zewnętrznych. Zatrzymuje ciepło zimą i nie nagrzewa się nadmiernie latem, zwiększając komfort podróży."
     },
     {
-      id: 3,
-      icon: Sparkles,
-      title: "Antybakteryjny",
-      description: "Naturalne właściwości antybakteryjne - brak nieprzyjemnych zapachów",
-      color: "from-red-400 to-red-500"
+      title: "Właściwości Antybakteryjne",
+      description: "Polimerowa struktura jest naturalnie odporna na rozwój grzybów i bakterii. Nie chłonie zapachów i jest bezpieczna dla alergików."
+    },
+    {
+      title: "100% Wodoodporność",
+      description: "Zamkniętokomórkowa struktura materiału sprawia, że jest on całkowicie nieprzemakalny. Wilgoć i brud pozostają w komórkach, nie przenikając na wykładzinę."
     }
   ];
 
   return (
-    <section id="gleboka-struktura-komorek-section" className="py-12 md:py-16 bg-neutral-950 relative overflow-hidden">
-      {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-800/5"></div>
+    <section 
+      id="gleboka-struktura-komorek-section" 
+      className="py-20 md:py-24 bg-neutral-950 relative overflow-hidden"
+      role="region"
+      aria-label="Cechy materiału EVA - struktura komórkowa"
+    >
+      {/* Gradient line top */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
       
-      {/* Animowane cząsteczki */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
-      </div>
-
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="text-center mb-12 transition-all duration-1000 ease-out">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-6 animate-pulse-glow">
-            <Zap className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 bg-gradient-to-r from-white via-red-100 to-white bg-clip-text text-transparent">
-            NOWOCZESNY MATERIAŁ EVA
+        <div className={`text-center mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+            Nowoczesny materiał <span className="text-red-500">EVA</span>
           </h2>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-            <span className="text-red-400 font-semibold">Pianka EVA</span> - najnowocześniejszy materiał używany w samochodach premium. 
-            Niezwykła elastyczność, doskonała izolacja i 100% wodoodporność w jednym materiale.
+          <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Technologia polimerowa, która zmienia standardy ochrony wnętrza samochodu.
+            Lekkość, wytrzymałość i funkcjonalność w jednym materiale.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-7xl mx-auto">
           {/* Obrazek */}
-          <div className="relative flex justify-center">
-            <div className="relative bg-neutral-950 rounded-2xl p-6 shadow-2xl w-full max-w-lg">
-              <Image
-                src="/images/zalety/pianka.webp"
-                alt="Nowoczesny Materiał EVA"
-                width={800}
-                height={800}
-                className="w-full h-auto rounded-xl object-cover"
-              />
-              {/* Floating badge */}
-              <div className="absolute -top-4 -right-4 bg-gradient-to-r from-red-500 to-red-700 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
-                <Star className="w-4 h-4 inline mr-1" />
-                100% WODODPORNY
+          <div className={`relative order-2 lg:order-1 transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
+            <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-white/5 backdrop-blur-sm group">
+              <div className="aspect-square relative">
+                <Image
+                  src="/images/zalety/pianka.webp"
+                  alt="Struktura komórkowa materiału EVA w zbliżeniu"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/60 via-transparent to-transparent"></div>
+              </div>
+              
+              {/* Subtle glass badge */}
+              <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
+                <p className="text-white font-medium text-sm text-center">
+                  Głęboka struktura komórek (Diamond/Plaster miodu) zatrzymuje do <span className="text-red-500 font-bold">1 litra</span> płynów.
+                </p>
               </div>
             </div>
           </div>
           
-          {/* Opis cechy */}
-          <div className="flex flex-col justify-center space-y-8">
-            <div className="text-center lg:text-left">
-              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">Dlaczego to ważne?</h3>
-              <p className="text-gray-200 text-lg leading-relaxed">
-                <span className="text-red-400 font-semibold">Pianka EVA</span> to materiał używany w samochodach luksusowych - 
-                niezwykle elastyczna, doskonale izolująca i w 100% wodoodporna. 
-                Odzyskuje kształt po każdym nacisku i nie traci właściwości przez lata.
-              </p>
-            </div>
-            
-            {/* Interaktywne karty funkcji */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {features.map((feature) => (
-                <div
-                  key={feature.id}
-                  className={`relative p-4 rounded-xl border transition-all duration-300 cursor-pointer group ${
-                    hoveredFeature === feature.id
-                      ? 'border-red-400/50 bg-gradient-to-br from-red-500/10 to-red-600/10 scale-105 shadow-lg shadow-red-500/20'
-                      : 'border-gray-700 bg-gray-800/50 hover:border-red-400/30 hover:bg-gray-800/70'
-                  }`}
-                  onMouseEnter={() => setHoveredFeature(feature.id)}
-                  onMouseLeave={() => setHoveredFeature(null)}
+          {/* Lista cech */}
+          <div className={`flex flex-col justify-center space-y-10 order-1 lg:order-2 transition-all duration-1000 delay-400 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+            <div className="space-y-8">
+              {features.map((feature, index) => (
+                <div 
+                  key={index} 
+                  className="flex gap-6 group"
                 >
-                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300`}>
-                    <feature.icon className="w-5 h-5 text-white" />
+                  <div className="flex-shrink-0 pt-1">
+                    <span className="text-4xl font-bold text-white/10 group-hover:text-red-500/50 transition-colors duration-300 font-mono">
+                      0{index + 1}
+                    </span>
                   </div>
-                  <h4 className="text-white font-bold text-sm mb-1">{feature.title}</h4>
-                  <p className="text-gray-400 text-xs">{feature.description}</p>
-                  
-                  {/* Hover effect */}
-                  {hoveredFeature === feature.id && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-red-600/5 rounded-xl"></div>
-                  )}
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors duration-300">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+                      {feature.description}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
             
-            {/* Lista korzyści */}
-            <div className="bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-2xl p-6 border border-gray-700">
-              <h4 className="text-white font-bold text-xl mb-4 text-center lg:text-left">
-                Kluczowe Zalety Pianki EVA
-              </h4>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-300">
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-red-400 mr-3 flex-shrink-0" />
-                  <span><span className="text-red-400 font-semibold">Elastyczność</span> - odzyskuje kształt po każdym nacisku</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-red-400 mr-3 flex-shrink-0" />
-                  <span><span className="text-red-400 font-semibold">Izolacja termiczna</span> - komfort w każdych warunkach</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-red-400 mr-3 flex-shrink-0" />
-                  <span><span className="text-red-400 font-semibold">Antybakteryjność</span> - naturalne właściwości higieniczne</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-red-400 mr-3 flex-shrink-0" />
-                  <span><span className="text-red-400 font-semibold">Wodoodporność</span> - 100% ochrona przed wilgocią</span>
-                </li>
-                <li className="flex items-center md:col-span-2">
-                  <CheckCircle className="w-4 h-4 text-red-400 mr-3 flex-shrink-0" />
-                  <span><span className="text-red-400 font-semibold">Trwałość</span> - nie traci właściwości przez lata</span>
-                </li>
-              </ul>
+            {/* Additional info */}
+            <div className="pt-4 border-t border-white/10">
+              <p className="text-sm text-gray-500 italic">
+                Materiał EVA (etylen-octan winylu) jest bezpieczny, nietoksyczny i przyjazny dla środowiska.
+              </p>
             </div>
           </div>
         </div>
       </div>
     </section>
   );
-} 
+}

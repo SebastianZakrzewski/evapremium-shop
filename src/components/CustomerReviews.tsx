@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Star, ThumbsUp, Quote } from "lucide-react";
+import { Star, ThumbsUp, Quote, CheckCircle } from "lucide-react";
 
 interface Review {
   id: number;
@@ -84,40 +84,7 @@ export default function CustomerReviews() {
       purchaseDate: "Październik 2024",
       verified: true,
       helpful: 7
-    },
-    {
-      id: 7,
-      name: "Jakub Lewandowski",
-      location: "Katowice",
-      rating: 5,
-      review: "Szybka realizacja zamówienia, dokładne dopasowanie do modelu. Dywaniki są bardzo grube i solidne. W zimie nie ma problemu z solą i śniegiem - wszystko się łatwo spłukuje.",
-      carModel: "Ford Focus 2023",
-      purchaseDate: "Styczeń 2025",
-      verified: true,
-      helpful: 6
-    },
-    {
-      id: 8,
-      name: "Aleksandra Wójcik",
-      location: "Szczecin",
-      rating: 5,
-      review: "Zamówiłam dywaniki w kolorze kości słoniowej - idealnie pasują do wnętrza mojego auta. Jakość wykonania na najwyższym poziomie, a cena bardzo przystępna. Polecam wszystkim!",
-      carModel: "Peugeot 308 2023",
-      purchaseDate: "Grudzień 2024",
-      verified: true,
-      helpful: 10
-    },
-    {
-      id: 9,
-      name: "Michał Dąbrowski",
-      location: "Lublin",
-      rating: 5,
-      review: "Ranty 3D są genialne! Chronią przed wnikaniem wody pod dywanik. Po deszczu wystarczy przetrzeć wilgotną szmatką i wygląda jak nowy. Świetna jakość za rozsądną cenę.",
-      carModel: "Hyundai i30 2022",
-      purchaseDate: "Listopad 2024",
-      verified: true,
-      helpful: 13
-    },
+    }
   ];
 
   const toggleHelpful = (reviewId: number) => {
@@ -129,70 +96,86 @@ export default function CustomerReviews() {
   };
 
   return (
-    <section id="opinie" className="py-24 bg-neutral-950 relative overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <section 
+      id="opinie" 
+      className="py-20 md:py-24 bg-neutral-950 relative overflow-hidden"
+      role="region"
+      aria-label="Opinie klientów o dywanikach EVA"
+    >
+      {/* Gradient line top */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
-            Opinie naszych <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-600">Klientów</span>
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+            Opinie naszych <span className="text-red-500">Klientów</span>
           </h2>
           
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light">
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
             Dołącz do ponad <span className="text-white font-semibold">2000+</span> zadowolonych kierowców, którzy wybrali komfort i jakość EVA Premium.
           </p>
         </div>
 
         {/* Reviews Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {reviews.map((review, index) => (
+          {reviews.map((review) => (
             <div
               key={review.id}
-              className="group relative bg-gray-900/40 backdrop-blur-xl border border-white/5 rounded-3xl p-8 hover:bg-gray-800/60 hover:border-white/10 transition-all duration-500 hover:-translate-y-2"
+              className="group relative bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 hover:border-red-500/30 transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/50"
             >
+              {/* Shine Effect */}
+              <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-3xl overflow-hidden">
+                <div className="absolute inset-0 transform -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+              </div>
+
               {/* User Info */}
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 border border-white/10 flex items-center justify-center text-lg font-bold text-white shadow-lg">
+              <div className="relative z-10 flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center text-lg font-bold text-white">
                   {review.name.charAt(0)}
                 </div>
                 <div>
-                  <h4 className="text-white font-bold">{review.name}</h4>
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-white font-bold">{review.name}</h4>
+                    {review.verified && (
+                      <CheckCircle className="w-4 h-4 text-red-500" aria-label="Zweryfikowany zakup" />
+                    )}
+                  </div>
                   <p className="text-xs text-gray-500">{review.location}</p>
                 </div>
               </div>
 
               {/* Rating */}
-              <div className="flex gap-1 mb-4">
+              <div className="relative z-10 flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className={`w-4 h-4 ${i < review.rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-700'}`} />
                 ))}
               </div>
 
               {/* Content */}
-              <div className="relative mb-6">
-                <Quote className="absolute -top-2 -left-2 w-8 h-8 text-white/5 transform -scale-x-100" />
-                <p className="text-gray-300 leading-relaxed text-sm relative z-10 pl-2">
+              <div className="relative z-10 mb-6 min-h-[80px]">
+                <Quote className="absolute -top-2 -left-2 w-6 h-6 text-white/10 transform -scale-x-100" />
+                <p className="text-gray-300 leading-relaxed text-sm relative pl-4">
                   {review.review}
                 </p>
               </div>
 
               {/* Footer */}
-              <div className="pt-6 border-t border-white/5 flex items-center justify-between">
+              <div className="relative z-10 pt-6 border-t border-white/10 flex items-center justify-between">
                 <div className="text-xs text-gray-500">
-                  <p className="font-medium text-gray-400">{review.carModel}</p>
+                  <p className="font-medium text-gray-400 mb-0.5">{review.carModel}</p>
                   <p>{review.purchaseDate}</p>
                 </div>
                 
                 <button
                   onClick={() => toggleHelpful(review.id)}
                   className={`
-                    flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300
+                    flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 border
                     ${helpfulReviews.includes(review.id) 
-                      ? 'bg-red-500/10 text-red-400 border border-red-500/20' 
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}
+                      ? 'bg-red-500/10 text-red-400 border-red-500/20' 
+                      : 'bg-white/5 text-gray-400 border-white/5 hover:bg-white/10 hover:text-white'}
                   `}
+                  aria-label={helpfulReviews.includes(review.id) ? "Cofnij ocenę przydatne" : "Oceń jako przydatne"}
                 >
                   <ThumbsUp className="w-3.5 h-3.5" />
                   <span>{review.helpful + (helpfulReviews.includes(review.id) ? 1 : 0)}</span>

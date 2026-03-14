@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface FAQItem {
   id: number;
@@ -116,42 +116,36 @@ export default function FAQSection() {
   };
 
   return (
-    <section id="faq-section" className="py-16 bg-neutral-950 text-white relative overflow-hidden">
-      {/* Animowane tło z gradientem */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-800/5"></div>
-      
-      {/* Animowane cząsteczki tła */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
-      </div>
+    <section 
+      id="faq-section" 
+      className="py-20 md:py-24 bg-neutral-950 text-white relative overflow-hidden"
+      role="region"
+      aria-label="Najczęściej zadawane pytania - FAQ"
+    >
+      {/* Gradient line top */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* Header z animacją */}
-        <div className={`text-center mb-12 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-6 animate-pulse-glow">
-            <HelpCircle className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 bg-gradient-to-r from-white via-red-100 to-white bg-clip-text text-transparent">
-            NAJCZĘŚCIEJ ZADAWANE PYTANIA
+        {/* Header */}
+        <div className={`text-center mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+            Najczęściej zadawane <span className="text-red-500">pytania</span>
           </h2>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-            Znajdź odpowiedzi na najważniejsze pytania dotyczące naszych dywaników samochodowych
+          <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Znajdź odpowiedzi na najważniejsze pytania dotyczące naszych dywaników samochodowych.
           </p>
         </div>
 
         {/* Filtry kategorii */}
-        <div className={`flex flex-wrap justify-center gap-2 mb-8 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          {categories.map((category, index) => (
+        <div className={`flex flex-wrap justify-center gap-3 mb-12 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          {categories.map((category) => (
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${
                 selectedCategory === category
-                  ? 'bg-red-500 text-white shadow-lg shadow-red-500/25 scale-105'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
+                  ? 'bg-red-600 text-white border-red-500 shadow-lg shadow-red-900/30'
+                  : 'bg-white/5 text-gray-400 border-white/5 hover:bg-white/10 hover:text-white hover:border-white/10'
               }`}
             >
               {category}
@@ -167,34 +161,45 @@ export default function FAQSection() {
               className={`transition-all duration-1000 ease-out ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
               }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              style={{ transitionDelay: `${index * 50}ms` }}
             >
-              <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/30 rounded-xl border border-red-800/30 overflow-hidden hover:border-red-500/50 transition-all duration-300">
+              <div 
+                className={`
+                  rounded-2xl border overflow-hidden transition-all duration-300
+                  ${openItems.includes(faq.id) 
+                    ? 'bg-white/10 border-red-500/30 shadow-lg shadow-black/20' 
+                    : 'bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/10'}
+                `}
+              >
                 <button
                   onClick={() => toggleItem(faq.id)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gradient-to-r hover:from-red-500/10 hover:to-red-600/10 transition-all duration-300"
+                  className="w-full px-6 py-5 text-left flex items-center justify-between group"
+                  aria-expanded={openItems.includes(faq.id)}
                 >
-                  <h3 className="text-lg font-semibold text-white pr-4">
+                  <h3 className={`text-lg font-semibold pr-8 transition-colors duration-300 ${openItems.includes(faq.id) ? 'text-white' : 'text-gray-200 group-hover:text-white'}`}>
                     {faq.question}
                   </h3>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs bg-red-500/20 text-red-300 px-2 py-1 rounded-full">
+                  <div className="flex items-center space-x-3 flex-shrink-0">
+                    <span className="hidden sm:inline-block text-xs bg-white/5 text-gray-400 px-2 py-1 rounded-full border border-white/5">
                       {faq.category}
                     </span>
                     {openItems.includes(faq.id) ? (
-                      <ChevronUp className="w-5 h-5 text-red-400 transition-transform duration-300" />
+                      <ChevronUp className="w-5 h-5 text-red-500 transition-transform duration-300" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 text-red-400 transition-transform duration-300" />
+                      <ChevronDown className="w-5 h-5 text-gray-500 group-hover:text-red-400 transition-transform duration-300" />
                     )}
                   </div>
                 </button>
                 
-                <div className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                  openItems.includes(faq.id) ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                }`}>
-                  <div className="px-6 pb-4">
-                    <div className="border-t border-red-800/30 pt-4">
-                      <p className="text-gray-300 leading-relaxed">
+                <div 
+                  className={`
+                    overflow-hidden transition-all duration-300 ease-in-out
+                    ${openItems.includes(faq.id) ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
+                  `}
+                >
+                  <div className="px-6 pb-6 pt-0">
+                    <div className="border-t border-white/10 pt-4">
+                      <p className="text-gray-300 leading-relaxed text-sm md:text-base">
                         {faq.answer}
                       </p>
                     </div>
@@ -206,19 +211,19 @@ export default function FAQSection() {
         </div>
 
         {/* Call to Action */}
-        <div className={`text-center mt-12 transition-all duration-1000 ease-out delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="bg-gradient-to-r from-red-500/10 to-red-600/10 rounded-2xl p-8 border border-red-500/20">
+        <div className={`text-center mt-16 transition-all duration-1000 ease-out delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/10 max-w-3xl mx-auto">
             <h3 className="text-2xl font-bold text-white mb-4">
               Nie znalazłeś odpowiedzi na swoje pytanie?
             </h3>
-            <p className="text-gray-300 mb-6">
+            <p className="text-gray-300 mb-8">
               Skontaktuj się z naszym zespołem - chętnie pomożemy!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-xl hover:shadow-red-500/25 hover:scale-105">
+              <button className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-full font-bold transition-all duration-300 shadow-xl shadow-red-900/20 hover:scale-105 hover:shadow-red-900/40">
                 Napisz do nas
               </button>
-              <button className="bg-white/10 backdrop-blur border border-white/20 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 hover:bg-white/20">
+              <button className="bg-transparent border border-white/20 text-white px-8 py-3 rounded-full font-bold transition-all duration-300 hover:bg-white/10 hover:border-white/40">
                 Zadzwoń: +48 793 993 430
               </button>
             </div>
@@ -227,4 +232,4 @@ export default function FAQSection() {
       </div>
     </section>
   );
-} 
+}
