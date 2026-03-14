@@ -113,7 +113,7 @@ export default function ThreeDMatsSection() {
       title = "DOSKONAŁA OCHRONA";
       description = benefit.fullDescription;
     } else if (benefit.id === 2) {
-      image = '/3djezor.png';
+      image = '/images/zalety/3d-jezor-detail.png';
       title = "3D JĘZOR";
       description = benefit.fullDescription;
     } else if (benefit.id === 3) {
