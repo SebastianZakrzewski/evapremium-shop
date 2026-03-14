@@ -4,8 +4,7 @@ import React, { useState, useCallback, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ProductImage {
   id: number;
@@ -253,7 +252,7 @@ const ProductImageCard = React.memo(({
           src={image.src}
           alt={image.alt}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          className="object-cover brightness-110 transition-transform duration-500 group-hover:scale-110 group-hover:brightness-125"
           sizes="(max-width: 768px) 320px, 384px"
           priority={isPriority}
           quality={85}
@@ -286,7 +285,15 @@ const ImageModal = React.memo(({
   selectedImage: ProductImage | null; 
   onClose: () => void;
 }) => {
-  if (!selectedImage) return null;
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [onClose])
+
+  if (!selectedImage) return null
 
   return (
     <motion.div
@@ -304,12 +311,13 @@ const ImageModal = React.memo(({
         className="relative max-w-5xl max-h-[90vh] w-full h-full flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Przycisk zamknięcia */}
+        {/* Przycisk zamknięcia - touch target min 44px */}
         <button
           onClick={onClose}
-          className="absolute -top-12 right-0 z-10 text-white hover:text-red-500 transition-colors duration-200 p-2"
+          className="absolute -top-12 right-0 z-10 text-white hover:text-red-500 transition-colors duration-200 p-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-white/10"
+          aria-label="Zamknij podgląd obrazu"
         >
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -408,46 +416,35 @@ export default function ProductGallerySection() {
   }, [openModal]);
 
   return (
-    <section data-section="product-gallery" className="py-12 md:py-16 bg-neutral-950 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-red-900/10 blur-[100px] rounded-full" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-900/10 blur-[100px] rounded-full" />
-      </div>
+    <section
+      id="product-gallery"
+      data-section="product-gallery"
+      className="w-full bg-neutral-950 py-20 md:py-24 relative overflow-hidden"
+      role="region"
+      aria-label="Galeria produktów - zdjęcia dywaników samochodowych EVA Premium"
+    >
+      {/* Gradient line top - spójność z Hero/QuickSearchBar */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
 
-      {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-800/5"></div>
-      
-      {/* Animowane cząsteczki */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
-      </div>
-
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Header */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+        {/* Header - spójny z QuickSearchBar */}
         <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-8 animate-pulse-glow shadow-lg shadow-red-500/30 transition-all duration-1000 ease-out" style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
-            <ImageIcon className="w-10 h-10 text-white" />
-          </div>
-          <h1 className={`text-4xl md:text-6xl font-bold text-white mb-6 bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent leading-tight transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
-            NASZA GALERIA PRODUKTÓW
-          </h1>
-          <h2 className={`text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
-            Odkryj jakość i precyzję wykonania naszych dywaników. Każdy detal ma znaczenie.
+          <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 md:mb-6 leading-tight break-words px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
+            Nasza galeria <span className="text-red-500">produktów</span>
           </h2>
+          <p className={`text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
+            Odkryj jakość i precyzję wykonania naszych dywaników. Każdy detal ma znaczenie.
+          </p>
         </div>
       </div>
 
       {/* Kontener galerii - pełna szerokość */}
       <div className="w-full overflow-hidden relative z-10 mt-8">
-        {/* Strzałka w lewo */}
+        {/* Strzałka w lewo - touch target min 44px, spójność z Hero */}
         <button
           onClick={goToPrevious}
-          className="absolute left-4 md:left-8 top-1/2 transform -translate-y-1/2 z-20 bg-black/80 hover:bg-red-600 text-white p-3 md:p-4 rounded-full transition-all duration-300 border border-white/10 hover:border-red-500 shadow-xl backdrop-blur-sm group"
-          aria-label="Przewiń w lewo"
+          className="absolute left-4 md:left-8 top-1/2 transform -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white p-3 md:p-4 rounded-full transition-all duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center group"
+          aria-label="Przewiń galerię w lewo"
         >
           <ChevronLeft className="w-6 h-6 group-hover:scale-110 transition-transform" />
         </button>
@@ -455,8 +452,8 @@ export default function ProductGallerySection() {
         {/* Strzałka w prawo */}
         <button
           onClick={goToNext}
-          className="absolute right-4 md:right-8 top-1/2 transform -translate-y-1/2 z-20 bg-black/80 hover:bg-red-600 text-white p-3 md:p-4 rounded-full transition-all duration-300 border border-white/10 hover:border-red-500 shadow-xl backdrop-blur-sm group"
-          aria-label="Przewiń w prawo"
+          className="absolute right-4 md:right-8 top-1/2 transform -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white p-3 md:p-4 rounded-full transition-all duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center group"
+          aria-label="Przewiń galerię w prawo"
         >
           <ChevronRight className="w-6 h-6 group-hover:scale-110 transition-transform" />
         </button>
@@ -495,11 +492,12 @@ export default function ProductGallerySection() {
         <ImageModal selectedImage={selectedImage} onClose={closeModal} />
       </AnimatePresence>
 
-      {/* Call to Action */}
-      <div className="container mx-auto px-4 relative z-10 mt-12 text-center">
+      {/* Call to Action - spójny z Hero i QuickSearchBar */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 mt-12 text-center">
         <Link 
           href="/dywaniki"
-          className="inline-flex items-center justify-center px-4 py-2.5 md:px-8 md:py-4 text-sm md:text-base font-bold text-white transition-all duration-300 bg-red-600 hover:bg-red-700 rounded-full shadow-lg hover:shadow-xl hover:shadow-red-900/30 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black"
+          className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 text-sm md:text-base font-bold text-white transition-all duration-300 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 rounded-full shadow-xl shadow-red-900/30 hover:scale-105 hover:shadow-2xl hover:shadow-red-600/20 active:scale-95 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-neutral-950 min-h-[44px]"
+          aria-label="Sprawdź dostępność dywaników dla Twojego auta"
         >
           Sprawdź Dostępność Dla Twojego Auta
         </Link>

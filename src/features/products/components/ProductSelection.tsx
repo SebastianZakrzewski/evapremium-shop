@@ -1,19 +1,24 @@
-"use client";
+"use client"
 
-import React, { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import ImageCarousel from '@/components/ImageCarousel';
-import { BrandCard } from '@/components/ui/BrandCard';
-import { Brand } from '@/entities/car';
-import { Car, Loader2 } from 'lucide-react';
-import { useBrands } from "@/features/brands/hooks/useBrands";
+import React, { useState, useCallback, useMemo } from "react"
+import { useRouter } from "next/navigation"
+import BrandsScrollingCarousel from "@/components/brands/BrandsScrollingCarousel"
+import { Brand } from "@/entities/car"
+import { Loader2, Search } from "lucide-react"
+import { useBrands } from "@/features/brands/hooks/useBrands"
 
 export default function ProductSelection() {
-  const router = useRouter();
-  const [clickedCardId, setClickedCardId] = useState<number | null>(null);
+  const router = useRouter()
+  const [clickedCardId, setClickedCardId] = useState<number | null>(null)
+  const [search, setSearch] = useState("")
 
-  // Użyj hooka useBrands do pobierania marek
-  const { brands, isLoading: loading, error } = useBrands();
+  const { brands, isLoading: loading, error } = useBrands()
+
+  const filteredBrands = useMemo(() => {
+    if (!search.trim()) return brands
+    const term = search.toLowerCase().trim()
+    return brands.filter((b) => b.name.toLowerCase().includes(term))
+  }, [brands, search])
 
   const handleBrandClick = useCallback((brand: Brand) => {
     setClickedCardId(brand.id);
@@ -30,39 +35,50 @@ export default function ProductSelection() {
 
   if (loading) {
     return (
-      <section id="products" className="bg-neutral-950 py-8 md:py-12 flex items-center justify-center min-h-screen">
-        <div className="w-full max-w-7xl mx-auto px-4 text-center">
-          <div className="flex flex-col items-center justify-center min-h-[400px]">
+      <section
+        id="products"
+        className="w-full bg-neutral-950 py-20 md:py-24 flex items-center justify-center relative"
+        role="region"
+        aria-label="Popularne marki samochodów - ładowanie"
+      >
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+          <div className="flex flex-col items-center justify-center min-h-[300px]">
             <Loader2 className="w-12 h-12 text-red-500 animate-spin mb-4" />
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
-              Popularne Marki Samochodów
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+              Popularne marki <span className="text-red-500">samochodów</span>
             </h2>
-            <p className="text-gray-300 text-xl">
+            <p className="text-sm sm:text-base md:text-lg text-gray-300">
               Ładowanie dostępnych marek...
             </p>
           </div>
         </div>
       </section>
-    );
+    )
   }
 
   return (
-    <section id="products" className="bg-neutral-950 py-8 md:py-12 flex items-center justify-center min-h-screen">
-      <div className="w-full max-w-7xl mx-auto px-4">
-        {/* Nagłówek sekcji */}
-        <div className="text-center mb-6 md:mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-6 animate-bounce-in">
-            <Car className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 animate-fade-in">
-            Popularne Marki Samochodów
+    <section
+      id="products"
+      className="w-full bg-neutral-950 py-20 md:py-24 relative"
+      role="region"
+      aria-label="Popularne marki samochodów - wybierz markę i znajdź dywaniki"
+    >
+      {/* Gradient line top - spójność z innymi sekcjami */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        {/* Nagłówek sekcji - spójny z QuickSearchBar, ProductGallery, AdvantagesSection */}
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 md:mb-6 leading-tight break-words px-2">
+            Popularne marki <span className="text-red-500">samochodów</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto animate-fade-in-delay">
+          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed px-2">
             Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
           </p>
-          <div className="mt-6 text-xs md:text-sm text-gray-400 animate-fade-in-delay-2 px-4">
-            <span className="bg-gray-800/50 px-3 py-2 md:px-4 md:py-2 rounded-full border border-gray-700 inline-block max-w-full md:max-w-none whitespace-normal break-words text-center leading-relaxed">
-              🚗 Dostępne marki: {brands.length} producentów samochodów
+          <div className="mt-6 text-xs md:text-sm text-gray-400 px-4">
+            <span className="bg-white/5 backdrop-blur-md border border-white/10 px-3 py-2 md:px-4 md:py-2 rounded-full inline-block max-w-full md:max-w-none whitespace-normal break-words text-center leading-relaxed">
+              Dostępne marki: {brands.length} producentów samochodów
             </span>
           </div>
           {error && (
@@ -72,21 +88,32 @@ export default function ProductSelection() {
           )}
         </div>
 
-        {/* Karuzela */}
-        <div className="animate-slide-in-left">
-          <ImageCarousel<Brand>
-            items={brands}
-            onItemClick={handleBrandClick}
-            renderItem={(brand, index, position) => (
-              <BrandCard 
-                brand={brand} 
-                className={`${position} ${clickedCardId === brand.id ? 'animate-click' : ''}`}
-                isPriority={index < 3 && position === 'center'} // Priority tylko dla pierwszych 3 widocznych na środku
-              />
-            )}
+        {/* Wyszukiwarka marek */}
+        <div className="relative mb-6 w-full max-w-xs mx-auto">
+          <input
+            type="text"
+            placeholder="Szukaj marki..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-4 pr-10 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all"
+            aria-label="Szukaj marki samochodu"
           />
+          <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
         </div>
 
+        {/* Karuzela z płynnym przewijaniem - jak galeria produktów */}
+        {filteredBrands.length > 0 ? (
+          <BrandsScrollingCarousel
+            brands={filteredBrands}
+            onBrandClick={handleBrandClick}
+            clickedCardId={clickedCardId}
+          />
+        ) : (
+          <div className="text-center py-16 text-gray-400">
+            <p className="text-sm md:text-base">Brak wyników dla &quot;{search}&quot;</p>
+            <p className="text-xs mt-2">Spróbuj wpisać inną nazwę marki</p>
+          </div>
+        )}
       </div>
     </section>
   );

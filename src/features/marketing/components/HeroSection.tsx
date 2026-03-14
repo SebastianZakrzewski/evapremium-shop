@@ -14,6 +14,7 @@ type HeroSlide = {
   benefits: string[];
   video?: string;
   image?: string;
+  imageAlt?: string;
   isImageSlide?: boolean;
 };
 
@@ -29,15 +30,16 @@ const heroSlides: HeroSlide[] = [
   },
   {
     id: 2,
-    title: "",
-    subtitle: "",
+    title: "Odkryj naszą kolekcję",
+    subtitle: "Setki modeli aut, precyzyjne dopasowanie do każdego wnętrza",
     image: "/hero2.png",
-    cta: "",
+    imageAlt: "Dywaniki samochodowe EVA Premium - kolekcja produktów",
+    cta: "Zobacz produkty",
     price: "",
     benefits: [],
     isImageSlide: true
   }
-];
+]
 
 // Funkcja do wykrywania odpowiedniego formatu video
 const getVideoSource = (baseVideo: string, isMobile: boolean, isHighDpi: boolean) => {
@@ -55,6 +57,7 @@ export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isHighDpi, setIsHighDpi] = useState(false);
+  const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
 
   // Wykrywanie typu urządzenia
   useEffect(() => {
@@ -95,6 +98,13 @@ export default function HeroSection() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [goToNext, goToPrev]);
 
+  // Autoplay z pauzą przy hover/focus
+  useEffect(() => {
+    if (isAutoplayPaused) return
+    const interval = setInterval(goToNext, 6000)
+    return () => clearInterval(interval)
+  }, [currentSlide, isAutoplayPaused, goToNext])
+
   // Określ które slajdy renderować (tylko aktywny + następny dla lazy loading)
   const visibleSlides = useMemo(() => {
     const slides: number[] = [currentSlide];
@@ -105,8 +115,18 @@ export default function HeroSection() {
     return slides;
   }, [currentSlide]);
 
+  const handlePauseAutoplay = useCallback(() => setIsAutoplayPaused(true), [])
+  const handleResumeAutoplay = useCallback(() => setIsAutoplayPaused(false), [])
+
   return (
-    <section className="relative min-h-[750px] md:min-h-[550px] h-auto md:h-[70vh] overflow-visible md:overflow-hidden pt-24 md:pt-0 pb-20 md:pb-0 bg-neutral-950">
+    <section
+      className="relative min-h-[85vh] md:min-h-[550px] h-auto md:h-[70vh] overflow-visible md:overflow-hidden pt-24 md:pt-0 pb-20 md:pb-0 bg-neutral-950"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Sekcja promocyjna - dywaniki samochodowe"
+      onMouseEnter={handlePauseAutoplay}
+      onMouseLeave={handleResumeAutoplay}
+    >
       {/* Phone number - Mobile only */}
       <div className="md:hidden absolute top-4 left-0 right-0 z-30 px-4">
         <a 
@@ -119,7 +139,7 @@ export default function HeroSection() {
       </div>
 
       {/* Carousel */}
-      <div className="container mx-auto px-4 relative min-h-[750px] md:h-full py-12 md:py-0">
+      <div className="container mx-auto px-4 relative min-h-[85vh] md:min-h-0 md:h-full py-12 md:py-0">
         {heroSlides.map((slide, index) => {
           const isVisible = visibleSlides.includes(index);
           const isActive = index === currentSlide;
@@ -140,13 +160,13 @@ export default function HeroSection() {
             >
               {/* Background - Video or Image */}
               <div className="absolute inset-0 w-full h-full flex justify-center items-center p-4 md:p-8">
-                <div className="w-full h-full relative rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 min-h-[650px] md:min-h-0">
+                <div className="w-full h-full relative rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 min-h-[60vh] md:min-h-0">
                   {isImageSlide && slide.image ? (
                     <>
                       <div className="absolute inset-0 bg-neutral-950">
                         <Image
                           src={slide.image}
-                          alt=""
+                          alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
                           fill
                           className="object-contain object-center"
                           priority={index === 1}
@@ -155,7 +175,7 @@ export default function HeroSection() {
                         />
                       </div>
                       {/* Radial Overlay */}
-                      <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/20 to-black/60"></div>
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.2)_50%,rgba(0,0,0,0.6)_100%)]"></div>
                     </>
                   ) : (
                     <>
@@ -181,14 +201,14 @@ export default function HeroSection() {
                         Your browser does not support the video tag.
                       </video>
                       {/* Premium Radial Overlay - Focus center */}
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent via-black/20 to-black/50"></div>
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.2)_50%,rgba(0,0,0,0.5)_100%)]"></div>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/15"></div>
                     </>
                   )}
                   
                   {/* Content */}
-                  {!isImageSlide && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 md:p-12 text-white">
+                  {(!isImageSlide || slide.title || slide.cta) && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 md:p-12 text-white" aria-live="polite" aria-atomic="true">
                       <div className="max-w-4xl mx-auto space-y-5 md:space-y-8 w-full px-3">
                         {slide.title && (
                           <h1 className={`text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-tight animate-fade-up break-words mb-2 drop-shadow-2xl`}>
@@ -200,6 +220,13 @@ export default function HeroSection() {
                           <p className={`text-sm sm:text-base md:text-xl lg:text-2xl font-light tracking-wide max-w-2xl mx-auto animate-fade-in-delay mb-3 text-gray-200 drop-shadow-lg`}>
                             {slide.subtitle}
                           </p>
+                        )}
+                        
+                        {/* Price badge */}
+                        {slide.price && (
+                          <div className="animate-fade-in-delay inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-lg font-semibold text-white mb-4">
+                            {slide.price}
+                          </div>
                         )}
                         
                         {/* Benefits Chips */}
@@ -224,11 +251,11 @@ export default function HeroSection() {
                             <button 
                               onClick={() => {
                                 if (slide.cta === "Skonfiguruj swój zestaw") {
-                                  router.push('/dywaniki');
+                                  router.push('/dywaniki')
                                 } else {
-                                  const element = document.getElementById('products');
+                                  const element = document.getElementById('products')
                                   if (element) {
-                                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
                                   }
                                 }
                               }}
@@ -244,17 +271,19 @@ export default function HeroSection() {
                               </span>
                             </button>
                             
-                            <button 
-                              onClick={() => {
-                                const element = document.getElementById('3d-mats-section');
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                }
-                              }}
-                              className="glass-button px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-semibold tracking-wide hover:bg-white/10 hover:border-white/40 w-full sm:w-auto"
-                            >
-                              Dowiedz się więcej
-                            </button>
+                            {!isImageSlide && (
+                              <button 
+                                onClick={() => {
+                                  const element = document.getElementById('3d-mats-section')
+                                  if (element) {
+                                    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                                  }
+                                }}
+                                className="glass-button px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-semibold tracking-wide hover:bg-white/10 hover:border-white/40 w-full sm:w-auto"
+                              >
+                                Dowiedz się więcej
+                              </button>
+                            )}
                           </div>
                         )}
                       </div>
@@ -267,10 +296,10 @@ export default function HeroSection() {
         })}
       </div>
 
-      {/* Navigation Arrows */}
+      {/* Navigation Arrows - widoczne na mobile i desktop */}
       <button
         onClick={goToPrev}
-        className="absolute left-6 top-1/2 transform -translate-y-1/2 glass-button p-3 rounded-full hover:bg-white/20 transition-all z-20 group opacity-0 md:opacity-100"
+        className="absolute left-2 md:left-6 top-1/2 transform -translate-y-1/2 glass-button p-2.5 md:p-3 rounded-full hover:bg-white/20 transition-all z-20 group min-w-[44px] min-h-[44px] flex items-center justify-center opacity-80 md:opacity-100"
         aria-label="Poprzedni slajd"
       >
         <svg className="w-5 h-5 text-white group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -280,7 +309,7 @@ export default function HeroSection() {
       
       <button
         onClick={goToNext}
-        className="absolute right-6 top-1/2 transform -translate-y-1/2 glass-button p-3 rounded-full hover:bg-white/20 transition-all z-20 group opacity-0 md:opacity-100"
+        className="absolute right-2 md:right-6 top-1/2 transform -translate-y-1/2 glass-button p-2.5 md:p-3 rounded-full hover:bg-white/20 transition-all z-20 group min-w-[44px] min-h-[44px] flex items-center justify-center opacity-80 md:opacity-100"
         aria-label="Następny slajd"
       >
         <svg className="w-5 h-5 text-white group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -288,18 +317,27 @@ export default function HeroSection() {
         </svg>
       </button>
 
-      {/* Indicators */}
-      <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
+      {/* Indicators - touch targets min 44px */}
+      <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-1 z-20" role="tablist" aria-label="Nawigacja slajdów">
         {heroSlides.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`h-1.5 rounded-full transition-all duration-500 ${
-              index === currentSlide ? "w-8 bg-white" : "w-2 bg-white/30 hover:bg-white/50"
-            }`}
+            className="relative p-3 -m-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-white/5 transition-colors"
             aria-label={`Przejdź do slajdu ${index + 1}`}
-          />
+            aria-selected={index === currentSlide}
+            role="tab"
+          >
+            <span
+              className={`block h-1.5 rounded-full transition-all duration-500 ${
+                index === currentSlide ? "w-8 bg-white" : "w-2 bg-white/30 hover:bg-white/50"
+              }`}
+            />
+          </button>
         ))}
+        <span className="sr-only" aria-live="polite">
+          Slajd {currentSlide + 1} z {heroSlides.length}
+        </span>
       </div>
     </section>
   );

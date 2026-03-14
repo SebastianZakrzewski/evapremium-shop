@@ -43,7 +43,7 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
                 transition-transform duration-700 ease-out will-change-transform
                 group-hover:scale-110
                 ${isBrandImage ? 'object-cover object-center' : 'object-contain p-8'}
-                opacity-90 group-hover:opacity-100
+                opacity-100 brightness-110 group-hover:brightness-125
               `}
               sizes="(max-width: 768px) 224px 320px, 288px 448px"
               priority={isPriority}
@@ -68,9 +68,9 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
             </div>
           )}
           
-          {/* Gradient Overlays */}
-          <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90`} />
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+          {/* Gradient Overlays - zmniejszona intensywność dla jaśniejszych zdjęć */}
+          <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-50 transition-opacity duration-500 group-hover:opacity-60`} />
+          <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
         </div>
       
       {/* Shine Effect */}

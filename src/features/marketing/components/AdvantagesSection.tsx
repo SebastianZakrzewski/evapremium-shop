@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Target, Sparkles, Zap, Star, ArrowRight, Package } from "lucide-react";
+import { ArrowRight } from "lucide-react"
 import Image from "next/image";
 
 const advantagesItems = [
@@ -10,7 +10,6 @@ const advantagesItems = [
     src: "/images/zalety/dywanik_z_rantami.png",
     title: "Dywaniki 3D z rantami",
     description: "Zaawansowana technologia 3D zapewnia doskonałe dopasowanie i trwałość",
-    icon: Sparkles,
     targetSection: "3d-mats-section"
   },
   {
@@ -18,7 +17,6 @@ const advantagesItems = [
     src: "/images/zalety/szycie.png",
     title: "Szyte na miarę",
     description: "Każdy dywanik jest precyzyjnie dopasowany do konkretnego modelu samochodu",
-    icon: Target,
     targetSection: "custom-fit-section"
   },
   {
@@ -26,7 +24,6 @@ const advantagesItems = [
     src: "/kolory.png",
     title: "Różnorodna kolorystyka",
     description: "Szeroka paleta kolorów dopasowana do wnętrza Twojego auta",
-    icon: Star,
     targetSection: "roznorodna-kolorystyka-section"
   },
   {
@@ -34,10 +31,9 @@ const advantagesItems = [
     src: "/images/zalety/pianka.webp",
     title: "Nowoczesny Materiał EVA",
     description: "Specjalna struktura materiału EVA skutecznie zatrzymuje brud i wilgoć",
-    icon: Zap,
     targetSection: "gleboka-struktura-komorek-section"
   }
-];
+]
 
 export default function AdvantagesSection() {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
@@ -68,102 +64,101 @@ export default function AdvantagesSection() {
     }
   };
 
-  return (
-    <section id="advantages-section" className="py-12 md:py-16 bg-neutral-950 relative overflow-x-hidden overflow-y-visible">
-      {/* Background Gradients */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-900/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-900/5 rounded-full blur-3xl"></div>
-      </div>
+  const handleCardKeyDown = (e: React.KeyboardEvent, targetId: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      handleItemClick(targetId)
+    }
+  }
 
-      {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-800/5"></div>
-      
-      {/* Animowane cząsteczki */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
-      </div>
-      
-      <div className="container mx-auto px-4 md:px-4 relative z-10">
-        {/* Header */}
+  return (
+    <section
+      id="advantages-section"
+      className="w-full bg-neutral-950 py-20 md:py-24 relative overflow-x-hidden overflow-y-visible"
+      role="region"
+      aria-label="Poznaj nasz produkt - zalety dywaników EVA Premium"
+    >
+      {/* Gradient line top - spójność z QuickSearchBar i ProductGallery */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        {/* Header - spójny z QuickSearchBar i ProductGallery */}
         <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-8 animate-pulse-glow shadow-lg shadow-red-500/30 transition-all duration-1000 ease-out" style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
-            <Package className="w-10 h-10 text-white" />
-          </div>
-          <h1 className={`text-4xl md:text-6xl font-bold text-white mb-6 bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent leading-tight transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
-            POZNAJ NASZ PRODUKT
-          </h1>
-          <h2 className={`text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
-            Tworzymy dywaniki samochodowe, które łączą w sobie bezkompromisową jakość, nowoczesny design i maksymalną funkcjonalność. Odkryj unikalne rozwiązania, które podniosą standard Twojej codziennej jazdy.
+          <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 md:mb-6 leading-tight break-words px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
+            Poznaj nasz <span className="text-red-500">produkt</span>
           </h2>
+          <p className={`text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
+            Tworzymy dywaniki samochodowe, które łączą w sobie bezkompromisową jakość, nowoczesny design i maksymalną funkcjonalność. Odkryj unikalne rozwiązania, które podniosą standard Twojej codziennej jazdy.
+          </p>
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {advantagesItems.map((item, index) => {
-            const Icon = item.icon;
             const isHoveredState = hoveredItem === item.id;
             
             return (
               <div
                 key={item.id}
+                role="button"
+                tabIndex={0}
                 className={`
-                  group relative cursor-pointer rounded-2xl md:rounded-3xl p-1.5 md:p-2 transition-all duration-500 ease-out
+                  group relative cursor-pointer rounded-3xl transition-all duration-500 ease-out h-full
                   ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 md:translate-y-20'}
                 `}
                 style={{ transitionDelay: `${index * 100}ms` }}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
                 onClick={() => handleItemClick(item.targetSection)}
+                onKeyDown={(e) => handleCardKeyDown(e, item.targetSection)}
+                aria-label={`${item.title} - ${item.description}. Kliknij, aby zobaczyć więcej.`}
               >
                 {/* Card Content */}
                 <div className={`
-                  relative h-full bg-gray-900/40 backdrop-blur-md border border-white/5 rounded-xl md:rounded-2xl overflow-hidden
+                  relative h-full flex flex-col
+                  bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden
                   transition-all duration-500
-                  ${isHoveredState ? 'bg-gray-800/60 border-red-500/30 transform -translate-y-1 md:-translate-y-2 shadow-xl md:shadow-2xl shadow-red-900/20' : 'hover:border-white/10'}
+                  ${isHoveredState 
+                    ? 'bg-white/10 border-red-500/30 transform -translate-y-2 shadow-2xl shadow-red-900/20' 
+                    : 'hover:border-white/20 shadow-xl shadow-black/50'}
                 `}>
                   
                   {/* Image Area */}
-                  <div className="relative h-48 w-full overflow-hidden bg-neutral-950">
+                  <div className="relative h-56 w-full overflow-hidden bg-neutral-900/50">
                     <Image
                       src={item.src}
                       alt={item.title}
                       fill
                       className={`object-cover transition-transform duration-700 ${isHoveredState ? 'scale-110' : 'scale-100'}`}
                     />
-                    <div className={`absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent transition-opacity duration-500 ${isHoveredState ? 'opacity-80' : 'opacity-60'}`}></div>
+                    {/* Gradient Overlay - spójny z BrandCard */}
+                    <div className={`absolute inset-0 bg-gradient-to-t from-neutral-900 via-transparent to-transparent transition-opacity duration-500 ${isHoveredState ? 'opacity-60' : 'opacity-80'}`}></div>
                     
-                    {/* Icon Badge */}
-                    <div className={`
-                      absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center
-                      bg-white/10 backdrop-blur-md border border-white/20 text-white
-                      transition-all duration-500
-                      ${isHoveredState ? 'bg-red-600 border-red-500 scale-110 rotate-12' : ''}
-                    `}>
-                      <Icon className="w-5 h-5" />
+                    {/* Shine Effect - spójny z BrandCard */}
+                    <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                      <div className="absolute inset-0 transform -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                     </div>
                   </div>
 
                   {/* Text Area */}
-                  <div className="p-4 md:p-6">
-                    <h3 className={`
-                      text-lg md:text-xl font-bold mb-2 transition-colors duration-300
-                      ${isHoveredState ? 'text-white' : 'text-gray-200'}
-                    `}>
-                      {item.title}
-                    </h3>
-                    <p className="text-xs md:text-sm text-gray-400 leading-relaxed mb-3 md:mb-4">
-                      {item.description}
-                    </p>
+                  <div className="p-6 md:p-8 flex-1 flex flex-col justify-between bg-neutral-900/30">
+                    <div>
+                      <h3 className={`
+                        text-xl font-bold mb-3 transition-colors duration-300
+                        ${isHoveredState ? 'text-white' : 'text-gray-100'}
+                      `}>
+                        {item.title}
+                      </h3>
+                      <p className="text-sm text-gray-300 leading-relaxed mb-4">
+                        {item.description}
+                      </p>
+                    </div>
                     
                     <div className={`
-                      flex items-center text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300
-                      ${isHoveredState ? 'text-red-500 translate-x-1 md:translate-x-2' : 'text-gray-600'}
+                      flex items-center text-xs font-bold uppercase tracking-wider transition-all duration-300 mt-auto
+                      ${isHoveredState ? 'text-red-500 translate-x-2' : 'text-gray-400'}
                     `}>
-                      Więcej <ArrowRight className="w-3 h-3 md:w-4 md:h-4 ml-1 md:ml-2" />
+                      Więcej <ArrowRight className="w-3 h-3 md:w-4 md:h-4 ml-2" />
                     </div>
                   </div>
                 </div>
@@ -175,6 +170,3 @@ export default function AdvantagesSection() {
     </section>
   );
 }
-
-
-
