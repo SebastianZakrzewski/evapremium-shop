@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { X, Send, User, Phone, User as UserIcon, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ContactInfo, ContactFormData } from "@/types/contact";
+import { ContactFormData } from "@/lib/integrations/bitrix24/mappers/formToLead";
 import { bitrix24Api } from "@/lib/api";
 
 interface Message {
@@ -175,7 +175,7 @@ export default function Chatbot() {
 
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!contactData.name.trim() || !contactData.phone.trim()) return;
+    if (!contactData.name.trim() || !contactData.phone?.trim()) return;
 
     setIsSubmittingContact(true);
 
@@ -196,7 +196,7 @@ export default function Chatbot() {
       // Send data to API
       const result = await bitrix24Api.sendChatMessage({
         name: contactData.name.trim(),
-        phone: contactData.phone.trim(),
+        phone: contactData.phone!.trim(),
         message: contactData.message || undefined,
       });
 
@@ -426,7 +426,7 @@ export default function Chatbot() {
                 <div className="flex space-x-3 pt-2">
                   <button
                     type="submit"
-                    disabled={!contactData.name.trim() || !contactData.phone.trim() || isSubmittingContact}
+                    disabled={!contactData.name.trim() || !contactData.phone?.trim() || isSubmittingContact}
                     className="flex-1 bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed text-white py-3 px-6 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-red-500/20 min-h-[44px]"
                   >
                     {isSubmittingContact ? (
