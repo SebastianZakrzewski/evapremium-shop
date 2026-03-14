@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Palette, CheckCircle } from "lucide-react";
+import { ArrowRight, Palette } from "lucide-react";
 import Link from "next/link";
 
 const colorVariants = [
@@ -61,17 +61,6 @@ export default function RoznorodnaKolorystykaSection() {
     <section id="roznorodna-kolorystyka-section" className="py-20 md:py-24 bg-neutral-950 relative overflow-hidden">
       {/* Gradient line top */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
-
-      {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/5 via-neutral-950 to-red-800/5 pointer-events-none"></div>
-      
-      {/* Animowane cząsteczki */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
-      </div>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
