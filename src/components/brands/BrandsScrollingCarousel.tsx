@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useCallback, useMemo } from "react"
+import React, { useState, useCallback, useMemo, useRef } from "react"
 import { motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { BrandCard } from "@/components/ui/BrandCard"
@@ -13,7 +13,8 @@ interface BrandsScrollingCarouselProps {
 }
 
 const CARD_WIDTH = 312
-const SCROLL_DISTANCE = 400
+const GAP = 24 // mx-3 = 12px * 2
+const SCROLL_DISTANCE = CARD_WIDTH + GAP
 const SCROLL_DURATION = 50
 
 export default function BrandsScrollingCarousel({
@@ -23,17 +24,20 @@ export default function BrandsScrollingCarousel({
 }: BrandsScrollingCarouselProps) {
   const [isPaused, setIsPaused] = useState(false)
   const [carouselOffset, setCarouselOffset] = useState(0)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const goToPrevious = useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
     setIsPaused(true)
     setCarouselOffset((prev) => prev + SCROLL_DISTANCE)
-    setTimeout(() => setIsPaused(false), 2000)
+    timeoutRef.current = setTimeout(() => setIsPaused(false), 2000)
   }, [])
 
   const goToNext = useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
     setIsPaused(true)
     setCarouselOffset((prev) => prev - SCROLL_DISTANCE)
-    setTimeout(() => setIsPaused(false), 2000)
+    timeoutRef.current = setTimeout(() => setIsPaused(false), 2000)
   }, [])
 
   const brandSets = useMemo(() => {
