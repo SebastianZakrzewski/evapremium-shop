@@ -61,6 +61,17 @@ const checkoutSchema = z.object({
   billingPostalCode: z.string().optional(),
   billingCity: z.string().optional(),
   billingCountry: z.string().optional(),
+  /** NIP (opcjonalnie) - polski numer identyfikacji podatkowej, 10 cyfr */
+  nip: z.string()
+    .optional()
+    .refine(
+      (val) => !val || val.trim() === '' || /^\d{10}$/.test(val.replace(/[\s-]/g, '')),
+      { message: "NIP musi składać się z 10 cyfr" }
+    )
+    .transform((val) => {
+      const cleaned = val?.replace(/[\s-]/g, '');
+      return cleaned && cleaned.length === 10 ? cleaned : undefined;
+    }),
   
   // Metoda płatności - tylko Przelewy24
   paymentMethod: z.literal("p24", {
@@ -235,6 +246,7 @@ export default function CheckoutSection() {
         lastName: contactLastName,
         email: contactEmail,
         phone: contactPhone,
+        ...(contactNip && { taxId: contactNip }),
       },
       address: addressData.street || addressData.city ? addressData : undefined, // Only include if at least street or city is filled
       car: carData,
@@ -279,6 +291,7 @@ export default function CheckoutSection() {
   const contactLastName = watch("lastName");
   const contactEmail = watch("email");
   const contactPhone = watch("phone");
+  const contactNip = watch("nip");
 
   // Załaduj zapisany kod rabatowy z localStorage przy załadowaniu checkout
   // Musi być po inicjalizacji formularza, aby mieć dostęp do setValue
@@ -684,7 +697,8 @@ export default function CheckoutSection() {
         customer: {
           name: `${customerData.firstName} ${customerData.lastName}`,
           email: customerData.email,
-          phone: customerData.phone
+          phone: customerData.phone,
+          ...(data.nip && { taxId: data.nip })
         },
         shippingAddress: {
           street: customerData.address,
@@ -1079,6 +1093,30 @@ export default function CheckoutSection() {
 
                     {/* Billing address */}
                     <div className="pt-4 border-t">
+                      <div className="space-y-4 mb-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="nip" className="text-neutral-200 font-medium text-base">
+                            NIP na fakturę (opcjonalnie)
+                          </Label>
+                          <Input
+                            id="nip"
+                            {...register("nip")}
+                            placeholder="np. 1234567890"
+                            maxLength={13}
+                            className={`min-h-[48px] h-12 bg-gray-600/40 border-gray-500 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                              errors.nip ? "border-red-500 bg-red-900/20" : ""
+                            }`}
+                          />
+                          {errors.nip && (
+                            <p className="text-red-400 text-sm mt-2">
+                              {errors.nip.message}
+                            </p>
+                          )}
+                          <p className="text-neutral-400 text-xs">
+                            Wpisz NIP, jeśli potrzebujesz faktury VAT na firmę
+                          </p>
+                        </div>
+                      </div>
                       <div className="flex items-center space-x-2 mb-4">
                         <Checkbox
                           id="sameAsShipping"

@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import Chatbot from "@/features/chatbot/components/Chatbot";
 import Script from "next/script";
 import { SessionProvider } from "@/lib/contexts/session-context";
 import { TrackingProvider } from "@/components/tracking-provider";
 import { QueryProvider } from "@/lib/providers/query-provider";
+import Chatbot from "@/features/chatbot/components/Chatbot";
 
 const inter = Inter({
   variable: "--font-inter",

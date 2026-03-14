@@ -7,6 +7,7 @@ export const abandonedCartContactSchema = z.object({
   phone: z.string().min(5).max(32).optional(),
   firstName: z.string().max(64).optional(),
   lastName: z.string().max(64).optional(),
+  taxId: z.string().max(16).optional(), // NIP na fakturę
 }).strict().partial();
 
 export const abandonedCartCarSchema = z.object({

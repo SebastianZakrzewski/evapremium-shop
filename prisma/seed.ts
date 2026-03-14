@@ -19,7 +19,6 @@ const matsData = [
   { color: "darkgrey",   image: "/images/konfigurator/dywaniki/3d/romby/czarne/5os-3d-diamonds-darkgrey-black.webp" },
   { color: "brown",      image: "/images/konfigurator/dywaniki/3d/romby/czarne/5os-3d-diamonds-brown-black.webp" },
   { color: "black",      image: "/images/konfigurator/dywaniki/3d/romby/czarne/5os-3d-diamonds-black-black (1).webp" },
-  { color: "maroon",     image: "/images/konfigurator/dywaniki/3d/romby/czarne/5os-3d-diamonds-maroon-black copy.webp" },
 ];
 
 async function main() {

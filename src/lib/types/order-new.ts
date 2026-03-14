@@ -47,6 +47,8 @@ export interface CustomerData {
   email: string;
   phone: string;
   company?: string;
+  /** NIP (Polish tax ID) for invoice - optional */
+  taxId?: string;
 }
 
 export interface AddressData {

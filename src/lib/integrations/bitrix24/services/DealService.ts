@@ -520,12 +520,13 @@ export class DealService {
     
     // Add contact information
     if (cart.contact) {
-      const c = cart.contact;
+      const c = cart.contact as { firstName?: string; lastName?: string; email?: string; phone?: string; taxId?: string };
       if (c.firstName || c.lastName) {
         commentsLines.push(`Kontakt: ${c.firstName || ''} ${c.lastName || ''}`.trim());
       }
       if (c.email) commentsLines.push(`Email: ${c.email}`);
       if (c.phone) commentsLines.push(`Telefon: ${c.phone}`);
+      if (c.taxId) commentsLines.push(`NIP: ${c.taxId}`);
     }
 
     // Add address information

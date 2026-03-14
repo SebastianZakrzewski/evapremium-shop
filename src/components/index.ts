@@ -43,7 +43,6 @@ export { default as PageHeroBanner } from './page-hero-banner';
 export { default as ModelNavigationBar } from './model-navigation-bar';
 export { default as SearchDropdown } from './search-dropdown';
 export { TrackingProvider } from './tracking-provider';
-export { default as Chatbot } from './Chatbot';
 
 // Re-exports from features (for backward compatibility)
 export { CartModal, CartModalWrapper, CartItem } from '@/features/shopping-cart';

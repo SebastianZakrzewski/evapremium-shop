@@ -17,7 +17,6 @@ interface Message {
 export default function Chatbot() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const chatWindowRef = useRef<HTMLDivElement>(null);
@@ -57,18 +56,6 @@ export default function Chatbot() {
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
-    }
-  }, [isOpen]);
-
-  // Show tooltip after 3 seconds if chat is not open
-  useEffect(() => {
-    if (!isOpen) {
-      const timer = setTimeout(() => {
-        setShowTooltip(true);
-      }, 3000);
-      return () => clearTimeout(timer);
-    } else {
-      setShowTooltip(false);
     }
   }, [isOpen]);
 
@@ -166,17 +153,16 @@ export default function Chatbot() {
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate bot response and show contact form
+    // Simulate bot response (contact form disabled for now)
     setTimeout(() => {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Dziękuję za wiadomość! Aby móc Ci pomóc, zostaw proszę swoje dane kontaktowe:",
+        text: "Dziękuję za wiadomość! Skontaktuję się z Tobą wkrótce.",
         sender: "bot",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, botResponse]);
       setIsTyping(false);
-      setShowContactForm(true);
     }, 1500);
   };
 
@@ -254,33 +240,12 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Floating Chat Button with Tooltip */}
+      {/* Floating Chat Button */}
       <div className={`fixed bottom-4 md:bottom-6 z-50 transition-all duration-300 pb-safe ${isCartOpen ? 'left-4 md:left-6' : 'right-4 md:right-6'}`}>
-        {/* Tooltip - ukryty na bardzo małych ekranach */}
-        {showTooltip && !isOpen && (
-          <div className={`absolute bottom-20 md:bottom-20 bg-neutral-900 text-white px-3 py-2 md:px-5 md:py-3 rounded-xl shadow-2xl border border-white/10 max-w-[200px] sm:max-w-sm animate-bounce sm:block ${isCartOpen ? 'left-0' : 'right-0'}`}>
-            <div className="flex items-center space-x-2 md:space-x-3">
-              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden flex-shrink-0 bg-red-600 flex items-center justify-center">
-                <MessageCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs md:text-sm font-semibold text-white">Potrzebujesz pomocy?</p>
-                <p className="text-[10px] md:text-xs text-neutral-400 hidden sm:block">Kliknij aby porozmawiać z Klaudią</p>
-                <p className="text-[10px] md:text-xs text-neutral-400 sm:hidden">Kliknij tutaj</p>
-              </div>
-            </div>
-            {/* Arrow pointing down */}
-            <div className={`absolute top-full w-0 h-0 border-l-6 border-r-6 border-t-6 border-l-transparent border-r-transparent border-t-neutral-900 ${isCartOpen ? 'left-6' : 'right-6'}`}></div>
-          </div>
-        )}
-        
         <button
           onClick={() => {
             setIsOpen(!isOpen);
-            setShowTooltip(false);
           }}
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
           className={`w-16 h-16 md:w-20 md:h-20 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 relative overflow-hidden border border-white/10 flex items-center justify-center ${
             isOpen
               ? "bg-neutral-900 text-white hover:bg-neutral-800"

@@ -12,6 +12,16 @@ button, a, input, select, textarea, [role="button"] {
   -webkit-touch-callout: none;
 }
 
+/* Enforce pointer cursor on interactive elements */
+button, a, [role="button"], label, select, summary, input[type="checkbox"], input[type="radio"], input[type="submit"], input[type="button"], input[type="reset"] {
+  cursor: pointer;
+}
+
+/* Disabled state cursor */
+button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"], input:disabled, select:disabled, textarea:disabled {
+  cursor: not-allowed;
+}
+
 /* Improve touch targets */
 @media (hover: none) and (pointer: coarse) {
   button, a, input, select, textarea, [role="button"] {

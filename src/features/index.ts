@@ -16,5 +16,3 @@ export * from './orders';
 // Product Gallery feature
 export * from './product-gallery';
 
-// Chatbot feature
-export * from './chatbot';

@@ -56,13 +56,6 @@
     "needsCleaning": false
   },
   {
-    "id": 1905,
-    "brand_name": "Alfa romeo",
-    "model_name_original": "Brera/Spider",
-    "model_name_cleaned": "Brera/Spider",
-    "needsCleaning": false
-  },
-  {
     "id": 1906,
     "brand_name": "Alfa romeo",
     "model_name_original": "Giulietta",
@@ -161,65 +154,9 @@
     "needsCleaning": true
   },
   {
-    "id": 1921,
-    "brand_name": "Audi",
-    "model_name_original": "80 B4",
-    "model_name_cleaned": "80",
-    "needsCleaning": true
-  },
-  {
-    "id": 1922,
-    "brand_name": "Audi",
-    "model_name_original": "80 B4",
-    "model_name_cleaned": "80",
-    "needsCleaning": true
-  },
-  {
     "id": 1923,
     "brand_name": "Audi",
     "model_name_original": "A4 B5 /S4/RS4",
-    "model_name_cleaned": "A4",
-    "needsCleaning": true
-  },
-  {
-    "id": 1924,
-    "brand_name": "Audi",
-    "model_name_original": "A4 B6/S4",
-    "model_name_cleaned": "A4",
-    "needsCleaning": true
-  },
-  {
-    "id": 1925,
-    "brand_name": "Audi",
-    "model_name_original": "A4 B6/S4",
-    "model_name_cleaned": "A4",
-    "needsCleaning": true
-  },
-  {
-    "id": 1926,
-    "brand_name": "Audi",
-    "model_name_original": "A4 B7 /S4/RS4",
-    "model_name_cleaned": "A4",
-    "needsCleaning": true
-  },
-  {
-    "id": 1927,
-    "brand_name": "Audi",
-    "model_name_original": "A4 B7 /S4/RS4",
-    "model_name_cleaned": "A4",
-    "needsCleaning": true
-  },
-  {
-    "id": 1928,
-    "brand_name": "Audi",
-    "model_name_original": "A4 B8 /S4/RS4",
-    "model_name_cleaned": "A4",
-    "needsCleaning": true
-  },
-  {
-    "id": 1929,
-    "brand_name": "Audi",
-    "model_name_original": "A4 B9/S4",
     "model_name_cleaned": "A4",
     "needsCleaning": true
   },
@@ -231,93 +168,9 @@
     "needsCleaning": true
   },
   {
-    "id": 1931,
-    "brand_name": "Audi",
-    "model_name_original": "A5 8T /S5/RS5",
-    "model_name_cleaned": "A5",
-    "needsCleaning": true
-  },
-  {
-    "id": 1932,
-    "brand_name": "Audi",
-    "model_name_original": "A5 Sportback (8T)/S5/RS5",
-    "model_name_cleaned": "A5",
-    "needsCleaning": true
-  },
-  {
-    "id": 1933,
-    "brand_name": "Audi",
-    "model_name_original": "A5",
-    "model_name_cleaned": "A5",
-    "needsCleaning": false
-  },
-  {
-    "id": 1934,
-    "brand_name": "Audi",
-    "model_name_original": "A5 F5 /S5",
-    "model_name_cleaned": "A5",
-    "needsCleaning": true
-  },
-  {
-    "id": 1935,
-    "brand_name": "Audi",
-    "model_name_original": "A5 F5",
-    "model_name_cleaned": "A5",
-    "needsCleaning": true
-  },
-  {
-    "id": 1936,
-    "brand_name": "Audi",
-    "model_name_original": "A5 B10",
-    "model_name_cleaned": "A5",
-    "needsCleaning": true
-  },
-  {
-    "id": 1937,
-    "brand_name": "Audi",
-    "model_name_original": "A5 B10",
-    "model_name_cleaned": "A5",
-    "needsCleaning": true
-  },
-  {
     "id": 1938,
     "brand_name": "Audi",
     "model_name_original": "A6 C4 /S6",
-    "model_name_cleaned": "A6",
-    "needsCleaning": true
-  },
-  {
-    "id": 1939,
-    "brand_name": "Audi",
-    "model_name_original": "A6 C5 /S6/RS6",
-    "model_name_cleaned": "A6",
-    "needsCleaning": true
-  },
-  {
-    "id": 1940,
-    "brand_name": "Audi",
-    "model_name_original": "A6 C6 /S6/RS6",
-    "model_name_cleaned": "A6",
-    "needsCleaning": true
-  },
-  {
-    "id": 1941,
-    "brand_name": "Audi",
-    "model_name_original": "A6 C7( ALLROAD) / S6 /RS6",
-    "model_name_cleaned": "A6",
-    "needsCleaning": true
-  },
-  {
-    "id": 1942,
-    "brand_name": "Audi",
-    "model_name_original": "A6 C8/ S6 C8",
-    "model_name_cleaned": "A6",
-    "needsCleaning": true
-  },
-  {
-    "id": 1943,
-    "brand_name": "Audi",
-    "model_name_original": "A6 C8",
     "model_name_cleaned": "A6",
     "needsCleaning": true
   },
@@ -336,44 +189,9 @@
     "needsCleaning": true
   },
   {
-    "id": 1946,
-    "brand_name": "Audi",
-    "model_name_original": "A7/RS 7",
-    "model_name_cleaned": "A7/",
-    "needsCleaning": true
-  },
-  {
     "id": 1947,
     "brand_name": "Audi",
     "model_name_original": "A8 D2/S8",
-    "model_name_cleaned": "A8",
-    "needsCleaning": true
-  },
-  {
-    "id": 1949,
-    "brand_name": "Audi",
-    "model_name_original": "A8 D2/S8 quattro",
-    "model_name_cleaned": "A8",
-    "needsCleaning": true
-  },
-  {
-    "id": 1950,
-    "brand_name": "Audi",
-    "model_name_original": "A8 D3",
-    "model_name_cleaned": "A8",
-    "needsCleaning": true
-  },
-  {
-    "id": 1952,
-    "brand_name": "Audi",
-    "model_name_original": "A8 D4",
-    "model_name_cleaned": "A8",
-    "needsCleaning": true
-  },
-  {
-    "id": 1954,
-    "brand_name": "Audi",
-    "model_name_original": "A8 D5",
     "model_name_cleaned": "A8",
     "needsCleaning": true
   },
@@ -399,13 +217,6 @@
     "needsCleaning": true
   },
   {
-    "id": 1959,
-    "brand_name": "Audi",
-    "model_name_original": "Q3/ RS Q3",
-    "model_name_cleaned": "Q3/",
-    "needsCleaning": true
-  },
-  {
     "id": 1960,
     "brand_name": "Audi",
     "model_name_original": "Q3 Sportback",
@@ -416,13 +227,6 @@
     "id": 1961,
     "brand_name": "Audi",
     "model_name_original": "Q4 E-tron",
-    "model_name_cleaned": "Q4",
-    "needsCleaning": true
-  },
-  {
-    "id": 1962,
-    "brand_name": "Audi",
-    "model_name_original": "Q4 Sportback e-tron",
     "model_name_cleaned": "Q4",
     "needsCleaning": true
   },
@@ -439,20 +243,6 @@
     "model_name_original": "Q5 SUV/SQ5",
     "model_name_cleaned": "Q5",
     "needsCleaning": true
-  },
-  {
-    "id": 1965,
-    "brand_name": "Audi",
-    "model_name_original": "Q5 Sportback/SQ5",
-    "model_name_cleaned": "Q5",
-    "needsCleaning": true
-  },
-  {
-    "id": 1966,
-    "brand_name": "Audi",
-    "model_name_original": "Q5",
-    "model_name_cleaned": "Q5",
-    "needsCleaning": false
   },
   {
     "id": 1967,
@@ -490,32 +280,11 @@
     "needsCleaning": true
   },
   {
-    "id": 1972,
-    "brand_name": "Audi",
-    "model_name_original": "TT 8J/TT RS",
-    "model_name_cleaned": "TT",
-    "needsCleaning": true
-  },
-  {
-    "id": 1973,
-    "brand_name": "Audi",
-    "model_name_original": "TT 8S/TT RS/TTS",
-    "model_name_cleaned": "TT",
-    "needsCleaning": true
-  },
-  {
     "id": 1974,
     "brand_name": "Audi",
     "model_name_original": "A1 Sportback 8X",
     "model_name_cleaned": "A1",
     "needsCleaning": true
-  },
-  {
-    "id": 1975,
-    "brand_name": "Audi",
-    "model_name_original": "A1",
-    "model_name_cleaned": "A1",
-    "needsCleaning": false
   },
   {
     "id": 1976,
@@ -532,52 +301,10 @@
     "needsCleaning": true
   },
   {
-    "id": 1978,
-    "brand_name": "Audi",
-    "model_name_original": "A3 8P / S3",
-    "model_name_cleaned": "A3",
-    "needsCleaning": true
-  },
-  {
-    "id": 1979,
-    "brand_name": "Audi",
-    "model_name_original": "A3 8V /S3/RS3",
-    "model_name_cleaned": "A3",
-    "needsCleaning": true
-  },
-  {
-    "id": 1980,
-    "brand_name": "Audi",
-    "model_name_original": "A3 8V 3 drzwi /S3/RS3",
-    "model_name_cleaned": "A3",
-    "needsCleaning": true
-  },
-  {
-    "id": 1981,
-    "brand_name": "Audi",
-    "model_name_original": "A3 8V 5 drzwi /S3/RS3",
-    "model_name_cleaned": "A3",
-    "needsCleaning": true
-  },
-  {
-    "id": 1982,
-    "brand_name": "Audi",
-    "model_name_original": "A3 8Y",
-    "model_name_cleaned": "A3",
-    "needsCleaning": true
-  },
-  {
     "id": 1983,
     "brand_name": "Audi",
     "model_name_original": "S3 8Y",
     "model_name_cleaned": "S3",
-    "needsCleaning": true
-  },
-  {
-    "id": 1984,
-    "brand_name": "Audi",
-    "model_name_original": "A3 8Y Sportback /RS3",
-    "model_name_cleaned": "A3",
     "needsCleaning": true
   },
   {
@@ -595,20 +322,6 @@
     "needsCleaning": true
   },
   {
-    "id": 1987,
-    "brand_name": "Baic",
-    "model_name_original": "Beijing 5",
-    "model_name_cleaned": "Beijing",
-    "needsCleaning": true
-  },
-  {
-    "id": 1988,
-    "brand_name": "Baic",
-    "model_name_original": "Beijing 7",
-    "model_name_cleaned": "Beijing",
-    "needsCleaning": true
-  },
-  {
     "id": 1989,
     "brand_name": "Bentley",
     "model_name_original": "Continental GT",
@@ -616,23 +329,9 @@
     "needsCleaning": true
   },
   {
-    "id": 1990,
-    "brand_name": "Bentley",
-    "model_name_original": "Continental",
-    "model_name_cleaned": "Continental",
-    "needsCleaning": false
-  },
-  {
     "id": 1991,
     "brand_name": "Bentley",
     "model_name_original": "Flying Spur 2",
-    "model_name_cleaned": "Flying",
-    "needsCleaning": true
-  },
-  {
-    "id": 1992,
-    "brand_name": "Bentley",
-    "model_name_original": "Flying Spur 3",
     "model_name_cleaned": "Flying",
     "needsCleaning": true
   },
@@ -756,35 +455,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2010,
-    "brand_name": "Bmw",
-    "model_name_original": "3 (E-36)",
-    "model_name_cleaned": "3 (E-36)",
-    "needsCleaning": false
-  },
-  {
-    "id": 2011,
-    "brand_name": "Bmw",
-    "model_name_original": "3 (E-36)",
-    "model_name_cleaned": "3 (E-36)",
-    "needsCleaning": false
-  },
-  {
     "id": 2012,
-    "brand_name": "Bmw",
-    "model_name_original": "3 (E-46)",
-    "model_name_cleaned": "3 (E-46)",
-    "needsCleaning": false
-  },
-  {
-    "id": 2013,
-    "brand_name": "Bmw",
-    "model_name_original": "3 (E-46)",
-    "model_name_cleaned": "3 (E-46)",
-    "needsCleaning": false
-  },
-  {
-    "id": 2014,
     "brand_name": "Bmw",
     "model_name_original": "3 (E-46)",
     "model_name_cleaned": "3 (E-46)",
@@ -943,13 +614,6 @@
     "model_name_original": "5 (F10) (F11)",
     "model_name_cleaned": "5 (F10)",
     "needsCleaning": true
-  },
-  {
-    "id": 2038,
-    "brand_name": "Bmw",
-    "model_name_original": "5 (F10)",
-    "model_name_cleaned": "5 (F10)",
-    "needsCleaning": false
   },
   {
     "id": 2039,
@@ -1120,25 +784,11 @@
     "needsCleaning": false
   },
   {
-    "id": 2063,
-    "brand_name": "Bmw",
-    "model_name_original": "X4 (F26) Wersja M",
-    "model_name_cleaned": "X4 (F26)",
-    "needsCleaning": true
-  },
-  {
     "id": 2064,
     "brand_name": "Bmw",
     "model_name_original": "X4 (G02)",
     "model_name_cleaned": "X4 (G02)",
     "needsCleaning": false
-  },
-  {
-    "id": 2065,
-    "brand_name": "Bmw",
-    "model_name_original": "X4 (G02) Wersja M",
-    "model_name_cleaned": "X4 (G02)",
-    "needsCleaning": true
   },
   {
     "id": 2066,
@@ -1351,13 +1001,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2096,
-    "brand_name": "Buick",
-    "model_name_original": "Enclave",
-    "model_name_cleaned": "Enclave",
-    "needsCleaning": false
-  },
-  {
     "id": 2097,
     "brand_name": "Buick",
     "model_name_original": "Encore",
@@ -1407,13 +1050,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2104,
-    "brand_name": "Byd",
-    "model_name_original": "Seal U DM-i",
-    "model_name_cleaned": "Seal",
-    "needsCleaning": true
-  },
-  {
     "id": 2105,
     "brand_name": "Byd",
     "model_name_original": "Sealion 7",
@@ -1435,25 +1071,11 @@
     "needsCleaning": true
   },
   {
-    "id": 2108,
-    "brand_name": "Cadillac",
-    "model_name_original": "Escalade 4",
-    "model_name_cleaned": "Escalade",
-    "needsCleaning": true
-  },
-  {
     "id": 2109,
     "brand_name": "Cadillac",
     "model_name_original": "SRX",
     "model_name_cleaned": "SRX",
     "needsCleaning": false
-  },
-  {
-    "id": 2110,
-    "brand_name": "Cadillac",
-    "model_name_original": "SRX 2",
-    "model_name_cleaned": "SRX",
-    "needsCleaning": true
   },
   {
     "id": 2111,
@@ -1659,20 +1281,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2141,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Aveo T255",
-    "model_name_cleaned": "Aveo",
-    "needsCleaning": true
-  },
-  {
-    "id": 2142,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Aveo T300",
-    "model_name_cleaned": "Aveo",
-    "needsCleaning": true
-  },
-  {
     "id": 2143,
     "brand_name": "Chevrolet",
     "model_name_original": "Astro",
@@ -1694,13 +1302,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2146,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Camaro",
-    "model_name_cleaned": "Camaro",
-    "needsCleaning": false
-  },
-  {
     "id": 2147,
     "brand_name": "Chevrolet",
     "model_name_original": "Captiva",
@@ -1711,41 +1312,6 @@
     "id": 2148,
     "brand_name": "Chevrolet",
     "model_name_original": "Corvette C3",
-    "model_name_cleaned": "Corvette",
-    "needsCleaning": true
-  },
-  {
-    "id": 2149,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Corvette C4",
-    "model_name_cleaned": "Corvette",
-    "needsCleaning": true
-  },
-  {
-    "id": 2150,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Corvette C5",
-    "model_name_cleaned": "Corvette",
-    "needsCleaning": true
-  },
-  {
-    "id": 2151,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Corvette C6",
-    "model_name_cleaned": "Corvette",
-    "needsCleaning": true
-  },
-  {
-    "id": 2152,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Corvette C7",
-    "model_name_cleaned": "Corvette",
-    "needsCleaning": true
-  },
-  {
-    "id": 2153,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Corvette C8",
     "model_name_cleaned": "Corvette",
     "needsCleaning": true
   },
@@ -1820,20 +1386,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2164,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Silverado USA",
-    "model_name_cleaned": "Silverado",
-    "needsCleaning": true
-  },
-  {
-    "id": 2165,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Silverado",
-    "model_name_cleaned": "Silverado",
-    "needsCleaning": false
-  },
-  {
     "id": 2166,
     "brand_name": "Chevrolet",
     "model_name_original": "Suburban 9gen. USA",
@@ -1841,28 +1393,7 @@
     "needsCleaning": true
   },
   {
-    "id": 2167,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Suburban 11gen.",
-    "model_name_cleaned": "Suburban",
-    "needsCleaning": true
-  },
-  {
-    "id": 2168,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Suburban 12gen. USA",
-    "model_name_cleaned": "Suburban",
-    "needsCleaning": true
-  },
-  {
     "id": 2169,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Tahoe",
-    "model_name_cleaned": "Tahoe",
-    "needsCleaning": false
-  },
-  {
-    "id": 2170,
     "brand_name": "Chevrolet",
     "model_name_original": "Tahoe",
     "model_name_cleaned": "Tahoe",
@@ -1884,13 +1415,6 @@
   },
   {
     "id": 2173,
-    "brand_name": "Chevrolet",
-    "model_name_original": "Volt",
-    "model_name_cleaned": "Volt",
-    "needsCleaning": false
-  },
-  {
-    "id": 2174,
     "brand_name": "Chevrolet",
     "model_name_original": "Volt",
     "model_name_cleaned": "Volt",
@@ -1925,13 +1449,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2179,
-    "brand_name": "Chrysler",
-    "model_name_original": "300C",
-    "model_name_cleaned": "300C",
-    "needsCleaning": false
-  },
-  {
     "id": 2180,
     "brand_name": "Chrysler",
     "model_name_original": "300M",
@@ -1954,13 +1471,6 @@
   },
   {
     "id": 2183,
-    "brand_name": "Chrysler",
-    "model_name_original": "Pacifica",
-    "model_name_cleaned": "Pacifica",
-    "needsCleaning": false
-  },
-  {
-    "id": 2184,
     "brand_name": "Chrysler",
     "model_name_original": "Pacifica",
     "model_name_cleaned": "Pacifica",
@@ -1995,21 +1505,7 @@
     "needsCleaning": true
   },
   {
-    "id": 2189,
-    "brand_name": "Chrysler",
-    "model_name_original": "Town/Country Grand Voyager V",
-    "model_name_cleaned": "Town/Country",
-    "needsCleaning": true
-  },
-  {
     "id": 2190,
-    "brand_name": "Chrysler",
-    "model_name_original": "Voyager",
-    "model_name_cleaned": "Voyager",
-    "needsCleaning": false
-  },
-  {
-    "id": 2191,
     "brand_name": "Chrysler",
     "model_name_original": "Voyager",
     "model_name_cleaned": "Voyager",
@@ -2023,28 +1519,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2193,
-    "brand_name": "Citroen",
-    "model_name_original": "Berlingo",
-    "model_name_cleaned": "Berlingo",
-    "needsCleaning": false
-  },
-  {
-    "id": 2194,
-    "brand_name": "Citroen",
-    "model_name_original": "Berlingo",
-    "model_name_cleaned": "Berlingo",
-    "needsCleaning": false
-  },
-  {
     "id": 2195,
-    "brand_name": "Citroen",
-    "model_name_original": "C1",
-    "model_name_cleaned": "C1",
-    "needsCleaning": false
-  },
-  {
-    "id": 2196,
     "brand_name": "Citroen",
     "model_name_original": "C1",
     "model_name_cleaned": "C1",
@@ -2065,20 +1540,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2199,
-    "brand_name": "Citroen",
-    "model_name_original": "C3",
-    "model_name_cleaned": "C3",
-    "needsCleaning": false
-  },
-  {
-    "id": 2200,
-    "brand_name": "Citroen",
-    "model_name_original": "C3",
-    "model_name_cleaned": "C3",
-    "needsCleaning": false
-  },
-  {
     "id": 2201,
     "brand_name": "Citroen",
     "model_name_original": "E-C3",
@@ -2086,70 +1547,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2202,
-    "brand_name": "Citroen",
-    "model_name_original": "C3",
-    "model_name_cleaned": "C3",
-    "needsCleaning": false
-  },
-  {
-    "id": 2203,
-    "brand_name": "Citroen",
-    "model_name_original": "C3 Aircross",
-    "model_name_cleaned": "C3",
-    "needsCleaning": true
-  },
-  {
-    "id": 2204,
-    "brand_name": "Citroen",
-    "model_name_original": "C3 Aircross",
-    "model_name_cleaned": "C3",
-    "needsCleaning": true
-  },
-  {
-    "id": 2205,
-    "brand_name": "Citroen",
-    "model_name_original": "E-C3 Aircross MAX electric",
-    "model_name_cleaned": "E-C3",
-    "needsCleaning": true
-  },
-  {
-    "id": 2206,
-    "brand_name": "Citroen",
-    "model_name_original": "C3 Picasso",
-    "model_name_cleaned": "C3",
-    "needsCleaning": true
-  },
-  {
     "id": 2207,
-    "brand_name": "Citroen",
-    "model_name_original": "C4",
-    "model_name_cleaned": "C4",
-    "needsCleaning": false
-  },
-  {
-    "id": 2208,
-    "brand_name": "Citroen",
-    "model_name_original": "C4",
-    "model_name_cleaned": "C4",
-    "needsCleaning": false
-  },
-  {
-    "id": 2209,
-    "brand_name": "Citroen",
-    "model_name_original": "C4 Aircross",
-    "model_name_cleaned": "C4",
-    "needsCleaning": true
-  },
-  {
-    "id": 2210,
-    "brand_name": "Citroen",
-    "model_name_original": "C4 Cactus",
-    "model_name_cleaned": "C4",
-    "needsCleaning": true
-  },
-  {
-    "id": 2211,
     "brand_name": "Citroen",
     "model_name_original": "C4",
     "model_name_cleaned": "C4",
@@ -2177,56 +1575,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2216,
-    "brand_name": "Citroen",
-    "model_name_original": "C4 Picasso",
-    "model_name_cleaned": "C4",
-    "needsCleaning": true
-  },
-  {
-    "id": 2217,
-    "brand_name": "Citroen",
-    "model_name_original": "C4 Picasso",
-    "model_name_cleaned": "C4",
-    "needsCleaning": true
-  },
-  {
-    "id": 2218,
-    "brand_name": "Citroen",
-    "model_name_original": "C4 Grand Picasso",
-    "model_name_cleaned": "C4",
-    "needsCleaning": true
-  },
-  {
-    "id": 2219,
-    "brand_name": "Citroen",
-    "model_name_original": "C4 Grand Picasso",
-    "model_name_cleaned": "C4",
-    "needsCleaning": true
-  },
-  {
-    "id": 2220,
-    "brand_name": "Citroen",
-    "model_name_original": "C4 Grand SpaceTourer",
-    "model_name_cleaned": "C4",
-    "needsCleaning": true
-  },
-  {
-    "id": 2221,
-    "brand_name": "Citroen",
-    "model_name_original": "C4 SpaceTourer",
-    "model_name_cleaned": "C4",
-    "needsCleaning": true
-  },
-  {
     "id": 2222,
-    "brand_name": "Citroen",
-    "model_name_original": "C5",
-    "model_name_cleaned": "C5",
-    "needsCleaning": false
-  },
-  {
-    "id": 2223,
     "brand_name": "Citroen",
     "model_name_original": "C5",
     "model_name_cleaned": "C5",
@@ -2261,13 +1610,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2228,
-    "brand_name": "Citroen",
-    "model_name_original": "Jumper",
-    "model_name_cleaned": "Jumper",
-    "needsCleaning": false
-  },
-  {
     "id": 2229,
     "brand_name": "Citroen",
     "model_name_original": "JUMPY",
@@ -2282,25 +1624,11 @@
     "needsCleaning": false
   },
   {
-    "id": 2231,
-    "brand_name": "Citroen",
-    "model_name_original": "Jumpy",
-    "model_name_cleaned": "Jumpy",
-    "needsCleaning": false
-  },
-  {
     "id": 2232,
     "brand_name": "Citroen",
     "model_name_original": "Nemo",
     "model_name_cleaned": "Nemo",
     "needsCleaning": false
-  },
-  {
-    "id": 2233,
-    "brand_name": "Citroen",
-    "model_name_original": "C5 Aircross",
-    "model_name_cleaned": "C5",
-    "needsCleaning": true
   },
   {
     "id": 2235,
@@ -2345,13 +1673,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2241,
-    "brand_name": "Citroen",
-    "model_name_original": "Xsara Picasso",
-    "model_name_cleaned": "Xsara",
-    "needsCleaning": true
-  },
-  {
     "id": 2242,
     "brand_name": "Claas",
     "model_name_original": "Arion 440",
@@ -2359,51 +1680,9 @@
     "needsCleaning": true
   },
   {
-    "id": 2243,
-    "brand_name": "Claas",
-    "model_name_original": "Arion 450",
-    "model_name_cleaned": "Arion",
-    "needsCleaning": true
-  },
-  {
-    "id": 2244,
-    "brand_name": "Claas",
-    "model_name_original": "Arion 630",
-    "model_name_cleaned": "Arion",
-    "needsCleaning": true
-  },
-  {
-    "id": 2245,
-    "brand_name": "Claas",
-    "model_name_original": "Arion 650",
-    "model_name_cleaned": "Arion",
-    "needsCleaning": true
-  },
-  {
     "id": 2246,
     "brand_name": "Claas",
     "model_name_original": "Axion 830",
-    "model_name_cleaned": "Axion",
-    "needsCleaning": true
-  },
-  {
-    "id": 2247,
-    "brand_name": "Claas",
-    "model_name_original": "Axion 920",
-    "model_name_cleaned": "Axion",
-    "needsCleaning": true
-  },
-  {
-    "id": 2248,
-    "brand_name": "Claas",
-    "model_name_original": "Axion 950",
-    "model_name_cleaned": "Axion",
-    "needsCleaning": true
-  },
-  {
-    "id": 2249,
-    "brand_name": "Claas",
-    "model_name_original": "Axion 960",
     "model_name_cleaned": "Axion",
     "needsCleaning": true
   },
@@ -2436,25 +1715,11 @@
     "needsCleaning": true
   },
   {
-    "id": 2254,
-    "brand_name": "Cupra",
-    "model_name_original": "Formentor polift",
-    "model_name_cleaned": "Formentor",
-    "needsCleaning": true
-  },
-  {
     "id": 2255,
     "brand_name": "Cupra",
     "model_name_original": "Leon",
     "model_name_cleaned": "Leon",
     "needsCleaning": false
-  },
-  {
-    "id": 2256,
-    "brand_name": "Cupra",
-    "model_name_original": "Leon Sportwagon",
-    "model_name_cleaned": "Leon",
-    "needsCleaning": true
   },
   {
     "id": 2257,
@@ -2492,27 +1757,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2262,
-    "brand_name": "Dacia",
-    "model_name_original": "Duster 2",
-    "model_name_cleaned": "Duster",
-    "needsCleaning": true
-  },
-  {
-    "id": 2263,
-    "brand_name": "Dacia",
-    "model_name_original": "Duster 3",
-    "model_name_cleaned": "Duster",
-    "needsCleaning": true
-  },
-  {
-    "id": 2264,
-    "brand_name": "Dacia",
-    "model_name_original": "Duster 3 napęd przód",
-    "model_name_cleaned": "Duster",
-    "needsCleaning": true
-  },
-  {
     "id": 2265,
     "brand_name": "Dacia",
     "model_name_original": "Jogger",
@@ -2539,41 +1783,6 @@
     "model_name_original": "Sandero",
     "model_name_cleaned": "Sandero",
     "needsCleaning": false
-  },
-  {
-    "id": 2269,
-    "brand_name": "Dacia",
-    "model_name_original": "Sandero",
-    "model_name_cleaned": "Sandero",
-    "needsCleaning": false
-  },
-  {
-    "id": 2270,
-    "brand_name": "Dacia",
-    "model_name_original": "Sandero",
-    "model_name_cleaned": "Sandero",
-    "needsCleaning": false
-  },
-  {
-    "id": 2271,
-    "brand_name": "Dacia",
-    "model_name_original": "Sandero Stepway",
-    "model_name_cleaned": "Sandero",
-    "needsCleaning": true
-  },
-  {
-    "id": 2272,
-    "brand_name": "Dacia",
-    "model_name_original": "Sandero Stepway",
-    "model_name_cleaned": "Sandero",
-    "needsCleaning": true
-  },
-  {
-    "id": 2273,
-    "brand_name": "Dacia",
-    "model_name_original": "Sandero Stepway",
-    "model_name_cleaned": "Sandero",
-    "needsCleaning": true
   },
   {
     "id": 2274,
@@ -2607,13 +1816,6 @@
     "id": 2278,
     "brand_name": "Daf",
     "model_name_original": "CF 85",
-    "model_name_cleaned": "CF",
-    "needsCleaning": true
-  },
-  {
-    "id": 2279,
-    "brand_name": "Daf",
-    "model_name_original": "CF 370 FA",
     "model_name_cleaned": "CF",
     "needsCleaning": true
   },
@@ -2661,13 +1863,6 @@
   },
   {
     "id": 2287,
-    "brand_name": "Daihatsu",
-    "model_name_original": "Terios",
-    "model_name_cleaned": "Terios",
-    "needsCleaning": false
-  },
-  {
-    "id": 2288,
     "brand_name": "Daihatsu",
     "model_name_original": "Terios",
     "model_name_cleaned": "Terios",
@@ -2744,25 +1939,11 @@
     "needsCleaning": false
   },
   {
-    "id": 2301,
-    "brand_name": "Dodge",
-    "model_name_original": "Charger Daytona",
-    "model_name_cleaned": "Charger",
-    "needsCleaning": true
-  },
-  {
     "id": 2302,
     "brand_name": "Dodge",
     "model_name_original": "Durango",
     "model_name_cleaned": "Durango",
     "needsCleaning": false
-  },
-  {
-    "id": 2303,
-    "brand_name": "Dodge",
-    "model_name_original": "Durango 3",
-    "model_name_cleaned": "Durango",
-    "needsCleaning": true
   },
   {
     "id": 2304,
@@ -2780,34 +1961,6 @@
   },
   {
     "id": 2306,
-    "brand_name": "Dodge",
-    "model_name_original": "Ram",
-    "model_name_cleaned": "Ram",
-    "needsCleaning": false
-  },
-  {
-    "id": 2307,
-    "brand_name": "Dodge",
-    "model_name_original": "Ram Daytona",
-    "model_name_cleaned": "Ram",
-    "needsCleaning": true
-  },
-  {
-    "id": 2308,
-    "brand_name": "Dodge",
-    "model_name_original": "Ram 2drzwi",
-    "model_name_cleaned": "Ram",
-    "needsCleaning": true
-  },
-  {
-    "id": 2309,
-    "brand_name": "Dodge",
-    "model_name_original": "Ram",
-    "model_name_cleaned": "Ram",
-    "needsCleaning": false
-  },
-  {
-    "id": 2310,
     "brand_name": "Dodge",
     "model_name_original": "Ram",
     "model_name_cleaned": "Ram",
@@ -2835,20 +1988,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2318,
-    "brand_name": "Ds",
-    "model_name_original": "3 elektro",
-    "model_name_cleaned": "3",
-    "needsCleaning": true
-  },
-  {
-    "id": 2319,
-    "brand_name": "Ds",
-    "model_name_original": "4",
-    "model_name_cleaned": "4",
-    "needsCleaning": false
-  },
-  {
     "id": 2320,
     "brand_name": "Ds",
     "model_name_original": "54x4",
@@ -2857,13 +1996,6 @@
   },
   {
     "id": 2321,
-    "brand_name": "Ds",
-    "model_name_original": "7 Crossback",
-    "model_name_cleaned": "7",
-    "needsCleaning": true
-  },
-  {
-    "id": 2322,
     "brand_name": "Ds",
     "model_name_original": "7 Crossback",
     "model_name_cleaned": "7",
@@ -3066,20 +2198,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2351,
-    "brand_name": "Fiat",
-    "model_name_original": "Doblo",
-    "model_name_cleaned": "Doblo",
-    "needsCleaning": false
-  },
-  {
-    "id": 2352,
-    "brand_name": "Fiat",
-    "model_name_original": "Doblo",
-    "model_name_cleaned": "Doblo",
-    "needsCleaning": false
-  },
-  {
     "id": 2353,
     "brand_name": "Fiat",
     "model_name_original": "DUCATOa",
@@ -3088,20 +2206,6 @@
   },
   {
     "id": 2354,
-    "brand_name": "Fiat",
-    "model_name_original": "Ducato",
-    "model_name_cleaned": "Ducato",
-    "needsCleaning": false
-  },
-  {
-    "id": 2355,
-    "brand_name": "Fiat",
-    "model_name_original": "Ducato",
-    "model_name_cleaned": "Ducato",
-    "needsCleaning": false
-  },
-  {
-    "id": 2356,
     "brand_name": "Fiat",
     "model_name_original": "Ducato",
     "model_name_cleaned": "Ducato",
@@ -3150,42 +2254,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2363,
-    "brand_name": "Fiat",
-    "model_name_original": "Punto",
-    "model_name_cleaned": "Punto",
-    "needsCleaning": false
-  },
-  {
-    "id": 2364,
-    "brand_name": "Fiat",
-    "model_name_original": "Punto",
-    "model_name_cleaned": "Punto",
-    "needsCleaning": false
-  },
-  {
-    "id": 2365,
-    "brand_name": "Fiat",
-    "model_name_original": "Punto Evo",
-    "model_name_cleaned": "Punto",
-    "needsCleaning": true
-  },
-  {
     "id": 2366,
-    "brand_name": "Fiat",
-    "model_name_original": "Panda",
-    "model_name_cleaned": "Panda",
-    "needsCleaning": false
-  },
-  {
-    "id": 2367,
-    "brand_name": "Fiat",
-    "model_name_original": "Panda",
-    "model_name_cleaned": "Panda",
-    "needsCleaning": false
-  },
-  {
-    "id": 2368,
     "brand_name": "Fiat",
     "model_name_original": "Panda",
     "model_name_cleaned": "Panda",
@@ -3255,13 +2324,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2378,
-    "brand_name": "Fiat",
-    "model_name_original": "Tipo Cross",
-    "model_name_cleaned": "Tipo",
-    "needsCleaning": true
-  },
-  {
     "id": 2379,
     "brand_name": "Fiat",
     "model_name_original": "Ulysse",
@@ -3279,13 +2341,6 @@
     "id": 2381,
     "brand_name": "Ford",
     "model_name_original": "Bronco Outer Banks",
-    "model_name_cleaned": "Bronco",
-    "needsCleaning": true
-  },
-  {
-    "id": 2382,
-    "brand_name": "Ford",
-    "model_name_original": "Bronco Sport",
     "model_name_cleaned": "Bronco",
     "needsCleaning": true
   },
@@ -3332,58 +2387,9 @@
     "needsCleaning": false
   },
   {
-    "id": 2389,
-    "brand_name": "Ford",
-    "model_name_original": "Expedition",
-    "model_name_cleaned": "Expedition",
-    "needsCleaning": false
-  },
-  {
-    "id": 2390,
-    "brand_name": "Ford",
-    "model_name_original": "Expedition",
-    "model_name_cleaned": "Expedition",
-    "needsCleaning": false
-  },
-  {
-    "id": 2391,
-    "brand_name": "Ford",
-    "model_name_original": "Expedition MAX",
-    "model_name_cleaned": "Expedition",
-    "needsCleaning": true
-  },
-  {
     "id": 2392,
     "brand_name": "Ford",
     "model_name_original": "Explorer Sport",
-    "model_name_cleaned": "Explorer",
-    "needsCleaning": true
-  },
-  {
-    "id": 2393,
-    "brand_name": "Ford",
-    "model_name_original": "Explorer Policentercep",
-    "model_name_cleaned": "Explorer",
-    "needsCleaning": true
-  },
-  {
-    "id": 2394,
-    "brand_name": "Ford",
-    "model_name_original": "Explorer",
-    "model_name_cleaned": "Explorer",
-    "needsCleaning": false
-  },
-  {
-    "id": 2395,
-    "brand_name": "Ford",
-    "model_name_original": "Explorer",
-    "model_name_cleaned": "Explorer",
-    "needsCleaning": false
-  },
-  {
-    "id": 2396,
-    "brand_name": "Ford",
-    "model_name_original": "Explorer Electrik",
     "model_name_cleaned": "Explorer",
     "needsCleaning": true
   },
@@ -3395,53 +2401,11 @@
     "needsCleaning": true
   },
   {
-    "id": 2398,
-    "brand_name": "Ford",
-    "model_name_original": "F 150 Triton",
-    "model_name_cleaned": "F",
-    "needsCleaning": true
-  },
-  {
-    "id": 2400,
-    "brand_name": "Ford",
-    "model_name_original": "F 150",
-    "model_name_cleaned": "F",
-    "needsCleaning": true
-  },
-  {
-    "id": 2402,
-    "brand_name": "Ford",
-    "model_name_original": "F 150",
-    "model_name_cleaned": "F",
-    "needsCleaning": true
-  },
-  {
-    "id": 2403,
-    "brand_name": "Ford",
-    "model_name_original": "F 150",
-    "model_name_cleaned": "F",
-    "needsCleaning": true
-  },
-  {
-    "id": 2404,
-    "brand_name": "Ford",
-    "model_name_original": "F 150",
-    "model_name_cleaned": "F",
-    "needsCleaning": true
-  },
-  {
     "id": 2405,
     "brand_name": "Ford",
     "model_name_original": "F150",
     "model_name_cleaned": "F150",
     "needsCleaning": false
-  },
-  {
-    "id": 2406,
-    "brand_name": "Ford",
-    "model_name_original": "F 250 Super Duty",
-    "model_name_cleaned": "F",
-    "needsCleaning": true
   },
   {
     "id": 2407,
@@ -3465,20 +2429,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2410,
-    "brand_name": "Ford",
-    "model_name_original": "Fiesta",
-    "model_name_cleaned": "Fiesta",
-    "needsCleaning": false
-  },
-  {
-    "id": 2411,
-    "brand_name": "Ford",
-    "model_name_original": "Fiesta ST",
-    "model_name_cleaned": "Fiesta",
-    "needsCleaning": true
-  },
-  {
     "id": 2412,
     "brand_name": "Ford",
     "model_name_original": "Fusion przed lifting",
@@ -3486,35 +2436,7 @@
     "needsCleaning": true
   },
   {
-    "id": 2413,
-    "brand_name": "Ford",
-    "model_name_original": "Fusion",
-    "model_name_cleaned": "Fusion",
-    "needsCleaning": false
-  },
-  {
-    "id": 2414,
-    "brand_name": "Ford",
-    "model_name_original": "Fusion przed lifting",
-    "model_name_cleaned": "Fusion",
-    "needsCleaning": true
-  },
-  {
-    "id": 2415,
-    "brand_name": "Ford",
-    "model_name_original": "Fusion",
-    "model_name_cleaned": "Fusion",
-    "needsCleaning": false
-  },
-  {
     "id": 2416,
-    "brand_name": "Ford",
-    "model_name_original": "Flex",
-    "model_name_cleaned": "Flex",
-    "needsCleaning": false
-  },
-  {
-    "id": 2417,
     "brand_name": "Ford",
     "model_name_original": "Flex",
     "model_name_cleaned": "Flex",
@@ -3535,28 +2457,7 @@
     "needsCleaning": true
   },
   {
-    "id": 2420,
-    "brand_name": "Ford",
-    "model_name_original": "Galaxy/ S-MAX",
-    "model_name_cleaned": "Galaxy/",
-    "needsCleaning": true
-  },
-  {
-    "id": 2421,
-    "brand_name": "Ford",
-    "model_name_original": "Galaxy/ S-Max",
-    "model_name_cleaned": "Galaxy/",
-    "needsCleaning": true
-  },
-  {
     "id": 2422,
-    "brand_name": "Ford",
-    "model_name_original": "C-Max",
-    "model_name_cleaned": "C-",
-    "needsCleaning": true
-  },
-  {
-    "id": 2423,
     "brand_name": "Ford",
     "model_name_original": "C-Max",
     "model_name_cleaned": "C-",
@@ -3577,21 +2478,7 @@
     "needsCleaning": true
   },
   {
-    "id": 2426,
-    "brand_name": "Ford",
-    "model_name_original": "Grand C-Max",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
     "id": 2427,
-    "brand_name": "Ford",
-    "model_name_original": "KA",
-    "model_name_cleaned": "KA",
-    "needsCleaning": false
-  },
-  {
-    "id": 2428,
     "brand_name": "Ford",
     "model_name_original": "KA",
     "model_name_cleaned": "KA",
@@ -3605,74 +2492,11 @@
     "needsCleaning": false
   },
   {
-    "id": 2430,
-    "brand_name": "Ford",
-    "model_name_original": "Mustang",
-    "model_name_cleaned": "Mustang",
-    "needsCleaning": false
-  },
-  {
-    "id": 2431,
-    "brand_name": "Ford",
-    "model_name_original": "Mustang",
-    "model_name_cleaned": "Mustang",
-    "needsCleaning": false
-  },
-  {
-    "id": 2432,
-    "brand_name": "Ford",
-    "model_name_original": "Mustang",
-    "model_name_cleaned": "Mustang",
-    "needsCleaning": false
-  },
-  {
-    "id": 2433,
-    "brand_name": "Ford",
-    "model_name_original": "Mustang",
-    "model_name_cleaned": "Mustang",
-    "needsCleaning": false
-  },
-  {
     "id": 2434,
     "brand_name": "Ford",
     "model_name_original": "Mustanga",
     "model_name_cleaned": "Mustanga",
     "needsCleaning": false
-  },
-  {
-    "id": 2435,
-    "brand_name": "Ford",
-    "model_name_original": "Mustang Bullit",
-    "model_name_cleaned": "Mustang",
-    "needsCleaning": true
-  },
-  {
-    "id": 2437,
-    "brand_name": "Ford",
-    "model_name_original": "Mustanga",
-    "model_name_cleaned": "Mustanga",
-    "needsCleaning": false
-  },
-  {
-    "id": 2438,
-    "brand_name": "Ford",
-    "model_name_original": "Mustanga",
-    "model_name_cleaned": "Mustanga",
-    "needsCleaning": false
-  },
-  {
-    "id": 2439,
-    "brand_name": "Ford",
-    "model_name_original": "Mustang Mach-E",
-    "model_name_cleaned": "Mustang",
-    "needsCleaning": true
-  },
-  {
-    "id": 2440,
-    "brand_name": "Ford",
-    "model_name_original": "Mustang Mach 1",
-    "model_name_cleaned": "Mustang",
-    "needsCleaning": true
   },
   {
     "id": 2441,
@@ -3689,35 +2513,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2443,
-    "brand_name": "Ford",
-    "model_name_original": "Puma elektryk",
-    "model_name_cleaned": "Puma",
-    "needsCleaning": true
-  },
-  {
     "id": 2444,
-    "brand_name": "Ford",
-    "model_name_original": "Ranger",
-    "model_name_cleaned": "Ranger",
-    "needsCleaning": false
-  },
-  {
-    "id": 2445,
-    "brand_name": "Ford",
-    "model_name_original": "Ranger",
-    "model_name_cleaned": "Ranger",
-    "needsCleaning": false
-  },
-  {
-    "id": 2446,
-    "brand_name": "Ford",
-    "model_name_original": "Ranger T6",
-    "model_name_cleaned": "Ranger",
-    "needsCleaning": true
-  },
-  {
-    "id": 2447,
     "brand_name": "Ford",
     "model_name_original": "Ranger",
     "model_name_cleaned": "Ranger",
@@ -3745,34 +2541,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2451,
-    "brand_name": "Ford",
-    "model_name_original": "Tourneo Connect",
-    "model_name_cleaned": "Tourneo",
-    "needsCleaning": true
-  },
-  {
-    "id": 2452,
-    "brand_name": "Ford",
-    "model_name_original": "Tourneo Connect",
-    "model_name_cleaned": "Tourneo",
-    "needsCleaning": true
-  },
-  {
-    "id": 2453,
-    "brand_name": "Ford",
-    "model_name_original": "Grand Tourneo Connect",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
-    "id": 2454,
-    "brand_name": "Ford",
-    "model_name_original": "Grand Tourneo Connect",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
     "id": 2455,
     "brand_name": "Ford",
     "model_name_original": "Transit Courier",
@@ -3780,126 +2548,7 @@
     "needsCleaning": true
   },
   {
-    "id": 2456,
-    "brand_name": "Ford",
-    "model_name_original": "Tourneo Courier",
-    "model_name_cleaned": "Tourneo",
-    "needsCleaning": true
-  },
-  {
-    "id": 2457,
-    "brand_name": "Ford",
-    "model_name_original": "Tourneo Courier",
-    "model_name_cleaned": "Tourneo",
-    "needsCleaning": true
-  },
-  {
-    "id": 2458,
-    "brand_name": "Ford",
-    "model_name_original": "Transit",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": false
-  },
-  {
-    "id": 2459,
-    "brand_name": "Ford",
-    "model_name_original": "Transit",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": false
-  },
-  {
-    "id": 2460,
-    "brand_name": "Ford",
-    "model_name_original": "Transit Connect",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": true
-  },
-  {
-    "id": 2461,
-    "brand_name": "Ford",
-    "model_name_original": "Transit Connect",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": true
-  },
-  {
-    "id": 2462,
-    "brand_name": "Ford",
-    "model_name_original": "Transit Connect New",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": true
-  },
-  {
-    "id": 2463,
-    "brand_name": "Ford",
-    "model_name_original": "Transit Custom 1",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": true
-  },
-  {
-    "id": 2464,
-    "brand_name": "Ford",
-    "model_name_original": "Transit Custom",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": true
-  },
-  {
-    "id": 2465,
-    "brand_name": "Ford",
-    "model_name_original": "Transit Custom 1 Brygadówka",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": true
-  },
-  {
-    "id": 2466,
-    "brand_name": "Ford",
-    "model_name_original": "Transit Custom 2",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": true
-  },
-  {
-    "id": 2467,
-    "brand_name": "Ford",
-    "model_name_original": "Transit Custom 2",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": true
-  },
-  {
-    "id": 2468,
-    "brand_name": "Ford",
-    "model_name_original": "Transit Benimar tessoro 463",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": true
-  },
-  {
-    "id": 2469,
-    "brand_name": "Ford",
-    "model_name_original": "Transit 9os",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": true
-  },
-  {
-    "id": 2470,
-    "brand_name": "Ford",
-    "model_name_original": "Transit dostawczak",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": true
-  },
-  {
-    "id": 2471,
-    "brand_name": "Ford",
-    "model_name_original": "Transit Kronos",
-    "model_name_cleaned": "Transit",
-    "needsCleaning": true
-  },
-  {
     "id": 2472,
-    "brand_name": "Ford",
-    "model_name_original": "EcoSport",
-    "model_name_cleaned": "EcoSport",
-    "needsCleaning": false
-  },
-  {
-    "id": 2473,
     "brand_name": "Ford",
     "model_name_original": "EcoSport",
     "model_name_cleaned": "EcoSport",
@@ -3927,13 +2576,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2477,
-    "brand_name": "Ford",
-    "model_name_original": "Explorer",
-    "model_name_cleaned": "Explorer",
-    "needsCleaning": false
-  },
-  {
     "id": 2478,
     "brand_name": "Ford",
     "model_name_original": "F-Max",
@@ -3941,46 +2583,11 @@
     "needsCleaning": true
   },
   {
-    "id": 2479,
-    "brand_name": "Ford",
-    "model_name_original": "Focus",
-    "model_name_cleaned": "Focus",
-    "needsCleaning": false
-  },
-  {
-    "id": 2480,
-    "brand_name": "Ford",
-    "model_name_original": "Focus",
-    "model_name_cleaned": "Focus",
-    "needsCleaning": false
-  },
-  {
-    "id": 2481,
-    "brand_name": "Ford",
-    "model_name_original": "Focus",
-    "model_name_cleaned": "Focus",
-    "needsCleaning": false
-  },
-  {
     "id": 2482,
     "brand_name": "Ford",
     "model_name_original": "FocusFocus ST",
     "model_name_cleaned": "FocusFocus",
     "needsCleaning": true
-  },
-  {
-    "id": 2483,
-    "brand_name": "Ford",
-    "model_name_original": "FocusFocus ST",
-    "model_name_cleaned": "FocusFocus",
-    "needsCleaning": true
-  },
-  {
-    "id": 2484,
-    "brand_name": "Ford",
-    "model_name_original": "Kuga",
-    "model_name_cleaned": "Kuga",
-    "needsCleaning": false
   },
   {
     "id": 2485,
@@ -3998,27 +2605,6 @@
   },
   {
     "id": 2487,
-    "brand_name": "Ford",
-    "model_name_original": "Mondeo",
-    "model_name_cleaned": "Mondeo",
-    "needsCleaning": false
-  },
-  {
-    "id": 2488,
-    "brand_name": "Ford",
-    "model_name_original": "Mondeo",
-    "model_name_cleaned": "Mondeo",
-    "needsCleaning": false
-  },
-  {
-    "id": 2489,
-    "brand_name": "Ford",
-    "model_name_original": "Mondeo",
-    "model_name_cleaned": "Mondeo",
-    "needsCleaning": false
-  },
-  {
-    "id": 2490,
     "brand_name": "Ford",
     "model_name_original": "Mondeo",
     "model_name_cleaned": "Mondeo",
@@ -4074,84 +2660,7 @@
     "needsCleaning": true
   },
   {
-    "id": 2500,
-    "brand_name": "Honda",
-    "model_name_original": "Accord 5",
-    "model_name_cleaned": "Accord",
-    "needsCleaning": true
-  },
-  {
-    "id": 2501,
-    "brand_name": "Honda",
-    "model_name_original": "Accord 6",
-    "model_name_cleaned": "Accord",
-    "needsCleaning": true
-  },
-  {
-    "id": 2502,
-    "brand_name": "Honda",
-    "model_name_original": "Accord 6",
-    "model_name_cleaned": "Accord",
-    "needsCleaning": true
-  },
-  {
-    "id": 2503,
-    "brand_name": "Honda",
-    "model_name_original": "Accord 7",
-    "model_name_cleaned": "Accord",
-    "needsCleaning": true
-  },
-  {
-    "id": 2504,
-    "brand_name": "Honda",
-    "model_name_original": "Accord 8",
-    "model_name_cleaned": "Accord",
-    "needsCleaning": true
-  },
-  {
-    "id": 2505,
-    "brand_name": "Honda",
-    "model_name_original": "Accord 8",
-    "model_name_cleaned": "Accord",
-    "needsCleaning": true
-  },
-  {
-    "id": 2506,
-    "brand_name": "Honda",
-    "model_name_original": "Accord 8",
-    "model_name_cleaned": "Accord",
-    "needsCleaning": true
-  },
-  {
-    "id": 2507,
-    "brand_name": "Honda",
-    "model_name_original": "Accord 9",
-    "model_name_cleaned": "Accord",
-    "needsCleaning": true
-  },
-  {
-    "id": 2508,
-    "brand_name": "Honda",
-    "model_name_original": "Accord 10",
-    "model_name_cleaned": "Accord",
-    "needsCleaning": true
-  },
-  {
-    "id": 2509,
-    "brand_name": "Honda",
-    "model_name_original": "Accord 11",
-    "model_name_cleaned": "Accord",
-    "needsCleaning": true
-  },
-  {
     "id": 2510,
-    "brand_name": "Honda",
-    "model_name_original": "City",
-    "model_name_cleaned": "City",
-    "needsCleaning": false
-  },
-  {
-    "id": 2511,
     "brand_name": "Honda",
     "model_name_original": "City",
     "model_name_cleaned": "City",
@@ -4165,133 +2674,7 @@
     "needsCleaning": true
   },
   {
-    "id": 2513,
-    "brand_name": "Honda",
-    "model_name_original": "Civic 6",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
-    "id": 2514,
-    "brand_name": "Honda",
-    "model_name_original": "Civic 7",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
-    "id": 2515,
-    "brand_name": "Honda",
-    "model_name_original": "Civic 7",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
-    "id": 2516,
-    "brand_name": "Honda",
-    "model_name_original": "Civic 7",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
-    "id": 2517,
-    "brand_name": "Honda",
-    "model_name_original": "Civic 8",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
-    "id": 2518,
-    "brand_name": "Honda",
-    "model_name_original": "Civic 8",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
-    "id": 2519,
-    "brand_name": "Honda",
-    "model_name_original": "Civic 8",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
-    "id": 2520,
-    "brand_name": "Honda",
-    "model_name_original": "Civic 8 Type-R",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
-    "id": 2521,
-    "brand_name": "Honda",
-    "model_name_original": "Civic 9",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
-    "id": 2522,
-    "brand_name": "Honda",
-    "model_name_original": "Civic 9 Si FB6",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
-    "id": 2523,
-    "brand_name": "Honda",
-    "model_name_original": "Civic X",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
-    "id": 2524,
-    "brand_name": "Honda",
-    "model_name_original": "Civic XI",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
-    "id": 2525,
-    "brand_name": "Honda",
-    "model_name_original": "Civic Type R FL5",
-    "model_name_cleaned": "Civic",
-    "needsCleaning": true
-  },
-  {
     "id": 2526,
-    "brand_name": "Honda",
-    "model_name_original": "CR-V",
-    "model_name_cleaned": "CR-V",
-    "needsCleaning": false
-  },
-  {
-    "id": 2527,
-    "brand_name": "Honda",
-    "model_name_original": "CR-V",
-    "model_name_cleaned": "CR-V",
-    "needsCleaning": false
-  },
-  {
-    "id": 2528,
-    "brand_name": "Honda",
-    "model_name_original": "CR-V",
-    "model_name_cleaned": "CR-V",
-    "needsCleaning": false
-  },
-  {
-    "id": 2529,
-    "brand_name": "Honda",
-    "model_name_original": "CR-V",
-    "model_name_cleaned": "CR-V",
-    "needsCleaning": false
-  },
-  {
-    "id": 2530,
-    "brand_name": "Honda",
-    "model_name_original": "CR-V",
-    "model_name_cleaned": "CR-V",
-    "needsCleaning": false
-  },
-  {
-    "id": 2532,
     "brand_name": "Honda",
     "model_name_original": "CR-V",
     "model_name_cleaned": "CR-V",
@@ -4326,20 +2709,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2537,
-    "brand_name": "Honda",
-    "model_name_original": "HR-V",
-    "model_name_cleaned": "HR-V",
-    "needsCleaning": false
-  },
-  {
-    "id": 2538,
-    "brand_name": "Honda",
-    "model_name_original": "HR-V E",
-    "model_name_cleaned": "HR-V",
-    "needsCleaning": true
-  },
-  {
     "id": 2539,
     "brand_name": "Honda",
     "model_name_original": "Insight",
@@ -4354,27 +2723,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2541,
-    "brand_name": "Honda",
-    "model_name_original": "Jazz",
-    "model_name_cleaned": "Jazz",
-    "needsCleaning": false
-  },
-  {
-    "id": 2542,
-    "brand_name": "Honda",
-    "model_name_original": "Jazz",
-    "model_name_cleaned": "Jazz",
-    "needsCleaning": false
-  },
-  {
-    "id": 2543,
-    "brand_name": "Honda",
-    "model_name_original": "Jazz / Jazz Crosstar",
-    "model_name_cleaned": "Jazz",
-    "needsCleaning": true
-  },
-  {
     "id": 2544,
     "brand_name": "Honda",
     "model_name_original": "Legend",
@@ -4382,21 +2730,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2545,
-    "brand_name": "Honda",
-    "model_name_original": "Legend IV",
-    "model_name_cleaned": "Legend",
-    "needsCleaning": true
-  },
-  {
     "id": 2546,
-    "brand_name": "Honda",
-    "model_name_original": "Odyssey",
-    "model_name_cleaned": "Odyssey",
-    "needsCleaning": false
-  },
-  {
-    "id": 2547,
     "brand_name": "Honda",
     "model_name_original": "Odyssey",
     "model_name_cleaned": "Odyssey",
@@ -4410,21 +2744,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2549,
-    "brand_name": "Honda",
-    "model_name_original": "Pilota",
-    "model_name_cleaned": "Pilota",
-    "needsCleaning": false
-  },
-  {
     "id": 2550,
-    "brand_name": "Honda",
-    "model_name_original": "Prelude",
-    "model_name_cleaned": "Prelude",
-    "needsCleaning": false
-  },
-  {
-    "id": 2551,
     "brand_name": "Honda",
     "model_name_original": "Prelude",
     "model_name_cleaned": "Prelude",
@@ -4480,13 +2800,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2560,
-    "brand_name": "Hyundai",
-    "model_name_original": "Elantra",
-    "model_name_cleaned": "Elantra",
-    "needsCleaning": false
-  },
-  {
     "id": 2561,
     "brand_name": "Hyundai",
     "model_name_original": "Galloper",
@@ -4515,13 +2828,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2565,
-    "brand_name": "Hyundai",
-    "model_name_original": "H1",
-    "model_name_cleaned": "H1",
-    "needsCleaning": false
-  },
-  {
     "id": 2566,
     "brand_name": "Hyundai",
     "model_name_original": "H100",
@@ -4534,20 +2840,6 @@
     "model_name_original": "Ioniq",
     "model_name_cleaned": "Ioniq",
     "needsCleaning": false
-  },
-  {
-    "id": 2568,
-    "brand_name": "Hyundai",
-    "model_name_original": "Ioniq 5 Electric",
-    "model_name_cleaned": "Ioniq",
-    "needsCleaning": true
-  },
-  {
-    "id": 2569,
-    "brand_name": "Hyundai",
-    "model_name_original": "Ioniq 6",
-    "model_name_cleaned": "Ioniq",
-    "needsCleaning": true
   },
   {
     "id": 2570,
@@ -4564,20 +2856,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2573,
-    "brand_name": "Hyundai",
-    "model_name_original": "I10",
-    "model_name_cleaned": "I10",
-    "needsCleaning": false
-  },
-  {
-    "id": 2574,
-    "brand_name": "Hyundai",
-    "model_name_original": "I10",
-    "model_name_cleaned": "I10",
-    "needsCleaning": false
-  },
-  {
     "id": 2575,
     "brand_name": "Hyundai",
     "model_name_original": "I20",
@@ -4585,35 +2863,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2576,
-    "brand_name": "Hyundai",
-    "model_name_original": "I20",
-    "model_name_cleaned": "I20",
-    "needsCleaning": false
-  },
-  {
-    "id": 2577,
-    "brand_name": "Hyundai",
-    "model_name_original": "I20",
-    "model_name_cleaned": "I20",
-    "needsCleaning": false
-  },
-  {
     "id": 2578,
-    "brand_name": "Hyundai",
-    "model_name_original": "I30",
-    "model_name_cleaned": "I30",
-    "needsCleaning": false
-  },
-  {
-    "id": 2579,
-    "brand_name": "Hyundai",
-    "model_name_original": "I30",
-    "model_name_cleaned": "I30",
-    "needsCleaning": false
-  },
-  {
-    "id": 2580,
     "brand_name": "Hyundai",
     "model_name_original": "I30",
     "model_name_cleaned": "I30",
@@ -4634,39 +2884,11 @@
     "needsCleaning": true
   },
   {
-    "id": 2583,
-    "brand_name": "Hyundai",
-    "model_name_original": "IX 35",
-    "model_name_cleaned": "IX",
-    "needsCleaning": true
-  },
-  {
-    "id": 2584,
-    "brand_name": "Hyundai",
-    "model_name_original": "IX 55 7os",
-    "model_name_cleaned": "IX",
-    "needsCleaning": true
-  },
-  {
     "id": 2585,
     "brand_name": "Hyundai",
     "model_name_original": "Kona",
     "model_name_cleaned": "Kona",
     "needsCleaning": false
-  },
-  {
-    "id": 2586,
-    "brand_name": "Hyundai",
-    "model_name_original": "Kona",
-    "model_name_cleaned": "Kona",
-    "needsCleaning": false
-  },
-  {
-    "id": 2587,
-    "brand_name": "Hyundai",
-    "model_name_original": "Kona Electric",
-    "model_name_cleaned": "Kona",
-    "needsCleaning": true
   },
   {
     "id": 2589,
@@ -4681,34 +2903,6 @@
     "model_name_original": "Tucson 1",
     "model_name_cleaned": "Tucson",
     "needsCleaning": true
-  },
-  {
-    "id": 2591,
-    "brand_name": "Hyundai",
-    "model_name_original": "Tucson 2",
-    "model_name_cleaned": "Tucson",
-    "needsCleaning": true
-  },
-  {
-    "id": 2592,
-    "brand_name": "Hyundai",
-    "model_name_original": "Tucson 3 Europe Przed lifting",
-    "model_name_cleaned": "Tucson",
-    "needsCleaning": true
-  },
-  {
-    "id": 2593,
-    "brand_name": "Hyundai",
-    "model_name_original": "Tucson 3 Europe Polift",
-    "model_name_cleaned": "Tucson",
-    "needsCleaning": true
-  },
-  {
-    "id": 2594,
-    "brand_name": "Hyundai",
-    "model_name_original": "Tucson",
-    "model_name_cleaned": "Tucson",
-    "needsCleaning": false
   },
   {
     "id": 2596,
@@ -4732,20 +2926,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2599,
-    "brand_name": "Hyundai",
-    "model_name_original": "SANTA FE",
-    "model_name_cleaned": "SANTA",
-    "needsCleaning": true
-  },
-  {
-    "id": 2600,
-    "brand_name": "Hyundai",
-    "model_name_original": "SANTA FE 3",
-    "model_name_cleaned": "SANTA",
-    "needsCleaning": true
-  },
-  {
     "id": 2601,
     "brand_name": "Hyundai",
     "model_name_original": "Grand Santa Fe",
@@ -4756,34 +2936,6 @@
     "id": 2602,
     "brand_name": "Hyundai",
     "model_name_original": "Santa Fe 4",
-    "model_name_cleaned": "Santa",
-    "needsCleaning": true
-  },
-  {
-    "id": 2603,
-    "brand_name": "Hyundai",
-    "model_name_original": "Santa Fe 4",
-    "model_name_cleaned": "Santa",
-    "needsCleaning": true
-  },
-  {
-    "id": 2604,
-    "brand_name": "Hyundai",
-    "model_name_original": "Santa Fe 4",
-    "model_name_cleaned": "Santa",
-    "needsCleaning": true
-  },
-  {
-    "id": 2605,
-    "brand_name": "Hyundai",
-    "model_name_original": "Santa Fe 4",
-    "model_name_cleaned": "Santa",
-    "needsCleaning": true
-  },
-  {
-    "id": 2606,
-    "brand_name": "Hyundai",
-    "model_name_original": "Santa Fe 5",
     "model_name_cleaned": "Santa",
     "needsCleaning": true
   },
@@ -4921,35 +3073,7 @@
     "needsCleaning": true
   },
   {
-    "id": 2626,
-    "brand_name": "Isuzu",
-    "model_name_original": "D-Max",
-    "model_name_cleaned": "D-",
-    "needsCleaning": true
-  },
-  {
-    "id": 2627,
-    "brand_name": "Isuzu",
-    "model_name_original": "D-Max",
-    "model_name_cleaned": "D-",
-    "needsCleaning": true
-  },
-  {
-    "id": 2628,
-    "brand_name": "Isuzu",
-    "model_name_original": "D-Max",
-    "model_name_cleaned": "D-",
-    "needsCleaning": true
-  },
-  {
     "id": 2630,
-    "brand_name": "Iveco",
-    "model_name_original": "Daily",
-    "model_name_cleaned": "Daily",
-    "needsCleaning": false
-  },
-  {
-    "id": 2631,
     "brand_name": "Iveco",
     "model_name_original": "Daily",
     "model_name_cleaned": "Daily",
@@ -4980,13 +3104,6 @@
     "id": 2636,
     "brand_name": "Jaguar",
     "model_name_original": "F-Pace przedlift",
-    "model_name_cleaned": "F-Pace",
-    "needsCleaning": true
-  },
-  {
-    "id": 2637,
-    "brand_name": "Jaguar",
-    "model_name_original": "F-Pace polift",
     "model_name_cleaned": "F-Pace",
     "needsCleaning": true
   },
@@ -5026,13 +3143,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2643,
-    "brand_name": "Jaguar",
-    "model_name_original": "XF X260",
-    "model_name_cleaned": "XF",
-    "needsCleaning": true
-  },
-  {
     "id": 2644,
     "brand_name": "Jaguar",
     "model_name_original": "XJ",
@@ -5040,24 +3150,10 @@
     "needsCleaning": false
   },
   {
-    "id": 2645,
-    "brand_name": "Jaguar",
-    "model_name_original": "XJ X351 zwyklą",
-    "model_name_cleaned": "XJ",
-    "needsCleaning": true
-  },
-  {
     "id": 2646,
     "brand_name": "Jaguar",
     "model_name_original": "XJL X351",
     "model_name_cleaned": "XJL",
-    "needsCleaning": true
-  },
-  {
-    "id": 2647,
-    "brand_name": "Jaguar",
-    "model_name_original": "XJ X358",
-    "model_name_cleaned": "XJ",
     "needsCleaning": true
   },
   {
@@ -5076,20 +3172,6 @@
   },
   {
     "id": 2660,
-    "brand_name": "Jeep",
-    "model_name_original": "Avenger",
-    "model_name_cleaned": "Avenger",
-    "needsCleaning": false
-  },
-  {
-    "id": 2661,
-    "brand_name": "Jeep",
-    "model_name_original": "Avenger napęd przód",
-    "model_name_cleaned": "Avenger",
-    "needsCleaning": true
-  },
-  {
-    "id": 2662,
     "brand_name": "Jeep",
     "model_name_original": "Avenger",
     "model_name_cleaned": "Avenger",
@@ -5117,34 +3199,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2666,
-    "brand_name": "Jeep",
-    "model_name_original": "Cherokee XJ",
-    "model_name_cleaned": "Cherokee",
-    "needsCleaning": true
-  },
-  {
-    "id": 2667,
-    "brand_name": "Jeep",
-    "model_name_original": "Cherokee KJ",
-    "model_name_cleaned": "Cherokee",
-    "needsCleaning": true
-  },
-  {
-    "id": 2668,
-    "brand_name": "Jeep",
-    "model_name_original": "Cherokee",
-    "model_name_cleaned": "Cherokee",
-    "needsCleaning": false
-  },
-  {
-    "id": 2669,
-    "brand_name": "Jeep",
-    "model_name_original": "Cherokee",
-    "model_name_cleaned": "Cherokee",
-    "needsCleaning": false
-  },
-  {
     "id": 2670,
     "brand_name": "Jeep",
     "model_name_original": "Grand Cherokee ZJ przed lift",
@@ -5152,70 +3206,7 @@
     "needsCleaning": true
   },
   {
-    "id": 2671,
-    "brand_name": "Jeep",
-    "model_name_original": "Grand Cherokee ZJ polift",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
-    "id": 2672,
-    "brand_name": "Jeep",
-    "model_name_original": "Grand Cherokee WJ",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
-    "id": 2673,
-    "brand_name": "Jeep",
-    "model_name_original": "Grand Cherokee WK",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
-    "id": 2674,
-    "brand_name": "Jeep",
-    "model_name_original": "Grand Cherokee WK2 przedlift",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
-    "id": 2675,
-    "brand_name": "Jeep",
-    "model_name_original": "Grand Cherokee WK2",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
-    "id": 2676,
-    "brand_name": "Jeep",
-    "model_name_original": "Grand Cherokee WK2 polift",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
-    "id": 2677,
-    "brand_name": "Jeep",
-    "model_name_original": "Grand Cherokee Summit",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
-    "id": 2678,
-    "brand_name": "Jeep",
-    "model_name_original": "Grand Wagoneer",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
     "id": 2679,
-    "brand_name": "Jeep",
-    "model_name_original": "Compass",
-    "model_name_cleaned": "Compass",
-    "needsCleaning": false
-  },
-  {
-    "id": 2680,
     "brand_name": "Jeep",
     "model_name_original": "Compass",
     "model_name_cleaned": "Compass",
@@ -5236,72 +3227,9 @@
     "needsCleaning": false
   },
   {
-    "id": 2683,
-    "brand_name": "Jeep",
-    "model_name_original": "Renegade napęd przedni",
-    "model_name_cleaned": "Renegade",
-    "needsCleaning": true
-  },
-  {
     "id": 2684,
     "brand_name": "Jeep",
     "model_name_original": "Wrangler YJ",
-    "model_name_cleaned": "Wrangler",
-    "needsCleaning": true
-  },
-  {
-    "id": 2685,
-    "brand_name": "Jeep",
-    "model_name_original": "Wrangler TJ",
-    "model_name_cleaned": "Wrangler",
-    "needsCleaning": true
-  },
-  {
-    "id": 2686,
-    "brand_name": "Jeep",
-    "model_name_original": "Wrangler JK",
-    "model_name_cleaned": "Wrangler",
-    "needsCleaning": true
-  },
-  {
-    "id": 2687,
-    "brand_name": "Jeep",
-    "model_name_original": "Wrangler JKU Kanada",
-    "model_name_cleaned": "Wrangler",
-    "needsCleaning": true
-  },
-  {
-    "id": 2688,
-    "brand_name": "Jeep",
-    "model_name_original": "Wrangler Rubicon",
-    "model_name_cleaned": "Wrangler",
-    "needsCleaning": true
-  },
-  {
-    "id": 2689,
-    "brand_name": "Jeep",
-    "model_name_original": "Wrangler 4 Sahara",
-    "model_name_cleaned": "Wrangler",
-    "needsCleaning": true
-  },
-  {
-    "id": 2690,
-    "brand_name": "Jeep",
-    "model_name_original": "Wrangler JL",
-    "model_name_cleaned": "Wrangler",
-    "needsCleaning": true
-  },
-  {
-    "id": 2691,
-    "brand_name": "Jeep",
-    "model_name_original": "Wrangler JL/ Rubicon",
-    "model_name_cleaned": "Wrangler",
-    "needsCleaning": true
-  },
-  {
-    "id": 2692,
-    "brand_name": "Jeep",
-    "model_name_original": "Wrangler JL",
     "model_name_cleaned": "Wrangler",
     "needsCleaning": true
   },
@@ -5383,37 +3311,9 @@
     "needsCleaning": true
   },
   {
-    "id": 2704,
-    "brand_name": "John deere",
-    "model_name_original": "6R 215",
-    "model_name_cleaned": "6R",
-    "needsCleaning": true
-  },
-  {
-    "id": 2705,
-    "brand_name": "John deere",
-    "model_name_original": "6R 250",
-    "model_name_cleaned": "6R",
-    "needsCleaning": true
-  },
-  {
-    "id": 2706,
-    "brand_name": "John deere",
-    "model_name_original": "6R 175",
-    "model_name_cleaned": "6R",
-    "needsCleaning": true
-  },
-  {
     "id": 2707,
     "brand_name": "John deere",
     "model_name_original": "8R 370",
-    "model_name_cleaned": "8R",
-    "needsCleaning": true
-  },
-  {
-    "id": 2708,
-    "brand_name": "John deere",
-    "model_name_original": "8R 410",
     "model_name_cleaned": "8R",
     "needsCleaning": true
   },
@@ -5453,35 +3353,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2714,
-    "brand_name": "Kia",
-    "model_name_original": "Carens",
-    "model_name_cleaned": "Carens",
-    "needsCleaning": false
-  },
-  {
-    "id": 2715,
-    "brand_name": "Kia",
-    "model_name_original": "Carens",
-    "model_name_cleaned": "Carens",
-    "needsCleaning": false
-  },
-  {
     "id": 2716,
-    "brand_name": "Kia",
-    "model_name_original": "Carnival",
-    "model_name_cleaned": "Carnival",
-    "needsCleaning": false
-  },
-  {
-    "id": 2717,
-    "brand_name": "Kia",
-    "model_name_original": "Carnival",
-    "model_name_cleaned": "Carnival",
-    "needsCleaning": false
-  },
-  {
-    "id": 2718,
     "brand_name": "Kia",
     "model_name_original": "Carnival",
     "model_name_cleaned": "Carnival",
@@ -5495,45 +3367,10 @@
     "needsCleaning": false
   },
   {
-    "id": 2720,
-    "brand_name": "Kia",
-    "model_name_original": "Ceed",
-    "model_name_cleaned": "Ceed",
-    "needsCleaning": false
-  },
-  {
-    "id": 2721,
-    "brand_name": "Kia",
-    "model_name_original": "Ceed",
-    "model_name_cleaned": "Ceed",
-    "needsCleaning": false
-  },
-  {
     "id": 2722,
     "brand_name": "Kia",
     "model_name_original": "Proceed",
     "model_name_cleaned": "Proceed",
-    "needsCleaning": false
-  },
-  {
-    "id": 2723,
-    "brand_name": "Kia",
-    "model_name_original": "Proceed",
-    "model_name_cleaned": "Proceed",
-    "needsCleaning": false
-  },
-  {
-    "id": 2724,
-    "brand_name": "Kia",
-    "model_name_original": "Proceed",
-    "model_name_cleaned": "Proceed",
-    "needsCleaning": false
-  },
-  {
-    "id": 2725,
-    "brand_name": "Kia",
-    "model_name_original": "Ceed",
-    "model_name_cleaned": "Ceed",
     "needsCleaning": false
   },
   {
@@ -5600,28 +3437,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2736,
-    "brand_name": "Kia",
-    "model_name_original": "Niro EV",
-    "model_name_cleaned": "Niro",
-    "needsCleaning": true
-  },
-  {
     "id": 2737,
-    "brand_name": "Kia",
-    "model_name_original": "Picanto",
-    "model_name_cleaned": "Picanto",
-    "needsCleaning": false
-  },
-  {
-    "id": 2738,
-    "brand_name": "Kia",
-    "model_name_original": "Picanto",
-    "model_name_cleaned": "Picanto",
-    "needsCleaning": false
-  },
-  {
-    "id": 2739,
     "brand_name": "Kia",
     "model_name_original": "Picanto",
     "model_name_cleaned": "Picanto",
@@ -5631,13 +3447,6 @@
     "id": 2740,
     "brand_name": "Kia",
     "model_name_original": "Rio 3",
-    "model_name_cleaned": "Rio",
-    "needsCleaning": true
-  },
-  {
-    "id": 2741,
-    "brand_name": "Kia",
-    "model_name_original": "Rio 4",
     "model_name_cleaned": "Rio",
     "needsCleaning": true
   },
@@ -5656,13 +3465,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2744,
-    "brand_name": "Kia",
-    "model_name_original": "Soul",
-    "model_name_cleaned": "Soul",
-    "needsCleaning": false
-  },
-  {
     "id": 2745,
     "brand_name": "Kia",
     "model_name_original": "Sorento 1",
@@ -5670,72 +3472,9 @@
     "needsCleaning": true
   },
   {
-    "id": 2746,
-    "brand_name": "Kia",
-    "model_name_original": "Sorento 2 przed lifting",
-    "model_name_cleaned": "Sorento",
-    "needsCleaning": true
-  },
-  {
-    "id": 2747,
-    "brand_name": "Kia",
-    "model_name_original": "Sorento 2",
-    "model_name_cleaned": "Sorento",
-    "needsCleaning": true
-  },
-  {
-    "id": 2748,
-    "brand_name": "Kia",
-    "model_name_original": "Sorento 3",
-    "model_name_cleaned": "Sorento",
-    "needsCleaning": true
-  },
-  {
-    "id": 2749,
-    "brand_name": "Kia",
-    "model_name_original": "Sorento 4 (/)",
-    "model_name_cleaned": "Sorento",
-    "needsCleaning": true
-  },
-  {
-    "id": 2750,
-    "brand_name": "Kia",
-    "model_name_original": "Sorento 4",
-    "model_name_cleaned": "Sorento",
-    "needsCleaning": true
-  },
-  {
     "id": 2751,
     "brand_name": "Kia",
     "model_name_original": "Sportage 2",
-    "model_name_cleaned": "Sportage",
-    "needsCleaning": true
-  },
-  {
-    "id": 2752,
-    "brand_name": "Kia",
-    "model_name_original": "Sportage 3",
-    "model_name_cleaned": "Sportage",
-    "needsCleaning": true
-  },
-  {
-    "id": 2753,
-    "brand_name": "Kia",
-    "model_name_original": "Sportage 4",
-    "model_name_cleaned": "Sportage",
-    "needsCleaning": true
-  },
-  {
-    "id": 2754,
-    "brand_name": "Kia",
-    "model_name_original": "Sportage 5",
-    "model_name_cleaned": "Sportage",
-    "needsCleaning": true
-  },
-  {
-    "id": 2755,
-    "brand_name": "Kia",
-    "model_name_original": "Sportage 5 SX Prestige",
     "model_name_cleaned": "Sportage",
     "needsCleaning": true
   },
@@ -5769,20 +3508,6 @@
   },
   {
     "id": 2761,
-    "brand_name": "Kia",
-    "model_name_original": "Optima",
-    "model_name_cleaned": "Optima",
-    "needsCleaning": false
-  },
-  {
-    "id": 2762,
-    "brand_name": "Kia",
-    "model_name_original": "Optima",
-    "model_name_cleaned": "Optima",
-    "needsCleaning": false
-  },
-  {
-    "id": 2763,
     "brand_name": "Kia",
     "model_name_original": "Optima",
     "model_name_cleaned": "Optima",
@@ -5943,27 +3668,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2786,
-    "brand_name": "Land rover",
-    "model_name_original": "Defender 110",
-    "model_name_cleaned": "Defender",
-    "needsCleaning": true
-  },
-  {
-    "id": 2787,
-    "brand_name": "Land rover",
-    "model_name_original": "Defender 90",
-    "model_name_cleaned": "Defender",
-    "needsCleaning": true
-  },
-  {
-    "id": 2788,
-    "brand_name": "Land rover",
-    "model_name_original": "Defender 130",
-    "model_name_cleaned": "Defender",
-    "needsCleaning": true
-  },
-  {
     "id": 2789,
     "brand_name": "Land rover",
     "model_name_original": "Discovery 2",
@@ -5971,58 +3675,9 @@
     "needsCleaning": true
   },
   {
-    "id": 2790,
-    "brand_name": "Land rover",
-    "model_name_original": "Discovery 3",
-    "model_name_cleaned": "Discovery",
-    "needsCleaning": true
-  },
-  {
-    "id": 2791,
-    "brand_name": "Land rover",
-    "model_name_original": "Discovery 4",
-    "model_name_cleaned": "Discovery",
-    "needsCleaning": true
-  },
-  {
-    "id": 2792,
-    "brand_name": "Land rover",
-    "model_name_original": "Discovery 4",
-    "model_name_cleaned": "Discovery",
-    "needsCleaning": true
-  },
-  {
-    "id": 2793,
-    "brand_name": "Land rover",
-    "model_name_original": "Discovery 5",
-    "model_name_cleaned": "Discovery",
-    "needsCleaning": true
-  },
-  {
-    "id": 2794,
-    "brand_name": "Land rover",
-    "model_name_original": "Discovery Sport",
-    "model_name_cleaned": "Discovery",
-    "needsCleaning": true
-  },
-  {
-    "id": 2795,
-    "brand_name": "Land rover",
-    "model_name_original": "Discovery Sport",
-    "model_name_cleaned": "Discovery",
-    "needsCleaning": true
-  },
-  {
     "id": 2796,
     "brand_name": "Land rover",
     "model_name_original": "Freelander L314",
-    "model_name_cleaned": "Freelander",
-    "needsCleaning": true
-  },
-  {
-    "id": 2797,
-    "brand_name": "Land rover",
-    "model_name_original": "Freelander L359",
     "model_name_cleaned": "Freelander",
     "needsCleaning": true
   },
@@ -6041,76 +3696,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2800,
-    "brand_name": "Land rover",
-    "model_name_original": "Range Rover",
-    "model_name_cleaned": "Range",
-    "needsCleaning": true
-  },
-  {
-    "id": 2801,
-    "brand_name": "Land rover",
-    "model_name_original": "Range Rover",
-    "model_name_cleaned": "Range",
-    "needsCleaning": true
-  },
-  {
-    "id": 2802,
-    "brand_name": "Land rover",
-    "model_name_original": "Range Rover L460",
-    "model_name_cleaned": "Range",
-    "needsCleaning": true
-  },
-  {
-    "id": 2803,
-    "brand_name": "Land rover",
-    "model_name_original": "Range Rover Sport",
-    "model_name_cleaned": "Range",
-    "needsCleaning": true
-  },
-  {
-    "id": 2804,
-    "brand_name": "Land rover",
-    "model_name_original": "Range Rover Sport",
-    "model_name_cleaned": "Range",
-    "needsCleaning": true
-  },
-  {
-    "id": 2805,
-    "brand_name": "Land rover",
-    "model_name_original": "Range Rover Sport L461",
-    "model_name_cleaned": "Range",
-    "needsCleaning": true
-  },
-  {
-    "id": 2806,
-    "brand_name": "Land rover",
-    "model_name_original": "Range Rover SV Autobiography",
-    "model_name_cleaned": "Range",
-    "needsCleaning": true
-  },
-  {
-    "id": 2807,
-    "brand_name": "Land rover",
-    "model_name_original": "Range Rover Autobiography",
-    "model_name_cleaned": "Range",
-    "needsCleaning": true
-  },
-  {
-    "id": 2808,
-    "brand_name": "Land rover",
-    "model_name_original": "Range Rover VELAR",
-    "model_name_cleaned": "Range",
-    "needsCleaning": true
-  },
-  {
-    "id": 2809,
-    "brand_name": "Land rover",
-    "model_name_original": "Range Rover Vogue L322",
-    "model_name_cleaned": "Range",
-    "needsCleaning": true
-  },
-  {
     "id": 2810,
     "brand_name": "Lexus",
     "model_name_original": "CT 200H",
@@ -6125,53 +3710,11 @@
     "needsCleaning": false
   },
   {
-    "id": 2812,
-    "brand_name": "Lexus",
-    "model_name_original": "ES",
-    "model_name_cleaned": "ES",
-    "needsCleaning": false
-  },
-  {
-    "id": 2813,
-    "brand_name": "Lexus",
-    "model_name_original": "ES",
-    "model_name_cleaned": "ES",
-    "needsCleaning": false
-  },
-  {
-    "id": 2814,
-    "brand_name": "Lexus",
-    "model_name_original": "ES",
-    "model_name_cleaned": "ES",
-    "needsCleaning": false
-  },
-  {
-    "id": 2815,
-    "brand_name": "Lexus",
-    "model_name_original": "ES",
-    "model_name_cleaned": "ES",
-    "needsCleaning": false
-  },
-  {
     "id": 2816,
     "brand_name": "Lexus",
     "model_name_original": "GS",
     "model_name_cleaned": "GS",
     "needsCleaning": false
-  },
-  {
-    "id": 2817,
-    "brand_name": "Lexus",
-    "model_name_original": "GS",
-    "model_name_cleaned": "GS",
-    "needsCleaning": false
-  },
-  {
-    "id": 2818,
-    "brand_name": "Lexus",
-    "model_name_original": "GS 300H",
-    "model_name_cleaned": "GS",
-    "needsCleaning": true
   },
   {
     "id": 2819,
@@ -6202,13 +3745,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2823,
-    "brand_name": "Lexus",
-    "model_name_original": "IS 3",
-    "model_name_cleaned": "IS",
-    "needsCleaning": true
-  },
-  {
     "id": 2824,
     "brand_name": "Lexus",
     "model_name_original": "LBX",
@@ -6223,34 +3759,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2826,
-    "brand_name": "Lexus",
-    "model_name_original": "LS 4",
-    "model_name_cleaned": "LS",
-    "needsCleaning": true
-  },
-  {
-    "id": 2827,
-    "brand_name": "Lexus",
-    "model_name_original": "LS zwykła",
-    "model_name_cleaned": "LS",
-    "needsCleaning": true
-  },
-  {
-    "id": 2828,
-    "brand_name": "Lexus",
-    "model_name_original": "LS",
-    "model_name_cleaned": "LS",
-    "needsCleaning": false
-  },
-  {
-    "id": 2829,
-    "brand_name": "Lexus",
-    "model_name_original": "LS",
-    "model_name_cleaned": "LS",
-    "needsCleaning": false
-  },
-  {
     "id": 2830,
     "brand_name": "Lexus",
     "model_name_original": "LX 1 J80",
@@ -6258,30 +3766,9 @@
     "needsCleaning": true
   },
   {
-    "id": 2831,
-    "brand_name": "Lexus",
-    "model_name_original": "LX 470",
-    "model_name_cleaned": "LX",
-    "needsCleaning": true
-  },
-  {
-    "id": 2832,
-    "brand_name": "Lexus",
-    "model_name_original": "LX 570",
-    "model_name_cleaned": "LX",
-    "needsCleaning": true
-  },
-  {
     "id": 2833,
     "brand_name": "Lexus",
     "model_name_original": "NX 200/300H",
-    "model_name_cleaned": "NX",
-    "needsCleaning": true
-  },
-  {
-    "id": 2834,
-    "brand_name": "Lexus",
-    "model_name_original": "NX 450h / 350h",
     "model_name_cleaned": "NX",
     "needsCleaning": true
   },
@@ -6307,24 +3794,10 @@
     "needsCleaning": true
   },
   {
-    "id": 2838,
-    "brand_name": "Lexus",
-    "model_name_original": "RX 450h",
-    "model_name_cleaned": "RX",
-    "needsCleaning": true
-  },
-  {
     "id": 2839,
     "brand_name": "Lexus",
     "model_name_original": "RX-200T, 300, 350, 450 h",
     "model_name_cleaned": "RX-200T,",
-    "needsCleaning": true
-  },
-  {
-    "id": 2840,
-    "brand_name": "Lexus",
-    "model_name_original": "RX 450h/500h/350h",
-    "model_name_cleaned": "RX",
     "needsCleaning": true
   },
   {
@@ -6405,21 +3878,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2856,
-    "brand_name": "Man",
-    "model_name_original": "TGS polift",
-    "model_name_cleaned": "TGS",
-    "needsCleaning": true
-  },
-  {
     "id": 2857,
-    "brand_name": "Man",
-    "model_name_original": "TGX",
-    "model_name_cleaned": "TGX",
-    "needsCleaning": false
-  },
-  {
-    "id": 2858,
     "brand_name": "Man",
     "model_name_original": "TGX",
     "model_name_cleaned": "TGX",
@@ -6434,13 +3893,6 @@
   },
   {
     "id": 2860,
-    "brand_name": "Maserati",
-    "model_name_original": "Ghibli",
-    "model_name_cleaned": "Ghibli",
-    "needsCleaning": false
-  },
-  {
-    "id": 2861,
     "brand_name": "Maserati",
     "model_name_original": "Ghibli",
     "model_name_cleaned": "Ghibli",
@@ -6475,13 +3927,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2867,
-    "brand_name": "Maserati",
-    "model_name_original": "Quattroporte S Q4",
-    "model_name_cleaned": "Quattroporte",
-    "needsCleaning": true
-  },
-  {
     "id": 2868,
     "brand_name": "Massey ferguson",
     "model_name_original": "5445",
@@ -6503,35 +3948,7 @@
     "needsCleaning": false
   },
   {
-    "id": 2871,
-    "brand_name": "Mazda",
-    "model_name_original": "2",
-    "model_name_cleaned": "2",
-    "needsCleaning": false
-  },
-  {
     "id": 2872,
-    "brand_name": "Mazda",
-    "model_name_original": "3",
-    "model_name_cleaned": "3",
-    "needsCleaning": false
-  },
-  {
-    "id": 2873,
-    "brand_name": "Mazda",
-    "model_name_original": "3",
-    "model_name_cleaned": "3",
-    "needsCleaning": false
-  },
-  {
-    "id": 2874,
-    "brand_name": "Mazda",
-    "model_name_original": "3",
-    "model_name_cleaned": "3",
-    "needsCleaning": false
-  },
-  {
-    "id": 2875,
     "brand_name": "Mazda",
     "model_name_original": "3",
     "model_name_cleaned": "3",
@@ -6545,51 +3962,9 @@
     "needsCleaning": false
   },
   {
-    "id": 2877,
-    "brand_name": "Mazda",
-    "model_name_original": "5",
-    "model_name_cleaned": "5",
-    "needsCleaning": false
-  },
-  {
-    "id": 2878,
-    "brand_name": "Mazda",
-    "model_name_original": "5",
-    "model_name_cleaned": "5",
-    "needsCleaning": false
-  },
-  {
-    "id": 2879,
-    "brand_name": "Mazda",
-    "model_name_original": "2",
-    "model_name_cleaned": "2",
-    "needsCleaning": false
-  },
-  {
     "id": 2880,
     "brand_name": "Mazda",
     "model_name_original": "6 GG1",
-    "model_name_cleaned": "6",
-    "needsCleaning": true
-  },
-  {
-    "id": 2881,
-    "brand_name": "Mazda",
-    "model_name_original": "6 2 GH",
-    "model_name_cleaned": "6",
-    "needsCleaning": true
-  },
-  {
-    "id": 2882,
-    "brand_name": "Mazda",
-    "model_name_original": "6",
-    "model_name_cleaned": "6",
-    "needsCleaning": false
-  },
-  {
-    "id": 2883,
-    "brand_name": "Mazda",
-    "model_name_original": "6 (Gj) ( i)",
     "model_name_cleaned": "6",
     "needsCleaning": true
   },
@@ -6602,13 +3977,6 @@
   },
   {
     "id": 2885,
-    "brand_name": "Mazda",
-    "model_name_original": "CX-5",
-    "model_name_cleaned": "CX-5",
-    "needsCleaning": false
-  },
-  {
-    "id": 2886,
     "brand_name": "Mazda",
     "model_name_original": "CX-5",
     "model_name_cleaned": "CX-5",
@@ -6678,20 +4046,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2896,
-    "brand_name": "Mazda",
-    "model_name_original": "MX-5",
-    "model_name_cleaned": "MX-5",
-    "needsCleaning": false
-  },
-  {
-    "id": 2897,
-    "brand_name": "Mazda",
-    "model_name_original": "MX-5",
-    "model_name_cleaned": "MX-5",
-    "needsCleaning": false
-  },
-  {
     "id": 2898,
     "brand_name": "Mazda",
     "model_name_original": "MX-30",
@@ -6727,13 +4081,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2903,
-    "brand_name": "Mazda",
-    "model_name_original": "323F BA",
-    "model_name_cleaned": "323F",
-    "needsCleaning": true
-  },
-  {
     "id": 2904,
     "brand_name": "Maxus",
     "model_name_original": "Euniq 6",
@@ -6762,30 +4109,9 @@
     "needsCleaning": true
   },
   {
-    "id": 2908,
-    "brand_name": "Mercedes-Maybach",
-    "model_name_original": "S-class X223",
-    "model_name_cleaned": "-class",
-    "needsCleaning": true
-  },
-  {
     "id": 2909,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "A-class W168 zwykła",
-    "model_name_cleaned": "A-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2910,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "A-class W169",
-    "model_name_cleaned": "A-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2911,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "A-class W176",
     "model_name_cleaned": "A-class",
     "needsCleaning": true
   },
@@ -6832,13 +4158,6 @@
     "needsCleaning": false
   },
   {
-    "id": 2918,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "Actros",
-    "model_name_cleaned": "Actros",
-    "needsCleaning": false
-  },
-  {
     "id": 2919,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "Arocs",
@@ -6860,20 +4179,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2922,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "B-class W246",
-    "model_name_cleaned": "B-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2923,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "B-class B180 W247",
-    "model_name_cleaned": "B-class",
-    "needsCleaning": true
-  },
-  {
     "id": 2924,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "Citan W415",
@@ -6888,114 +4193,9 @@
     "needsCleaning": true
   },
   {
-    "id": 2926,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "T-class Citan W420",
-    "model_name_cleaned": "T-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2927,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "T-class eCitan EQT",
-    "model_name_cleaned": "T-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2928,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "T-class eCitan / EQT",
-    "model_name_cleaned": "T-class",
-    "needsCleaning": true
-  },
-  {
     "id": 2929,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "C-class W202",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2930,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class S202",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2931,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class CL203 Sport",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2932,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class S203",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2933,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class W203",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2934,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class C204",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2935,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class S204",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2936,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class W204",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2937,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class C205",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2938,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class S205",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2939,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class W205",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2940,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class S206",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2943,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class W206",
     "model_name_cleaned": "C-class",
     "needsCleaning": true
   },
@@ -7007,37 +4207,9 @@
     "needsCleaning": true
   },
   {
-    "id": 2946,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "CL C216",
-    "model_name_cleaned": "CL",
-    "needsCleaning": true
-  },
-  {
     "id": 2947,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "CLA C117",
-    "model_name_cleaned": "CLA",
-    "needsCleaning": true
-  },
-  {
-    "id": 2948,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "CLA X117",
-    "model_name_cleaned": "CLA",
-    "needsCleaning": true
-  },
-  {
-    "id": 2949,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "CLA C118",
-    "model_name_cleaned": "CLA",
-    "needsCleaning": true
-  },
-  {
-    "id": 2950,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "CLA X118",
     "model_name_cleaned": "CLA",
     "needsCleaning": true
   },
@@ -7056,13 +4228,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2953,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "CLE C236",
-    "model_name_cleaned": "CLE",
-    "needsCleaning": true
-  },
-  {
     "id": 2954,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "CLK C208",
@@ -7070,37 +4235,9 @@
     "needsCleaning": true
   },
   {
-    "id": 2955,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "CLK C209",
-    "model_name_cleaned": "CLK",
-    "needsCleaning": true
-  },
-  {
     "id": 2957,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "CLS C219",
-    "model_name_cleaned": "CLS",
-    "needsCleaning": true
-  },
-  {
-    "id": 2958,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "CLS C218",
-    "model_name_cleaned": "CLS",
-    "needsCleaning": true
-  },
-  {
-    "id": 2959,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "CLS X218",
-    "model_name_cleaned": "CLS",
-    "needsCleaning": true
-  },
-  {
-    "id": 2960,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "CLS C257 53 AMG",
     "model_name_cleaned": "CLS",
     "needsCleaning": true
   },
@@ -7124,97 +4261,6 @@
     "model_name_original": "W124",
     "model_name_cleaned": "W124",
     "needsCleaning": false
-  },
-  {
-    "id": 2964,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "E-class S210",
-    "model_name_cleaned": "E-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2965,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "E-class S211",
-    "model_name_cleaned": "E-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2966,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "E-class W211",
-    "model_name_cleaned": "E-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2967,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "E-class C207",
-    "model_name_cleaned": "E-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2968,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "C-class W207",
-    "model_name_cleaned": "C-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2969,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "E-class S212",
-    "model_name_cleaned": "E-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2970,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "E-class W212",
-    "model_name_cleaned": "E-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2971,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "E-class S213",
-    "model_name_cleaned": "E-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2972,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "E-class W213",
-    "model_name_cleaned": "E-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2973,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "E-class A238",
-    "model_name_cleaned": "E-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2974,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "E-class C238",
-    "model_name_cleaned": "E-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2975,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "E-class S214",
-    "model_name_cleaned": "E-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2976,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "E-class W214",
-    "model_name_cleaned": "E-class",
-    "needsCleaning": true
   },
   {
     "id": 2978,
@@ -7245,23 +4291,9 @@
     "needsCleaning": true
   },
   {
-    "id": 2982,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "EQE X294",
-    "model_name_cleaned": "EQE",
-    "needsCleaning": true
-  },
-  {
     "id": 2983,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "EQS 53 V297",
-    "model_name_cleaned": "EQS",
-    "needsCleaning": true
-  },
-  {
-    "id": 2984,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "EQS X296",
     "model_name_cleaned": "EQS",
     "needsCleaning": true
   },
@@ -7280,27 +4312,6 @@
     "needsCleaning": true
   },
   {
-    "id": 2987,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "G-class W463",
-    "model_name_cleaned": "G-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2988,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "G-class W463",
-    "model_name_cleaned": "G-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 2989,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "G-class W464",
-    "model_name_cleaned": "G-class",
-    "needsCleaning": true
-  },
-  {
     "id": 2990,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "GL X164",
@@ -7308,23 +4319,9 @@
     "needsCleaning": true
   },
   {
-    "id": 2992,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "GL X166",
-    "model_name_cleaned": "GL",
-    "needsCleaning": true
-  },
-  {
     "id": 2993,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "GLA X156 4 matik",
-    "model_name_cleaned": "GLA",
-    "needsCleaning": true
-  },
-  {
-    "id": 2994,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "GLA (AMG) H247",
     "model_name_cleaned": "GLA",
     "needsCleaning": true
   },
@@ -7343,51 +4340,9 @@
     "needsCleaning": true
   },
   {
-    "id": 2997,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "GLC X253",
-    "model_name_cleaned": "GLC",
-    "needsCleaning": true
-  },
-  {
-    "id": 2998,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "GLC C254",
-    "model_name_cleaned": "GLC",
-    "needsCleaning": true
-  },
-  {
-    "id": 2999,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "GLC X254",
-    "model_name_cleaned": "GLC",
-    "needsCleaning": true
-  },
-  {
     "id": 3000,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "GLE C292",
-    "model_name_cleaned": "GLE",
-    "needsCleaning": true
-  },
-  {
-    "id": 3001,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "GLE W166/ W292",
-    "model_name_cleaned": "GLE",
-    "needsCleaning": true
-  },
-  {
-    "id": 3002,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "GLE C167",
-    "model_name_cleaned": "GLE",
-    "needsCleaning": true
-  },
-  {
-    "id": 3004,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "GLE W167",
     "model_name_cleaned": "GLE",
     "needsCleaning": true
   },
@@ -7406,44 +4361,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3007,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "GLS X167",
-    "model_name_cleaned": "GLS",
-    "needsCleaning": true
-  },
-  {
     "id": 3008,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "ML W163",
-    "model_name_cleaned": "ML",
-    "needsCleaning": true
-  },
-  {
-    "id": 3009,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "ML W164 Edition",
-    "model_name_cleaned": "ML",
-    "needsCleaning": true
-  },
-  {
-    "id": 3010,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "ML W164",
-    "model_name_cleaned": "ML",
-    "needsCleaning": true
-  },
-  {
-    "id": 3011,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "ML W166",
-    "model_name_cleaned": "ML",
-    "needsCleaning": true
-  },
-  {
-    "id": 3012,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "ML W166",
     "model_name_cleaned": "ML",
     "needsCleaning": true
   },
@@ -7455,72 +4375,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3015,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "S-class W220",
-    "model_name_cleaned": "-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 3016,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "S-class W220",
-    "model_name_cleaned": "-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 3017,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "S-class W221 zwykly",
-    "model_name_cleaned": "-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 3018,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "S-class W221",
-    "model_name_cleaned": "-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 3019,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "S-class W222",
-    "model_name_cleaned": "-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 3021,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "S-class C217",
-    "model_name_cleaned": "-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 3022,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "S-class W223",
-    "model_name_cleaned": "-class",
-    "needsCleaning": true
-  },
-  {
     "id": 3023,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "SL R107",
-    "model_name_cleaned": "SL",
-    "needsCleaning": true
-  },
-  {
-    "id": 3024,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "SL 500 R129",
-    "model_name_cleaned": "SL",
-    "needsCleaning": true
-  },
-  {
-    "id": 3025,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "SL 500 R230",
     "model_name_cleaned": "SL",
     "needsCleaning": true
   },
@@ -7535,20 +4392,6 @@
     "id": 3027,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "SLK R170",
-    "model_name_cleaned": "SLK",
-    "needsCleaning": true
-  },
-  {
-    "id": 3028,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "SLK R171",
-    "model_name_cleaned": "SLK",
-    "needsCleaning": true
-  },
-  {
-    "id": 3029,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "SLK R172",
     "model_name_cleaned": "SLK",
     "needsCleaning": true
   },
@@ -7581,34 +4424,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3034,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "R-class W251 zwykła",
-    "model_name_cleaned": "R-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 3035,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "Sprinter W906",
-    "model_name_cleaned": "Sprinter",
-    "needsCleaning": true
-  },
-  {
-    "id": 3036,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "Sprinter W906",
-    "model_name_cleaned": "Sprinter",
-    "needsCleaning": true
-  },
-  {
-    "id": 3037,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "Sprinter Tourer",
-    "model_name_cleaned": "Sprinter",
-    "needsCleaning": true
-  },
-  {
     "id": 3038,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "W907/W910",
@@ -7616,32 +4431,11 @@
     "needsCleaning": false
   },
   {
-    "id": 3039,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "W907/W910 dostawczak",
-    "model_name_cleaned": "W907/W910",
-    "needsCleaning": true
-  },
-  {
-    "id": 3040,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "W907/W910 dubel kabina",
-    "model_name_cleaned": "W907/W910",
-    "needsCleaning": true
-  },
-  {
     "id": 3041,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "Unimog U4000",
     "model_name_cleaned": "Unimog",
     "needsCleaning": true
-  },
-  {
-    "id": 3042,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "Unimog",
-    "model_name_cleaned": "Unimog",
-    "needsCleaning": false
   },
   {
     "id": 3043,
@@ -7658,44 +4452,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3045,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "V-class Viano/Vito W639",
-    "model_name_cleaned": "V-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 3046,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "V-class Vito Tourer",
-    "model_name_cleaned": "V-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 3047,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "V-class W447 przedlift",
-    "model_name_cleaned": "V-class",
-    "needsCleaning": true
-  },
-  {
-    "id": 3048,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "V-class EQV N447/ W447",
-    "model_name_cleaned": "V-class",
-    "needsCleaning": true
-  },
-  {
     "id": 3049,
     "brand_name": "Mercedes-Benz",
     "model_name_original": "W447 V-Class EQV N447 polift",
-    "model_name_cleaned": "W447",
-    "needsCleaning": true
-  },
-  {
-    "id": 3050,
-    "brand_name": "Mercedes-Benz",
-    "model_name_original": "W447 V-Class Extra",
     "model_name_cleaned": "W447",
     "needsCleaning": true
   },
@@ -7756,21 +4515,7 @@
     "needsCleaning": false
   },
   {
-    "id": 3059,
-    "brand_name": "MG",
-    "model_name_original": "HS",
-    "model_name_cleaned": "HS",
-    "needsCleaning": false
-  },
-  {
     "id": 3062,
-    "brand_name": "MG",
-    "model_name_original": "ZS",
-    "model_name_cleaned": "ZS",
-    "needsCleaning": false
-  },
-  {
-    "id": 3063,
     "brand_name": "MG",
     "model_name_original": "ZS",
     "model_name_cleaned": "ZS",
@@ -7791,13 +4536,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3080,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "ASX",
-    "model_name_cleaned": "ASX",
-    "needsCleaning": false
-  },
-  {
     "id": 3081,
     "brand_name": "Mitsubishi",
     "model_name_original": "Carisma",
@@ -7812,60 +4550,11 @@
     "needsCleaning": true
   },
   {
-    "id": 3083,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Colt 5drzwi",
-    "model_name_cleaned": "Colt",
-    "needsCleaning": true
-  },
-  {
-    "id": 3084,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Colt 7",
-    "model_name_cleaned": "Colt",
-    "needsCleaning": true
-  },
-  {
     "id": 3085,
     "brand_name": "Mitsubishi",
     "model_name_original": "Eclipse",
     "model_name_cleaned": "Eclipse",
     "needsCleaning": false
-  },
-  {
-    "id": 3086,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Eclipse",
-    "model_name_cleaned": "Eclipse",
-    "needsCleaning": false
-  },
-  {
-    "id": 3087,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Eclipse",
-    "model_name_cleaned": "Eclipse",
-    "needsCleaning": false
-  },
-  {
-    "id": 3088,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Eclipse Spyder",
-    "model_name_cleaned": "Eclipse",
-    "needsCleaning": true
-  },
-  {
-    "id": 3089,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Eclipse Cross",
-    "model_name_cleaned": "Eclipse",
-    "needsCleaning": true
-  },
-  {
-    "id": 3090,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Eclipse Cross",
-    "model_name_cleaned": "Eclipse",
-    "needsCleaning": true
   },
   {
     "id": 3091,
@@ -7910,48 +4599,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3097,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Outlander 3",
-    "model_name_cleaned": "Outlander",
-    "needsCleaning": true
-  },
-  {
-    "id": 3098,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Outlander 3",
-    "model_name_cleaned": "Outlander",
-    "needsCleaning": true
-  },
-  {
-    "id": 3099,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Outlander Sport",
-    "model_name_cleaned": "Outlander",
-    "needsCleaning": true
-  },
-  {
-    "id": 3100,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Outlander 4",
-    "model_name_cleaned": "Outlander",
-    "needsCleaning": true
-  },
-  {
-    "id": 3101,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Outlander",
-    "model_name_cleaned": "Outlander",
-    "needsCleaning": false
-  },
-  {
-    "id": 3102,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Outlander",
-    "model_name_cleaned": "Outlander",
-    "needsCleaning": false
-  },
-  {
     "id": 3103,
     "brand_name": "Mitsubishi",
     "model_name_original": "PAJERO Sport",
@@ -7966,30 +4613,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3105,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Space Star/ Mirage",
-    "model_name_cleaned": "Space",
-    "needsCleaning": true
-  },
-  {
     "id": 3106,
     "brand_name": "Mitsubishi",
     "model_name_original": "Lancer 7",
-    "model_name_cleaned": "Lancer",
-    "needsCleaning": true
-  },
-  {
-    "id": 3107,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Lancer 8",
-    "model_name_cleaned": "Lancer",
-    "needsCleaning": true
-  },
-  {
-    "id": 3108,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Lancer X Evolution",
     "model_name_cleaned": "Lancer",
     "needsCleaning": true
   },
@@ -8001,51 +4627,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3110,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Pajero 3",
-    "model_name_cleaned": "Pajero",
-    "needsCleaning": true
-  },
-  {
-    "id": 3111,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Pajero 3",
-    "model_name_cleaned": "Pajero",
-    "needsCleaning": true
-  },
-  {
-    "id": 3112,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Pajero Pinin",
-    "model_name_cleaned": "Pajero",
-    "needsCleaning": true
-  },
-  {
-    "id": 3113,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "PAJERO 4 7os",
-    "model_name_cleaned": "PAJERO",
-    "needsCleaning": true
-  },
-  {
-    "id": 3114,
-    "brand_name": "Mitsubishi",
-    "model_name_original": "Pajero Sport",
-    "model_name_cleaned": "Pajero",
-    "needsCleaning": true
-  },
-  {
     "id": 3115,
     "brand_name": "MITSUBISHI",
     "model_name_original": "L200 polift",
-    "model_name_cleaned": "L200",
-    "needsCleaning": true
-  },
-  {
-    "id": 3116,
-    "brand_name": "MITSUBISHI",
-    "model_name_original": "L200 Triton",
     "model_name_cleaned": "L200",
     "needsCleaning": true
   },
@@ -8106,13 +4690,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3125,
-    "brand_name": "New Holland",
-    "model_name_original": "T5 140",
-    "model_name_cleaned": "T5",
-    "needsCleaning": true
-  },
-  {
     "id": 3126,
     "brand_name": "New Holland",
     "model_name_original": "T6 160",
@@ -8137,13 +4714,6 @@
     "id": 3129,
     "brand_name": "Nissan",
     "model_name_original": "Almera N16",
-    "model_name_cleaned": "Almera",
-    "needsCleaning": true
-  },
-  {
-    "id": 3130,
-    "brand_name": "Nissan",
-    "model_name_original": "Almera Tino",
     "model_name_cleaned": "Almera",
     "needsCleaning": true
   },
@@ -8197,23 +4767,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3138,
-    "brand_name": "Nissan",
-    "model_name_original": "Murano Z51",
-    "model_name_cleaned": "Murano",
-    "needsCleaning": true
-  },
-  {
     "id": 3139,
     "brand_name": "Nissan",
     "model_name_original": "Micra 2",
-    "model_name_cleaned": "Micra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3140,
-    "brand_name": "Nissan",
-    "model_name_original": "Micra K12",
     "model_name_cleaned": "Micra",
     "needsCleaning": true
   },
@@ -8232,21 +4788,7 @@
     "needsCleaning": true
   },
   {
-    "id": 3143,
-    "brand_name": "Nissan",
-    "model_name_original": "Navara",
-    "model_name_cleaned": "Navara",
-    "needsCleaning": false
-  },
-  {
     "id": 3145,
-    "brand_name": "Nissan",
-    "model_name_original": "Note",
-    "model_name_cleaned": "Note",
-    "needsCleaning": false
-  },
-  {
-    "id": 3146,
     "brand_name": "Nissan",
     "model_name_original": "Note",
     "model_name_cleaned": "Note",
@@ -8270,13 +4812,6 @@
     "id": 3149,
     "brand_name": "Nissan",
     "model_name_original": "Patrol Y61",
-    "model_name_cleaned": "Patrol",
-    "needsCleaning": true
-  },
-  {
-    "id": 3150,
-    "brand_name": "Nissan",
-    "model_name_original": "Patrol Y60 5os",
     "model_name_cleaned": "Patrol",
     "needsCleaning": true
   },
@@ -8309,13 +4844,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3155,
-    "brand_name": "Nissan",
-    "model_name_original": "Qashqai e-Power",
-    "model_name_cleaned": "Qashqai",
-    "needsCleaning": true
-  },
-  {
     "id": 3156,
     "brand_name": "Nissan",
     "model_name_original": "Rogue Sport",
@@ -8323,21 +4851,7 @@
     "needsCleaning": true
   },
   {
-    "id": 3157,
-    "brand_name": "Nissan",
-    "model_name_original": "Rogue",
-    "model_name_cleaned": "Rogue",
-    "needsCleaning": false
-  },
-  {
     "id": 3158,
-    "brand_name": "Nissan",
-    "model_name_original": "Juke",
-    "model_name_cleaned": "Juke",
-    "needsCleaning": false
-  },
-  {
-    "id": 3159,
     "brand_name": "Nissan",
     "model_name_original": "Juke",
     "model_name_cleaned": "Juke",
@@ -8349,13 +4863,6 @@
     "model_name_original": "Pathfinder R50",
     "model_name_cleaned": "Pathfinder",
     "needsCleaning": true
-  },
-  {
-    "id": 3161,
-    "brand_name": "Nissan",
-    "model_name_original": "Pathfinder",
-    "model_name_cleaned": "Pathfinder",
-    "needsCleaning": false
   },
   {
     "id": 3162,
@@ -8400,37 +4907,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3168,
-    "brand_name": "Nissan",
-    "model_name_original": "X-Trail T31",
-    "model_name_cleaned": "X-Trail",
-    "needsCleaning": true
-  },
-  {
-    "id": 3169,
-    "brand_name": "Nissan",
-    "model_name_original": "X-Trail T32",
-    "model_name_cleaned": "X-Trail",
-    "needsCleaning": true
-  },
-  {
-    "id": 3170,
-    "brand_name": "Nissan",
-    "model_name_original": "X-Trail T33",
-    "model_name_cleaned": "X-Trail",
-    "needsCleaning": true
-  },
-  {
     "id": 3171,
     "brand_name": "NiSSAN",
     "model_name_original": "Micra K13",
-    "model_name_cleaned": "Micra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3172,
-    "brand_name": "NiSSAN",
-    "model_name_original": "Micra 5 K14",
     "model_name_cleaned": "Micra",
     "needsCleaning": true
   },
@@ -8452,13 +4931,6 @@
     "id": 3175,
     "brand_name": "NISSAN",
     "model_name_original": "QASHQAI 1",
-    "model_name_cleaned": "QASHQAI",
-    "needsCleaning": true
-  },
-  {
-    "id": 3177,
-    "brand_name": "NISSAN",
-    "model_name_original": "QASHQAI 12 ()",
     "model_name_cleaned": "QASHQAI",
     "needsCleaning": true
   },
@@ -8498,90 +4970,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3184,
-    "brand_name": "Opel",
-    "model_name_original": "Astra F",
-    "model_name_cleaned": "Astra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3185,
-    "brand_name": "Opel",
-    "model_name_original": "Astra G",
-    "model_name_cleaned": "Astra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3186,
-    "brand_name": "Opel",
-    "model_name_original": "Astra G 3drz Kabriolet",
-    "model_name_cleaned": "Astra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3187,
-    "brand_name": "Opel",
-    "model_name_original": "Astra H TwinTop",
-    "model_name_cleaned": "Astra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3188,
-    "brand_name": "Opel",
-    "model_name_original": "Astra H",
-    "model_name_cleaned": "Astra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3189,
-    "brand_name": "Opel",
-    "model_name_original": "Astra H GTC",
-    "model_name_cleaned": "Astra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3190,
-    "brand_name": "Opel",
-    "model_name_original": "Astra J",
-    "model_name_cleaned": "Astra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3191,
-    "brand_name": "Opel",
-    "model_name_original": "Astra J",
-    "model_name_cleaned": "Astra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3192,
-    "brand_name": "Opel",
-    "model_name_original": "Astra J GTC",
-    "model_name_cleaned": "Astra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3193,
-    "brand_name": "Opel",
-    "model_name_original": "Astra J",
-    "model_name_cleaned": "Astra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3194,
-    "brand_name": "Opel",
-    "model_name_original": "Astra K",
-    "model_name_cleaned": "Astra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3195,
-    "brand_name": "Opel",
-    "model_name_original": "Astra L",
-    "model_name_cleaned": "Astra",
-    "needsCleaning": true
-  },
-  {
     "id": 3196,
     "brand_name": "Opel",
     "model_name_original": "Calibra",
@@ -8603,13 +4991,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3199,
-    "brand_name": "Opel",
-    "model_name_original": "Combo D",
-    "model_name_cleaned": "Combo",
-    "needsCleaning": true
-  },
-  {
     "id": 3200,
     "brand_name": "Opel",
     "model_name_original": "COMBO E / Life",
@@ -8617,30 +4998,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3201,
-    "brand_name": "Opel",
-    "model_name_original": "Combo",
-    "model_name_cleaned": "Combo",
-    "needsCleaning": false
-  },
-  {
     "id": 3202,
     "brand_name": "Opel",
     "model_name_original": "CORSA E",
-    "model_name_cleaned": "CORSA",
-    "needsCleaning": true
-  },
-  {
-    "id": 3203,
-    "brand_name": "Opel",
-    "model_name_original": "CORSA F",
-    "model_name_cleaned": "CORSA",
-    "needsCleaning": true
-  },
-  {
-    "id": 3204,
-    "brand_name": "Opel",
-    "model_name_original": "CORSA F elektrik",
     "model_name_cleaned": "CORSA",
     "needsCleaning": true
   },
@@ -8659,27 +5019,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3207,
-    "brand_name": "Opel",
-    "model_name_original": "Frontera B",
-    "model_name_cleaned": "Frontera",
-    "needsCleaning": true
-  },
-  {
-    "id": 3208,
-    "brand_name": "Opel",
-    "model_name_original": "Frontera",
-    "model_name_cleaned": "Frontera",
-    "needsCleaning": false
-  },
-  {
-    "id": 3209,
-    "brand_name": "Opel",
-    "model_name_original": "Frontera Electric",
-    "model_name_cleaned": "Frontera",
-    "needsCleaning": true
-  },
-  {
     "id": 3210,
     "brand_name": "Opel",
     "model_name_original": "Insignia 1g",
@@ -8687,30 +5026,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3211,
-    "brand_name": "Opel",
-    "model_name_original": "Insignia 1g",
-    "model_name_cleaned": "Insignia",
-    "needsCleaning": true
-  },
-  {
-    "id": 3212,
-    "brand_name": "Opel",
-    "model_name_original": "Insignia B Grand SportSports Tourer",
-    "model_name_cleaned": "Insignia",
-    "needsCleaning": true
-  },
-  {
     "id": 3213,
     "brand_name": "Opel",
     "model_name_original": "Meriva A",
-    "model_name_cleaned": "Meriva",
-    "needsCleaning": true
-  },
-  {
-    "id": 3214,
-    "brand_name": "Opel",
-    "model_name_original": "Meriva B, Vauxhall Meriva",
     "model_name_cleaned": "Meriva",
     "needsCleaning": true
   },
@@ -8743,37 +5061,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3220,
-    "brand_name": "Opel",
-    "model_name_original": "Movano B",
-    "model_name_cleaned": "Movano",
-    "needsCleaning": true
-  },
-  {
-    "id": 3221,
-    "brand_name": "Opel",
-    "model_name_original": "Movano B Lift",
-    "model_name_cleaned": "Movano",
-    "needsCleaning": true
-  },
-  {
-    "id": 3222,
-    "brand_name": "Opel",
-    "model_name_original": "Movano C",
-    "model_name_cleaned": "Movano",
-    "needsCleaning": true
-  },
-  {
     "id": 3223,
     "brand_name": "Opel",
     "model_name_original": "Omega A",
-    "model_name_cleaned": "Omega",
-    "needsCleaning": true
-  },
-  {
-    "id": 3224,
-    "brand_name": "Opel",
-    "model_name_original": "Omega B",
     "model_name_cleaned": "Omega",
     "needsCleaning": true
   },
@@ -8806,23 +5096,9 @@
     "needsCleaning": false
   },
   {
-    "id": 3229,
-    "brand_name": "Opel",
-    "model_name_original": "Vivaro",
-    "model_name_cleaned": "Vivaro",
-    "needsCleaning": false
-  },
-  {
     "id": 3230,
     "brand_name": "Opel",
     "model_name_original": "ZAFIRA A",
-    "model_name_cleaned": "ZAFIRA",
-    "needsCleaning": true
-  },
-  {
-    "id": 3231,
-    "brand_name": "Opel",
-    "model_name_original": "ZAFIRA LIFE (BUS)",
     "model_name_cleaned": "ZAFIRA",
     "needsCleaning": true
   },
@@ -8841,51 +5117,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3234,
-    "brand_name": "Opel",
-    "model_name_original": "Corsa D 5 drzwi",
-    "model_name_cleaned": "Corsa",
-    "needsCleaning": true
-  },
-  {
-    "id": 3235,
-    "brand_name": "Opel",
-    "model_name_original": "Corsa D 3 drzwi",
-    "model_name_cleaned": "Corsa",
-    "needsCleaning": true
-  },
-  {
-    "id": 3236,
-    "brand_name": "Opel",
-    "model_name_original": "Tigra TwinTop",
-    "model_name_cleaned": "Tigra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3237,
-    "brand_name": "Opel",
-    "model_name_original": "Vectra A",
-    "model_name_cleaned": "Vectra",
-    "needsCleaning": true
-  },
-  {
-    "id": 3238,
-    "brand_name": "Opel",
-    "model_name_original": "Vectra B",
-    "model_name_cleaned": "Vectra",
-    "needsCleaning": true
-  },
-  {
     "id": 3239,
     "brand_name": "Opel",
     "model_name_original": "Zafira B",
-    "model_name_cleaned": "Zafira",
-    "needsCleaning": true
-  },
-  {
-    "id": 3240,
-    "brand_name": "Opel",
-    "model_name_original": "Zafira C",
     "model_name_cleaned": "Zafira",
     "needsCleaning": true
   },
@@ -8895,13 +5129,6 @@
     "model_name_original": "Grandland X",
     "model_name_cleaned": "Grandland",
     "needsCleaning": true
-  },
-  {
-    "id": 3242,
-    "brand_name": "Opel",
-    "model_name_original": "Grandland",
-    "model_name_cleaned": "Grandland",
-    "needsCleaning": false
   },
   {
     "id": 3243,
@@ -9002,20 +5229,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3257,
-    "brand_name": "Peugeot",
-    "model_name_original": "3008",
-    "model_name_cleaned": "3008",
-    "needsCleaning": false
-  },
-  {
-    "id": 3258,
-    "brand_name": "Peugeot",
-    "model_name_original": "3008",
-    "model_name_cleaned": "3008",
-    "needsCleaning": false
-  },
-  {
     "id": 3259,
     "brand_name": "Peugeot",
     "model_name_original": "4007",
@@ -9030,13 +5243,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3261,
-    "brand_name": "Peugeot",
-    "model_name_original": "5008",
-    "model_name_cleaned": "5008",
-    "needsCleaning": false
-  },
-  {
     "id": 3262,
     "brand_name": "Peugeot",
     "model_name_original": "107 5drzwi",
@@ -9044,32 +5250,11 @@
     "needsCleaning": true
   },
   {
-    "id": 3263,
-    "brand_name": "Peugeot",
-    "model_name_original": "2008",
-    "model_name_cleaned": "2008",
-    "needsCleaning": false
-  },
-  {
     "id": 3264,
     "brand_name": "Peugeot",
     "model_name_original": "e2008",
     "model_name_cleaned": "e2008",
     "needsCleaning": false
-  },
-  {
-    "id": 3265,
-    "brand_name": "Peugeot",
-    "model_name_original": "2008 HEV",
-    "model_name_cleaned": "2008",
-    "needsCleaning": true
-  },
-  {
-    "id": 3266,
-    "brand_name": "Peugeot",
-    "model_name_original": "3008 PHEV",
-    "model_name_cleaned": "3008",
-    "needsCleaning": true
   },
   {
     "id": 3267,
@@ -9086,32 +5271,11 @@
     "needsCleaning": false
   },
   {
-    "id": 3269,
-    "brand_name": "Peugeot",
-    "model_name_original": "207 SW",
-    "model_name_cleaned": "207",
-    "needsCleaning": true
-  },
-  {
     "id": 3270,
     "brand_name": "Peugeot",
     "model_name_original": "207CC",
     "model_name_cleaned": "207CC",
     "needsCleaning": false
-  },
-  {
-    "id": 3271,
-    "brand_name": "Peugeot",
-    "model_name_original": "208",
-    "model_name_cleaned": "208",
-    "needsCleaning": false
-  },
-  {
-    "id": 3272,
-    "brand_name": "Peugeot",
-    "model_name_original": "208 MHEV",
-    "model_name_cleaned": "208",
-    "needsCleaning": true
   },
   {
     "id": 3273,
@@ -9149,28 +5313,7 @@
     "needsCleaning": true
   },
   {
-    "id": 3278,
-    "brand_name": "Peugeot",
-    "model_name_original": "308 SW",
-    "model_name_cleaned": "308",
-    "needsCleaning": true
-  },
-  {
-    "id": 3279,
-    "brand_name": "Peugeot",
-    "model_name_original": "308 (przedlift)",
-    "model_name_cleaned": "308",
-    "needsCleaning": true
-  },
-  {
     "id": 3280,
-    "brand_name": "Peugeot",
-    "model_name_original": "Expert",
-    "model_name_cleaned": "Expert",
-    "needsCleaning": false
-  },
-  {
-    "id": 3281,
     "brand_name": "Peugeot",
     "model_name_original": "Expert",
     "model_name_cleaned": "Expert",
@@ -9212,21 +5355,7 @@
     "needsCleaning": false
   },
   {
-    "id": 3287,
-    "brand_name": "PEUGEOT",
-    "model_name_original": "508 SW",
-    "model_name_cleaned": "508",
-    "needsCleaning": true
-  },
-  {
     "id": 3288,
-    "brand_name": "PEUGEOT",
-    "model_name_original": "Boxter",
-    "model_name_cleaned": "Boxter",
-    "needsCleaning": false
-  },
-  {
-    "id": 3289,
     "brand_name": "PEUGEOT",
     "model_name_original": "Boxter",
     "model_name_cleaned": "Boxter",
@@ -9254,13 +5383,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3293,
-    "brand_name": "PEUGEOT",
-    "model_name_original": "Partner / Rifter",
-    "model_name_cleaned": "Partner",
-    "needsCleaning": true
-  },
-  {
     "id": 3294,
     "brand_name": "PEUGEOT",
     "model_name_original": "RCZ",
@@ -9282,32 +5404,11 @@
     "needsCleaning": false
   },
   {
-    "id": 3297,
-    "brand_name": "Porsche",
-    "model_name_original": "911",
-    "model_name_cleaned": "911",
-    "needsCleaning": false
-  },
-  {
     "id": 3298,
     "brand_name": "Porsche",
     "model_name_original": "924",
     "model_name_cleaned": "924",
     "needsCleaning": false
-  },
-  {
-    "id": 3299,
-    "brand_name": "Porsche",
-    "model_name_original": "911 Carrera 4S 991",
-    "model_name_cleaned": "911",
-    "needsCleaning": true
-  },
-  {
-    "id": 3300,
-    "brand_name": "Porsche",
-    "model_name_original": "911 Carrera 992",
-    "model_name_cleaned": "911",
-    "needsCleaning": true
   },
   {
     "id": 3301,
@@ -9338,27 +5439,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3305,
-    "brand_name": "Porsche",
-    "model_name_original": "Cayenne",
-    "model_name_cleaned": "Cayenne",
-    "needsCleaning": false
-  },
-  {
-    "id": 3306,
-    "brand_name": "Porsche",
-    "model_name_original": "Cayenne",
-    "model_name_cleaned": "Cayenne",
-    "needsCleaning": false
-  },
-  {
-    "id": 3307,
-    "brand_name": "Porsche",
-    "model_name_original": "Cayenne",
-    "model_name_cleaned": "Cayenne",
-    "needsCleaning": false
-  },
-  {
     "id": 3308,
     "brand_name": "Porsche",
     "model_name_original": "Cayman",
@@ -9380,20 +5460,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3311,
-    "brand_name": "Porsche",
-    "model_name_original": "Panamera Turbo S",
-    "model_name_cleaned": "Panamera",
-    "needsCleaning": true
-  },
-  {
-    "id": 3312,
-    "brand_name": "Porsche",
-    "model_name_original": "Panamera 972",
-    "model_name_cleaned": "Panamera",
-    "needsCleaning": true
-  },
-  {
     "id": 3313,
     "brand_name": "Porsche",
     "model_name_original": "Taycan4S",
@@ -9404,13 +5470,6 @@
     "id": 3314,
     "brand_name": "Porsche",
     "model_name_original": "Taycan 4S Cross Turismo",
-    "model_name_cleaned": "Taycan",
-    "needsCleaning": true
-  },
-  {
-    "id": 3315,
-    "brand_name": "Porsche",
-    "model_name_original": "Taycan Turbo GT",
     "model_name_cleaned": "Taycan",
     "needsCleaning": true
   },
@@ -9457,53 +5516,11 @@
     "needsCleaning": false
   },
   {
-    "id": 3322,
-    "brand_name": "Renault",
-    "model_name_original": "Captur",
-    "model_name_cleaned": "Captur",
-    "needsCleaning": false
-  },
-  {
-    "id": 3323,
-    "brand_name": "Renault",
-    "model_name_original": "Captur E-Tech",
-    "model_name_cleaned": "Captur",
-    "needsCleaning": true
-  },
-  {
     "id": 3324,
     "brand_name": "Renault",
     "model_name_original": "Clio Staria",
     "model_name_cleaned": "Clio",
     "needsCleaning": true
-  },
-  {
-    "id": 3325,
-    "brand_name": "Renault",
-    "model_name_original": "Clio",
-    "model_name_cleaned": "Clio",
-    "needsCleaning": false
-  },
-  {
-    "id": 3326,
-    "brand_name": "Renault",
-    "model_name_original": "Clio Campus",
-    "model_name_cleaned": "Clio",
-    "needsCleaning": true
-  },
-  {
-    "id": 3327,
-    "brand_name": "Renault",
-    "model_name_original": "Clio",
-    "model_name_cleaned": "Clio",
-    "needsCleaning": false
-  },
-  {
-    "id": 3328,
-    "brand_name": "Renault",
-    "model_name_original": "Clio",
-    "model_name_cleaned": "Clio",
-    "needsCleaning": false
   },
   {
     "id": 3329,
@@ -9520,13 +5537,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3331,
-    "brand_name": "Renault",
-    "model_name_original": "Espace 6",
-    "model_name_cleaned": "Espace",
-    "needsCleaning": true
-  },
-  {
     "id": 3332,
     "brand_name": "Renault",
     "model_name_original": "Express",
@@ -9535,34 +5545,6 @@
   },
   {
     "id": 3333,
-    "brand_name": "Renault",
-    "model_name_original": "Kangoo",
-    "model_name_cleaned": "Kangoo",
-    "needsCleaning": false
-  },
-  {
-    "id": 3334,
-    "brand_name": "Renault",
-    "model_name_original": "Kangoo",
-    "model_name_cleaned": "Kangoo",
-    "needsCleaning": false
-  },
-  {
-    "id": 3335,
-    "brand_name": "Renault",
-    "model_name_original": "Kangoo",
-    "model_name_cleaned": "Kangoo",
-    "needsCleaning": false
-  },
-  {
-    "id": 3336,
-    "brand_name": "Renault",
-    "model_name_original": "Kangoo",
-    "model_name_cleaned": "Kangoo",
-    "needsCleaning": false
-  },
-  {
-    "id": 3337,
     "brand_name": "Renault",
     "model_name_original": "Kangoo",
     "model_name_cleaned": "Kangoo",
@@ -9597,20 +5579,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3342,
-    "brand_name": "Renault",
-    "model_name_original": "Laguna 3",
-    "model_name_cleaned": "Laguna",
-    "needsCleaning": true
-  },
-  {
-    "id": 3343,
-    "brand_name": "Renault",
-    "model_name_original": "Laguna 3",
-    "model_name_cleaned": "Laguna",
-    "needsCleaning": true
-  },
-  {
     "id": 3344,
     "brand_name": "Renault",
     "model_name_original": "Latitude",
@@ -9639,41 +5607,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3348,
-    "brand_name": "Renault",
-    "model_name_original": "Megane 2",
-    "model_name_cleaned": "Megane",
-    "needsCleaning": true
-  },
-  {
-    "id": 3349,
-    "brand_name": "Renault",
-    "model_name_original": "Megane 2",
-    "model_name_cleaned": "Megane",
-    "needsCleaning": true
-  },
-  {
-    "id": 3350,
-    "brand_name": "Renault",
-    "model_name_original": "Megane III",
-    "model_name_cleaned": "Megane",
-    "needsCleaning": true
-  },
-  {
-    "id": 3351,
-    "brand_name": "Renault",
-    "model_name_original": "Megane 3 CC",
-    "model_name_cleaned": "Megane",
-    "needsCleaning": true
-  },
-  {
-    "id": 3352,
-    "brand_name": "Renault",
-    "model_name_original": "Megane 4 GT",
-    "model_name_cleaned": "Megane",
-    "needsCleaning": true
-  },
-  {
     "id": 3353,
     "brand_name": "Renault",
     "model_name_original": "Megan E-Tech Electric",
@@ -9695,13 +5628,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3356,
-    "brand_name": "Renault",
-    "model_name_original": "Grand Modus",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
     "id": 3357,
     "brand_name": "Renault",
     "model_name_original": "Premium",
@@ -9719,55 +5645,6 @@
     "id": 3359,
     "brand_name": "Renault",
     "model_name_original": "Scenic 1g",
-    "model_name_cleaned": "Scenic",
-    "needsCleaning": true
-  },
-  {
-    "id": 3360,
-    "brand_name": "Renault",
-    "model_name_original": "Scenic 2g",
-    "model_name_cleaned": "Scenic",
-    "needsCleaning": true
-  },
-  {
-    "id": 3361,
-    "brand_name": "Renault",
-    "model_name_original": "Grand Scenic 2g",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
-    "id": 3362,
-    "brand_name": "Renault",
-    "model_name_original": "Scenic",
-    "model_name_cleaned": "Scenic",
-    "needsCleaning": false
-  },
-  {
-    "id": 3363,
-    "brand_name": "Renault",
-    "model_name_original": "Grand Scenic",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
-    "id": 3364,
-    "brand_name": "Renault",
-    "model_name_original": "Scenic",
-    "model_name_cleaned": "Scenic",
-    "needsCleaning": false
-  },
-  {
-    "id": 3365,
-    "brand_name": "Renault",
-    "model_name_original": "Grand Scenic",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
-    "id": 3366,
-    "brand_name": "Renault",
-    "model_name_original": "Scenic E-Tech electric",
     "model_name_cleaned": "Scenic",
     "needsCleaning": true
   },
@@ -9807,30 +5684,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3373,
-    "brand_name": "Renault",
-    "model_name_original": "Trafic",
-    "model_name_cleaned": "Trafic",
-    "needsCleaning": false
-  },
-  {
-    "id": 3374,
-    "brand_name": "Renault",
-    "model_name_original": "Trafic",
-    "model_name_cleaned": "Trafic",
-    "needsCleaning": false
-  },
-  {
     "id": 3376,
     "brand_name": "Renault",
     "model_name_original": "Twingo 2",
-    "model_name_cleaned": "Twingo",
-    "needsCleaning": true
-  },
-  {
-    "id": 3377,
-    "brand_name": "Renault",
-    "model_name_original": "Twingo 3",
     "model_name_cleaned": "Twingo",
     "needsCleaning": true
   },
@@ -9870,28 +5726,7 @@
     "needsCleaning": true
   },
   {
-    "id": 3383,
-    "brand_name": "RENAULT",
-    "model_name_original": "MASTER 3",
-    "model_name_cleaned": "MASTER",
-    "needsCleaning": true
-  },
-  {
-    "id": 3384,
-    "brand_name": "RENAULT",
-    "model_name_original": "MASTER 3 lift",
-    "model_name_cleaned": "MASTER",
-    "needsCleaning": true
-  },
-  {
     "id": 3385,
-    "brand_name": "RENAULT",
-    "model_name_original": "Trafic",
-    "model_name_cleaned": "Trafic",
-    "needsCleaning": false
-  },
-  {
-    "id": 3386,
     "brand_name": "RENAULT",
     "model_name_original": "Trafic",
     "model_name_cleaned": "Trafic",
@@ -9940,20 +5775,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3396,
-    "brand_name": "SAAB",
-    "model_name_original": "9-3",
-    "model_name_cleaned": "9-3",
-    "needsCleaning": false
-  },
-  {
-    "id": 3397,
-    "brand_name": "SAAB",
-    "model_name_original": "9-3",
-    "model_name_cleaned": "9-3",
-    "needsCleaning": false
-  },
-  {
     "id": 3398,
     "brand_name": "Scania",
     "model_name_original": "G420",
@@ -9996,13 +5817,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3404,
-    "brand_name": "Scania",
-    "model_name_original": "R450 polift",
-    "model_name_cleaned": "R450",
-    "needsCleaning": true
-  },
-  {
     "id": 3405,
     "brand_name": "Seat",
     "model_name_original": "Arona",
@@ -10031,37 +5845,9 @@
     "needsCleaning": false
   },
   {
-    "id": 3409,
-    "brand_name": "Seat",
-    "model_name_original": "Ibiza",
-    "model_name_cleaned": "Ibiza",
-    "needsCleaning": false
-  },
-  {
-    "id": 3410,
-    "brand_name": "Seat",
-    "model_name_original": "Ibiza",
-    "model_name_cleaned": "Ibiza",
-    "needsCleaning": false
-  },
-  {
-    "id": 3411,
-    "brand_name": "Seat",
-    "model_name_original": "Ibiza",
-    "model_name_cleaned": "Ibiza",
-    "needsCleaning": false
-  },
-  {
     "id": 3412,
     "brand_name": "Seat",
     "model_name_original": "Leon 3",
-    "model_name_cleaned": "Leon",
-    "needsCleaning": true
-  },
-  {
-    "id": 3413,
-    "brand_name": "Seat",
-    "model_name_original": "Leon 4",
     "model_name_cleaned": "Leon",
     "needsCleaning": true
   },
@@ -10071,13 +5857,6 @@
     "model_name_original": "Mii",
     "model_name_cleaned": "Mii",
     "needsCleaning": false
-  },
-  {
-    "id": 3415,
-    "brand_name": "Seat",
-    "model_name_original": "Mii Electric",
-    "model_name_cleaned": "Mii",
-    "needsCleaning": true
   },
   {
     "id": 3416,
@@ -10094,28 +5873,7 @@
     "needsCleaning": false
   },
   {
-    "id": 3418,
-    "brand_name": "Seat",
-    "model_name_original": "Toledo",
-    "model_name_cleaned": "Toledo",
-    "needsCleaning": false
-  },
-  {
-    "id": 3419,
-    "brand_name": "Seat",
-    "model_name_original": "Toledo",
-    "model_name_cleaned": "Toledo",
-    "needsCleaning": false
-  },
-  {
     "id": 3420,
-    "brand_name": "Seat",
-    "model_name_original": "Alhambra",
-    "model_name_cleaned": "Alhambra",
-    "needsCleaning": false
-  },
-  {
-    "id": 3421,
     "brand_name": "Seat",
     "model_name_original": "Alhambra",
     "model_name_cleaned": "Alhambra",
@@ -10150,13 +5908,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3426,
-    "brand_name": "SEAT",
-    "model_name_original": "LEON",
-    "model_name_cleaned": "LEON",
-    "needsCleaning": false
-  },
-  {
     "id": 3427,
     "brand_name": "Seres",
     "model_name_original": "3",
@@ -10178,13 +5929,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3430,
-    "brand_name": "Skoda",
-    "model_name_original": "Enyaq RS",
-    "model_name_cleaned": "Enyaq",
-    "needsCleaning": true
-  },
-  {
     "id": 3431,
     "brand_name": "Skoda",
     "model_name_original": "Elroq",
@@ -10197,20 +5941,6 @@
     "model_name_original": "Fabia",
     "model_name_cleaned": "Fabia",
     "needsCleaning": false
-  },
-  {
-    "id": 3433,
-    "brand_name": "Skoda",
-    "model_name_original": "Fabia 2",
-    "model_name_cleaned": "Fabia",
-    "needsCleaning": true
-  },
-  {
-    "id": 3434,
-    "brand_name": "Skoda",
-    "model_name_original": "Fabia 3",
-    "model_name_cleaned": "Fabia",
-    "needsCleaning": true
   },
   {
     "id": 3435,
@@ -10230,20 +5960,6 @@
     "id": 3437,
     "brand_name": "Skoda",
     "model_name_original": "Octavia 4 e-Tec",
-    "model_name_cleaned": "Octavia",
-    "needsCleaning": true
-  },
-  {
-    "id": 3438,
-    "brand_name": "Skoda",
-    "model_name_original": "Octavia 2 A-5",
-    "model_name_cleaned": "Octavia",
-    "needsCleaning": true
-  },
-  {
-    "id": 3439,
-    "brand_name": "Skoda",
-    "model_name_original": "Octavia A4 Tour",
     "model_name_cleaned": "Octavia",
     "needsCleaning": true
   },
@@ -10311,13 +6027,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3449,
-    "brand_name": "SKODA",
-    "model_name_original": "OCTAViA - 4, A-8 to samo co Octavia A7",
-    "model_name_cleaned": "OCTAViA",
-    "needsCleaning": true
-  },
-  {
     "id": 3450,
     "brand_name": "SKODA",
     "model_name_original": "RAPID",
@@ -10339,20 +6048,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3453,
-    "brand_name": "SKODA",
-    "model_name_original": "SUPERB 2",
-    "model_name_cleaned": "SUPERB",
-    "needsCleaning": true
-  },
-  {
-    "id": 3454,
-    "brand_name": "SKODA",
-    "model_name_original": "SUPERB 3",
-    "model_name_cleaned": "SUPERB",
-    "needsCleaning": true
-  },
-  {
     "id": 3455,
     "brand_name": "Skywell",
     "model_name_original": "ET5",
@@ -10367,35 +6062,7 @@
     "needsCleaning": true
   },
   {
-    "id": 3457,
-    "brand_name": "Smart",
-    "model_name_original": "Fortwo 450",
-    "model_name_cleaned": "Fortwo",
-    "needsCleaning": true
-  },
-  {
     "id": 3458,
-    "brand_name": "Smart",
-    "model_name_original": "Forfour",
-    "model_name_cleaned": "Forfour",
-    "needsCleaning": false
-  },
-  {
-    "id": 3459,
-    "brand_name": "Smart",
-    "model_name_original": "Forfour",
-    "model_name_cleaned": "Forfour",
-    "needsCleaning": false
-  },
-  {
-    "id": 3460,
-    "brand_name": "Smart",
-    "model_name_original": "Fortwo",
-    "model_name_cleaned": "Fortwo",
-    "needsCleaning": false
-  },
-  {
-    "id": 3461,
     "brand_name": "Smart",
     "model_name_original": "Forfour",
     "model_name_cleaned": "Forfour",
@@ -10451,21 +6118,7 @@
     "needsCleaning": false
   },
   {
-    "id": 3483,
-    "brand_name": "SUBARU",
-    "model_name_original": "IMPREZA",
-    "model_name_cleaned": "IMPREZA",
-    "needsCleaning": false
-  },
-  {
     "id": 3484,
-    "brand_name": "SUBARU",
-    "model_name_original": "Outback",
-    "model_name_cleaned": "Outback",
-    "needsCleaning": false
-  },
-  {
-    "id": 3485,
     "brand_name": "SUBARU",
     "model_name_original": "Outback",
     "model_name_cleaned": "Outback",
@@ -10486,13 +6139,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3488,
-    "brand_name": "SUBARU",
-    "model_name_original": "WRX STI",
-    "model_name_cleaned": "WRX",
-    "needsCleaning": true
-  },
-  {
     "id": 3489,
     "brand_name": "Subaru",
     "model_name_original": "Forester",
@@ -10500,42 +6146,7 @@
     "needsCleaning": false
   },
   {
-    "id": 3490,
-    "brand_name": "Subaru",
-    "model_name_original": "Forester przed lifting",
-    "model_name_cleaned": "Forester",
-    "needsCleaning": true
-  },
-  {
-    "id": 3491,
-    "brand_name": "Subaru",
-    "model_name_original": "Forester",
-    "model_name_cleaned": "Forester",
-    "needsCleaning": false
-  },
-  {
-    "id": 3492,
-    "brand_name": "Subaru",
-    "model_name_original": "Forester Europe",
-    "model_name_cleaned": "Forester",
-    "needsCleaning": true
-  },
-  {
-    "id": 3493,
-    "brand_name": "Subaru",
-    "model_name_original": "Forester 6",
-    "model_name_cleaned": "Forester",
-    "needsCleaning": true
-  },
-  {
     "id": 3494,
-    "brand_name": "Subaru",
-    "model_name_original": "Impreza",
-    "model_name_cleaned": "Impreza",
-    "needsCleaning": false
-  },
-  {
-    "id": 3495,
     "brand_name": "Subaru",
     "model_name_original": "Impreza",
     "model_name_cleaned": "Impreza",
@@ -10549,45 +6160,10 @@
     "needsCleaning": false
   },
   {
-    "id": 3497,
-    "brand_name": "Subaru",
-    "model_name_original": "Outback",
-    "model_name_cleaned": "Outback",
-    "needsCleaning": false
-  },
-  {
     "id": 3498,
     "brand_name": "Subaru",
     "model_name_original": "Legacy",
     "model_name_cleaned": "Legacy",
-    "needsCleaning": false
-  },
-  {
-    "id": 3499,
-    "brand_name": "Subaru",
-    "model_name_original": "Legacy",
-    "model_name_cleaned": "Legacy",
-    "needsCleaning": false
-  },
-  {
-    "id": 3500,
-    "brand_name": "Subaru",
-    "model_name_original": "Legacy",
-    "model_name_cleaned": "Legacy",
-    "needsCleaning": false
-  },
-  {
-    "id": 3501,
-    "brand_name": "Subaru",
-    "model_name_original": "Legacy",
-    "model_name_cleaned": "Legacy",
-    "needsCleaning": false
-  },
-  {
-    "id": 3502,
-    "brand_name": "Subaru",
-    "model_name_original": "Outback",
-    "model_name_cleaned": "Outback",
     "needsCleaning": false
   },
   {
@@ -10603,13 +6179,6 @@
     "model_name_original": "XV",
     "model_name_cleaned": "XV",
     "needsCleaning": false
-  },
-  {
-    "id": 3505,
-    "brand_name": "Subaru",
-    "model_name_original": "XV Crosstrek",
-    "model_name_cleaned": "XV",
-    "needsCleaning": true
   },
   {
     "id": 3506,
@@ -10647,28 +6216,7 @@
     "needsCleaning": false
   },
   {
-    "id": 3511,
-    "brand_name": "Suzuki",
-    "model_name_original": "Ignis",
-    "model_name_cleaned": "Ignis",
-    "needsCleaning": false
-  },
-  {
     "id": 3512,
-    "brand_name": "Suzuki",
-    "model_name_original": "Jimny",
-    "model_name_cleaned": "Jimny",
-    "needsCleaning": false
-  },
-  {
-    "id": 3513,
-    "brand_name": "Suzuki",
-    "model_name_original": "Jimny",
-    "model_name_cleaned": "Jimny",
-    "needsCleaning": false
-  },
-  {
-    "id": 3514,
     "brand_name": "Suzuki",
     "model_name_original": "Jimny",
     "model_name_cleaned": "Jimny",
@@ -10710,28 +6258,7 @@
     "needsCleaning": false
   },
   {
-    "id": 3520,
-    "brand_name": "Suzuki",
-    "model_name_original": "Swift",
-    "model_name_cleaned": "Swift",
-    "needsCleaning": false
-  },
-  {
-    "id": 3521,
-    "brand_name": "Suzuki",
-    "model_name_original": "Swift",
-    "model_name_cleaned": "Swift",
-    "needsCleaning": false
-  },
-  {
     "id": 3522,
-    "brand_name": "Suzuki",
-    "model_name_original": "SX4 S-Cross",
-    "model_name_cleaned": "SX4",
-    "needsCleaning": true
-  },
-  {
-    "id": 3523,
     "brand_name": "Suzuki",
     "model_name_original": "SX4 S-Cross",
     "model_name_cleaned": "SX4",
@@ -10755,13 +6282,6 @@
     "id": 3526,
     "brand_name": "Suzuki",
     "model_name_original": "Grand Vitara 5 drzwi",
-    "model_name_cleaned": "Grand",
-    "needsCleaning": true
-  },
-  {
-    "id": 3527,
-    "brand_name": "Suzuki",
-    "model_name_original": "Grand Vitara",
     "model_name_cleaned": "Grand",
     "needsCleaning": true
   },
@@ -10801,62 +6321,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3533,
-    "brand_name": "Tesla",
-    "model_name_original": "Model S",
-    "model_name_cleaned": "Model",
-    "needsCleaning": true
-  },
-  {
-    "id": 3534,
-    "brand_name": "Tesla",
-    "model_name_original": "Model 3",
-    "model_name_cleaned": "Model",
-    "needsCleaning": true
-  },
-  {
-    "id": 3535,
-    "brand_name": "Tesla",
-    "model_name_original": "Model 3Dual Motor",
-    "model_name_cleaned": "Model",
-    "needsCleaning": true
-  },
-  {
-    "id": 3536,
-    "brand_name": "Tesla",
-    "model_name_original": "Model X",
-    "model_name_cleaned": "Model",
-    "needsCleaning": true
-  },
-  {
-    "id": 3537,
-    "brand_name": "Tesla",
-    "model_name_original": "Model X",
-    "model_name_cleaned": "Model",
-    "needsCleaning": true
-  },
-  {
-    "id": 3538,
-    "brand_name": "Tesla",
-    "model_name_original": "Model YDual Motor",
-    "model_name_cleaned": "Model",
-    "needsCleaning": true
-  },
-  {
-    "id": 3539,
-    "brand_name": "Tesla",
-    "model_name_original": "Model Y Juniper",
-    "model_name_cleaned": "Model",
-    "needsCleaning": true
-  },
-  {
-    "id": 3540,
-    "brand_name": "Tesla",
-    "model_name_original": "Model Y Performance",
-    "model_name_cleaned": "Model",
-    "needsCleaning": true
-  },
-  {
     "id": 3541,
     "brand_name": "Terex-Fuchs",
     "model_name_original": "MHL 350",
@@ -10871,21 +6335,7 @@
     "needsCleaning": false
   },
   {
-    "id": 3543,
-    "brand_name": "Toyota",
-    "model_name_original": "4Runner",
-    "model_name_cleaned": "4Runner",
-    "needsCleaning": false
-  },
-  {
     "id": 3544,
-    "brand_name": "Toyota",
-    "model_name_original": "AURIS",
-    "model_name_cleaned": "AURIS",
-    "needsCleaning": false
-  },
-  {
-    "id": 3545,
     "brand_name": "Toyota",
     "model_name_original": "AURIS",
     "model_name_cleaned": "AURIS",
@@ -10899,51 +6349,9 @@
     "needsCleaning": false
   },
   {
-    "id": 3547,
-    "brand_name": "Toyota",
-    "model_name_original": "Avalon",
-    "model_name_cleaned": "Avalon",
-    "needsCleaning": false
-  },
-  {
-    "id": 3548,
-    "brand_name": "Toyota",
-    "model_name_original": "Avalon",
-    "model_name_cleaned": "Avalon",
-    "needsCleaning": false
-  },
-  {
     "id": 3549,
     "brand_name": "Toyota",
     "model_name_original": "Avensis T22",
-    "model_name_cleaned": "Avensis",
-    "needsCleaning": true
-  },
-  {
-    "id": 3550,
-    "brand_name": "Toyota",
-    "model_name_original": "Avensis Т270",
-    "model_name_cleaned": "Avensis",
-    "needsCleaning": true
-  },
-  {
-    "id": 3551,
-    "brand_name": "Toyota",
-    "model_name_original": "Avensis Т270 drugi polift",
-    "model_name_cleaned": "Avensis",
-    "needsCleaning": true
-  },
-  {
-    "id": 3552,
-    "brand_name": "Toyota",
-    "model_name_original": "Avensis Verso przed lift",
-    "model_name_cleaned": "Avensis",
-    "needsCleaning": true
-  },
-  {
-    "id": 3553,
-    "brand_name": "Toyota",
-    "model_name_original": "Avensis Verso po lift",
     "model_name_cleaned": "Avensis",
     "needsCleaning": true
   },
@@ -10955,20 +6363,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3555,
-    "brand_name": "Toyota",
-    "model_name_original": "Aygo 2",
-    "model_name_cleaned": "Aygo",
-    "needsCleaning": true
-  },
-  {
-    "id": 3556,
-    "brand_name": "Toyota",
-    "model_name_original": "Aygo X",
-    "model_name_cleaned": "Aygo",
-    "needsCleaning": true
-  },
-  {
     "id": 3557,
     "brand_name": "Toyota",
     "model_name_original": "C-HR",
@@ -10976,37 +6370,9 @@
     "needsCleaning": false
   },
   {
-    "id": 3558,
-    "brand_name": "Toyota",
-    "model_name_original": "C-HR",
-    "model_name_cleaned": "C-HR",
-    "needsCleaning": false
-  },
-  {
-    "id": 3559,
-    "brand_name": "Toyota",
-    "model_name_original": "C-HR GR-Sport",
-    "model_name_cleaned": "C-HR",
-    "needsCleaning": true
-  },
-  {
     "id": 3560,
     "brand_name": "Toyota",
     "model_name_original": "Camry XV40",
-    "model_name_cleaned": "Camry",
-    "needsCleaning": true
-  },
-  {
-    "id": 3561,
-    "brand_name": "Toyota",
-    "model_name_original": "Camry XV50",
-    "model_name_cleaned": "Camry",
-    "needsCleaning": true
-  },
-  {
-    "id": 3562,
-    "brand_name": "Toyota",
-    "model_name_original": "Camry XV80",
     "model_name_cleaned": "Camry",
     "needsCleaning": true
   },
@@ -11025,45 +6391,10 @@
     "needsCleaning": true
   },
   {
-    "id": 3565,
-    "brand_name": "Toyota",
-    "model_name_original": "Corolla Verso",
-    "model_name_cleaned": "Corolla",
-    "needsCleaning": true
-  },
-  {
-    "id": 3566,
-    "brand_name": "Toyota",
-    "model_name_original": "Corolla (E-100)",
-    "model_name_cleaned": "Corolla",
-    "needsCleaning": true
-  },
-  {
-    "id": 3567,
-    "brand_name": "Toyota",
-    "model_name_original": "Corolla",
-    "model_name_cleaned": "Corolla",
-    "needsCleaning": false
-  },
-  {
-    "id": 3568,
-    "brand_name": "Toyota",
-    "model_name_original": "Corolla",
-    "model_name_cleaned": "Corolla",
-    "needsCleaning": false
-  },
-  {
     "id": 3569,
     "brand_name": "Toyota",
     "model_name_original": "Corolla,130",
     "model_name_cleaned": "Corolla,130",
-    "needsCleaning": false
-  },
-  {
-    "id": 3570,
-    "brand_name": "Toyota",
-    "model_name_original": "Corolla",
-    "model_name_cleaned": "Corolla",
     "needsCleaning": false
   },
   {
@@ -11072,13 +6403,6 @@
     "model_name_original": "Corolla/E170/E180",
     "model_name_cleaned": "Corolla/E170/E180",
     "needsCleaning": false
-  },
-  {
-    "id": 3572,
-    "brand_name": "Toyota",
-    "model_name_original": "Corolla E 210 / 12",
-    "model_name_cleaned": "Corolla",
-    "needsCleaning": true
   },
   {
     "id": 3573,
@@ -11109,46 +6433,11 @@
     "needsCleaning": false
   },
   {
-    "id": 3577,
-    "brand_name": "Toyota",
-    "model_name_original": "Highlander 7os",
-    "model_name_cleaned": "Highlander",
-    "needsCleaning": true
-  },
-  {
-    "id": 3578,
-    "brand_name": "Toyota",
-    "model_name_original": "Highlander 7os",
-    "model_name_cleaned": "Highlander",
-    "needsCleaning": true
-  },
-  {
     "id": 3579,
     "brand_name": "Toyota",
     "model_name_original": "Hilux 3drzwi",
     "model_name_cleaned": "Hilux",
     "needsCleaning": true
-  },
-  {
-    "id": 3580,
-    "brand_name": "Toyota",
-    "model_name_original": "Hilux 5drzwi",
-    "model_name_cleaned": "Hilux",
-    "needsCleaning": true
-  },
-  {
-    "id": 3581,
-    "brand_name": "Toyota",
-    "model_name_original": "Hilux",
-    "model_name_cleaned": "Hilux",
-    "needsCleaning": false
-  },
-  {
-    "id": 3582,
-    "brand_name": "Toyota",
-    "model_name_original": "Hilux",
-    "model_name_cleaned": "Hilux",
-    "needsCleaning": false
   },
   {
     "id": 3584,
@@ -11158,93 +6447,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3585,
-    "brand_name": "Toyota",
-    "model_name_original": "IQ/Scion IQ",
-    "model_name_cleaned": "IQ/Scion",
-    "needsCleaning": true
-  },
-  {
     "id": 3586,
     "brand_name": "Toyota",
     "model_name_original": "Land Cruiser z arabii J76",
-    "model_name_cleaned": "Land",
-    "needsCleaning": true
-  },
-  {
-    "id": 3587,
-    "brand_name": "Toyota",
-    "model_name_original": "Land Cruiser J70 Prado 3drzwi",
-    "model_name_cleaned": "Land",
-    "needsCleaning": true
-  },
-  {
-    "id": 3588,
-    "brand_name": "Toyota",
-    "model_name_original": "Land Cruiser J90",
-    "model_name_cleaned": "Land",
-    "needsCleaning": true
-  },
-  {
-    "id": 3589,
-    "brand_name": "Toyota",
-    "model_name_original": "Land Cruiser J80",
-    "model_name_cleaned": "Land",
-    "needsCleaning": true
-  },
-  {
-    "id": 3590,
-    "brand_name": "Toyota",
-    "model_name_original": "Land Cruiser J80",
-    "model_name_cleaned": "Land",
-    "needsCleaning": true
-  },
-  {
-    "id": 3591,
-    "brand_name": "Toyota",
-    "model_name_original": "Land Cruiser J95",
-    "model_name_cleaned": "Land",
-    "needsCleaning": true
-  },
-  {
-    "id": 3592,
-    "brand_name": "Toyota",
-    "model_name_original": "Land Cruiser J100",
-    "model_name_cleaned": "Land",
-    "needsCleaning": true
-  },
-  {
-    "id": 3593,
-    "brand_name": "Toyota",
-    "model_name_original": "Land Cruiser Prado 120",
-    "model_name_cleaned": "Land",
-    "needsCleaning": true
-  },
-  {
-    "id": 3594,
-    "brand_name": "Toyota",
-    "model_name_original": "Land Cruiser VDJ200",
-    "model_name_cleaned": "Land",
-    "needsCleaning": true
-  },
-  {
-    "id": 3595,
-    "brand_name": "Toyota",
-    "model_name_original": "Land Cruiser Prado 150Land Cruiser 150",
-    "model_name_cleaned": "Land",
-    "needsCleaning": true
-  },
-  {
-    "id": 3596,
-    "brand_name": "Toyota",
-    "model_name_original": "Land Cruiser Prado 3 drzwiowy",
-    "model_name_cleaned": "Land",
-    "needsCleaning": true
-  },
-  {
-    "id": 3597,
-    "brand_name": "Toyota",
-    "model_name_original": "Land Cruiser J250",
     "model_name_cleaned": "Land",
     "needsCleaning": true
   },
@@ -11284,63 +6489,7 @@
     "needsCleaning": false
   },
   {
-    "id": 3603,
-    "brand_name": "Toyota",
-    "model_name_original": "Proace City",
-    "model_name_cleaned": "Proace",
-    "needsCleaning": true
-  },
-  {
-    "id": 3604,
-    "brand_name": "Toyota",
-    "model_name_original": "Proace City Verso",
-    "model_name_cleaned": "Proace",
-    "needsCleaning": true
-  },
-  {
-    "id": 3605,
-    "brand_name": "Toyota",
-    "model_name_original": "Proace City Verso",
-    "model_name_cleaned": "Proace",
-    "needsCleaning": true
-  },
-  {
-    "id": 3606,
-    "brand_name": "Toyota",
-    "model_name_original": "Proace Verso",
-    "model_name_cleaned": "Proace",
-    "needsCleaning": true
-  },
-  {
     "id": 3607,
-    "brand_name": "Toyota",
-    "model_name_original": "RAV4",
-    "model_name_cleaned": "RAV4",
-    "needsCleaning": false
-  },
-  {
-    "id": 3608,
-    "brand_name": "Toyota",
-    "model_name_original": "RAV4",
-    "model_name_cleaned": "RAV4",
-    "needsCleaning": false
-  },
-  {
-    "id": 3609,
-    "brand_name": "Toyota",
-    "model_name_original": "RAV4",
-    "model_name_cleaned": "RAV4",
-    "needsCleaning": false
-  },
-  {
-    "id": 3610,
-    "brand_name": "Toyota",
-    "model_name_original": "RAV4 Zwykła",
-    "model_name_cleaned": "RAV4",
-    "needsCleaning": true
-  },
-  {
-    "id": 3611,
     "brand_name": "Toyota",
     "model_name_original": "RAV4",
     "model_name_cleaned": "RAV4",
@@ -11368,13 +6517,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3615,
-    "brand_name": "Toyota",
-    "model_name_original": "Sienna 40",
-    "model_name_cleaned": "Sienna",
-    "needsCleaning": true
-  },
-  {
     "id": 3616,
     "brand_name": "Toyota",
     "model_name_original": "Sequoia",
@@ -11389,46 +6531,11 @@
     "needsCleaning": true
   },
   {
-    "id": 3618,
-    "brand_name": "Toyota",
-    "model_name_original": "Supra",
-    "model_name_cleaned": "Supra",
-    "needsCleaning": false
-  },
-  {
     "id": 3619,
     "brand_name": "Toyota",
     "model_name_original": "Prius",
     "model_name_cleaned": "Prius",
     "needsCleaning": false
-  },
-  {
-    "id": 3620,
-    "brand_name": "Toyota",
-    "model_name_original": "Prius XW30",
-    "model_name_cleaned": "Prius",
-    "needsCleaning": true
-  },
-  {
-    "id": 3621,
-    "brand_name": "Toyota",
-    "model_name_original": "Prius XW50",
-    "model_name_cleaned": "Prius",
-    "needsCleaning": true
-  },
-  {
-    "id": 3622,
-    "brand_name": "Toyota",
-    "model_name_original": "Prius XW60",
-    "model_name_cleaned": "Prius",
-    "needsCleaning": true
-  },
-  {
-    "id": 3623,
-    "brand_name": "Toyota",
-    "model_name_original": "Prius Plus 7os",
-    "model_name_cleaned": "Prius",
-    "needsCleaning": true
   },
   {
     "id": 3624,
@@ -11473,41 +6580,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3630,
-    "brand_name": "Toyota",
-    "model_name_original": "Yaris Verso",
-    "model_name_cleaned": "Yaris",
-    "needsCleaning": true
-  },
-  {
-    "id": 3631,
-    "brand_name": "Toyota",
-    "model_name_original": "Yaris 2",
-    "model_name_cleaned": "Yaris",
-    "needsCleaning": true
-  },
-  {
-    "id": 3632,
-    "brand_name": "Toyota",
-    "model_name_original": "Yaris GR",
-    "model_name_cleaned": "Yaris",
-    "needsCleaning": true
-  },
-  {
-    "id": 3633,
-    "brand_name": "Toyota",
-    "model_name_original": "Yaris 3",
-    "model_name_cleaned": "Yaris",
-    "needsCleaning": true
-  },
-  {
-    "id": 3635,
-    "brand_name": "Toyota",
-    "model_name_original": "Yaris 4",
-    "model_name_cleaned": "Yaris",
-    "needsCleaning": true
-  },
-  {
     "id": 3636,
     "brand_name": "Toyota",
     "model_name_original": "Rav4",
@@ -11550,32 +6622,11 @@
     "needsCleaning": false
   },
   {
-    "id": 3642,
-    "brand_name": "TOYOTA",
-    "model_name_original": "RAV4",
-    "model_name_cleaned": "RAV4",
-    "needsCleaning": false
-  },
-  {
-    "id": 3643,
-    "brand_name": "TOYOTA",
-    "model_name_original": "RAV4 Hybrid",
-    "model_name_cleaned": "RAV4",
-    "needsCleaning": true
-  },
-  {
     "id": 3644,
     "brand_name": "TOYOTA",
     "model_name_original": "YARIS CROSS",
     "model_name_cleaned": "YARIS",
     "needsCleaning": true
-  },
-  {
-    "id": 3646,
-    "brand_name": "TOYOTA",
-    "model_name_original": "YARIS",
-    "model_name_cleaned": "YARIS",
-    "needsCleaning": false
   },
   {
     "id": 3648,
@@ -11593,13 +6644,6 @@
   },
   {
     "id": 3650,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Amarok",
-    "model_name_cleaned": "Amarok",
-    "needsCleaning": false
-  },
-  {
-    "id": 3651,
     "brand_name": "Volkswagen",
     "model_name_original": "Amarok",
     "model_name_cleaned": "Amarok",
@@ -11648,13 +6692,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3658,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Crafter MAN TGE",
-    "model_name_cleaned": "Crafter",
-    "needsCleaning": true
-  },
-  {
     "id": 3659,
     "brand_name": "Volkswagen",
     "model_name_original": "Caravelle T6California",
@@ -11690,90 +6727,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3664,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Golf 4",
-    "model_name_cleaned": "Golf",
-    "needsCleaning": true
-  },
-  {
-    "id": 3665,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Golf 4",
-    "model_name_cleaned": "Golf",
-    "needsCleaning": true
-  },
-  {
-    "id": 3666,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Golf 4",
-    "model_name_cleaned": "Golf",
-    "needsCleaning": true
-  },
-  {
-    "id": 3667,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Golf 5",
-    "model_name_cleaned": "Golf",
-    "needsCleaning": true
-  },
-  {
-    "id": 3668,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Golf 5",
-    "model_name_cleaned": "Golf",
-    "needsCleaning": true
-  },
-  {
-    "id": 3669,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Golf 6",
-    "model_name_cleaned": "Golf",
-    "needsCleaning": true
-  },
-  {
-    "id": 3670,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Golf 6",
-    "model_name_cleaned": "Golf",
-    "needsCleaning": true
-  },
-  {
-    "id": 3671,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Golf 7",
-    "model_name_cleaned": "Golf",
-    "needsCleaning": true
-  },
-  {
-    "id": 3672,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Golf 7 Sportsvan",
-    "model_name_cleaned": "Golf",
-    "needsCleaning": true
-  },
-  {
-    "id": 3673,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Golf 8",
-    "model_name_cleaned": "Golf",
-    "needsCleaning": true
-  },
-  {
-    "id": 3674,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Golf 8",
-    "model_name_cleaned": "Golf",
-    "needsCleaning": true
-  },
-  {
-    "id": 3675,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Golf",
-    "model_name_cleaned": "Golf",
-    "needsCleaning": false
-  },
-  {
     "id": 3676,
     "brand_name": "Volkswagen",
     "model_name_original": "GOLF PLUS",
@@ -11784,13 +6737,6 @@
     "id": 3677,
     "brand_name": "Volkswagen",
     "model_name_original": "ID Buzz",
-    "model_name_cleaned": "ID",
-    "needsCleaning": true
-  },
-  {
-    "id": 3678,
-    "brand_name": "Volkswagen",
-    "model_name_original": "ID Buzz Cargo",
     "model_name_cleaned": "ID",
     "needsCleaning": true
   },
@@ -11830,20 +6776,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3684,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Jetta",
-    "model_name_cleaned": "Jetta",
-    "needsCleaning": false
-  },
-  {
-    "id": 3685,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Jetta Sportwagen",
-    "model_name_cleaned": "Jetta",
-    "needsCleaning": true
-  },
-  {
     "id": 3686,
     "brand_name": "Volkswagen",
     "model_name_original": "LT",
@@ -11858,25 +6790,11 @@
     "needsCleaning": false
   },
   {
-    "id": 3688,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Lupo 3L",
-    "model_name_cleaned": "Lupo",
-    "needsCleaning": true
-  },
-  {
     "id": 3689,
     "brand_name": "Volkswagen",
     "model_name_original": "Beetle",
     "model_name_cleaned": "Beetle",
     "needsCleaning": false
-  },
-  {
-    "id": 3690,
-    "brand_name": "Volkswagen",
-    "model_name_original": "New Beetle",
-    "model_name_cleaned": "Beetle",
-    "needsCleaning": true
   },
   {
     "id": 3691,
@@ -11886,51 +6804,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3692,
-    "brand_name": "Volkswagen",
-    "model_name_original": "PASSAT B5",
-    "model_name_cleaned": "PASSAT",
-    "needsCleaning": true
-  },
-  {
     "id": 3693,
     "brand_name": "Volkswagen",
     "model_name_original": "Passat B5",
-    "model_name_cleaned": "Passat",
-    "needsCleaning": true
-  },
-  {
-    "id": 3694,
-    "brand_name": "Volkswagen",
-    "model_name_original": "PASSAT B6",
-    "model_name_cleaned": "PASSAT",
-    "needsCleaning": true
-  },
-  {
-    "id": 3695,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Passat B7",
-    "model_name_cleaned": "Passat",
-    "needsCleaning": true
-  },
-  {
-    "id": 3696,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Passat B7",
-    "model_name_cleaned": "Passat",
-    "needsCleaning": true
-  },
-  {
-    "id": 3697,
-    "brand_name": "Volkswagen",
-    "model_name_original": "PASSAT B8 ()ALLTRACK",
-    "model_name_cleaned": "PASSAT",
-    "needsCleaning": true
-  },
-  {
-    "id": 3698,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Passat B9",
     "model_name_cleaned": "Passat",
     "needsCleaning": true
   },
@@ -11950,13 +6826,6 @@
   },
   {
     "id": 3701,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Scirocco",
-    "model_name_cleaned": "Scirocco",
-    "needsCleaning": false
-  },
-  {
-    "id": 3702,
     "brand_name": "Volkswagen",
     "model_name_original": "Scirocco",
     "model_name_cleaned": "Scirocco",
@@ -11984,13 +6853,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3706,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Tayron",
-    "model_name_cleaned": "Tayron",
-    "needsCleaning": false
-  },
-  {
     "id": 3707,
     "brand_name": "Volkswagen",
     "model_name_original": "Taos",
@@ -12012,13 +6874,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3710,
-    "brand_name": "Volkswagen",
-    "model_name_original": "T-Roc",
-    "model_name_cleaned": "T-Roc",
-    "needsCleaning": false
-  },
-  {
     "id": 3711,
     "brand_name": "Volkswagen",
     "model_name_original": "TOURAN 1",
@@ -12026,30 +6881,9 @@
     "needsCleaning": true
   },
   {
-    "id": 3712,
-    "brand_name": "Volkswagen",
-    "model_name_original": "TOURAN 2",
-    "model_name_cleaned": "TOURAN",
-    "needsCleaning": true
-  },
-  {
     "id": 3713,
     "brand_name": "Volkswagen",
     "model_name_original": "Transporter T4",
-    "model_name_cleaned": "Transporter",
-    "needsCleaning": true
-  },
-  {
-    "id": 3714,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Transporter T4 Exclusive wersja",
-    "model_name_cleaned": "Transporter",
-    "needsCleaning": true
-  },
-  {
-    "id": 3715,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Transporter T5",
     "model_name_cleaned": "Transporter",
     "needsCleaning": true
   },
@@ -12075,67 +6909,11 @@
     "needsCleaning": false
   },
   {
-    "id": 3719,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Passat CC",
-    "model_name_cleaned": "Passat",
-    "needsCleaning": true
-  },
-  {
     "id": 3720,
     "brand_name": "Volkswagen",
     "model_name_original": "Polo",
     "model_name_cleaned": "Polo",
     "needsCleaning": false
-  },
-  {
-    "id": 3721,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Polo",
-    "model_name_cleaned": "Polo",
-    "needsCleaning": false
-  },
-  {
-    "id": 3722,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Polo",
-    "model_name_cleaned": "Polo",
-    "needsCleaning": false
-  },
-  {
-    "id": 3723,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Polo",
-    "model_name_cleaned": "Polo",
-    "needsCleaning": false
-  },
-  {
-    "id": 3724,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Polo",
-    "model_name_cleaned": "Polo",
-    "needsCleaning": false
-  },
-  {
-    "id": 3725,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Polo",
-    "model_name_cleaned": "Polo",
-    "needsCleaning": false
-  },
-  {
-    "id": 3726,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Polo",
-    "model_name_cleaned": "Polo",
-    "needsCleaning": false
-  },
-  {
-    "id": 3727,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Polo Cross",
-    "model_name_cleaned": "Polo",
-    "needsCleaning": true
   },
   {
     "id": 3728,
@@ -12145,52 +6923,10 @@
     "needsCleaning": true
   },
   {
-    "id": 3729,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Sharan polift",
-    "model_name_cleaned": "Sharan",
-    "needsCleaning": true
-  },
-  {
-    "id": 3730,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Sharan 2",
-    "model_name_cleaned": "Sharan",
-    "needsCleaning": true
-  },
-  {
-    "id": 3731,
-    "brand_name": "Volkswagen",
-    "model_name_original": "T6 Caravelle",
-    "model_name_cleaned": "T6",
-    "needsCleaning": true
-  },
-  {
-    "id": 3732,
-    "brand_name": "Volkswagen",
-    "model_name_original": "T6 Highline/ Multivan",
-    "model_name_cleaned": "T6",
-    "needsCleaning": true
-  },
-  {
     "id": 3733,
     "brand_name": "Volkswagen",
     "model_name_original": "T6.1",
     "model_name_cleaned": "T",
-    "needsCleaning": true
-  },
-  {
-    "id": 3734,
-    "brand_name": "Volkswagen",
-    "model_name_original": "T6 California",
-    "model_name_cleaned": "T6",
-    "needsCleaning": true
-  },
-  {
-    "id": 3735,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Transporter T7",
-    "model_name_cleaned": "Transporter",
     "needsCleaning": true
   },
   {
@@ -12215,34 +6951,6 @@
     "needsCleaning": false
   },
   {
-    "id": 3739,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Tiguan",
-    "model_name_cleaned": "Tiguan",
-    "needsCleaning": false
-  },
-  {
-    "id": 3740,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Tiguan Allspace",
-    "model_name_cleaned": "Tiguan",
-    "needsCleaning": true
-  },
-  {
-    "id": 3741,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Tiguan",
-    "model_name_cleaned": "Tiguan",
-    "needsCleaning": false
-  },
-  {
-    "id": 3742,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Tiguan",
-    "model_name_cleaned": "Tiguan",
-    "needsCleaning": false
-  },
-  {
     "id": 3743,
     "brand_name": "Volkswagen",
     "model_name_original": "TOUAREG 1\\\\Porsche Cayenne",
@@ -12253,20 +6961,6 @@
     "id": 3744,
     "brand_name": "Volkswagen",
     "model_name_original": "Touareg 2",
-    "model_name_cleaned": "Touareg",
-    "needsCleaning": true
-  },
-  {
-    "id": 3745,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Touareg 3",
-    "model_name_cleaned": "Touareg",
-    "needsCleaning": true
-  },
-  {
-    "id": 3746,
-    "brand_name": "Volkswagen",
-    "model_name_original": "Touareg 3",
     "model_name_cleaned": "Touareg",
     "needsCleaning": true
   },
@@ -12348,13 +7042,6 @@
     "needsCleaning": true
   },
   {
-    "id": 3758,
-    "brand_name": "Volvo",
-    "model_name_original": "EC 220EL",
-    "model_name_cleaned": "EC",
-    "needsCleaning": true
-  },
-  {
     "id": 3759,
     "brand_name": "Volvo",
     "model_name_original": "EW140",
@@ -12411,28 +7098,7 @@
     "needsCleaning": false
   },
   {
-    "id": 3767,
-    "brand_name": "Volvo",
-    "model_name_original": "S60",
-    "model_name_cleaned": "S60",
-    "needsCleaning": false
-  },
-  {
-    "id": 3768,
-    "brand_name": "Volvo",
-    "model_name_original": "S60",
-    "model_name_cleaned": "S60",
-    "needsCleaning": false
-  },
-  {
     "id": 3769,
-    "brand_name": "Volvo",
-    "model_name_original": "XC-70",
-    "model_name_cleaned": "XC-70",
-    "needsCleaning": false
-  },
-  {
-    "id": 3770,
     "brand_name": "Volvo",
     "model_name_original": "XC-70",
     "model_name_cleaned": "XC-70",
@@ -12467,21 +7133,7 @@
     "needsCleaning": false
   },
   {
-    "id": 3775,
-    "brand_name": "Volvo",
-    "model_name_original": "S40",
-    "model_name_cleaned": "S40",
-    "needsCleaning": false
-  },
-  {
     "id": 3776,
-    "brand_name": "Volvo",
-    "model_name_original": "V40",
-    "model_name_cleaned": "V40",
-    "needsCleaning": false
-  },
-  {
-    "id": 3777,
     "brand_name": "Volvo",
     "model_name_original": "V40",
     "model_name_cleaned": "V40",
@@ -12502,21 +7154,7 @@
     "needsCleaning": false
   },
   {
-    "id": 3781,
-    "brand_name": "Volvo",
-    "model_name_original": "V60",
-    "model_name_cleaned": "V60",
-    "needsCleaning": false
-  },
-  {
     "id": 3782,
-    "brand_name": "Volvo",
-    "model_name_original": "V70",
-    "model_name_cleaned": "V70",
-    "needsCleaning": false
-  },
-  {
-    "id": 3783,
     "brand_name": "Volvo",
     "model_name_original": "V70",
     "model_name_cleaned": "V70",
@@ -12538,13 +7176,6 @@
   },
   {
     "id": 3786,
-    "brand_name": "Volvo",
-    "model_name_original": "XC90",
-    "model_name_cleaned": "XC90",
-    "needsCleaning": false
-  },
-  {
-    "id": 3787,
     "brand_name": "Volvo",
     "model_name_original": "XC90",
     "model_name_cleaned": "XC90",
@@ -12579,39 +7210,11 @@
     "needsCleaning": true
   },
   {
-    "id": 3795,
-    "brand_name": "Mini",
-    "model_name_original": "Cooper S 3drzwi",
-    "model_name_cleaned": "Cooper",
-    "needsCleaning": true
-  },
-  {
-    "id": 3796,
-    "brand_name": "Mini",
-    "model_name_original": "Cooper 5 drz",
-    "model_name_cleaned": "Cooper",
-    "needsCleaning": true
-  },
-  {
-    "id": 3797,
-    "brand_name": "Mini",
-    "model_name_original": "Cooper SE",
-    "model_name_cleaned": "Cooper",
-    "needsCleaning": true
-  },
-  {
     "id": 3798,
     "brand_name": "Mini",
     "model_name_original": "Clubman",
     "model_name_cleaned": "Clubman",
     "needsCleaning": false
-  },
-  {
-    "id": 3799,
-    "brand_name": "Mini",
-    "model_name_original": "Cooper S Clubman",
-    "model_name_cleaned": "Cooper",
-    "needsCleaning": true
   },
   {
     "id": 3800,
@@ -12626,13 +7229,6 @@
     "model_name_original": "Countryman Cooper S",
     "model_name_cleaned": "Countryman",
     "needsCleaning": true
-  },
-  {
-    "id": 3802,
-    "brand_name": "Mini",
-    "model_name_original": "Countryman",
-    "model_name_cleaned": "Countryman",
-    "needsCleaning": false
   },
   {
     "id": 3803,

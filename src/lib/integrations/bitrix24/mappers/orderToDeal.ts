@@ -288,6 +288,9 @@ function buildDealComments(order: Order): string {
   if (customer.phone) {
     comments.push(`Telefon: ${customer.phone}`);
   }
+  if (customer.taxId) {
+    comments.push(`NIP: ${customer.taxId}`);
+  }
 
   // Add shipping address
   const shippingAddress = order.shippingAddress as any;

@@ -5,6 +5,7 @@ export interface AbandonedCartSnapshotContact {
   phone?: string;
   firstName?: string;
   lastName?: string;
+  taxId?: string; // NIP na fakturę
 }
 
 export interface AbandonedCartSnapshotCar {
