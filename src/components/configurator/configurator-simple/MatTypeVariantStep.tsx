@@ -68,17 +68,17 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Typ dywaników */}
       <div>
-        <h3 className="text-base font-semibold mb-2 text-white/90">Typ dywaników</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 [&>*]:min-w-[150px] items-stretch">
+        <h3 className="text-sm font-semibold mb-1.5 text-white">Typ dywaników</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 [&>*]:min-w-[150px] items-stretch">
           {matTypes.map((type) => (
             <Card
               key={type.id}
               onClick={() => onUpdate({ matType: type.id })}
               className={`
-                p-3 md:p-4 cursor-pointer transition-all duration-300 min-h-[80px] active:scale-[0.98]
+                p-2.5 md:p-3 cursor-pointer transition-all duration-300 min-h-[64px] active:scale-[0.98]
                 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50
                 ${config.matType === type.id
                   ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
@@ -86,8 +86,8 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
                 }
               `}
             >
-              <h4 className="text-base font-semibold mb-1 leading-tight">{type.name}</h4>
-              <p className="text-gray-300 text-xs leading-relaxed">{type.description}</p>
+              <h4 className="text-sm font-semibold mb-0.5 leading-tight text-white">{type.name}</h4>
+              <p className="text-gray-200 text-xs leading-relaxed">{type.description}</p>
             </Card>
           ))}
         </div>
@@ -96,8 +96,8 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
       {/* Wariant zestawu */}
       {config.matType && (
         <div>
-          <h3 className="text-base font-semibold mb-2 text-white/90">Wariant zestawu</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 [&>*]:min-w-[150px] [&>*]:min-h-0 items-stretch">
+          <h3 className="text-sm font-semibold mb-1.5 text-white/90">Wariant zestawu</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 [&>*]:min-w-[150px] [&>*]:min-h-0 items-stretch">
             {variants.map((variant) => {
               const { displayPrice, oldPrice, hasDiscount } = getVariantPricing(variant.id);
               const isSelected = config.variant === variant.id;
@@ -107,7 +107,7 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
                   type="button"
                   onClick={() => onUpdate({ variant: variant.id })}
                   className={`
-                    p-3 md:p-4 cursor-pointer transition-all duration-300 flex flex-col h-full w-full text-left
+                    p-2.5 md:p-3 cursor-pointer transition-all duration-300 flex flex-col h-full w-full text-left
                     rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50
                     ${isSelected
                       ? 'ring-2 ring-red-500/50 ring-offset-2 ring-offset-black scale-[1.01]'
@@ -116,30 +116,32 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
                   `}
                 >
                   {/* Nagłówek – stała wysokość, skrócone opisy mieszczą się w 2 liniach */}
-                  <div className="h-[52px] md:h-[56px] flex-shrink-0 flex flex-col justify-center min-h-0">
-                    <h4 className="text-xs md:text-base font-semibold leading-tight truncate">{variant.name}</h4>
-                    <p className="text-gray-300 text-[10px] md:text-xs leading-tight line-clamp-2">{variant.description}</p>
+                  <div className="h-[46px] md:h-[52px] flex-shrink-0 flex flex-col justify-center min-h-0">
+                    <h4 className="text-sm md:text-base font-semibold leading-tight truncate text-white">{variant.name}</h4>
+                    <p className="text-gray-200 text-xs md:text-sm leading-tight line-clamp-2">{variant.description}</p>
                   </div>
                   {/* Zdjęcie – stała wysokość, zapobiega nachodzeniu na cenę */}
-                  <div className="w-full h-[100px] md:h-[120px] flex-shrink-0 mt-2 rounded-2xl overflow-hidden bg-neutral-800/40 relative">
-                    <Image
-                      src={variant.image}
-                      alt={variant.name}
-                      fill
-                      className="object-contain p-0.5 md:p-2 rounded-2xl"
-                      sizes="(max-width: 768px) 50vw, 25vw"
-                    />
+                  <div className="w-full h-[80px] md:h-[96px] flex-shrink-0 mt-1.5 rounded-2xl overflow-hidden bg-neutral-800/40 relative">
+                    <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                      <Image
+                        src={variant.image}
+                        alt={variant.name}
+                        fill
+                        className="object-contain p-0.5 md:p-2 rounded-2xl"
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                      />
+                    </div>
                   </div>
                   {/* Cena – stała wysokość, zawsze na dole */}
-                  <div className="h-[48px] flex-shrink-0 pt-2 mt-auto flex flex-col justify-end gap-0.5">
-                    <span className="text-gray-400 text-[10px] md:text-xs">Cena</span>
+                  <div className="h-[42px] flex-shrink-0 pt-1.5 mt-auto flex flex-col justify-end gap-0.5">
+                    <span className="text-gray-400 text-xs">Cena</span>
                     <div className="flex items-baseline gap-1.5 flex-nowrap">
                       {hasDiscount && (
-                        <span className="text-[10px] md:text-xs text-gray-500 line-through whitespace-nowrap">
+                        <span className="text-xs text-gray-500 line-through whitespace-nowrap">
                           {oldPrice.toFixed(2)} zł
                         </span>
                       )}
-                      <span className="text-xs md:text-base font-bold text-white whitespace-nowrap">
+                      <span className="text-sm md:text-base font-bold text-white whitespace-nowrap">
                         {displayPrice.toFixed(2)} zł
                       </span>
                     </div>
@@ -155,7 +157,7 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-white/10 hover:bg-white/5 text-sm font-medium transition-all duration-200 active:scale-95"
+          className="flex-1 sm:flex-initial px-4 py-2.5 min-h-[40px] md:min-h-[36px] border-white/10 hover:bg-white/5 text-xs font-medium transition-all duration-200 active:scale-95"
         >
           Wstecz
         </Button>
@@ -166,7 +168,7 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
           <Button
             onClick={onNext}
             disabled={!config.matType || !config.variant}
-            className="w-full sm:w-auto px-6 py-3 min-h-[44px] md:min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30 active:scale-95"
+            className="w-full sm:w-auto px-4 py-2.5 min-h-[40px] md:min-h-[36px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-xs font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30 active:scale-95"
           >
             Dalej
           </Button>

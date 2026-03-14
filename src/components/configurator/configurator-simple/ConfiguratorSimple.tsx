@@ -748,8 +748,6 @@ export default function ConfiguratorSimple() {
                       } else {
                         setSelectedRimsProductImage(imagePath);
                       }
-                      setModalImageType("product");
-                      setIsPreviewModalOpen(true);
                     }}
                     className={`
                       relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 active:scale-95
@@ -758,6 +756,7 @@ export default function ConfiguratorSimple() {
                         : 'border-white/10 opacity-60 active:opacity-100'
                       }
                     `}
+                    aria-label={`Zobacz zdjęcie produktu`}
                   >
                     <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="48px" />
                   </button>
@@ -768,12 +767,12 @@ export default function ConfiguratorSimple() {
       )}
 
       {/* Main Content - scale 1.01 = 1% powiększenie (minimalne) */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scale-[0.92] origin-top w-full min-w-0 mx-auto ${
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scale-[1] origin-top w-full min-w-0 mx-auto ${
         shouldShowStickyPreview && activeStep !== 5 
           ? 'pt-[calc(30vh+5rem+3rem)] sm:pt-[calc(33vh+5rem+3rem)] md:pt-[calc(36vh+5rem+3rem)]' 
           : 'pt-12'
       } lg:pt-32 pb-12 ${shouldShowStickyPreview ? `lg:pb-24 ${mainContainerPaddingBottom}` : ''}`}>
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-7 gap-5 xl:gap-6">
           {/* Mobile: Krokowe etapy - jeden krok na raz (4 kroki) */}
           <div className="lg:hidden">
             {/* Step 1: Wybór samochodu */}
@@ -903,8 +902,8 @@ export default function ConfiguratorSimple() {
             )}
           </div>
 
-          {/* Desktop: Poprzednie rozwiązanie z accordion (7 kroków) */}
-          <div className="hidden lg:block lg:col-span-3 space-y-6">
+          {/* Desktop: Konfigurator – po prawej (order-2), col-span-4 dla większych okien opcji */}
+          <div className="hidden lg:block lg:col-span-4 lg:order-2 space-y-4">
             {[
               { step: 1, title: "Wybór samochodu", comp: CarSelectionStep, desc: "Dopasujemy dywaniki idealnie do Twojego modelu" },
               { step: 2, title: "Typ dywaników", comp: MatTypeStep, desc: "Wybierz poziom ochrony i stylu" },
@@ -949,13 +948,13 @@ export default function ConfiguratorSimple() {
             ))}
           </div>
 
-          {/* Right Column - Visualization - Desktop only */}
-          <div className="hidden lg:block lg:col-span-2 space-y-6 mt-8 lg:mt-0">
-            <div className="lg:sticky lg:top-28 space-y-6">
+          {/* Left Column - Podgląd + Cena - Desktop only (order-1 = na lewo, col-span-3) */}
+          <div className="hidden lg:block lg:col-span-3 lg:order-1 space-y-4 mt-8 lg:mt-0">
+            <div className="lg:sticky lg:top-28 flex flex-col gap-4">
               
-              {/* Desktop Price & CTA Card - Moved from sticky bottom bar */}
-              <div className="bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-2xl p-6 shadow-xl">
-                <div className="flex flex-col gap-4">
+              {/* Desktop Price & CTA Card - zawsze na górze */}
+              <div className="order-1 bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-4 shadow-xl">
+                <div className="flex flex-col gap-3">
                   {/* Step Indicator - Moved from top bar */}
                   <div className="flex items-center justify-between text-xs font-medium text-gray-500 uppercase tracking-wider">
                     <span>Konfiguracja</span>
@@ -982,7 +981,7 @@ export default function ConfiguratorSimple() {
                                 {(priceBreakdown.basePrice + priceBreakdown.shippingCost).toFixed(2)} zł
                               </span>
                             )}
-                            <span className="text-3xl font-bold text-white">
+                            <span className="text-2xl font-bold text-white">
                               {totalPriceWithAccessories.toFixed(2)} zł
                             </span>
                           </div>
@@ -1004,7 +1003,7 @@ export default function ConfiguratorSimple() {
                   <Button
                     onClick={handleAddToCart}
                     disabled={isAddingToCart || !isStepValidDesktop(7)}
-                    className="w-full min-h-[56px] text-lg bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold shadow-lg shadow-red-900/20 hover:shadow-red-900/40 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full min-h-[48px] text-base bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold shadow-lg shadow-red-900/20 hover:shadow-red-900/40 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isAddingToCart ? (
                       <div className="flex items-center justify-center gap-2">
@@ -1039,9 +1038,9 @@ export default function ConfiguratorSimple() {
                 </div>
               </div>
 
-              {/* 0. Mat Product Image (Top) - zdjęcie produktu z bazy danych */}
+              {/* 0. Mat Product Image - zdjęcie produktu z bazy danych (pod podglądem dywanika) */}
               {matProductImage && (
-                <div className="space-y-4">
+                <div className="order-3 space-y-4">
                   <div 
                     className="relative group bg-white/5 rounded-2xl border border-white/10 overflow-hidden shadow-lg backdrop-blur-sm transition-all hover:shadow-red-900/5 cursor-pointer"
                     onClick={() => {
@@ -1113,9 +1112,9 @@ export default function ConfiguratorSimple() {
                 </div>
               )}
 
-              {/* 1. Product Window (Top) - galeria zdjęć produktu */}
+              {/* 1. Product Window - galeria zdjęć produktu z karuzelą (pod podglądem dywanika) */}
               {productPreviewPath && (
-                <div className="space-y-4">
+                <div className="order-3 space-y-4">
                   <div 
                     className="relative group bg-white/5 rounded-2xl border border-white/10 overflow-hidden shadow-lg backdrop-blur-sm transition-all hover:shadow-red-900/5 cursor-pointer"
                     onClick={() => {
@@ -1157,12 +1156,37 @@ export default function ConfiguratorSimple() {
                       </div>
                     </div>
                   </div>
+                  {/* Karuzela pod zdjęciem – zmiana grafiki przed powiększeniem */}
+                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+                    <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                      <RotateCcw className="w-3 h-3" />
+                      Wybierz zdjęcie
+                    </h4>
+                    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                      {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
+                        <button
+                          key={imagePath}
+                          onClick={() => config.matType === 'classic' ? setSelectedClassicProductImage(imagePath) : setSelectedRimsProductImage(imagePath)}
+                          className={`
+                            relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 flex-shrink-0
+                            ${(config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath
+                              ? 'border-red-500 shadow-lg shadow-red-500/20 scale-105'
+                              : 'border-transparent opacity-60 hover:opacity-100 hover:border-white/20'
+                            }
+                          `}
+                          aria-label={`Zobacz zdjęcie ${imagePath}`}
+                        >
+                          <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="64px" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
 
-              {/* 2. Rug Preview Window (Bottom) */}
+              {/* 2. Rug Preview Window - dynamiczny podgląd dywanika (nad grafikami) */}
               <div 
-                className="relative group bg-[#111] rounded-2xl p-1 border border-white/10 shadow-2xl transition-all duration-500 hover:shadow-red-900/10 cursor-pointer"
+                className="order-2 relative group bg-[#111] rounded-2xl p-1 border border-white/10 shadow-2xl transition-all duration-500 hover:shadow-red-900/10 cursor-pointer"
                 onClick={() => {
                   setModalImageType('dynamic');
                   setIsPreviewModalOpen(true);

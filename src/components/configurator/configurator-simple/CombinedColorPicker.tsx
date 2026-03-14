@@ -16,7 +16,7 @@ interface CombinedColorPickerProps {
   onPrevious: () => void;
 }
 
-export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: CombinedColorPickerProps) {
+export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious, previewImagePath }: CombinedColorPickerProps) {
   // Pobierz dostępne kolory materiału na podstawie wybranego koloru obszycia
   const availableMatColors = useMemo(() => {
     return getAvailableMaterialColorsForEdge(
@@ -51,14 +51,14 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
   const isStepComplete = !!(config.color && config.edgeColor);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Kolor dywaników */}
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <div>
-          <h4 className="text-xs font-semibold mb-1.5 text-gray-300">Kolor dywaników</h4>
+          <h4 className="text-[10px] font-semibold mb-1 text-gray-300">Kolor dywaników</h4>
           {/* Horizontal Scroll on Mobile, Grid on Desktop */}
           <div className="overflow-x-auto scrollbar-hide pb-2 md:pb-0">
-            <div className="flex md:grid md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-3 md:gap-1.5 min-w-max md:min-w-0">
+            <div className="flex md:grid md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-2 md:gap-1 min-w-max md:min-w-0">
               {availableMatColors.map((colorKey) => {
                 const colorInfo = getColorInfo(colorKey);
                 const isSelected = config.color === colorKey;
@@ -68,7 +68,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
                     key={colorKey}
                     onClick={() => handleMatColorSelect(colorKey)}
                     className={`
-                      aspect-square rounded-lg border transition-all duration-300 w-12 h-12 md:min-w-[18px] md:min-h-[18px] flex-shrink-0 md:flex-shrink
+                      aspect-square rounded-md border transition-all duration-300 w-10 h-10 md:min-w-[16px] md:min-h-[16px] flex-shrink-0 md:flex-shrink
                       ${isSelected
                         ? 'border-red-500 ring-2 ring-red-500/40 md:ring-1 scale-105 md:scale-110'
                         : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
@@ -109,12 +109,12 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
       </div>
 
       {/* Kolor obszycia */}
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <div>
-          <h4 className="text-xs font-semibold mb-1.5 text-gray-300">Kolor obszycia</h4>
+          <h4 className="text-[10px] font-semibold mb-1 text-gray-300">Kolor obszycia</h4>
           {/* Horizontal Scroll on Mobile, Grid on Desktop */}
           <div className="overflow-x-auto scrollbar-hide pb-2 md:pb-0">
-            <div className="flex md:grid md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-3 md:gap-1.5 min-w-max md:min-w-0">
+            <div className="flex md:grid md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-2 md:gap-1 min-w-max md:min-w-0">
               {availableEdgeColors.map((colorKey) => {
                 const colorInfo = getColorInfo(colorKey);
                 const isSelected = config.edgeColor === colorKey;
@@ -124,7 +124,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
                     key={colorKey}
                     onClick={() => handleEdgeColorSelect(colorKey)}
                     className={`
-                      aspect-square rounded-lg border transition-all duration-300 w-12 h-12 md:min-w-[18px] md:min-h-[18px] flex-shrink-0 md:flex-shrink
+                      aspect-square rounded-md border transition-all duration-300 w-10 h-10 md:min-w-[16px] md:min-h-[16px] flex-shrink-0 md:flex-shrink
                       ${isSelected
                         ? 'border-red-500 ring-2 ring-red-500/40 md:ring-1 scale-105 md:scale-110'
                         : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
@@ -164,17 +164,17 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 justify-end pt-4">
+      <div className="flex flex-col sm:flex-row gap-2 justify-end pt-3">
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-white/10 hover:bg-white/5 text-sm font-medium transition-all duration-200 active:scale-95"
+          className="flex-1 sm:flex-initial px-4 py-2.5 min-h-[40px] md:min-h-[36px] border-white/10 hover:bg-white/5 text-xs font-medium transition-all duration-200 active:scale-95"
         >
           Wstecz
         </Button>
-        <div className="flex flex-col items-end gap-2 flex-1 sm:flex-initial">
+        <div className="flex flex-col items-end gap-1.5 flex-1 sm:flex-initial">
           {!isStepComplete && (
-            <p className="text-xs text-gray-400 text-right">
+            <p className="text-[10px] text-gray-400 text-right">
               {!config.color && !config.edgeColor && "Wybierz kolory aby kontynuować"}
               {config.edgeColor && !config.color && "Wybierz kolor materiału aby kontynuować"}
               {config.color && !config.edgeColor && "Wybierz kolor obszycia aby kontynuować"}
@@ -183,7 +183,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious }: Co
           <Button
             onClick={onNext}
             disabled={!isStepComplete}
-            className="w-full sm:w-auto px-6 py-3 min-h-[44px] md:min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30 active:scale-95"
+            className="w-full sm:w-auto px-4 py-2.5 min-h-[40px] md:min-h-[36px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-xs font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30 active:scale-95"
           >
             Dalej
           </Button>

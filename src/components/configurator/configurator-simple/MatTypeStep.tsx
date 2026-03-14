@@ -28,14 +28,14 @@ const matTypes = [
 
 export function MatTypeStep({ config, onUpdate, onNext, onPrevious }: MatTypeStepProps) {
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 [&>*]:min-w-[150px]">
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 [&>*]:min-w-[150px]">
         {matTypes.map((type) => (
           <Card
             key={type.id}
             onClick={() => onUpdate({ matType: type.id })}
             className={`
-              p-4 md:p-5 cursor-pointer transition-all duration-300 min-h-[120px] md:min-h-[100px] active:scale-[0.98]
+              p-3 md:p-4 cursor-pointer transition-all duration-300 min-h-[88px] md:min-h-[80px] active:scale-[0.98]
               ${config.matType === type.id
                 ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
                 : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm'
@@ -43,29 +43,29 @@ export function MatTypeStep({ config, onUpdate, onNext, onPrevious }: MatTypeSte
             `}
           >
             <div>
-              <h3 className="text-lg md:text-xl font-semibold mb-1.5 leading-tight">{type.name}</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">{type.description}</p>
+              <h3 className="text-base md:text-lg font-semibold mb-1 leading-tight">{type.name}</h3>
+              <p className="text-gray-300 text-xs leading-relaxed">{type.description}</p>
             </div>
           </Card>
         ))}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 justify-end pt-4">
+      <div className="flex flex-col sm:flex-row gap-2 justify-end pt-3">
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200 active:scale-95"
+          className="flex-1 sm:flex-initial px-4 py-2.5 min-h-[40px] md:min-h-[36px] border-neutral-700 hover:bg-neutral-800 text-xs font-medium transition-all duration-200 active:scale-95"
         >
           Wstecz
         </Button>
-        <div className="flex flex-col items-end gap-2 flex-1 sm:flex-initial">
+        <div className="flex flex-col items-end gap-1.5 flex-1 sm:flex-initial">
           {!config.matType && (
-            <p className="text-xs text-gray-400 text-right">Wybierz typ dywaników aby kontynuować</p>
+            <p className="text-[10px] text-gray-400 text-right">Wybierz typ dywaników aby kontynuować</p>
           )}
           <Button
             onClick={onNext}
             disabled={!config.matType}
-            className="w-full sm:w-auto px-6 py-3 min-h-[44px] md:min-h-[40px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30 active:scale-95"
+            className="w-full sm:w-auto px-4 py-2.5 min-h-[40px] md:min-h-[36px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-xs font-medium transition-all duration-200 shadow-md shadow-red-600/20 hover:shadow-lg hover:shadow-red-600/30 active:scale-95"
           >
             Dalej
           </Button>

@@ -64,11 +64,11 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
   }, [isSheetOpen, onProductModalOpenChange]);
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
+    <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
       {/* Sekcja Podpiętki */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-semibold text-white">Podpiętki</h3>
+          <h3 className="text-sm font-semibold text-white">Podpiętki</h3>
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-400">Opcjonalne</span>
             <Button
@@ -102,7 +102,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
                 <div
                   key={podpietka.id}
                   className={`
-                    relative group cursor-pointer rounded-lg border-2 overflow-hidden transition-all min-h-[160px] active:scale-[0.98]
+                    relative group cursor-pointer rounded-lg border-2 overflow-hidden transition-all min-h-[140px] active:scale-[0.98]
                     ${isSelected 
                       ? 'border-red-600 bg-red-600/10' 
                       : 'border-white/10 bg-[#111] hover:border-white/20 hover:bg-white/5'
@@ -111,7 +111,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
                   onClick={() => handlePodpietkaClick(podpietka)}
                 >
                   {/* Obraz */}
-                  <div className="relative aspect-square bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] max-h-[140px]">
+                  <div className="relative aspect-square bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] max-h-[120px]">
                     {displayImage ? (
                       <Image
                         src={displayImage}

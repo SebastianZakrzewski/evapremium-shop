@@ -33,13 +33,13 @@ export const StepAccordion = React.forwardRef<HTMLDivElement, StepAccordionProps
     >
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-3 md:p-5 text-left hover:bg-neutral-800/50 transition-colors duration-200 min-h-[44px] md:min-h-[56px] active:bg-neutral-800/70"
+        className="w-full flex items-center justify-between p-2.5 md:p-3 text-left hover:bg-neutral-800/50 transition-colors duration-200 min-h-[40px] md:min-h-[44px] active:bg-neutral-800/70"
       >
-        <div className="flex items-center gap-3 md:gap-4">
+        <div className="flex items-center gap-2 md:gap-3">
           <div
             className={`
               flex items-center justify-center
-              w-6 h-6 md:w-7 md:h-7
+              w-5 h-5 md:w-6 md:h-6
               transition-all duration-300
               ${isValid 
                 ? 'text-red-400 opacity-100' 
@@ -75,19 +75,19 @@ export const StepAccordion = React.forwardRef<HTMLDivElement, StepAccordionProps
             )}
           </div>
           <div className="flex flex-col">
-            <h3 className="text-lg md:text-xl font-semibold leading-tight">{title}</h3>
+            <h3 className="text-base md:text-lg font-semibold leading-tight">{title}</h3>
             {benefitDescription && (
-              <p className="text-xs md:text-sm text-gray-400 mt-1 leading-relaxed">{benefitDescription}</p>
+              <p className="text-[10px] md:text-xs text-gray-400 mt-0.5 leading-relaxed">{benefitDescription}</p>
             )}
           </div>
         </div>
-        <span className={`text-gray-400 text-base md:text-lg transition-transform duration-200 will-change-transform ${isOpen ? 'rotate-180' : ''}`}>
+        <span className={`text-gray-400 text-sm md:text-base transition-transform duration-200 will-change-transform ${isOpen ? 'rotate-180' : ''}`}>
           ▼
         </span>
       </button>
       
       {isOpen && (
-        <div className="px-3 md:px-5 pb-3 md:pb-5 border-t border-neutral-800 pt-3 md:pt-5 animate-in fade-in slide-in-from-top-2 duration-200 will-change-transform">
+        <div className="px-2.5 md:px-3 pb-2.5 md:pb-3 border-t border-neutral-800 pt-2.5 md:pt-3 animate-in fade-in slide-in-from-top-2 duration-200 will-change-transform">
           {children}
         </div>
       )}
