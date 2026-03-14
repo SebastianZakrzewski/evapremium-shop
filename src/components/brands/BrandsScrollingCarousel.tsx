@@ -42,7 +42,7 @@ export default function BrandsScrollingCarousel({
       brands.map((brand, index) => (
         <div
           key={`${setKey}-${brand.id}`}
-          className="flex-shrink-0 mx-3 cursor-pointer"
+          className="flex-shrink-0 mx-3 cursor-pointer relative group"
           style={{ width: CARD_WIDTH }}
           onClick={() => onBrandClick(brand)}
           role="button"
@@ -55,11 +55,13 @@ export default function BrandsScrollingCarousel({
           }}
           aria-label={`Wybierz markę ${brand.name}`}
         >
-          <BrandCard
-            brand={brand}
-            className={clickedCardId === brand.id ? "animate-click" : ""}
-            isPriority={index < 3 && setKey === "first"}
-          />
+          <div className="transform transition-transform duration-300 group-hover:scale-105">
+            <BrandCard
+              brand={brand}
+              className={clickedCardId === brand.id ? "animate-click" : ""}
+              isPriority={index < 3 && setKey === "first"}
+            />
+          </div>
         </div>
       ))
     )
@@ -70,8 +72,6 @@ export default function BrandsScrollingCarousel({
   return (
     <div
       className="w-full overflow-hidden relative py-10"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
     >
       {/* Strzałki - spójne z ProductGallery */}
       <button
