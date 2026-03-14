@@ -30,14 +30,14 @@ export default function BrandsScrollingCarousel({
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     setIsPaused(true)
     setCarouselOffset((prev) => prev + SCROLL_DISTANCE)
-    timeoutRef.current = setTimeout(() => setIsPaused(false), 2000)
+    timeoutRef.current = setTimeout(() => setIsPaused(false), 500)
   }, [])
 
   const goToNext = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     setIsPaused(true)
     setCarouselOffset((prev) => prev - SCROLL_DISTANCE)
-    timeoutRef.current = setTimeout(() => setIsPaused(false), 2000)
+    timeoutRef.current = setTimeout(() => setIsPaused(false), 500)
   }, [])
 
   const brandSets = useMemo(() => {
