@@ -29,7 +29,7 @@ const matTypes = [
 export function MatTypeStep({ config, onUpdate, onNext, onPrevious }: MatTypeStepProps) {
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 [&>*]:min-w-[150px]">
         {matTypes.map((type) => (
           <Card
             key={type.id}

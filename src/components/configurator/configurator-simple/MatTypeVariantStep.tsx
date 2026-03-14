@@ -50,19 +50,21 @@ const variants = [
   },
   {
     id: "complete" as const,
-    name: "Mata do Bagażnika",
+    name: "Bagażnik",
     description: "1 dywanik - Mata do Bagażnika",
     image: "/konfigurator/zestaw/mata.png",
   },
 ];
 
 export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: MatTypeVariantStepProps) {
-  const getVariantPrice = (variantId: string) => {
+  const getVariantPricing = (variantId: string) => {
     const price = PricingService.calculateConfiguratorPrice(config.matType || "3d-with-rims", variantId as any);
-    if (config.matType === 'classic' && variantId === 'front') {
-      return price.priceAfterDiscount || (price.totalPrice - price.shippingCost);
-    }
-    return price.totalPrice;
+    const isClassicFront = config.matType === 'classic' && variantId === 'front';
+    const displayPrice = isClassicFront
+      ? price.priceAfterDiscount || (price.totalPrice - price.shippingCost)
+      : price.totalPrice;
+    const oldPrice = isClassicFront ? price.basePrice : price.basePrice + price.shippingCost;
+    return { displayPrice, oldPrice, hasDiscount: price.discount > 0 };
   };
 
   return (
@@ -70,7 +72,7 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
       {/* Typ dywaników */}
       <div>
         <h3 className="text-base font-semibold mb-2 text-white/90">Typ dywaników</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 [&>*]:min-w-[150px]">
           {matTypes.map((type) => (
             <Card
               key={type.id}
@@ -94,42 +96,48 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
       {config.matType && (
         <div>
           <h3 className="text-base font-semibold mb-2 text-white/90">Wariant zestawu</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 [&>*]:min-w-[150px] [&>*]:min-h-0 items-stretch">
             {variants.map((variant) => {
-              const variantPrice = getVariantPrice(variant.id);
+              const { displayPrice, oldPrice, hasDiscount } = getVariantPricing(variant.id);
               return (
                 <Card
                   key={variant.id}
                   onClick={() => onUpdate({ variant: variant.id })}
                   className={`
-                    p-2 md:p-3 cursor-pointer transition-all duration-300 flex flex-col h-full min-h-[140px] md:min-h-[160px]
+                    p-2 md:p-3 cursor-pointer transition-all duration-300 grid grid-rows-[auto_1fr_auto] h-full
                     ${config.variant === variant.id
                       ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
                       : 'border-white/10 bg-[#111] hover:border-white/20 hover:bg-white/5 hover:shadow-sm active:scale-[0.98]'
                     }
                   `}
                 >
-                  <div className="flex flex-col h-full space-y-1.5 md:space-y-2">
-                    <div className="flex-shrink-0">
-                      <h4 className="text-xs md:text-base font-semibold mb-0.5 md:mb-1 leading-tight">{variant.name}</h4>
-                      <p className="text-gray-300 text-[10px] md:text-xs leading-tight line-clamp-2">{variant.description}</p>
-                    </div>
-                    <div className="aspect-video bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] rounded md:rounded-md overflow-hidden border border-white/10 relative flex-1 min-h-0">
-                      <Image
-                        src={variant.image}
-                        alt={variant.name}
-                        fill
-                        className="object-contain p-0.5 md:p-1"
-                        sizes="(max-width: 768px) 50vw, 25vw"
-                      />
-                    </div>
-                    <div className="pt-1.5 md:pt-2 border-t border-white/10 flex-shrink-0">
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-400 text-[10px] md:text-xs">Cena:</span>
-                        <span className="text-xs md:text-base font-bold text-white">
-                          {variantPrice.toFixed(2)} zł
+                  {/* Nagłówek – stała wysokość, 2 linie opisu */}
+                  <div className="h-[52px] md:h-[56px] flex-shrink-0 flex flex-col justify-center min-h-0">
+                    <h4 className="text-xs md:text-base font-semibold leading-tight truncate">{variant.name}</h4>
+                    <p className="text-gray-300 text-[10px] md:text-xs leading-tight line-clamp-2">{variant.description}</p>
+                  </div>
+                  {/* Zdjęcie – wypełnia środkową przestrzeń */}
+                  <div className="w-full min-h-[100px] md:min-h-[120px] mt-2 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] rounded md:rounded-md overflow-hidden border border-white/10 relative">
+                    <Image
+                      src={variant.image}
+                      alt={variant.name}
+                      fill
+                      className="object-contain p-0.5 md:p-2"
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                    />
+                  </div>
+                  {/* Cena – stała wysokość, zawsze na dole karty */}
+                  <div className="h-[48px] flex-shrink-0 mt-auto pt-2 border-t border-white/10 flex flex-col justify-end gap-0.5">
+                    <span className="text-gray-400 text-[10px] md:text-xs">Cena</span>
+                    <div className="flex items-baseline gap-1.5 flex-wrap">
+                      {hasDiscount && (
+                        <span className="text-[10px] md:text-xs text-gray-500 line-through whitespace-nowrap">
+                          {oldPrice.toFixed(2)} zł
                         </span>
-                      </div>
+                      )}
+                      <span className="text-xs md:text-base font-bold text-white whitespace-nowrap">
+                        {displayPrice.toFixed(2)} zł
+                      </span>
                     </div>
                   </div>
                 </Card>

@@ -214,8 +214,17 @@ export default function ConfiguratorSimple() {
     '/zrantamiprodukt/komplet5dyw.webp',
   ];
 
-  // Oblicz cenę na podstawie konfiguracji
+  // Oblicz cenę na podstawie konfiguracji – tylko gdy wybrano wariant zestawu
   const priceBreakdown = useMemo(() => {
+    if (!config.variant) {
+      return {
+        basePrice: 0,
+        discount: 0,
+        priceAfterDiscount: 0,
+        shippingCost: 0,
+        totalPrice: 0,
+      };
+    }
     return calculatePriceBreakdown(config.matType, config.variant, {
       brand: config.brand,
       model: config.model,
@@ -635,7 +644,8 @@ export default function ConfiguratorSimple() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white selection:bg-red-500 selection:text-white lg:overflow-hidden">
-      {/* Progress Bar - Desktop only */}
+      {/* Progress Bar - Desktop only - REMOVED to save vertical space */}
+      {/* 
       {!shouldHideDesktopBars && (
       <div className="hidden lg:block fixed top-24 left-0 right-0 z-[60] bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300 lg:scale-[0.85] lg:origin-top lg:w-[117.647%] lg:left-1/2 lg:-translate-x-1/2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -648,6 +658,7 @@ export default function ConfiguratorSimple() {
         </div>
       </div>
       )}
+      */}
 
       {/* Mobile Fixed Header with Product Image and Gallery */}
       {shouldShowStickyPreview && (
@@ -942,6 +953,92 @@ export default function ConfiguratorSimple() {
           <div className="hidden lg:block lg:col-span-2 space-y-6 mt-8 lg:mt-0">
             <div className="lg:sticky lg:top-28 space-y-6">
               
+              {/* Desktop Price & CTA Card - Moved from sticky bottom bar */}
+              <div className="bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-2xl p-6 shadow-xl">
+                <div className="flex flex-col gap-4">
+                  {/* Step Indicator - Moved from top bar */}
+                  <div className="flex items-center justify-between text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <span>Konfiguracja</span>
+                    <span>Krok {activeStep} z {TOTAL_STEPS_DESKTOP}</span>
+                  </div>
+                  
+                  {/* Progress Line */}
+                  <div className="h-1 w-full bg-neutral-800 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-red-600 transition-all duration-500 ease-out"
+                      style={{ width: `${(activeStep / TOTAL_STEPS_DESKTOP) * 100}%` }}
+                    />
+                  </div>
+
+                  {/* Price Section */}
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <p className="text-sm text-gray-400 mb-1">Cena zestawu</p>
+                      {config.variant ? (
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-baseline gap-2">
+                            {priceBreakdown.discount > 0 && (
+                              <span className="text-lg text-gray-500 line-through font-medium">
+                                {(priceBreakdown.basePrice + priceBreakdown.shippingCost).toFixed(2)} zł
+                              </span>
+                            )}
+                            <span className="text-3xl font-bold text-white">
+                              {totalPriceWithAccessories.toFixed(2)} zł
+                            </span>
+                          </div>
+                          {priceBreakdown.discount > 0 && (
+                            <span className="text-sm text-green-400 bg-green-400/10 px-2 py-0.5 rounded w-fit">
+                              Rabat {priceBreakdown.basePrice >= 910 ? "30%" : "20%"}: -{priceBreakdown.discount.toFixed(2)} zł
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="text-sm text-gray-500">
+                          Wybierz wariant
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* CTA Button */}
+                  <Button
+                    onClick={handleAddToCart}
+                    disabled={isAddingToCart || !isStepValidDesktop(7)}
+                    className="w-full min-h-[56px] text-lg bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold shadow-lg shadow-red-900/20 hover:shadow-red-900/40 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isAddingToCart ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Dodawanie...</span>
+                      </div>
+                    ) : !isStepValidDesktop(7) ? (
+                      <span>Dokończ konfigurację</span>
+                    ) : (
+                      <span className="flex items-center justify-center gap-2">
+                        <ShoppingCart className="w-5 h-5" />
+                        Dodaj do koszyka
+                      </span>
+                    )}
+                  </Button>
+                  
+                  {/* Additional Info */}
+                  <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+                    <span className="flex items-center gap-1.5">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Darmowa dostawa
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Wysyłka 24h
+                    </span>
+                  </div>
+                </div>
+              </div>
+
               {/* 0. Mat Product Image (Top) - zdjęcie produktu z bazy danych */}
               {matProductImage && (
                 <div className="space-y-4">
@@ -1134,7 +1231,8 @@ export default function ConfiguratorSimple() {
 
       {/* Desktop Sticky Bottom Bar with Price and CTA */}
       {/* Pokazuje się dopiero po przejściu do sekcji "Typ dywaników" (krok 2) */}
-      {(activeStep >= 2 && !shouldHideDesktopBars && activeStep !== 7) && (
+      {/* UKRYTE - Przeniesione do sidebara na desktopie */}
+      {false && (activeStep >= 2 && !shouldHideDesktopBars && activeStep !== 7) && (
         <div className="hidden lg:block fixed bottom-0 left-0 right-0 z-50 bg-neutral-950/95 backdrop-blur-xl border-t border-white/10 shadow-2xl lg:scale-[0.8] lg:origin-bottom lg:w-[125%] lg:left-1/2 lg:-translate-x-1/2">
           {/* Main Content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -1207,13 +1305,18 @@ export default function ConfiguratorSimple() {
                 <div className="flex-1 min-w-0 overflow-hidden">
                   <div className="flex items-baseline gap-1.5 min-w-0">
                     <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0">Cena:</span>
+                    {priceBreakdown.discount > 0 && (
+                      <span className="text-sm text-gray-500 line-through flex-shrink-0">
+                        {(priceBreakdown.basePrice + priceBreakdown.shippingCost).toFixed(2)} zł
+                      </span>
+                    )}
                     <span className="text-lg font-bold text-white truncate">
                       {totalPriceWithAccessories.toFixed(2)} zł
                     </span>
                   </div>
                   {priceBreakdown.discount > 0 && (
                     <div className="text-xs text-green-400 mt-0.5 truncate">
-                      Rabat: -{priceBreakdown.discount.toFixed(2)} zł
+                      Rabat {priceBreakdown.basePrice >= 910 ? "30%" : "20%"}: -{priceBreakdown.discount.toFixed(2)} zł
                     </div>
                   )}
                 </div>

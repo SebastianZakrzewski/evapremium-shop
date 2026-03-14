@@ -6,7 +6,7 @@ export interface ConfiguratorState {
   year: string;
   bodyType: string;
   matType: "3d-with-rims" | "classic";
-  variant: "front" | "basic" | "premium" | "complete";
+  variant: "" | "front" | "basic" | "premium" | "complete";
   structure: "diamonds" | "honey";
   color: string;
   edgeColor: string;

@@ -27,7 +27,7 @@ const variantNames: Record<string, string> = {
   front: "Starter",
   basic: "Podstawowy",
   premium: "Premium",
-  complete: "Mata do Bagażnika",
+  complete: "Bagażnik",
 };
 
 const matTypeNames: Record<string, string> = {
@@ -239,14 +239,27 @@ export function SummaryStep({
             <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:bg-red-500/10 transition-colors duration-700"></div>
             
             <div className="space-y-3 relative z-10">
-              <div className="flex justify-between text-gray-400">
-                <span>Cena bazowa</span>
-                <span>{priceBreakdown.basePrice.toFixed(2)} zł</span>
+              <div className="flex justify-between items-center text-gray-400">
+                <span>Cena zestawu</span>
+                <div className="flex items-center gap-2">
+                  {priceBreakdown.discount > 0 ? (
+                    <>
+                      <span className="text-gray-500 line-through text-sm">
+                        {priceBreakdown.basePrice.toFixed(2)} zł
+                      </span>
+                      <span className="text-white font-medium">
+                        {(priceBreakdown.basePrice - priceBreakdown.discount).toFixed(2)} zł
+                      </span>
+                    </>
+                  ) : (
+                    <span>{priceBreakdown.basePrice.toFixed(2)} zł</span>
+                  )}
+                </div>
               </div>
               
               {priceBreakdown.discount > 0 && (
                 <div className="flex justify-between text-green-400 bg-green-500/5 px-2 py-1 rounded">
-                  <span>Rabat</span>
+                  <span>Rabat ({priceBreakdown.basePrice >= 910 ? "30%" : "20%"})</span>
                   <span>-{priceBreakdown.discount.toFixed(2)} zł</span>
                 </div>
               )}
@@ -269,9 +282,23 @@ export function SummaryStep({
             <div className="pt-6 mt-6 border-t border-white/10 relative z-10">
               <div className="flex justify-between items-end mb-1">
                 <span className="text-gray-300 font-medium">Do zapłaty</span>
-                <span className="text-3xl font-bold text-white tracking-tight">
-                  {(priceBreakdown.totalPrice + (selectedPodpietka?.price || 0)).toFixed(2)} <span className="text-lg text-gray-500 font-normal">zł</span>
-                </span>
+                <div className="flex flex-col items-end gap-0.5">
+                  <div className="flex items-baseline gap-2">
+                    {priceBreakdown.discount > 0 && (
+                      <span className="text-base text-gray-500 line-through font-medium">
+                        {(priceBreakdown.basePrice + priceBreakdown.shippingCost + (selectedPodpietka?.price || 0)).toFixed(2)} zł
+                      </span>
+                    )}
+                    <span className="text-3xl font-bold text-white tracking-tight">
+                      {(priceBreakdown.totalPrice + (selectedPodpietka?.price || 0)).toFixed(2)} <span className="text-lg text-gray-500 font-normal">zł</span>
+                    </span>
+                  </div>
+                  {priceBreakdown.discount > 0 && (
+                    <span className="text-xs text-green-400 font-medium">
+                      Oszczędzasz {priceBreakdown.discount.toFixed(2)} zł
+                    </span>
+                  )}
+                </div>
               </div>
               <p className="text-xs text-gray-500 text-right">Zawiera podatek VAT</p>
             </div>

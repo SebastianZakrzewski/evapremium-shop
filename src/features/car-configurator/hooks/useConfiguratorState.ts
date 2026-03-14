@@ -36,7 +36,7 @@ const defaultState: ConfiguratorState = {
   year: "",
   bodyType: "",
   matType: "3d-with-rims",
-  variant: "front",
+  variant: "",
   structure: "diamonds",
   color: "black",
   edgeColor: "black",
