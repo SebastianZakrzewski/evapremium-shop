@@ -243,30 +243,43 @@ const ProductImageCard = React.memo(({
   const isPriority = index < 3;
   
   return (
-    <div key={`${setKey}-${index}`} className="flex-shrink-0 w-80 h-64 sm:w-96 sm:h-80 mx-3 group">
+    <div key={`${setKey}-${index}`} className="flex-shrink-0 w-80 h-64 sm:w-96 sm:h-80 mx-3 group relative">
       <div 
-        className="relative h-full rounded-xl overflow-hidden bg-neutral-950 border border-white/5 group-hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1 cursor-pointer"
+        className="
+          relative h-full rounded-3xl overflow-hidden 
+          bg-white/5 backdrop-blur-md border border-white/10 
+          group-hover:border-red-500/30 
+          transition-all duration-500 ease-out
+          shadow-2xl shadow-black/50
+          group-hover:shadow-red-900/20 group-hover:-translate-y-2 
+          cursor-pointer
+        "
         onClick={() => onImageClick(image)}
       >
         <Image
           src={image.src}
           alt={image.alt}
           fill
-          className="object-cover brightness-110 transition-transform duration-500 group-hover:scale-110 group-hover:brightness-125"
+          className="object-cover brightness-110 transition-transform duration-700 group-hover:scale-110 group-hover:brightness-125"
           sizes="(max-width: 768px) 320px, 384px"
           priority={isPriority}
           quality={85}
         />
         
-        {/* Overlay z gradientem */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        {/* Overlay z gradientem - spójny z BrandCard */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+        
+        {/* Shine Effect - spójny z BrandCard */}
+        <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+          <div className="absolute inset-0 transform -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        </div>
         
         {/* Tekst na obrazie */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 text-white translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-          <h3 className="text-xl font-bold mb-2 text-white group-hover:text-red-500 transition-colors">
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white translate-y-4 group-hover:translate-y-0 transition-transform duration-500 z-20">
+          <h3 className="text-xl font-bold mb-2 text-white group-hover:text-red-500 transition-colors duration-300">
             {image.title}
           </h3>
-          <p className="text-sm text-gray-300 line-clamp-2">
+          <p className="text-sm text-gray-300 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
             {image.description}
           </p>
         </div>
