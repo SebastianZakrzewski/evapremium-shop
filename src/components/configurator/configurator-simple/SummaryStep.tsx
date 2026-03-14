@@ -235,7 +235,7 @@ export function SummaryStep({
             Podsumowanie
           </h3>
           
-          <div className="flex-1 bg-[#111] border border-white/10 rounded-2xl p-4 shadow-xl flex flex-col justify-between relative overflow-hidden group">
+          <div className="flex-1 bg-neutral-900/30 backdrop-blur-sm border border-neutral-800/80 rounded-2xl p-4 shadow-md flex flex-col justify-between relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:bg-red-500/10 transition-colors duration-700"></div>
             
             <div className="space-y-3 relative z-10">

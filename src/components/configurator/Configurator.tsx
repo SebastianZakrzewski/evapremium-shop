@@ -90,7 +90,7 @@ const setVariants: SetVariant[] = [
   { id: "front", name: "Starter", description: "2 dywaniki (tylko przód)", priceModifier: 0 },
   { id: "basic", name: "Podstawowy", description: "5 dywaników (przód + tył + ochrona na tunel środkowy)", priceModifier: 0 },
   { id: "premium", name: "Premium", description: "5 dywaników (przód + tył + bagażnik)", priceModifier: 0 },
-  { id: "complete", name: "Mata do Bagażnika", description: "1 dywanik - Mata do Bagażnika", priceModifier: 0 },
+  { id: "complete", name: "Bagażnik", description: "1 dywanik - Mata do Bagażnika", priceModifier: 0 },
 ];
 
 const bodyTypes = [

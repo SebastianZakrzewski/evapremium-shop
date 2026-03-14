@@ -33,25 +33,25 @@ const variants = [
   {
     id: "front" as const,
     name: "Starter",
-    description: "2 dywaniki (tylko przód)",
+    description: "2 dyw. (przód)",
     image: "/konfigurator/zestaw/przod.png",
   },
   {
     id: "basic" as const,
     name: "Podstawowy",
-    description: "5 dywaników (przód + tył)",
+    description: "5 dyw. (przód + tył)",
     image: "/konfigurator/zestaw/pt.png",
   },
   {
     id: "premium" as const,
     name: "Premium",
-    description: "5 dywaników (przód + tył + bagażnik)",
+    description: "5 dyw. (przód + tył + bagażnik)",
     image: "/konfigurator/zestaw/ptb.png",
   },
   {
     id: "complete" as const,
     name: "Bagażnik",
-    description: "1 dywanik - Mata do Bagażnika",
+    description: "1 dyw. (mata bagażnik)",
     image: "/konfigurator/zestaw/mata.png",
   },
 ];
@@ -68,17 +68,18 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Typ dywaników */}
       <div>
         <h3 className="text-base font-semibold mb-2 text-white/90">Typ dywaników</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 [&>*]:min-w-[150px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 [&>*]:min-w-[150px] items-stretch">
           {matTypes.map((type) => (
             <Card
               key={type.id}
               onClick={() => onUpdate({ matType: type.id })}
               className={`
-                p-3 cursor-pointer transition-all duration-300 min-h-[80px] active:scale-[0.98]
+                p-3 md:p-4 cursor-pointer transition-all duration-300 min-h-[80px] active:scale-[0.98]
+                rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50
                 ${config.matType === type.id
                   ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
                   : 'border-white/10 bg-[#111] hover:border-white/20 hover:bg-white/5 hover:shadow-sm'
@@ -99,37 +100,40 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 [&>*]:min-w-[150px] [&>*]:min-h-0 items-stretch">
             {variants.map((variant) => {
               const { displayPrice, oldPrice, hasDiscount } = getVariantPricing(variant.id);
+              const isSelected = config.variant === variant.id;
               return (
-                <Card
+                <button
                   key={variant.id}
+                  type="button"
                   onClick={() => onUpdate({ variant: variant.id })}
                   className={`
-                    p-2 md:p-3 cursor-pointer transition-all duration-300 grid grid-rows-[auto_1fr_auto] h-full
-                    ${config.variant === variant.id
-                      ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
-                      : 'border-white/10 bg-[#111] hover:border-white/20 hover:bg-white/5 hover:shadow-sm active:scale-[0.98]'
+                    p-3 md:p-4 cursor-pointer transition-all duration-300 flex flex-col h-full w-full text-left
+                    rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50
+                    ${isSelected
+                      ? 'ring-2 ring-red-500/50 ring-offset-2 ring-offset-black scale-[1.01]'
+                      : 'hover:opacity-90 active:scale-[0.98]'
                     }
                   `}
                 >
-                  {/* Nagłówek – stała wysokość, 2 linie opisu */}
+                  {/* Nagłówek – stała wysokość, skrócone opisy mieszczą się w 2 liniach */}
                   <div className="h-[52px] md:h-[56px] flex-shrink-0 flex flex-col justify-center min-h-0">
                     <h4 className="text-xs md:text-base font-semibold leading-tight truncate">{variant.name}</h4>
                     <p className="text-gray-300 text-[10px] md:text-xs leading-tight line-clamp-2">{variant.description}</p>
                   </div>
-                  {/* Zdjęcie – wypełnia środkową przestrzeń */}
-                  <div className="w-full min-h-[100px] md:min-h-[120px] mt-2 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] rounded md:rounded-md overflow-hidden border border-white/10 relative">
+                  {/* Zdjęcie – stała wysokość, zapobiega nachodzeniu na cenę */}
+                  <div className="w-full h-[100px] md:h-[120px] flex-shrink-0 mt-2 rounded-2xl overflow-hidden bg-neutral-800/40 relative">
                     <Image
                       src={variant.image}
                       alt={variant.name}
                       fill
-                      className="object-contain p-0.5 md:p-2"
+                      className="object-contain p-0.5 md:p-2 rounded-2xl"
                       sizes="(max-width: 768px) 50vw, 25vw"
                     />
                   </div>
-                  {/* Cena – stała wysokość, zawsze na dole karty */}
-                  <div className="h-[48px] flex-shrink-0 mt-auto pt-2 border-t border-white/10 flex flex-col justify-end gap-0.5">
+                  {/* Cena – stała wysokość, zawsze na dole */}
+                  <div className="h-[48px] flex-shrink-0 pt-2 mt-auto flex flex-col justify-end gap-0.5">
                     <span className="text-gray-400 text-[10px] md:text-xs">Cena</span>
-                    <div className="flex items-baseline gap-1.5 flex-wrap">
+                    <div className="flex items-baseline gap-1.5 flex-nowrap">
                       {hasDiscount && (
                         <span className="text-[10px] md:text-xs text-gray-500 line-through whitespace-nowrap">
                           {oldPrice.toFixed(2)} zł
@@ -140,7 +144,7 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
                       </span>
                     </div>
                   </div>
-                </Card>
+                </button>
               );
             })}
           </div>

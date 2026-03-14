@@ -767,8 +767,8 @@ export default function ConfiguratorSimple() {
         </div>
       )}
 
-      {/* Main Content */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:scale-[0.8] lg:origin-top lg:w-[125%] ${
+      {/* Main Content - scale 1.01 = 1% powiększenie (minimalne) */}
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scale-[0.92] origin-top w-full min-w-0 mx-auto ${
         shouldShowStickyPreview && activeStep !== 5 
           ? 'pt-[calc(30vh+5rem+3rem)] sm:pt-[calc(33vh+5rem+3rem)] md:pt-[calc(36vh+5rem+3rem)]' 
           : 'pt-12'
