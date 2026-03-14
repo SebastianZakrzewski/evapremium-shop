@@ -1,35 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Target, ClipboardList, BarChart2, Scissors, Pen, Package, CheckCircle, Truck } from "lucide-react";
+import { CheckCircle, ArrowRight } from "lucide-react";
 import Image from "next/image";
 
-const carBrands = [
-  { name: "BMW", logo: "/images/products/bmw.png" },
-  { name: "Mercedes", logo: "/images/products/mercedes.jpg" },
-  { name: "Audi", logo: "/images/products/audi.jpg" },
-  { name: "Porsche", logo: "/images/products/porsche.png" },
-  { name: "Tesla", logo: "/images/products/tesla.avif" },
-  { name: "Acura", logo: "/images/products/acura.avif" },
-  { name: "Alfa Romeo", logo: "/images/products/alfa_romeo.jpg" },
-  { name: "Aston Martin", logo: "/images/products/aston_martin.avif" },
-  { name: "Bentley", logo: "/images/products/bentley.webp" },
-  { name: "Bugatti", logo: "/images/products/bugatti.jpg" },
-  { name: "Cadillac", logo: "/images/products/cadilac.jpeg" }
-];
-
-const timelineSteps = [
-  { icon: ClipboardList, title: "Przyjęcie zamówienia", day: "Dzień 1" },
-  { icon: BarChart2, title: "Weryfikacja modelu", day: "Dzień 2" },
-  { icon: Scissors, title: "Cięcie dywaników", day: "Dzień 3" },
-  { icon: Pen, title: "Szycie", day: "Dzień 6" },
-  { icon: Package, title: "Formowanie 3D", day: "Dzień 9" },
-  { icon: CheckCircle, title: "Kontrola jakości", day: "Dzień 12" },
-  { icon: Truck, title: "Wysyłka", day: "Dzień 14" }
+const processSteps = [
+  { id: 1, title: "Przyjęcie zamówienia", day: "Dzień 1" },
+  { id: 2, title: "Weryfikacja modelu", day: "Dzień 2" },
+  { id: 3, title: "Cięcie dywaników", day: "Dzień 3" },
+  { id: 4, title: "Szycie", day: "Dzień 6" },
+  { id: 5, title: "Formowanie 3D", day: "Dzień 9" },
+  { id: 6, title: "Kontrola jakości", day: "Dzień 12" },
+  { id: 7, title: "Wysyłka", day: "Dzień 14" }
 ];
 
 export default function CustomFitSection() {
   const [isVisible, setIsVisible] = useState(false);
+  const [activeStep, setActiveStep] = useState<number | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -54,105 +41,126 @@ export default function CustomFitSection() {
       {/* Gradient line top */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
 
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/mc.webp"
-          alt="Tło"
-          fill
-          className="object-cover opacity-10"
-          quality={90}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-neutral-950/90 to-neutral-950" />
-      </div>
-
-      {/* Animowane tło */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/5 via-neutral-950 to-red-800/5 pointer-events-none"></div>
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-bl from-red-900/5 via-neutral-950 to-neutral-950 pointer-events-none"></div>
       
-      {/* Animowane cząsteczki */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-300 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
-      </div>
-
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className={`text-center mb-16 md:mb-24 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-8 animate-pulse-glow shadow-lg shadow-red-500/30 transition-all duration-1000 ease-out" style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
-            <Target className="w-10 h-10 text-white" />
-          </div>
-          <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight break-words px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
+          <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight break-words px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
             Szyte na miarę do <span className="text-red-500">Twojego auta</span>
           </h2>
-          <p className={`text-sm sm:text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
-            Każdy dywanik jest precyzyjnie dopasowany do konkretnego modelu samochodu z dokładnością do milimetra. Nasz proces produkcyjny gwarantuje idealne pokrycie podłogi, perfekcyjne dopasowanie do kształtów i maksymalną ochronę.
+          <p className={`text-sm sm:text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
+            Każdy dywanik jest precyzyjnie dopasowany do konkretnego modelu samochodu z dokładnością do milimetra. Nasz proces produkcyjny gwarantuje idealne pokrycie podłogi i perfekcyjne dopasowanie.
           </p>
         </div>
 
-        {/* Timeline */}
-        <div className="mb-20 md:mb-28 relative max-w-6xl mx-auto">
-          {/* Vertical line for mobile - centered */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/10 to-transparent md:hidden" />
+        {/* Split Layout: Text Left, Image Right */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
           
-          {/* Horizontal line for desktop */}
-          <div className="absolute top-8 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-y-1/2 hidden md:block" />
-          
-          {/* Timeline Steps */}
-          <div className="flex flex-col items-center md:flex-row md:justify-between gap-12 md:gap-4 relative">
-            {timelineSteps.map((step, idx) => {
-              const Icon = step.icon;
-              return (
-                <div key={idx} className="group relative flex flex-col items-center gap-4 md:gap-6 w-full md:w-auto">
-                  {/* Node */}
-                  <div className="relative z-10 shrink-0">
-                    <div className="w-16 h-16 bg-neutral-950 border border-white/10 rounded-full flex items-center justify-center transition-all duration-500 group-hover:border-red-500 group-hover:shadow-[0_0_30px_rgba(220,38,38,0.3)] group-hover:scale-110 relative overflow-hidden">
-                      {/* Glass effect inside circle */}
-                      <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-full"></div>
-                      <Icon className="w-6 h-6 text-gray-400 group-hover:text-red-500 transition-colors relative z-10" />
+          {/* Left Column: Process List */}
+          <div className={`order-2 lg:order-1 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
+            <div className="space-y-8">
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  Proces realizacji
+                </h3>
+                <p className="text-gray-400 leading-relaxed">
+                  Od momentu zamówienia do wysyłki, Twój zestaw przechodzi przez 7-etapowy proces produkcji, zapewniający najwyższą jakość wykonania.
+                </p>
+              </div>
+
+              {/* Clean Numbered List */}
+              <div className="space-y-3">
+                {processSteps.map((step) => (
+                  <div 
+                    key={step.id}
+                    className="group flex items-center p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 transition-all duration-300 cursor-default"
+                    onMouseEnter={() => setActiveStep(step.id)}
+                    onMouseLeave={() => setActiveStep(null)}
+                  >
+                    <div className={`
+                      text-lg font-bold mr-6 w-8 text-right transition-colors duration-300 font-mono
+                      ${activeStep === step.id ? 'text-red-500' : 'text-gray-600'}
+                    `}>
+                      0{step.id}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className={`font-semibold transition-colors duration-300 ${activeStep === step.id ? 'text-white' : 'text-gray-300'}`}>
+                        {step.title}
+                      </h4>
+                    </div>
+                    <div className={`
+                      text-xs uppercase tracking-wider font-medium transition-colors duration-300
+                      ${activeStep === step.id ? 'text-red-400' : 'text-gray-500'}
+                    `}>
+                      {step.day}
                     </div>
                   </div>
-                  
-                  {/* Content */}
-                  <div className="text-center md:w-32 bg-neutral-950/80 backdrop-blur-sm p-3 rounded-xl border border-white/5 md:border-none md:bg-transparent md:p-0">
-                    <p className="text-white font-bold text-sm md:text-base mb-1 group-hover:text-red-500 transition-colors">
-                      {step.title}
-                    </p>
-                    <p className="text-xs text-gray-500 uppercase tracking-wider font-mono">
-                      {step.day}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+                ))}
+              </div>
 
-        {/* Marquee Section */}
-        <div className="space-y-8 md:space-y-12">
-          <div className="text-center">
-            <span className="inline-block px-4 py-1 rounded-full bg-white/5 border border-white/10 text-xs md:text-sm text-gray-400 uppercase tracking-widest backdrop-blur-md">
-              Obsługujemy ponad 50 marek samochodów
-            </span>
-          </div>
-          
-          <div className="relative flex overflow-hidden group -mx-4 md:mx-0 py-4 mask-gradient">
-            <div className="flex animate-scroll-left whitespace-nowrap hover:pause">
-              {[...carBrands, ...carBrands, ...carBrands].map((brand, idx) => (
-                <div key={`${brand.name}-${idx}`} className="mx-6 md:mx-10 flex items-center justify-center w-24 h-16 md:w-32 md:h-20 opacity-40 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0 cursor-pointer hover:scale-110">
-                  <div className="relative w-full h-full">
-                     <Image 
-                       src={brand.logo} 
-                       alt={brand.name}
-                       fill
-                       className="object-contain"
-                     />
-                  </div>
-                </div>
-              ))}
+              {/* CTA */}
+              <div className="pt-6">
+                <button 
+                  onClick={() => {
+                    const element = document.getElementById('products');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className="
+                    bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 
+                    text-white font-bold uppercase tracking-wide py-4 px-8 rounded-full 
+                    shadow-xl shadow-red-900/30 hover:shadow-2xl hover:shadow-red-600/20 
+                    transition-all duration-300 transform hover:scale-105 active:scale-95
+                    flex items-center gap-2 min-h-[44px]
+                  "
+                >
+                  Zamów do swojego auta
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
+
+          {/* Right Column: Image */}
+          <div className={`order-1 lg:order-2 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+            <div className="relative group">
+              {/* Glass Container */}
+              <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
+                <div className="relative rounded-2xl overflow-hidden aspect-[4/5] lg:aspect-[3/4] bg-neutral-900">
+                  <Image
+                    src="/images/zalety/szycie.png"
+                    alt="Proces szycia dywaników na miarę"
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                  
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                  
+                  {/* Text Overlay */}
+                  <div className="absolute bottom-0 left-0 p-8">
+                    <div className="flex items-center gap-2 text-red-500 font-bold uppercase tracking-wider text-sm mb-2">
+                      <CheckCircle className="w-4 h-4" />
+                      Precyzja wykonania
+                    </div>
+                    <p className="text-white text-lg font-medium leading-relaxed">
+                      Każdy szew jest kontrolowany, aby zapewnić maksymalną trwałość i estetykę.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Shine Effect */}
+                <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                  <div className="absolute inset-0 transform -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
