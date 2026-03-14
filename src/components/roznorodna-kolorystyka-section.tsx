@@ -62,12 +62,6 @@ export default function RoznorodnaKolorystykaSection() {
       {/* Gradient line top */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
 
-      {/* Background Glow */}
-      <div 
-        className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] blur-[150px] rounded-full opacity-10 transition-colors duration-1000 pointer-events-none"
-        style={{ backgroundColor: selectedColor.hex }}
-      />
-
       {/* Animowane tło */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/5 via-neutral-950 to-red-800/5 pointer-events-none"></div>
       
