@@ -258,18 +258,6 @@ export default function ThreeDMatsSection() {
                     }}
                   >
                     <div className="p-4 sm:p-5 flex items-start gap-4">
-                      {/* Ikona */}
-                      <div className={`
-                        flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300
-                        ${isActive 
-                          ? 'bg-red-600 text-white shadow-lg shadow-red-600/30' 
-                          : isHovered 
-                            ? 'bg-white/10 text-white' 
-                            : 'bg-black/40 text-gray-400'}
-                      `}>
-                        <IconComponent className="w-6 h-6" />
-                      </div>
-
                       {/* Tekst */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
