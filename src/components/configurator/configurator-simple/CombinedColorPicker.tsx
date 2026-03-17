@@ -14,6 +14,7 @@ interface CombinedColorPickerProps {
   onUpdate: (updates: { color?: string; edgeColor?: string }) => void;
   onNext: () => void;
   onPrevious: () => void;
+  previewImagePath?: string;
 }
 
 export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious, previewImagePath }: CombinedColorPickerProps) {

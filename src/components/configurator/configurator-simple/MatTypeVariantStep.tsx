@@ -9,7 +9,7 @@ import { PricingService } from "@/lib/services/PricingService";
 interface MatTypeVariantStepProps {
   config: {
     matType: "3d-with-rims" | "classic";
-    variant: "front" | "basic" | "premium" | "complete";
+    variant: "" | "front" | "basic" | "premium" | "complete";
   };
   onUpdate: (updates: { matType?: "3d-with-rims" | "classic"; variant?: "front" | "basic" | "premium" | "complete" }) => void;
   onNext: () => void;

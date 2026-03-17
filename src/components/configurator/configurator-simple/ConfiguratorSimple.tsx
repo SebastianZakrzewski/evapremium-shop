@@ -814,7 +814,10 @@ export default function ConfiguratorSimple() {
                   <h2 className="text-xl font-semibold text-white">Typ i wariant zestawu</h2>
                 </div>
                 <MatTypeVariantStep
-                  config={config}
+                  config={{
+                    matType: config.matType,
+                    variant: config.variant || "front",
+                  }}
                   onUpdate={updateConfig}
                   onNext={goToNextStep}
                   onPrevious={goToPreviousStep}
