@@ -21,13 +21,13 @@ import { cn } from '@/lib/utils';
 const stats = [
   {
     icon: Award,
-    value: "13+",
+    value: "3+",
     label: "Lat doświadczenia",
-    description: "Od 2010 roku na rynku"
+    description: "Od 2023 roku na rynku"
   },
   {
     icon: Users,
-    value: "15K+",
+    value: "3K+",
     label: "Zadowolonych klientów",
     description: "W całej Europie"
   },
@@ -68,8 +68,8 @@ const values = [
   },
   {
     icon: Truck,
-    title: "Ekspresowa Realizacja",
-    description: "Wysyłka w 24-48h dla większości popularnych modeli."
+    title: "Realizacja standardowa",
+    description: "Do 10 dni roboczych dla większości popularnych modeli."
   },
   {
     icon: CheckCircle,

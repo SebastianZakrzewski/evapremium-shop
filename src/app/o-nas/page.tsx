@@ -5,7 +5,7 @@ import PageHeroBanner from '@/components/page-hero-banner';
 
 export const metadata: Metadata = {
   title: 'O Nas - EvaPremium | Najwyższej Jakości Dywaniki Samochodowe EVA',
-  description: 'Poznaj historię EvaPremium - polskiego producenta dywaników samochodowych EVA. Najwyższa jakość, innowacyjne rozwiązania i zadowoleni klienci od 2010 roku.',
+  description: 'Poznaj historię EvaPremium - polskiego producenta dywaników samochodowych EVA. Najwyższa jakość, innowacyjne rozwiązania i zadowoleni klienci od 2023 roku.',
   keywords: 'o nas, evapremium, historia firmy, dywaniki eva, producent, polska firma, jakość',
   openGraph: {
     title: 'O Nas - EvaPremium',
@@ -21,7 +21,7 @@ export default function AboutUsPage() {
         breadcrumb="O Nas"
         title="O NAS"
         highlight="EVAPREMIUM"
-        description="EvaPremium to polski producent innowacyjnych dywaników samochodowych. Łączymy technologię z rzemieślniczą precyzją, dostarczając produkty najwyższej jakości od 2010 roku."
+        description="EvaPremium to polski producent innowacyjnych dywaników samochodowych. Łączymy technologię z rzemieślniczą precyzją, dostarczając produkty najwyższej jakości od 2023 roku."
       />
       <AboutUsSection />
     </>
