@@ -12,7 +12,7 @@ export default function TermsOfServicePage() {
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-white mb-8 text-center">Regulamin</h1>
           
-          <div className="bg-black border border-neutral-800 rounded-lg shadow-lg p-8 space-y-8">
+          <div className="bg-black border border-white/5 rounded-lg shadow-lg p-8 space-y-8">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-white mb-4">REGULAMIN SKLEPU INTERNETOWEGO WWW.EVAPREMIUM.PL</h1>
               <div className="text-sm text-gray-400">
@@ -376,7 +376,7 @@ export default function TermsOfServicePage() {
               </div>
             </section>
 
-            <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-lg mt-8">
+            <div className="bg-[#111] border border-white/5 p-6 rounded-lg mt-8">
               <h3 className="text-lg font-semibold text-white mb-3">Kontakt w sprawach regulaminu</h3>
               <div className="text-gray-300 space-y-2">
                 <p><strong>Email:</strong> kontakt.evapremium@gmail.com</p>

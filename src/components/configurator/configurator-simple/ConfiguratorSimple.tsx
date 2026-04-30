@@ -956,7 +956,7 @@ export default function ConfiguratorSimple() {
             <div className="lg:sticky lg:top-28 flex flex-col gap-4">
               
               {/* Desktop Price & CTA Card - zawsze na górze */}
-              <div className="order-1 bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-4 shadow-xl">
+              <div className="order-1 bg-[#111] backdrop-blur-sm border border-white/5 rounded-xl p-4 shadow-xl">
                 <div className="flex flex-col gap-3">
                   {/* Step Indicator - Moved from top bar */}
                   <div className="flex items-center justify-between text-xs font-medium text-gray-400 uppercase tracking-wider">
@@ -1438,7 +1438,7 @@ export default function ConfiguratorSimple() {
 
             {/* Modal Navigation - Gallery & View Switcher */}
             <div className="flex justify-center px-4 pb-8 pt-4">
-              <div className="flex gap-2 p-2 bg-neutral-900/90 backdrop-blur-md rounded-2xl border border-white/10 overflow-x-auto max-w-full scrollbar-hide shadow-2xl">
+              <div className="flex gap-2 p-2 bg-[#111]/90 backdrop-blur-md rounded-2xl border border-white/10 overflow-x-auto max-w-full scrollbar-hide shadow-2xl">
                 
                 {/* Opcja 1: Wizualizacja (tylko jeśli dostępna) */}
                 {hasFullPreview && (

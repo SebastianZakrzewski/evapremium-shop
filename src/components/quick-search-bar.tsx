@@ -97,9 +97,9 @@ export default function QuickSearchBar() {
                 "
                 disabled={brandsLoading}
               >
-                <option value="" className="bg-neutral-900 text-gray-400">Wybierz...</option>
+                <option value="" className="bg-[#111] text-gray-400">Wybierz...</option>
                 {brands.map((brand) => (
-                  <option key={brand.id} value={brand.name} className="bg-neutral-900 text-white">
+                  <option key={brand.id} value={brand.name} className="bg-[#111] text-white">
                     {brand.name}
                   </option>
                 ))}
@@ -135,7 +135,7 @@ export default function QuickSearchBar() {
                   disabled:opacity-50 disabled:cursor-not-allowed
                 "
               >
-                <option value="" className="bg-neutral-900 text-gray-400">
+                <option value="" className="bg-[#111] text-gray-400">
                   {!selectedBrand
                     ? "Wybierz markę..."
                     : modelsLoading
@@ -143,7 +143,7 @@ export default function QuickSearchBar() {
                       : "Wybierz model..."}
                 </option>
                 {availableModels.map((model) => (
-                  <option key={model.id} value={model.name} className="bg-neutral-900 text-white">
+                  <option key={model.id} value={model.name} className="bg-[#111] text-white">
                     {model.name}
                   </option>
                 ))}

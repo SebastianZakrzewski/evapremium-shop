@@ -245,11 +245,11 @@ export function PaymentSuccess() {
       case 'failed':
         return <Badge className="bg-red-900/30 text-red-400 border-red-500/30 px-4 py-2 text-sm font-medium">Nieudane</Badge>;
       case 'cancelled':
-        return <Badge className="bg-neutral-900/30 text-gray-400 border-neutral-600/30 px-4 py-2 text-sm font-medium">Anulowane</Badge>;
+        return <Badge className="bg-[#111]/30 text-gray-400 border-neutral-600/30 px-4 py-2 text-sm font-medium">Anulowane</Badge>;
       case 'pending':
         return <Badge className="bg-yellow-900/30 text-yellow-400 border-yellow-500/30 px-4 py-2 text-sm font-medium">W trakcie</Badge>;
       default:
-        return <Badge className="bg-neutral-900/30 text-gray-400 border-neutral-600/30 px-4 py-2 text-sm font-medium">Nieznany</Badge>;
+        return <Badge className="bg-[#111]/30 text-gray-400 border-neutral-600/30 px-4 py-2 text-sm font-medium">Nieznany</Badge>;
     }
   };
 
@@ -267,7 +267,7 @@ export function PaymentSuccess() {
           <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
         </div>
 
-        <Card className="w-full max-w-md bg-neutral-900/80 border-neutral-800 backdrop-blur-sm relative z-10">
+        <Card className="w-full max-w-md bg-[#111]/80 border-white/5 backdrop-blur-sm relative z-10">
           <CardContent className="p-8 text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500 mx-auto mb-6"></div>
             <p className="text-white/80 text-lg">Sprawdzanie statusu płatności...</p>
@@ -291,7 +291,7 @@ export function PaymentSuccess() {
           <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
         </div>
 
-        <Card className="w-full max-w-md bg-neutral-900/80 border-neutral-800 backdrop-blur-sm relative z-10">
+        <Card className="w-full max-w-md bg-[#111]/80 border-white/5 backdrop-blur-sm relative z-10">
           <CardContent className="p-8 text-center">
             <XCircle className="h-16 w-16 text-red-500 mx-auto mb-6 animate-bounce-in" />
             <h2 className="text-2xl font-bold text-white mb-4">Błąd</h2>
@@ -322,7 +322,7 @@ export function PaymentSuccess() {
           <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
         </div>
 
-        <Card className="w-full max-w-md bg-neutral-900/80 border-neutral-800 backdrop-blur-sm relative z-10">
+        <Card className="w-full max-w-md bg-[#111]/80 border-white/5 backdrop-blur-sm relative z-10">
           <CardContent className="p-8 text-center">
             <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-6 animate-bounce-in" />
             <h2 className="text-2xl font-bold text-white mb-4">Brak danych</h2>
@@ -412,7 +412,7 @@ export function PaymentSuccess() {
           {/* Status-specific content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
             {/* Main status card */}
-            <Card className="bg-neutral-900/80 border-neutral-800 backdrop-blur-sm animate-slide-in-left">
+            <Card className="bg-[#111]/80 border-white/5 backdrop-blur-sm animate-slide-in-left">
               <CardContent className="p-6">
                 {paymentStatus.status === 'paid' && (
                   <div className="space-y-4">
@@ -485,7 +485,7 @@ export function PaymentSuccess() {
             </Card>
 
             {/* Order details card */}
-            <Card className="bg-neutral-900/80 border-neutral-800 backdrop-blur-sm animate-slide-in-right">
+            <Card className="bg-[#111]/80 border-white/5 backdrop-blur-sm animate-slide-in-right">
               <CardContent className="p-6">
                 <h4 className="font-semibold text-white mb-4 flex items-center gap-2">
                   <ShoppingBag className="h-5 w-5" />

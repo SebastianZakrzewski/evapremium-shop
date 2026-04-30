@@ -223,9 +223,9 @@ function SearchDropdown() {
             md:transform md:-translate-x-1/2
             w-full
             md:w-auto md:max-w-2xl
-            bg-black md:bg-neutral-900/95
+            bg-black md:bg-[#111]/95
             backdrop-blur-sm
-            border-0 md:border border-neutral-800
+            border-0 md:border border-white/5
             rounded-none md:rounded-lg
             shadow-2xl md:shadow-lg shadow-red-500/20 md:shadow-red-500/10
             z-[101]
@@ -260,7 +260,7 @@ function SearchDropdown() {
                     h-14 sm:h-12
                     w-full
                     bg-neutral-800 md:bg-neutral-800/80 backdrop-blur-xl
-                    border-2 border-neutral-600 md:border-neutral-800/50
+                    border-2 border-neutral-600 md:border-white/5/50
                     text-white text-base sm:text-base
                     placeholder:text-gray-400 md:placeholder:text-gray-400
                     focus:border-red-500 focus:ring-2 focus:ring-red-500/50 md:focus:ring-red-500/30
@@ -358,7 +358,7 @@ function SearchDropdown() {
 
                       {/* Modele */}
                       {results.models.length > 0 && (
-                        <div className="px-2 sm:px-3 py-1 sm:py-2 border-t border-neutral-800/50">
+                        <div className="px-2 sm:px-3 py-1 sm:py-2 border-t border-white/5/50">
                           <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                             Modele ({results.models.length})
                           </div>
@@ -399,7 +399,7 @@ function SearchDropdown() {
 
                       {/* Produkty */}
                       {results.products.length > 0 && (
-                        <div className="px-3 sm:px-4 py-2 sm:py-2 border-t border-neutral-800/50">
+                        <div className="px-3 sm:px-4 py-2 sm:py-2 border-t border-white/5/50">
                           <div className="text-xs sm:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                             Produkty ({results.products.length})
                           </div>

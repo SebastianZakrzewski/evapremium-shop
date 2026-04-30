@@ -857,7 +857,7 @@ export default function Configurator() {
           <div className="w-full lg:w-[720px] xl:w-[800px] 2xl:w-[880px]">
             <div 
               ref={previewRef}
-              className="relative w-full h-[50vh] md:h-[440px] lg:h-[520px] xl:h-[560px] 2xl:h-[640px] rounded-xl overflow-hidden border border-neutral-800 bg-black cursor-pointer md:cursor-default transition-opacity duration-300 sticky top-20 z-30 border-b md:border-b-0"
+              className="relative w-full h-[50vh] md:h-[440px] lg:h-[520px] xl:h-[560px] 2xl:h-[640px] rounded-xl overflow-hidden border border-white/5 bg-black cursor-pointer md:cursor-default transition-opacity duration-300 sticky top-20 z-30 border-b md:border-b-0"
               onClick={() => {
                 if (typeof window !== 'undefined' && window.innerWidth < 768) {
                   setIsVisualizationExpanded(true);
@@ -911,7 +911,7 @@ export default function Configurator() {
               </div>
               <div className="absolute inset-0 pointer-events-none">
                 {/* Tap to expand indicator na mobile */}
-                <div className="md:hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur px-3 py-1.5 rounded-full border border-neutral-800 text-xs text-white/80">
+                <div className="md:hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur px-3 py-1.5 rounded-full border border-white/5 text-xs text-white/80">
                   Dotknij aby powiększyć
                 </div>
               </div>
@@ -924,7 +924,7 @@ export default function Configurator() {
           {/* Prawa strona - konfigurator z sekcjami */}
           <div 
             ref={configPanelRef}
-            className="w-full lg:w-[560px] xl:w-[624px] 2xl:w-[720px] bg-black/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 2xl:p-12 min-h-[400px] sm:min-h-[500px] flex flex-col pb-24 md:pb-24 overflow-x-hidden"
+            className="w-full lg:w-[560px] xl:w-[624px] 2xl:w-[720px] bg-black/60 border border-white/5 rounded-2xl p-6 md:p-8 lg:p-10 2xl:p-12 min-h-[400px] sm:min-h-[500px] flex flex-col pb-24 md:pb-24 overflow-x-hidden"
             data-config-panel
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
@@ -979,7 +979,7 @@ export default function Configurator() {
               <div ref={(el) => { sectionRefs.current[0] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 {/* Wyświetl wybraną markę */}
                 {selectedCarBrand && (
-                  <div className="mb-6 p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
+                  <div className="mb-6 p-4 bg-[#111] rounded-lg border border-white/5">
                     <h3 className="text-base font-medium mb-2 text-gray-300">Wybrana marka</h3>
                     <div className="flex items-center gap-3">
                       <div className="relative w-24 h-24 bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
@@ -1028,11 +1028,11 @@ export default function Configurator() {
                           data-model-select
                           value={selectedCarModel}
                           onChange={(e) => setSelectedCarModel(e.target.value)}
-                          className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
+                          className="w-full p-4 md:p-4 bg-[#111] border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
                         >
-                          <option value="" className="bg-neutral-900 text-gray-400">Wybierz model...</option>
+                          <option value="" className="bg-[#111] text-gray-400">Wybierz model...</option>
                           {availableModels.map((model, index) => (
-                            <option key={index} value={model.name} className="bg-neutral-900 text-white">
+                            <option key={index} value={model.name} className="bg-[#111] text-white">
                               {model.name}
                             </option>
                           ))}
@@ -1044,7 +1044,7 @@ export default function Configurator() {
                         </div>
                       </div>
                     ) : (
-                      <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
+                      <div className="p-4 bg-[#111] rounded-lg border border-white/5 text-center">
                         <p className="text-gray-400 mb-2">Brak dostępnych modeli</p>
                         <p className="text-sm text-gray-400">Dla wybranej marki nie ma jeszcze dostępnych modeli</p>
                       </div>
@@ -1066,11 +1066,11 @@ export default function Configurator() {
                           data-body-type-select
                           value={selectedBodyType}
                           onChange={(e) => setSelectedBodyType(e.target.value)}
-                          className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
+                          className="w-full p-4 md:p-4 bg-[#111] border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
                         >
-                          <option value="" className="bg-neutral-900 text-gray-400">Wybierz typ nadwozia...</option>
+                          <option value="" className="bg-[#111] text-gray-400">Wybierz typ nadwozia...</option>
                           {availableBodyTypes.map((bodyType) => (
-                            <option key={bodyType.id} value={bodyType.id} className="bg-neutral-900 text-white">
+                            <option key={bodyType.id} value={bodyType.id} className="bg-[#111] text-white">
                               {bodyType.name}
                             </option>
                           ))}
@@ -1082,7 +1082,7 @@ export default function Configurator() {
                         </div>
                       </div>
                     ) : (
-                      <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center pb-8">
+                      <div className="p-4 bg-[#111] rounded-lg border border-white/5 text-center pb-8">
                         <p className="text-gray-400 mb-2">Brak dostępnych typów nadwozia</p>
                         <p className="text-sm text-gray-400">Dla wybranego modelu nie ma jeszcze dostępnych typów nadwozia</p>
                       </div>
@@ -1104,11 +1104,11 @@ export default function Configurator() {
                           data-year-select
                           value={selectedCarYear}
                           onChange={(e) => setSelectedCarYear(e.target.value)}
-                          className="w-full p-4 md:p-4 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
+                          className="w-full p-4 md:p-4 bg-[#111] border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
                         >
-                          <option value="" className="bg-neutral-900 text-gray-400">Wybierz rocznik...</option>
+                          <option value="" className="bg-[#111] text-gray-400">Wybierz rocznik...</option>
                           {availableYears.map((year) => (
-                            <option key={year.id} value={year.name} className="bg-neutral-900 text-white">
+                            <option key={year.id} value={year.name} className="bg-[#111] text-white">
                               {year.name}
                             </option>
                           ))}
@@ -1120,7 +1120,7 @@ export default function Configurator() {
                         </div>
                       </div>
                     ) : (
-                      <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
+                      <div className="p-4 bg-[#111] rounded-lg border border-white/5 text-center">
                         <p className="text-gray-400 mb-2">Brak dostępnych roczników</p>
                         <p className="text-sm text-gray-400">Dla wybranego modelu nie ma jeszcze dostępnych roczników</p>
                       </div>
@@ -1152,7 +1152,7 @@ export default function Configurator() {
                       const modifier = { modifier: 0, label: '+0 zł' };
                       
                       return (
-                        <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 active:bg-neutral-800 active:scale-[0.98] transition`}>
+                        <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-white/5"} p-4 bg-[#111] hover:bg-[#111] active:bg-neutral-800 active:scale-[0.98] transition`}>
                           <RadioGroupItem value={s.id} id={`set-${s.id}`} className="sr-only" />
                           <div className="flex items-center justify-between">
                             <div>
@@ -1195,7 +1195,7 @@ export default function Configurator() {
                         : 0;
                       
                       return (
-                        <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 active:bg-neutral-800 active:scale-[0.98] transition`}>
+                        <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-white/5"} p-4 bg-[#111] hover:bg-[#111] active:bg-neutral-800 active:scale-[0.98] transition`}>
                           <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
                           <div className="flex items-center justify-between">
                             <div className="flex-1">
@@ -1242,7 +1242,7 @@ export default function Configurator() {
                   <h3 className="text-base font-medium mb-3">Wybierz rodzaj komórek</h3>
                   <RadioGroup value={selectedCellType} onValueChange={setSelectedCellType} className="space-y-3">
                     {cellTypes.map((c) => (
-                      <Label key={c.id} htmlFor={`cell-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedCellType === c.id ? "border-white" : "border-neutral-800"} p-4 bg-neutral-900/50 hover:bg-neutral-900 active:bg-neutral-800 active:scale-[0.98] transition`}>
+                      <Label key={c.id} htmlFor={`cell-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedCellType === c.id ? "border-white" : "border-white/5"} p-4 bg-[#111] hover:bg-[#111] active:bg-neutral-800 active:scale-[0.98] transition`}>
                         <RadioGroupItem value={c.id} id={`cell-${c.id}`} className="sr-only" />
                         <div className="flex items-center justify-between">
                           <div>
@@ -1322,7 +1322,7 @@ export default function Configurator() {
                       { id: "brak", name: "Brak" },
                       { id: "gumowy", name: "Gumowy" },
                     ].map((h) => (
-                      <Label key={h.id} htmlFor={`heel-${h.id}`} className={`cursor-pointer rounded-xl border ${selectedHeelPad === h.id ? "border-white" : "border-neutral-800"} px-4 py-3 bg-neutral-900/50 hover:bg-neutral-900 active:bg-neutral-800 active:scale-[0.98] transition` }>
+                      <Label key={h.id} htmlFor={`heel-${h.id}`} className={`cursor-pointer rounded-xl border ${selectedHeelPad === h.id ? "border-white" : "border-white/5"} px-4 py-3 bg-[#111] hover:bg-[#111] active:bg-neutral-800 active:scale-[0.98] transition` }>
                         <RadioGroupItem value={h.id} id={`heel-${h.id}`} className="sr-only" />
                         <span className="text-base">{h.name}</span>
                       </Label>
@@ -1336,7 +1336,7 @@ export default function Configurator() {
             {currentSection === 6 && (
               <div ref={(el) => { sectionRefs.current[6] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 {/* Wybrane auto */}
-                <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
+                <div className="p-4 bg-[#111] rounded-lg border border-white/5">
                   <h3 className="text-base font-medium mb-3 text-gray-300">Wybrane auto</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
@@ -1464,7 +1464,7 @@ export default function Configurator() {
 
 
             {/* Navigation buttons */}
-            <div ref={navigationRef} className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800 md:static fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur border-t border-neutral-800 p-4 md:p-0 md:bg-transparent md:backdrop-blur-none z-20 pb-safe md:pb-0 shadow-lg md:shadow-none">
+            <div ref={navigationRef} className="flex justify-between items-center mt-6 pt-4 border-t border-white/5 md:static fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur border-t border-white/5 p-4 md:p-0 md:bg-transparent md:backdrop-blur-none z-20 pb-safe md:pb-0 shadow-lg md:shadow-none">
               <Button
                 variant="outline"
                 onClick={prevSection}
@@ -1515,7 +1515,7 @@ export default function Configurator() {
           className="fixed inset-0 z-50 bg-black flex items-center justify-center p-4"
           onClick={() => setIsVisualizationExpanded(false)}
         >
-          <div className="relative w-full h-full max-w-4xl max-h-[90vh] rounded-xl overflow-hidden border border-neutral-800 bg-black">
+          <div className="relative w-full h-full max-w-4xl max-h-[90vh] rounded-xl overflow-hidden border border-white/5 bg-black">
             <Image
               key={`expanded-${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`}
               src={matImagePath}
@@ -1527,14 +1527,14 @@ export default function Configurator() {
             />
             <button
               onClick={() => setIsVisualizationExpanded(false)}
-              className="absolute top-4 right-4 bg-black/60 backdrop-blur px-4 py-2 rounded-full border border-neutral-800 text-white hover:bg-black/80 active:bg-black active:scale-95 transition-all min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="absolute top-4 right-4 bg-black/60 backdrop-blur px-4 py-2 rounded-full border border-white/5 text-white hover:bg-black/80 active:bg-black active:scale-95 transition-all min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Zamknij"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur px-4 py-2 rounded-full border border-neutral-800 text-sm text-white/80">
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur px-4 py-2 rounded-full border border-white/5 text-sm text-white/80">
               Dotknij poza obraz aby zamknąć
             </div>
           </div>

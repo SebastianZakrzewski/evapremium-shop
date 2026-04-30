@@ -248,7 +248,7 @@ export default function Chatbot() {
           }}
           className={`w-16 h-16 md:w-20 md:h-20 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 relative overflow-hidden border border-white/10 flex items-center justify-center ${
             isOpen
-              ? "bg-neutral-900 text-white hover:bg-neutral-800"
+              ? "bg-[#111] text-white hover:bg-neutral-800"
               : "bg-red-600 hover:bg-red-700 text-white shadow-red-900/20"
           }`}
           aria-label={isOpen ? "Zamknij chat" : "Otwórz chat"}
@@ -284,7 +284,7 @@ export default function Chatbot() {
           } : undefined}
         >
           {/* Header */}
-          <div className="bg-neutral-900/50 backdrop-blur-md px-6 py-4 flex items-center justify-between border-b border-white/5">
+          <div className="bg-[#111] backdrop-blur-md px-6 py-4 flex items-center justify-between border-b border-white/5">
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden border border-white/10 shadow-lg">
                 <Image
@@ -326,7 +326,7 @@ export default function Chatbot() {
                   className={`max-w-[85%] rounded-2xl px-4 py-3 shadow-lg backdrop-blur-sm ${
                     message.sender === "user"
                       ? "bg-red-600 text-white rounded-br-sm"
-                      : "bg-neutral-900 text-neutral-200 rounded-bl-sm border border-white/10"
+                      : "bg-[#111] text-neutral-200 rounded-bl-sm border border-white/10"
                   }`}
                 >
                   <div className="flex items-start space-x-3">
@@ -364,7 +364,7 @@ export default function Chatbot() {
             {/* Typing Indicator */}
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-neutral-900 text-neutral-200 rounded-2xl rounded-bl-sm border border-white/10 px-4 py-3 shadow-lg backdrop-blur-sm">
+                <div className="bg-[#111] text-neutral-200 rounded-2xl rounded-bl-sm border border-white/10 px-4 py-3 shadow-lg backdrop-blur-sm">
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
                       <Image
@@ -390,7 +390,7 @@ export default function Chatbot() {
 
           {/* Contact Form */}
           {showContactForm && (
-            <div className="p-6 bg-neutral-900/80 backdrop-blur-md border-t border-white/10">
+            <div className="p-6 bg-[#111]/80 backdrop-blur-md border-t border-white/10">
               <form onSubmit={handleContactSubmit} className="space-y-3">
                 <div className="text-sm text-neutral-200 mb-4 font-medium">
                   Wypełnij dane kontaktowe:
@@ -452,7 +452,7 @@ export default function Chatbot() {
 
           {/* Input */}
           {!showContactForm && (
-            <form onSubmit={handleSendMessage} className="p-4 md:p-5 bg-neutral-900/80 backdrop-blur-md border-t border-white/10">
+            <form onSubmit={handleSendMessage} className="p-4 md:p-5 bg-[#111]/80 backdrop-blur-md border-t border-white/10">
             <div className="flex space-x-3">
               <input
                 ref={inputRef}

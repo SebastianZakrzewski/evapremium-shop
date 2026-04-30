@@ -27,8 +27,8 @@ export const StepAccordion = React.forwardRef<HTMLDivElement, StepAccordionProps
     <div
       ref={ref}
       className={`
-        bg-neutral-900 rounded-lg border transition-all duration-200 will-change-transform
-        ${isOpen ? 'border-red-500/50 shadow-lg shadow-red-500/10' : 'border-neutral-800'}
+        bg-[#111] rounded-lg border transition-all duration-200 will-change-transform
+        ${isOpen ? 'border-red-500/50 shadow-lg shadow-red-500/10' : 'border-white/5'}
       `}
     >
       <button
@@ -87,7 +87,7 @@ export const StepAccordion = React.forwardRef<HTMLDivElement, StepAccordionProps
       </button>
       
       {isOpen && (
-        <div className="px-2.5 md:px-3 pb-2.5 md:pb-3 border-t border-neutral-800 pt-2.5 md:pt-3 animate-in fade-in slide-in-from-top-2 duration-200 will-change-transform">
+        <div className="px-2.5 md:px-3 pb-2.5 md:pb-3 border-t border-white/5 pt-2.5 md:pt-3 animate-in fade-in slide-in-from-top-2 duration-200 will-change-transform">
           {children}
         </div>
       )}

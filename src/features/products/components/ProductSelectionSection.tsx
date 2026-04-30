@@ -532,7 +532,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
                 return (
                   <article
                     key={product.id}
-                    className="bg-[#111] rounded-2xl border border-white/5 overflow-hidden transition-all duration-500 hover:border-white/10 hover:bg-neutral-900/40 hover:shadow-2xl hover:shadow-red-900/10 hover:-translate-y-1 group"
+                    className="bg-[#111] rounded-2xl border border-white/5 overflow-hidden transition-all duration-500 hover:border-white/10 hover:bg-[#111]/40 hover:shadow-2xl hover:shadow-red-900/10 hover:-translate-y-1 group"
                   >
                     {/* Obraz produktu */}
                     <div className="relative w-full aspect-[4/3] bg-gradient-to-b from-neutral-900/50 to-transparent p-6 flex items-center justify-center">

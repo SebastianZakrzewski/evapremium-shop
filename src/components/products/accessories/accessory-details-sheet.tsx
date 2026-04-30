@@ -147,7 +147,7 @@ export default function AccessoryDetailsSheet({
         {/* Scrollable Content Container */}
         <div className="flex-1 overflow-y-auto">
           {/* Image Section - Fixed at top on mobile, scrollable content below */}
-          <div className="relative w-full bg-neutral-900">
+          <div className="relative w-full bg-[#111]">
             {/* Main Image */}
             <div className="relative aspect-video w-full">
               {currentImage && !imageError ? (
@@ -200,7 +200,7 @@ export default function AccessoryDetailsSheet({
 
             {/* Thumbnail Carousel - zawsze widoczna z placeholderami */}
             {productImages.length > 0 && (
-              <div className="px-4 py-3 bg-neutral-900/50 border-t border-white/5">
+              <div className="px-4 py-3 bg-[#111] border-t border-white/5">
                 <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
                   {Array.from({ length: thumbnailSlots }).map((_, index) => {
                     const hasImage = index < productImages.length;

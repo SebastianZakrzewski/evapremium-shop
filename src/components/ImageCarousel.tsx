@@ -133,7 +133,7 @@ export default function ImageCarousel<T>({
             placeholder="Szukaj marki..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg bg-neutral-900/50 text-white border border-neutral-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
+            className="w-full px-4 py-3 rounded-lg bg-[#111] text-white border border-white/5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
           />
           <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
         </div>
@@ -191,7 +191,7 @@ export default function ImageCarousel<T>({
           placeholder="Szukaj marki..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full px-4 py-3 rounded-lg bg-neutral-900/50 text-white border border-neutral-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
+          className="w-full px-4 py-3 rounded-lg bg-[#111] text-white border border-white/5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
         />
         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
       </div>

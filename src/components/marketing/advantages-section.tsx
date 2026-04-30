@@ -121,7 +121,7 @@ export default function AdvantagesSection() {
               >
                 {/* Card Content */}
                 <div className={`
-                  relative h-full bg-neutral-900/40 backdrop-blur-md border border-white/5 rounded-xl md:rounded-2xl overflow-hidden
+                  relative h-full bg-[#111]/40 backdrop-blur-md border border-white/5 rounded-xl md:rounded-2xl overflow-hidden
                   transition-all duration-500
                   ${isHoveredState ? 'bg-neutral-800/60 border-red-500/30 transform -translate-y-1 md:-translate-y-2 shadow-xl md:shadow-2xl shadow-red-900/20' : 'hover:border-white/10'}
                 `}>

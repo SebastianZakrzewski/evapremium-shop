@@ -54,7 +54,7 @@ export default function ProductCardV2({ product }: ProductCardV2Props) {
 
   return (
     <Link href={configuratorUrl} className="group block h-full outline-none">
-      <article className="h-full flex flex-col bg-[#111] border border-white/5 rounded-2xl overflow-hidden transition-all duration-500 hover:border-white/10 hover:bg-neutral-900/40 hover:shadow-2xl hover:shadow-red-900/10 hover:-translate-y-1">
+      <article className="h-full flex flex-col bg-[#111] border border-white/5 rounded-2xl overflow-hidden transition-all duration-500 hover:border-white/10 hover:bg-[#111]/40 hover:shadow-2xl hover:shadow-red-900/10 hover:-translate-y-1">
         {/* Image Container */}
         <div className="relative aspect-[4/3] bg-gradient-to-b from-neutral-900/50 to-transparent overflow-hidden p-6 flex items-center justify-center">
           {product.imageSrc ? (

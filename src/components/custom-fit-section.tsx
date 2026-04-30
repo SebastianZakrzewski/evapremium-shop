@@ -134,7 +134,7 @@ export default function CustomFitSection() {
             <div className="relative group">
               {/* Glass Container */}
               <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
-                <div className="relative rounded-2xl overflow-hidden aspect-[4/5] lg:aspect-[3/4] bg-neutral-900">
+                <div className="relative rounded-2xl overflow-hidden aspect-[4/5] lg:aspect-[3/4] bg-[#111]">
                   <Image
                     src="/images/zalety/szycie.png"
                     alt="Proces szycia dywaników na miarę"

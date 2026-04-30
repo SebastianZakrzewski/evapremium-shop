@@ -124,7 +124,7 @@ export default function AdvantagesSection() {
                 `}>
                   
                   {/* Image Area */}
-                  <div className="relative h-56 w-full overflow-hidden bg-neutral-900/50">
+                  <div className="relative h-56 w-full overflow-hidden bg-[#111]">
                     <Image
                       src={item.src}
                       alt={item.title}
@@ -141,7 +141,7 @@ export default function AdvantagesSection() {
                   </div>
 
                   {/* Text Area */}
-                  <div className="p-6 md:p-8 flex-1 flex flex-col justify-between bg-neutral-900/30">
+                  <div className="p-6 md:p-8 flex-1 flex flex-col justify-between bg-[#111]/30">
                     <div>
                       <h3 className={`
                         text-xl font-bold mb-3 transition-colors duration-300

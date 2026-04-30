@@ -228,12 +228,12 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
       
       {/* Modal */}
       <div 
-        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-black border-l border-neutral-800 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-black border-l border-white/5 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* Header */}
-        <div className="flex-shrink-0 flex items-center justify-between p-6 border-b border-neutral-800">
+        <div className="flex-shrink-0 flex items-center justify-between p-6 border-b border-white/5">
           <h2 className="text-2xl font-bold text-white">
             Koszyk {itemCount > 0 && `(${itemCount})`}
           </h2>
@@ -295,7 +295,7 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
 
           {/* Footer - tylko gdy są produkty */}
           {!isLoading && !error && items.length > 0 && (
-            <div className="flex-shrink-0 border-t border-neutral-800 p-6 space-y-4 bg-black">
+            <div className="flex-shrink-0 border-t border-white/5 p-6 space-y-4 bg-black">
               {/* Discount Code Input */}
               <div className="space-y-2">
                 <Label className="text-white text-sm font-medium">Kod rabatowy</Label>

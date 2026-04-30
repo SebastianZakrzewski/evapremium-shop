@@ -170,7 +170,7 @@ export function StickyBottomCTA({
 
               {/* Expandable Price Breakdown */}
               {showPriceBreakdown && (
-                <div className="mt-2 p-2 bg-neutral-900/50 rounded-lg border border-white/5 space-y-1 animate-in slide-in-from-top-2 duration-200">
+                <div className="mt-2 p-2 bg-[#111] rounded-lg border border-white/5 space-y-1 animate-in slide-in-from-top-2 duration-200">
                   <div className="flex justify-between text-xs">
                     <span className="text-gray-400">Cena bazowa</span>
                     <span className="text-white">{priceBreakdown.basePrice.toFixed(2)} zł</span>

@@ -808,7 +808,7 @@ export default function CheckoutSection() {
         </div>
 
         <div className="max-w-2xl mx-auto px-4 relative z-10">
-          <Card className="text-center bg-neutral-900 backdrop-blur border-neutral-800 shadow-2xl">
+          <Card className="text-center bg-[#111] backdrop-blur border-white/5 shadow-2xl">
             <CardContent className="pt-8 pb-8">
               <div className="w-16 h-16 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-red-500/30">
                 <Check className="w-8 h-8 text-red-500" />
@@ -822,7 +822,7 @@ export default function CheckoutSection() {
                 Dziękujemy za zakup. Twoje zamówienie zostało przyjęte do realizacji.
               </p>
               
-              <div className="bg-neutral-800/60 border border-neutral-800 rounded-lg p-4 mb-6">
+              <div className="bg-neutral-800/60 border border-white/5 rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-400 mb-1">Numer zamówienia:</p>
                 <p className="text-xl font-bold text-red-400">{orderNumber}</p>
               </div>
@@ -834,7 +834,7 @@ export default function CheckoutSection() {
                   </Link>
                 </Button>
                 
-                <Button variant="outline" asChild className="w-full bg-neutral-800 border-neutral-800 text-gray-300 hover:bg-neutral-700 hover:text-white">
+                <Button variant="outline" asChild className="w-full bg-neutral-800 border-white/5 text-gray-300 hover:bg-neutral-700 hover:text-white">
                   <Link href={`/order/${orderNumber}`}>
                     Zobacz szczegóły zamówienia
                   </Link>
