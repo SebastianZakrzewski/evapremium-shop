@@ -34,14 +34,14 @@ describe("HeroSection", () => {
   it("renders the spring promotion image as the active hero media", () => {
     render(<HeroSection />)
 
-    const promotionImage = screen.getByAltText(
+    const promotionImages = screen.getAllByAltText(
       "Wiosenna promocja dywaników samochodowych EVA Premium"
     )
 
-    expect(promotionImage).toHaveAttribute(
-      "src",
-      "/images/hero/wiosenna-zalety-hero2.png"
-    )
+    const srcs = promotionImages.map((img) => img.getAttribute("src"))
+
+    expect(srcs).toContain("/images/zalety/hero_mobile.png")
+    expect(srcs).toContain("/images/hero/wiosenna-zalety-hero2.png")
   })
 
   it("scrolls to dywaniki section when promo CTA overlay is clicked", () => {
@@ -53,9 +53,7 @@ describe("HeroSection", () => {
 
     render(<HeroSection />)
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /Skonfiguruj dywaniki do swojego auta/i })
-    )
+    fireEvent.click(screen.getByTestId("hero-promo-cta-hit-area"))
 
     expect(scrollIntoView).toHaveBeenCalledWith(
       expect.objectContaining({ behavior: "smooth", block: "start" })

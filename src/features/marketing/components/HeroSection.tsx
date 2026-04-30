@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Phone, ChevronRight, ShieldCheck, Droplets, Truck } from "lucide-react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 type HeroSlide = {
   id: number;
@@ -14,6 +15,8 @@ type HeroSlide = {
   benefits: string[];
   video?: string;
   image?: string;
+  /** Opcjonalny baner pionowy poniżej breakpointu md; bez tego używany jest tylko `image`. */
+  imageMobile?: string;
   imageAlt?: string;
   isImageSlide?: boolean;
   /** Klikalny CTA nałożony na baner (np. zamiast niewidocznego tekstu w grafice). */
@@ -29,6 +32,7 @@ const heroSlides: HeroSlide[] = [
     title: "",
     subtitle: "",
     image: "/images/hero/wiosenna-zalety-hero2.png",
+    imageMobile: "/images/zalety/hero_mobile.png",
     imageAlt: "Wiosenna promocja dywaników samochodowych EVA Premium",
     cta: "",
     price: "",
@@ -40,10 +44,6 @@ const heroSlides: HeroSlide[] = [
     },
   }
 ]
-
-/** Wymiary pikselowe aktualnego banera hero (plik PNG, odczyt z IHDR). */
-const HERO_PROMO_IMAGE_NATIVE_WIDTH = 2045
-const HERO_PROMO_IMAGE_NATIVE_HEIGHT = 769
 
 // Funkcja do wykrywania odpowiedniego formatu video
 const getVideoSource = (baseVideo: string, isMobile: boolean, isHighDpi: boolean) => {
@@ -129,9 +129,13 @@ export default function HeroSection() {
     }
   }, [])
 
+  const heroCarouselFrameClass = heroSlides.some((s) => s.imageMobile)
+    ? "aspect-[941/1672] md:aspect-[2045/769]"
+    : "min-h-[min(72vw,320px)] md:min-h-0 md:aspect-[2045/769]"
+
   return (
     <section
-      className="relative overflow-visible bg-neutral-950 pt-24 pb-24 md:overflow-hidden md:pt-0 md:pb-12"
+      className="relative overflow-visible bg-neutral-950 pt-[4.5rem] pb-14 max-sm:pb-10 md:overflow-hidden md:pt-0 md:pb-12"
       role="region"
       aria-roledescription="carousel"
       aria-label="Sekcja promocyjna - dywaniki samochodowe"
@@ -139,23 +143,23 @@ export default function HeroSection() {
       onMouseLeave={handleResumeAutoplay}
     >
       {/* Phone number - Mobile only */}
-      <div className="md:hidden absolute top-4 left-0 right-0 z-30 px-4">
+      <div className="md:hidden absolute top-3 left-0 right-0 z-30 px-3">
         <a 
           href="tel:+48793993430"
-          className="flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2.5 rounded-full shadow-lg shadow-red-900/50 hover:from-red-500 hover:to-red-600 transition-all duration-300 active:scale-95"
+          className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-red-600 to-red-700 px-3 py-2 text-sm font-semibold text-white shadow-lg shadow-red-900/50 transition-all duration-300 hover:from-red-500 hover:to-red-600 active:scale-95"
         >
-          <Phone className="w-4 h-4" />
-          <span className="font-semibold text-sm">+48 793 993 430</span>
+          <Phone className="size-4 shrink-0" aria-hidden="true" />
+          <span>+48 793 993 430</span>
         </a>
       </div>
 
       {/* Carousel — wysokość = proporcja oryginalnej rozdzielczości banera */}
-      <div className="container relative mx-auto px-4 py-12 md:py-8">
+      <div className="container relative mx-auto px-2 py-6 sm:px-4 sm:py-8 md:py-8">
         <div
-          className="relative mx-auto w-full max-w-[1240px] overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10 md:rounded-3xl"
-          style={{
-            aspectRatio: `${HERO_PROMO_IMAGE_NATIVE_WIDTH} / ${HERO_PROMO_IMAGE_NATIVE_HEIGHT}`,
-          }}
+          className={cn(
+            "relative mx-auto w-full max-w-[1240px] overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 sm:rounded-2xl md:rounded-3xl",
+            heroCarouselFrameClass
+          )}
         >
           {heroSlides.map((slide, index) => {
             const isVisible = visibleSlides.includes(index);
@@ -177,31 +181,72 @@ export default function HeroSection() {
                 {isImageSlide && slide.image ? (
                   <>
                     <div className="absolute inset-0 bg-neutral-950">
-                      <Image
-                        src={slide.image}
-                        alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
-                        fill
-                        className="object-contain object-center brightness-110 contrast-[1.02]"
-                        priority={index === 0}
-                        quality={90}
-                        sizes="(max-width: 1240px) 100vw, 2045px"
-                      />
+                      {slide.imageMobile ? (
+                        <>
+                          <Image
+                            src={slide.imageMobile}
+                            alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
+                            fill
+                            className="object-contain object-center brightness-110 contrast-[1.02] md:hidden"
+                            priority={index === 0}
+                            quality={90}
+                            sizes="100vw"
+                          />
+                          <Image
+                            src={slide.image}
+                            alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
+                            fill
+                            className="hidden object-contain object-center brightness-110 contrast-[1.02] md:block"
+                            priority={index === 0}
+                            quality={90}
+                            sizes="(max-width: 1240px) 100vw, 1240px"
+                          />
+                        </>
+                      ) : (
+                        <Image
+                          src={slide.image}
+                          alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
+                          fill
+                          className="object-contain object-center brightness-110 contrast-[1.02]"
+                          priority={index === 0}
+                          quality={90}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1240px) 100vw, 1240px"
+                        />
+                      )}
                     </div>
                     <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.12)_50%,rgba(0,0,0,0.42)_100%)]" />
                     {slide.ctaOverlay ? (
                       <div className="pointer-events-none absolute inset-0 z-30">
+                        {!slide.imageMobile ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (!slide.ctaOverlay) return
+                              handleScrollToSection(slide.ctaOverlay.scrollToSectionId)
+                            }}
+                            data-testid="hero-promo-cta-button"
+                            className="pointer-events-auto absolute bottom-[8%] left-1/2 flex min-h-11 w-[calc(100%-1rem)] max-w-none -translate-x-1/2 items-center gap-2 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-600 to-red-700 px-3.5 py-3 text-left text-xs font-bold leading-snug text-white shadow-xl shadow-red-900/40 transition-all duration-300 hover:scale-[1.02] hover:from-red-500 hover:to-red-600 hover:shadow-2xl hover:shadow-red-600/25 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950 sm:bottom-[9%] sm:left-[2%] sm:w-auto sm:max-w-[min(92vw,23rem)] sm:min-h-0 sm:translate-x-0 sm:rounded-2xl sm:px-5 sm:py-4 sm:text-sm sm:leading-tight md:hidden"
+                            aria-label={`${slide.ctaOverlay.label} — przewiń do wyboru dywaników`}
+                          >
+                            <span className="min-w-0 flex-1 leading-tight">{slide.ctaOverlay.label}</span>
+                            <ChevronRight className="size-4 shrink-0 sm:size-5" aria-hidden="true" />
+                          </button>
+                        ) : null}
                         <button
                           type="button"
                           onClick={() => {
                             if (!slide.ctaOverlay) return
                             handleScrollToSection(slide.ctaOverlay.scrollToSectionId)
                           }}
-                          className="pointer-events-auto absolute bottom-[9%] left-[2%] flex max-w-[min(92vw,23rem)] items-center gap-2 rounded-2xl border border-red-500/30 bg-gradient-to-r from-red-600 to-red-700 px-3 py-4 text-left text-sm font-bold text-white shadow-xl shadow-red-900/40 transition-all duration-300 hover:scale-[1.02] hover:from-red-500 hover:to-red-600 hover:shadow-2xl hover:shadow-red-600/25 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950 sm:px-5 sm:py-4.5 md:bottom-[11%] md:left-[3%] md:max-w-[min(58%,26rem)] md:px-6 md:py-[1.3125rem] md:text-sm"
+                          data-testid="hero-promo-cta-hit-area"
+                          className={cn(
+                            "pointer-events-auto absolute inset-x-0 bottom-0 z-30 cursor-pointer border-0 bg-transparent p-0",
+                            slide.imageMobile
+                              ? "top-[30%]"
+                              : "top-[42%] hidden md:block"
+                          )}
                           aria-label={`${slide.ctaOverlay.label} — przewiń do wyboru dywaników`}
-                        >
-                          <span className="min-w-0 flex-1 leading-tight">{slide.ctaOverlay.label}</span>
-                          <ChevronRight className="h-5 w-5 shrink-0 md:h-6 md:w-6" aria-hidden="true" />
-                        </button>
+                        />
                       </div>
                     ) : null}
                   </>
