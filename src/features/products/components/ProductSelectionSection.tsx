@@ -568,7 +568,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
 
                       <div className="mt-auto flex items-end justify-between gap-4">
                         <div className="flex flex-col">
-                          <span className="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Cena od</span>
+                          <span className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">Cena od</span>
                           <span className="text-2xl font-bold text-white tracking-tight">
                             {product.price.toLocaleString("pl-PL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-sm font-medium text-gray-400 ml-0.5">PLN</span>
                           </span>
