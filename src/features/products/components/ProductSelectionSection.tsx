@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Car, SlidersHorizontal } from "lucide-react";
+import { Loader2, Car, SlidersHorizontal, ChevronRight } from "lucide-react";
 import { getBrandInfo, normalizeBrandName } from '@/shared/brands';
 import { formatBodyTypeLabel } from '@/shared';
 import { useProductSelectionFilters } from '@/features/products/hooks';

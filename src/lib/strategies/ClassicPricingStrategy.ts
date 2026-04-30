@@ -15,31 +15,21 @@ export class ClassicPricingStrategy implements PricingStrategy {
       complete: 350
     },
     discountThreshold: 910,
-    discountAboveThreshold: 0.30,
-    discountBelowThreshold: 0.20,
+    discountAboveThreshold: 0.35,
+    discountBelowThreshold: 0.25,
     shippingCost: 27,
-    freeShippingVariants: ['basic', 'premium', 'complete'] as const
+    freeShippingVariants: ['front', 'basic', 'premium', 'complete'] as const
   };
 
   calculatePrice(setVariant: 'front' | 'basic' | 'premium' | 'complete'): ProductPricing {
     const basePrice = this.config.basePrice[setVariant];
     
-    // Special case: classic + front should be 232 PLN after discount
-    let discount: number;
-    let priceAfterDiscount: number;
-    
-    if (setVariant === 'front') {
-      discount = this.config.discountBelowThreshold;
-      priceAfterDiscount = 232; // Fixed price for classic front
-    } else {
-      discount = basePrice >= this.config.discountThreshold 
-        ? this.config.discountAboveThreshold 
-        : this.config.discountBelowThreshold;
-      const discountAmount = basePrice * discount;
-      priceAfterDiscount = basePrice - discountAmount;
-    }
-    
-    const discountAmount = basePrice - priceAfterDiscount;
+    const discount = basePrice >= this.config.discountThreshold
+      ? this.config.discountAboveThreshold
+      : this.config.discountBelowThreshold;
+
+    const discountAmount = basePrice * discount;
+    const priceAfterDiscount = basePrice - discountAmount;
     
     // Shipping cost
     const shippingCost = (this.config.freeShippingVariants as readonly string[]).includes(setVariant)

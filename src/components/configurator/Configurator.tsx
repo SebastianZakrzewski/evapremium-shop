@@ -28,6 +28,7 @@ import { debugLog } from "@/lib/config/features";
 import { useTracking } from "@/lib/tracking";
 import { Brand, Model } from "@/entities/car";
 import { normalizeBrandName } from "@/shared/brands";
+import { LowestPrice30DaysNotice } from "@/components/configurator/configurator-simple/LowestPrice30DaysNotice";
 import { useConfiguratorCarData } from "@/features/car-configurator";
 
 // Dodaj event do otwierania modala koszyka
@@ -1231,6 +1232,7 @@ export default function Configurator() {
                       );
                     })}
                   </RadioGroup>
+                  <LowestPrice30DaysNotice />
                 </div>
               </div>
             )}
@@ -1399,12 +1401,6 @@ export default function Configurator() {
                       <div className="flex justify-between">
                         <span className="text-gray-400">Rabat ({Math.round((priceBreakdown.discount / priceBreakdown.basePrice) * 100)}%)</span>
                         <span className="text-red-400">-{priceBreakdown.discount} zł</span>
-                      </div>
-                    )}
-                    {priceBreakdown.shippingCost > 0 && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Wysyłka</span>
-                        <span className="text-white">{priceBreakdown.shippingCost} zł</span>
                       </div>
                     )}
                     <Separator className="my-2" />

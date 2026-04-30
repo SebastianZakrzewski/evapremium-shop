@@ -15,9 +15,19 @@ export default function ProductSelection() {
   const { brands, isLoading: loading, error } = useBrands()
 
   const filteredBrands = useMemo(() => {
-    if (!search.trim()) return brands
-    const term = search.toLowerCase().trim()
-    return brands.filter((b) => b.name.toLowerCase().includes(term))
+    let result = brands.filter(brand => {
+      const isImage = brand.logo.includes('.jpg') || 
+                      brand.logo.includes('.png') || 
+                      brand.logo.includes('.jpeg') || 
+                      brand.logo.includes('.avif') || 
+                      brand.logo.includes('.webp');
+      const isExcluded = ['asia', 'bestune', 'chery'].includes(brand.name.toLowerCase());
+      return isImage && !isExcluded;
+    });
+
+    if (!search.trim()) return result;
+    const term = search.toLowerCase().trim();
+    return result.filter((b) => b.name.toLowerCase().includes(term));
   }, [brands, search])
 
   const handleBrandClick = useCallback((brand: Brand) => {

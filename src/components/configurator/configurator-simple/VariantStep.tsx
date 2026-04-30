@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { PricingService } from "@/lib/services/PricingService";
+import { LowestPrice30DaysNotice } from "./LowestPrice30DaysNotice";
 
 interface VariantStepProps {
   config: {
@@ -55,7 +56,7 @@ export function VariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdo
     const displayPrice = isClassicFront
       ? price.priceAfterDiscount || (price.totalPrice - price.shippingCost)
       : price.totalPrice;
-    const oldPrice = isClassicFront ? price.basePrice : price.basePrice + price.shippingCost;
+    const oldPrice = price.basePrice;
     return { displayPrice, oldPrice, hasDiscount: price.discount > 0 };
   };
 
@@ -114,6 +115,8 @@ export function VariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdo
           );
         })}
       </div>
+
+      <LowestPrice30DaysNotice />
 
       <div className="flex flex-col sm:flex-row gap-2 justify-end pt-3">
         <Button

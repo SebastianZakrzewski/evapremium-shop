@@ -668,12 +668,6 @@ export function PaymentSuccess() {
                           <span className="text-white">{paymentStatus.subtotal.toFixed(2)} zł</span>
                         </div>
                       )}
-                      {paymentStatus.shippingCost !== undefined && paymentStatus.shippingCost > 0 && (
-                        <div className="flex justify-between items-center">
-                          <span className="text-white/70">Dostawa:</span>
-                          <span className="text-white">{paymentStatus.shippingCost.toFixed(2)} zł</span>
-                        </div>
-                      )}
                       {paymentStatus.tax !== undefined && paymentStatus.tax > 0 && (
                         <div className="flex justify-between items-center">
                           <span className="text-white/70">Podatek:</span>

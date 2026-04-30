@@ -259,7 +259,7 @@ export function SummaryStep({
               
               {priceBreakdown.discount > 0 && (
                 <div className="flex justify-between text-green-400 bg-green-500/5 px-2 py-1 rounded">
-                  <span>Rabat ({priceBreakdown.basePrice >= 910 ? "30%" : "20%"})</span>
+                  <span>Rabat ({priceBreakdown.basePrice >= 910 ? "35%" : "25%"})</span>
                   <span>-{priceBreakdown.discount.toFixed(2)} zł</span>
                 </div>
               )}
@@ -270,13 +270,6 @@ export function SummaryStep({
                   <span className="text-sm font-medium">{selectedPodpietka.price.toFixed(2)} zł</span>
                 </div>
               )}
-              
-              <div className="flex justify-between text-gray-400">
-                <span>Dostawa</span>
-                <span className={priceBreakdown.shippingCost === 0 ? "text-green-400 font-medium" : ""}>
-                  {priceBreakdown.shippingCost === 0 ? "Gratis" : `${priceBreakdown.shippingCost.toFixed(2)} zł`}
-                </span>
-              </div>
             </div>
 
             <div className="pt-6 mt-6 border-t border-white/10 relative z-10">
@@ -286,7 +279,7 @@ export function SummaryStep({
                   <div className="flex items-baseline gap-2">
                     {priceBreakdown.discount > 0 && (
                       <span className="text-base text-gray-400 line-through font-medium">
-                        {(priceBreakdown.basePrice + priceBreakdown.shippingCost + (selectedPodpietka?.price || 0)).toFixed(2)} zł
+                        {(priceBreakdown.basePrice + (selectedPodpietka?.price || 0)).toFixed(2)} zł
                       </span>
                     )}
                     <span className="text-3xl font-bold text-white tracking-tight">

@@ -18,12 +18,22 @@ export default function BrandSelectionGrid() {
 
   // Filtrowanie marek na podstawie wyszukiwania
   const filteredBrands = useMemo(() => {
+    let result = brands.filter(brand => {
+      const isImage = brand.logo.includes('.jpg') || 
+                      brand.logo.includes('.png') || 
+                      brand.logo.includes('.jpeg') || 
+                      brand.logo.includes('.avif') || 
+                      brand.logo.includes('.webp');
+      const isExcluded = ['asia', 'bestune', 'chery'].includes(brand.name.toLowerCase());
+      return isImage && !isExcluded;
+    });
+
     if (!searchQuery.trim()) {
-      return brands;
+      return result;
     }
     
     const query = searchQuery.toLowerCase().trim();
-    return brands.filter(brand => 
+    return result.filter(brand => 
       brand.name.toLowerCase().includes(query) ||
       brand.description?.toLowerCase().includes(query)
     );

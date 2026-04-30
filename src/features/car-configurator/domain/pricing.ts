@@ -21,11 +21,11 @@ export const PRICING = {
     classic: { front: 290, basic: 510, premium: 710, complete: 350 },
     "3d-with-rims": { front: 550, basic: 910, premium: 1210, complete: 350 },
   },
-  // Rabat zależny od wartości: -30% dla >=910 zł, -20% dla <910 zł
-  getDiscount: (basePrice: number) => (basePrice >= 910 ? 0.3 : 0.2),
+  // Rabat zależny od wartości: -35% dla >=910 zł, -25% dla <910 zł
+  getDiscount: (basePrice: number) => (basePrice >= 910 ? 0.35 : 0.25),
   shipping: {
     cost: 27,
-    freeForVariants: ["basic", "premium", "complete"] as SetVariantId[],
+    freeForVariants: ["front", "basic", "premium", "complete"] as SetVariantId[],
   },
 };
 
@@ -153,12 +153,13 @@ export const calculatePriceBreakdown = (
   const shippingCost = PRICING.shipping.freeForVariants.includes(setVariant)
     ? 0
     : PRICING.shipping.cost;
-  const totalPrice = Math.round(priceAfterDiscount + shippingCost);
+  const totalPrice =
+    Math.round((priceAfterDiscount + shippingCost) * 100) / 100;
 
   return {
     basePrice: Math.round(basePrice),
-    discount: Math.round(discountAmount),
-    priceAfterDiscount: Math.round(priceAfterDiscount),
+    discount: Math.round(discountAmount * 100) / 100,
+    priceAfterDiscount: Math.round(priceAfterDiscount * 100) / 100,
     shippingCost,
     totalPrice,
   };

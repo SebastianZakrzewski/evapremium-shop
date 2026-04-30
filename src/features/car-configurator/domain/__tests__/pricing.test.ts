@@ -11,22 +11,24 @@ import {
 describe("car-configurator pricing", () => {
   it("returns base prices from matrix", () => {
     expect(getBasePrice("classic", "front")).toBe(290);
+    expect(getBasePrice("3d-with-rims", "front")).toBe(550);
     expect(getBasePrice("3d-with-rims", "basic")).toBe(910);
   });
 
   it("calculates discount tiers correctly", () => {
-    expect(PRICING.getDiscount(909)).toBe(0.2);
-    expect(PRICING.getDiscount(910)).toBe(0.3);
+    expect(PRICING.getDiscount(909)).toBe(0.25);
+    expect(PRICING.getDiscount(910)).toBe(0.35);
   });
 
   it("calculates variant base price without shipping", () => {
-    expect(calculateVariantBasePrice("classic", "front")).toBe(232);
-    expect(calculateVariantBasePrice("3d-with-rims", "premium")).toBe(847);
+    expect(calculateVariantBasePrice("classic", "front")).toBe(218);
+    expect(calculateVariantBasePrice("3d-with-rims", "premium")).toBe(787);
   });
 
-  it("includes shipping only for front variant", () => {
-    expect(calculateVariantPrice("classic", "front")).toBe(259);
-    expect(calculateVariantPrice("classic", "basic")).toBe(408);
+  it("includes free shipping for starter front so total matches catalog minus discount", () => {
+    expect(calculateVariantPrice("classic", "front")).toBe(217.5);
+    expect(calculateVariantPrice("3d-with-rims", "front")).toBe(412.5);
+    expect(calculateVariantPrice("classic", "basic")).toBe(382.5);
   });
 
   it("returns full price breakdown", () => {
@@ -34,10 +36,10 @@ describe("car-configurator pricing", () => {
 
     expect(breakdown).toEqual({
       basePrice: 910,
-      discount: 273,
-      priceAfterDiscount: 637,
+      discount: 318.5,
+      priceAfterDiscount: 591.5,
       shippingCost: 0,
-      totalPrice: 637,
+      totalPrice: 591.5,
     });
   });
 

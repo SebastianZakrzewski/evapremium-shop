@@ -149,7 +149,7 @@ export function StickyBottomCTA({
                   <span className="text-xs text-gray-400">Cena:</span>
                   {priceBreakdown.discount > 0 && (
                     <span className="text-sm text-gray-400 line-through">
-                      {(priceBreakdown.basePrice + priceBreakdown.shippingCost).toFixed(2)} zł
+                      {(priceBreakdown.basePrice).toFixed(2)} zł
                     </span>
                   )}
                   <span className="text-xl font-bold text-white">
@@ -181,12 +181,6 @@ export function StickyBottomCTA({
                       <span className="text-green-400">-{priceBreakdown.discount.toFixed(2)} zł</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-xs">
-                    <span className="text-gray-400">Dostawa</span>
-                    <span className={priceBreakdown.shippingCost === 0 ? "text-green-400" : "text-white"}>
-                      {priceBreakdown.shippingCost === 0 ? "Gratis" : `${priceBreakdown.shippingCost.toFixed(2)} zł`}
-                    </span>
-                  </div>
                 </div>
               )}
             </div>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PricingService } from "@/lib/services/PricingService";
+import { LowestPrice30DaysNotice } from "./LowestPrice30DaysNotice";
 
 interface MatTypeVariantStepProps {
   config: {
@@ -63,7 +64,7 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
     const displayPrice = isClassicFront
       ? price.priceAfterDiscount || (price.totalPrice - price.shippingCost)
       : price.totalPrice;
-    const oldPrice = isClassicFront ? price.basePrice : price.basePrice + price.shippingCost;
+    const oldPrice = price.basePrice;
     return { displayPrice, oldPrice, hasDiscount: price.discount > 0 };
   };
 
@@ -150,6 +151,8 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
               );
             })}
           </div>
+
+          <LowestPrice30DaysNotice />
         </div>
       )}
 

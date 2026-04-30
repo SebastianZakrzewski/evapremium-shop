@@ -981,7 +981,7 @@ export default function ConfiguratorSimple() {
                           <div className="flex items-baseline gap-2">
                             {priceBreakdown.discount > 0 && (
                               <span className="text-lg text-gray-400 line-through font-medium">
-                                {(priceBreakdown.basePrice + priceBreakdown.shippingCost).toFixed(2)} zł
+                                {priceBreakdown.basePrice.toFixed(2)} zł
                               </span>
                             )}
                             <span className="text-2xl font-bold text-white">
@@ -990,7 +990,7 @@ export default function ConfiguratorSimple() {
                           </div>
                           {priceBreakdown.discount > 0 && (
                             <span className="text-sm text-green-400 bg-green-400/10 px-2 py-0.5 rounded w-fit">
-                              Rabat {priceBreakdown.basePrice >= 910 ? "30%" : "20%"}: -{priceBreakdown.discount.toFixed(2)} zł
+                              Rabat {priceBreakdown.basePrice >= 910 ? "35%" : "25%"}: -{priceBreakdown.discount.toFixed(2)} zł
                             </span>
                           )}
                         </div>
@@ -1025,12 +1025,6 @@ export default function ConfiguratorSimple() {
                   
                   {/* Additional Info */}
                   <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
-                    <span className="flex items-center gap-1.5">
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Darmowa dostawa
-                    </span>
                     <span className="flex items-center gap-1.5">
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -1334,7 +1328,7 @@ export default function ConfiguratorSimple() {
                     <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0">Cena:</span>
                     {priceBreakdown.discount > 0 && (
                       <span className="text-sm text-gray-400 line-through flex-shrink-0">
-                        {(priceBreakdown.basePrice + priceBreakdown.shippingCost).toFixed(2)} zł
+                        {priceBreakdown.basePrice.toFixed(2)} zł
                       </span>
                     )}
                     <span className="text-lg font-bold text-white truncate">
@@ -1343,7 +1337,7 @@ export default function ConfiguratorSimple() {
                   </div>
                   {priceBreakdown.discount > 0 && (
                     <div className="text-xs text-green-400 mt-0.5 truncate">
-                      Rabat {priceBreakdown.basePrice >= 910 ? "30%" : "20%"}: -{priceBreakdown.discount.toFixed(2)} zł
+                      Rabat {priceBreakdown.basePrice >= 910 ? "35%" : "25%"}: -{priceBreakdown.discount.toFixed(2)} zł
                     </div>
                   )}
                 </div>

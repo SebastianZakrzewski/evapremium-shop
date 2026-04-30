@@ -15,10 +15,10 @@ export class ThreeDPricingStrategy implements PricingStrategy {
       complete: 350
     },
     discountThreshold: 910,
-    discountAboveThreshold: 0.30,
-    discountBelowThreshold: 0.20,
+    discountAboveThreshold: 0.35,
+    discountBelowThreshold: 0.25,
     shippingCost: 27,
-    freeShippingVariants: ['basic', 'premium', 'complete'] as const
+    freeShippingVariants: ['front', 'basic', 'premium', 'complete'] as const
   };
 
   calculatePrice(setVariant: 'front' | 'basic' | 'premium' | 'complete'): ProductPricing {

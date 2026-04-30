@@ -82,11 +82,11 @@ export class PricingService {
       });
     }
 
-    // Dla maty do bagażnika zastosuj rabat 20% jeśli jeszcze nie został zastosowany
+    // Dla maty do bagażnika zastosuj rabat 25% jeśli jeszcze nie został zastosowany
     if (setType === 'complete' && totalPrice >= 350) {
-      const discount = 0.20;
+      const discount = 0.25;
       totalPrice = totalPrice * (1 - discount);
-      console.log('💰 PricingService.calculateMatPrice - Zastosowano rabat 20% dla complete:', {
+      console.log('💰 PricingService.calculateMatPrice - Zastosowano rabat 25% dla complete:', {
         basePrice,
         totalPriceBeforeDiscount: totalPrice / (1 - discount),
         totalPriceAfterDiscount: totalPrice
