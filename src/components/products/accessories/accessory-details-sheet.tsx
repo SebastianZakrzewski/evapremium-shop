@@ -168,10 +168,10 @@ export default function AccessoryDetailsSheet({
                   }}
                 />
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center text-neutral-500 bg-white/5/50">
+                <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-white/5/50">
                   <span className="text-6xl mb-2">📦</span>
                   {currentImage && (
-                    <p className="text-xs text-neutral-500 text-center px-4">
+                    <p className="text-xs text-gray-400 text-center px-4">
                       Obraz nie został znaleziony
                       <br />
                       <span className="text-[10px] font-mono">{currentImage}</span>

@@ -350,7 +350,7 @@ export default function Chatbot() {
                         className={`text-[10px] mt-1.5 ${
                           message.sender === "user"
                             ? "text-red-100"
-                            : "text-neutral-500"
+                            : "text-gray-400"
                         }`}
                       >
                         {formatTime(message.timestamp)}
@@ -380,7 +380,7 @@ export default function Chatbot() {
                       <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
                       <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
                     </div>
-                    <span className="text-xs text-neutral-500 ml-2">Klaudia pisze...</span>
+                    <span className="text-xs text-gray-400 ml-2">Klaudia pisze...</span>
                   </div>
                 </div>
               </div>
@@ -398,7 +398,7 @@ export default function Chatbot() {
                 
                 <div className="space-y-3">
                   <div className="relative">
-                    <UserIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-500" />
+                    <UserIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       ref={nameInputRef}
                       type="text"
@@ -411,7 +411,7 @@ export default function Chatbot() {
                   </div>
 
                   <div className="relative">
-                    <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-500" />
+                    <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="tel"
                       value={contactData.phone}
@@ -427,7 +427,7 @@ export default function Chatbot() {
                   <button
                     type="submit"
                     disabled={!contactData.name.trim() || !contactData.phone?.trim() || isSubmittingContact}
-                    className="flex-1 bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:bg-white/5 disabled:text-neutral-500 disabled:cursor-not-allowed text-white py-3 px-6 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-red-500/20 min-h-[44px]"
+                    className="flex-1 bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:bg-white/5 disabled:text-gray-400 disabled:cursor-not-allowed text-white py-3 px-6 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-red-500/20 min-h-[44px]"
                   >
                     {isSubmittingContact ? (
                       <>
@@ -467,7 +467,7 @@ export default function Chatbot() {
               <button
                 type="submit"
                 disabled={!inputValue.trim() || isTyping}
-                className="w-12 h-12 md:w-12 md:h-12 bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:bg-white/5 disabled:text-neutral-500 disabled:cursor-not-allowed text-white rounded-xl flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-red-500/20 min-h-[48px] min-w-[48px]"
+                className="w-12 h-12 md:w-12 md:h-12 bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:bg-white/5 disabled:text-gray-400 disabled:cursor-not-allowed text-white rounded-xl flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-red-500/20 min-h-[48px] min-w-[48px]"
                 aria-label="Wyślij wiadomość"
               >
                 <Send className="w-5 h-5" />

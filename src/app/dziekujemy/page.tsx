@@ -47,7 +47,7 @@ export default function ThankYouPage() {
           </Link>
         </Button>
         
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-gray-400">
           Automatyczny powrót za {countdown} s
         </p>
       </div>

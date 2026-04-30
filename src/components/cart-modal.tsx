@@ -261,7 +261,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
 
             {!isLoading && !error && items.length === 0 && (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <ShoppingBag className="h-16 w-16 text-neutral-500 mb-4" />
+                <ShoppingBag className="h-16 w-16 text-gray-400 mb-4" />
                 <h3 className="text-xl font-semibold text-white mb-2">
                   Twój koszyk jest pusty
                 </h3>
