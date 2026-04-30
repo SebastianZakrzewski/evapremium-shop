@@ -965,7 +965,7 @@ export default function ConfiguratorSimple() {
                   </div>
                   
                   {/* Progress Line */}
-                  <div className="h-1 w-full bg-neutral-800 rounded-full overflow-hidden">
+                  <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-red-600 transition-all duration-500 ease-out"
                       style={{ width: `${(activeStep / TOTAL_STEPS_DESKTOP) * 100}%` }}
@@ -1316,7 +1316,7 @@ export default function ConfiguratorSimple() {
       {shouldShowStickyPreview && !isCartOpen && (
         <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-xl border-t border-white/10 pb-safe shadow-2xl">
           {/* Mini Progress Indicator */}
-          <div className="h-1 bg-neutral-800">
+          <div className="h-1 bg-white/5">
             <div
               className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-300 ease-out"
               style={{ width: `${(activeStep / TOTAL_STEPS_MOBILE) * 100}%` }}
@@ -1453,7 +1453,7 @@ export default function ConfiguratorSimple() {
                          : 'border-white/10 opacity-60 hover:opacity-100 hover:border-white/30'
                      }`}
                    >
-                     <div className="absolute inset-0 bg-neutral-800" />
+                     <div className="absolute inset-0 bg-white/5" />
                      <Image src={dynamicPreviewPath} alt="Wizualizacja" fill className="object-contain p-1" />
                      {modalImageType === 'dynamic' && <div className="absolute inset-0 bg-red-500/10" />}
                    </button>

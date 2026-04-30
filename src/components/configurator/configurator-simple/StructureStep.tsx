@@ -52,7 +52,7 @@ export function StructureStep({ config, onUpdate, onNext, onPrevious }: Structur
                 <h3 className="text-xs md:text-sm font-semibold leading-tight truncate">{structure.name}</h3>
                 <p className="text-gray-300 text-[10px] leading-tight line-clamp-2">{structure.description}</p>
               </div>
-              <div className="w-full min-h-[80px] md:min-h-[96px] mt-1.5 rounded-xl overflow-hidden bg-neutral-800/40 relative">
+              <div className="w-full min-h-[80px] md:min-h-[96px] mt-1.5 rounded-xl overflow-hidden bg-white/5/40 relative">
                 <Image
                   src={structure.image}
                   alt={structure.name}
@@ -70,7 +70,7 @@ export function StructureStep({ config, onUpdate, onNext, onPrevious }: Structur
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="flex-1 sm:flex-initial px-4 py-2.5 min-h-[40px] md:min-h-[36px] border-neutral-700 hover:bg-neutral-800 text-xs font-medium transition-all duration-200 active:scale-95"
+          className="flex-1 sm:flex-initial px-4 py-2.5 min-h-[40px] md:min-h-[36px] border-neutral-700 hover:bg-white/5 text-xs font-medium transition-all duration-200 active:scale-95"
         >
           Wstecz
         </Button>

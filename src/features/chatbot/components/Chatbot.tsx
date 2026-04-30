@@ -248,7 +248,7 @@ export default function Chatbot() {
           }}
           className={`w-16 h-16 md:w-20 md:h-20 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 relative overflow-hidden border border-white/10 flex items-center justify-center ${
             isOpen
-              ? "bg-[#111] text-white hover:bg-neutral-800"
+              ? "bg-[#111] text-white hover:bg-white/5"
               : "bg-red-600 hover:bg-red-700 text-white shadow-red-900/20"
           }`}
           aria-label={isOpen ? "Zamknij chat" : "Otwórz chat"}
@@ -427,7 +427,7 @@ export default function Chatbot() {
                   <button
                     type="submit"
                     disabled={!contactData.name.trim() || !contactData.phone?.trim() || isSubmittingContact}
-                    className="flex-1 bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed text-white py-3 px-6 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-red-500/20 min-h-[44px]"
+                    className="flex-1 bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:bg-white/5 disabled:text-neutral-500 disabled:cursor-not-allowed text-white py-3 px-6 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-red-500/20 min-h-[44px]"
                   >
                     {isSubmittingContact ? (
                       <>
@@ -441,7 +441,7 @@ export default function Chatbot() {
                   <button
                     type="button"
                     onClick={() => setShowContactForm(false)}
-                    className="px-6 py-3 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl text-sm font-medium transition-all duration-200 shadow-lg min-h-[44px]"
+                    className="px-6 py-3 bg-white/5 hover:bg-neutral-700 text-white rounded-xl text-sm font-medium transition-all duration-200 shadow-lg min-h-[44px]"
                   >
                     Anuluj
                   </button>
@@ -467,7 +467,7 @@ export default function Chatbot() {
               <button
                 type="submit"
                 disabled={!inputValue.trim() || isTyping}
-                className="w-12 h-12 md:w-12 md:h-12 bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed text-white rounded-xl flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-red-500/20 min-h-[48px] min-w-[48px]"
+                className="w-12 h-12 md:w-12 md:h-12 bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:bg-white/5 disabled:text-neutral-500 disabled:cursor-not-allowed text-white rounded-xl flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-red-500/20 min-h-[48px] min-w-[48px]"
                 aria-label="Wyślij wiadomość"
               >
                 <Send className="w-5 h-5" />

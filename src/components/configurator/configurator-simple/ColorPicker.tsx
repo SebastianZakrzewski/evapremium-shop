@@ -91,7 +91,7 @@ export function ColorPicker({ type, config, onUpdate, onNext, onPrevious }: Colo
       </div>
 
       {selectedColor && (
-        <div className="p-4 bg-neutral-800 rounded-lg border border-neutral-700 shadow-sm">
+        <div className="p-4 bg-white/5 rounded-lg border border-neutral-700 shadow-sm">
           <div className="flex items-center gap-3">
             <div
               className="w-10 h-10 md:w-12 md:h-12 rounded-lg border border-neutral-600 shadow-sm"
@@ -111,7 +111,7 @@ export function ColorPicker({ type, config, onUpdate, onNext, onPrevious }: Colo
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="px-6 py-2.5 min-h-[40px] border-neutral-700 hover:bg-neutral-800 text-sm font-medium transition-all duration-200"
+          className="px-6 py-2.5 min-h-[40px] border-neutral-700 hover:bg-white/5 text-sm font-medium transition-all duration-200"
         >
           Wstecz
         </Button>

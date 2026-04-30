@@ -259,7 +259,7 @@ function SearchDropdown() {
                     pl-12 pr-12
                     h-14 sm:h-12
                     w-full
-                    bg-neutral-800 md:bg-neutral-800/80 backdrop-blur-xl
+                    bg-white/5 md:bg-white/5/80 backdrop-blur-xl
                     border-2 border-neutral-600 md:border-white/5/50
                     text-white text-base sm:text-base
                     placeholder:text-gray-400 md:placeholder:text-gray-400
@@ -337,7 +337,7 @@ function SearchDropdown() {
                                   transition-colors text-left touch-manipulation
                                   ${selectedIndex === flatIndex 
                                     ? 'bg-red-500/20 text-white' 
-                                    : 'active:bg-neutral-800/50 hover:bg-neutral-800/50 text-gray-300 hover:text-white'
+                                    : 'active:bg-white/5/50 hover:bg-white/5/50 text-gray-300 hover:text-white'
                                   }
                                 `}
                                 role="option"
@@ -373,7 +373,7 @@ function SearchDropdown() {
                                   transition-colors text-left touch-manipulation
                                   ${selectedIndex === flatIndex 
                                     ? 'bg-red-500/20 text-white' 
-                                    : 'active:bg-neutral-800/50 hover:bg-neutral-800/50 text-gray-300 hover:text-white'
+                                    : 'active:bg-white/5/50 hover:bg-white/5/50 text-gray-300 hover:text-white'
                                   }
                                 `}
                                 role="option"
@@ -414,7 +414,7 @@ function SearchDropdown() {
                                   transition-colors text-left touch-manipulation
                                   ${selectedIndex === flatIndex 
                                     ? 'bg-red-500/20 text-white' 
-                                    : 'active:bg-neutral-800/50 hover:bg-neutral-800/50 text-gray-300 hover:text-white'
+                                    : 'active:bg-white/5/50 hover:bg-white/5/50 text-gray-300 hover:text-white'
                                   }
                                 `}
                                 role="option"

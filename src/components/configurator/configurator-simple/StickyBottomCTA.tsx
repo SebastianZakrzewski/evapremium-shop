@@ -82,7 +82,7 @@ export function StickyBottomCTA({
       isHidden ? 'translate-y-full' : 'animate-in slide-in-from-bottom-full'
     }`}>
       {/* Progress Bar */}
-      <div className="h-1 bg-neutral-800">
+      <div className="h-1 bg-white/5">
         <div
           className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-300 ease-out"
           style={{ width: `${progress}%` }}

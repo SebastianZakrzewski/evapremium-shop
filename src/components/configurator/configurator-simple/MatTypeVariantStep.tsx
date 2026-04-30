@@ -121,7 +121,7 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
                     <p className="text-gray-200 text-xs md:text-sm leading-tight line-clamp-2">{variant.description}</p>
                   </div>
                   {/* Zdjęcie – stała wysokość, zapobiega nachodzeniu na cenę */}
-                  <div className="w-full h-[80px] md:h-[96px] flex-shrink-0 mt-1.5 rounded-2xl overflow-hidden bg-neutral-800/40 relative">
+                  <div className="w-full h-[80px] md:h-[96px] flex-shrink-0 mt-1.5 rounded-2xl overflow-hidden bg-white/5/40 relative">
                     <div className="absolute inset-0 rounded-2xl overflow-hidden">
                       <Image
                         src={variant.image}

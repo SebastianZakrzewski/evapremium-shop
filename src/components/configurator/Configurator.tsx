@@ -960,7 +960,7 @@ export default function Configurator() {
               
               {/* Progress indicator */}
               <div className="mt-4 flex items-center gap-2">
-                <div className="flex-1 bg-neutral-800 rounded-full h-2 md:h-2">
+                <div className="flex-1 bg-white/5 rounded-full h-2 md:h-2">
                   <div 
                     className="bg-red-500 rounded-full h-2 md:h-2 transition-all duration-300"
                     style={{ width: `${((currentSection + 1) / totalSections) * 100}%` }}
@@ -972,7 +972,7 @@ export default function Configurator() {
               </div>
             </div>
 
-            <Separator className="mb-6 bg-neutral-800" />
+            <Separator className="mb-6 bg-white/5" />
 
             {/* Sekcja 1: Rodzaj zestawu */}
             {currentSection === 0 && (
@@ -982,7 +982,7 @@ export default function Configurator() {
                   <div className="mb-6 p-4 bg-[#111] rounded-lg border border-white/5">
                     <h3 className="text-base font-medium mb-2 text-gray-300">Wybrana marka</h3>
                     <div className="flex items-center gap-3">
-                      <div className="relative w-24 h-24 bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
+                      <div className="relative w-24 h-24 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
                         {brandsLoading ? (
                           <div className="w-full h-full bg-neutral-700 animate-pulse rounded"></div>
                         ) : (
@@ -1152,7 +1152,7 @@ export default function Configurator() {
                       const modifier = { modifier: 0, label: '+0 zł' };
                       
                       return (
-                        <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-white/5"} p-4 bg-[#111] hover:bg-[#111] active:bg-neutral-800 active:scale-[0.98] transition`}>
+                        <Label key={s.id} htmlFor={`set-${s.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetType === s.id ? "border-white" : "border-white/5"} p-4 bg-[#111] hover:bg-[#111] active:bg-white/5 active:scale-[0.98] transition`}>
                           <RadioGroupItem value={s.id} id={`set-${s.id}`} className="sr-only" />
                           <div className="flex items-center justify-between">
                             <div>
@@ -1168,7 +1168,7 @@ export default function Configurator() {
                 
                 {/* Info box o wpływie na cenę */}
                 {selectedSetType && (
-                  <div className="p-4 bg-neutral-800/50 border border-neutral-700 rounded-lg">
+                  <div className="p-4 bg-white/5/50 border border-neutral-700 rounded-lg">
                     <p className="text-base text-gray-300">
                       Wybór rodzaju dywaników wpłynie na końcową cenę zestawu
                     </p>
@@ -1195,7 +1195,7 @@ export default function Configurator() {
                         : 0;
                       
                       return (
-                        <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-white/5"} p-4 bg-[#111] hover:bg-[#111] active:bg-neutral-800 active:scale-[0.98] transition`}>
+                        <Label key={v.id} htmlFor={`variant-${v.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedSetVariant === v.id ? "border-white" : "border-white/5"} p-4 bg-[#111] hover:bg-[#111] active:bg-white/5 active:scale-[0.98] transition`}>
                           <RadioGroupItem value={v.id} id={`variant-${v.id}`} className="sr-only" />
                           <div className="flex items-center justify-between">
                             <div className="flex-1">
@@ -1242,7 +1242,7 @@ export default function Configurator() {
                   <h3 className="text-base font-medium mb-3">Wybierz rodzaj komórek</h3>
                   <RadioGroup value={selectedCellType} onValueChange={setSelectedCellType} className="space-y-3">
                     {cellTypes.map((c) => (
-                      <Label key={c.id} htmlFor={`cell-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedCellType === c.id ? "border-white" : "border-white/5"} p-4 bg-[#111] hover:bg-[#111] active:bg-neutral-800 active:scale-[0.98] transition`}>
+                      <Label key={c.id} htmlFor={`cell-${c.id}`} className={`group relative cursor-pointer rounded-xl border ${selectedCellType === c.id ? "border-white" : "border-white/5"} p-4 bg-[#111] hover:bg-[#111] active:bg-white/5 active:scale-[0.98] transition`}>
                         <RadioGroupItem value={c.id} id={`cell-${c.id}`} className="sr-only" />
                         <div className="flex items-center justify-between">
                           <div>
@@ -1322,7 +1322,7 @@ export default function Configurator() {
                       { id: "brak", name: "Brak" },
                       { id: "gumowy", name: "Gumowy" },
                     ].map((h) => (
-                      <Label key={h.id} htmlFor={`heel-${h.id}`} className={`cursor-pointer rounded-xl border ${selectedHeelPad === h.id ? "border-white" : "border-white/5"} px-4 py-3 bg-[#111] hover:bg-[#111] active:bg-neutral-800 active:scale-[0.98] transition` }>
+                      <Label key={h.id} htmlFor={`heel-${h.id}`} className={`cursor-pointer rounded-xl border ${selectedHeelPad === h.id ? "border-white" : "border-white/5"} px-4 py-3 bg-[#111] hover:bg-[#111] active:bg-white/5 active:scale-[0.98] transition` }>
                         <RadioGroupItem value={h.id} id={`heel-${h.id}`} className="sr-only" />
                         <span className="text-base">{h.name}</span>
                       </Label>
@@ -1340,7 +1340,7 @@ export default function Configurator() {
                   <h3 className="text-base font-medium mb-3 text-gray-300">Wybrane auto</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
-                      <div className="relative w-16 h-16 bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
+                      <div className="relative w-16 h-16 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
                         {brandsLoading ? (
                           <div className="w-full h-full bg-neutral-700 animate-pulse rounded"></div>
                         ) : (
@@ -1426,7 +1426,7 @@ export default function Configurator() {
                 <p className="text-sm text-white/60">Finalna cena może się różnić w zależności od modelu auta.</p>
                 
                 {/* Szacowany czas dostawy */}
-                <div className="mt-6 p-3 bg-neutral-800/50 rounded-lg border border-neutral-700">
+                <div className="mt-6 p-3 bg-white/5/50 rounded-lg border border-neutral-700">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <span className="text-sm text-white/80 font-medium">Szacowany czas dostawy</span>
@@ -1444,7 +1444,7 @@ export default function Configurator() {
                   <textarea
                     id="order-notes"
                     placeholder="Dodatkowe informacje, uwagi, specjalne życzenia..."
-                    className="w-full h-20 px-3 py-2 bg-neutral-800 border border-neutral-600 rounded-lg text-white text-base placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                    className="w-full h-20 px-3 py-2 bg-white/5 border border-neutral-600 rounded-lg text-white text-base placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
                   />
                 </div>
                 
@@ -1453,7 +1453,7 @@ export default function Configurator() {
                   <input
                     type="checkbox"
                     id="privacy-agreement"
-                    className="w-4 h-4 text-red-600 bg-neutral-800 border-neutral-600 rounded focus:ring-red-500 focus:ring-2"
+                    className="w-4 h-4 text-red-600 bg-white/5 border-neutral-600 rounded focus:ring-red-500 focus:ring-2"
                   />
                   <label htmlFor="privacy-agreement" className="text-sm text-white/70 cursor-pointer">
                     Zgadzam się z polityką prywatności i regulaminem
@@ -1469,7 +1469,7 @@ export default function Configurator() {
                 variant="outline"
                 onClick={prevSection}
                 disabled={currentSection === 0}
-                className="flex items-center gap-2 border-neutral-700 text-white hover:bg-neutral-800 active:bg-neutral-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] md:min-w-auto"
+                className="flex items-center gap-2 border-neutral-700 text-white hover:bg-white/5 active:bg-neutral-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] md:min-w-auto"
               >
                 <ChevronLeft className="h-5 w-5" />
                 <span className="hidden sm:inline text-base">Wstecz</span>

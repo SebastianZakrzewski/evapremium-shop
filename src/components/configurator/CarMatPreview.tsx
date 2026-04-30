@@ -82,7 +82,7 @@ export default function CarMatPreview({ formData }: CarMatPreviewProps) {
           </div>
 
           {/* Car Info */}
-          <div className="bg-neutral-800/30 rounded-xl p-4 mb-6">
+          <div className="bg-white/5/30 rounded-xl p-4 mb-6">
             <div className="flex items-center gap-3 mb-3">
               <Car className="w-5 h-5 text-red-400" />
               <h4 className="text-white font-semibold">

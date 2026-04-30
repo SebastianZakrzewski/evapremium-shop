@@ -33,7 +33,7 @@ export const StepAccordion = React.forwardRef<HTMLDivElement, StepAccordionProps
     >
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-2.5 md:p-3 text-left hover:bg-neutral-800/50 transition-colors duration-200 min-h-[40px] md:min-h-[44px] active:bg-neutral-800/70"
+        className="w-full flex items-center justify-between p-2.5 md:p-3 text-left hover:bg-white/5/50 transition-colors duration-200 min-h-[40px] md:min-h-[44px] active:bg-white/5/70"
       >
         <div className="flex items-center gap-2 md:gap-3">
           <div

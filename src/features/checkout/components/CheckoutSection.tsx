@@ -822,7 +822,7 @@ export default function CheckoutSection() {
                 Dziękujemy za zakup. Twoje zamówienie zostało przyjęte do realizacji.
               </p>
               
-              <div className="bg-neutral-800/60 border border-white/5 rounded-lg p-4 mb-6">
+              <div className="bg-white/5/60 border border-white/5 rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-400 mb-1">Numer zamówienia:</p>
                 <p className="text-xl font-bold text-red-400">{orderNumber}</p>
               </div>
@@ -834,7 +834,7 @@ export default function CheckoutSection() {
                   </Link>
                 </Button>
                 
-                <Button variant="outline" asChild className="w-full bg-neutral-800 border-white/5 text-gray-300 hover:bg-neutral-700 hover:text-white">
+                <Button variant="outline" asChild className="w-full bg-white/5 border-white/5 text-gray-300 hover:bg-neutral-700 hover:text-white">
                   <Link href={`/order/${orderNumber}`}>
                     Zobacz szczegóły zamówienia
                   </Link>
@@ -903,7 +903,7 @@ export default function CheckoutSection() {
               </span>
               <span>Pozostało: {currentStep >= 2 ? `${minutes}:${seconds}` : '15:00'}</span>
             </div>
-            <div className="h-2 w-full bg-neutral-800 rounded-full overflow-hidden border border-neutral-700">
+            <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-neutral-700">
               {currentStep >= 2 ? (
                 <motion.div
                   initial={{ width: '100%' }}
@@ -1320,7 +1320,7 @@ export default function CheckoutSection() {
                     variant="outline"
                     onClick={prevStep}
                     disabled={currentStep === 1}
-                    className="bg-neutral-800 border-neutral-600 text-gray-300 hover:bg-neutral-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-8 py-4 text-base"
+                    className="bg-white/5 border-neutral-600 text-gray-300 hover:bg-neutral-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-8 py-4 text-base"
                   >
                     <ArrowLeft className="w-5 h-5 mr-3" />
                     Wstecz
@@ -1430,7 +1430,7 @@ export default function CheckoutSection() {
                             <div className="grid grid-cols-1 gap-2">
                               {/* Wariant zestawu */}
                               {item.configuration.setVariant && (
-                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-neutral-800 rounded-lg">
+                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
                                   <span className="text-xs md:text-sm text-neutral-300">Zestaw:</span>
                                   <span className="text-xs md:text-sm font-medium text-white text-right">
                                     {item.configuration.setVariant === 'front' ? 'Starter' :
@@ -1453,7 +1453,7 @@ export default function CheckoutSection() {
 
                               {/* Typ dywaników */}
                               {item.configuration.setType && (
-                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-neutral-800 rounded-lg">
+                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
                                   <span className="text-xs md:text-sm text-neutral-300">Typ:</span>
                                   <span className="text-xs md:text-sm font-medium text-white">
                                     {item.configuration.setType === '3d-with-rims' ? '3D z rantami' :
@@ -1465,7 +1465,7 @@ export default function CheckoutSection() {
 
                               {/* Struktura komórek */}
                               {item.configuration.cellType && (
-                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-neutral-800 rounded-lg">
+                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
                                   <span className="text-xs md:text-sm text-neutral-300">Struktura:</span>
                                   <span className="text-xs md:text-sm font-medium text-white">
                                     {item.configuration.cellType === 'diamonds' ? 'Romby' :
@@ -1477,7 +1477,7 @@ export default function CheckoutSection() {
 
                               {/* Kolory */}
                               {(item.configuration.materialColor || item.configuration.edgeColor) && (
-                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-neutral-800 rounded-lg">
+                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
                                   <span className="text-xs md:text-sm text-neutral-300">Kolor:</span>
                                   <span className="text-xs md:text-sm font-medium text-white text-right">
                                     {item.configuration.materialColor && (
@@ -1510,7 +1510,7 @@ export default function CheckoutSection() {
                         <div className="flex items-center justify-between pt-3 border-t border-neutral-700">
                           <div className="flex items-center space-x-2">
                             <span className="text-neutral-300 text-xs md:text-sm">Ilość:</span>
-                            <span className="w-7 text-center font-semibold text-white text-base md:text-lg bg-neutral-800 rounded px-1.5 py-0.5">
+                            <span className="w-7 text-center font-semibold text-white text-base md:text-lg bg-white/5 rounded px-1.5 py-0.5">
                               {item.quantity}
                             </span>
                           </div>
@@ -1573,7 +1573,7 @@ export default function CheckoutSection() {
 
                   {/* Totals */}
                   <div className="space-y-2 md:space-y-3 pt-2 md:pt-3">
-                    <div className="pt-2 md:pt-3 border-t border-neutral-700 bg-neutral-800/40 p-3 md:p-4 rounded-lg space-y-1.5 md:space-y-2">
+                    <div className="pt-2 md:pt-3 border-t border-neutral-700 bg-white/5/40 p-3 md:p-4 rounded-lg space-y-1.5 md:space-y-2">
                       <div className="flex justify-between items-center text-neutral-300">
                         <span className="text-sm md:text-base">Wartość produktów:</span>
                         <span className="text-sm md:text-base">
@@ -1619,7 +1619,7 @@ export default function CheckoutSection() {
                   variant="outline"
                   onClick={prevStep}
                   disabled={currentStep === 1}
-                  className="bg-neutral-800 border-neutral-600 text-gray-300 hover:bg-neutral-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-4 sm:px-8 lg:px-8 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
+                  className="bg-white/5 border-neutral-600 text-gray-300 hover:bg-neutral-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-4 sm:px-8 lg:px-8 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
                 >
                   <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 mr-2 sm:mr-3 lg:mr-3" />
                   Wstecz

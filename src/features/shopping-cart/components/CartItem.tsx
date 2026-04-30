@@ -191,7 +191,7 @@ function MatCartItem({
         <div className="mb-4">
           <div className="grid grid-cols-1 gap-3">
             {/* Wariant zestawu */}
-            <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
+            <div className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">
               <span className="text-sm text-neutral-300">Zestaw:</span>
               <span className="text-sm font-medium text-white">
                 {getPolishSetVariant(config.setVariant)}
@@ -199,7 +199,7 @@ function MatCartItem({
             </div>
 
             {/* Typ dywaników */}
-            <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
+            <div className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">
               <span className="text-sm text-neutral-300">Typ:</span>
               <span className="text-sm font-medium text-white">
                 {getPolishSetType(config.setType)}
@@ -207,7 +207,7 @@ function MatCartItem({
             </div>
 
             {/* Struktura komórek */}
-            <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
+            <div className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">
               <span className="text-sm text-neutral-300">Struktura:</span>
               <span className="text-sm font-medium text-white">
                 {getPolishCellType(config.cellType)}
@@ -215,7 +215,7 @@ function MatCartItem({
             </div>
 
             {/* Kolory */}
-            <div className="flex items-center justify-between py-2 px-3 bg-neutral-800 rounded-lg">
+            <div className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">
               <span className="text-sm text-neutral-300">Kolor:</span>
               <span className="text-sm font-medium text-white">
                 {getPolishColor(config.materialColor)} + {getPolishColor(config.edgeColor)} obszycie
@@ -300,7 +300,7 @@ function AccessoryCartItem({
   onUpdateQuantity: (quantity: number) => void; 
 }) {
   return (
-    <div className="flex items-center space-x-4 p-4 border border-neutral-600 rounded-lg bg-neutral-800/40 backdrop-blur">
+    <div className="flex items-center space-x-4 p-4 border border-neutral-600 rounded-lg bg-white/5/40 backdrop-blur">
       {/* Obraz produktu */}
       <div className="flex-shrink-0">
         <div className="w-20 h-20 bg-neutral-700 rounded-lg flex items-center justify-center">

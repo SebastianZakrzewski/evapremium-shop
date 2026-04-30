@@ -168,7 +168,7 @@ export default function AccessoryDetailsSheet({
                   }}
                 />
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center text-neutral-700 bg-neutral-800/50">
+                <div className="w-full h-full flex flex-col items-center justify-center text-neutral-700 bg-white/5/50">
                   <span className="text-6xl mb-2">📦</span>
                   {currentImage && (
                     <p className="text-xs text-neutral-600 text-center px-4">
@@ -241,7 +241,7 @@ export default function AccessoryDetailsSheet({
                             )}
                           </>
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-neutral-800/50">
+                          <div className="w-full h-full flex items-center justify-center bg-white/5/50">
                             <div className="w-8 h-8 border-2 border-dashed border-white/30 rounded flex items-center justify-center">
                               <span className="text-white/30 text-xs">+</span>
                             </div>
@@ -410,7 +410,7 @@ export default function AccessoryDetailsSheet({
             className={`w-full h-12 text-lg font-medium transition-all ${
               accessory.inStock 
                 ? 'bg-red-600 text-white hover:bg-red-700' 
-                : 'bg-neutral-800 text-gray-400 cursor-not-allowed'
+                : 'bg-white/5 text-gray-400 cursor-not-allowed'
             }`}
             onClick={handleAddToCart}
             disabled={!accessory.inStock || isAddingToCart}

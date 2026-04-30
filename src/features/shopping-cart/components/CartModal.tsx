@@ -272,7 +272,7 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
                 </p>
                 <button
                   onClick={handleContinueShopping}
-                  className="px-6 py-2 bg-neutral-800 text-white rounded-lg hover:bg-neutral-700 transition-colors"
+                  className="px-6 py-2 bg-white/5 text-white rounded-lg hover:bg-neutral-700 transition-colors"
                 >
                   Kontynuuj zakupy
                 </button>
@@ -366,7 +366,7 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
                 
                 <button
                   onClick={handleContinueShopping}
-                  className="w-full border border-neutral-600 text-white py-3 px-6 rounded-lg hover:bg-neutral-800 transition-colors"
+                  className="w-full border border-neutral-600 text-white py-3 px-6 rounded-lg hover:bg-white/5 transition-colors"
                 >
                   Kontynuuj zakupy
                 </button>

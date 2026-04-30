@@ -505,7 +505,7 @@ export default function BrandProductsSection({ brandSlug }: BrandProductsSection
                     className="bg-[#111] rounded-xl border border-white/5 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group"
                   >
                     {/* Obraz produktu */}
-                    <div className="relative w-full h-48 bg-neutral-800/50">
+                    <div className="relative w-full h-48 bg-white/5/50">
                       {product.imageSrc ? (
                         <Image
                           src={product.imageSrc}

@@ -117,7 +117,7 @@ export default function DeliveryAndPaymentTermsPage() {
                         <p>81-198 Pogórze</p>
                         <p>NIP: 5871715880</p>
                         <p><strong>Numer rachunku (Alior Bank S.A.):</strong></p>
-                        <p className="text-lg font-mono bg-neutral-800 p-2 rounded text-green-400">78 2490 0005 0000 4530 1376 8507</p>
+                        <p className="text-lg font-mono bg-white/5 p-2 rounded text-green-400">78 2490 0005 0000 4530 1376 8507</p>
                       </div>
                     </div>
                     <p className="text-gray-300 mt-4">

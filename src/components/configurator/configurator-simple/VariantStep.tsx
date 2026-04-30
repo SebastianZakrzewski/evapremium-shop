@@ -85,7 +85,7 @@ export function VariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdo
                 <p className="text-gray-200 text-xs md:text-sm leading-tight line-clamp-2">{variant.description}</p>
               </div>
               {/* Zdjęcie – stała wysokość, zapobiega nachodzeniu na cenę */}
-              <div className="w-full h-[80px] md:h-[96px] flex-shrink-0 mt-1.5 rounded-2xl overflow-hidden bg-neutral-800/40 relative">
+              <div className="w-full h-[80px] md:h-[96px] flex-shrink-0 mt-1.5 rounded-2xl overflow-hidden bg-white/5/40 relative">
                 <div className="absolute inset-0 rounded-2xl overflow-hidden">
                   <Image
                     src={variant.image}
@@ -119,7 +119,7 @@ export function VariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdo
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="flex-1 sm:flex-initial px-4 py-2.5 min-h-[40px] md:min-h-[36px] border-neutral-700 hover:bg-neutral-800 text-xs font-medium transition-all duration-200 active:scale-95"
+          className="flex-1 sm:flex-initial px-4 py-2.5 min-h-[40px] md:min-h-[36px] border-neutral-700 hover:bg-white/5 text-xs font-medium transition-all duration-200 active:scale-95"
         >
           Wstecz
         </Button>

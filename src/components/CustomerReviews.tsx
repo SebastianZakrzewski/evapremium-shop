@@ -131,7 +131,7 @@ export default function CustomerReviews() {
 
               {/* User Info */}
               <div className="relative z-10 flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center text-lg font-bold text-white">
+                <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-lg font-bold text-white">
                   {review.name.charAt(0)}
                 </div>
                 <div>

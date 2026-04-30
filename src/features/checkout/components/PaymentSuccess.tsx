@@ -710,7 +710,7 @@ export function PaymentSuccess() {
                     <h5 className="font-semibold text-white mb-3">Produkty</h5>
                     <div className="space-y-3">
                       {paymentStatus.items.map((item: any, index: number) => (
-                        <div key={item.id || index} className="bg-neutral-800/50 rounded-lg p-3">
+                        <div key={item.id || index} className="bg-white/5/50 rounded-lg p-3">
                           <div className="flex justify-between items-start mb-2">
                             <div className="flex-1">
                               <span className="text-white font-medium">{item.productName || 'Produkt'}</span>

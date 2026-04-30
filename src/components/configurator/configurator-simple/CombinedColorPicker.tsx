@@ -93,7 +93,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious, prev
             </div>
           </div>
           {config.color && (
-            <div className="mt-1.5 p-1.5 bg-neutral-800 rounded border border-neutral-700">
+            <div className="mt-1.5 p-1.5 bg-white/5 rounded border border-neutral-700">
               <div className="flex items-center gap-1.5">
                 <div
                   className="w-4 h-4 rounded border border-neutral-600"
@@ -149,7 +149,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious, prev
             </div>
           </div>
           {config.edgeColor && (
-            <div className="mt-1.5 p-1.5 bg-neutral-800 rounded border border-neutral-700">
+            <div className="mt-1.5 p-1.5 bg-white/5 rounded border border-neutral-700">
               <div className="flex items-center gap-1.5">
                 <div
                   className="w-4 h-4 rounded border border-neutral-600"
