@@ -545,7 +545,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <Car className="w-20 h-20 text-gray-500 opacity-20" />
+                          <Car className="w-20 h-20 text-gray-400 opacity-20" />
                         </div>
                       )}
                     </div>
