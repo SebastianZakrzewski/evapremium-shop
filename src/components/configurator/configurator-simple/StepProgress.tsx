@@ -32,7 +32,7 @@ export function StepProgress({ currentStep, totalSteps, onStepClick, isValid }: 
                   ${isCurrent 
                     ? 'bg-gradient-to-br from-red-600 to-red-700 text-white scale-110 shadow-[0_0_15px_rgba(220,38,38,0.4)] ring-1 ring-red-500/50 z-10' 
                     : isCompleted 
-                    ? 'bg-white/5 text-red-500 border border-red-500/50 hover:bg-neutral-700 hover:scale-105' 
+                    ? 'bg-white/5 text-red-500 border border-red-500/50 hover:bg-white/10 hover:scale-105' 
                     : 'bg-[#111] text-gray-400 border border-white/5'
                   }
                   ${isClickable ? 'cursor-pointer' : 'cursor-not-allowed opacity-80'}

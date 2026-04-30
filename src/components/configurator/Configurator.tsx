@@ -984,7 +984,7 @@ export default function Configurator() {
                     <div className="flex items-center gap-3">
                       <div className="relative w-24 h-24 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
                         {brandsLoading ? (
-                          <div className="w-full h-full bg-neutral-700 animate-pulse rounded"></div>
+                          <div className="w-full h-full bg-white/10 animate-pulse rounded"></div>
                         ) : (
                           <Image
                             src={brands.find(b => b.name.toLowerCase() === selectedCarBrand.toLowerCase())?.logo || "/images/placeholder.png"}
@@ -1342,7 +1342,7 @@ export default function Configurator() {
                     <div className="flex items-center gap-3">
                       <div className="relative w-16 h-16 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
                         {brandsLoading ? (
-                          <div className="w-full h-full bg-neutral-700 animate-pulse rounded"></div>
+                          <div className="w-full h-full bg-white/10 animate-pulse rounded"></div>
                         ) : (
                           <Image
                             src={brands.find(b => b.name.toLowerCase() === selectedCarBrand.toLowerCase())?.logo || "/images/placeholder.png"}
@@ -1469,7 +1469,7 @@ export default function Configurator() {
                 variant="outline"
                 onClick={prevSection}
                 disabled={currentSection === 0}
-                className="flex items-center gap-2 border-neutral-700 text-white hover:bg-white/5 active:bg-neutral-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] md:min-w-auto"
+                className="flex items-center gap-2 border-neutral-700 text-white hover:bg-white/5 active:bg-white/10 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] md:min-w-auto"
               >
                 <ChevronLeft className="h-5 w-5" />
                 <span className="hidden sm:inline text-base">Wstecz</span>

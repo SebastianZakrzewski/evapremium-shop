@@ -441,7 +441,7 @@ export default function Chatbot() {
                   <button
                     type="button"
                     onClick={() => setShowContactForm(false)}
-                    className="px-6 py-3 bg-white/5 hover:bg-neutral-700 text-white rounded-xl text-sm font-medium transition-all duration-200 shadow-lg min-h-[44px]"
+                    className="px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-sm font-medium transition-all duration-200 shadow-lg min-h-[44px]"
                   >
                     Anuluj
                   </button>

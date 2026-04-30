@@ -168,7 +168,7 @@ function MatCartItem({
 
         {/* Obraz produktu */}
         <div className="ml-4">
-          <div className="w-16 h-16 bg-neutral-700 rounded-lg flex items-center justify-center overflow-hidden">
+          <div className="w-16 h-16 bg-white/10 rounded-lg flex items-center justify-center overflow-hidden">
             {item.productImage ? (
               <Image
                 src={item.productImage}
@@ -243,7 +243,7 @@ function MatCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity - 1)}
-            className="h-9 w-9 p-0 border-neutral-600 text-neutral-300 hover:bg-neutral-700 hover:text-white"
+            className="h-9 w-9 p-0 border-neutral-600 text-neutral-300 hover:bg-white/10 hover:text-white"
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -256,7 +256,7 @@ function MatCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity + 1)}
-            className="h-9 w-9 p-0 border-neutral-600 text-neutral-300 hover:bg-neutral-700 hover:text-white"
+            className="h-9 w-9 p-0 border-neutral-600 text-neutral-300 hover:bg-white/10 hover:text-white"
           >
             <Plus className="h-4 w-4" />
           </Button>
@@ -303,7 +303,7 @@ function AccessoryCartItem({
     <div className="flex items-center space-x-4 p-4 border border-neutral-600 rounded-lg bg-white/5/40 backdrop-blur">
       {/* Obraz produktu */}
       <div className="flex-shrink-0">
-        <div className="w-20 h-20 bg-neutral-700 rounded-lg flex items-center justify-center">
+        <div className="w-20 h-20 bg-white/10 rounded-lg flex items-center justify-center">
           {item.productImage ? (
             <Image
               src={item.productImage}
@@ -335,7 +335,7 @@ function AccessoryCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity - 1)}
-            className="h-8 w-8 p-0 border-neutral-600 text-gray-300 hover:bg-neutral-700"
+            className="h-8 w-8 p-0 border-neutral-600 text-gray-300 hover:bg-white/10"
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -348,7 +348,7 @@ function AccessoryCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity + 1)}
-            className="h-8 w-8 p-0 border-neutral-600 text-gray-300 hover:bg-neutral-700"
+            className="h-8 w-8 p-0 border-neutral-600 text-gray-300 hover:bg-white/10"
           >
             <Plus className="h-4 w-4" />
           </Button>

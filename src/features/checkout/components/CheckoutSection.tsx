@@ -834,7 +834,7 @@ export default function CheckoutSection() {
                   </Link>
                 </Button>
                 
-                <Button variant="outline" asChild className="w-full bg-white/5 border-white/5 text-gray-300 hover:bg-neutral-700 hover:text-white">
+                <Button variant="outline" asChild className="w-full bg-white/5 border-white/5 text-gray-300 hover:bg-white/10 hover:text-white">
                   <Link href={`/order/${orderNumber}`}>
                     Zobacz szczegóły zamówienia
                   </Link>
@@ -1320,7 +1320,7 @@ export default function CheckoutSection() {
                     variant="outline"
                     onClick={prevStep}
                     disabled={currentStep === 1}
-                    className="bg-white/5 border-neutral-600 text-gray-300 hover:bg-neutral-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-8 py-4 text-base"
+                    className="bg-white/5 border-neutral-600 text-gray-300 hover:bg-white/10 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-8 py-4 text-base"
                   >
                     <ArrowLeft className="w-5 h-5 mr-3" />
                     Wstecz
@@ -1408,7 +1408,7 @@ export default function CheckoutSection() {
 
                           {/* Obraz produktu */}
                           <div className="ml-2 md:ml-3 flex-shrink-0">
-                            <div className="w-10 h-10 md:w-14 md:h-14 bg-neutral-700 rounded-lg flex items-center justify-center overflow-hidden">
+                            <div className="w-10 h-10 md:w-14 md:h-14 bg-white/10 rounded-lg flex items-center justify-center overflow-hidden">
                               {item.productImage ? (
                                 <img 
                                   src={item.productImage} 
@@ -1528,7 +1528,7 @@ export default function CheckoutSection() {
                     ))}
                   </div>
 
-                  <Separator className="bg-neutral-700 my-2 md:my-3" />
+                  <Separator className="bg-white/10 my-2 md:my-3" />
 
                   {/* Discount Code */}
                   <div className="space-y-1.5 md:space-y-2">
@@ -1619,7 +1619,7 @@ export default function CheckoutSection() {
                   variant="outline"
                   onClick={prevStep}
                   disabled={currentStep === 1}
-                  className="bg-white/5 border-neutral-600 text-gray-300 hover:bg-neutral-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-4 sm:px-8 lg:px-8 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
+                  className="bg-white/5 border-neutral-600 text-gray-300 hover:bg-white/10 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-4 sm:px-8 lg:px-8 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
                 >
                   <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 mr-2 sm:mr-3 lg:mr-3" />
                   Wstecz

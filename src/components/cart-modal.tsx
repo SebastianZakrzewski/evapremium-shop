@@ -270,7 +270,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 </p>
                 <button
                   onClick={handleContinueShopping}
-                  className="px-6 py-2 bg-white/5 text-white rounded-lg hover:bg-neutral-700 transition-colors"
+                  className="px-6 py-2 bg-white/5 text-white rounded-lg hover:bg-white/10 transition-colors"
                 >
                   Kontynuuj zakupy
                 </button>
