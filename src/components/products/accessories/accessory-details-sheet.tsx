@@ -168,7 +168,7 @@ export default function AccessoryDetailsSheet({
                   }}
                 />
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-white/5/50">
+                <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-white/5">
                   <span className="text-6xl mb-2">📦</span>
                   {currentImage && (
                     <p className="text-xs text-gray-400 text-center px-4">
@@ -241,7 +241,7 @@ export default function AccessoryDetailsSheet({
                             )}
                           </>
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-white/5/50">
+                          <div className="w-full h-full flex items-center justify-center bg-white/5">
                             <div className="w-8 h-8 border-2 border-dashed border-white/30 rounded flex items-center justify-center">
                               <span className="text-white/30 text-xs">+</span>
                             </div>

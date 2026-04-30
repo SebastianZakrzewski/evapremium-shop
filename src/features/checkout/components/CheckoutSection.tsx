@@ -822,7 +822,7 @@ export default function CheckoutSection() {
                 Dziękujemy za zakup. Twoje zamówienie zostało przyjęte do realizacji.
               </p>
               
-              <div className="bg-white/5/60 border border-white/5 rounded-lg p-4 mb-6">
+              <div className="bg-white/5 border border-white/5 rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-400 mb-1">Numer zamówienia:</p>
                 <p className="text-xl font-bold text-red-400">{orderNumber}</p>
               </div>
@@ -1573,7 +1573,7 @@ export default function CheckoutSection() {
 
                   {/* Totals */}
                   <div className="space-y-2 md:space-y-3 pt-2 md:pt-3">
-                    <div className="pt-2 md:pt-3 border-t border-white/10 bg-white/5/40 p-3 md:p-4 rounded-lg space-y-1.5 md:space-y-2">
+                    <div className="pt-2 md:pt-3 border-t border-white/10 bg-white/5 p-3 md:p-4 rounded-lg space-y-1.5 md:space-y-2">
                       <div className="flex justify-between items-center text-neutral-300">
                         <span className="text-sm md:text-base">Wartość produktów:</span>
                         <span className="text-sm md:text-base">

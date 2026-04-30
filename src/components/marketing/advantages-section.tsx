@@ -123,7 +123,7 @@ export default function AdvantagesSection() {
                 <div className={`
                   relative h-full bg-[#111]/40 backdrop-blur-md border border-white/5 rounded-xl md:rounded-2xl overflow-hidden
                   transition-all duration-500
-                  ${isHoveredState ? 'bg-white/5/60 border-red-500/30 transform -translate-y-1 md:-translate-y-2 shadow-xl md:shadow-2xl shadow-red-900/20' : 'hover:border-white/10'}
+                  ${isHoveredState ? 'bg-white/5 border-red-500/30 transform -translate-y-1 md:-translate-y-2 shadow-xl md:shadow-2xl shadow-red-900/20' : 'hover:border-white/10'}
                 `}>
                   
                   {/* Image Area */}

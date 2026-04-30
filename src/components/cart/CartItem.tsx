@@ -300,7 +300,7 @@ function AccessoryCartItem({
   onUpdateQuantity: (quantity: number) => void; 
 }) {
   return (
-    <div className="flex items-center space-x-4 p-4 border border-white/10 rounded-lg bg-white/5/40 backdrop-blur">
+    <div className="flex items-center space-x-4 p-4 border border-white/10 rounded-lg bg-white/5 backdrop-blur">
       {/* Obraz produktu */}
       <div className="flex-shrink-0">
         <div className="w-20 h-20 bg-white/10 rounded-lg flex items-center justify-center">

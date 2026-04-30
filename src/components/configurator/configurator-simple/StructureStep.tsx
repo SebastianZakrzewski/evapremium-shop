@@ -52,7 +52,7 @@ export function StructureStep({ config, onUpdate, onNext, onPrevious }: Structur
                 <h3 className="text-xs md:text-sm font-semibold leading-tight truncate">{structure.name}</h3>
                 <p className="text-gray-400 text-[10px] leading-tight line-clamp-2">{structure.description}</p>
               </div>
-              <div className="w-full min-h-[80px] md:min-h-[96px] mt-1.5 rounded-xl overflow-hidden bg-white/5/40 relative">
+              <div className="w-full min-h-[80px] md:min-h-[96px] mt-1.5 rounded-xl overflow-hidden bg-white/5 relative">
                 <Image
                   src={structure.image}
                   alt={structure.name}

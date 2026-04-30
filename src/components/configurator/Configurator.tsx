@@ -1168,7 +1168,7 @@ export default function Configurator() {
                 
                 {/* Info box o wpływie na cenę */}
                 {selectedSetType && (
-                  <div className="p-4 bg-white/5/50 border border-white/10 rounded-lg">
+                  <div className="p-4 bg-white/5 border border-white/10 rounded-lg">
                     <p className="text-base text-gray-400">
                       Wybór rodzaju dywaników wpłynie na końcową cenę zestawu
                     </p>
@@ -1426,7 +1426,7 @@ export default function Configurator() {
                 <p className="text-sm text-white/60">Finalna cena może się różnić w zależności od modelu auta.</p>
                 
                 {/* Szacowany czas dostawy */}
-                <div className="mt-6 p-3 bg-white/5/50 rounded-lg border border-white/10">
+                <div className="mt-6 p-3 bg-white/5 rounded-lg border border-white/10">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <span className="text-sm text-white/80 font-medium">Szacowany czas dostawy</span>

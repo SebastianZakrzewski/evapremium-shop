@@ -337,7 +337,7 @@ function SearchDropdown() {
                                   transition-colors text-left touch-manipulation
                                   ${selectedIndex === flatIndex 
                                     ? 'bg-red-500/20 text-white' 
-                                    : 'active:bg-white/5/50 hover:bg-white/5/50 text-gray-400 hover:text-white'
+                                    : 'active:bg-white/5 hover:bg-white/5 text-gray-400 hover:text-white'
                                   }
                                 `}
                                 role="option"
@@ -373,7 +373,7 @@ function SearchDropdown() {
                                   transition-colors text-left touch-manipulation
                                   ${selectedIndex === flatIndex 
                                     ? 'bg-red-500/20 text-white' 
-                                    : 'active:bg-white/5/50 hover:bg-white/5/50 text-gray-400 hover:text-white'
+                                    : 'active:bg-white/5 hover:bg-white/5 text-gray-400 hover:text-white'
                                   }
                                 `}
                                 role="option"
@@ -414,7 +414,7 @@ function SearchDropdown() {
                                   transition-colors text-left touch-manipulation
                                   ${selectedIndex === flatIndex 
                                     ? 'bg-red-500/20 text-white' 
-                                    : 'active:bg-white/5/50 hover:bg-white/5/50 text-gray-400 hover:text-white'
+                                    : 'active:bg-white/5 hover:bg-white/5 text-gray-400 hover:text-white'
                                   }
                                 `}
                                 role="option"
