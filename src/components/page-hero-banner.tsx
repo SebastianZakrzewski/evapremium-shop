@@ -19,7 +19,7 @@ export default function PageHeroBanner({
   return (
     <div className="relative bg-black border-b border-white/5 py-16 md:py-24 overflow-hidden">
       {/* Gradient background – spójny z Galeria i O nas */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-900/5 opacity-50"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-900/5 opacity-50"></div>
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
 

@@ -30,7 +30,7 @@ export default function AccessoryCard({ accessory, onAddToCart, onView }: Access
       role="button"
       tabIndex={0}
       aria-label={`Zobacz szczegóły produktu ${accessory.name}, cena ${accessory.price.toLocaleString('pl-PL')} PLN`}
-      className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-neutral-950 rounded-xl"
+      className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black rounded-xl"
     >
       <article className="h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1">
         {/* Image Container */}

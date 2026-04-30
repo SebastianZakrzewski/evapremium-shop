@@ -437,7 +437,7 @@ export default function CarModelsSection() {
       {/* Hero Header */}
       <div className="relative bg-black border-b border-white/5 py-16 md:py-24 overflow-hidden">
         {/* Gradient background – spójny z hero (H1 + opis) na Galeria / O nas */}
-        <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-900/5 opacity-50"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-900/5 opacity-50"></div>
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
 
@@ -634,7 +634,7 @@ export default function CarModelsSection() {
                     return (
                       <article
                         key={model.id}
-                        className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-neutral-950 rounded-xl"
+                        className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black rounded-xl"
                       >
                         <div className="h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1">
                           {/* Car Model Image */}

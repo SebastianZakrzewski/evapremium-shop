@@ -78,7 +78,7 @@ export default function GlebokaStrukturaKomorekSection() {
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
                 {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/60 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
               </div>
               
               {/* Subtle glass badge */}
