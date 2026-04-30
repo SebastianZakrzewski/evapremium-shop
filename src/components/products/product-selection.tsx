@@ -30,7 +30,7 @@ export default function ProductSelection() {
 
   if (loading) {
     return (
-      <section id="products" className="bg-neutral-950 py-8 md:py-12 flex items-center justify-center min-h-screen">
+      <section id="products" className="bg-black py-8 md:py-12 flex items-center justify-center min-h-screen">
         <div className="w-full max-w-7xl mx-auto px-4 text-center">
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <Loader2 className="w-12 h-12 text-red-500 animate-spin mb-4" />
@@ -47,7 +47,7 @@ export default function ProductSelection() {
   }
 
   return (
-    <section id="products" className="bg-neutral-950 py-8 md:py-12 flex items-center justify-center min-h-screen">
+    <section id="products" className="bg-black py-8 md:py-12 flex items-center justify-center min-h-screen">
       <div className="w-full max-w-7xl mx-auto px-4">
         {/* Nagłówek sekcji */}
         <div className="text-center mb-6 md:mb-10">

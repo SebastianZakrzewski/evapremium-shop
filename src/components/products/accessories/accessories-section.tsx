@@ -231,7 +231,7 @@ export default function AccessoriesSection() {
 
   if (error) {
     return (
-      <section className="min-h-[60vh] flex items-center justify-center bg-neutral-950">
+      <section className="min-h-[60vh] flex items-center justify-center bg-black">
         <div className="text-center space-y-4">
           <div className="text-red-500 text-xl font-semibold">Wystąpił błąd</div>
           <p className="text-gray-400">{error}</p>
@@ -244,14 +244,14 @@ export default function AccessoriesSection() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white pb-20">
+    <div className="min-h-screen bg-black text-white pb-20">
       {/* Hero Header */}
       <div className="relative bg-[#0a0a0a] border-b border-white/5 py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
         
         <div className="container mx-auto px-4 relative z-10">
-          <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+          <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>
             <span className="text-white">Akcesoria</span>
@@ -345,7 +345,7 @@ export default function AccessoriesSection() {
                   {selectedMainCategories.length > 0 && availableCategories.length > 0 && (
                     <>
                       <div className="pt-2 border-t border-white/10 mt-2">
-                        <div className="text-xs text-gray-500 uppercase tracking-wider mb-2 px-1">
+                        <div className="text-xs text-gray-400 uppercase tracking-wider mb-2 px-1">
                           Podkategorie
                         </div>
                         <div className="space-y-2 pl-4">
@@ -418,7 +418,7 @@ export default function AccessoriesSection() {
                     onChange={handlePriceRangeChange}
                     className="w-full h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-red-600"
                   />
-                  <div className="flex justify-between mt-2 text-xs text-gray-500">
+                  <div className="flex justify-between mt-2 text-xs text-gray-400">
                     <span>0 PLN</span>
                     <span>5000+ PLN</span>
                   </div>

@@ -134,7 +134,7 @@ export default function HeroSection() {
   }, [currentSlide]);
 
   return (
-    <section className="relative min-h-[750px] md:min-h-[550px] h-auto md:h-[70vh] overflow-visible md:overflow-hidden pt-24 md:pt-0 pb-20 md:pb-0 bg-neutral-950">
+    <section className="relative min-h-[750px] md:min-h-[550px] h-auto md:h-[70vh] overflow-visible md:overflow-hidden pt-24 md:pt-0 pb-20 md:pb-0 bg-black">
       {/* Phone number - Mobile only */}
       <div className="md:hidden absolute top-4 left-0 right-0 z-30 px-4">
         <a 
@@ -171,7 +171,7 @@ export default function HeroSection() {
                 <div className="w-full h-full relative rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 min-h-[650px] md:min-h-0">
                   {isImageSlide && slide.image ? (
                     <>
-                      <div className="absolute inset-0 bg-neutral-950">
+                      <div className="absolute inset-0 bg-black">
                         <Image
                           src={slide.image}
                           alt=""

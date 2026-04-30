@@ -45,7 +45,7 @@ export default function AccessoryCard({ accessory, onAddToCart, onView }: Access
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-700">
+            <div className="w-full h-full flex items-center justify-center text-gray-300">
               <span className="text-4xl">📦</span>
             </div>
           )}
@@ -74,7 +74,7 @@ export default function AccessoryCard({ accessory, onAddToCart, onView }: Access
 
           <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between gap-3">
             <div className="flex flex-col">
-              <span className="text-xs text-gray-500">Cena</span>
+              <span className="text-xs text-gray-400">Cena</span>
               <span className="text-xl font-bold text-white">
                 {accessory.price.toLocaleString('pl-PL')} <span className="text-red-500">PLN</span>
               </span>
@@ -92,7 +92,7 @@ export default function AccessoryCard({ accessory, onAddToCart, onView }: Access
                 shrink-0 gap-2 transition-all duration-300
                 ${!accessory.inStock 
                   ? 'opacity-50 cursor-not-allowed bg-gray-800 text-gray-400' 
-                  : 'bg-white text-black hover:bg-red-600 hover:text-white'
+                  : 'bg-red-600 text-white hover:bg-red-700'
                 }
               `}
             >

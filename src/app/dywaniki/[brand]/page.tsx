@@ -25,7 +25,7 @@ export default function BrandProductsPage({
 
   if (isRedirecting) {
     return (
-      <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-white text-xl">Przekierowywanie...</div>
       </div>
     );

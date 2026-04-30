@@ -58,7 +58,7 @@ export default function RoznorodnaKolorystykaSection() {
   }, []);
 
   return (
-    <section id="roznorodna-kolorystyka-section" className="py-20 md:py-24 bg-neutral-950 relative overflow-hidden">
+    <section id="roznorodna-kolorystyka-section" className="py-20 md:py-24 bg-black relative overflow-hidden">
       {/* Gradient line top */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
 
@@ -89,7 +89,7 @@ export default function RoznorodnaKolorystykaSection() {
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-900 text-gray-500 p-6 text-center">
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-900 text-gray-400 p-6 text-center">
                       <Palette className="w-12 h-12 mb-4 opacity-20" />
                       <span>Podgląd dla koloru {selectedColor.name} niedostępny</span>
                     </div>
@@ -100,7 +100,7 @@ export default function RoznorodnaKolorystykaSection() {
                   
                   {/* Label Overlay */}
                   <div className="absolute bottom-6 left-6 z-20">
-                    <div className="px-4 py-2 bg-neutral-950/80 backdrop-blur-md border border-white/10 rounded-xl text-white font-bold text-sm flex items-center gap-2 shadow-lg">
+                    <div className="px-4 py-2 bg-black/80 backdrop-blur-md border border-white/10 rounded-xl text-white font-bold text-sm flex items-center gap-2 shadow-lg">
                       <div className="w-3 h-3 rounded-full border border-white/20" style={{ backgroundColor: selectedColor.hex }}></div>
                       {selectedColor.name.toUpperCase()}
                     </div>
@@ -189,7 +189,7 @@ export default function RoznorodnaKolorystykaSection() {
                     <ArrowRight className="w-5 h-5" />
                   </button>
                 </Link>
-                <p className="text-center sm:text-left text-xs text-gray-500 mt-4 px-2">
+                <p className="text-center sm:text-left text-xs text-gray-400 mt-4 px-2">
                   * Kolory na ekranie mogą nieznacznie różnić się od rzeczywistych.
                 </p>
               </div>

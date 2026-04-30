@@ -226,7 +226,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       
       {/* Modal */}
       <div 
-        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-neutral-950 border-l border-neutral-800 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-black border-l border-neutral-800 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -270,7 +270,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 </p>
                 <button
                   onClick={handleContinueShopping}
-                  className="px-6 py-2 bg-white text-black rounded-lg hover:bg-neutral-200 transition-colors"
+                  className="px-6 py-2 bg-neutral-800 text-white rounded-lg hover:bg-neutral-700 transition-colors"
                 >
                   Kontynuuj zakupy
                 </button>
@@ -293,7 +293,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
 
           {/* Footer - tylko gdy są produkty */}
           {!isLoading && !error && items.length > 0 && (
-            <div className="flex-shrink-0 border-t border-neutral-800 p-6 space-y-4 bg-neutral-950">
+            <div className="flex-shrink-0 border-t border-neutral-800 p-6 space-y-4 bg-black">
               {/* Discount Code Input */}
               <div className="space-y-2">
                 <Label className="text-white text-sm font-medium">Kod rabatowy</Label>

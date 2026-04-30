@@ -45,7 +45,7 @@ export const StepAccordion = React.forwardRef<HTMLDivElement, StepAccordionProps
                 ? 'text-red-400 opacity-100' 
                 : isOpen 
                 ? 'text-red-400 opacity-100' 
-                : 'text-gray-500 opacity-50'
+                : 'text-gray-400 opacity-50'
               }
             `}
           >

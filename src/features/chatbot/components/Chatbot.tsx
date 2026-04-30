@@ -265,7 +265,7 @@ export default function Chatbot() {
       {isOpen && (
         <div 
           ref={chatWindowRef}
-          className={`fixed z-50 bg-neutral-950/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 flex flex-col overflow-hidden transition-all duration-300 pb-safe ${
+          className={`fixed z-50 bg-black/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 flex flex-col overflow-hidden transition-all duration-300 pb-safe ${
             isMobile 
               ? '' 
               : `bottom-24 md:bottom-28 w-full max-w-[calc(100vw-2rem)] sm:w-96 h-[500px] md:h-[500px] max-h-[calc(100vh-150px)] md:max-h-[calc(100vh-200px)] ${isCartOpen ? 'left-4 md:left-6' : 'right-4 md:right-6'}`
@@ -405,7 +405,7 @@ export default function Chatbot() {
                       value={contactData.name}
                       onChange={(e) => handleContactInputChange('name', e.target.value)}
                       placeholder="Imię"
-                      className="w-full pl-12 pr-4 py-3 bg-neutral-950 border border-white/10 text-white placeholder-neutral-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 text-sm transition-all duration-200 min-h-[48px]"
+                      className="w-full pl-12 pr-4 py-3 bg-black border border-white/10 text-white placeholder-neutral-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 text-sm transition-all duration-200 min-h-[48px]"
                       required
                     />
                   </div>
@@ -417,7 +417,7 @@ export default function Chatbot() {
                       value={contactData.phone}
                       onChange={(e) => handleContactInputChange('phone', e.target.value)}
                       placeholder="Numer telefonu"
-                      className="w-full pl-12 pr-4 py-3 bg-neutral-950 border border-white/10 text-white placeholder-neutral-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 text-sm transition-all duration-200 min-h-[48px]"
+                      className="w-full pl-12 pr-4 py-3 bg-black border border-white/10 text-white placeholder-neutral-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 text-sm transition-all duration-200 min-h-[48px]"
                       required
                     />
                   </div>
@@ -460,7 +460,7 @@ export default function Chatbot() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Napisz wiadomość..."
-                className="flex-1 px-4 py-3 bg-neutral-950 border border-white/10 text-white placeholder-neutral-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 text-base md:text-sm transition-all duration-200 min-h-[48px]"
+                className="flex-1 px-4 py-3 bg-black border border-white/10 text-white placeholder-neutral-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 text-base md:text-sm transition-all duration-200 min-h-[48px]"
                 style={{ fontSize: '16px', touchAction: 'manipulation' }}
                 disabled={isTyping}
               />

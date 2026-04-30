@@ -51,7 +51,7 @@ export default function BrandSelectionGrid() {
 
   if (loading) {
     return (
-      <section id="brand-selection" className="bg-neutral-950 py-16 md:py-24 relative overflow-hidden min-h-screen flex items-center justify-center">
+      <section id="brand-selection" className="bg-black py-16 md:py-24 relative overflow-hidden min-h-screen flex items-center justify-center">
         <div className="w-full max-w-7xl mx-auto px-4 text-center relative z-10">
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <Loader2 className="w-12 h-12 text-red-500 animate-spin mb-4" />
@@ -70,7 +70,7 @@ export default function BrandSelectionGrid() {
   return (
     <section 
       id="brand-selection" 
-      className="bg-neutral-950 py-16 md:py-24 relative overflow-hidden min-h-screen"
+      className="bg-black py-16 md:py-24 relative overflow-hidden min-h-screen"
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 relative z-10">
         {/* Input wyszukiwania */}
@@ -124,7 +124,7 @@ export default function BrandSelectionGrid() {
           {searchQuery && filteredBrands.length === 0 && (
             <div className="text-center py-12 animate-fade-in">
               <p className="text-gray-400 text-lg mb-2">Nie znaleziono marek pasujących do wyszukiwania</p>
-              <p className="text-gray-500 text-sm">Spróbuj wpisać inną nazwę marki</p>
+              <p className="text-gray-400 text-sm">Spróbuj wpisać inną nazwę marki</p>
             </div>
           )}
         </div>

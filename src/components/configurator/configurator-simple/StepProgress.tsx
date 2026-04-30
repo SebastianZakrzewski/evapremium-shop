@@ -33,7 +33,7 @@ export function StepProgress({ currentStep, totalSteps, onStepClick, isValid }: 
                     ? 'bg-gradient-to-br from-red-600 to-red-700 text-white scale-110 shadow-[0_0_15px_rgba(220,38,38,0.4)] ring-1 ring-red-500/50 z-10' 
                     : isCompleted 
                     ? 'bg-neutral-800 text-red-500 border border-red-500/50 hover:bg-neutral-700 hover:scale-105' 
-                    : 'bg-neutral-900 text-gray-500 border border-neutral-800'
+                    : 'bg-neutral-900 text-gray-400 border border-neutral-800'
                   }
                   ${isClickable ? 'cursor-pointer' : 'cursor-not-allowed opacity-80'}
                 `}

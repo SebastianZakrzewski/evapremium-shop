@@ -244,7 +244,7 @@ export function SummaryStep({
                 <div className="flex items-center gap-2">
                   {priceBreakdown.discount > 0 ? (
                     <>
-                      <span className="text-gray-500 line-through text-sm">
+                      <span className="text-gray-400 line-through text-sm">
                         {priceBreakdown.basePrice.toFixed(2)} zł
                       </span>
                       <span className="text-white font-medium">
@@ -285,12 +285,12 @@ export function SummaryStep({
                 <div className="flex flex-col items-end gap-0.5">
                   <div className="flex items-baseline gap-2">
                     {priceBreakdown.discount > 0 && (
-                      <span className="text-base text-gray-500 line-through font-medium">
+                      <span className="text-base text-gray-400 line-through font-medium">
                         {(priceBreakdown.basePrice + priceBreakdown.shippingCost + (selectedPodpietka?.price || 0)).toFixed(2)} zł
                       </span>
                     )}
                     <span className="text-3xl font-bold text-white tracking-tight">
-                      {(priceBreakdown.totalPrice + (selectedPodpietka?.price || 0)).toFixed(2)} <span className="text-lg text-gray-500 font-normal">zł</span>
+                      {(priceBreakdown.totalPrice + (selectedPodpietka?.price || 0)).toFixed(2)} <span className="text-lg text-gray-400 font-normal">zł</span>
                     </span>
                   </div>
                   {priceBreakdown.discount > 0 && (
@@ -300,7 +300,7 @@ export function SummaryStep({
                   )}
                 </div>
               </div>
-              <p className="text-xs text-gray-500 text-right">Zawiera podatek VAT</p>
+              <p className="text-xs text-gray-400 text-right">Zawiera podatek VAT</p>
             </div>
           </div>
         </div>

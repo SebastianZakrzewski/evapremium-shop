@@ -36,7 +36,7 @@ export default function PopularBrandsCarousel() {
 
   if (loading) {
     return (
-      <section className="py-20 bg-neutral-950 relative overflow-hidden">
+      <section className="py-20 bg-black relative overflow-hidden">
         <div className="container mx-auto px-4 text-center">
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <Loader2 className="w-12 h-12 text-red-500 animate-spin mb-4" />
@@ -54,7 +54,7 @@ export default function PopularBrandsCarousel() {
 
   if (error && brands.length === 0) {
     return (
-      <section className="py-20 bg-neutral-950 relative overflow-hidden">
+      <section className="py-20 bg-black relative overflow-hidden">
         <div className="container mx-auto px-4 text-center">
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <Car className="w-16 h-16 text-red-500 mb-4" />
@@ -74,7 +74,7 @@ export default function PopularBrandsCarousel() {
   }
 
   return (
-    <section className="py-20 bg-neutral-950 relative overflow-hidden">
+    <section className="py-20 bg-black relative overflow-hidden">
       {/* Tło z gradientem */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
       

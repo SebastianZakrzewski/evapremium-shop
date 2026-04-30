@@ -139,7 +139,7 @@ export default function AccessoryDetailsSheet({
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent 
-        className="w-full sm:max-w-xl bg-neutral-950 border-l border-white/10 text-white p-0 flex flex-col h-full [&>button]:hidden md:[&>button]:block"
+        className="w-full sm:max-w-xl bg-black border-l border-white/10 text-white p-0 flex flex-col h-full [&>button]:hidden md:[&>button]:block"
         aria-labelledby="accessory-details-title"
         aria-describedby="accessory-details-description"
       >
@@ -271,7 +271,7 @@ export default function AccessoryDetailsSheet({
                  {accessory.price.toLocaleString('pl-PL')} <span className="text-red-500">PLN</span>
                </div>
                {accessory.originalPrice && accessory.originalPrice > accessory.price && (
-                  <span className="text-lg text-gray-500 line-through">
+                  <span className="text-lg text-gray-400 line-through">
                     {accessory.originalPrice.toLocaleString('pl-PL')} PLN
                   </span>
                )}
@@ -357,7 +357,7 @@ export default function AccessoryDetailsSheet({
         </div>
 
         {/* Fixed Footer Action */}
-        <div className="shrink-0 p-6 bg-neutral-950/95 backdrop-blur border-t border-white/10 space-y-4">
+        <div className="shrink-0 p-6 bg-black/95 backdrop-blur border-t border-white/10 space-y-4">
           {/* Quantity Selector */}
           {accessory.inStock && (
             <div className="flex items-center justify-center gap-4">
@@ -399,7 +399,7 @@ export default function AccessoryDetailsSheet({
                 </Button>
               </div>
               {accessory.stockQuantity && (
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-400">
                   Dostępne: {accessory.stockQuantity}
                 </span>
               )}
@@ -409,7 +409,7 @@ export default function AccessoryDetailsSheet({
           <Button 
             className={`w-full h-12 text-lg font-medium transition-all ${
               accessory.inStock 
-                ? 'bg-white text-black hover:bg-red-600 hover:text-white' 
+                ? 'bg-red-600 text-white hover:bg-red-700' 
                 : 'bg-gray-800 text-gray-400 cursor-not-allowed'
             }`}
             onClick={handleAddToCart}

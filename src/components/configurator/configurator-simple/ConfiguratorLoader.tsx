@@ -4,7 +4,7 @@ import React from "react";
 
 export function ConfiguratorLoader() {
   return (
-    <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center">
       <div className="text-center space-y-6">
         {/* Spinner */}
         <div className="relative w-16 h-16 mx-auto">

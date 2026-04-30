@@ -56,7 +56,7 @@ export default function QuickSearchBar() {
   return (
     <section
       id="quick-search"
-      className="w-full bg-neutral-950 py-20 md:py-24 relative"
+      className="w-full bg-black py-20 md:py-24 relative"
       role="region"
       aria-label="Wyszukiwarka dywaników - wybierz markę i model samochodu"
     >
@@ -97,7 +97,7 @@ export default function QuickSearchBar() {
                 "
                 disabled={brandsLoading}
               >
-                <option value="" className="bg-neutral-900 text-gray-500">Wybierz...</option>
+                <option value="" className="bg-neutral-900 text-gray-400">Wybierz...</option>
                 {brands.map((brand) => (
                   <option key={brand.id} value={brand.name} className="bg-neutral-900 text-white">
                     {brand.name}
@@ -108,7 +108,7 @@ export default function QuickSearchBar() {
                 {brandsLoading ? (
                   <Loader2 className="w-4 h-4 md:w-5 md:h-5 text-red-500 animate-spin" />
                 ) : (
-                  <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-500 group-hover:text-white transition-colors" />
+                  <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-400 group-hover:text-white transition-colors" />
                 )}
               </div>
             </div>
@@ -135,7 +135,7 @@ export default function QuickSearchBar() {
                   disabled:opacity-50 disabled:cursor-not-allowed
                 "
               >
-                <option value="" className="bg-neutral-900 text-gray-500">
+                <option value="" className="bg-neutral-900 text-gray-400">
                   {!selectedBrand
                     ? "Wybierz markę..."
                     : modelsLoading
@@ -152,7 +152,7 @@ export default function QuickSearchBar() {
                 {modelsLoading ? (
                   <Loader2 className="w-4 h-4 md:w-5 md:h-5 text-red-500 animate-spin" />
                 ) : (
-                  <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-500 group-hover:text-white transition-colors" />
+                  <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-400 group-hover:text-white transition-colors" />
                 )}
               </div>
             </div>

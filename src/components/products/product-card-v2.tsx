@@ -69,7 +69,7 @@ export default function ProductCardV2({ product }: ProductCardV2Props) {
               />
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-700">
+            <div className="w-full h-full flex items-center justify-center text-gray-300">
               <Car className="w-24 h-24 opacity-20" />
             </div>
           )}
@@ -103,7 +103,7 @@ export default function ProductCardV2({ product }: ProductCardV2Props) {
 
           <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between gap-3">
             <div className="flex flex-col">
-              <span className="text-xs text-gray-500">Cena od</span>
+              <span className="text-xs text-gray-400">Cena od</span>
               <span className="text-xl font-bold text-white">
                 {product.price.toLocaleString('pl-PL')} <span className="text-red-500">PLN</span>
               </span>
@@ -111,7 +111,7 @@ export default function ProductCardV2({ product }: ProductCardV2Props) {
             
             <Button
               size="sm"
-              className="bg-white text-black hover:bg-red-600 hover:text-white shrink-0 gap-2 transition-all duration-300"
+              className="bg-red-600 text-white hover:bg-red-700 shrink-0 gap-2 transition-all duration-300"
             >
               <span className="hidden sm:inline">Konfiguruj</span>
               <ChevronRight className="w-4 h-4" />

@@ -101,7 +101,7 @@ export function VariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdo
                 <span className="text-gray-400 text-xs">Cena</span>
                 <div className="flex items-baseline gap-1.5 flex-nowrap">
                   {hasDiscount && (
-                    <span className="text-xs text-gray-500 line-through whitespace-nowrap">
+                    <span className="text-xs text-gray-400 line-through whitespace-nowrap">
                       {oldPrice.toFixed(2)} zł
                     </span>
                   )}

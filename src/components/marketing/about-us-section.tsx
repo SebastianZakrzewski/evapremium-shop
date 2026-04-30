@@ -80,7 +80,7 @@ const values = [
 
 export default function AboutUsSection() {
   return (
-    <div className="min-h-screen bg-neutral-950 relative overflow-hidden py-20 md:py-32">
+    <div className="min-h-screen bg-black relative overflow-hidden py-20 md:py-32">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-red-900/5 blur-[120px] rounded-full" />
@@ -104,7 +104,7 @@ export default function AboutUsSection() {
                   {stat.value}
                 </h3>
                 <p className="text-white font-medium mb-1">{stat.label}</p>
-                <p className="text-sm text-gray-500">{stat.description}</p>
+                <p className="text-sm text-gray-400">{stat.description}</p>
               </div>
             );
           })}
@@ -176,7 +176,7 @@ export default function AboutUsSection() {
               const Icon = val.icon;
               return (
                 <div key={idx} className="p-6 rounded-xl bg-[#111] border border-white/5 hover:border-white/20 transition-all duration-300 group">
-                  <Icon className="w-8 h-8 text-gray-500 group-hover:text-white mb-4 transition-colors" />
+                  <Icon className="w-8 h-8 text-gray-400 group-hover:text-white mb-4 transition-colors" />
                   <h3 className="text-lg font-bold text-white mb-2">{val.title}</h3>
                   <p className="text-gray-400 text-sm leading-relaxed">{val.description}</p>
                 </div>
@@ -199,7 +199,7 @@ export default function AboutUsSection() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="#dywaniki" 
-                className="bg-white text-black hover:bg-gray-200 px-8 py-4 rounded-full font-bold transition-all duration-300 flex items-center justify-center gap-2 group"
+                className="bg-red-600 text-white hover:bg-red-700 px-8 py-4 rounded-full font-bold transition-all duration-300 flex items-center justify-center gap-2 group"
               >
                 Zobacz Ofertę
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

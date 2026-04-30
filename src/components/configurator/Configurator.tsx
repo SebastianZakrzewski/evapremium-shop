@@ -850,14 +850,14 @@ export default function Configurator() {
   }, [selectedSetType, selectedCellType, selectedMat, selectedEdge]);
 
   return (
-    <section className="w-full bg-neutral-950 text-white md:flex md:items-start md:justify-center md:min-h-screen md:overflow-hidden">
+    <section className="w-full bg-black text-white md:flex md:items-start md:justify-center md:min-h-screen md:overflow-hidden">
       <div className="max-w-[1024px] 2xl:max-w-[1280px] mx-auto px-4 sm:px-8 py-6 md:py-[38.4px] lg:py-[51.2px] 2xl:py-[51.2px] md:scale-[0.8] md:origin-top md:w-[125%] md:max-w-[1280px] 2xl:max-w-[1600px]">
         <div className="flex flex-col md:flex-row gap-6 lg:gap-8 2xl:gap-[38.4px]">
           {/* Lewa strona - wizualizacja */}
           <div className="w-full lg:w-[720px] xl:w-[800px] 2xl:w-[880px]">
             <div 
               ref={previewRef}
-              className="relative w-full h-[50vh] md:h-[440px] lg:h-[520px] xl:h-[560px] 2xl:h-[640px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950 cursor-pointer md:cursor-default transition-opacity duration-300 sticky top-20 z-30 border-b md:border-b-0"
+              className="relative w-full h-[50vh] md:h-[440px] lg:h-[520px] xl:h-[560px] 2xl:h-[640px] rounded-xl overflow-hidden border border-neutral-800 bg-black cursor-pointer md:cursor-default transition-opacity duration-300 sticky top-20 z-30 border-b md:border-b-0"
               onClick={() => {
                 if (typeof window !== 'undefined' && window.innerWidth < 768) {
                   setIsVisualizationExpanded(true);
@@ -924,14 +924,14 @@ export default function Configurator() {
           {/* Prawa strona - konfigurator z sekcjami */}
           <div 
             ref={configPanelRef}
-            className="w-full lg:w-[560px] xl:w-[624px] 2xl:w-[720px] bg-neutral-950/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 2xl:p-12 min-h-[400px] sm:min-h-[500px] flex flex-col pb-24 md:pb-24 overflow-x-hidden"
+            className="w-full lg:w-[560px] xl:w-[624px] 2xl:w-[720px] bg-black/60 border border-neutral-800 rounded-2xl p-6 md:p-8 lg:p-10 2xl:p-12 min-h-[400px] sm:min-h-[500px] flex flex-col pb-24 md:pb-24 overflow-x-hidden"
             data-config-panel
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
             {/* Header z progressem - sticky tylko na desktop */}
-            <div ref={headerRef} className="mb-6 md:sticky md:top-0 z-10 bg-neutral-950/60 md:bg-transparent backdrop-blur md:backdrop-blur-none pb-4 md:pb-0 -mx-6 md:mx-0 px-6 md:px-0 pt-safe md:pt-0">
+            <div ref={headerRef} className="mb-6 md:sticky md:top-0 z-10 bg-black/60 md:bg-transparent backdrop-blur md:backdrop-blur-none pb-4 md:pb-0 -mx-6 md:mx-0 px-6 md:px-0 pt-safe md:pt-0">
               <h2 className="hidden md:block text-2xl md:text-3xl font-semibold">
                 {getDynamicTitle()}
               </h2>
@@ -1046,7 +1046,7 @@ export default function Configurator() {
                     ) : (
                       <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
                         <p className="text-gray-400 mb-2">Brak dostępnych modeli</p>
-                        <p className="text-sm text-gray-500">Dla wybranej marki nie ma jeszcze dostępnych modeli</p>
+                        <p className="text-sm text-gray-400">Dla wybranej marki nie ma jeszcze dostępnych modeli</p>
                       </div>
                     )}
                   </div>
@@ -1084,7 +1084,7 @@ export default function Configurator() {
                     ) : (
                       <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center pb-8">
                         <p className="text-gray-400 mb-2">Brak dostępnych typów nadwozia</p>
-                        <p className="text-sm text-gray-500">Dla wybranego modelu nie ma jeszcze dostępnych typów nadwozia</p>
+                        <p className="text-sm text-gray-400">Dla wybranego modelu nie ma jeszcze dostępnych typów nadwozia</p>
                       </div>
                     )}
                   </div>
@@ -1122,7 +1122,7 @@ export default function Configurator() {
                     ) : (
                       <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800 text-center">
                         <p className="text-gray-400 mb-2">Brak dostępnych roczników</p>
-                        <p className="text-sm text-gray-500">Dla wybranego modelu nie ma jeszcze dostępnych roczników</p>
+                        <p className="text-sm text-gray-400">Dla wybranego modelu nie ma jeszcze dostępnych roczników</p>
                       </div>
                     )}
                   </div>
@@ -1131,7 +1131,7 @@ export default function Configurator() {
                 {!selectedCarBrand && (
                   <div className="text-center py-8">
                     <p className="text-gray-400 mb-4">Nie wybrano marki auta</p>
-                    <p className="text-sm text-gray-500">Wróć do sekcji &quot;Popularne Marki Samochodów&quot; i wybierz markę swojego auta</p>
+                    <p className="text-sm text-gray-400">Wróć do sekcji &quot;Popularne Marki Samochodów&quot; i wybierz markę swojego auta</p>
                   </div>
                 )}
               </div>
@@ -1464,7 +1464,7 @@ export default function Configurator() {
 
 
             {/* Navigation buttons */}
-            <div ref={navigationRef} className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800 md:static fixed bottom-0 left-0 right-0 bg-neutral-950/95 backdrop-blur border-t border-neutral-800 p-4 md:p-0 md:bg-transparent md:backdrop-blur-none z-20 pb-safe md:pb-0 shadow-lg md:shadow-none">
+            <div ref={navigationRef} className="flex justify-between items-center mt-6 pt-4 border-t border-neutral-800 md:static fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur border-t border-neutral-800 p-4 md:p-0 md:bg-transparent md:backdrop-blur-none z-20 pb-safe md:pb-0 shadow-lg md:shadow-none">
               <Button
                 variant="outline"
                 onClick={prevSection}
@@ -1515,7 +1515,7 @@ export default function Configurator() {
           className="fixed inset-0 z-50 bg-black flex items-center justify-center p-4"
           onClick={() => setIsVisualizationExpanded(false)}
         >
-          <div className="relative w-full h-full max-w-4xl max-h-[90vh] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
+          <div className="relative w-full h-full max-w-4xl max-h-[90vh] rounded-xl overflow-hidden border border-neutral-800 bg-black">
             <Image
               key={`expanded-${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`}
               src={matImagePath}

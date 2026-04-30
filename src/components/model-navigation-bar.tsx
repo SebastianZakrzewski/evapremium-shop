@@ -18,7 +18,7 @@ export default function ModelNavigationBar({
   }
 
   return (
-    <div className="w-full border-b border-white/10 bg-neutral-950/50 backdrop-blur-sm">
+    <div className="w-full border-b border-white/10 bg-black/50 backdrop-blur-sm">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-center gap-2 overflow-x-auto scrollbar-hide pb-2">
           {/* Przycisk "Wszystkie" */}

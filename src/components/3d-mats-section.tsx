@@ -143,7 +143,7 @@ export default function ThreeDMatsSection() {
   return (
     <section 
       id="3d-mats-section" 
-      className="w-full bg-neutral-950 py-20 md:py-24 relative overflow-hidden"
+      className="w-full bg-black py-20 md:py-24 relative overflow-hidden"
       role="region"
       aria-label="Dywaniki 3D z rantami - szczegóły produktu"
     >
@@ -268,7 +268,7 @@ export default function ThreeDMatsSection() {
                             <ChevronRight className="w-5 h-5 text-red-500 animate-pulse" />
                           )}
                         </div>
-                        <p className={`text-sm leading-relaxed transition-colors duration-300 ${isActive ? 'text-gray-300' : 'text-gray-500 group-hover:text-gray-400'}`}>
+                        <p className={`text-sm leading-relaxed transition-colors duration-300 ${isActive ? 'text-gray-300' : 'text-gray-400 group-hover:text-gray-400'}`}>
                           {benefit.description}
                         </p>
                       </div>

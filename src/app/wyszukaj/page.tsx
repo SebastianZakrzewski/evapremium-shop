@@ -103,7 +103,7 @@ function SearchPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 pt-24 md:pt-28 pb-16">
+    <div className="min-h-screen bg-black pt-24 md:pt-28 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
@@ -139,7 +139,7 @@ function SearchPageContent() {
         {/* Wyniki wyszukiwania */}
         {!debouncedQuery.trim() && (
           <div className="text-center py-16">
-            <Search className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+            <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-400 text-lg">
               Wpisz frazę wyszukiwania, aby znaleźć marki, modele lub produkty
             </p>
@@ -164,7 +164,7 @@ function SearchPageContent() {
             <p className="text-gray-400 text-lg mb-2">
               Nie znaleziono wyników dla &quot;{debouncedQuery}&quot;
             </p>
-            <p className="text-gray-500 text-sm">Spróbuj wpisać inną frazę</p>
+            <p className="text-gray-400 text-sm">Spróbuj wpisać inną frazę</p>
           </div>
         )}
 
@@ -323,7 +323,7 @@ function SearchPageContent() {
 export default function SearchPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-neutral-950 pt-24 md:pt-28 pb-16 flex items-center justify-center">
+      <div className="min-h-screen bg-black pt-24 md:pt-28 pb-16 flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-red-500 animate-spin" />
       </div>
     }>

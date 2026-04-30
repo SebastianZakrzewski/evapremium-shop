@@ -643,7 +643,7 @@ export default function ConfiguratorSimple() {
   const shouldHideDesktopBars = isCartOpen || isOnCheckout || isProductModalOpen;
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white selection:bg-red-500 selection:text-white lg:overflow-hidden">
+    <div className="min-h-screen bg-black text-white selection:bg-red-500 selection:text-white lg:overflow-hidden">
       {/* Progress Bar - Desktop only - REMOVED to save vertical space */}
       {/* 
       {!shouldHideDesktopBars && (
@@ -662,7 +662,7 @@ export default function ConfiguratorSimple() {
 
       {/* Mobile Fixed Header with Product Image and Gallery */}
       {shouldShowStickyPreview && (
-        <div className="lg:hidden fixed top-16 left-0 right-0 z-40 bg-neutral-950/95 backdrop-blur-md border-b border-white/10 shadow-lg">
+        <div className="lg:hidden fixed top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg">
           {/* Main Product Image */}
           {/* Optimal preview size: 30vh (small) -> 33vh (medium) -> 36vh (large)
               Balances product visibility with menu accessibility
@@ -711,7 +711,7 @@ export default function ConfiguratorSimple() {
           </div>
 
           {/* Product Gallery - Sticky under main image, always visible */}
-          <div className="px-4 py-2 bg-neutral-950/95 border-t border-white/10">
+          <div className="px-4 py-2 bg-black/95 border-t border-white/10">
             <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
               <button
                 onClick={(e) => {
@@ -785,7 +785,7 @@ export default function ConfiguratorSimple() {
                   ref={(el) => { stepHeaderRefs.current[1] = el; }}
                   className="flex items-center gap-3 mb-4"
                 >
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(1) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-500 border border-white/10'}`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(1) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-400 border border-white/10'}`}>
                     <span className="text-sm font-bold">1</span>
                   </div>
                   <h2 className="text-xl font-semibold text-white">Wybór samochodu</h2>
@@ -808,7 +808,7 @@ export default function ConfiguratorSimple() {
                   ref={(el) => { stepHeaderRefs.current[2] = el; }}
                   className="flex items-center gap-3 mb-4"
                 >
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(2) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-500 border border-white/10'}`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(2) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-400 border border-white/10'}`}>
                     <span className="text-sm font-bold">2</span>
                   </div>
                   <h2 className="text-xl font-semibold text-white">Typ i wariant zestawu</h2>
@@ -835,7 +835,7 @@ export default function ConfiguratorSimple() {
                   ref={(el) => { stepHeaderRefs.current[3] = el; }}
                   className="flex items-center gap-3 mb-4"
                 >
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(3) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-500 border border-white/10'}`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(3) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-400 border border-white/10'}`}>
                     <span className="text-sm font-bold">3</span>
                   </div>
                   <h2 className="text-xl font-semibold text-white">Struktura i kolory</h2>
@@ -864,7 +864,7 @@ export default function ConfiguratorSimple() {
                   ref={(el) => { stepHeaderRefs.current[4] = el; }}
                   className="flex items-center gap-3 mb-4"
                 >
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(4) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-500 border border-white/10'}`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(4) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-400 border border-white/10'}`}>
                     <span className="text-sm font-bold">4</span>
                   </div>
                   <h2 className="text-xl font-semibold text-white">Dodatki (opcjonalne)</h2>
@@ -889,7 +889,7 @@ export default function ConfiguratorSimple() {
                   ref={(el) => { stepHeaderRefs.current[5] = el; }}
                   className="flex items-center gap-3 mb-4"
                 >
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(5) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-500 border border-white/10'}`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(5) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-400 border border-white/10'}`}>
                     <span className="text-sm font-bold">5</span>
                   </div>
                   <h2 className="text-xl font-semibold text-white">Podsumowanie</h2>
@@ -959,7 +959,7 @@ export default function ConfiguratorSimple() {
               <div className="order-1 bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-4 shadow-xl">
                 <div className="flex flex-col gap-3">
                   {/* Step Indicator - Moved from top bar */}
-                  <div className="flex items-center justify-between text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="flex items-center justify-between text-xs font-medium text-gray-400 uppercase tracking-wider">
                     <span>Konfiguracja</span>
                     <span>Krok {activeStep} z {TOTAL_STEPS_DESKTOP}</span>
                   </div>
@@ -980,7 +980,7 @@ export default function ConfiguratorSimple() {
                         <div className="flex flex-col gap-1">
                           <div className="flex items-baseline gap-2">
                             {priceBreakdown.discount > 0 && (
-                              <span className="text-lg text-gray-500 line-through font-medium">
+                              <span className="text-lg text-gray-400 line-through font-medium">
                                 {(priceBreakdown.basePrice + priceBreakdown.shippingCost).toFixed(2)} zł
                               </span>
                             )}
@@ -995,7 +995,7 @@ export default function ConfiguratorSimple() {
                           )}
                         </div>
                       ) : (
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-400">
                           Wybierz wariant
                         </div>
                       )}
@@ -1024,7 +1024,7 @@ export default function ConfiguratorSimple() {
                   </Button>
                   
                   {/* Additional Info */}
-                  <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+                  <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
                     <span className="flex items-center gap-1.5">
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -1260,7 +1260,7 @@ export default function ConfiguratorSimple() {
       {/* Pokazuje się dopiero po przejściu do sekcji "Typ dywaników" (krok 2) */}
       {/* UKRYTE - Przeniesione do sidebara na desktopie */}
       {false && (activeStep >= 2 && !shouldHideDesktopBars && activeStep !== 7) && (
-        <div className="hidden lg:block fixed bottom-0 left-0 right-0 z-50 bg-neutral-950/95 backdrop-blur-xl border-t border-white/10 shadow-2xl lg:scale-[0.8] lg:origin-bottom lg:w-[125%] lg:left-1/2 lg:-translate-x-1/2">
+        <div className="hidden lg:block fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 shadow-2xl lg:scale-[0.8] lg:origin-bottom lg:w-[125%] lg:left-1/2 lg:-translate-x-1/2">
           {/* Main Content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between gap-6">
@@ -1281,7 +1281,7 @@ export default function ConfiguratorSimple() {
                 </div>
               ) : (
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-400">
                     Wybierz zestaw aby zobaczyć cenę
                   </div>
                 </div>
@@ -1314,7 +1314,7 @@ export default function ConfiguratorSimple() {
 
       {/* Mobile Sticky Bottom Bar with Price and CTA */}
       {shouldShowStickyPreview && !isCartOpen && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-neutral-950/95 backdrop-blur-xl border-t border-white/10 pb-safe shadow-2xl">
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-xl border-t border-white/10 pb-safe shadow-2xl">
           {/* Mini Progress Indicator */}
           <div className="h-1 bg-neutral-800">
             <div
@@ -1333,7 +1333,7 @@ export default function ConfiguratorSimple() {
                   <div className="flex items-baseline gap-1.5 min-w-0">
                     <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0">Cena:</span>
                     {priceBreakdown.discount > 0 && (
-                      <span className="text-sm text-gray-500 line-through flex-shrink-0">
+                      <span className="text-sm text-gray-400 line-through flex-shrink-0">
                         {(priceBreakdown.basePrice + priceBreakdown.shippingCost).toFixed(2)} zł
                       </span>
                     )}
@@ -1349,7 +1349,7 @@ export default function ConfiguratorSimple() {
                 </div>
               ) : (
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-gray-500 truncate">
+                  <div className="text-xs text-gray-400 truncate">
                     Wybierz zestaw aby zobaczyć cenę
                   </div>
                 </div>

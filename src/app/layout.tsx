@@ -191,7 +191,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} bg-neutral-950 min-h-screen`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} bg-black min-h-screen`}>
         <QueryProvider>
           <SessionProvider>
             <TrackingProvider>

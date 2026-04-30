@@ -118,7 +118,7 @@ export default function FAQSection() {
   return (
     <section 
       id="faq-section" 
-      className="py-20 md:py-24 bg-neutral-950 text-white relative overflow-hidden"
+      className="py-20 md:py-24 bg-black text-white relative overflow-hidden"
       role="region"
       aria-label="Najczęściej zadawane pytania - FAQ"
     >
@@ -186,7 +186,7 @@ export default function FAQSection() {
                     {openItems.includes(faq.id) ? (
                       <ChevronUp className="w-5 h-5 text-red-500 transition-transform duration-300" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 text-gray-500 group-hover:text-red-400 transition-transform duration-300" />
+                      <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-red-400 transition-transform duration-300" />
                     )}
                   </div>
                 </button>

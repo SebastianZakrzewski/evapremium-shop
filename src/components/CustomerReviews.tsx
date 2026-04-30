@@ -98,7 +98,7 @@ export default function CustomerReviews() {
   return (
     <section 
       id="opinie" 
-      className="py-20 md:py-24 bg-neutral-950 relative overflow-hidden"
+      className="py-20 md:py-24 bg-black relative overflow-hidden"
       role="region"
       aria-label="Opinie klientów o dywanikach EVA"
     >
@@ -141,14 +141,14 @@ export default function CustomerReviews() {
                       <CheckCircle className="w-4 h-4 text-red-500" aria-label="Zweryfikowany zakup" />
                     )}
                   </div>
-                  <p className="text-xs text-gray-500">{review.location}</p>
+                  <p className="text-xs text-gray-400">{review.location}</p>
                 </div>
               </div>
 
               {/* Rating */}
               <div className="relative z-10 flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className={`w-4 h-4 ${i < review.rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-700'}`} />
+                  <Star key={i} className={`w-4 h-4 ${i < review.rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`} />
                 ))}
               </div>
 
@@ -162,7 +162,7 @@ export default function CustomerReviews() {
 
               {/* Footer */}
               <div className="relative z-10 pt-6 border-t border-white/10 flex items-center justify-between">
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-gray-400">
                   <p className="font-medium text-gray-400 mb-0.5">{review.carModel}</p>
                   <p>{review.purchaseDate}</p>
                 </div>

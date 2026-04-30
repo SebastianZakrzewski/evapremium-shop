@@ -793,7 +793,7 @@ export default function CheckoutSection() {
   // Strona sukcesu
   if (orderSuccess && orderNumber) {
     return (
-      <div className="min-h-screen bg-neutral-950 py-12 relative overflow-hidden">
+      <div className="min-h-screen bg-black py-12 relative overflow-hidden">
         {/* Animowane tło z gradientem - ciemniejszy motyw */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
         
@@ -848,7 +848,7 @@ export default function CheckoutSection() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 py-12 relative overflow-hidden pb-safe">
+    <div className="min-h-screen bg-black py-12 relative overflow-hidden pb-safe">
       {/* Animowane tło z gradientem - ciemniejszy motyw */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
       
@@ -882,7 +882,7 @@ export default function CheckoutSection() {
               <div className={`flex items-center justify-center min-w-[48px] min-h-[48px] w-12 h-12 rounded-full border-2 transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation ${
                 currentStep >= step 
                   ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-500/50' 
-                  : 'border-red-800/50 text-gray-500 bg-black/80 hover:border-red-600/70 hover:bg-red-900/20'
+                  : 'border-red-800/50 text-gray-400 bg-black/80 hover:border-red-600/70 hover:bg-red-900/20'
               }`}>
                 {step}
               </div>

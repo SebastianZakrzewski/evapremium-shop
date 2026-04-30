@@ -371,7 +371,7 @@ export default function CarModelsSection() {
   // Jeśli nie ma wybranej marki, pokaż sekcję wyboru marek
   if (!brandParam) {
     return (
-      <section className="py-8 md:py-12 bg-neutral-950">
+      <section className="py-8 md:py-12 bg-black">
         <div className="container mx-auto px-4">
           {/* Breadcrumbs */}
           <nav className="mb-6" aria-label="Breadcrumb">
@@ -381,7 +381,7 @@ export default function CarModelsSection() {
                   Strona główna
                 </Link>
               </li>
-              <li className="text-gray-600">/</li>
+              <li className="text-gray-400">/</li>
               <li className="text-white font-medium">Modele aut</li>
             </ol>
           </nav>
@@ -433,16 +433,16 @@ export default function CarModelsSection() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white pb-20">
+    <div className="min-h-screen bg-black text-white pb-20">
       {/* Hero Header */}
-      <div className="relative bg-neutral-950 border-b border-white/5 py-16 md:py-24 overflow-hidden">
+      <div className="relative bg-black border-b border-white/5 py-16 md:py-24 overflow-hidden">
         {/* Gradient background – spójny z hero (H1 + opis) na Galeria / O nas */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-neutral-950 to-red-900/5 opacity-50"></div>
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
 
         <div className="container mx-auto px-4 relative z-10">
-          <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+          <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>
             <Link href={basePath} className="hover:text-white transition-colors">
@@ -672,7 +672,7 @@ export default function CarModelsSection() {
 
                             <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between gap-3">
                               <div className="flex flex-col">
-                                <span className="text-xs text-gray-500">Cena od</span>
+                                <span className="text-xs text-gray-400">Cena od</span>
                                 <span className="text-xl font-bold text-white">
                                   150.00 <span className="text-red-500">PLN</span>
                                 </span>
@@ -681,7 +681,7 @@ export default function CarModelsSection() {
                               {/* Przycisk do konfiguratora */}
                               <Link href={configuratorUrl}>
                                 <Button
-                                  className="shrink-0 gap-2 transition-all duration-300 bg-white text-black hover:bg-red-600 hover:text-white"
+                                  className="shrink-0 gap-2 transition-all duration-300 bg-red-600 text-white hover:bg-red-700"
                                   size="sm"
                                 >
                                   <ShoppingCart className="w-4 h-4" aria-hidden="true" />

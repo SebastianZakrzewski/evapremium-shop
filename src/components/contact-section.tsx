@@ -59,7 +59,7 @@ export default function ContactSection() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 relative overflow-hidden py-20 md:py-32">
+    <div className="min-h-screen bg-black relative overflow-hidden py-20 md:py-32">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/3 left-0 w-[600px] h-[600px] bg-red-900/5 blur-[120px] rounded-full" />
@@ -86,9 +86,9 @@ export default function ContactSection() {
                     <div>
                       <p className="text-sm text-gray-400 font-medium mb-1">{info.title}</p>
                       <h4 className="text-lg font-bold text-white group-hover:text-red-500 transition-colors">{info.value}</h4>
-                      <p className="text-xs text-gray-500">{info.subtext}</p>
+                      <p className="text-xs text-gray-400">{info.subtext}</p>
                     </div>
-                    <ArrowRight className="ml-auto w-5 h-5 text-gray-600 group-hover:text-white opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                    <ArrowRight className="ml-auto w-5 h-5 text-gray-400 group-hover:text-white opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                   </a>
                 );
               })}
@@ -141,7 +141,7 @@ export default function ContactSection() {
                     <Input
                       id="firstName"
                       placeholder="Wpisz imię"
-                      className="bg-black/50 border-white/10 text-white placeholder:text-gray-600 focus:border-red-500 focus:ring-red-500/20 h-12"
+                      className="bg-black/50 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 h-12"
                       required
                     />
                   </div>
@@ -151,7 +151,7 @@ export default function ContactSection() {
                       id="email"
                       type="email"
                       placeholder="twoj@email.com"
-                      className="bg-black/50 border-white/10 text-white placeholder:text-gray-600 focus:border-red-500 focus:ring-red-500/20 h-12"
+                      className="bg-black/50 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 h-12"
                       required
                     />
                   </div>
@@ -162,7 +162,7 @@ export default function ContactSection() {
                   <Input
                     id="subject"
                     placeholder="Czego dotyczy wiadomość?"
-                    className="bg-black/50 border-white/10 text-white placeholder:text-gray-600 focus:border-red-500 focus:ring-red-500/20 h-12"
+                    className="bg-black/50 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 h-12"
                     required
                   />
                 </div>
@@ -173,7 +173,7 @@ export default function ContactSection() {
                     id="message"
                     placeholder="Treść wiadomości..."
                     rows={6}
-                    className="bg-black/50 border-white/10 text-white placeholder:text-gray-600 focus:border-red-500 focus:ring-red-500/20 resize-none"
+                    className="bg-black/50 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 resize-none"
                     required
                   />
                 </div>
@@ -185,7 +185,7 @@ export default function ContactSection() {
                     "w-full h-14 text-base font-bold transition-all duration-300",
                     formState === 'success' 
                       ? "bg-green-600 hover:bg-green-700 text-white"
-                      : "bg-white text-black hover:bg-gray-200"
+                      : "bg-red-600 text-white hover:bg-red-700"
                   )}
                 >
                   {formState === 'idle' && (

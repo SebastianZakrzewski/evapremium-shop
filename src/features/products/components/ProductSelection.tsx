@@ -37,7 +37,7 @@ export default function ProductSelection() {
     return (
       <section
         id="products"
-        className="w-full bg-neutral-950 py-20 md:py-24 flex items-center justify-center relative"
+        className="w-full bg-black py-20 md:py-24 flex items-center justify-center relative"
         role="region"
         aria-label="Popularne marki samochodów - ładowanie"
       >
@@ -60,7 +60,7 @@ export default function ProductSelection() {
   return (
     <section
       id="products"
-      className="w-full bg-neutral-950 py-20 md:py-24 relative"
+      className="w-full bg-black py-20 md:py-24 relative"
       role="region"
       aria-label="Popularne marki samochodów - wybierz markę i znajdź dywaniki"
     >
@@ -98,7 +98,7 @@ export default function ProductSelection() {
             className="w-full pl-4 pr-10 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all"
             aria-label="Szukaj marki samochodu"
           />
-          <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
+          <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
         </div>
 
         {/* Karuzela z płynnym przewijaniem - jak galeria produktów */}

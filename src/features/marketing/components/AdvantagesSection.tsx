@@ -74,7 +74,7 @@ export default function AdvantagesSection() {
   return (
     <section
       id="advantages-section"
-      className="w-full bg-neutral-950 py-20 md:py-24 relative overflow-x-hidden overflow-y-visible"
+      className="w-full bg-black py-20 md:py-24 relative overflow-x-hidden overflow-y-visible"
       role="region"
       aria-label="Poznaj nasz produkt - zalety dywaników EVA Premium"
     >

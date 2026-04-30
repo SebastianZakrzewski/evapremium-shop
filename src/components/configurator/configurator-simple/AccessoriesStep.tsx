@@ -121,7 +121,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
                         sizes="(max-width: 768px) 100vw, 50vw"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-600">
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">
                         <span className="text-2xl">📦</span>
                       </div>
                     )}
@@ -144,7 +144,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
                     {/* Dostępne kolory */}
                     {podpietka.availableColors && podpietka.availableColors.length > 0 && (
                       <div className="flex items-center gap-1 mb-1.5">
-                        <span className="text-[10px] text-gray-500">Kolory:</span>
+                        <span className="text-[10px] text-gray-400">Kolory:</span>
                         <div className="flex gap-0.5 flex-wrap">
                           {podpietka.availableColors.slice(0, 5).map((color) => (
                             <div
@@ -165,7 +165,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
                             />
                           ))}
                           {podpietka.availableColors.length > 5 && (
-                            <span className="text-[10px] text-gray-500">+{podpietka.availableColors.length - 5}</span>
+                            <span className="text-[10px] text-gray-400">+{podpietka.availableColors.length - 5}</span>
                           )}
                         </div>
                       </div>

@@ -35,7 +35,7 @@ function DywanikiPageContent() {
 export default function DywanikiPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-white text-xl">Ładowanie...</div>
       </div>
     }>

@@ -5,7 +5,7 @@ import PageHeroBanner from '@/components/page-hero-banner';
 
 export default function GaleriaPage() {
   return (
-    <div className="min-h-screen bg-neutral-950">
+    <div className="min-h-screen bg-black">
       <PageHeroBanner
         breadcrumb="Galeria"
         title="GALERIA"

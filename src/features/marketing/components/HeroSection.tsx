@@ -135,7 +135,7 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative overflow-visible bg-neutral-950 pt-[4.5rem] pb-14 max-sm:pb-10 md:overflow-hidden md:pt-0 md:pb-12"
+      className="relative overflow-visible bg-black pt-[4.5rem] pb-14 max-sm:pb-10 md:overflow-hidden md:pt-0 md:pb-12"
       role="region"
       aria-roledescription="carousel"
       aria-label="Sekcja promocyjna - dywaniki samochodowe"
@@ -180,7 +180,7 @@ export default function HeroSection() {
               >
                 {isImageSlide && slide.image ? (
                   <>
-                    <div className="absolute inset-0 bg-neutral-950">
+                    <div className="absolute inset-0 bg-black">
                       {slide.imageMobile ? (
                         <>
                           <Image
@@ -225,7 +225,7 @@ export default function HeroSection() {
                               handleScrollToSection(slide.ctaOverlay.scrollToSectionId)
                             }}
                             data-testid="hero-promo-cta-button"
-                            className="pointer-events-auto absolute bottom-[8%] left-1/2 flex min-h-11 w-[calc(100%-1rem)] max-w-none -translate-x-1/2 items-center gap-2 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-600 to-red-700 px-3.5 py-3 text-left text-xs font-bold leading-snug text-white shadow-xl shadow-red-900/40 transition-all duration-300 hover:scale-[1.02] hover:from-red-500 hover:to-red-600 hover:shadow-2xl hover:shadow-red-600/25 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950 sm:bottom-[9%] sm:left-[2%] sm:w-auto sm:max-w-[min(92vw,23rem)] sm:min-h-0 sm:translate-x-0 sm:rounded-2xl sm:px-5 sm:py-4 sm:text-sm sm:leading-tight md:hidden"
+                            className="pointer-events-auto absolute bottom-[8%] left-1/2 flex min-h-11 w-[calc(100%-1rem)] max-w-none -translate-x-1/2 items-center gap-2 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-600 to-red-700 px-3.5 py-3 text-left text-xs font-bold leading-snug text-white shadow-xl shadow-red-900/40 transition-all duration-300 hover:scale-[1.02] hover:from-red-500 hover:to-red-600 hover:shadow-2xl hover:shadow-red-600/25 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black sm:bottom-[9%] sm:left-[2%] sm:w-auto sm:max-w-[min(92vw,23rem)] sm:min-h-0 sm:translate-x-0 sm:rounded-2xl sm:px-5 sm:py-4 sm:text-sm sm:leading-tight md:hidden"
                             aria-label={`${slide.ctaOverlay.label} — przewiń do wyboru dywaników`}
                           >
                             <span className="min-w-0 flex-1 leading-tight">{slide.ctaOverlay.label}</span>

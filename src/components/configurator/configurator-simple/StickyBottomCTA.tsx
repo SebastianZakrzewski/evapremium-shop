@@ -148,7 +148,7 @@ export function StickyBottomCTA({
                 <div className="flex items-baseline gap-2">
                   <span className="text-xs text-gray-400">Cena:</span>
                   {priceBreakdown.discount > 0 && (
-                    <span className="text-sm text-gray-500 line-through">
+                    <span className="text-sm text-gray-400 line-through">
                       {(priceBreakdown.basePrice + priceBreakdown.shippingCost).toFixed(2)} zł
                     </span>
                   )}
@@ -192,7 +192,7 @@ export function StickyBottomCTA({
             </div>
           ) : (
             <div className="flex-1 min-w-0">
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-gray-400">
                 Wybierz zestaw aby zobaczyć cenę
               </div>
             </div>

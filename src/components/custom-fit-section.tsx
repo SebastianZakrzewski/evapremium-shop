@@ -37,7 +37,7 @@ export default function CustomFitSection() {
   }, []);
 
   return (
-    <section id="custom-fit-section" className="py-20 md:py-24 bg-neutral-950 relative overflow-hidden">
+    <section id="custom-fit-section" className="py-20 md:py-24 bg-black relative overflow-hidden">
       {/* Gradient line top */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
 
@@ -86,7 +86,7 @@ export default function CustomFitSection() {
                   >
                     <div className={`
                       text-lg font-bold mr-6 w-8 text-right transition-colors duration-300 font-mono
-                      ${activeStep === step.id ? 'text-red-500' : 'text-gray-600'}
+                      ${activeStep === step.id ? 'text-red-500' : 'text-gray-400'}
                     `}>
                       0{step.id}
                     </div>
@@ -97,7 +97,7 @@ export default function CustomFitSection() {
                     </div>
                     <div className={`
                       text-xs uppercase tracking-wider font-medium transition-colors duration-300
-                      ${activeStep === step.id ? 'text-red-400' : 'text-gray-500'}
+                      ${activeStep === step.id ? 'text-red-400' : 'text-gray-400'}
                     `}>
                       {step.day}
                     </div>

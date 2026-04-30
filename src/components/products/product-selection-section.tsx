@@ -308,9 +308,9 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
   // Obsługa stanu ładowania
   if (!brand) {
     return (
-      <section className="py-8 md:py-12 bg-neutral-950">
+      <section className="py-8 md:py-12 bg-black">
         <div className="container mx-auto px-4">
-          <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
+          <div className="min-h-screen bg-black flex items-center justify-center">
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-red-500 animate-spin mx-auto mb-4" />
               <div className="text-white text-xl">Ładowanie...</div>
@@ -323,11 +323,11 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
 
   if (loadingModels || loadingMats) {
     return (
-      <section className="py-8 md:py-12 bg-neutral-950 relative overflow-hidden">
+      <section className="py-8 md:py-12 bg-black relative overflow-hidden">
         {/* Animowane tło */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
         <div className="container mx-auto px-4">
-          <div className="min-h-screen bg-neutral-950 flex items-center justify-center relative z-10">
+          <div className="min-h-screen bg-black flex items-center justify-center relative z-10">
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-red-500 animate-spin mx-auto mb-4" />
               <div className="text-white text-xl">Ładowanie produktów...</div>
@@ -342,9 +342,9 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
   // Ale tylko jeśli nie ładują się dane (nie podczas ładowania)
   if (!loadingModels && !loadingMats && carModels.length === 0 && mats.length === 0) {
     return (
-      <section className="py-8 md:py-12 bg-neutral-950">
+      <section className="py-8 md:py-12 bg-black">
         <div className="container mx-auto px-4">
-          <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
+          <div className="min-h-screen bg-black flex items-center justify-center">
             <div className="text-center max-w-md">
               <div className="text-6xl mb-6">🚗</div>
               <h2 className="text-2xl font-bold text-white mb-4">Brak dostępnych produktów</h2>
@@ -375,14 +375,14 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white pb-20">
+    <div className="min-h-screen bg-black text-white pb-20">
       {/* Hero Header */}
       <div className="relative bg-[#0a0a0a] border-b border-white/5 py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
         
         <div className="container mx-auto px-4 relative z-10">
-          <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+          <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>
             <Link href="/dywaniki" className="hover:text-white transition-colors">Dywaniki</Link>
@@ -537,10 +537,10 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
                 return (
                   <article
                     key={product.id}
-                    className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group"
+                    className="bg-neutral-900 rounded-xl border border-neutral-800 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group"
                   >
                     {/* Obraz produktu */}
-                    <div className="relative w-full h-48 bg-gray-100">
+                    <div className="relative w-full h-48 bg-neutral-800/50">
                       {product.imageSrc ? (
                         <Image
                           src={product.imageSrc}
@@ -557,12 +557,12 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
 
                     {/* Informacje o produkcie */}
                     <div className="p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                      <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2">
                         {product.brand} {product.model}
                         {product.generation && ` (${product.generation})`}
                       </h3>
                       
-                      <div className="text-sm text-gray-600 mb-2">
+                      <div className="text-sm text-gray-400 mb-2">
                         {product.yearFrom && product.yearTo && (
                           <p>{product.yearFrom}-{product.yearTo} rok</p>
                         )}

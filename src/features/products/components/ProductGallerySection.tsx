@@ -326,7 +326,7 @@ const ImageModal = React.memo(({
         </button>
 
         {/* Kontener obrazu */}
-        <div className="relative flex-1 rounded-2xl overflow-hidden bg-neutral-950 shadow-2xl border border-white/10">
+        <div className="relative flex-1 rounded-2xl overflow-hidden bg-black shadow-2xl border border-white/10">
           <Image
             src={selectedImage.src}
             alt={selectedImage.alt}
@@ -339,7 +339,7 @@ const ImageModal = React.memo(({
         </div>
 
         {/* Informacje o produkcie */}
-        <div className="mt-6 bg-neutral-950 border border-white/10 rounded-xl p-6 backdrop-blur-md">
+        <div className="mt-6 bg-black border border-white/10 rounded-xl p-6 backdrop-blur-md">
           <h3 className="text-2xl font-bold text-white mb-2">
             {selectedImage.title}
           </h3>
@@ -422,7 +422,7 @@ export default function ProductGallerySection() {
     <section
       id="product-gallery"
       data-section="product-gallery"
-      className="w-full bg-neutral-950 py-20 md:py-24 relative overflow-hidden"
+      className="w-full bg-black py-20 md:py-24 relative overflow-hidden"
       role="region"
       aria-label="Galeria produktów - zdjęcia dywaników samochodowych EVA Premium"
     >

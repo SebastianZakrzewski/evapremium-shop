@@ -46,7 +46,7 @@ export default function GlebokaStrukturaKomorekSection() {
   return (
     <section 
       id="gleboka-struktura-komorek-section" 
-      className="py-20 md:py-24 bg-neutral-950 relative overflow-hidden"
+      className="py-20 md:py-24 bg-black relative overflow-hidden"
       role="region"
       aria-label="Cechy materiału EVA - struktura komórkowa"
     >
@@ -117,7 +117,7 @@ export default function GlebokaStrukturaKomorekSection() {
             
             {/* Additional info */}
             <div className="pt-4 border-t border-white/10">
-              <p className="text-sm text-gray-500 italic">
+              <p className="text-sm text-gray-400 italic">
                 Materiał EVA (etylen-octan winylu) jest bezpieczny, nietoksyczny i przyjazny dla środowiska.
               </p>
             </div>

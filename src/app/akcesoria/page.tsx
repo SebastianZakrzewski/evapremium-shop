@@ -5,8 +5,8 @@ import AccessoriesSection from "@/components/products/accessories/accessories-se
 
 export default function AkcesoriaPage() {
   return (
-    <div className="min-h-screen bg-neutral-950">
-      <Suspense fallback={<div className="min-h-screen bg-neutral-950 flex items-center justify-center"><div className="text-white text-xl">Ładowanie akcesoriów...</div></div>}>
+    <div className="min-h-screen bg-black">
+      <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center"><div className="text-white text-xl">Ładowanie akcesoriów...</div></div>}>
         <AccessoriesSection />
       </Suspense>
     </div>
