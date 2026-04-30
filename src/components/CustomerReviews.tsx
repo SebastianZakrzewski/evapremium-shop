@@ -112,7 +112,7 @@ export default function CustomerReviews() {
             Opinie naszych <span className="text-red-500">Klientów</span>
           </h2>
           
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Dołącz do ponad <span className="text-white font-semibold">2000+</span> zadowolonych kierowców, którzy wybrali komfort i jakość EVA Premium.
           </p>
         </div>
@@ -148,14 +148,14 @@ export default function CustomerReviews() {
               {/* Rating */}
               <div className="relative z-10 flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className={`w-4 h-4 ${i < review.rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`} />
+                  <Star key={i} className={`w-4 h-4 ${i < review.rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-400'}`} />
                 ))}
               </div>
 
               {/* Content */}
               <div className="relative z-10 mb-6 min-h-[80px]">
                 <Quote className="absolute -top-2 -left-2 w-6 h-6 text-white/10 transform -scale-x-100" />
-                <p className="text-gray-300 leading-relaxed text-sm relative pl-4">
+                <p className="text-gray-400 leading-relaxed text-sm relative pl-4">
                   {review.review}
                 </p>
               </div>

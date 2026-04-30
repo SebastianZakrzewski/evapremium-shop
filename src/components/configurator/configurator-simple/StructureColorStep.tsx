@@ -123,7 +123,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
               <div className="space-y-0.5 sm:space-y-1.5 flex flex-col h-full">
                 <div className="flex-shrink-0">
                   <h4 className="text-[11px] sm:text-base font-semibold mb-0 sm:mb-1 leading-tight">{structure.name}</h4>
-                  <p className="text-gray-300 text-[9px] sm:text-sm leading-tight sm:leading-relaxed">{structure.description}</p>
+                  <p className="text-gray-400 text-[9px] sm:text-sm leading-tight sm:leading-relaxed">{structure.description}</p>
                 </div>
                 <div 
                   className="aspect-video bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] rounded sm:rounded-md overflow-hidden border border-white/10 relative flex-1 min-h-0"

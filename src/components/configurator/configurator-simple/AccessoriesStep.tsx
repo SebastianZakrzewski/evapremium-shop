@@ -75,7 +75,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
               onClick={onNext}
               variant="outline"
               size="sm"
-              className="border-white/10 hover:bg-white/5 hover:text-white text-gray-300 h-7 px-3 text-xs font-medium"
+              className="border-white/10 hover:bg-white/5 hover:text-white text-gray-400 h-7 px-3 text-xs font-medium"
             >
               Pomiń
             </Button>
@@ -205,7 +205,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
                 {config.podpietkaColor && (
                   <p className="text-[10px] text-gray-400 mt-0.5">Kolor: {config.podpietkaColor}</p>
                 )}
-                <p className="text-xs text-gray-300 mt-0.5">
+                <p className="text-xs text-gray-400 mt-0.5">
                   {selectedPodpietka.price.toLocaleString('pl-PL')} PLN
                 </p>
               </div>

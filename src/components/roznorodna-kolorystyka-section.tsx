@@ -68,7 +68,7 @@ export default function RoznorodnaKolorystykaSection() {
           <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight break-words px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
             Kolorystyka <span className="text-red-500">Premium</span>
           </h2>
-          <p className={`text-sm sm:text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
+          <p className={`text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
             Dopasuj kolor dywaników do wnętrza swojego samochodu lub stwórz kontrastowy akcent. Oferujemy szeroką paletę barw, od klasycznej elegancji po żywe, sportowe odcienie.
           </p>
         </div>

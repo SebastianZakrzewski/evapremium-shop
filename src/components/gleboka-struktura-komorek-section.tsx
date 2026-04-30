@@ -59,7 +59,7 @@ export default function GlebokaStrukturaKomorekSection() {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
             Nowoczesny materiał <span className="text-red-500">EVA</span>
           </h2>
-          <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Technologia polimerowa, która zmienia standardy ochrony wnętrza samochodu.
             Lekkość, wytrzymałość i funkcjonalność w jednym materiale.
           </p>
@@ -107,7 +107,7 @@ export default function GlebokaStrukturaKomorekSection() {
                     <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors duration-300">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+                    <p className="text-gray-400 leading-relaxed group-hover:text-gray-400 transition-colors duration-300">
                       {feature.description}
                     </p>
                   </div>

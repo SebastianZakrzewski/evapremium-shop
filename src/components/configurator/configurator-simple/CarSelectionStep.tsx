@@ -121,7 +121,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
     <div className="space-y-6">
       {/* Marka */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-400 mb-2">
           Marka *
         </label>
         <div className="relative">
@@ -150,7 +150,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
 
       {/* Model */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-400 mb-2">
           Model *
         </label>
         <div className="relative">
@@ -181,7 +181,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
 
       {/* Rok produkcji */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-400 mb-2">
           Rok produkcji *
         </label>
         <div className="relative">
@@ -215,7 +215,7 @@ export function CarSelectionStep({ config, onUpdate, onNext }: CarSelectionStepP
 
       {/* Typ nadwozia */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-400 mb-2">
           Typ nadwozia *
         </label>
         <div className="relative">

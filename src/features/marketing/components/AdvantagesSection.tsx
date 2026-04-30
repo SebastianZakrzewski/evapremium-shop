@@ -87,7 +87,7 @@ export default function AdvantagesSection() {
           <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 md:mb-6 leading-tight break-words px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
             Poznaj nasz <span className="text-red-500">produkt</span>
           </h2>
-          <p className={`text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
+          <p className={`text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
             Tworzymy dywaniki samochodowe, które łączą w sobie bezkompromisową jakość, nowoczesny design i maksymalną funkcjonalność. Odkryj unikalne rozwiązania, które podniosą standard Twojej codziennej jazdy.
           </p>
         </div>
@@ -149,7 +149,7 @@ export default function AdvantagesSection() {
                       `}>
                         {item.title}
                       </h3>
-                      <p className="text-sm text-gray-300 leading-relaxed mb-4">
+                      <p className="text-sm text-gray-400 leading-relaxed mb-4">
                         {item.description}
                       </p>
                     </div>

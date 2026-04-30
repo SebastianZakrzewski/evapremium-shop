@@ -131,7 +131,7 @@ export default function FAQSection() {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
             Najczęściej zadawane <span className="text-red-500">pytania</span>
           </h2>
-          <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Znajdź odpowiedzi na najważniejsze pytania dotyczące naszych dywaników samochodowych.
           </p>
         </div>
@@ -199,7 +199,7 @@ export default function FAQSection() {
                 >
                   <div className="px-6 pb-6 pt-0">
                     <div className="border-t border-white/10 pt-4">
-                      <p className="text-gray-300 leading-relaxed text-sm md:text-base">
+                      <p className="text-gray-400 leading-relaxed text-sm md:text-base">
                         {faq.answer}
                       </p>
                     </div>
@@ -216,7 +216,7 @@ export default function FAQSection() {
             <h3 className="text-2xl font-bold text-white mb-4">
               Nie znalazłeś odpowiedzi na swoje pytanie?
             </h3>
-            <p className="text-gray-300 mb-8">
+            <p className="text-gray-400 mb-8">
               Skontaktuj się z naszym zespołem - chętnie pomożemy!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

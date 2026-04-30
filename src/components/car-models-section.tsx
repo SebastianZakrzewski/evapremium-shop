@@ -391,7 +391,7 @@ export default function CarModelsSection() {
             <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
               WYBIERZ MARKĘ SAMOCHODU
             </h1>
-            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
               Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
             </p>
             <div className="mt-6 text-xs md:text-sm text-gray-400 px-4">
@@ -545,7 +545,7 @@ export default function CarModelsSection() {
                         />
                         <Label
                           htmlFor={`bodyType-${key}`}
-                          className="text-gray-300 group-hover:text-white cursor-pointer transition-colors font-medium"
+                          className="text-gray-400 group-hover:text-white cursor-pointer transition-colors font-medium"
                         >
                           {label}
                         </Label>
@@ -576,7 +576,7 @@ export default function CarModelsSection() {
                         />
                         <Label
                           htmlFor={`generation-${generation}`}
-                          className="text-gray-300 group-hover:text-white cursor-pointer transition-colors"
+                          className="text-gray-400 group-hover:text-white cursor-pointer transition-colors"
                         >
                           {generation}
                         </Label>

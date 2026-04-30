@@ -44,7 +44,7 @@ export function MatTypeStep({ config, onUpdate, onNext, onPrevious }: MatTypeSte
           >
             <div>
               <h3 className="text-base md:text-lg font-semibold mb-1 leading-tight">{type.name}</h3>
-              <p className="text-gray-300 text-xs leading-relaxed">{type.description}</p>
+              <p className="text-gray-400 text-xs leading-relaxed">{type.description}</p>
             </div>
           </Card>
         ))}

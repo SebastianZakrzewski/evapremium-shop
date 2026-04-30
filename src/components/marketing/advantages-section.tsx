@@ -96,7 +96,7 @@ export default function AdvantagesSection() {
           <h1 className={`text-4xl md:text-6xl font-bold text-white mb-6 bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent leading-tight transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
             POZNAJ NASZ PRODUKT
           </h1>
-          <h2 className={`text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
+          <h2 className={`text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
             Tworzymy dywaniki samochodowe, które łączą w sobie bezkompromisową jakość, nowoczesny design i maksymalną funkcjonalność. Odkryj unikalne rozwiązania, które podniosą standard Twojej codziennej jazdy.
           </h2>
         </div>

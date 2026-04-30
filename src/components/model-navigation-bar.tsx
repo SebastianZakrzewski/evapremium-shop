@@ -28,7 +28,7 @@ export default function ModelNavigationBar({
               "shrink-0 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 whitespace-nowrap",
               selectedModel === null
                 ? "bg-red-600 text-white shadow-lg shadow-red-900/30 border border-red-700"
-                : "bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white border border-white/10"
+                : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10"
             )}
           >
             Wszystkie
@@ -45,7 +45,7 @@ export default function ModelNavigationBar({
                   "shrink-0 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 whitespace-nowrap relative",
                   isSelected
                     ? "bg-red-600 text-white shadow-lg shadow-red-900/30 border border-red-700"
-                    : "bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white border border-white/10"
+                    : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10"
                 )}
               >
                 {model}

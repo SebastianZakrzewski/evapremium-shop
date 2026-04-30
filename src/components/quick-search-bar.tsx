@@ -68,7 +68,7 @@ export default function QuickSearchBar() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 md:mb-6 leading-tight break-words px-2">
             Dobierz dywaniki w <span className="text-red-500">15 sekund</span>
           </h2>
-          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed px-2">
+          <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed px-2">
             Wybierz markę i model, a my dopasujemy idealne dywaniki.
           </p>
         </div>

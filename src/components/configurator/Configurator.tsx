@@ -980,7 +980,7 @@ export default function Configurator() {
                 {/* Wyświetl wybraną markę */}
                 {selectedCarBrand && (
                   <div className="mb-6 p-4 bg-[#111] rounded-lg border border-white/5">
-                    <h3 className="text-base font-medium mb-2 text-gray-300">Wybrana marka</h3>
+                    <h3 className="text-base font-medium mb-2 text-gray-400">Wybrana marka</h3>
                     <div className="flex items-center gap-3">
                       <div className="relative w-24 h-24 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-white/10">
                         {brandsLoading ? (
@@ -1016,7 +1016,7 @@ export default function Configurator() {
 
                 {selectedCarBrand && (
                   <div>
-                    <h3 className="text-base font-medium mb-3 text-gray-300">Wybierz model</h3>
+                    <h3 className="text-base font-medium mb-3 text-gray-400">Wybierz model</h3>
                     {loadingModels ? (
                       <div className="text-center py-8 text-gray-400">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
@@ -1054,7 +1054,7 @@ export default function Configurator() {
 
                 {selectedCarModel && (
                   <div className="mb-2 pb-2">
-                    <h3 className="text-base font-medium mb-3 text-gray-300">Wybierz typ nadwozia</h3>
+                    <h3 className="text-base font-medium mb-3 text-gray-400">Wybierz typ nadwozia</h3>
                     {loadingBodyTypes ? (
                       <div className="text-center py-8 text-gray-400">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
@@ -1092,7 +1092,7 @@ export default function Configurator() {
 
                 {selectedCarModel && selectedBodyType && (
                   <div className="mb-8 pb-8">
-                    <h3 className="text-base font-medium mb-3 text-gray-300">Wybierz rocznik</h3>
+                    <h3 className="text-base font-medium mb-3 text-gray-400">Wybierz rocznik</h3>
                     {loadingYears ? (
                       <div className="text-center py-8 text-gray-400">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-2"></div>
@@ -1169,7 +1169,7 @@ export default function Configurator() {
                 {/* Info box o wpływie na cenę */}
                 {selectedSetType && (
                   <div className="p-4 bg-white/5/50 border border-white/10 rounded-lg">
-                    <p className="text-base text-gray-300">
+                    <p className="text-base text-gray-400">
                       Wybór rodzaju dywaników wpłynie na końcową cenę zestawu
                     </p>
                   </div>
@@ -1337,7 +1337,7 @@ export default function Configurator() {
               <div ref={(el) => { sectionRefs.current[6] = el; }} className="flex-1 space-y-6 overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-180px)] md:max-h-none" style={{ scrollBehavior: 'smooth' }}>
                 {/* Wybrane auto */}
                 <div className="p-4 bg-[#111] rounded-lg border border-white/5">
-                  <h3 className="text-base font-medium mb-3 text-gray-300">Wybrane auto</h3>
+                  <h3 className="text-base font-medium mb-3 text-gray-400">Wybrane auto</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
                       <div className="relative w-16 h-16 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-white/10">

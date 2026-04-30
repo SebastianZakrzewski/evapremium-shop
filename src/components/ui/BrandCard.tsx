@@ -93,7 +93,7 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
         {/* Opis marki */}
         {brand.description && (
           <p className={`
-            text-center text-sm md:text-base text-gray-300/90 mb-4
+            text-center text-sm md:text-base text-gray-400/90 mb-4
             max-w-[200px] line-clamp-2
             opacity-0 group-hover:opacity-100 transition-all duration-500 delay-75
             transform translate-y-4 group-hover:translate-y-0

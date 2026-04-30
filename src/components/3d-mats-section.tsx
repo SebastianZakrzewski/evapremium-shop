@@ -156,7 +156,7 @@ export default function ThreeDMatsSection() {
           <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 md:mb-6 leading-tight break-words px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
             Dywaniki 3D z <span className="text-red-500">rantami</span>
           </h2>
-          <p className={`text-sm sm:text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
+          <p className={`text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
             Odkryj nowy wymiar komfortu i ochrony swojego auta! Nasze dywaniki 3D to połączenie nowoczesnej technologii, prestiżowego wyglądu i maksymalnej funkcjonalności.
           </p>
         </div>
@@ -194,7 +194,7 @@ export default function ThreeDMatsSection() {
                 <h3 className="text-2xl font-bold text-white mb-4 transition-all duration-500">
                   {mainTitle}
                 </h3>
-                <p className="text-gray-300 leading-relaxed transition-all duration-500">
+                <p className="text-gray-400 leading-relaxed transition-all duration-500">
                   {mainDescription}
                 </p>
                 
@@ -224,7 +224,7 @@ export default function ThreeDMatsSection() {
               <h3 className="text-xl font-bold text-white mb-3">
                 {mainTitle}
               </h3>
-              <p className="text-sm text-gray-300 leading-relaxed">
+              <p className="text-sm text-gray-400 leading-relaxed">
                 {mainDescription}
               </p>
             </div>
@@ -268,7 +268,7 @@ export default function ThreeDMatsSection() {
                             <ChevronRight className="w-5 h-5 text-red-500 animate-pulse" />
                           )}
                         </div>
-                        <p className={`text-sm leading-relaxed transition-colors duration-300 ${isActive ? 'text-gray-300' : 'text-gray-400 group-hover:text-gray-400'}`}>
+                        <p className={`text-sm leading-relaxed transition-colors duration-300 ${isActive ? 'text-gray-400' : 'text-gray-400 group-hover:text-gray-400'}`}>
                           {benefit.description}
                         </p>
                       </div>

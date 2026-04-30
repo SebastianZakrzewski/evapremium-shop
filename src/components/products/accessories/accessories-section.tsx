@@ -334,7 +334,7 @@ export default function AccessoriesSection() {
                         />
                         <Label 
                           htmlFor={`category-${category.name}`}
-                          className="text-gray-300 group-hover:text-white cursor-pointer transition-colors font-medium"
+                          className="text-gray-400 group-hover:text-white cursor-pointer transition-colors font-medium"
                         >
                           {category.name}
                         </Label>
@@ -361,7 +361,7 @@ export default function AccessoriesSection() {
                               />
                               <Label 
                                 htmlFor={`subcategory-${category}`}
-                                className="text-gray-400 group-hover:text-gray-300 cursor-pointer transition-colors text-sm"
+                                className="text-gray-400 group-hover:text-gray-400 cursor-pointer transition-colors text-sm"
                               >
                                 {category}
                               </Label>
@@ -387,7 +387,7 @@ export default function AccessoriesSection() {
                           />
                           <Label 
                             htmlFor={`category-${category}`}
-                            className="text-gray-300 group-hover:text-white cursor-pointer transition-colors"
+                            className="text-gray-400 group-hover:text-white cursor-pointer transition-colors"
                           >
                             {category}
                           </Label>
@@ -439,7 +439,7 @@ export default function AccessoriesSection() {
                   />
                   <Label 
                     htmlFor="inStock"
-                    className="text-gray-300 group-hover:text-white cursor-pointer transition-colors"
+                    className="text-gray-400 group-hover:text-white cursor-pointer transition-colors"
                   >
                     Tylko dostępne produkty
                   </Label>

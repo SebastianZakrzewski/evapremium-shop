@@ -313,7 +313,7 @@ function AccessoryCartItem({
               className="rounded-lg object-cover"
             />
           ) : (
-            <div className="text-gray-300 text-xs text-center">
+            <div className="text-gray-400 text-xs text-center">
               Akcesorium
             </div>
           )}
@@ -335,7 +335,7 @@ function AccessoryCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity - 1)}
-            className="h-8 w-8 p-0 border-white/10 text-gray-300 hover:bg-white/10"
+            className="h-8 w-8 p-0 border-white/10 text-gray-400 hover:bg-white/10"
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -348,7 +348,7 @@ function AccessoryCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity + 1)}
-            className="h-8 w-8 p-0 border-white/10 text-gray-300 hover:bg-white/10"
+            className="h-8 w-8 p-0 border-white/10 text-gray-400 hover:bg-white/10"
           >
             <Plus className="h-4 w-4" />
           </Button>

@@ -70,7 +70,7 @@ function ProductCardV2({ product }: ProductCardV2Props) {
               />
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-300">
+            <div className="w-full h-full flex items-center justify-center text-gray-400">
               <Car className="w-24 h-24 opacity-20" />
             </div>
           )}

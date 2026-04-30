@@ -134,7 +134,7 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
           {brand.name}
         </h3>
         {brand.description && (
-          <p className="text-gray-300 text-xs text-center mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+          <p className="text-gray-400 text-xs text-center mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
             {brand.description}
           </p>
         )}

@@ -50,7 +50,7 @@ export function StructureStep({ config, onUpdate, onNext, onPrevious }: Structur
             >
               <div className="h-[44px] md:h-[48px] flex-shrink-0 flex flex-col justify-center min-h-0">
                 <h3 className="text-xs md:text-sm font-semibold leading-tight truncate">{structure.name}</h3>
-                <p className="text-gray-300 text-[10px] leading-tight line-clamp-2">{structure.description}</p>
+                <p className="text-gray-400 text-[10px] leading-tight line-clamp-2">{structure.description}</p>
               </div>
               <div className="w-full min-h-[80px] md:min-h-[96px] mt-1.5 rounded-xl overflow-hidden bg-white/5/40 relative">
                 <Image

@@ -50,7 +50,7 @@ export default function CustomFitSection() {
           <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight break-words px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '200ms' : '0ms'}}>
             Szyte na miarę do <span className="text-red-500">Twojego auta</span>
           </h2>
-          <p className={`text-sm sm:text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
+          <p className={`text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
             Każdy dywanik jest precyzyjnie dopasowany do konkretnego modelu samochodu z dokładnością do milimetra. Nasz proces produkcyjny gwarantuje idealne pokrycie podłogi i perfekcyjne dopasowanie.
           </p>
         </div>
@@ -91,7 +91,7 @@ export default function CustomFitSection() {
                       0{step.id}
                     </div>
                     <div className="flex-1">
-                      <h4 className={`font-semibold transition-colors duration-300 ${activeStep === step.id ? 'text-white' : 'text-gray-300'}`}>
+                      <h4 className={`font-semibold transition-colors duration-300 ${activeStep === step.id ? 'text-white' : 'text-gray-400'}`}>
                         {step.title}
                       </h4>
                     </div>

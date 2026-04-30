@@ -468,7 +468,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
                       />
                       <Label
                         htmlFor={`bodyType-${key}`}
-                        className="text-gray-300 group-hover:text-white cursor-pointer transition-colors font-medium"
+                        className="text-gray-400 group-hover:text-white cursor-pointer transition-colors font-medium"
                       >
                         {label} ({count})
                       </Label>
@@ -495,7 +495,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
                       />
                       <Label
                         htmlFor={`yearRange-${range}`}
-                        className="text-gray-300 group-hover:text-white cursor-pointer transition-colors"
+                        className="text-gray-400 group-hover:text-white cursor-pointer transition-colors"
                       >
                         {range} ({count})
                       </Label>

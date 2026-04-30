@@ -302,7 +302,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                     value={discountCode}
                     onChange={(e) => handleDiscountCodeChange(e.target.value)}
                     placeholder=""
-                    className={`min-h-[40px] h-10 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm ${
+                    className={`min-h-[40px] h-10 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm ${
                       discountError ? 'border-red-500' : discountApplied ? 'border-green-500' : ''
                     }`}
                     disabled={discountApplied || isDiscountFromCheckout}

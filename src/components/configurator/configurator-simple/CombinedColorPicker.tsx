@@ -56,7 +56,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious, prev
       {/* Kolor dywaników */}
       <div className="space-y-1.5">
         <div>
-          <h4 className="text-[10px] font-semibold mb-1 text-gray-300">Kolor dywaników</h4>
+          <h4 className="text-[10px] font-semibold mb-1 text-gray-400">Kolor dywaników</h4>
           {/* Horizontal Scroll on Mobile, Grid on Desktop */}
           <div className="overflow-x-auto scrollbar-hide pb-2 md:pb-0">
             <div className="flex md:grid md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-2 md:gap-1 min-w-max md:min-w-0">
@@ -112,7 +112,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious, prev
       {/* Kolor obszycia */}
       <div className="space-y-1.5">
         <div>
-          <h4 className="text-[10px] font-semibold mb-1 text-gray-300">Kolor obszycia</h4>
+          <h4 className="text-[10px] font-semibold mb-1 text-gray-400">Kolor obszycia</h4>
           {/* Horizontal Scroll on Mobile, Grid on Desktop */}
           <div className="overflow-x-auto scrollbar-hide pb-2 md:pb-0">
             <div className="flex md:grid md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-2 md:gap-1 min-w-max md:min-w-0">

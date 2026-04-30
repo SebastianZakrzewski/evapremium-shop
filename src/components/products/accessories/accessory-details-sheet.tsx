@@ -298,7 +298,7 @@ export default function AccessoryDetailsSheet({
             <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Opis produktu</h4>
             <SheetDescription 
               id="accessory-details-description"
-              className="text-base text-gray-300 leading-relaxed"
+              className="text-base text-gray-400 leading-relaxed"
             >
               {accessory.description || "Brak opisu produktu."}
             </SheetDescription>
@@ -322,7 +322,7 @@ export default function AccessoryDetailsSheet({
                         px-4 py-2 rounded-lg border-2 transition-all text-sm font-medium
                         ${selectedColor === color
                           ? 'border-red-500 bg-red-500/10 text-white'
-                          : 'border-white/20 hover:border-white/40 text-gray-300'
+                          : 'border-white/20 hover:border-white/40 text-gray-400'
                         }
                       `}
                       aria-label={`Wybierz kolor ${color}`}
@@ -343,7 +343,7 @@ export default function AccessoryDetailsSheet({
                  <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Cechy produktu</h4>
                  <ul className="grid grid-cols-1 gap-3">
                    {accessory.features.map((feature, index) => (
-                     <li key={index} className="flex items-start gap-3 text-gray-300 min-w-0">
+                     <li key={index} className="flex items-start gap-3 text-gray-400 min-w-0">
                        <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
                        <span className="flex-1 break-words min-w-0 pr-2">{feature}</span>
                      </li>

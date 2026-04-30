@@ -58,7 +58,7 @@ export default function BrandSelectionGrid() {
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
               Wybierz Markę Samochodu
             </h2>
-            <p className="text-gray-300 text-xl">
+            <p className="text-gray-400 text-xl">
               Ładowanie dostępnych marek...
             </p>
           </div>

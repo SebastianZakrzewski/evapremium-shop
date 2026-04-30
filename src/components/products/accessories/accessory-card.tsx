@@ -45,7 +45,7 @@ export default function AccessoryCard({ accessory, onAddToCart, onView }: Access
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-300">
+            <div className="w-full h-full flex items-center justify-center text-gray-400">
               <span className="text-4xl">📦</span>
             </div>
           )}

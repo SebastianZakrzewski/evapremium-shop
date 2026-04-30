@@ -173,11 +173,11 @@ export function SummaryStep({
                 <div className="flex gap-3 mt-2">
                   <div className="flex items-center gap-2 bg-black/20 px-2 py-1 rounded-md border border-white/5">
                     <div className="w-3 h-3 rounded-full border border-white/20" style={{ backgroundColor: getColorInfo(config.color).color }} />
-                    <span className="text-xs text-gray-300">{getColorInfo(config.color).name}</span>
+                    <span className="text-xs text-gray-400">{getColorInfo(config.color).name}</span>
                   </div>
                   <div className="flex items-center gap-2 bg-black/20 px-2 py-1 rounded-md border border-white/5">
                     <div className="w-3 h-3 rounded-full border border-white/20" style={{ backgroundColor: getColorInfo(config.edgeColor).color }} />
-                    <span className="text-xs text-gray-300">{getColorInfo(config.edgeColor).name}</span>
+                    <span className="text-xs text-gray-400">{getColorInfo(config.edgeColor).name}</span>
                   </div>
                 </div>
               </div>
@@ -217,7 +217,7 @@ export function SummaryStep({
                       {config.podpietkaColor && (
                         <p className="text-xs text-gray-400 mt-1">Kolor: {config.podpietkaColor}</p>
                       )}
-                      <p className="text-sm text-gray-300 mt-1">
+                      <p className="text-sm text-gray-400 mt-1">
                         {selectedPodpietka.price.toLocaleString('pl-PL')} PLN
                       </p>
                     </div>
@@ -265,7 +265,7 @@ export function SummaryStep({
               )}
               
               {selectedPodpietka && (
-                <div className="flex justify-between text-gray-300 bg-white/5 px-2 py-1 rounded">
+                <div className="flex justify-between text-gray-400 bg-white/5 px-2 py-1 rounded">
                   <span className="text-sm">Podpiętka</span>
                   <span className="text-sm font-medium">{selectedPodpietka.price.toFixed(2)} zł</span>
                 </div>
@@ -281,7 +281,7 @@ export function SummaryStep({
 
             <div className="pt-6 mt-6 border-t border-white/10 relative z-10">
               <div className="flex justify-between items-end mb-1">
-                <span className="text-gray-300 font-medium">Do zapłaty</span>
+                <span className="text-gray-400 font-medium">Do zapłaty</span>
                 <div className="flex flex-col items-end gap-0.5">
                   <div className="flex items-baseline gap-2">
                     {priceBreakdown.discount > 0 && (

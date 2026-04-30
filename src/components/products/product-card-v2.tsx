@@ -69,7 +69,7 @@ export default function ProductCardV2({ product }: ProductCardV2Props) {
               />
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-300">
+            <div className="w-full h-full flex items-center justify-center text-gray-400">
               <Car className="w-20 h-20 opacity-20" />
             </div>
           )}

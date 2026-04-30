@@ -43,7 +43,7 @@ export default function PopularBrandsCarousel() {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Popularne Marki Samochodów
             </h2>
-            <p className="text-gray-300 text-lg">
+            <p className="text-gray-400 text-lg">
               Ładowanie dostępnych marek...
             </p>
           </div>
@@ -64,7 +64,7 @@ export default function PopularBrandsCarousel() {
             <p className="text-red-400 text-lg mb-4">
               {error}
             </p>
-            <p className="text-gray-300">
+            <p className="text-gray-400">
               Spróbuj odświeżyć stronę lub skontaktuj się z nami.
             </p>
           </div>
@@ -84,7 +84,7 @@ export default function PopularBrandsCarousel() {
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Popularne Marki <span className="text-red-500">Samochodów</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Wybierz markę swojego auta i odkryj nasze precyzyjnie dopasowane dywaniki samochodowe. 
             Oferujemy rozwiązania dla ponad {brands.length} marek samochodów.
           </p>

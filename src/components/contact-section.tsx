@@ -137,7 +137,7 @@ export default function ContactSection() {
               <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-gray-300">Imię</Label>
+                    <Label htmlFor="firstName" className="text-gray-400">Imię</Label>
                     <Input
                       id="firstName"
                       placeholder="Wpisz imię"
@@ -146,7 +146,7 @@ export default function ContactSection() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-gray-300">Email</Label>
+                    <Label htmlFor="email" className="text-gray-400">Email</Label>
                     <Input
                       id="email"
                       type="email"
@@ -158,7 +158,7 @@ export default function ContactSection() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="subject" className="text-gray-300">Temat</Label>
+                  <Label htmlFor="subject" className="text-gray-400">Temat</Label>
                   <Input
                     id="subject"
                     placeholder="Czego dotyczy wiadomość?"
@@ -168,7 +168,7 @@ export default function ContactSection() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="message" className="text-gray-300">Wiadomość</Label>
+                  <Label htmlFor="message" className="text-gray-400">Wiadomość</Label>
                   <Textarea
                     id="message"
                     placeholder="Treść wiadomości..."

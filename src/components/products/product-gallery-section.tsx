@@ -267,7 +267,7 @@ const ProductImageCard = React.memo(({
           <h3 className="text-xl font-bold mb-2 text-white group-hover:text-red-500 transition-colors">
             {image.title}
           </h3>
-          <p className="text-sm text-gray-300 line-clamp-2">
+          <p className="text-sm text-gray-400 line-clamp-2">
             {image.description}
           </p>
         </div>
@@ -435,7 +435,7 @@ export default function ProductGallerySection() {
           <h1 className={`text-4xl md:text-6xl font-bold text-white mb-6 bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent leading-tight transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
             NASZA GALERIA PRODUKTÓW
           </h1>
-          <h2 className={`text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
+          <h2 className={`text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
             Odkryj jakość i precyzję wykonania naszych dywaników. Każdy detal ma znaczenie.
           </h2>
         </div>

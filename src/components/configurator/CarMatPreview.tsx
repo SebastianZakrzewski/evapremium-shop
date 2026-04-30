@@ -90,12 +90,12 @@ export default function CarMatPreview({ formData }: CarMatPreviewProps) {
               </h4>
             </div>
             {previewData.matType && (
-              <p className="text-gray-300 text-sm">
+              <p className="text-gray-400 text-sm">
                 {getMatTypeName(previewData.matType)}
               </p>
             )}
             {previewData.completeness && (
-              <p className="text-gray-300 text-sm">
+              <p className="text-gray-400 text-sm">
                 {getCompletenessName(previewData.completeness)}
               </p>
             )}
@@ -111,7 +111,7 @@ export default function CarMatPreview({ formData }: CarMatPreviewProps) {
                 <p className="text-white text-sm font-semibold">EVAPREMIUM</p>
               </div>
             </div>
-            <p className="text-gray-300 text-sm">
+            <p className="text-gray-400 text-sm">
               Najwyższa jakość • 3D Design • Ochrona podłogi
             </p>
           </div>
@@ -121,25 +121,25 @@ export default function CarMatPreview({ formData }: CarMatPreviewProps) {
             {previewData.matType && (
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                <span className="text-gray-300 text-sm">Typ: {getMatTypeName(previewData.matType)}</span>
+                <span className="text-gray-400 text-sm">Typ: {getMatTypeName(previewData.matType)}</span>
               </div>
             )}
             {previewData.completeness && (
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="text-gray-300 text-sm">Komplet: {getCompletenessName(previewData.completeness)}</span>
+                <span className="text-gray-400 text-sm">Komplet: {getCompletenessName(previewData.completeness)}</span>
               </div>
             )}
             {previewData.borderColor && (
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                <span className="text-gray-300 text-sm">Kolor obszycia: {previewData.borderColor}</span>
+                <span className="text-gray-400 text-sm">Kolor obszycia: {previewData.borderColor}</span>
               </div>
             )}
             {previewData.materialColor && (
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                <span className="text-gray-300 text-sm">Kolor materiału: {previewData.materialColor}</span>
+                <span className="text-gray-400 text-sm">Kolor materiału: {previewData.materialColor}</span>
               </div>
             )}
           </div>

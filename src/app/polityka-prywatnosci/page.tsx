@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">§ 1 POSTANOWIENIA OGÓLNE</h2>
-              <div className="text-gray-300 leading-relaxed space-y-4">
+              <div className="text-gray-400 leading-relaxed space-y-4">
                 <p>
                   <strong>1.</strong> Administratorem danych osobowych zbieranych za pośrednictwem Sklepu internetowego 
                   www.evapremium.pl jest <strong>Klaudia Lewandowska</strong>, miejsce wykonywania działalności oraz 
@@ -52,10 +52,10 @@ export default function PrivacyPolicyPage() {
               <div className="space-y-6">
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-3">1. CEL PRZETWARZANIA I PODSTAWA PRAWNA</h3>
-                  <p className="text-gray-300 leading-relaxed mb-3">
+                  <p className="text-gray-400 leading-relaxed mb-3">
                     Administrator przetwarza dane osobowe Usługobiorców Sklepu www.evapremium.pl w przypadku:
                   </p>
-                  <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                  <ul className="list-disc list-inside text-gray-400 space-y-2 ml-4">
                     <li><strong>1.1.</strong> składania Zamówienia w Sklepie w celu wykonania Umowy Sprzedaży na podstawie art. 6 ust. 1 lit. b) RODO (realizacja umowy sprzedaży),</li>
                     <li><strong>1.2.</strong> skorzystania z Formularza Wyceny w celu wysłania wiadomości do Administratora na podstawie art. 6 ust. 1 lit. f) RODO (prawnie uzasadniony interes przedsiębiorcy),</li>
                     <li><strong>1.3.</strong> zapisania się do Newslettera w celu przesyłania informacji handlowych drogą elektroniczną. Dane osobowe są przetwarzane po wyrażeniu odrębnej zgody, na podstawie art. 6 ust. 1 lit. a) RODO,</li>
@@ -66,10 +66,10 @@ export default function PrivacyPolicyPage() {
 
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-3">2. RODZAJ PRZETWARZANYCH DANYCH OSOBOWYCH</h3>
-                  <p className="text-gray-300 leading-relaxed mb-3">
+                  <p className="text-gray-400 leading-relaxed mb-3">
                     Usługobiorca podaje w przypadku:
                   </p>
-                  <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                  <ul className="list-disc list-inside text-gray-400 space-y-2 ml-4">
                     <li><strong>2.1.</strong> Zamówienia: imię i nazwisko, adres, NIP, adres e-mail, numer telefonu,</li>
                     <li><strong>2.2.</strong> Formularza Wyceny: imię i nazwisko, adres e-mail, numer telefonu,</li>
                     <li><strong>2.3.</strong> Newslettera: imię i nazwisko, adres e-mail,</li>
@@ -80,10 +80,10 @@ export default function PrivacyPolicyPage() {
 
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-3">3. OKRES ARCHIWIZACJI DANYCH OSOBOWYCH</h3>
-                  <p className="text-gray-300 leading-relaxed mb-3">
+                  <p className="text-gray-400 leading-relaxed mb-3">
                     Dane osobowe Usługobiorców przechowywane są przez Administratora:
                   </p>
-                  <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                  <ul className="list-disc list-inside text-gray-400 space-y-2 ml-4">
                     <li><strong>3.1.</strong> w przypadku gdy podstawą przetwarzania danych jest wykonanie umowy, tak długo jak jest to niezbędne do wykonania umowy, a po tym czasie przez okres odpowiadający okresowi przedawnienia roszczeń. Jeżeli przepis szczególny nie stanowi inaczej termin przedawnienia wynosi lat sześć, a dla roszczeń o świadczenia okresowe oraz roszczeń związanych z prowadzeniem działalności gospodarczej- trzy lata,</li>
                     <li><strong>3.2.</strong> w przypadku gdy podstawą przetwarzania danych jest zgoda, tak długo aż zgoda nie zostanie odwołana, a po odwołaniu zgody przez okres czasu odpowiadający okresowi przedawnienia roszczeń jakie może podnosić Administrator i jakie mogą być podnoszone wobec niego. Jeżeli przepis szczególny nie stanowi inaczej termin przedawnienia wynosi lat sześć, a dla roszczeń o świadczenia okresowe oraz roszczeń związanych z prowadzeniem działalności gospodarczej- trzy lata.</li>
                   </ul>
@@ -91,38 +91,38 @@ export default function PrivacyPolicyPage() {
 
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-3">4. DODATKOWE INFORMACJE</h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <p className="text-gray-400 leading-relaxed">
                     Podczas korzystania ze Sklepu mogą być pobierane dodatkowe informacje w szczególności: adres IP przypisany do komputera Usługobiorcy lub zewnętrzny adres IP dostawcy Internetu, nazwa domeny, rodzaj przeglądarki, czas dostępu, typ systemu operacyjnego.
                   </p>
                 </div>
 
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-3">5. MARKETING I REKLAMA</h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <p className="text-gray-400 leading-relaxed">
                     Po wyrażeniu odrębnej zgody na podstawie art. 6 ust. 1 lit. a) RODO dane mogą być przetwarzane również w celu przesyłania informacji handlowych drogą elektroniczną lub wykonywania telefonicznych połączeń w celu marketingu bezpośredniego– odpowiednio w związku z art. 10 ust. 2 Ustawy z dnia 18 lipca 2002 roku o świadczeniu usług drogą elektroniczną lub art. 172 ust. 1 Ustawy z dnia 16 lipca 2004 roku– Prawo Telekomunikacyjne w tym kierowanych w wyniku profilowania, o ile Usługobiorca wyraził stosowną zgodę.
                   </p>
                 </div>
 
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-3">6. DANE NAWIGACYJNE</h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <p className="text-gray-400 leading-relaxed">
                     Od Usługobiorców mogą być także gromadzone dane nawigacyjne w tym informacje o linkach i odnośnikach, w które zdecydują się kliknąć lub innych czynnościach podejmowanych w Sklepie. Podstawą prawną tego rodzaju czynności jest prawnie uzasadniony interes Administratora (art. 6 ust. 1 lit. f RODO) polegający na ułatwieniu korzystania z usług świadczonych drogą elektroniczną oraz na poprawie funkcjonalności tych usług.
                   </p>
                 </div>
 
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-3">7. DOBROWOLNOŚĆ PODANIA DANYCH</h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <p className="text-gray-400 leading-relaxed">
                     Podanie danych osobowych przez Usługobiorcę jest dobrowolne.
                   </p>
                 </div>
 
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-3">8. ZASADY PRZETWARZANIA</h3>
-                  <p className="text-gray-300 leading-relaxed mb-3">
+                  <p className="text-gray-400 leading-relaxed mb-3">
                     Administrator dokłada szczególnej staranności w celu ochrony interesów osób, których dane dotyczą a w szczególności zapewnia, że zbierane przez niego dane są:
                   </p>
-                  <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                  <ul className="list-disc list-inside text-gray-400 space-y-2 ml-4">
                     <li><strong>8.1.</strong> przetwarzane zgodnie z prawem,</li>
                     <li><strong>8.2.</strong> zbierane dla oznaczonych, zgodnych z prawem celów i niepoddawane dalszemu przetwarzaniu niezgodnemu z tymi celami,</li>
                     <li><strong>8.3.</strong> merytorycznie poprawne i adekwatne w stosunku do celów w jakich są przetwarzane oraz przechowywane w postaci umożliwiającej identyfikację osób których dotyczą, nie dłużej niż jest to niezbędne do osiągnięcia celu przetwarzania.</li>
@@ -133,11 +133,11 @@ export default function PrivacyPolicyPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">§ 3 UDOSTĘPNIENIE DANYCH OSOBOWYCH</h2>
-              <div className="text-gray-300 leading-relaxed space-y-4">
+              <div className="text-gray-400 leading-relaxed space-y-4">
                 <p>
                   <strong>1.</strong> Dane osobowe Usługobiorców przekazywane są dostawcom usług, z których korzysta Administrator przy prowadzeniu Sklepu, a w szczególności do:
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside text-gray-400 space-y-2 ml-4">
                   <li><strong>1.1.</strong> podmiotów realizujących dostawę Produktów,</li>
                   <li><strong>1.2.</strong> dostawców systemów płatności,</li>
                   <li><strong>1.3.</strong> dostawców systemów ankiet opiniujących,</li>
@@ -160,14 +160,14 @@ export default function PrivacyPolicyPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">§ 4 PRAWO KONTROLI, DOSTĘPU DO TREŚCI WŁASNYCH DANYCH ORAZ ICH POPRAWIANIA</h2>
-              <div className="text-gray-300 leading-relaxed space-y-4">
+              <div className="text-gray-400 leading-relaxed space-y-4">
                 <p>
                   <strong>1.</strong> Osoba, której dane dotyczą ma prawo dostępu do treści swoich danych osobowych oraz prawo ich sprostowania, usunięcia, ograniczenia przetwarzania, prawo do przenoszenia danych, prawo wniesienia sprzeciwu, prawo do cofnięcia zgody w dowolnym momencie bez wpływu na zgodność z prawem przetwarzania, którego dokonano na podstawie zgody przed jej cofnięciem.
                 </p>
                 <p>
                   <strong>2.</strong> Podstawy prawne żądania Usługobiorcy:
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside text-gray-400 space-y-2 ml-4">
                   <li><strong>2.1.</strong> dostęp do danych– art. 15 RODO,</li>
                   <li><strong>2.2.</strong> sprostowanie danych– art. 16 RODO,</li>
                   <li><strong>2.3.</strong> usunięcie danych (tzw. prawo do bycia zapomnianym)– art. 17 RODO,</li>
@@ -190,7 +190,7 @@ export default function PrivacyPolicyPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">§ 5 PLIKI &quot;COOKIES&quot;</h2>
-              <div className="text-gray-300 leading-relaxed space-y-4">
+              <div className="text-gray-400 leading-relaxed space-y-4">
                 <p><strong>1.</strong> Strona Administratora używa plików &quot;cookies&quot;.</p>
                 <p>
                   <strong>2.</strong> Instalacja plików &quot;cookies&quot; jest konieczna do prawidłowego świadczenia usług na stronie internetowej Sklepu. W plikach &quot;cookies&quot; znajdują się informacje niezbędne do prawidłowego funkcjonowania strony, a także dają one także możliwość opracowywania ogólnych statystyk odwiedzin strony internetowej.
@@ -198,7 +198,7 @@ export default function PrivacyPolicyPage() {
                 <p>
                   <strong>3.</strong> W ramach strony stosowane są dwa rodzaje plików &quot;cookies&quot;: &quot;sesyjne&quot; oraz &quot;stałe&quot;.
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside text-gray-400 space-y-2 ml-4">
                   <li><strong>3.1.</strong> &quot;Cookies&quot; &quot;sesyjne&quot; są plikami tymczasowymi, które przechowywane są w urządzeniu końcowym Usługobiorcy do czasu wylogowania (opuszczenia strony),</li>
                   <li><strong>3.2.</strong> &quot;Stałe&quot; pliki &quot;cookies&quot; przechowywane są w urządzeniu końcowym Usługobiorcy przez czas określony w parametrach plików &quot;cookies&quot; lub do czasu ich usunięcia przez Usługobiorcę.</li>
                 </ul>
@@ -214,7 +214,7 @@ export default function PrivacyPolicyPage() {
                 <p>
                   <strong>7.</strong> Usługobiorca ma prawo zadecydowania w zakresie dostępu plików &quot;cookies&quot; do swojego komputera poprzez:
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside text-gray-400 space-y-2 ml-4">
                   <li><strong>7.1.</strong> wybór rodzajów plików cookies, na gromadzenie których wyraża zgodę tuż po wejściu na stronę Sklepu i pojawieniu się komunikatu dotyczącego cookies,</li>
                   <li><strong>7.2.</strong> zmianę ustawień w oknie swojej przeglądarki. Szczegółowe informacje o możliwości i sposobach obsługi plików &quot;cookies&quot; dostępne są również w ustawieniach oprogramowania (przeglądarki internetowej).</li>
                 </ul>
@@ -223,7 +223,7 @@ export default function PrivacyPolicyPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">§ 6 USŁUGI DODATKOWE ZWIĄZANE Z AKTYWNOŚCIĄ UŻYTKOWNIKA W SKLEPIE</h2>
-              <div className="text-gray-300 leading-relaxed space-y-4">
+              <div className="text-gray-400 leading-relaxed space-y-4">
                 <p>
                   <strong>1.</strong> W Sklepie wykorzystywane są tzw. wtyczki społecznościowe (&quot;wtyczki&quot;) serwisów społecznościowych. Wyświetlając stronę internetową www.evapremium.pl, zawierającą taką wtyczkę przeglądarka Usługobiorcy nawiąże bezpośrednie połączenie z serwerami Facebook, Meta, Tiktok, Pinterest, Youtube oraz Instagram.
                 </p>
@@ -239,7 +239,7 @@ export default function PrivacyPolicyPage() {
                 <p>
                   <strong>5.</strong> Cel i zakres gromadzenia danych oraz ich dalszego przetwarzania i wykorzystania przez usługodawców, jak również możliwość kontaktu oraz prawa Usługobiorcy w tym zakresie i możliwość dokonania ustawień zapewniających ochronę prywatności Usługobiorcy zostały opisane w polityce prywatności usługodawców:
                 </p>
-                <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                <ul className="list-disc list-inside text-gray-400 space-y-2 ml-4">
                   <li><strong>5.1.</strong> <a href="https://www.facebook.com/policy.php" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">https://www.facebook.com/policy.php</a></li>
                   <li><strong>5.2.</strong> <a href="https://policy.pinterest.com/pl/privacy-policy" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">https://policy.pinterest.com/pl/privacy-policy</a></li>
                   <li><strong>5.3.</strong> <a href="https://help.twitter.com/en/rules-and-policies" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">https://help.twitter.com/en/rules-and-policies</a></li>
@@ -258,7 +258,7 @@ export default function PrivacyPolicyPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">§ 7 POSTANOWIENIA KOŃCOWE</h2>
-              <div className="text-gray-300 leading-relaxed space-y-4">
+              <div className="text-gray-400 leading-relaxed space-y-4">
                 <p>
                   <strong>1.</strong> Administrator stosuje środki techniczne i organizacyjne zapewniające ochronę przetwarzanych danych osobowych odpowiednią do zagrożeń oraz kategorii danych objętych ochroną, a w szczególności zabezpiecza dane przed ich udostępnieniem osobom nieupoważnionym, zabraniem przez osobę nieuprawnioną, przetwarzaniem z naruszeniem obowiązujących przepisów oraz zmianą, utratą, uszkodzeniem lub zniszczeniem.
                 </p>
@@ -273,7 +273,7 @@ export default function PrivacyPolicyPage() {
 
             <div className="bg-[#111] border border-white/5 p-6 rounded-lg mt-8">
               <h3 className="text-lg font-semibold text-white mb-3">Kontakt w sprawach ochrony danych</h3>
-              <div className="text-gray-300 space-y-2">
+              <div className="text-gray-400 space-y-2">
                 <p><strong>Email:</strong> evapremium.kontakt@gmail.com</p>
                 <p><strong>Telefon:</strong> +48 793 993 430</p>
                 <p><strong>Adres:</strong> ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze</p>

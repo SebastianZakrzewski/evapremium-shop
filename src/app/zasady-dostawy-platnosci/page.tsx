@@ -22,7 +22,7 @@ export default function DeliveryAndPaymentTermsPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">KOSZT, TERMIN I SPOSOBY DOSTAWY PRODUKTU</h2>
-              <div className="text-gray-300 leading-relaxed space-y-4">
+              <div className="text-gray-400 leading-relaxed space-y-4">
                 <p>
                   Koszty dostawy Produktu ponoszone przez Klienta są określane w trakcie składania Zamówienia i zależą od wybranej metody płatności oraz sposobu dostawy. 
                   Informacja o całkowitym koszcie (w tym koszcie dostawy) jest każdorazowo podawana przed ostatecznym potwierdzeniem Zamówienia.
@@ -34,10 +34,10 @@ export default function DeliveryAndPaymentTermsPage() {
                 
                 <div className="bg-[#111] border border-white/5 p-6 rounded-lg my-4">
                   <h3 className="text-lg font-semibold text-white mb-3">Czasu kompletowania Produktu</h3>
-                  <p className="text-gray-300 mb-3">
+                  <p className="text-gray-400 mb-3">
                     który wynosi do 14 dni roboczych od momentu:
                   </p>
-                  <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
+                  <ul className="list-disc list-inside text-gray-400 space-y-2 ml-4">
                     <li>dostarczenia przez Klienta wszystkich niezbędnych informacji, w tym zdjęć podłogi samochodu, jeżeli są wymagane,</li>
                     <li>zaksięgowania płatności na rachunku Sprzedawcy (w przypadku przelewu),</li>
                     <li>pozytywnej autoryzacji transakcji (w przypadku płatności elektronicznej),</li>
@@ -47,7 +47,7 @@ export default function DeliveryAndPaymentTermsPage() {
 
                 <div className="bg-[#111] border border-white/5 p-6 rounded-lg my-4">
                   <h3 className="text-lg font-semibold text-white mb-3">+ Czasu dostawy przez przewoźnika</h3>
-                  <p className="text-gray-300">
+                  <p className="text-gray-400">
                     który wynosi zazwyczaj do 7 dni roboczych od momentu nadania przesyłki (dostawy realizowane są tylko w dni robocze, 
                     z wyłączeniem sobót, niedziel i dni ustawowo wolnych od pracy).
                   </p>
@@ -64,15 +64,15 @@ export default function DeliveryAndPaymentTermsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
                   <div className="bg-[#111] border border-white/5 p-4 rounded-lg text-center">
                     <h4 className="text-lg font-semibold text-white mb-2">Standard</h4>
-                    <p className="text-gray-300">do 14 dni roboczych</p>
+                    <p className="text-gray-400">do 14 dni roboczych</p>
                   </div>
                   <div className="bg-[#111] border border-white/5 p-4 rounded-lg text-center">
                     <h4 className="text-lg font-semibold text-white mb-2">Ekspres</h4>
-                    <p className="text-gray-300">do 7 dni roboczych</p>
+                    <p className="text-gray-400">do 7 dni roboczych</p>
                   </div>
                   <div className="bg-[#111] border border-white/5 p-4 rounded-lg text-center">
                     <h4 className="text-lg font-semibold text-white mb-2">Premium</h4>
-                    <p className="text-gray-300">do 3 dni roboczych</p>
+                    <p className="text-gray-400">do 3 dni roboczych</p>
                   </div>
                 </div>
 
@@ -102,7 +102,7 @@ export default function DeliveryAndPaymentTermsPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">SPOSOBY PŁATNOŚCI</h2>
-              <div className="text-gray-300 leading-relaxed space-y-4">
+              <div className="text-gray-400 leading-relaxed space-y-4">
                 <p>
                   Sprzedawca udostępnia następujące formy płatności:
                 </p>
@@ -111,7 +111,7 @@ export default function DeliveryAndPaymentTermsPage() {
                   <div className="bg-[#111] border border-white/5 p-6 rounded-lg">
                     <h3 className="text-xl font-semibold text-white mb-4">1.1. Przelew tradycyjny na rachunek bankowy Sprzedawcy:</h3>
                     <div className="bg-black border border-white/10 p-4 rounded-lg">
-                      <div className="text-gray-300 space-y-2">
+                      <div className="text-gray-400 space-y-2">
                         <p><strong>Klaudia Lewandowska</strong></p>
                         <p>ul. Tadeusza Kościuszki 34/1</p>
                         <p>81-198 Pogórze</p>
@@ -120,14 +120,14 @@ export default function DeliveryAndPaymentTermsPage() {
                         <p className="text-lg font-mono bg-white/5 p-2 rounded text-green-400">78 2490 0005 0000 4530 1376 8507</p>
                       </div>
                     </div>
-                    <p className="text-gray-300 mt-4">
+                    <p className="text-gray-400 mt-4">
                       W tytule przelewu należy wpisać numer zamówienia, adres e-mail oraz markę i model samochodu.
                     </p>
                   </div>
 
                   <div className="bg-[#111] border border-white/5 p-6 rounded-lg">
                     <h3 className="text-xl font-semibold text-white mb-4">1.2. Płatność online</h3>
-                    <p className="text-gray-300 mb-4">
+                    <p className="text-gray-400 mb-4">
                       za pośrednictwem systemów płatności elektronicznych (Stripe, BLIK, karta płatnicza).
                     </p>
                     <div className="flex flex-wrap gap-4">
@@ -148,7 +148,7 @@ export default function DeliveryAndPaymentTermsPage() {
 
                   <div className="bg-[#111] border border-white/5 p-6 rounded-lg">
                     <h3 className="text-xl font-semibold text-white mb-4">1.3. Płatność za pobraniem (przy odbiorze)</h3>
-                    <p className="text-gray-300">
+                    <p className="text-gray-400">
                       możliwa po uprzednim dokonaniu przedpłaty oraz weryfikacji danych adresowych.
                     </p>
                   </div>
@@ -168,7 +168,7 @@ export default function DeliveryAndPaymentTermsPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">DODATKOWE INFORMACJE</h2>
-              <div className="text-gray-300 leading-relaxed space-y-4">
+              <div className="text-gray-400 leading-relaxed space-y-4">
                 <p>
                   W przypadku braku możliwości realizacji zamówienia z przyczyn niezależnych od Sprzedawcy (np. brak materiałów, błędne dane), 
                   Klient zostanie niezwłocznie poinformowany, a ewentualna wpłata zostanie zwrócona w ciągu 7 dni roboczych.
@@ -186,7 +186,7 @@ export default function DeliveryAndPaymentTermsPage() {
 
             <div className="bg-[#111] border border-white/5 p-6 rounded-lg mt-8">
               <h3 className="text-lg font-semibold text-white mb-3">Kontakt w sprawach dostawy i płatności</h3>
-              <div className="text-gray-300 space-y-2">
+              <div className="text-gray-400 space-y-2">
                 <p><strong>Email:</strong> 
                   <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-400 hover:underline ml-1">
                     evapremium.kontakt@gmail.com

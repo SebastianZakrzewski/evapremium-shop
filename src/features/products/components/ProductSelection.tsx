@@ -48,7 +48,7 @@ export default function ProductSelection() {
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
               Popularne marki <span className="text-red-500">samochodów</span>
             </h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300">
+            <p className="text-sm sm:text-base md:text-lg text-gray-400">
               Ładowanie dostępnych marek...
             </p>
           </div>
@@ -73,7 +73,7 @@ export default function ProductSelection() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 md:mb-6 leading-tight break-words px-2">
             Popularne marki <span className="text-red-500">samochodów</span>
           </h2>
-          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed px-2">
+          <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed px-2">
             Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
           </p>
           <div className="mt-6 text-xs md:text-sm text-gray-400 px-4">
