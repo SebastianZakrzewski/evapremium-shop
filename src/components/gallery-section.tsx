@@ -359,7 +359,7 @@ export default function GallerySection() {
                    <h3 className="text-3xl font-bold mb-2">{selectedImage.title}</h3>
                    <div className="flex items-center gap-4 text-sm text-gray-400 font-mono">
                      <span>{selectedImage.alt}</span>
-                     <span className="w-1 h-1 rounded-full bg-gray-500" />
+                     <span className="w-1 h-1 rounded-full bg-neutral-500" />
                      <span>{currentIndex + 1} / {galleryImages.length}</span>
                    </div>
                 </div>

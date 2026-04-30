@@ -410,7 +410,7 @@ export default function AccessoryDetailsSheet({
             className={`w-full h-12 text-lg font-medium transition-all ${
               accessory.inStock 
                 ? 'bg-red-600 text-white hover:bg-red-700' 
-                : 'bg-gray-800 text-gray-400 cursor-not-allowed'
+                : 'bg-neutral-800 text-gray-400 cursor-not-allowed'
             }`}
             onClick={handleAddToCart}
             disabled={!accessory.inStock || isAddingToCart}

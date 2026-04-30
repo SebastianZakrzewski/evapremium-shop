@@ -416,7 +416,7 @@ export default function AccessoriesSection() {
                     step="50"
                     value={filters.priceRange[1]}
                     onChange={handlePriceRangeChange}
-                    className="w-full h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-red-600"
+                    className="w-full h-1 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-red-600"
                   />
                   <div className="flex justify-between mt-2 text-xs text-gray-400">
                     <span>0 PLN</span>

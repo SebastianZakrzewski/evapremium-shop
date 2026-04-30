@@ -245,11 +245,11 @@ export function PaymentSuccess() {
       case 'failed':
         return <Badge className="bg-red-900/30 text-red-400 border-red-500/30 px-4 py-2 text-sm font-medium">Nieudane</Badge>;
       case 'cancelled':
-        return <Badge className="bg-gray-900/30 text-gray-400 border-gray-500/30 px-4 py-2 text-sm font-medium">Anulowane</Badge>;
+        return <Badge className="bg-neutral-900/30 text-gray-400 border-neutral-600/30 px-4 py-2 text-sm font-medium">Anulowane</Badge>;
       case 'pending':
         return <Badge className="bg-yellow-900/30 text-yellow-400 border-yellow-500/30 px-4 py-2 text-sm font-medium">W trakcie</Badge>;
       default:
-        return <Badge className="bg-gray-900/30 text-gray-400 border-gray-500/30 px-4 py-2 text-sm font-medium">Nieznany</Badge>;
+        return <Badge className="bg-neutral-900/30 text-gray-400 border-neutral-600/30 px-4 py-2 text-sm font-medium">Nieznany</Badge>;
     }
   };
 

@@ -300,10 +300,10 @@ function AccessoryCartItem({
   onUpdateQuantity: (quantity: number) => void; 
 }) {
   return (
-    <div className="flex items-center space-x-4 p-4 border border-gray-600 rounded-lg bg-gray-800/40 backdrop-blur">
+    <div className="flex items-center space-x-4 p-4 border border-neutral-600 rounded-lg bg-neutral-800/40 backdrop-blur">
       {/* Obraz produktu */}
       <div className="flex-shrink-0">
-        <div className="w-20 h-20 bg-gray-700 rounded-lg flex items-center justify-center">
+        <div className="w-20 h-20 bg-neutral-700 rounded-lg flex items-center justify-center">
           {item.productImage ? (
             <Image
               src={item.productImage}
@@ -335,7 +335,7 @@ function AccessoryCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity - 1)}
-            className="h-8 w-8 p-0 border-gray-600 text-gray-300 hover:bg-gray-700"
+            className="h-8 w-8 p-0 border-neutral-600 text-gray-300 hover:bg-neutral-700"
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -348,7 +348,7 @@ function AccessoryCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity + 1)}
-            className="h-8 w-8 p-0 border-gray-600 text-gray-300 hover:bg-gray-700"
+            className="h-8 w-8 p-0 border-neutral-600 text-gray-300 hover:bg-neutral-700"
           >
             <Plus className="h-4 w-4" />
           </Button>

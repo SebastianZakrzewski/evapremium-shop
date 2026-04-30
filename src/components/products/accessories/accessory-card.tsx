@@ -91,7 +91,7 @@ export default function AccessoryCard({ accessory, onAddToCart, onView }: Access
               className={`
                 shrink-0 gap-2 transition-all duration-300
                 ${!accessory.inStock 
-                  ? 'opacity-50 cursor-not-allowed bg-gray-800 text-gray-400' 
+                  ? 'opacity-50 cursor-not-allowed bg-neutral-800 text-gray-400' 
                   : 'bg-red-600 text-white hover:bg-red-700'
                 }
               `}

@@ -259,8 +259,8 @@ function SearchDropdown() {
                     pl-12 pr-12
                     h-14 sm:h-12
                     w-full
-                    bg-gray-800 md:bg-gray-800/80 backdrop-blur-xl
-                    border-2 border-gray-600 md:border-gray-700/50
+                    bg-neutral-800 md:bg-neutral-800/80 backdrop-blur-xl
+                    border-2 border-neutral-600 md:border-neutral-800/50
                     text-white text-base sm:text-base
                     placeholder:text-gray-400 md:placeholder:text-gray-400
                     focus:border-red-500 focus:ring-2 focus:ring-red-500/50 md:focus:ring-red-500/30
@@ -337,7 +337,7 @@ function SearchDropdown() {
                                   transition-colors text-left touch-manipulation
                                   ${selectedIndex === flatIndex 
                                     ? 'bg-red-500/20 text-white' 
-                                    : 'active:bg-gray-800/50 hover:bg-gray-800/50 text-gray-300 hover:text-white'
+                                    : 'active:bg-neutral-800/50 hover:bg-neutral-800/50 text-gray-300 hover:text-white'
                                   }
                                 `}
                                 role="option"
@@ -358,7 +358,7 @@ function SearchDropdown() {
 
                       {/* Modele */}
                       {results.models.length > 0 && (
-                        <div className="px-2 sm:px-3 py-1 sm:py-2 border-t border-gray-700/50">
+                        <div className="px-2 sm:px-3 py-1 sm:py-2 border-t border-neutral-800/50">
                           <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                             Modele ({results.models.length})
                           </div>
@@ -373,7 +373,7 @@ function SearchDropdown() {
                                   transition-colors text-left touch-manipulation
                                   ${selectedIndex === flatIndex 
                                     ? 'bg-red-500/20 text-white' 
-                                    : 'active:bg-gray-800/50 hover:bg-gray-800/50 text-gray-300 hover:text-white'
+                                    : 'active:bg-neutral-800/50 hover:bg-neutral-800/50 text-gray-300 hover:text-white'
                                   }
                                 `}
                                 role="option"
@@ -399,7 +399,7 @@ function SearchDropdown() {
 
                       {/* Produkty */}
                       {results.products.length > 0 && (
-                        <div className="px-3 sm:px-4 py-2 sm:py-2 border-t border-gray-700/50">
+                        <div className="px-3 sm:px-4 py-2 sm:py-2 border-t border-neutral-800/50">
                           <div className="text-xs sm:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                             Produkty ({results.products.length})
                           </div>
@@ -414,7 +414,7 @@ function SearchDropdown() {
                                   transition-colors text-left touch-manipulation
                                   ${selectedIndex === flatIndex 
                                     ? 'bg-red-500/20 text-white' 
-                                    : 'active:bg-gray-800/50 hover:bg-gray-800/50 text-gray-300 hover:text-white'
+                                    : 'active:bg-neutral-800/50 hover:bg-neutral-800/50 text-gray-300 hover:text-white'
                                   }
                                 `}
                                 role="option"

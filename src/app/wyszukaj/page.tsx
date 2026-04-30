@@ -123,8 +123,8 @@ function SearchPageContent() {
                 className="
                   pl-12 pr-4
                   h-14
-                  bg-gray-900/80 backdrop-blur-xl
-                  border-gray-700/50
+                  bg-neutral-900/80 backdrop-blur-xl
+                  border-neutral-800/50
                   text-white text-lg
                   placeholder:text-gray-400
                   focus:border-red-500/70 focus:ring-2 focus:ring-red-500/30
@@ -184,8 +184,8 @@ function SearchPageContent() {
                       href={`/modele/${encodeURIComponent(brand.name.toLowerCase())}`}
                       className="
                         group relative
-                        bg-gray-900/80 backdrop-blur-xl
-                        border border-gray-700/50
+                        bg-neutral-900/80 backdrop-blur-xl
+                        border border-neutral-800/50
                         rounded-xl p-6
                         hover:border-red-500/70
                         hover:shadow-lg hover:shadow-red-500/20
@@ -223,8 +223,8 @@ function SearchPageContent() {
                       href={`/konfigurator?brand=${encodeURIComponent(model.brand.toLowerCase())}&model=${encodeURIComponent(model.model)}`}
                       className="
                         group relative
-                        bg-gray-900/80 backdrop-blur-xl
-                        border border-gray-700/50
+                        bg-neutral-900/80 backdrop-blur-xl
+                        border border-neutral-800/50
                         rounded-xl p-6
                         hover:border-red-500/70
                         hover:shadow-lg hover:shadow-red-500/20
@@ -281,8 +281,8 @@ function SearchPageContent() {
                       href={`/konfigurator?brand=${encodeURIComponent(product.carBrandSlug)}&model=${encodeURIComponent(product.carModelSlug)}`}
                       className="
                         group relative
-                        bg-gray-900/80 backdrop-blur-xl
-                        border border-gray-700/50
+                        bg-neutral-900/80 backdrop-blur-xl
+                        border border-neutral-800/50
                         rounded-xl p-6
                         hover:border-red-500/70
                         hover:shadow-lg hover:shadow-red-500/20

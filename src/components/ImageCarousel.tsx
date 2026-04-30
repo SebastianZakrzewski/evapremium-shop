@@ -133,12 +133,12 @@ export default function ImageCarousel<T>({
             placeholder="Szukaj marki..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg bg-gray-900/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
+            className="w-full px-4 py-3 rounded-lg bg-neutral-900/50 text-white border border-neutral-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
           />
           <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
         </div>
         <div className="text-center animate-fade-in">
-          <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-4">
             <Search className="w-8 h-8 text-gray-400" />
           </div>
           <div className="text-white text-xl mb-2">Brak wyników</div>
@@ -191,7 +191,7 @@ export default function ImageCarousel<T>({
           placeholder="Szukaj marki..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full px-4 py-3 rounded-lg bg-gray-900/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
+          className="w-full px-4 py-3 rounded-lg bg-neutral-900/50 text-white border border-neutral-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
         />
         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
       </div>
