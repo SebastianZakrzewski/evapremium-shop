@@ -134,20 +134,22 @@ export default function HeroSection() {
   }, [currentSlide]);
 
   return (
-    <section className="relative min-h-[750px] md:min-h-[550px] h-auto md:h-[70vh] overflow-visible md:overflow-hidden pt-24 md:pt-0 pb-20 md:pb-0 bg-black">
+    <section className="relative h-[100svh] min-h-[700px] w-full bg-black overflow-hidden">
       {/* Phone number - Mobile only */}
-      <div className="md:hidden absolute top-4 left-0 right-0 z-30 px-4">
+      <div className="md:hidden absolute top-24 left-0 right-0 z-30 px-6">
         <a 
           href="tel:+48793993430"
-          className="flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2.5 rounded-full shadow-lg shadow-red-900/50 hover:from-red-500 hover:to-red-600 transition-all duration-300 active:scale-95"
+          className="flex items-center justify-center gap-3 bg-black/70 backdrop-blur-xl border border-white/10 text-white px-5 py-3.5 rounded-full shadow-2xl transition-all duration-300 active:scale-95"
         >
-          <Phone className="w-4 h-4" />
-          <span className="font-semibold text-sm">+48 793 993 430</span>
+          <div className="bg-gradient-to-r from-red-600 to-red-700 p-2 rounded-full">
+            <Phone className="w-3.5 h-3.5 text-white" />
+          </div>
+          <span className="font-medium text-sm tracking-wide">+48 793 993 430</span>
         </a>
       </div>
 
       {/* Carousel */}
-      <div className="container mx-auto px-4 relative min-h-[750px] md:h-full py-12 md:py-0">
+      <div className="absolute inset-0 w-full h-full">
         {heroSlides.map((slide, index) => {
           const isVisible = visibleSlides.includes(index);
           const isActive = index === currentSlide;
@@ -162,167 +164,159 @@ export default function HeroSection() {
           return (
             <div
               key={slide.id}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
                 isActive ? "opacity-100 z-10" : "opacity-0 z-0"
               }`}
             >
-              {/* Background - Video or Image */}
-              <div className="absolute inset-0 w-full h-full flex justify-center items-center p-4 md:p-8">
-                <div className="w-full h-full relative rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 min-h-[650px] md:min-h-0">
-                  {isImageSlide && slide.image ? (
-                    <>
-                      <div className="absolute inset-0 bg-black">
-                        <Image
-                          src={slide.image}
-                          alt=""
-                          fill
-                          className="object-[scale-down] object-center"
-                          priority={index === 1}
-                          sizes="100vw"
-                        />
-                      </div>
-                      {/* Radial Overlay */}
-                      <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/20 to-black/60"></div>
-                    </>
-                  ) : (
-                    <>
-                      <video
-                        autoPlay={isActive}
-                        loop
-                        muted
-                        playsInline
-                        preload={index === 0 ? "auto" : "metadata"}
-                        poster="/images/hero/video-poster.jpg"
-                        className="w-full h-full object-cover object-center"
-                        style={{
-                          objectPosition: 'center center',
-                          filter: 'brightness(1.2) contrast(1.1)'
-                        }}
-                        onLoadedData={(e) => {
-                          const video = e.target as HTMLVideoElement;
-                          video.playbackRate = 0.8;
-                        }}
-                      >
-                        {videoSource && <source src={videoSource} type="video/mp4" />}
-                        {!isMobile && slide.video && <source src="/images/hero/video.webm" type="video/webm" />}
-                        Your browser does not support the video tag.
-                      </video>
-                      {/* Premium Radial Overlay - Focus center */}
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent via-black/20 to-black/50"></div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/15"></div>
-                    </>
-                  )}
-                  
-                  {/* Content */}
-                  {!isImageSlide && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 md:p-12 text-white">
-                      <div className="max-w-4xl mx-auto space-y-5 md:space-y-8 w-full px-3">
-                        {slide.title && (
-                          <h1 className={`text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-tight animate-fade-up break-words mb-2 drop-shadow-2xl`}>
-                            {slide.title}
-                          </h1>
-                        )}
-                        
-                        {slide.subtitle && (
-                          <p className={`text-sm sm:text-base md:text-xl lg:text-2xl font-light tracking-wide max-w-2xl mx-auto animate-fade-in-delay mb-3 text-gray-200 drop-shadow-lg`}>
-                            {slide.subtitle}
-                          </p>
-                        )}
-                        
-                        {/* Benefits Chips */}
-                        {slide.benefits && slide.benefits.length > 0 && (
-                          <div className="animate-fade-in-delay flex flex-wrap justify-center gap-2 md:gap-3 mb-4">
-                            {slide.benefits.map((benefit, index) => (
-                              <div 
-                                key={index}
-                                className="glass-panel px-3 md:px-4 py-1.5 md:py-2 rounded-full flex items-center gap-2 text-xs md:text-sm font-medium backdrop-blur-md border-white/20 bg-white/5 hover:bg-white/10 transition-colors"
-                              >
-                                {index === 0 && <ShieldCheck className="w-3 h-3 md:w-4 md:h-4 text-red-500" />}
-                                {index === 1 && <Droplets className="w-3 h-3 md:w-4 md:h-4 text-blue-400" />}
-                                {index === 2 && <Truck className="w-3 h-3 md:w-4 md:h-4 text-green-400" />}
-                                {benefit}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                        
-                        {slide.cta && (
-                          <div className="flex flex-col sm:flex-row gap-3 md:gap-6 justify-center items-center animate-fade-in-delay-2 pt-2 pb-6 md:pb-0">
-                            <button 
-                              onClick={() => {
-                                if (slide.cta === "Skonfiguruj swój zestaw") {
-                                  router.push('/dywaniki');
-                                } else {
-                                  const element = document.getElementById('products');
-                                  if (element) {
-                                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                  }
-                                }
-                              }}
-                              className="
-                                group relative px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-bold tracking-wide transition-all duration-300 w-full sm:w-auto
-                                bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-xl shadow-red-900/30
-                                hover:scale-105 hover:shadow-2xl hover:shadow-red-600/20 active:scale-95
-                              "
-                            >
-                              <span className="flex items-center justify-center gap-2">
-                                {slide.cta}
-                                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                              </span>
-                            </button>
-                            
-                            <button 
-                              onClick={() => {
-                                const element = document.getElementById('3d-mats-section');
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                }
-                              }}
-                              className="glass-button px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-semibold tracking-wide hover:bg-white/10 hover:border-white/40 w-full sm:w-auto"
-                            >
-                              Dowiedz się więcej
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
+              {/* Background Media */}
+              <div className="absolute inset-0 w-full h-full overflow-hidden">
+                {isImageSlide && slide.image ? (
+                  <>
+                    <Image
+                      src={slide.image}
+                      alt={slide.title || "Promocja"}
+                      fill
+                      className={`object-cover md:object-[scale-down] object-center transition-transform duration-[10s] ease-out ${
+                        isActive ? "scale-105" : "scale-100"
+                      }`}
+                      priority={index === 1}
+                      sizes="100vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                  </>
+                ) : (
+                  <>
+                    <video
+                      autoPlay={isActive}
+                      loop
+                      muted
+                      playsInline
+                      preload={index === 0 ? "auto" : "metadata"}
+                      poster="/images/hero/video-poster.jpg"
+                      className={`w-full h-full object-cover object-center transition-transform duration-[10s] ease-out ${
+                        isActive ? "scale-105" : "scale-100"
+                      }`}
+                      style={{
+                        filter: 'brightness(0.85) contrast(1.1) saturate(1.1)'
+                      }}
+                      onLoadedData={(e) => {
+                        const video = e.target as HTMLVideoElement;
+                        video.playbackRate = 0.8;
+                      }}
+                    >
+                      {videoSource && <source src={videoSource} type="video/mp4" />}
+                      {!isMobile && slide.video && <source src="/images/hero/video.webm" type="video/webm" />}
+                    </video>
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent md:w-3/4"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-black/40"></div>
+                  </>
+                )}
               </div>
+
+              {/* Content */}
+              {!isImageSlide && (
+                <div className="absolute inset-0 z-20 flex flex-col justify-end md:justify-center max-w-[1400px] mx-auto px-6 md:px-16 pb-32 md:pb-0 pt-32">
+                  <div className={`max-w-3xl space-y-6 md:space-y-8 transition-all duration-1000 delay-300 ${
+                    isActive ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
+                  }`}>
+                    {/* Benefits */}
+                    {slide.benefits && slide.benefits.length > 0 && (
+                      <div className="flex flex-wrap gap-2 md:gap-3">
+                        {slide.benefits.map((benefit, idx) => (
+                          <div 
+                            key={idx}
+                            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-gray-200 text-xs md:text-sm font-medium"
+                          >
+                            {idx === 0 && <ShieldCheck className="w-4 h-4 text-red-500" />}
+                            {idx === 1 && <Droplets className="w-4 h-4 text-blue-400" />}
+                            {idx === 2 && <Truck className="w-4 h-4 text-green-400" />}
+                            {benefit}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Title */}
+                    {slide.title && (
+                      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1]">
+                        {slide.title}
+                      </h1>
+                    )}
+
+                    {/* Subtitle */}
+                    {slide.subtitle && (
+                      <p className="text-lg md:text-xl lg:text-2xl font-normal text-gray-300 max-w-2xl leading-relaxed">
+                        {slide.subtitle}
+                      </p>
+                    )}
+
+                    {/* CTAs */}
+                    {slide.cta && (
+                      <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                        <button 
+                          onClick={() => {
+                            if (slide.cta === "Skonfiguruj swój zestaw") {
+                              router.push('/dywaniki');
+                            } else {
+                              const element = document.getElementById('products');
+                              if (element) {
+                                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }
+                            }
+                          }}
+                          className="group flex items-center justify-center gap-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white px-8 py-4 rounded-full text-base font-bold transition-all duration-300 active:scale-95 shadow-xl shadow-red-900/30"
+                        >
+                          {slide.cta}
+                          <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </button>
+                        
+                        <button 
+                          onClick={() => {
+                            const element = document.getElementById('3d-mats-section');
+                            if (element) {
+                              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                          }}
+                          className="flex items-center justify-center px-8 py-4 rounded-full text-base font-semibold text-white bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 transition-all duration-300 active:scale-95"
+                        >
+                          Dowiedz się więcej
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
       </div>
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={goToPrev}
-        className="absolute left-6 top-1/2 transform -translate-y-1/2 glass-button p-3 rounded-full hover:bg-white/20 transition-all z-20 group opacity-0 md:opacity-100"
-        aria-label="Poprzedni slajd"
-      >
-        <svg className="w-5 h-5 text-white group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      
-      <button
-        onClick={goToNext}
-        className="absolute right-6 top-1/2 transform -translate-y-1/2 glass-button p-3 rounded-full hover:bg-white/20 transition-all z-20 group opacity-0 md:opacity-100"
-        aria-label="Następny slajd"
-      >
-        <svg className="w-5 h-5 text-white group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
+      {/* Navigation Controls */}
+      <div className="hidden md:flex absolute right-12 top-1/2 -translate-y-1/2 flex-col gap-3 z-30">
+        <button
+          onClick={goToPrev}
+          className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 text-white transition-all active:scale-95 group"
+          aria-label="Poprzedni slajd"
+        >
+          <ChevronRight className="w-5 h-5 rotate-180 group-hover:-translate-x-0.5 transition-transform" />
+        </button>
+        <button
+          onClick={goToNext}
+          className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 text-white transition-all active:scale-95 group"
+          aria-label="Następny slajd"
+        >
+          <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+        </button>
+      </div>
 
       {/* Indicators */}
-      <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
+      <div className="absolute bottom-12 md:bottom-12 left-6 md:left-16 flex gap-2 z-30">
         {heroSlides.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
             className={`h-1.5 rounded-full transition-all duration-500 ${
-              index === currentSlide ? "w-8 bg-white" : "w-2 bg-white/30 hover:bg-white/50"
+              index === currentSlide ? "w-12 bg-white" : "w-4 bg-white/30 hover:bg-white/50"
             }`}
             aria-label={`Przejdź do slajdu ${index + 1}`}
           />

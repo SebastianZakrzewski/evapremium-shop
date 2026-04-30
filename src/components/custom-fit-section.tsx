@@ -42,7 +42,7 @@ export default function CustomFitSection() {
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
 
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-bl from-red-900/5 via-neutral-950 to-neutral-950 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-bl from-red-900/5 via-black to-black pointer-events-none"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}

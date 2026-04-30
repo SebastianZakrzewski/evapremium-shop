@@ -30,14 +30,17 @@ export default function ProductSelection() {
 
   if (loading) {
     return (
-      <section id="products" className="bg-black py-8 md:py-12 flex items-center justify-center min-h-screen">
-        <div className="w-full max-w-7xl mx-auto px-4 text-center">
-          <div className="flex flex-col items-center justify-center min-h-[400px]">
-            <Loader2 className="w-12 h-12 text-red-500 animate-spin mb-4" />
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
+      <section id="products" className="bg-black py-20 md:py-32 flex items-center justify-center min-h-[60vh] relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-900/10 blur-[120px] rounded-full pointer-events-none" aria-hidden="true"></div>
+
+        <div className="w-full max-w-7xl mx-auto px-4 text-center relative z-10">
+          <div className="flex flex-col items-center justify-center">
+            <Loader2 className="w-12 h-12 text-red-500 animate-spin mb-8" />
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
               Popularne Marki Samochodów
             </h2>
-            <p className="text-gray-400 text-xl">
+            <p className="text-gray-400 text-lg font-light">
               Ładowanie dostępnych marek...
             </p>
           </div>
@@ -47,46 +50,56 @@ export default function ProductSelection() {
   }
 
   return (
-    <section id="products" className="bg-black py-8 md:py-12 flex items-center justify-center min-h-screen">
-      <div className="w-full max-w-7xl mx-auto px-4">
+    <section id="products" className="bg-black py-20 md:py-32 flex items-center justify-center relative overflow-hidden">
+      {/* Subtle background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-red-900/10 blur-[120px] rounded-full pointer-events-none" aria-hidden="true"></div>
+
+      <div className="w-full max-w-7xl mx-auto px-4 relative z-10">
         {/* Nagłówek sekcji */}
-        <div className="text-center mb-6 md:mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-6 animate-bounce-in">
-            <Car className="w-8 h-8 text-white" />
+        <div className="text-center mb-16 md:mb-24">
+          <div className="inline-flex items-center justify-center p-3 bg-white/5 rounded-2xl mb-6 border border-white/10 shadow-xl animate-bounce-in">
+            <Car className="w-6 h-6 text-red-500" />
           </div>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 animate-fade-in">
-            Popularne Marki Samochodów
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight animate-fade-in leading-[1.1]">
+            Wybierz markę <br className="md:hidden" />
+            <span className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent">
+              Twojego auta
+            </span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto animate-fade-in-delay">
-            Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
+          <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-light animate-fade-in-delay leading-relaxed">
+            Znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium do swojego modelu.
           </p>
-          <div className="mt-6 text-xs md:text-sm text-gray-400 animate-fade-in-delay-2 px-4">
-            <span className="bg-white/5 px-3 py-2 md:px-4 md:py-2 rounded-full border border-white/5 inline-block max-w-full md:max-w-none whitespace-normal break-words text-center leading-relaxed">
-              🚗 Dostępne marki: {brands.length} producentów samochodów
+          <div className="mt-8 animate-fade-in-delay-2">
+            <span className="inline-flex items-center gap-2 bg-white/5 px-5 py-2.5 rounded-full border border-white/10 text-sm font-medium text-gray-300 shadow-lg">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+              Dostępne marki: {brands.length} producentów
             </span>
           </div>
           {error && (
-            <p className="text-yellow-400 text-sm mt-2">
+            <p className="text-yellow-500/80 text-sm mt-4 font-medium">
               ⚠️ Używamy ograniczonych danych (API tymczasowo niedostępne)
             </p>
           )}
         </div>
 
         {/* Karuzela */}
-        <div className="animate-slide-in-left">
+        <div className="animate-slide-in-left relative">
+          {/* Subtle vignette for carousel edges */}
+          <div className="absolute inset-y-0 left-0 w-12 md:w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute inset-y-0 right-0 w-12 md:w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none"></div>
+
           <ImageCarousel<Brand>
             items={brands}
             onItemClick={handleBrandClick}
             renderItem={(brand, index, position) => (
               <BrandCard 
                 brand={brand} 
-                className={`${position} ${clickedCardId === brand.id ? 'animate-click' : ''}`}
-                isPriority={index < 3 && position === 'center'} // Priority tylko dla pierwszych 3 widocznych na środku
+                className={`${position} ${clickedCardId === brand.id ? 'animate-click' : ''} transition-all duration-500`}
+                isPriority={index < 3 && position === 'center'}
               />
             )}
           />
         </div>
-
       </div>
     </section>
   );
