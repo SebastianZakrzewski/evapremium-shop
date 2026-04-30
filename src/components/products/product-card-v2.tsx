@@ -53,10 +53,10 @@ export default function ProductCardV2({ product }: ProductCardV2Props) {
   const configuratorUrl = `/konfigurator?brand=${encodeURIComponent(product.brand.toLowerCase())}&model=${encodeURIComponent(product.model.toLowerCase())}${product.generation ? `&generation=${encodeURIComponent(product.generation)}` : ""}${product.bodyType ? `&bodyType=${encodeURIComponent(product.bodyType)}` : ""}`;
 
   return (
-    <Link href={configuratorUrl} className="group block h-full">
-      <article className="h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1">
+    <Link href={configuratorUrl} className="group block h-full outline-none">
+      <article className="h-full flex flex-col bg-[#111] border border-white/5 rounded-2xl overflow-hidden transition-all duration-500 hover:border-white/10 hover:bg-neutral-900/40 hover:shadow-2xl hover:shadow-red-900/10 hover:-translate-y-1">
         {/* Image Container */}
-        <div className="relative aspect-square bg-gradient-to-br from-gray-900 to-black overflow-hidden p-8 flex items-center justify-center">
+        <div className="relative aspect-[4/3] bg-gradient-to-b from-neutral-900/50 to-transparent overflow-hidden p-6 flex items-center justify-center">
           {product.imageSrc ? (
             <div className="relative w-full h-full">
               <Image
@@ -64,20 +64,20 @@ export default function ProductCardV2({ product }: ProductCardV2Props) {
                 alt={`${product.brand} ${product.model}`}
                 fill
                 loading="lazy"
-                className="object-contain transition-transform duration-500 group-hover:scale-110"
+                className="object-contain transition-transform duration-700 group-hover:scale-105 drop-shadow-2xl"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-300">
-              <Car className="w-24 h-24 opacity-20" />
+              <Car className="w-20 h-20 opacity-20" />
             </div>
           )}
           
           {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
+          <div className="absolute top-4 left-4 flex flex-col gap-2">
             {product.yearFrom && product.yearTo && (
-              <Badge variant="secondary" className="bg-black/70 backdrop-blur-sm text-white border-white/10 hover:bg-black/90">
+              <Badge variant="secondary" className="bg-black/60 backdrop-blur-md text-white/90 border-white/10 font-medium tracking-wide">
                 {product.yearFrom}-{product.yearTo}
               </Badge>
             )}
@@ -85,37 +85,33 @@ export default function ProductCardV2({ product }: ProductCardV2Props) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col p-5">
-          <div className="mb-2">
-            <h3 className="text-lg font-bold text-white leading-tight group-hover:text-red-500 transition-colors line-clamp-2">
+        <div className="flex-1 flex flex-col p-6 pt-4">
+          <div className="mb-1">
+            <h3 className="text-xl font-semibold text-white leading-tight transition-colors line-clamp-2">
               {product.brand} {product.model}
             </h3>
           </div>
           
-          <div className="text-sm text-gray-400 mb-4 flex-1">
+          <div className="text-sm text-gray-400 mb-6 flex-1 font-light tracking-wide">
              {product.generation && (
                <span className="block">{product.generation}</span>
              )}
              {product.bodyType && (
-               <span className="block text-xs uppercase mt-1">{formatBodyType(product.bodyType)}</span>
+               <span className="block text-xs uppercase mt-1 opacity-70">{formatBodyType(product.bodyType)}</span>
              )}
           </div>
 
-          <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between gap-3">
+          <div className="mt-auto flex items-end justify-between gap-4">
             <div className="flex flex-col">
-              <span className="text-xs text-gray-400">Cena od</span>
-              <span className="text-xl font-bold text-white">
-                {product.price.toLocaleString('pl-PL')} <span className="text-red-500">PLN</span>
+              <span className="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Cena od</span>
+              <span className="text-2xl font-bold text-white tracking-tight">
+                {product.price.toLocaleString('pl-PL')} <span className="text-sm font-medium text-gray-400 ml-0.5">PLN</span>
               </span>
             </div>
             
-            <Button
-              size="sm"
-              className="bg-red-600 text-white hover:bg-red-700 shrink-0 gap-2 transition-all duration-300"
-            >
-              <span className="hidden sm:inline">Konfiguruj</span>
-              <ChevronRight className="w-4 h-4" />
-            </Button>
+            <div className="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-red-600 group-hover:border-red-600 transition-all duration-300 shrink-0">
+              <ChevronRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5" />
+            </div>
           </div>
         </div>
       </article>

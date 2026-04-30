@@ -532,53 +532,55 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
                 return (
                   <article
                     key={product.id}
-                    className="bg-neutral-900 rounded-xl border border-neutral-800 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group"
+                    className="bg-[#111] rounded-2xl border border-white/5 overflow-hidden transition-all duration-500 hover:border-white/10 hover:bg-neutral-900/40 hover:shadow-2xl hover:shadow-red-900/10 hover:-translate-y-1 group"
                   >
                     {/* Obraz produktu */}
-                    <div className="relative w-full h-48 bg-neutral-800/50">
+                    <div className="relative w-full aspect-[4/3] bg-gradient-to-b from-neutral-900/50 to-transparent p-6 flex items-center justify-center">
                       {product.imageSrc ? (
                         <Image
                           src={product.imageSrc}
                           alt={`${product.brand} ${product.model}`}
                           fill
-                          className="object-contain p-4"
+                          className="object-contain p-4 transition-transform duration-700 group-hover:scale-105 drop-shadow-2xl"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <Car className="w-16 h-16 text-gray-400" />
+                          <Car className="w-20 h-20 text-gray-500 opacity-20" />
                         </div>
                       )}
                     </div>
 
                     {/* Informacje o produkcie */}
-                    <div className="p-6">
-                      <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2">
+                    <div className="p-6 pt-4 flex flex-col h-[calc(100%-75%)]">
+                      <h3 className="text-xl font-semibold text-white mb-1 line-clamp-2">
                         {product.brand} {product.model}
                         {product.generation && ` (${product.generation})`}
                       </h3>
                       
-                      <div className="text-sm text-gray-400 mb-2">
+                      <div className="text-sm text-gray-400 mb-6 flex-1 font-light tracking-wide">
                         {product.yearFrom && product.yearTo && (
                           <p>{product.yearFrom}-{product.yearTo} rok</p>
                         )}
                         {product.bodyType && (
-                          <p className="uppercase">{formatBodyTypeLabel(product.bodyType)}</p>
+                          <p className="uppercase opacity-70 mt-1">{formatBodyTypeLabel(product.bodyType)}</p>
                         )}
                       </div>
 
-                      <p className="text-2xl font-bold text-red-600 mb-4">
-                        Od {product.price.toLocaleString("pl-PL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} zł
-                      </p>
+                      <div className="mt-auto flex items-end justify-between gap-4">
+                        <div className="flex flex-col">
+                          <span className="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Cena od</span>
+                          <span className="text-2xl font-bold text-white tracking-tight">
+                            {product.price.toLocaleString("pl-PL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-sm font-medium text-gray-400 ml-0.5">PLN</span>
+                          </span>
+                        </div>
 
-                      {/* Przycisk */}
-                      <Link href={configuratorUrl}>
-                        <Button
-                          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                          size="lg"
-                        >
-                          WYBIERZ KOLORY I ZESTAW
-                        </Button>
-                      </Link>
+                        {/* Przycisk */}
+                        <Link href={configuratorUrl} className="outline-none">
+                          <div className="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-red-600 group-hover:border-red-600 transition-all duration-300 shrink-0">
+                            <ChevronRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5" />
+                          </div>
+                        </Link>
+                      </div>
                     </div>
                   </article>
                 );
