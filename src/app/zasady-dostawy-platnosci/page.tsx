@@ -110,7 +110,7 @@ export default function DeliveryAndPaymentTermsPage() {
                 <div className="space-y-6">
                   <div className="bg-[#111] border border-white/5 p-6 rounded-lg">
                     <h3 className="text-xl font-semibold text-white mb-4">1.1. Przelew tradycyjny na rachunek bankowy Sprzedawcy:</h3>
-                    <div className="bg-black border border-neutral-700 p-4 rounded-lg">
+                    <div className="bg-black border border-white/10 p-4 rounded-lg">
                       <div className="text-gray-300 space-y-2">
                         <p><strong>Klaudia Lewandowska</strong></p>
                         <p>ul. Tadeusza Kościuszki 34/1</p>

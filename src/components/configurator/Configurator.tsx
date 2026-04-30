@@ -982,7 +982,7 @@ export default function Configurator() {
                   <div className="mb-6 p-4 bg-[#111] rounded-lg border border-white/5">
                     <h3 className="text-base font-medium mb-2 text-gray-300">Wybrana marka</h3>
                     <div className="flex items-center gap-3">
-                      <div className="relative w-24 h-24 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
+                      <div className="relative w-24 h-24 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-white/10">
                         {brandsLoading ? (
                           <div className="w-full h-full bg-white/10 animate-pulse rounded"></div>
                         ) : (
@@ -1028,7 +1028,7 @@ export default function Configurator() {
                           data-model-select
                           value={selectedCarModel}
                           onChange={(e) => setSelectedCarModel(e.target.value)}
-                          className="w-full p-4 md:p-4 bg-[#111] border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
+                          className="w-full p-4 md:p-4 bg-[#111] border border-white/10 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-white/10 appearance-none cursor-pointer min-h-[48px]"
                         >
                           <option value="" className="bg-[#111] text-gray-400">Wybierz model...</option>
                           {availableModels.map((model, index) => (
@@ -1066,7 +1066,7 @@ export default function Configurator() {
                           data-body-type-select
                           value={selectedBodyType}
                           onChange={(e) => setSelectedBodyType(e.target.value)}
-                          className="w-full p-4 md:p-4 bg-[#111] border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
+                          className="w-full p-4 md:p-4 bg-[#111] border border-white/10 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-white/10 appearance-none cursor-pointer min-h-[48px]"
                         >
                           <option value="" className="bg-[#111] text-gray-400">Wybierz typ nadwozia...</option>
                           {availableBodyTypes.map((bodyType) => (
@@ -1104,7 +1104,7 @@ export default function Configurator() {
                           data-year-select
                           value={selectedCarYear}
                           onChange={(e) => setSelectedCarYear(e.target.value)}
-                          className="w-full p-4 md:p-4 bg-[#111] border border-neutral-700 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-neutral-600 appearance-none cursor-pointer min-h-[48px]"
+                          className="w-full p-4 md:p-4 bg-[#111] border border-white/10 rounded-lg text-white text-base md:text-base focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-200 hover:border-white/10 appearance-none cursor-pointer min-h-[48px]"
                         >
                           <option value="" className="bg-[#111] text-gray-400">Wybierz rocznik...</option>
                           {availableYears.map((year) => (
@@ -1168,7 +1168,7 @@ export default function Configurator() {
                 
                 {/* Info box o wpływie na cenę */}
                 {selectedSetType && (
-                  <div className="p-4 bg-white/5/50 border border-neutral-700 rounded-lg">
+                  <div className="p-4 bg-white/5/50 border border-white/10 rounded-lg">
                     <p className="text-base text-gray-300">
                       Wybór rodzaju dywaników wpłynie na końcową cenę zestawu
                     </p>
@@ -1265,7 +1265,7 @@ export default function Configurator() {
                   <h3 className="text-base font-medium mb-3">Kolor dywaników</h3>
                   <RadioGroup value={selectedMat} onValueChange={setSelectedMat} className="grid grid-cols-6 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-7 gap-1 md:gap-3">
                     {availableMaterialColors.map((c) => (
-                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden min-w-[28px] min-h-[28px] md:min-w-[48px] md:min-h-[48px]`}>
+                      <Label key={c.id} htmlFor={`mat-${c.id}`} className={`group relative cursor-pointer rounded-lg border-2 ${selectedMat === c.id ? "border-white ring-2 ring-white/30" : "border-white/10"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 focus-within:ring-2 focus-within:ring-white/30 aspect-square overflow-hidden min-w-[28px] min-h-[28px] md:min-w-[48px] md:min-h-[48px]`}>
                         <RadioGroupItem value={c.id} id={`mat-${c.id}`} className="sr-only" />
                         <div
                           className="absolute inset-0"
@@ -1299,7 +1299,7 @@ export default function Configurator() {
                       <button
                         key={e.id}
                         onClick={() => setSelectedEdge(e.id)}
-                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-neutral-700"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 aspect-square cursor-pointer min-w-[28px] min-h-[28px] md:min-w-[48px] md:min-h-[48px]`}
+                        className={`rounded-lg border-2 ${selectedEdge === e.id ? "border-white ring-2 ring-white/30" : "border-white/10"} hover:opacity-80 active:opacity-70 active:scale-95 transition-all duration-200 aspect-square cursor-pointer min-w-[28px] min-h-[28px] md:min-w-[48px] md:min-h-[48px]`}
                         style={{ backgroundColor: e.hex }}
                         aria-pressed={selectedEdge === e.id}
                       >
@@ -1340,7 +1340,7 @@ export default function Configurator() {
                   <h3 className="text-base font-medium mb-3 text-gray-300">Wybrane auto</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
-                      <div className="relative w-16 h-16 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-neutral-700">
+                      <div className="relative w-16 h-16 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden shadow-lg border border-white/10">
                         {brandsLoading ? (
                           <div className="w-full h-full bg-white/10 animate-pulse rounded"></div>
                         ) : (
@@ -1426,7 +1426,7 @@ export default function Configurator() {
                 <p className="text-sm text-white/60">Finalna cena może się różnić w zależności od modelu auta.</p>
                 
                 {/* Szacowany czas dostawy */}
-                <div className="mt-6 p-3 bg-white/5/50 rounded-lg border border-neutral-700">
+                <div className="mt-6 p-3 bg-white/5/50 rounded-lg border border-white/10">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <span className="text-sm text-white/80 font-medium">Szacowany czas dostawy</span>
@@ -1444,7 +1444,7 @@ export default function Configurator() {
                   <textarea
                     id="order-notes"
                     placeholder="Dodatkowe informacje, uwagi, specjalne życzenia..."
-                    className="w-full h-20 px-3 py-2 bg-white/5 border border-neutral-600 rounded-lg text-white text-base placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                    className="w-full h-20 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-base placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
                   />
                 </div>
                 
@@ -1453,7 +1453,7 @@ export default function Configurator() {
                   <input
                     type="checkbox"
                     id="privacy-agreement"
-                    className="w-4 h-4 text-red-600 bg-white/5 border-neutral-600 rounded focus:ring-red-500 focus:ring-2"
+                    className="w-4 h-4 text-red-600 bg-white/5 border-white/10 rounded focus:ring-red-500 focus:ring-2"
                   />
                   <label htmlFor="privacy-agreement" className="text-sm text-white/70 cursor-pointer">
                     Zgadzam się z polityką prywatności i regulaminem
@@ -1469,7 +1469,7 @@ export default function Configurator() {
                 variant="outline"
                 onClick={prevSection}
                 disabled={currentSection === 0}
-                className="flex items-center gap-2 border-neutral-700 text-white hover:bg-white/5 active:bg-white/10 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] md:min-w-auto"
+                className="flex items-center gap-2 border-white/10 text-white hover:bg-white/5 active:bg-white/10 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] md:min-w-auto"
               >
                 <ChevronLeft className="h-5 w-5" />
                 <span className="hidden sm:inline text-base">Wstecz</span>

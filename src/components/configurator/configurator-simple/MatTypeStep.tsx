@@ -38,7 +38,7 @@ export function MatTypeStep({ config, onUpdate, onNext, onPrevious }: MatTypeSte
               p-3 md:p-4 cursor-pointer transition-all duration-300 min-h-[88px] md:min-h-[80px] active:scale-[0.98]
               ${config.matType === type.id
                 ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
-                : 'border-neutral-700 bg-white/5 hover:border-neutral-600 hover:bg-neutral-750 hover:shadow-sm'
+                : 'border-white/10 bg-white/5 hover:border-white/10 hover:bg-neutral-750 hover:shadow-sm'
               }
             `}
           >
@@ -54,7 +54,7 @@ export function MatTypeStep({ config, onUpdate, onNext, onPrevious }: MatTypeSte
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="flex-1 sm:flex-initial px-4 py-2.5 min-h-[40px] md:min-h-[36px] border-neutral-700 hover:bg-white/5 text-xs font-medium transition-all duration-200 active:scale-95"
+          className="flex-1 sm:flex-initial px-4 py-2.5 min-h-[40px] md:min-h-[36px] border-white/10 hover:bg-white/5 text-xs font-medium transition-all duration-200 active:scale-95"
         >
           Wstecz
         </Button>

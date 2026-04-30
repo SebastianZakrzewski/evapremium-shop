@@ -260,7 +260,7 @@ function SearchDropdown() {
                     h-14 sm:h-12
                     w-full
                     bg-white/5 md:bg-white/5/80 backdrop-blur-xl
-                    border-2 border-neutral-600 md:border-white/5/50
+                    border-2 border-white/10 md:border-white/5/50
                     text-white text-base sm:text-base
                     placeholder:text-gray-400 md:placeholder:text-gray-400
                     focus:border-red-500 focus:ring-2 focus:ring-red-500/50 md:focus:ring-red-500/30

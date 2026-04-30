@@ -302,7 +302,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                     value={discountCode}
                     onChange={(e) => handleDiscountCodeChange(e.target.value)}
                     placeholder=""
-                    className={`min-h-[40px] h-10 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm ${
+                    className={`min-h-[40px] h-10 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm ${
                       discountError ? 'border-red-500' : discountApplied ? 'border-green-500' : ''
                     }`}
                     disabled={discountApplied || isDiscountFromCheckout}
@@ -347,7 +347,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                     <span>-{PricingService.formatPrice(discountAmount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-lg font-bold text-white border-t border-neutral-700 pt-2">
+                <div className="flex justify-between text-lg font-bold text-white border-t border-white/10 pt-2">
                   <span>Razem:</span>
                   <span>{PricingService.formatPrice(finalTotal)}</span>
                 </div>
@@ -364,7 +364,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 
                 <button
                   onClick={handleContinueShopping}
-                  className="w-full border border-neutral-600 text-white py-3 px-6 rounded-lg hover:bg-white/5 transition-colors"
+                  className="w-full border border-white/10 text-white py-3 px-6 rounded-lg hover:bg-white/5 transition-colors"
                 >
                   Kontynuuj zakupy
                 </button>

@@ -72,7 +72,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious, prev
                       aspect-square rounded-md border transition-all duration-300 w-10 h-10 md:min-w-[16px] md:min-h-[16px] flex-shrink-0 md:flex-shrink
                       ${isSelected
                         ? 'border-red-500 ring-2 ring-red-500/40 md:ring-1 scale-105 md:scale-110'
-                        : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
+                        : 'border-white/10 hover:border-white/10 hover:scale-105 active:scale-95'
                       }
                     `}
                     style={{
@@ -93,10 +93,10 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious, prev
             </div>
           </div>
           {config.color && (
-            <div className="mt-1.5 p-1.5 bg-white/5 rounded border border-neutral-700">
+            <div className="mt-1.5 p-1.5 bg-white/5 rounded border border-white/10">
               <div className="flex items-center gap-1.5">
                 <div
-                  className="w-4 h-4 rounded border border-neutral-600"
+                  className="w-4 h-4 rounded border border-white/10"
                   style={{ backgroundColor: getColorInfo(config.color).color }}
                 />
                 <div>
@@ -128,7 +128,7 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious, prev
                       aspect-square rounded-md border transition-all duration-300 w-10 h-10 md:min-w-[16px] md:min-h-[16px] flex-shrink-0 md:flex-shrink
                       ${isSelected
                         ? 'border-red-500 ring-2 ring-red-500/40 md:ring-1 scale-105 md:scale-110'
-                        : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
+                        : 'border-white/10 hover:border-white/10 hover:scale-105 active:scale-95'
                       }
                     `}
                     style={{
@@ -149,10 +149,10 @@ export function CombinedColorPicker({ config, onUpdate, onNext, onPrevious, prev
             </div>
           </div>
           {config.edgeColor && (
-            <div className="mt-1.5 p-1.5 bg-white/5 rounded border border-neutral-700">
+            <div className="mt-1.5 p-1.5 bg-white/5 rounded border border-white/10">
               <div className="flex items-center gap-1.5">
                 <div
-                  className="w-4 h-4 rounded border border-neutral-600"
+                  className="w-4 h-4 rounded border border-white/10"
                   style={{ backgroundColor: getColorInfo(config.edgeColor).color }}
                 />
                 <div>

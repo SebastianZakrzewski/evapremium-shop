@@ -70,7 +70,7 @@ export function ColorPicker({ type, config, onUpdate, onNext, onPrevious }: Colo
                 aspect-square rounded-lg border transition-all duration-300 min-w-[36px] min-h-[36px]
                 ${isSelected
                   ? 'border-red-500 ring-2 ring-red-500/30 scale-105 shadow-md shadow-red-500/20'
-                  : 'border-neutral-700 hover:border-neutral-600 hover:scale-105 active:scale-95'
+                  : 'border-white/10 hover:border-white/10 hover:scale-105 active:scale-95'
                 }
               `}
               style={{
@@ -91,10 +91,10 @@ export function ColorPicker({ type, config, onUpdate, onNext, onPrevious }: Colo
       </div>
 
       {selectedColor && (
-        <div className="p-4 bg-white/5 rounded-lg border border-neutral-700 shadow-sm">
+        <div className="p-4 bg-white/5 rounded-lg border border-white/10 shadow-sm">
           <div className="flex items-center gap-3">
             <div
-              className="w-10 h-10 md:w-12 md:h-12 rounded-lg border border-neutral-600 shadow-sm"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-lg border border-white/10 shadow-sm"
               style={{ backgroundColor: getColorInfo(selectedColor).color }}
             />
             <div>
@@ -111,7 +111,7 @@ export function ColorPicker({ type, config, onUpdate, onNext, onPrevious }: Colo
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="px-6 py-2.5 min-h-[40px] border-neutral-700 hover:bg-white/5 text-sm font-medium transition-all duration-200"
+          className="px-6 py-2.5 min-h-[40px] border-white/10 hover:bg-white/5 text-sm font-medium transition-all duration-200"
         >
           Wstecz
         </Button>

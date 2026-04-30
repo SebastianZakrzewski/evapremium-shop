@@ -903,7 +903,7 @@ export default function CheckoutSection() {
               </span>
               <span>Pozostało: {currentStep >= 2 ? `${minutes}:${seconds}` : '15:00'}</span>
             </div>
-            <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-neutral-700">
+            <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/10">
               {currentStep >= 2 ? (
                 <motion.div
                   initial={{ width: '100%' }}
@@ -937,7 +937,7 @@ export default function CheckoutSection() {
             >
               {/* Step 1: Dane kontaktowe */}
               {currentStep === 1 && (
-                <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
+                <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-white/10 shadow-2xl hover:shadow-xl transition-all duration-300">
                   <CardHeader className="border-l-4 border-red-500 px-4 md:px-8 py-4 md:py-6">
                     <CardTitle className="flex items-center text-white text-lg md:text-xl">
                       <CreditCard className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-red-500" />
@@ -951,7 +951,7 @@ export default function CheckoutSection() {
                         <Input
                           id="firstName"
                           {...register("firstName")}
-                          className={`min-h-[48px] h-12 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.firstName ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -967,7 +967,7 @@ export default function CheckoutSection() {
                         <Input
                           id="lastName"
                           {...register("lastName")}
-                          className={`min-h-[48px] h-12 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.lastName ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -985,7 +985,7 @@ export default function CheckoutSection() {
                         id="email"
                         type="email"
                         {...register("email")}
-                        className={`min-h-[48px] h-12 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.email ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -1001,7 +1001,7 @@ export default function CheckoutSection() {
                       <Input
                         id="phone"
                         {...register("phone")}
-                        className={`min-h-[48px] h-12 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.phone ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -1017,7 +1017,7 @@ export default function CheckoutSection() {
 
               {/* Step 2: Adres */}
               {currentStep === 2 && (
-                <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
+                <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-white/10 shadow-2xl hover:shadow-xl transition-all duration-300">
                   <CardHeader className="border-l-4 border-red-500 px-4 md:px-8 py-4 md:py-6">
                     <CardTitle className="flex items-center text-white text-lg md:text-xl">
                       <Truck className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-red-500" />
@@ -1030,7 +1030,7 @@ export default function CheckoutSection() {
                       <Input
                         id="street"
                         {...register("street")}
-                        className={`min-h-[48px] h-12 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.street ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -1047,7 +1047,7 @@ export default function CheckoutSection() {
                         <Input
                           id="postalCode"
                           {...register("postalCode")}
-                          className={`min-h-[48px] h-12 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.postalCode ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -1063,7 +1063,7 @@ export default function CheckoutSection() {
                         <Input
                           id="city"
                           {...register("city")}
-                          className={`min-h-[48px] h-12 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                             errors.city ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -1080,7 +1080,7 @@ export default function CheckoutSection() {
                       <Input
                         id="country"
                         {...register("country")}
-                        className={`min-h-[48px] h-12 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                           errors.country ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -1103,7 +1103,7 @@ export default function CheckoutSection() {
                             {...register("nip")}
                             placeholder="np. 1234567890"
                             maxLength={13}
-                            className={`min-h-[48px] h-12 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                            className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                               errors.nip ? "border-red-500 bg-red-900/20" : ""
                             }`}
                           />
@@ -1136,7 +1136,7 @@ export default function CheckoutSection() {
                             <Input
                               id="billingStreet"
                               {...register("billingStreet")}
-                              className={`min-h-[48px] h-12 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                              className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                                 errors.billingStreet ? "border-red-500 bg-red-900/20" : ""
                               }`}
                             />
@@ -1147,7 +1147,7 @@ export default function CheckoutSection() {
                               <Input
                                 id="billingPostalCode"
                                 {...register("billingPostalCode")}
-                                className={`min-h-[48px] h-12 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                                className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                                   errors.billingPostalCode ? "border-red-500 bg-red-900/20" : ""
                                 }`}
                               />
@@ -1157,7 +1157,7 @@ export default function CheckoutSection() {
                               <Input
                                 id="billingCity"
                                 {...register("billingCity")}
-                                className={`min-h-[48px] h-12 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                                className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 text-base ${
                                   errors.billingCity ? "border-red-500 bg-red-900/20" : ""
                                 }`}
                               />
@@ -1172,7 +1172,7 @@ export default function CheckoutSection() {
 
               {/* Step 3: Płatność */}
               {currentStep === 3 && (
-                <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
+                <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-white/10 shadow-2xl hover:shadow-xl transition-all duration-300">
                   <CardHeader className="border-l-4 border-red-500 px-4 md:px-8 py-4 md:py-6">
                     <CardTitle className="flex items-center text-white text-lg md:text-xl">
                       <CreditCard className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-red-500" />
@@ -1259,7 +1259,7 @@ export default function CheckoutSection() {
                       <textarea
                         id="notes"
                         {...register("notes")}
-                        className="w-full p-3 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg resize-none"
+                        className="w-full p-3 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg resize-none"
                         rows={3}
                         placeholder="Dodatkowe informacje do zamówienia..."
                       />
@@ -1275,7 +1275,7 @@ export default function CheckoutSection() {
                               id="termsAccepted"
                               checked={field.value}
                               onCheckedChange={field.onChange}
-                              className="border-neutral-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                              className="border-white/10 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                             />
                           )}
                         />
@@ -1293,7 +1293,7 @@ export default function CheckoutSection() {
                         <Checkbox
                           id="marketingAccepted"
                           {...register("marketingAccepted")}
-                          className="border-neutral-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                          className="border-white/10 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                         />
                         <Label htmlFor="marketingAccepted" className="text-sm text-neutral-300 leading-relaxed">
                           Chcę otrzymywać informacje o nowościach i promocjach
@@ -1320,7 +1320,7 @@ export default function CheckoutSection() {
                     variant="outline"
                     onClick={prevStep}
                     disabled={currentStep === 1}
-                    className="bg-white/5 border-neutral-600 text-gray-300 hover:bg-white/10 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-8 py-4 text-base"
+                    className="bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-8 py-4 text-base"
                   >
                     <ArrowLeft className="w-5 h-5 mr-3" />
                     Wstecz
@@ -1369,8 +1369,8 @@ export default function CheckoutSection() {
 
           {/* Order Summary */}
           <div className="lg:col-span-2 xl:col-span-1 flex flex-col">
-            <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-neutral-700 shadow-2xl hover:shadow-xl transition-all duration-300">
-              <CardHeader className="border-b border-neutral-700 px-4 md:px-6 py-3 md:py-4">
+            <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-white/10 shadow-2xl hover:shadow-xl transition-all duration-300">
+              <CardHeader className="border-b border-white/10 px-4 md:px-6 py-3 md:py-4">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-base md:text-lg text-white">Podsumowanie zamówienia</CardTitle>
                   <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-red-500 rounded-full animate-pulse"></div>
@@ -1381,7 +1381,7 @@ export default function CheckoutSection() {
                   {/* Items */}
                   <div className="space-y-2 md:space-y-3">
                     {items.map((item, index) => (
-                      <div key={item.id} className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700 rounded-lg p-3 md:p-4 shadow-lg hover:shadow-xl transition-all duration-300">
+                      <div key={item.id} className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-white/10 rounded-lg p-3 md:p-4 shadow-lg hover:shadow-xl transition-all duration-300">
                         {/* Header z nazwą produktu */}
                         <div className="flex items-start justify-between mb-2 md:mb-3">
                           <div className="flex-1">
@@ -1507,7 +1507,7 @@ export default function CheckoutSection() {
                         )}
 
                         {/* Footer z ilością i ceną */}
-                        <div className="flex items-center justify-between pt-3 border-t border-neutral-700">
+                        <div className="flex items-center justify-between pt-3 border-t border-white/10">
                           <div className="flex items-center space-x-2">
                             <span className="text-neutral-300 text-xs md:text-sm">Ilość:</span>
                             <span className="w-7 text-center font-semibold text-white text-base md:text-lg bg-white/5 rounded px-1.5 py-0.5">
@@ -1538,7 +1538,7 @@ export default function CheckoutSection() {
                         value={discountCode}
                         onChange={(e) => handleDiscountCodeChange(e.target.value)}
                         placeholder=""
-                        className={`min-h-[40px] h-10 md:h-11 bg-neutral-600/40 border-neutral-600 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm md:text-base ${
+                        className={`min-h-[40px] h-10 md:h-11 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-300 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm md:text-base ${
                           discountError ? 'border-red-500' : discountApplied ? 'border-green-500' : ''
                         }`}
                         disabled={discountApplied || isDiscountFromCart}
@@ -1573,7 +1573,7 @@ export default function CheckoutSection() {
 
                   {/* Totals */}
                   <div className="space-y-2 md:space-y-3 pt-2 md:pt-3">
-                    <div className="pt-2 md:pt-3 border-t border-neutral-700 bg-white/5/40 p-3 md:p-4 rounded-lg space-y-1.5 md:space-y-2">
+                    <div className="pt-2 md:pt-3 border-t border-white/10 bg-white/5/40 p-3 md:p-4 rounded-lg space-y-1.5 md:space-y-2">
                       <div className="flex justify-between items-center text-neutral-300">
                         <span className="text-sm md:text-base">Wartość produktów:</span>
                         <span className="text-sm md:text-base">
@@ -1586,7 +1586,7 @@ export default function CheckoutSection() {
                           <span className="text-sm md:text-base font-semibold">-{PricingService.formatPrice(discountAmount)}</span>
                         </div>
                       )}
-                      <div className="flex justify-between items-center pt-2 border-t border-neutral-700">
+                      <div className="flex justify-between items-center pt-2 border-t border-white/10">
                         <span className="text-neutral-300 text-xs md:text-sm">Razem do zapłaty</span>
                         <div className="text-right">
                           <span className="text-white font-bold text-2xl md:text-3xl">
@@ -1619,7 +1619,7 @@ export default function CheckoutSection() {
                   variant="outline"
                   onClick={prevStep}
                   disabled={currentStep === 1}
-                  className="bg-white/5 border-neutral-600 text-gray-300 hover:bg-white/10 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-4 sm:px-8 lg:px-8 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
+                  className="bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-4 sm:px-8 lg:px-8 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
                 >
                   <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 mr-2 sm:mr-3 lg:mr-3" />
                   Wstecz

@@ -245,11 +245,11 @@ export function PaymentSuccess() {
       case 'failed':
         return <Badge className="bg-red-900/30 text-red-400 border-red-500/30 px-4 py-2 text-sm font-medium">Nieudane</Badge>;
       case 'cancelled':
-        return <Badge className="bg-[#111]/30 text-gray-400 border-neutral-600/30 px-4 py-2 text-sm font-medium">Anulowane</Badge>;
+        return <Badge className="bg-[#111]/30 text-gray-400 border-white/10/30 px-4 py-2 text-sm font-medium">Anulowane</Badge>;
       case 'pending':
         return <Badge className="bg-yellow-900/30 text-yellow-400 border-yellow-500/30 px-4 py-2 text-sm font-medium">W trakcie</Badge>;
       default:
-        return <Badge className="bg-[#111]/30 text-gray-400 border-neutral-600/30 px-4 py-2 text-sm font-medium">Nieznany</Badge>;
+        return <Badge className="bg-[#111]/30 text-gray-400 border-white/10/30 px-4 py-2 text-sm font-medium">Nieznany</Badge>;
     }
   };
 
@@ -495,7 +495,7 @@ export function PaymentSuccess() {
                 <div className="space-y-3 text-sm">
                   {/* Numer zamówienia */}
                   {paymentStatus.orderNumber && (
-                    <div className="flex justify-between items-center py-2 border-b border-neutral-700">
+                    <div className="flex justify-between items-center py-2 border-b border-white/10">
                       <span className="text-white/70">Numer zamówienia:</span>
                       <span className="text-white font-mono font-semibold">{paymentStatus.orderNumber}</span>
                     </div>
@@ -503,7 +503,7 @@ export function PaymentSuccess() {
                   
                   {/* Status zamówienia */}
                   {paymentStatus.orderStatus && (
-                    <div className="flex justify-between items-center py-2 border-b border-neutral-700">
+                    <div className="flex justify-between items-center py-2 border-b border-white/10">
                       <span className="text-white/70">Status zamówienia:</span>
                       <Badge className="bg-blue-900/30 text-blue-400 border-blue-500/30 px-2 py-1 text-xs">
                         {paymentStatus.orderStatus === 'pending' && 'Oczekujące'}
@@ -519,7 +519,7 @@ export function PaymentSuccess() {
 
                   {/* Status płatności */}
                   {paymentStatus.paymentStatus && (
-                    <div className="flex justify-between items-center py-2 border-b border-neutral-700">
+                    <div className="flex justify-between items-center py-2 border-b border-white/10">
                       <span className="text-white/70">Status płatności:</span>
                       <Badge className="bg-green-900/30 text-green-400 border-green-500/30 px-2 py-1 text-xs">
                         {paymentStatus.paymentStatus === 'paid' && 'Opłacone'}
@@ -533,7 +533,7 @@ export function PaymentSuccess() {
 
                   {/* Metoda płatności */}
                   {paymentStatus.paymentMethod && (
-                    <div className="flex justify-between items-center py-2 border-b border-neutral-700">
+                    <div className="flex justify-between items-center py-2 border-b border-white/10">
                       <span className="text-white/70">Metoda płatności:</span>
                       <span className="text-white">{getPaymentMethodLabel(paymentStatus.paymentMethod)}</span>
                     </div>
@@ -541,7 +541,7 @@ export function PaymentSuccess() {
 
                   {/* ID zamówienia */}
                   {paymentStatus.orderId && (
-                    <div className="flex justify-between items-center py-2 border-b border-neutral-700">
+                    <div className="flex justify-between items-center py-2 border-b border-white/10">
                       <span className="text-white/70">ID zamówienia:</span>
                       <span className="text-white font-mono text-xs">{paymentStatus.orderId}</span>
                     </div>
@@ -549,7 +549,7 @@ export function PaymentSuccess() {
                   
                   {/* ID transakcji P24 */}
                   {paymentStatus.p24OrderId && (
-                    <div className="flex justify-between items-center py-2 border-b border-neutral-700">
+                    <div className="flex justify-between items-center py-2 border-b border-white/10">
                       <span className="text-white/70">ID transakcji P24:</span>
                       <span className="text-white font-mono text-xs">{paymentStatus.p24OrderId}</span>
                     </div>
@@ -557,7 +557,7 @@ export function PaymentSuccess() {
 
                   {/* Data utworzenia */}
                   {paymentStatus.createdAt && (
-                    <div className="flex justify-between items-center py-2 border-b border-neutral-700">
+                    <div className="flex justify-between items-center py-2 border-b border-white/10">
                       <span className="text-white/70">Data zamówienia:</span>
                       <span className="text-white text-xs">
                         {new Date(paymentStatus.createdAt).toLocaleString('pl-PL', {
@@ -573,7 +573,7 @@ export function PaymentSuccess() {
 
                   {/* Numer śledzenia */}
                   {paymentStatus.trackingNumber && (
-                    <div className="flex justify-between items-center py-2 border-b border-neutral-700">
+                    <div className="flex justify-between items-center py-2 border-b border-white/10">
                       <span className="text-white/70">Numer śledzenia:</span>
                       <span className="text-white font-mono">{paymentStatus.trackingNumber}</span>
                     </div>
@@ -582,7 +582,7 @@ export function PaymentSuccess() {
 
                 {/* Dane klienta */}
                 {paymentStatus.customer && (
-                  <div className="mt-6 pt-4 border-t border-neutral-700">
+                  <div className="mt-6 pt-4 border-t border-white/10">
                     <h5 className="font-semibold text-white mb-3">Dane klienta</h5>
                     <div className="space-y-2 text-sm">
                       {paymentStatus.customer.name && (
@@ -615,7 +615,7 @@ export function PaymentSuccess() {
 
                 {/* Adres dostawy */}
                 {paymentStatus.shippingAddress && (
-                  <div className="mt-6 pt-4 border-t border-neutral-700">
+                  <div className="mt-6 pt-4 border-t border-white/10">
                     <h5 className="font-semibold text-white mb-3">Adres dostawy</h5>
                     <div className="text-sm text-white/80">
                       {paymentStatus.shippingAddress.street && (
@@ -637,7 +637,7 @@ export function PaymentSuccess() {
                 {/* Adres faktury (jeśli różny od dostawy) */}
                 {paymentStatus.billingAddress && 
                  JSON.stringify(paymentStatus.billingAddress) !== JSON.stringify(paymentStatus.shippingAddress) && (
-                  <div className="mt-6 pt-4 border-t border-neutral-700">
+                  <div className="mt-6 pt-4 border-t border-white/10">
                     <h5 className="font-semibold text-white mb-3">Adres faktury</h5>
                     <div className="text-sm text-white/80">
                       {paymentStatus.billingAddress.street && (
@@ -659,7 +659,7 @@ export function PaymentSuccess() {
                 {/* Szczegóły cenowe */}
                 {(paymentStatus.subtotal !== undefined || paymentStatus.shippingCost !== undefined || 
                   paymentStatus.tax !== undefined || paymentStatus.discount !== undefined) && (
-                  <div className="mt-6 pt-4 border-t border-neutral-700">
+                  <div className="mt-6 pt-4 border-t border-white/10">
                     <h5 className="font-semibold text-white mb-3">Szczegóły ceny</h5>
                     <div className="space-y-2 text-sm">
                       {paymentStatus.subtotal !== undefined && (
@@ -687,7 +687,7 @@ export function PaymentSuccess() {
                         </div>
                       )}
                       {paymentStatus.total !== undefined && (
-                        <div className="flex justify-between items-center pt-2 border-t border-neutral-700 mt-2">
+                        <div className="flex justify-between items-center pt-2 border-t border-white/10 mt-2">
                           <span className="text-white font-semibold">Suma całkowita:</span>
                           <span className="text-red-400 font-bold text-lg">{paymentStatus.total.toFixed(2)} zł</span>
                         </div>
@@ -698,7 +698,7 @@ export function PaymentSuccess() {
 
                 {/* Uwagi */}
                 {paymentStatus.notes && (
-                  <div className="mt-6 pt-4 border-t border-neutral-700">
+                  <div className="mt-6 pt-4 border-t border-white/10">
                     <h5 className="font-semibold text-white mb-2">Uwagi</h5>
                     <p className="text-sm text-white/80">{paymentStatus.notes}</p>
                   </div>
@@ -706,7 +706,7 @@ export function PaymentSuccess() {
 
                 {/* Products list */}
                 {paymentStatus.items && paymentStatus.items.length > 0 && (
-                  <div className="mt-6 pt-4 border-t border-neutral-700">
+                  <div className="mt-6 pt-4 border-t border-white/10">
                     <h5 className="font-semibold text-white mb-3">Produkty</h5>
                     <div className="space-y-3">
                       {paymentStatus.items.map((item: any, index: number) => (
@@ -737,7 +737,7 @@ export function PaymentSuccess() {
                             )}
                           </div>
                           {item.configuration && Object.keys(item.configuration).length > 0 && (
-                            <div className="mt-2 pt-2 border-t border-neutral-700 text-xs text-white/60">
+                            <div className="mt-2 pt-2 border-t border-white/10 text-xs text-white/60">
                               <span className="font-medium">Konfiguracja: </span>
                               <span>{JSON.stringify(item.configuration)}</span>
                             </div>

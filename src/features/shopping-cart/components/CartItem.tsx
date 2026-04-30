@@ -141,7 +141,7 @@ function MatCartItem({
   const carDetails = config?.carDetails;
 
   return (
-    <div className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700 rounded-xl p-5 shadow-lg hover:shadow-xl transition-all duration-300">
+    <div className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-white/10 rounded-xl p-5 shadow-lg hover:shadow-xl transition-all duration-300">
       {/* Header z nazwą produktu */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
@@ -236,14 +236,14 @@ function MatCartItem({
       )}
 
       {/* Footer z kontrolkami i ceną */}
-      <div className="flex items-center justify-between pt-4 border-t border-neutral-700">
+      <div className="flex items-center justify-between pt-4 border-t border-white/10">
         {/* Kontrolki ilości */}
         <div className="flex items-center space-x-3">
           <Button
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity - 1)}
-            className="h-9 w-9 p-0 border-neutral-600 text-neutral-300 hover:bg-white/10 hover:text-white"
+            className="h-9 w-9 p-0 border-white/10 text-neutral-300 hover:bg-white/10 hover:text-white"
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -256,7 +256,7 @@ function MatCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity + 1)}
-            className="h-9 w-9 p-0 border-neutral-600 text-neutral-300 hover:bg-white/10 hover:text-white"
+            className="h-9 w-9 p-0 border-white/10 text-neutral-300 hover:bg-white/10 hover:text-white"
           >
             <Plus className="h-4 w-4" />
           </Button>
@@ -300,7 +300,7 @@ function AccessoryCartItem({
   onUpdateQuantity: (quantity: number) => void; 
 }) {
   return (
-    <div className="flex items-center space-x-4 p-4 border border-neutral-600 rounded-lg bg-white/5/40 backdrop-blur">
+    <div className="flex items-center space-x-4 p-4 border border-white/10 rounded-lg bg-white/5/40 backdrop-blur">
       {/* Obraz produktu */}
       <div className="flex-shrink-0">
         <div className="w-20 h-20 bg-white/10 rounded-lg flex items-center justify-center">
@@ -335,7 +335,7 @@ function AccessoryCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity - 1)}
-            className="h-8 w-8 p-0 border-neutral-600 text-gray-300 hover:bg-white/10"
+            className="h-8 w-8 p-0 border-white/10 text-gray-300 hover:bg-white/10"
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -348,7 +348,7 @@ function AccessoryCartItem({
             variant="outline"
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity + 1)}
-            className="h-8 w-8 p-0 border-neutral-600 text-gray-300 hover:bg-white/10"
+            className="h-8 w-8 p-0 border-white/10 text-gray-300 hover:bg-white/10"
           >
             <Plus className="h-4 w-4" />
           </Button>
