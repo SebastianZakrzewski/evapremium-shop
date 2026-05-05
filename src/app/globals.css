@@ -243,6 +243,28 @@ html {
     will-change: transform;
   }
 
+  .animate-scroll-right-seamless {
+    animation: scroll-right-seamless 30s linear infinite;
+    will-change: transform;
+  }
+
+  .gallery-slider-mask {
+    mask: linear-gradient(
+      90deg,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+    -webkit-mask: linear-gradient(
+      90deg,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+  }
+
   /* Responsywne animacje dla urządzeń mobilnych */
   @media (max-width: 640px) {
     .animate-float-in,
@@ -516,6 +538,15 @@ html {
   }
   100% {
     transform: translateX(-1500px);
+  }
+}
+
+@keyframes scroll-right-seamless {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }
 
