@@ -118,16 +118,14 @@ export default function FAQSection() {
   return (
     <section 
       id="faq-section" 
-      className="py-20 md:py-24 bg-black text-white relative overflow-hidden"
+      className="py-10 md:py-14 bg-black text-white relative overflow-hidden"
       role="region"
       aria-label="Najczęściej zadawane pytania - FAQ"
     >
       {/* Gradient line top */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
-
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className={`text-center mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div className={`text-center mb-8 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
             Najczęściej zadawane <span className="text-red-500">pytania</span>
           </h2>
@@ -137,7 +135,7 @@ export default function FAQSection() {
         </div>
 
         {/* Filtry kategorii */}
-        <div className={`flex flex-wrap justify-center gap-3 mb-12 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div className={`flex flex-wrap justify-center gap-3 mb-6 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           {categories.map((category) => (
             <button
               key={category}

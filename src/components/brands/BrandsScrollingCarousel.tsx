@@ -1,8 +1,14 @@
 "use client"
 
-import React, { useState, useCallback, useMemo, useRef } from "react"
-import { motion } from "framer-motion"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import React from "react"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Autoplay, EffectCoverflow, Navigation, Pagination } from "swiper/modules"
+
+import "swiper/css"
+import "swiper/css/effect-coverflow"
+import "swiper/css/pagination"
+import "swiper/css/navigation"
+
 import { BrandCard } from "@/components/ui/BrandCard"
 import { Brand } from "@/entities/car"
 
@@ -12,115 +18,130 @@ interface BrandsScrollingCarouselProps {
   clickedCardId: number | null
 }
 
-const CARD_WIDTH = 312
-const GAP = 24 // mx-3 = 12px * 2
-const SCROLL_DISTANCE = CARD_WIDTH + GAP
-const SCROLL_DURATION = 50
+const swiperStyles = `
+  .brands-scrolling-swiper {
+    width: 100%;
+    padding-bottom: 16px !important;
+    touch-action: pan-y;
+  }
+
+  .brands-scrolling-swiper .swiper-slide {
+    width: 200px;
+  }
+
+  @media (min-width: 640px) {
+    .brands-scrolling-swiper .swiper-slide {
+      width: 240px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .brands-scrolling-swiper .swiper-slide {
+      width: 288px;
+    }
+  }
+
+  .brands-scrolling-swiper .swiper-3d .swiper-slide-shadow-left,
+  .brands-scrolling-swiper .swiper-3d .swiper-slide-shadow-right {
+    background-image: none;
+    background: none;
+  }
+
+  /* Ukryj strzałki na mobile */
+  @media (max-width: 639px) {
+    .brands-scrolling-swiper .swiper-button-prev,
+    .brands-scrolling-swiper .swiper-button-next {
+      display: none;
+    }
+  }
+
+  .brands-scrolling-swiper .swiper-button-prev,
+  .brands-scrolling-swiper .swiper-button-next {
+    color: #ef4444;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    top: 42%;
+  }
+
+  .brands-scrolling-swiper .swiper-button-prev::after,
+  .brands-scrolling-swiper .swiper-button-next::after {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .brands-scrolling-swiper .swiper-button-prev:hover,
+  .brands-scrolling-swiper .swiper-button-next:hover {
+    background: rgba(239, 68, 68, 0.2);
+  }
+`
 
 export default function BrandsScrollingCarousel({
   brands,
   onBrandClick,
-  clickedCardId
+  clickedCardId,
 }: BrandsScrollingCarouselProps) {
-  const [isPaused, setIsPaused] = useState(false)
-  const [carouselOffset, setCarouselOffset] = useState(0)
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-
-  const goToPrevious = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    setIsPaused(true)
-    setCarouselOffset((prev) => prev + SCROLL_DISTANCE)
-    timeoutRef.current = setTimeout(() => setIsPaused(false), 500)
-  }, [])
-
-  const goToNext = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    setIsPaused(true)
-    setCarouselOffset((prev) => prev - SCROLL_DISTANCE)
-    timeoutRef.current = setTimeout(() => setIsPaused(false), 500)
-  }, [])
-
-  const brandSets = useMemo(() => {
-    const sets = ["first", "second", "third", "fourth"]
-    return sets.map((setKey) =>
-      brands.map((brand, index) => (
-        <div
-          key={`${setKey}-${brand.id}`}
-          className="flex-shrink-0 mx-3 cursor-pointer relative group"
-          style={{ width: CARD_WIDTH }}
-          onClick={() => onBrandClick(brand)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault()
-              onBrandClick(brand)
-            }
-          }}
-          aria-label={`Wybierz markę ${brand.name}`}
-        >
-          <div className="transform transition-transform duration-300 group-hover:scale-105">
-            <BrandCard
-              brand={brand}
-              className={clickedCardId === brand.id ? "animate-click" : ""}
-              isPriority={index < 3 && setKey === "first"}
-            />
-          </div>
-        </div>
-      ))
-    )
-  }, [brands, clickedCardId, onBrandClick])
-
   if (brands.length === 0) return null
 
   return (
-    <div
-      className="w-full overflow-hidden relative py-10"
-    >
-      {/* Strzałki - spójne z ProductGallery */}
-      <button
-        onClick={goToPrevious}
-        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white p-3 md:p-4 rounded-full transition-all duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center group"
-        aria-label="Przewiń karuzelę w lewo"
+    <div className="w-full">
+      <style>{swiperStyles}</style>
+      <Swiper
+        className="brands-scrolling-swiper"
+        spaceBetween={40}
+        breakpoints={{
+          640: { spaceBetween: 56 },
+          1024: { spaceBetween: 72 },
+        }}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        }}
+        effect="coverflow"
+        grabCursor={true}
+        centeredSlides={true}
+        loop={brands.length > 3}
+        slidesPerView="auto"
+        touchRatio={1}
+        touchAngle={45}
+        simulateTouch={true}
+        allowTouchMove={true}
+        coverflowEffect={{
+          rotate: 0,
+          stretch: 0,
+          depth: 100,
+          modifier: 2,
+          slideShadows: false,
+        }}
+        pagination={false}
+        navigation={true}
+        modules={[EffectCoverflow, Autoplay, Pagination, Navigation]}
       >
-        <ChevronLeft className="w-6 h-6 group-hover:scale-110 transition-transform" />
-      </button>
-
-      <button
-        onClick={goToNext}
-        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white p-3 md:p-4 rounded-full transition-all duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center group"
-        aria-label="Przewiń karuzelę w prawo"
-      >
-        <ChevronRight className="w-6 h-6 group-hover:scale-110 transition-transform" />
-      </button>
-
-      <div className="overflow-hidden">
-        <motion.div
-          className="flex"
-          style={{ width: "max-content" }}
-          animate={
-            isPaused
-              ? { x: carouselOffset }
-              : { x: [carouselOffset, carouselOffset - SCROLL_DISTANCE * 2] }
-          }
-          transition={
-            isPaused
-              ? { x: { duration: 0.5, ease: "easeOut" } }
-              : {
-                  x: {
-                    repeat: Infinity,
-                    repeatType: "loop",
-                    duration: SCROLL_DURATION,
-                    ease: "linear"
-                  }
+        {brands.map((brand) => (
+          <SwiperSlide key={brand.id}>
+            <div
+              className="cursor-pointer select-none"
+              onClick={() => onBrandClick(brand)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Wybierz markę ${brand.name}`}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault()
+                  onBrandClick(brand)
                 }
-          }
-        >
-          {brandSets.map((set, i) => (
-            <React.Fragment key={i}>{set}</React.Fragment>
-          ))}
-        </motion.div>
-      </div>
+              }}
+            >
+              <BrandCard
+                brand={brand}
+                className={clickedCardId === brand.id ? "scale-95 opacity-70" : ""}
+              />
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   )
 }

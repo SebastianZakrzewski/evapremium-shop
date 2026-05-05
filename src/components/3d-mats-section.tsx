@@ -148,8 +148,6 @@ export default function ThreeDMatsSection() {
       aria-label="Dywaniki 3D z rantami - szczegóły produktu"
     >
       {/* Gradient line top - spójność z sekcjami powyżej */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
-      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Header - spójny z AdvantagesSection */}
         <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>

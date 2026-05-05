@@ -138,42 +138,6 @@ const productImages: SliderImage[] = [
     description: "Kompletny zestaw dywaników EVA Premium",
   },
   {
-    src: "/galeria/photo_2025-04-25_17.avif",
-    alt: "Dywaniki samochodowe EVA - nowoczesny design",
-    title: "Dywaniki EVA - Nowoczesny Design",
-    description: "Nowoczesny design dywaników EVA Premium",
-  },
-  {
-    src: "/galeria/Zdjęcie WhatsApp 2024-07-04 o 12.55.09_e0e51424.jpg",
-    alt: "Dywaniki samochodowe EVA - montaż w warsztacie",
-    title: "Dywaniki EVA - Montaż w Warsztacie",
-    description: "Profesjonalny montaż dywaników EVA w warsztacie",
-  },
-  {
-    src: "/galeria/Zdjęcie WhatsApp 2024-07-04 o 12.55.10_17f09e33.jpg",
-    alt: "Dywaniki samochodowe EVA - różne rozmiary",
-    title: "Dywaniki EVA - Różne Rozmiary",
-    description: "Dywaniki EVA w różnych rozmiarach do każdego samochodu",
-  },
-  {
-    src: "/galeria/Zdjęcie WhatsApp 2024-07-04 o 12.55.10_6ddf48d0.jpg",
-    alt: "Dywaniki samochodowe EVA - wykończenie brzegów",
-    title: "Dywaniki EVA - Wykończenie Brzegów",
-    description: "Precyzyjne wykończenie brzegów dywaników EVA",
-  },
-  {
-    src: "/galeria/Zdjęcie WhatsApp 2024-07-04 o 12.55.11_7814426b.jpg",
-    alt: "Dywaniki samochodowe EVA - kompletny zestaw",
-    title: "Dywaniki EVA - Kompletny Zestaw",
-    description: "Kompletny zestaw dywaników EVA do samochodu",
-  },
-  {
-    src: "/galeria/0-04-0a-9ba010c9aff1b9cdca1865a72fc75ebf4d93819c25a86b3373ae05ddcad6f52f_52ef7a6d.jpg",
-    alt: "Dywaniki samochodowe EVA - profesjonalna jakość",
-    title: "Dywaniki EVA - Profesjonalna Jakość",
-    description: "Profesjonalna jakość dywaników EVA Premium",
-  },
-  {
     src: "/galeria/photo_2025-09-26_12-01-31 (2).jpg",
     alt: "Dywaniki samochodowe EVA - nowa kolekcja",
     title: "Dywaniki EVA - Nowa Kolekcja",
@@ -208,15 +172,10 @@ export default function ProductGallerySection() {
     <section
       id="product-gallery"
       data-section="product-gallery"
-      className="w-full bg-black py-20 md:py-24 relative overflow-hidden"
+        className="w-full bg-black py-10 md:py-14 relative overflow-hidden"
       role="region"
       aria-label="Galeria produktów - zdjęcia dywaników samochodowych EVA Premium"
     >
-      {/* Top divider */}
-      <div
-        className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10"
-        aria-hidden="true"
-      />
 
       {/* Subtle background glow */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -248,7 +207,7 @@ export default function ProductGallerySection() {
 
       {/* Auto-scrolling gallery */}
       <div className="relative z-10 w-full py-4">
-        <ImageAutoSlider images={productImages} speed={100} />
+        <ImageAutoSlider images={productImages} speed={150} />
       </div>
 
       {/* CTA */}
@@ -262,11 +221,6 @@ export default function ProductGallerySection() {
         </Link>
       </div>
 
-      {/* Bottom divider */}
-      <div
-        className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10"
-        aria-hidden="true"
-      />
     </section>
   )
 }

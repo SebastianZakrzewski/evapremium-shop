@@ -1,40 +1,89 @@
-"use client";
+"use client"
 
-import React, { useState, useEffect } from "react";
-import ImageCarousel from "../ImageCarousel";
-import { BrandCard } from "../ui/BrandCard";
-import { Brand } from "@/entities/car";
-import { Car, Loader2 } from "lucide-react";
-import { useBrands } from "@/features/brands/hooks/useBrands";
+import React, { useState, useCallback } from "react"
+import { useRouter } from "next/navigation"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Autoplay, EffectCoverflow, Navigation, Pagination } from "swiper/modules"
+import { Car, Loader2 } from "lucide-react"
+
+import "swiper/css"
+import "swiper/css/effect-coverflow"
+import "swiper/css/pagination"
+import "swiper/css/navigation"
+
+import { BrandCard } from "@/components/ui/BrandCard"
+import { useBrands } from "@/features/brands/hooks/useBrands"
+import { Brand } from "@/entities/car"
+
+const swiperStyles = `
+  .brands-swiper {
+    width: 100%;
+    padding-bottom: 56px !important;
+  }
+
+  .brands-swiper .swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 288px;
+  }
+
+  .brands-swiper .swiper-slide img {
+    display: block;
+    width: 100%;
+  }
+
+  .brands-swiper .swiper-3d .swiper-slide-shadow-left,
+  .brands-swiper .swiper-3d .swiper-slide-shadow-right {
+    background-image: none;
+    background: none;
+  }
+
+  .brands-swiper .swiper-pagination-bullet {
+    background: #ef4444;
+    opacity: 0.5;
+  }
+
+  .brands-swiper .swiper-pagination-bullet-active {
+    background: #ef4444;
+    opacity: 1;
+  }
+
+  .brands-swiper .swiper-button-prev,
+  .brands-swiper .swiper-button-next {
+    color: #ef4444;
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    top: 42%;
+  }
+
+  .brands-swiper .swiper-button-prev::after,
+  .brands-swiper .swiper-button-next::after {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .brands-swiper .swiper-button-prev:hover,
+  .brands-swiper .swiper-button-next:hover {
+    background: rgba(239,68,68,0.2);
+  }
+`
 
 export default function PopularBrandsCarousel() {
-  // Pobierz marki używając hooka useBrands
-  const { brands, isLoading: loading, error: fetchError } = useBrands();
-  const error = fetchError ? 'Nie udało się pobrać marek samochodów' : null;
+  const router = useRouter()
+  const { brands, isLoading, error: fetchError } = useBrands()
+  const [failedImageIds, setFailedImageIds] = useState<Set<string>>(new Set())
 
-  // Handler dla kliknięcia w markę
+  const handleImageError = useCallback((brandId: string) => {
+    setFailedImageIds((prev) => new Set([...prev, brandId]))
+  }, [])
+
   const handleBrandClick = (brand: Brand) => {
-    // Przekieruj do strony z produktami modeli dla danej marki
-    window.location.href = `/modele/${encodeURIComponent(brand.name.toLowerCase())}`;
-  };
+    router.push(`/modele/${encodeURIComponent(brand.name.toLowerCase())}`)
+  }
 
-  // Renderowanie karty marki
-  const renderBrandCard = (brand: Brand, index: number, position: string) => {
-    return (
-      <BrandCard
-        brand={brand}
-        className={`transition-all duration-700 ease-out ${
-          position === 'center' 
-            ? 'scale-100 opacity-100' 
-            : position === 'left' || position === 'right'
-            ? 'scale-95 opacity-90'
-            : 'scale-90 opacity-70'
-        }`}
-      />
-    );
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <section className="py-20 bg-black relative overflow-hidden">
         <div className="container mx-auto px-4 text-center">
@@ -43,16 +92,14 @@ export default function PopularBrandsCarousel() {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Popularne Marki Samochodów
             </h2>
-            <p className="text-gray-400 text-lg">
-              Ładowanie dostępnych marek...
-            </p>
+            <p className="text-gray-400 text-lg">Ładowanie dostępnych marek...</p>
           </div>
         </div>
       </section>
-    );
+    )
   }
 
-  if (error && brands.length === 0) {
+  if (fetchError && brands.length === 0) {
     return (
       <section className="py-20 bg-black relative overflow-hidden">
         <div className="container mx-auto px-4 text-center">
@@ -62,7 +109,7 @@ export default function PopularBrandsCarousel() {
               Popularne Marki Samochodów
             </h2>
             <p className="text-red-400 text-lg mb-4">
-              {error}
+              Nie udało się pobrać marek samochodów
             </p>
             <p className="text-gray-400">
               Spróbuj odświeżyć stronę lub skontaktuj się z nami.
@@ -70,25 +117,26 @@ export default function PopularBrandsCarousel() {
           </div>
         </div>
       </section>
-    );
+    )
   }
 
   return (
     <section className="py-20 bg-black relative overflow-hidden">
-      {/* Tło z gradientem */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
-      
-      {/* Nagłówek sekcji */}
+      <style>{swiperStyles}</style>
+
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5" />
+
       <div className="container mx-auto px-4 relative z-10 mb-12">
         <div className="text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Popularne Marki <span className="text-red-500">Samochodów</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Wybierz markę swojego auta i odkryj nasze precyzyjnie dopasowane dywaniki samochodowe. 
-            Oferujemy rozwiązania dla ponad {brands.length} marek samochodów.
+            Wybierz markę swojego auta i odkryj nasze precyzyjnie dopasowane
+            dywaniki samochodowe. Oferujemy rozwiązania dla ponad{" "}
+            {brands.length} marek samochodów.
           </p>
-          {error && (
+          {fetchError && (
             <p className="text-yellow-400 text-sm mt-2">
               ⚠️ Używamy ograniczonych danych (API tymczasowo niedostępne)
             </p>
@@ -96,18 +144,63 @@ export default function PopularBrandsCarousel() {
         </div>
       </div>
 
-      {/* Carousel z markami */}
-      <div className="relative z-10">
-        <ImageCarousel
-          items={brands}
-          onItemClick={handleBrandClick}
-          renderItem={renderBrandCard}
-          className=""
-        />
+      <div className="relative z-10 w-full">
+        <Swiper
+          key={`brands-swiper-${brands.filter((b) => !failedImageIds.has(b.id)).length}`}
+          className="brands-swiper"
+          spaceBetween={32}
+          autoplay={{
+            delay: 2000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          effect="coverflow"
+          grabCursor={true}
+          centeredSlides={true}
+          loop={brands.filter((b) => !failedImageIds.has(b.id)).length > 3}
+          slidesPerView="auto"
+          coverflowEffect={{
+            rotate: 0,
+            stretch: 0,
+            depth: 120,
+            modifier: 2.5,
+            slideShadows: false,
+          }}
+          pagination={{ clickable: true }}
+          navigation={{
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+          }}
+          modules={[EffectCoverflow, Autoplay, Pagination, Navigation]}
+        >
+          {brands
+            .filter((brand) => !failedImageIds.has(brand.id))
+            .map((brand) => (
+              <SwiperSlide key={brand.id}>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => handleBrandClick(brand)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Wybierz markę ${brand.name}`}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault()
+                      handleBrandClick(brand)
+                    }
+                  }}
+                >
+                  <BrandCard
+                    brand={brand}
+                    onImageError={() => handleImageError(brand.id)}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+        </Swiper>
       </div>
 
-      {/* Dodatkowe informacje */}
-      <div className="container mx-auto px-4 relative z-10 mt-12">
+      <div className="container mx-auto px-4 relative z-10 mt-4">
         <div className="text-center">
           <p className="text-gray-400 text-sm">
             Kliknij na markę, aby zobaczyć dostępne modele i spersonalizować dywaniki
@@ -115,5 +208,5 @@ export default function PopularBrandsCarousel() {
         </div>
       </div>
     </section>
-  );
+  )
 }

@@ -47,11 +47,10 @@ export default function ProductSelection() {
     return (
       <section
         id="products"
-        className="w-full bg-black py-20 md:py-24 flex items-center justify-center relative"
+        className="w-full bg-black py-10 md:py-14 flex items-center justify-center relative"
         role="region"
         aria-label="Popularne marki samochodów - ładowanie"
       >
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
           <div className="flex flex-col items-center justify-center min-h-[300px]">
             <Loader2 className="w-12 h-12 text-red-500 animate-spin mb-4" />
@@ -74,9 +73,6 @@ export default function ProductSelection() {
       role="region"
       aria-label="Popularne marki samochodów - wybierz markę i znajdź dywaniki"
     >
-      {/* Gradient line top - spójność z innymi sekcjami */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
-
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Nagłówek sekcji - spójny z QuickSearchBar, ProductGallery, AdvantagesSection */}
         <div className="text-center mb-12 md:mb-16">

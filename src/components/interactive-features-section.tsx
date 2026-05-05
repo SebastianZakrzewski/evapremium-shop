@@ -6,61 +6,81 @@ import { cn } from "@/lib/utils";
 
 const features = [
   {
-    id: "ranty",
-    title: "Ranty o wysokości 5cm",
-    description: "Wysokie na 5 cm ranty skutecznie zatrzymują wodę, błoto i śnieg, chroniąc oryginalną wykładzinę samochodu przed zabrudzeniem.",
-    area: { top: "19%", left: "44%", width: "42%", height: "8%" },
+    id: "ochrona",
+    title: "Doskonała ochrona",
+    description: "Ranty 3D o wysokości do 8 cm skutecznie chronią przed wnikaniem brudu, wilgoci i zanieczyszczeń pod dywanik, zapewniając długotrwałą ochronę podłogi Twojego samochodu.",
+    position: { top: "25%", left: "20%" },
     image: "/7.webp"
   },
   {
-    id: "3d",
-    title: "Wyprofilowania 3D",
-    description: "Idealne dopasowanie do kształtu podłogi dzięki technologii skanowania 3D, co gwarantuje brak wolnych przestrzeni i przesuwania się dywaników.",
-    area: { top: "36.5%", left: "22%", width: "35%", height: "8%" },
+    id: "jezor",
+    title: "3D Jęzor",
+    description: "Jęzor 3D pod pedałami gazu jest zintegrowany z dywanikiem, nie przesuwa się i skutecznie chroni wykładzinę w miejscu najbardziej narażonym na zużycie.",
+    position: { top: "12%", left: "65%" },
     image: "/images/zalety/3d-jezor-detail.png"
   },
   {
-    id: "mocowania",
-    title: "Oryginalne mocowania",
-    description: "Wykorzystujemy fabryczne systemy mocowań (stoppery), dzięki czemu dywaniki są stabilne i bezpieczne podczas jazdy.",
-    area: { top: "54%", left: "6%", width: "41%", height: "8%" },
-    image: "/images/zalety/rzepy.png"
-  },
-  {
-    id: "przykrycie",
-    title: "95% przykrycie podłogi",
-    description: "Maksymalna ochrona podłogi Twojego auta. Nasze dywaniki pokrywają aż do 95% powierzchni, chroniąc to, co najważniejsze.",
-    area: { top: "60.5%", left: "51%", width: "42%", height: "8%" },
+    id: "bezpieczenstwo",
+    title: "Bezpieczeństwo",
+    description: "Specjalne antypoślizgowe właściwości dywaników 3D zapewniają maksymalne bezpieczeństwo podczas jazdy. Materiał EVA o wysokiej gęstości zapobiega przesuwaniu się dywaników.",
+    position: { top: "45%", left: "35%" },
     image: "/1.webp"
   },
   {
-    id: "kolory",
-    title: "250+ połączeń kolorystycznych",
-    description: "Stwórz unikalny wygląd wnętrza swojego samochodu. Wybieraj spośród setek kombinacji kolorów materiału i obszycia.",
-    area: { top: "82.5%", left: "13%", width: "55%", height: "8%" },
-    image: "/images/zalety/roznorodna-kolorystyka-v2.png"
+    id: "czyszczenie",
+    title: "Łatwość czyszczenia",
+    description: "Głęboka struktura komórek 3D ułatwia szybkie i skuteczne czyszczenie dywaników. Brud i zanieczyszczenia nie wnikają głęboko w materiał, co pozwala na łatwe usunięcie ich za pomocą wody.",
+    position: { top: "60%", left: "65%" },
+    image: "/komorki.png"
+  },
+  {
+    id: "rzep",
+    title: "Rzep na każdym rogu",
+    description: "Specjalne rzepy umieszczone na każdym rogu dywanika zapewniają idealne dopasowanie do podłogi samochodu. Dzięki temu dywaniki pozostają na swoim miejscu nawet podczas dynamicznej jazdy.",
+    position: { top: "75%", left: "25%" },
+    image: "/images/zalety/rzepy.png"
+  },
+  {
+    id: "grubosc",
+    title: "Grubość 10mm",
+    description: "Grubość dywanika wynosząca 10mm została starannie dobrana, aby zapewnić doskonałą amortyzację, komfort jazdy oraz skuteczną ochronę wykładziny samochodowej.",
+    position: { top: "85%", left: "75%" },
+    image: "/images/zalety/10mm.png"
   },
 ];
 
 export default function InteractiveFeaturesSection() {
   // Domyślnie wybrana pierwsza cecha
   const [activeFeature, setActiveFeature] = useState<string>(features[0].id);
+  const [displayedFeature, setDisplayedFeature] = useState(features[0]);
+  const [isFading, setIsFading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const imageRef = useRef<HTMLImageElement>(null);
+  const detailsRef = useRef<HTMLDivElement>(null);
 
-  const activeFeatureData = features.find(f => f.id === activeFeature) || features[0];
-
-  // Efekt przejścia (fade) przy zmianie zdjęcia
-  useEffect(() => {
-    if (imageRef.current) {
-      imageRef.current.classList.remove("opacity-0");
-      void imageRef.current.offsetWidth;
-      imageRef.current.classList.add("opacity-0");
+  const handleFeatureClick = (id: string) => {
+    if (id === activeFeature) return; // Ignoruj kliknięcie w już aktywną cechę
+    
+    setActiveFeature(id);
+    setIsFading(true); // Rozpocznij zanikanie
+    
+    // Po zakończeniu zanikania (300ms), zmień dane i pokaż ponownie
+    setTimeout(() => {
+      const newFeature = features.find(f => f.id === id) || features[0];
+      setDisplayedFeature(newFeature);
+      setIsFading(false);
+    }, 300);
+    
+    // Automatyczne przewijanie na urządzeniach mobilnych
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
       setTimeout(() => {
-        if (imageRef.current) imageRef.current.classList.remove("opacity-0");
-      }, 200);
+        if (detailsRef.current) {
+          const yOffset = -100; // Margines od góry (np. na sticky navbar)
+          const y = detailsRef.current.getBoundingClientRect().top + window.scrollY + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }, 350); // Przewijamy po zakończeniu animacji fade
     }
-  }, [activeFeature]);
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -83,17 +103,15 @@ export default function InteractiveFeaturesSection() {
   return (
     <section 
       id="interactive-features" 
-      className="py-20 md:py-24 bg-black relative overflow-hidden"
+      className="py-10 md:py-14 bg-black relative overflow-hidden"
     >
       {/* Gradient line top */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
-
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-tr from-red-900/5 via-black to-black pointer-events-none"></div>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className={`text-center mb-16 md:mb-20 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div className={`text-center mb-8 md:mb-10 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
             Poznaj <span className="text-red-500">innowacyjne cechy</span>
           </h2>
@@ -105,19 +123,17 @@ export default function InteractiveFeaturesSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-start max-w-7xl mx-auto">
           
           {/* Prawa strona: Zdjęcie szczegółowe + Opis */}
-          <div className={`order-2 lg:order-2 transition-all duration-1000 ease-out sticky top-24 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+          <div ref={detailsRef} className={`order-2 lg:order-2 transition-all duration-1000 ease-out sticky top-24 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             <div className="relative group">
               {/* Kontener na zdjęcie */}
               <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
-                <div className="relative rounded-2xl overflow-hidden bg-[#111] flex">
+                <div className={cn("relative rounded-2xl overflow-hidden bg-[#111] flex transition-opacity duration-300 ease-in-out", isFading ? "opacity-0" : "opacity-100")}>
                   <Image
-                    ref={imageRef}
-                    src={activeFeatureData.image}
-                    alt={activeFeatureData.title}
+                    src={displayedFeature.image}
+                    alt={displayedFeature.title}
                     width={1000}
                     height={1000}
-                    className="w-full h-auto transition-all duration-500 opacity-100"
-                    style={{ transition: 'opacity 0.4s' }}
+                    className="w-full h-auto"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   
@@ -132,12 +148,12 @@ export default function InteractiveFeaturesSection() {
               </div>
               
               {/* Opis pod zdjęciem */}
-              <div className="mt-8 p-6 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10">
-                <h3 className="text-2xl font-bold text-white mb-4 transition-all duration-500">
-                  {activeFeatureData.title}
+              <div className={cn("mt-8 p-6 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 transition-opacity duration-300 ease-in-out", isFading ? "opacity-0" : "opacity-100")}>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  {displayedFeature.title}
                 </h3>
-                <p className="text-gray-400 leading-relaxed transition-all duration-500">
-                  {activeFeatureData.description}
+                <p className="text-gray-400 leading-relaxed">
+                  {displayedFeature.description}
                 </p>
               </div>
             </div>
@@ -147,7 +163,7 @@ export default function InteractiveFeaturesSection() {
           <div className={`order-1 lg:order-1 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
             <div className="relative w-full aspect-square max-w-[600px] mx-auto rounded-3xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-[#111]">
               <Image
-                src="/images/interactive-mat.png"
+                src="/images/interactive-mat-clean.png"
                 alt="Dywaniki EVA - cechy"
                 fill
                 className="object-cover opacity-90"
@@ -160,26 +176,21 @@ export default function InteractiveFeaturesSection() {
                 return (
                   <button
                     key={feature.id}
-                    onClick={() => setActiveFeature(feature.id)}
+                    onClick={() => handleFeatureClick(feature.id)}
                     className={cn(
-                      "absolute rounded-full transition-all duration-300 z-20 cursor-pointer",
+                      "absolute -translate-x-1/2 -translate-y-1/2 px-4 py-2 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap z-20 shadow-xl border-2",
                       isActive 
-                        ? "bg-red-500/20 border-2 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)]" 
-                        : "bg-transparent border-2 border-transparent hover:bg-white/10 hover:border-white/50"
+                        ? "bg-red-600 text-white border-red-500 shadow-[0_0_20px_rgba(220,38,38,0.6)]" 
+                        : "bg-white/90 text-black border-transparent hover:bg-white"
                     )}
                     style={{ 
-                      top: feature.area.top, 
-                      left: feature.area.left,
-                      width: feature.area.width,
-                      height: feature.area.height,
+                      top: feature.position.top, 
+                      left: feature.position.left,
                       transitionDelay: isVisible && !isActive ? `${400 + (index * 150)}ms` : '0ms'
                     }}
                     aria-label={`Zobacz cechę: ${feature.title}`}
                   >
-                    {/* Efekt pulsowania dla aktywnego elementu */}
-                    {isActive && (
-                      <span className="absolute inset-0 rounded-full bg-red-500/20 animate-ping" />
-                    )}
+                    {feature.title}
                   </button>
                 );
               })}

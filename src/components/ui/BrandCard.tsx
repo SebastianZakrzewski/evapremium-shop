@@ -7,9 +7,10 @@ interface BrandCardProps {
   brand: Brand;
   className?: string;
   isPriority?: boolean;
+  onImageError?: () => void;
 }
 
-export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, className = "", isPriority = false }) => {
+export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, className = "", isPriority = false, onImageError }) => {
   // Sprawdź czy to jest zdjęcie czy logo SVG
   const isImage = brand.logo.includes('.jpg') || brand.logo.includes('.png') || brand.logo.includes('.jpeg') || brand.logo.includes('.avif') || brand.logo.includes('.webp');
   
@@ -49,6 +50,7 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
               priority={isPriority}
               quality={90}
               loading={isPriority ? "eager" : "lazy"}
+              onError={onImageError}
             />
           ) : (
             // Dla logo SVG - w centrum
@@ -63,6 +65,7 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
+                  onImageError?.();
                 }}
               />
             </div>
@@ -113,10 +116,10 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
       </div>
     </div>
   );
-}, (prevProps, nextProps) => {
-  return prevProps.brand.id === nextProps.brand.id && 
-         prevProps.isPriority === nextProps.isPriority &&
-         prevProps.className === nextProps.className;
-});
+}, (prevProps, nextProps) =>
+  prevProps.brand.id === nextProps.brand.id &&
+  prevProps.isPriority === nextProps.isPriority &&
+  prevProps.className === nextProps.className
+);
 
 export default BrandCard;

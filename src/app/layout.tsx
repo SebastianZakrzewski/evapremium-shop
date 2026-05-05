@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Montserrat } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import Script from "next/script";
@@ -9,20 +9,11 @@ import { TrackingProvider } from "@/components/tracking-provider";
 import { QueryProvider } from "@/lib/providers/query-provider";
 import Chatbot from "@/features/chatbot/components/Chatbot";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-});
-
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin", "latin-ext"],
   weight: ["300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -197,7 +188,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${montserrat.variable} ${inter.variable} ${jetbrainsMono.variable} bg-black min-h-screen`}>
+      <body className={`${montserrat.variable} bg-black min-h-screen`}>
         <QueryProvider>
           <SessionProvider>
             <TrackingProvider>

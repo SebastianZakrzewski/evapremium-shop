@@ -58,13 +58,11 @@ export default function RoznorodnaKolorystykaSection() {
   }, []);
 
   return (
-    <section id="roznorodna-kolorystyka-section" className="py-20 md:py-24 bg-black relative overflow-hidden">
+    <section id="roznorodna-kolorystyka-section" className="py-10 md:py-14 bg-black relative overflow-hidden">
       {/* Gradient line top */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
-
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className={`text-center mb-16 md:mb-24 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div className={`text-center mb-8 md:mb-12 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight break-words px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
             Kolorystyka <span className="text-red-500">Premium</span>
           </h2>

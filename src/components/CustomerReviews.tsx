@@ -98,16 +98,14 @@ export default function CustomerReviews() {
   return (
     <section 
       id="opinie" 
-      className="py-20 md:py-24 bg-black relative overflow-hidden"
+      className="py-10 md:py-14 bg-black relative overflow-hidden"
       role="region"
       aria-label="Opinie klientów o dywanikach EVA"
     >
       {/* Gradient line top */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
-      
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
             Opinie naszych <span className="text-red-500">Klientów</span>
           </h2>

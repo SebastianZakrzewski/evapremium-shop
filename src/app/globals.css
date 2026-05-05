@@ -32,7 +32,7 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
 
 @theme {
   --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
-  --font-montserrat: var(--font-montserrat), sans-serif;
+  --font-mono: var(--font-montserrat), ui-monospace, monospace;
   
   --color-background: 0 0% 0%;
   --color-foreground: 0 0% 100%;
@@ -78,15 +78,41 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
   --color-ring: 0 84.2% 60.2%;
 }
 
+@layer utilities {
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground font-sans;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
     overflow-x: hidden;
   }
-  
+
+  h1, h2, h3, h4, h5, h6,
+  .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 400;
+    letter-spacing: calc(0.06rem);
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); }
+  h2 { font-size: clamp(1.875rem, 4.5vw, 3.25rem); }
+  h3 { font-size: clamp(1.5rem, 3.5vw, 2.25rem); }
+  h4 { font-size: clamp(1.25rem, 2.5vw, 1.75rem); }
+  h5 { font-size: clamp(1.125rem, 2vw, 1.5rem); }
+  h6 { font-size: clamp(1rem, 1.5vw, 1.25rem); }
+
   /* Powiększenie głównych tytułów sekcji na stronie głównej */
   .home-page h1 {
     font-size: clamp(3rem, 7vw, 5rem) !important;
@@ -96,7 +122,20 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
     font-size: clamp(2.25rem, 5vw, 4rem) !important;
     line-height: 1.2 !important;
   }
-  
+
+  p, li, span, a, label, input, select, textarea, button {
+    font-weight: 600;
+  }
+
+  strong, b {
+    font-weight: 900;
+  }
+
+  small, .text-sm, .text-xs {
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
   /* Custom Selection */
   ::selection {
     @apply bg-red-600 text-white;
@@ -351,7 +390,7 @@ html {
     animation: bounceIn 0.8s ease-out;
   }
 
-  /* Wymuszenie białego koloru i pogrubienia dla wszystkich szarych opisów */
+  /* Wymuszenie białego koloru dla wszystkich szarych opisów */
   .text-gray-300,
   .text-gray-400,
   .text-gray-500,
@@ -362,7 +401,6 @@ html {
   .text-zinc-600,
   .text-muted-foreground {
     color: #ffffff !important;
-    font-weight: 500 !important;
   }
 }
 

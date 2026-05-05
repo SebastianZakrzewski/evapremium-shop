@@ -78,9 +78,6 @@ export default function AdvantagesSection() {
       role="region"
       aria-label="Poznaj nasz produkt - zalety dywaników EVA Premium"
     >
-      {/* Gradient line top - spójność z QuickSearchBar i ProductGallery */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" aria-hidden="true" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Header - spójny z QuickSearchBar i ProductGallery */}
         <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
