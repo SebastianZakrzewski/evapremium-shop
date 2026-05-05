@@ -40,7 +40,7 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
   --color-card-foreground: 0 0% 100%;
   --color-popover: 0 0% 5%;
   --color-popover-foreground: 0 0% 100%;
-  --color-primary: 0 84.2% 60.2%;
+  --color-primary: 355 86% 43%;
   --color-primary-foreground: 0 0% 100%;
   --color-secondary: 0 0% 10%;
   --color-secondary-foreground: 0 0% 100%;
@@ -48,11 +48,11 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
   --color-muted-foreground: 0 0% 65%;
   --color-accent: 0 0% 15%;
   --color-accent-foreground: 0 0% 100%;
-  --color-destructive: 0 84.2% 60.2%;
+  --color-destructive: 355 86% 43%;
   --color-destructive-foreground: 0 0% 100%;
   --color-border: 0 0% 15%;
   --color-input: 0 0% 15%;
-  --color-ring: 0 84.2% 60.2%;
+  --color-ring: 355 86% 43%;
   --radius: 0.5rem;
 }
 
@@ -63,7 +63,7 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
   --color-card-foreground: 0 0% 100%;
   --color-popover: 0 0% 5%;
   --color-popover-foreground: 0 0% 100%;
-  --color-primary: 0 84.2% 60.2%;
+  --color-primary: 355 86% 43%;
   --color-primary-foreground: 0 0% 100%;
   --color-secondary: 0 0% 10%;
   --color-secondary-foreground: 0 0% 100%;
@@ -71,11 +71,11 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
   --color-muted-foreground: 0 0% 65%;
   --color-accent: 0 0% 15%;
   --color-accent-foreground: 0 0% 100%;
-  --color-destructive: 0 62.8% 30.6%;
+  --color-destructive: 355 86% 35%;
   --color-destructive-foreground: 0 0% 100%;
   --color-border: 0 0% 15%;
   --color-input: 0 0% 15%;
-  --color-ring: 0 84.2% 60.2%;
+  --color-ring: 355 86% 43%;
 }
 
 @layer utilities {
@@ -138,7 +138,8 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
 
   /* Custom Selection */
   ::selection {
-    @apply bg-red-600 text-white;
+    background-color: #CC1020;
+    color: #ffffff;
   }
   
   /* Custom Scrollbar */
@@ -507,10 +508,10 @@ html {
 
 @keyframes pulseGlow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+    box-shadow: 0 0 20px rgba(204, 16, 32, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(220, 38, 38, 0.6);
+    box-shadow: 0 0 40px rgba(204, 16, 32, 0.6);
   }
 }
 
@@ -543,12 +544,12 @@ html {
 
 @keyframes glowBorder {
   0%, 100% {
-    border-color: rgba(220, 38, 38, 0.5);
-    box-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+    border-color: rgba(204, 16, 32, 0.5);
+    box-shadow: 0 0 10px rgba(204, 16, 32, 0.3);
   }
   50% {
-    border-color: rgba(220, 38, 38, 0.8);
-    box-shadow: 0 0 20px rgba(220, 38, 38, 0.6);
+    border-color: rgba(204, 16, 32, 0.8);
+    box-shadow: 0 0 20px rgba(204, 16, 32, 0.6);
   }
 }
 
@@ -590,13 +591,13 @@ html {
 
 @keyframes ring-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+    box-shadow: 0 0 0 0 rgba(204, 16, 32, 0.5);
   }
   70% {
-    box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
+    box-shadow: 0 0 0 12px rgba(204, 16, 32, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    box-shadow: 0 0 0 0 rgba(204, 16, 32, 0);
   }
 }
 
@@ -667,7 +668,7 @@ html {
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  background: #ef4444;
+  background: #CC1020;
   height: 20px;
   width: 20px;
   border-radius: 50%;
@@ -676,7 +677,7 @@ html {
 }
 
 .slider::-webkit-slider-thumb:hover {
-  background: #dc2626;
+  background: #A40D1A;
   transform: scale(1.1);
 }
 
@@ -767,7 +768,7 @@ html {
 }
 
 .slider::-moz-range-thumb {
-  background: #ef4444;
+  background: #CC1020;
   height: 20px;
   width: 20px;
   border-radius: 50%;
@@ -777,7 +778,7 @@ html {
 }
 
 .slider::-moz-range-thumb:hover {
-  background: #dc2626;
+  background: #A40D1A;
   transform: scale(1.1);
 }
 

@@ -2,17 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
-import { HeartIcon, TrendingUp, ChevronRight } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { ShoppingCart, TrendingUp, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 // TODO: Replace with real data from purchase tracking logic once implemented
@@ -25,9 +15,7 @@ interface PopularProduct {
   yearFrom: number
   yearTo: number
   price: number
-  description: string
   imageUrl: string
-  gradient: string
   configuratorUrl: string
 }
 
@@ -41,10 +29,7 @@ const POPULAR_PRODUCTS: PopularProduct[] = [
     yearFrom: 2019,
     yearTo: 2023,
     price: 299,
-    description:
-      "Precyzyjnie dopasowane dywaniki EVA z głęboką strukturą komórek. Ochrona przed błotem, wodą i zabrudzeniami.",
     imageUrl: "/galeria/photo_2024-10-21_16.32.33_1.jpg",
-    gradient: "from-neutral-800 to-zinc-900",
     configuratorUrl: "/konfigurator?brand=toyota&model=corolla",
   },
   {
@@ -56,10 +41,7 @@ const POPULAR_PRODUCTS: PopularProduct[] = [
     yearFrom: 2019,
     yearTo: 2024,
     price: 349,
-    description:
-      "Luksusowe dywaniki EVA Premium idealnie wycięte pod oryginalne mocowania. Elegancki wygląd i trwałość.",
     imageUrl: "/galeria/photo_2025-04-25_16.57.33.webp",
-    gradient: "from-slate-800 to-neutral-900",
     configuratorUrl: "/konfigurator?brand=bmw&model=seria+3",
   },
   {
@@ -71,10 +53,7 @@ const POPULAR_PRODUCTS: PopularProduct[] = [
     yearFrom: 2020,
     yearTo: 2024,
     price: 299,
-    description:
-      "Idealnie wycięte dywaniki EVA z antypoślizgową podkładką i systemem mocowania pasującym do oryginału.",
     imageUrl: "/galeria/photo_2025-04-25_16.57.37.webp",
-    gradient: "from-zinc-800 to-stone-900",
     configuratorUrl: "/konfigurator?brand=volkswagen&model=golf",
   },
   {
@@ -86,10 +65,7 @@ const POPULAR_PRODUCTS: PopularProduct[] = [
     yearFrom: 2016,
     yearTo: 2024,
     price: 349,
-    description:
-      "Dywaniki EVA w kolorze beżowym — klasa premium dla wymagających kierowców. Wzorowane na oryginale.",
     imageUrl: "/galeria/photo_2025-04-25_16.57.43.jpg",
-    gradient: "from-neutral-700 to-zinc-900",
     configuratorUrl: "/konfigurator?brand=audi&model=a4",
   },
   {
@@ -101,10 +77,7 @@ const POPULAR_PRODUCTS: PopularProduct[] = [
     yearFrom: 2018,
     yearTo: 2024,
     price: 279,
-    description:
-      "Wytrzymałe dywaniki EVA do wersji kombi — zwiększona powierzchnia tylna dla maksymalnej ochrony.",
     imageUrl: "/galeria/photo_2025-04-25_17.04.39.webp",
-    gradient: "from-stone-800 to-neutral-900",
     configuratorUrl: "/konfigurator?brand=ford&model=focus",
   },
   {
@@ -116,103 +89,68 @@ const POPULAR_PRODUCTS: PopularProduct[] = [
     yearFrom: 2020,
     yearTo: 2024,
     price: 299,
-    description:
-      "Popularny wybór dla rodzin — dywaniki EVA zapewniają ochronę podłogi na każdą podróż.",
     imageUrl: "/galeria/photo_2025-04-25_17.08.33.webp",
-    gradient: "from-zinc-700 to-slate-900",
     configuratorUrl: "/konfigurator?brand=skoda&model=octavia",
   },
 ]
 
-const ProductCard = ({ product }: { product: PopularProduct }) => {
-  const [liked, setLiked] = useState(false)
+const ProductCard = ({ product }: { product: PopularProduct }) => (
+  <Link
+    href={product.configuratorUrl}
+    aria-label={`Konfiguruj dywaniki EVA dla ${product.brand} ${product.model}`}
+    className="group block rounded-2xl bg-[#1a1a1a] overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-red-900/20 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+    tabIndex={0}
+  >
+    {/* Car image */}
+    <div className="relative h-52 overflow-hidden bg-zinc-900">
+      <img
+        src={product.imageUrl}
+        alt={`${product.brand} ${product.model} ${product.generation}`}
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-transparent to-transparent" />
+    </div>
 
-  const handleLike = (e: React.MouseEvent) => {
-    e.preventDefault()
-    setLiked((prev) => !prev)
-  }
-
-  return (
-    <div
-      className={cn(
-        "relative rounded-xl bg-gradient-to-br shadow-xl overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-red-900/10",
-        product.gradient
-      )}
-    >
-      {/* Product image */}
-      <div className="flex h-56 items-center justify-center overflow-hidden">
-        <img
-          src={product.imageUrl}
-          alt={`Dywaniki EVA ${product.brand} ${product.model}`}
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-        />
+    {/* Card body */}
+    <div className="px-5 pt-4 pb-5 space-y-3">
+      {/* Brand & model */}
+      <div>
+        <h3 className="text-lg font-bold text-white leading-tight">
+          {product.brand} {product.model}
+        </h3>
+        <p className="text-sm text-gray-400 mt-0.5">
+          {product.yearFrom}–{product.yearTo}&nbsp;&nbsp;{product.bodyType}
+        </p>
       </div>
 
-      {/* Like button */}
-      <Button
-        size="icon"
-        onClick={handleLike}
-        aria-label={liked ? "Usuń z ulubionych" : "Dodaj do ulubionych"}
-        className="bg-black/30 hover:bg-black/50 absolute top-3 right-3 rounded-full backdrop-blur-sm border border-white/10"
-      >
-        <HeartIcon
-          className={cn(
-            "size-4 transition-colors",
-            liked ? "fill-red-500 stroke-red-500" : "stroke-white"
-          )}
-        />
-        <span className="sr-only">{liked ? "Usuń z ulubionych" : "Polub"}</span>
-      </Button>
+      {/* Divider */}
+      <div className="border-t border-white/10" />
 
-      {/* Card content */}
-      <Card className="border-none rounded-none bg-transparent">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg leading-tight">
-            {product.brand} {product.model}
-          </CardTitle>
-          <CardDescription className="flex flex-wrap items-center gap-1.5 mt-1">
-            <Badge variant="outline" className="text-xs border-white/20 text-gray-300">
-              {product.generation}
-            </Badge>
-            <Badge variant="outline" className="text-xs border-white/20 text-gray-300">
-              {product.bodyType}
-            </Badge>
-            <Badge variant="outline" className="text-xs border-white/20 text-gray-300">
-              {product.yearFrom}–{product.yearTo}
-            </Badge>
-          </CardDescription>
-        </CardHeader>
+      {/* Price + CTA */}
+      <div className="flex items-end justify-between gap-3">
+        <div className="flex flex-col">
+          <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+            Cena od
+          </span>
+          <span className="text-2xl font-bold text-white leading-none mt-0.5">
+            {product.price.toFixed(2)}
+          </span>
+          <span className="text-sm font-semibold text-red-500 leading-none mt-0.5">
+            PLN
+          </span>
+        </div>
 
-        <CardContent className="pb-2">
-          <p className="text-sm text-gray-400 leading-relaxed line-clamp-2">
-            {product.description}
-          </p>
-        </CardContent>
-
-        <CardFooter className="justify-between gap-3 max-sm:flex-col max-sm:items-stretch pt-2">
-          <div className="flex flex-col">
-            <span className="text-xs font-medium uppercase tracking-wide text-gray-400">
-              Cena od
-            </span>
-            <span className="text-xl font-bold text-white">
-              {product.price}{" "}
-              <span className="text-red-500 text-base">PLN</span>
-            </span>
-          </div>
-          <Button
-            size="lg"
-            className="bg-red-600 hover:bg-red-700 text-white transition-all duration-300 hover:shadow-lg hover:shadow-red-900/30"
-            asChild
-          >
-            <Link href={product.configuratorUrl} aria-label={`Konfiguruj dywaniki EVA dla ${product.brand} ${product.model}`}>
-              Konfiguruj
-            </Link>
-          </Button>
-        </CardFooter>
-      </Card>
+        <span
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition-colors duration-200 shrink-0"
+          aria-hidden="true"
+        >
+          <ShoppingCart className="w-4 h-4" />
+          Skonfiguruj
+        </span>
+      </div>
     </div>
-  )
-}
+  </Link>
+)
 
 export default function PopularProductsSection() {
   const [isVisible, setIsVisible] = useState(false)

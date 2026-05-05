@@ -15,8 +15,8 @@ export class ClassicPricingStrategy implements PricingStrategy {
       complete: 350
     },
     discountThreshold: 910,
-    discountAboveThreshold: 0.35,
-    discountBelowThreshold: 0.25,
+    discountAboveThreshold: 0.30,
+    discountBelowThreshold: 0.20,
     shippingCost: 27,
     freeShippingVariants: ['front', 'basic', 'premium', 'complete'] as const
   };

@@ -189,7 +189,7 @@ export default function HeroSection() {
                             fill
                             className="object-contain object-center brightness-110 contrast-[1.02] md:hidden"
                             priority={index === 0}
-                            quality={90}
+                            quality={100}
                             sizes="100vw"
                           />
                           <Image
@@ -198,7 +198,7 @@ export default function HeroSection() {
                             fill
                             className="hidden object-contain object-center brightness-110 contrast-[1.02] md:block"
                             priority={index === 0}
-                            quality={90}
+                            quality={100}
                             sizes="(max-width: 1240px) 100vw, 1240px"
                           />
                         </>

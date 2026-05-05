@@ -16,19 +16,19 @@ describe("car-configurator pricing", () => {
   });
 
   it("calculates discount tiers correctly", () => {
-    expect(PRICING.getDiscount(909)).toBe(0.25);
-    expect(PRICING.getDiscount(910)).toBe(0.35);
+    expect(PRICING.getDiscount(909)).toBe(0.20);
+    expect(PRICING.getDiscount(910)).toBe(0.30);
   });
 
   it("calculates variant base price without shipping", () => {
-    expect(calculateVariantBasePrice("classic", "front")).toBe(218);
-    expect(calculateVariantBasePrice("3d-with-rims", "premium")).toBe(787);
+    expect(calculateVariantBasePrice("classic", "front")).toBe(232);
+    expect(calculateVariantBasePrice("3d-with-rims", "premium")).toBe(847);
   });
 
   it("includes free shipping for starter front so total matches catalog minus discount", () => {
-    expect(calculateVariantPrice("classic", "front")).toBe(217.5);
-    expect(calculateVariantPrice("3d-with-rims", "front")).toBe(412.5);
-    expect(calculateVariantPrice("classic", "basic")).toBe(382.5);
+    expect(calculateVariantPrice("classic", "front")).toBe(232);
+    expect(calculateVariantPrice("3d-with-rims", "front")).toBe(440);
+    expect(calculateVariantPrice("classic", "basic")).toBe(408);
   });
 
   it("returns full price breakdown", () => {
@@ -36,10 +36,10 @@ describe("car-configurator pricing", () => {
 
     expect(breakdown).toEqual({
       basePrice: 910,
-      discount: 318.5,
-      priceAfterDiscount: 591.5,
+      discount: 273,
+      priceAfterDiscount: 637,
       shippingCost: 0,
-      totalPrice: 591.5,
+      totalPrice: 637,
     });
   });
 
