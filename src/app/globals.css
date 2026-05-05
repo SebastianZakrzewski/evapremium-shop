@@ -31,6 +31,9 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
 }
 
 @theme {
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-montserrat: var(--font-montserrat), sans-serif;
+  
   --color-background: 0 0% 0%;
   --color-foreground: 0 0% 100%;
   --color-card: 0 0% 5%;
@@ -80,8 +83,18 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
     overflow-x: hidden;
+  }
+  
+  /* Powiększenie głównych tytułów sekcji na stronie głównej */
+  .home-page h1 {
+    font-size: clamp(3rem, 7vw, 5rem) !important;
+    line-height: 1.1 !important;
+  }
+  .home-page h2 {
+    font-size: clamp(2.25rem, 5vw, 4rem) !important;
+    line-height: 1.2 !important;
   }
   
   /* Custom Selection */
@@ -314,6 +327,20 @@ html {
   
   .animate-bounce-in {
     animation: bounceIn 0.8s ease-out;
+  }
+
+  /* Wymuszenie białego koloru i pogrubienia dla wszystkich szarych opisów */
+  .text-gray-300,
+  .text-gray-400,
+  .text-gray-500,
+  .text-gray-600,
+  .text-zinc-300,
+  .text-zinc-400,
+  .text-zinc-500,
+  .text-zinc-600,
+  .text-muted-foreground {
+    color: #ffffff !important;
+    font-weight: 500 !important;
   }
 }
 
