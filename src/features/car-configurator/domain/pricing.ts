@@ -25,7 +25,8 @@ export const PRICING = {
   getDiscount: (basePrice: number) => (basePrice >= 910 ? 0.30 : 0.20),
   shipping: {
     cost: 27,
-    freeForVariants: ["front", "basic", "premium", "complete"] as SetVariantId[],
+    freeShippingThreshold: 637,
+    // Shipping is added at cart level only; domain prices exclude shipping
   },
 };
 
@@ -150,11 +151,8 @@ export const calculatePriceBreakdown = (
   const discountRate = PRICING.getDiscount(basePrice);
   const discountAmount = basePrice * discountRate;
   const priceAfterDiscount = basePrice - discountAmount;
-  const shippingCost = PRICING.shipping.freeForVariants.includes(setVariant)
-    ? 0
-    : PRICING.shipping.cost;
-  const totalPrice =
-    Math.round((priceAfterDiscount + shippingCost) * 100) / 100;
+  const shippingCost = 0
+  const totalPrice = Math.round(priceAfterDiscount * 100) / 100;
 
   return {
     basePrice: Math.round(basePrice),

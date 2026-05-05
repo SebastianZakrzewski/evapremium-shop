@@ -27,7 +27,7 @@ export interface BasePricingConfig {
   discountAboveThreshold: number;
   discountBelowThreshold: number;
   shippingCost: number;
-  freeShippingVariants: readonly ('front' | 'basic' | 'premium' | 'complete')[];
+  freeShippingThreshold: number;
 }
 
 

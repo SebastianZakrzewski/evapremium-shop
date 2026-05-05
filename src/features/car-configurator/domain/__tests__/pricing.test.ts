@@ -25,13 +25,15 @@ describe("car-configurator pricing", () => {
     expect(calculateVariantBasePrice("3d-with-rims", "premium")).toBe(847);
   });
 
-  it("includes free shipping for starter front so total matches catalog minus discount", () => {
+  it("returns prices without shipping (shipping is added at cart level only)", () => {
     expect(calculateVariantPrice("classic", "front")).toBe(232);
     expect(calculateVariantPrice("3d-with-rims", "front")).toBe(440);
     expect(calculateVariantPrice("classic", "basic")).toBe(408);
+    expect(calculateVariantPrice("3d-with-rims", "basic")).toBe(637);
+    expect(calculateVariantPrice("3d-with-rims", "premium")).toBe(847);
   });
 
-  it("returns full price breakdown", () => {
+  it("returns full price breakdown with no shipping in domain layer", () => {
     const breakdown = calculatePriceBreakdown("3d-with-rims", "basic");
 
     expect(breakdown).toEqual({

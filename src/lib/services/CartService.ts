@@ -94,14 +94,16 @@ export class CartService {
     };
   }
 
+  private static readonly FREE_SHIPPING_THRESHOLD = 637
+  private static readonly SHIPPING_COST = 27
+
   /**
    * Przelicz koszyk
    */
   private async recalculateCart(cart: Cart): Promise<Cart> {
     cart.subtotal = cart.items.reduce((sum, item) => sum + item.subtotal, 0);
     
-    // Dostawa zawsze gratis
-    cart.shippingCost = 0;
+    cart.shippingCost = cart.subtotal >= CartService.FREE_SHIPPING_THRESHOLD ? 0 : CartService.SHIPPING_COST;
     
     cart.tax = 0; // VAT wyłączony
     cart.discount = 0; // TODO: Kody rabatowe

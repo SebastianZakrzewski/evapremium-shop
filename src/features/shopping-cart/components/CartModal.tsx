@@ -209,12 +209,13 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
     }
   };
 
-  // Oblicz finalną cenę z uwzględnieniem zniżki
+  // Oblicz finalną cenę z uwzględnieniem zniżki i wysyłki
   const finalTotal = useMemo(() => {
-    return discountApplied && discountAmount > 0
+    const subtotalAfterDiscount = discountApplied && discountAmount > 0
       ? Math.max(0, cart.subtotal - discountAmount)
-      : total;
-  }, [discountApplied, discountAmount, cart.subtotal, total]);
+      : cart.subtotal
+    return subtotalAfterDiscount + cart.shippingCost
+  }, [discountApplied, discountAmount, cart.subtotal, cart.shippingCost]);
 
   return (
     <>
@@ -349,6 +350,12 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
                     <span>-{PricingService.formatPrice(discountAmount)}</span>
                   </div>
                 )}
+                <div className="flex justify-between text-neutral-300">
+                  <span>Wysyłka:</span>
+                  <span className={cart.shippingCost === 0 ? 'text-green-400' : ''}>
+                    {cart.shippingCost === 0 ? 'Gratis' : PricingService.formatPrice(cart.shippingCost)}
+                  </span>
+                </div>
                 <div className="flex justify-between text-lg font-bold text-white border-t border-white/10 pt-2">
                   <span>Razem:</span>
                   <span>{PricingService.formatPrice(finalTotal)}</span>

@@ -1,8 +1,10 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { ShoppingCart, TrendingUp, ChevronRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 // TODO: Replace with real data from purchase tracking logic once implemented
@@ -95,61 +97,61 @@ const POPULAR_PRODUCTS: PopularProduct[] = [
 ]
 
 const ProductCard = ({ product }: { product: PopularProduct }) => (
-  <Link
-    href={product.configuratorUrl}
-    aria-label={`Konfiguruj dywaniki EVA dla ${product.brand} ${product.model}`}
-    className="group block rounded-2xl bg-[#1a1a1a] overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-red-900/20 focus:outline-none focus:ring-2 focus:ring-red-500/50"
-    tabIndex={0}
+  <article
+    className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black rounded-xl"
   >
-    {/* Car image */}
-    <div className="relative h-52 overflow-hidden bg-zinc-900">
-      <img
-        src={product.imageUrl}
-        alt={`${product.brand} ${product.model} ${product.generation}`}
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-transparent to-transparent" />
-    </div>
-
-    {/* Card body */}
-    <div className="px-5 pt-4 pb-5 space-y-3">
-      {/* Brand & model */}
-      <div>
-        <h3 className="text-lg font-bold text-white leading-tight">
-          {product.brand} {product.model}
-        </h3>
-        <p className="text-sm text-gray-400 mt-0.5">
-          {product.yearFrom}–{product.yearTo}&nbsp;&nbsp;{product.bodyType}
-        </p>
+    <div className="h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1">
+      {/* Car image */}
+      <div className="relative aspect-square bg-gradient-to-br from-gray-900 to-black overflow-hidden">
+        <Image
+          src={product.imageUrl}
+          alt={`Dywaniki do ${product.brand} ${product.model} - Spersonalizowane dywaniki samochodowe`}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+          quality={90}
+        />
       </div>
 
-      {/* Divider */}
-      <div className="border-t border-white/10" />
-
-      {/* Price + CTA */}
-      <div className="flex items-end justify-between gap-3">
-        <div className="flex flex-col">
-          <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-            Cena od
-          </span>
-          <span className="text-2xl font-bold text-white leading-none mt-0.5">
-            {product.price.toFixed(2)}
-          </span>
-          <span className="text-sm font-semibold text-red-500 leading-none mt-0.5">
-            PLN
-          </span>
+      {/* Card info */}
+      <div className="flex-1 flex flex-col p-5">
+        <div className="mb-2">
+          <h3 className="text-lg font-bold text-white leading-tight group-hover:text-red-500 transition-colors line-clamp-2">
+            {product.brand} {product.model}
+          </h3>
         </div>
 
-        <span
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition-colors duration-200 shrink-0"
-          aria-hidden="true"
-        >
-          <ShoppingCart className="w-4 h-4" />
-          Skonfiguruj
-        </span>
+        <div className="text-sm text-gray-400 mb-4 flex-1">
+          <div className="flex flex-wrap gap-2">
+            <span>{product.generation} · {product.yearFrom}–{product.yearTo}</span>
+            {product.bodyType && (
+              <span className="uppercase">{product.bodyType}</span>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between gap-3">
+          <div className="flex flex-col">
+            <span className="text-xs text-gray-400">Cena od</span>
+            <span className="text-xl font-bold text-white">
+              {product.price.toLocaleString("pl-PL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{" "}
+              <span className="text-red-500">PLN</span>
+            </span>
+          </div>
+
+          <Link href={product.configuratorUrl} aria-label={`Konfiguruj dywaniki EVA dla ${product.brand} ${product.model}`}>
+            <Button
+              className="shrink-0 gap-2 transition-all duration-300 bg-red-600 text-white hover:bg-red-700"
+              size="sm"
+            >
+              <ShoppingCart className="w-4 h-4" aria-hidden="true" />
+              <span className="hidden sm:inline">Skonfiguruj</span>
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
-  </Link>
+  </article>
 )
 
 export default function PopularProductsSection() {

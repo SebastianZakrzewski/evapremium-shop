@@ -18,7 +18,7 @@ export class ThreeDPricingStrategy implements PricingStrategy {
     discountAboveThreshold: 0.30,
     discountBelowThreshold: 0.20,
     shippingCost: 27,
-    freeShippingVariants: ['front', 'basic', 'premium', 'complete'] as const
+    freeShippingThreshold: 637
   };
 
   calculatePrice(setVariant: 'front' | 'basic' | 'premium' | 'complete'): ProductPricing {
@@ -33,11 +33,8 @@ export class ThreeDPricingStrategy implements PricingStrategy {
     const priceAfterDiscount = basePrice - discountAmount;
     
     // Shipping cost
-    const shippingCost = (this.config.freeShippingVariants as readonly string[]).includes(setVariant)
-      ? 0
-      : this.config.shippingCost;
-    
-    const totalPrice = Math.round((priceAfterDiscount + shippingCost) * 100) / 100;
+    const shippingCost = 0
+    const totalPrice = Math.round(priceAfterDiscount * 100) / 100;
 
     return {
       basePrice,
