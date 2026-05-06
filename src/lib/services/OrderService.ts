@@ -303,11 +303,13 @@ export class OrderService {
   /**
    * Oblicz ceny zamówienia
    */
+  private static readonly FREE_SHIPPING_THRESHOLD = 637
+  private static readonly SHIPPING_COST = 27
+
   private async calculateOrderPricing(items: any[], discountCode?: string, discountAmount?: number) {
     let subtotal = 0;
     
     for (const item of items) {
-      // Dla mat używaj bezpośrednio unitPrice (już zawiera rabat i wysyłkę)
       if (item.productType === 'mat') {
         subtotal += item.unitPrice * item.quantity;
       } else {
@@ -315,10 +317,12 @@ export class OrderService {
       }
     }
     
-    const shippingCost = 0; // Wysyłka już wliczona w unitPrice dla mat
+    const shippingCost = subtotal >= OrderService.FREE_SHIPPING_THRESHOLD ? 0 : OrderService.SHIPPING_COST;
     const tax = 0; // VAT wyłączony
-    const discount = discountAmount || 0; // Użyj zniżki z kodu rabatowego jeśli jest
-    const total = subtotal + shippingCost - discount; // Bez VAT
+    const discount = discountAmount || 0;
+    const total = subtotal + shippingCost - discount;
+    
+    console.log('💰 OrderService.calculateOrderPricing:', { subtotal, shippingCost, discount, total });
     
     return { subtotal, shippingCost, tax, discount, total };
   }
