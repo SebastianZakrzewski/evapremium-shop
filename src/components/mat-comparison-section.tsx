@@ -60,7 +60,7 @@ export default function MatComparisonSection() {
             Porównanie
           </p>
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-5">
-            EVA vs <span className="text-gray-400">Gumowe</span>
+            <span className="text-red-500">EVA</span> vs <span className="text-gray-400">Gumowe</span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed">
             Przeciągnij suwak i przekonaj się na własne oczy, dlaczego dywaniki

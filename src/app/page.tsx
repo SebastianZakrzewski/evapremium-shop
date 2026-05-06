@@ -16,11 +16,11 @@ export default function Home() {
       <QuickSearchBar />
       <ProductGallerySection />
       <InteractiveFeaturesSection />
+      <MatComparisonSection />
       <ProductSelection />
       <CustomFitSection />
       <RoznorodnaKolorystykaSection />
       <GlebokaStrukturaKomorekSection />
-      <MatComparisonSection />
       <PopularProductsSection />
       <CustomerReviews />
       <FAQSection />
