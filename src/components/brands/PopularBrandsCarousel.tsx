@@ -146,7 +146,7 @@ export default function PopularBrandsCarousel() {
 
       <div className="relative z-10 w-full">
         <Swiper
-          key={`brands-swiper-${brands.filter((b) => !failedImageIds.has(b.id)).length}`}
+          key={`brands-swiper-${brands.filter((b) => !failedImageIds.has(String(b.id))).length}`}
           className="brands-swiper"
           spaceBetween={32}
           autoplay={{
@@ -157,7 +157,7 @@ export default function PopularBrandsCarousel() {
           effect="coverflow"
           grabCursor={true}
           centeredSlides={true}
-          loop={brands.filter((b) => !failedImageIds.has(b.id)).length > 3}
+          loop={brands.filter((b) => !failedImageIds.has(String(b.id))).length > 3}
           slidesPerView="auto"
           coverflowEffect={{
             rotate: 0,
@@ -174,7 +174,7 @@ export default function PopularBrandsCarousel() {
           modules={[EffectCoverflow, Autoplay, Pagination, Navigation]}
         >
           {brands
-            .filter((brand) => !failedImageIds.has(brand.id))
+            .filter((brand) => !failedImageIds.has(String(brand.id)))
             .map((brand) => (
               <SwiperSlide key={brand.id}>
                 <div
@@ -192,7 +192,7 @@ export default function PopularBrandsCarousel() {
                 >
                   <BrandCard
                     brand={brand}
-                    onImageError={() => handleImageError(brand.id)}
+                    onImageError={() => handleImageError(String(brand.id))}
                   />
                 </div>
               </SwiperSlide>
