@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { env } from '@/config/env';
 
+export const maxDuration = 30
+
 const supabase = createClient(env.supabase.url, env.supabase.anonKey);
 
 const stringParam = z.preprocess((val) => (val === null ? undefined : val), z.string().optional());

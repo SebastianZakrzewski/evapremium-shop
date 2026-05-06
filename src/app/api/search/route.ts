@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { env } from '@/config/env';
 import { MatService } from '@/lib/services/MatService';
+
+export const maxDuration = 30
 import { resolveBrandLogo } from '@/shared/brands';
 
 const supabase = createClient(env.supabase.url, env.supabase.anonKey);

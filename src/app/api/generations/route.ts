@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { env } from '@/config/env';
+
+export const maxDuration = 30
 import {
   CAR_MODELS_EXTENDED_SELECT,
   CAR_MODELS_EXTENDED_SELECT_MINIMAL,

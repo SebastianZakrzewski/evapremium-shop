@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
+
+export const maxDuration = 30
 import { env } from '@/config/env';
 import { humanizeBrandSlug, mapApiNameToDbName, mapSlugToCanonicalBrand } from '@/shared/brands/brandNormalizer';
 import {

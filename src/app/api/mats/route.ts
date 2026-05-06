@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { MatService } from '@/lib/services/MatService';
+
+export const maxDuration = 30
 import { MatFilters } from '@/entities/product';
 
 const matService = new MatService();
