@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -73,6 +73,7 @@ const SliderModal = ({
             sizes="(max-width: 1200px) 100vw, 1200px"
             quality={100}
             priority
+            unoptimized
           />
         </div>
 
@@ -100,17 +101,42 @@ export const ImageAutoSlider = ({
   className,
 }: ImageAutoSliderProps) => {
   const [activeImage, setActiveImage] = useState<SliderImage | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
-  const duplicated = [...images, ...images]
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const mobileMediaQuery = window.matchMedia("(max-width: 767px)")
+    const reducedMotionMediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+
+    const handleSettingsChange = () => {
+      setIsMobile(mobileMediaQuery.matches)
+      setPrefersReducedMotion(reducedMotionMediaQuery.matches)
+    }
+
+    handleSettingsChange()
+    mobileMediaQuery.addEventListener("change", handleSettingsChange)
+    reducedMotionMediaQuery.addEventListener("change", handleSettingsChange)
+
+    return () => {
+      mobileMediaQuery.removeEventListener("change", handleSettingsChange)
+      reducedMotionMediaQuery.removeEventListener("change", handleSettingsChange)
+    }
+  }, [])
+
+  const duplicated = useMemo(() => [...images, ...images], [images])
 
   const tileSize = tileClassName ?? "w-48 h-48 md:w-64 md:h-64 lg:w-72 lg:h-72"
+  const eagerSlidesCount = isMobile ? 2 : 4
+  const animationDuration = prefersReducedMotion ? speed * 1.6 : speed
 
   return (
     <>
       <div className={`w-full overflow-hidden gallery-slider-mask ${className ?? ""}`}>
         <div
           className="flex gap-4 w-max animate-scroll-right-seamless"
-          style={{ animationDuration: `${speed}s` }}
+          style={{ animationDuration: `${animationDuration}s` }}
         >
           {duplicated.map((image, index) => (
             <button
@@ -135,8 +161,10 @@ export const ImageAutoSlider = ({
                 alt={image.alt}
                 fill
                 className="object-cover transition-transform duration-500 hover:scale-110 brightness-105"
-                sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 288px"
-                loading={index < 8 ? "eager" : "lazy"}
+                sizes="(max-width: 768px) 200px, (max-width: 1024px) 272px, 304px"
+                quality={100}
+                loading={index < eagerSlidesCount ? "eager" : "lazy"}
+                unoptimized
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
               {image.title && (

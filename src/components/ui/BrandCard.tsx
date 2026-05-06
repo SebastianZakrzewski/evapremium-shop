@@ -10,7 +10,7 @@ interface BrandCardProps {
   onImageError?: () => void;
 }
 
-export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, className = "", isPriority = false, onImageError }) => {
+const BrandCardComponent: React.FC<BrandCardProps> = ({ brand, className = "", isPriority = false, onImageError }) => {
   // Sprawdź czy to jest zdjęcie czy logo SVG
   const isImage = brand.logo.includes('.jpg') || brand.logo.includes('.png') || brand.logo.includes('.jpeg') || brand.logo.includes('.avif') || brand.logo.includes('.webp');
   
@@ -42,14 +42,15 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
               fill
               className={`
                 transition-transform duration-700 ease-out will-change-transform
-                group-hover:scale-110
+                group-hover:scale-105
                 ${isBrandImage ? 'object-cover object-center' : 'object-contain p-8'}
                 opacity-100 brightness-110 group-hover:brightness-125
               `}
-              sizes="(max-width: 768px) 224px 320px, 288px 448px"
+              sizes="(max-width: 640px) 224px, (max-width: 1024px) 288px, 320px"
               priority={isPriority}
-              quality={90}
+              quality={100}
               loading={isPriority ? "eager" : "lazy"}
+              unoptimized
               onError={onImageError}
             />
           ) : (
@@ -61,7 +62,8 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
                 width={128}
                 height={128}
                 className="object-contain transition-transform duration-500 group-hover:scale-110"
-                quality={95}
+                quality={100}
+                unoptimized
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
@@ -116,10 +118,15 @@ export const BrandCard: React.FC<BrandCardProps> = React.memo(({ brand, classNam
       </div>
     </div>
   );
-}, (prevProps, nextProps) =>
+}
+
+export const BrandCard: React.FC<BrandCardProps> = React.memo(BrandCardComponent, (prevProps, nextProps) =>
   prevProps.brand.id === nextProps.brand.id &&
   prevProps.isPriority === nextProps.isPriority &&
   prevProps.className === nextProps.className
 );
+
+BrandCardComponent.displayName = "BrandCardComponent"
+BrandCard.displayName = "BrandCard"
 
 export default BrandCard;

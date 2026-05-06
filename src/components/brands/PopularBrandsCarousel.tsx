@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useEffect, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Autoplay, EffectCoverflow, Navigation, Pagination } from "swiper/modules"
@@ -14,6 +14,7 @@ import "swiper/css/navigation"
 import { BrandCard } from "@/components/ui/BrandCard"
 import { useBrands } from "@/features/brands/hooks/useBrands"
 import { Brand } from "@/entities/car"
+import { getBrandsCarouselBehavior } from "@/components/brands/carouselBehavior"
 
 const swiperStyles = `
   .brands-swiper {
@@ -24,7 +25,15 @@ const swiperStyles = `
   .brands-swiper .swiper-slide {
     background-position: center;
     background-size: cover;
-    width: 288px;
+    width: 242px;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .brands-swiper .swiper-slide {
+      width: 288px;
+    }
   }
 
   .brands-swiper .swiper-slide img {
@@ -68,16 +77,64 @@ const swiperStyles = `
   .brands-swiper .swiper-button-next:hover {
     background: rgba(239,68,68,0.2);
   }
+
+  @media (max-width: 767px) {
+    .brands-swiper .swiper-button-prev,
+    .brands-swiper .swiper-button-next {
+      display: none;
+    }
+
+    .brands-swiper .swiper-slide {
+      transition-timing-function: linear;
+    }
+  }
 `
 
 export default function PopularBrandsCarousel() {
   const router = useRouter()
   const { brands, isLoading, error: fetchError } = useBrands()
   const [failedImageIds, setFailedImageIds] = useState<Set<string>>(new Set())
+  const [isMobile, setIsMobile] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   const handleImageError = useCallback((brandId: string) => {
     setFailedImageIds((prev) => new Set([...prev, brandId]))
   }, [])
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const mobileMediaQuery = window.matchMedia("(max-width: 767px)")
+    const reducedMotionMediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+
+    const handleSettingsChange = () => {
+      setIsMobile(mobileMediaQuery.matches)
+      setPrefersReducedMotion(reducedMotionMediaQuery.matches)
+    }
+
+    handleSettingsChange()
+    mobileMediaQuery.addEventListener("change", handleSettingsChange)
+    reducedMotionMediaQuery.addEventListener("change", handleSettingsChange)
+
+    return () => {
+      mobileMediaQuery.removeEventListener("change", handleSettingsChange)
+      reducedMotionMediaQuery.removeEventListener("change", handleSettingsChange)
+    }
+  }, [])
+
+  const visibleBrands = useMemo(
+    () => brands.filter((brand) => !failedImageIds.has(String(brand.id))),
+    [brands, failedImageIds]
+  )
+  const carouselBehavior = useMemo(
+    () =>
+      getBrandsCarouselBehavior({
+        isMobile,
+        prefersReducedMotion,
+        totalItems: visibleBrands.length,
+      }),
+    [isMobile, prefersReducedMotion, visibleBrands.length]
+  )
 
   const handleBrandClick = (brand: Brand) => {
     router.push(`/modele/${encodeURIComponent(brand.name.toLowerCase())}`)
@@ -146,36 +203,41 @@ export default function PopularBrandsCarousel() {
 
       <div className="relative z-10 w-full">
         <Swiper
-          key={`brands-swiper-${brands.filter((b) => !failedImageIds.has(String(b.id))).length}`}
+          key={`brands-swiper-${visibleBrands.length}`}
           className="brands-swiper"
-          spaceBetween={32}
+          spaceBetween={isMobile ? 14 : 32}
+          speed={carouselBehavior.speed}
           autoplay={{
-            delay: 2000,
+            delay: carouselBehavior.autoplayDelay,
             disableOnInteraction: false,
-            pauseOnMouseEnter: true,
+            pauseOnMouseEnter: !isMobile,
           }}
-          effect="coverflow"
-          grabCursor={true}
-          centeredSlides={true}
-          loop={brands.filter((b) => !failedImageIds.has(String(b.id))).length > 3}
-          slidesPerView="auto"
+          effect={carouselBehavior.effect}
+          grabCursor={!isMobile}
+          centeredSlides={carouselBehavior.centeredSlides}
+          loop={carouselBehavior.loop}
+          slidesPerView={carouselBehavior.slidesPerView}
+          breakpoints={{
+            768: {
+              slidesPerView: "auto",
+            },
+          }}
+          watchSlidesProgress
+          observer
+          observeParents
+          updateOnWindowResize
           coverflowEffect={{
             rotate: 0,
             stretch: 0,
-            depth: 120,
+            depth: carouselBehavior.coverflowDepth,
             modifier: 2.5,
             slideShadows: false,
           }}
-          pagination={{ clickable: true }}
-          navigation={{
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-          }}
+          pagination={{ clickable: true, dynamicBullets: isMobile }}
+          navigation={!isMobile}
           modules={[EffectCoverflow, Autoplay, Pagination, Navigation]}
         >
-          {brands
-            .filter((brand) => !failedImageIds.has(String(brand.id)))
-            .map((brand) => (
+          {visibleBrands.map((brand) => (
               <SwiperSlide key={brand.id}>
                 <div
                   className="cursor-pointer"

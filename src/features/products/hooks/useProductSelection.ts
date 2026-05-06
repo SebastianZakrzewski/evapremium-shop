@@ -4,6 +4,8 @@
  * Konsoliduje logikę pobierania i filtrowania produktów
  */
 
+"use client";
+
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { matsApi } from '@/lib/api';

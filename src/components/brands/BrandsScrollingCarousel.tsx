@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Autoplay, EffectCoverflow, Navigation, Pagination } from "swiper/modules"
 
@@ -11,6 +11,7 @@ import "swiper/css/navigation"
 
 import { BrandCard } from "@/components/ui/BrandCard"
 import { Brand } from "@/entities/car"
+import { getBrandsCarouselBehavior } from "@/components/brands/carouselBehavior"
 
 interface BrandsScrollingCarouselProps {
   brands: Brand[]
@@ -26,7 +27,9 @@ const swiperStyles = `
   }
 
   .brands-scrolling-swiper .swiper-slide {
-    width: 200px;
+    width: 228px;
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   @media (min-width: 640px) {
@@ -52,6 +55,10 @@ const swiperStyles = `
     .brands-scrolling-swiper .swiper-button-prev,
     .brands-scrolling-swiper .swiper-button-next {
       display: none;
+    }
+
+    .brands-scrolling-swiper .swiper-wrapper {
+      transition-timing-function: linear;
     }
   }
 
@@ -82,6 +89,35 @@ export default function BrandsScrollingCarousel({
   onBrandClick,
   clickedCardId,
 }: BrandsScrollingCarouselProps) {
+  const [isMobile, setIsMobile] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const mobileMediaQuery = window.matchMedia("(max-width: 767px)")
+    const reducedMotionMediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+
+    const handleSettingsChange = () => {
+      setIsMobile(mobileMediaQuery.matches)
+      setPrefersReducedMotion(reducedMotionMediaQuery.matches)
+    }
+
+    handleSettingsChange()
+    mobileMediaQuery.addEventListener("change", handleSettingsChange)
+    reducedMotionMediaQuery.addEventListener("change", handleSettingsChange)
+
+    return () => {
+      mobileMediaQuery.removeEventListener("change", handleSettingsChange)
+      reducedMotionMediaQuery.removeEventListener("change", handleSettingsChange)
+    }
+  }, [])
+  const carouselBehavior = getBrandsCarouselBehavior({
+    isMobile,
+    prefersReducedMotion,
+    totalItems: brands.length,
+  })
+
   if (brands.length === 0) return null
 
   return (
@@ -89,34 +125,41 @@ export default function BrandsScrollingCarousel({
       <style>{swiperStyles}</style>
       <Swiper
         className="brands-scrolling-swiper"
-        spaceBetween={40}
+        spaceBetween={isMobile ? 14 : 40}
+        speed={isMobile ? 430 : carouselBehavior.speed}
         breakpoints={{
-          640: { spaceBetween: 56 },
+          640: { spaceBetween: 36 },
+          768: { spaceBetween: 56 },
           1024: { spaceBetween: 72 },
         }}
         autoplay={{
-          delay: 2500,
+          delay: isMobile ? 3000 : carouselBehavior.autoplayDelay + 300,
           disableOnInteraction: false,
-          pauseOnMouseEnter: true,
+          pauseOnMouseEnter: !isMobile,
         }}
-        effect="coverflow"
-        grabCursor={true}
-        centeredSlides={true}
-        loop={brands.length > 3}
-        slidesPerView="auto"
+        effect={carouselBehavior.effect}
+        grabCursor={!isMobile}
+        centeredSlides={carouselBehavior.centeredSlides}
+        loop={carouselBehavior.loop}
+        slidesPerView={carouselBehavior.slidesPerView}
         touchRatio={1}
         touchAngle={45}
         simulateTouch={true}
         allowTouchMove={true}
+        watchSlidesProgress
+        observer
+        observeParents
+        updateOnWindowResize
+        threshold={isMobile ? 4 : 8}
         coverflowEffect={{
           rotate: 0,
           stretch: 0,
-          depth: 100,
+          depth: isMobile ? 0 : 100,
           modifier: 2,
           slideShadows: false,
         }}
         pagination={false}
-        navigation={true}
+        navigation={!isMobile}
         modules={[EffectCoverflow, Autoplay, Pagination, Navigation]}
       >
         {brands.map((brand) => (
