@@ -202,42 +202,71 @@ export default function PopularBrandsCarousel() {
       </div>
 
       <div className="relative z-10 w-full">
-        <Swiper
-          key={`brands-swiper-${visibleBrands.length}`}
-          className="brands-swiper"
-          spaceBetween={isMobile ? 14 : 32}
-          speed={carouselBehavior.speed}
-          autoplay={{
-            delay: carouselBehavior.autoplayDelay,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: !isMobile,
-          }}
-          effect={carouselBehavior.effect}
-          grabCursor={!isMobile}
-          centeredSlides={carouselBehavior.centeredSlides}
-          loop={carouselBehavior.loop}
-          slidesPerView={carouselBehavior.slidesPerView}
-          breakpoints={{
-            768: {
-              slidesPerView: "auto",
-            },
-          }}
-          watchSlidesProgress
-          observer
-          observeParents
-          updateOnWindowResize
-          coverflowEffect={{
-            rotate: 0,
-            stretch: 0,
-            depth: carouselBehavior.coverflowDepth,
-            modifier: 2.5,
-            slideShadows: false,
-          }}
-          pagination={{ clickable: true, dynamicBullets: isMobile }}
-          navigation={!isMobile}
-          modules={[EffectCoverflow, Autoplay, Pagination, Navigation]}
-        >
-          {visibleBrands.map((brand) => (
+        {/* Grid na mobile */}
+        <div className="md:hidden container mx-auto px-4">
+          <div className="grid grid-cols-3 gap-3">
+            {visibleBrands.map((brand) => (
+              <div
+                key={brand.id}
+                className="cursor-pointer"
+                onClick={() => handleBrandClick(brand)}
+                role="button"
+                tabIndex={0}
+                aria-label={`Wybierz markę ${brand.name}`}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault()
+                    handleBrandClick(brand)
+                  }
+                }}
+              >
+                <BrandCard
+                  brand={brand}
+                  onImageError={() => handleImageError(String(brand.id))}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Karuzela na desktop */}
+        <div className="hidden md:block">
+          <Swiper
+            key={`brands-swiper-${visibleBrands.length}`}
+            className="brands-swiper"
+            spaceBetween={32}
+            speed={carouselBehavior.speed}
+            autoplay={{
+              delay: carouselBehavior.autoplayDelay,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+            effect={carouselBehavior.effect}
+            grabCursor={true}
+            centeredSlides={carouselBehavior.centeredSlides}
+            loop={carouselBehavior.loop}
+            slidesPerView={carouselBehavior.slidesPerView}
+            breakpoints={{
+              768: {
+                slidesPerView: "auto",
+              },
+            }}
+            watchSlidesProgress
+            observer
+            observeParents
+            updateOnWindowResize
+            coverflowEffect={{
+              rotate: 0,
+              stretch: 0,
+              depth: carouselBehavior.coverflowDepth,
+              modifier: 2.5,
+              slideShadows: false,
+            }}
+            pagination={{ clickable: true, dynamicBullets: false }}
+            navigation={true}
+            modules={[EffectCoverflow, Autoplay, Pagination, Navigation]}
+          >
+            {visibleBrands.map((brand) => (
               <SwiperSlide key={brand.id}>
                 <div
                   className="cursor-pointer"
@@ -259,7 +288,8 @@ export default function PopularBrandsCarousel() {
                 </div>
               </SwiperSlide>
             ))}
-        </Swiper>
+          </Swiper>
+        </div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10 mt-4">
