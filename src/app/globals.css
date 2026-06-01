@@ -281,11 +281,21 @@ html {
   .animate-scroll-left {
     animation: scroll-left 180s linear infinite;
     will-change: transform;
+    backface-visibility: hidden;
+    transform: translate3d(0, 0, 0);
   }
 
   .animate-scroll-right-seamless {
     animation: scroll-right-seamless 30s linear infinite;
     will-change: transform;
+    backface-visibility: hidden;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Ostrzejsze renderowanie zdjęć w przewijanych karuzelach (bez dodatkowego scale na img) */
+  .gallery-slider-track img {
+    backface-visibility: hidden;
+    transform: translateZ(0);
   }
 
   .gallery-slider-mask {
@@ -582,10 +592,10 @@ html {
 
 @keyframes scroll-right-seamless {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 

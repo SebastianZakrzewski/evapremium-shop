@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react"
 import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
+import { GalleryLightbox } from "@/components/ui/gallery-lightbox"
 
 export interface SliderImage {
   src: string
@@ -20,87 +20,13 @@ interface ImageAutoSliderProps {
   className?: string
 }
 
-const SliderModal = ({
-  image,
-  onClose,
-}: {
-  image: SliderImage
-  onClose: () => void
-}) => {
-  React.useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose()
-    }
-    window.addEventListener("keydown", handleKey)
-    return () => window.removeEventListener("keydown", handleKey)
-  }, [onClose])
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] flex items-center justify-center p-4 md:p-8"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label={image.title ?? image.alt}
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="relative max-w-5xl max-h-[90vh] w-full h-full flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className="absolute -top-12 right-0 z-10 text-white hover:text-red-500 transition-colors duration-200 p-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-white/10"
-          aria-label="Zamknij podgląd obrazu"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        <div className="relative flex-1 rounded-2xl overflow-hidden bg-black shadow-2xl border border-white/10">
-          <Image
-            src={image.src}
-            alt={image.alt}
-            fill
-            className="object-contain"
-            sizes="(max-width: 1200px) 100vw, 1200px"
-            quality={100}
-            priority
-            unoptimized
-          />
-        </div>
-
-        {(image.title || image.description) && (
-          <div className="mt-6 bg-black border border-white/10 rounded-xl p-6 backdrop-blur-md">
-            {image.title && (
-              <h3 className="text-2xl font-bold text-white mb-2">{image.title}</h3>
-            )}
-            {image.description && (
-              <p className="text-white font-medium">{image.description}</p>
-            )}
-          </div>
-        )}
-      </motion.div>
-    </motion.div>
-  )
-}
-
-SliderModal.displayName = "SliderModal"
-
 export const ImageAutoSlider = ({
   images,
   speed = 30,
   tileClassName,
   className,
 }: ImageAutoSliderProps) => {
-  const [activeImage, setActiveImage] = useState<SliderImage | null>(null)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
@@ -135,14 +61,14 @@ export const ImageAutoSlider = ({
     <>
       <div className={`w-full overflow-hidden gallery-slider-mask ${className ?? ""}`}>
         <div
-          className="flex gap-4 w-max animate-scroll-right-seamless"
+          className="gallery-slider-track flex w-max gap-4 animate-scroll-right-seamless"
           style={{ animationDuration: `${animationDuration}s` }}
         >
           {duplicated.map((image, index) => (
             <button
               key={`${image.src}-${index}`}
               type="button"
-              onClick={() => setActiveImage(image)}
+              onClick={() => setLightboxIndex(index % images.length)}
               aria-label={`Otwórz zdjęcie: ${image.title ?? image.alt}`}
               className={`
                 flex-shrink-0 ${tileSize}
@@ -150,8 +76,8 @@ export const ImageAutoSlider = ({
                 shadow-2xl shadow-black/50
                 border border-white/10
                 hover:border-red-500/40
-                transition-all duration-300
-                hover:scale-[1.04] hover:shadow-red-900/30
+                transition-[border-color,box-shadow] duration-300
+                hover:shadow-red-900/30
                 focus:outline-none focus:ring-2 focus:ring-red-500/60
                 cursor-pointer
               `}
@@ -160,11 +86,10 @@ export const ImageAutoSlider = ({
                 src={image.src}
                 alt={image.alt}
                 fill
-                className="object-cover transition-transform duration-500 hover:scale-110 brightness-105"
-                sizes="(max-width: 768px) 200px, (max-width: 1024px) 272px, 304px"
-                quality={100}
+                className="object-cover"
+                sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 288px"
+                quality={90}
                 loading={index < eagerSlidesCount ? "eager" : "lazy"}
-                unoptimized
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
               {image.title && (
@@ -179,11 +104,13 @@ export const ImageAutoSlider = ({
         </div>
       </div>
 
-      <AnimatePresence>
-        {activeImage && (
-          <SliderModal image={activeImage} onClose={() => setActiveImage(null)} />
-        )}
-      </AnimatePresence>
+      <GalleryLightbox
+        isOpen={lightboxIndex !== null}
+        items={images}
+        currentIndex={lightboxIndex ?? 0}
+        onIndexChange={setLightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+      />
     </>
   )
 }

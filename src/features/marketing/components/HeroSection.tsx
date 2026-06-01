@@ -187,18 +187,18 @@ export default function HeroSection() {
                             src={slide.imageMobile}
                             alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
                             fill
-                            className="object-contain object-center brightness-110 contrast-[1.02] md:hidden"
+                            className="object-contain object-center md:hidden"
                             priority={index === 0}
-                            quality={100}
+                            quality={90}
                             sizes="100vw"
                           />
                           <Image
                             src={slide.image}
                             alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
                             fill
-                            className="hidden object-contain object-center brightness-110 contrast-[1.02] md:block"
+                            className="hidden object-contain object-center md:block"
                             priority={index === 0}
-                            quality={100}
+                            quality={90}
                             sizes="(max-width: 1240px) 100vw, 1240px"
                           />
                         </>
@@ -207,7 +207,7 @@ export default function HeroSection() {
                           src={slide.image}
                           alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
                           fill
-                          className="object-contain object-center brightness-110 contrast-[1.02]"
+                          className="object-contain object-center"
                           priority={index === 0}
                           quality={90}
                           sizes="(max-width: 640px) 100vw, (max-width: 1240px) 100vw, 1240px"

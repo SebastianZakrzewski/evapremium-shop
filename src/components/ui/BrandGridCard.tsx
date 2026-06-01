@@ -101,8 +101,7 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
             className={`
               transition-all duration-700
               ${isBrandImage ? 'object-cover object-center' : 'object-contain'}
-              group-hover:scale-110
-              brightness-100 group-hover:brightness-110
+              group-hover:scale-[1.02]
             `}
             sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
             quality={90}
@@ -110,7 +109,6 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
             placeholder={isBrandImage ? "empty" : "blur"}
             priority={isPriority}
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-            unoptimized={isBrandImage}
             onError={() => setImageError(true)}
           />
         ) : (
@@ -120,9 +118,8 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
               alt={`${brand.name} logo`}
               width={128}
               height={128}
-              className="object-contain transition-all duration-700 group-hover:scale-110 w-full h-full brightness-100 group-hover:brightness-125"
-              quality={100}
-              unoptimized={isBrandImage}
+              className="object-contain transition-all duration-700 group-hover:scale-105 w-full h-full"
+              quality={90}
               onError={() => setImageError(true)}
             />
           </div>

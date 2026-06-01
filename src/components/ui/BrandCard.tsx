@@ -41,16 +41,14 @@ const BrandCardComponent: React.FC<BrandCardProps> = ({ brand, className = "", i
               alt={`${brand.name}`}
               fill
               className={`
-                transition-transform duration-700 ease-out will-change-transform
-                group-hover:scale-105
-                ${isBrandImage ? 'object-cover object-center' : 'object-contain p-8'}
-                opacity-100 brightness-110 group-hover:brightness-125
+                transition-transform duration-700 ease-out
+                group-hover:scale-[1.02]
+                ${isBrandImage ? "object-cover object-center" : "object-contain p-8"}
               `}
               sizes="(max-width: 640px) 224px, (max-width: 1024px) 288px, 320px"
               priority={isPriority}
-              quality={100}
+              quality={90}
               loading={isPriority ? "eager" : "lazy"}
-              unoptimized
               onError={onImageError}
             />
           ) : (
@@ -61,9 +59,8 @@ const BrandCardComponent: React.FC<BrandCardProps> = ({ brand, className = "", i
                 alt={`${brand.name} logo`}
                 width={128}
                 height={128}
-                className="object-contain transition-transform duration-500 group-hover:scale-110"
-                quality={100}
-                unoptimized
+                className="object-contain transition-transform duration-500 group-hover:scale-105"
+                quality={90}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';

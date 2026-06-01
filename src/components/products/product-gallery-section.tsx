@@ -3,7 +3,8 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { GalleryLightbox } from "@/components/ui/gallery-lightbox";
 import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -253,10 +254,10 @@ const ProductImageCard = React.memo(({
           src={image.src}
           alt={image.alt}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          className="object-cover"
           sizes="(max-width: 768px) 320px, 384px"
           priority={isPriority}
-          quality={85}
+          quality={90}
         />
         
         {/* Overlay z gradientem */}
@@ -278,73 +279,8 @@ const ProductImageCard = React.memo(({
 
 ProductImageCard.displayName = 'ProductImageCard';
 
-// Zoptymalizowany komponent modala
-const ImageModal = React.memo(({ 
-  selectedImage, 
-  onClose 
-}: { 
-  selectedImage: ProductImage | null; 
-  onClose: () => void;
-}) => {
-  if (!selectedImage) return null;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] flex items-center justify-center p-4 md:p-8"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="relative max-w-5xl max-h-[90vh] w-full h-full flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Przycisk zamknięcia */}
-        <button
-          onClick={onClose}
-          className="absolute -top-12 right-0 z-10 text-white hover:text-red-500 transition-colors duration-200 p-2"
-        >
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        {/* Kontener obrazu */}
-        <div className="relative flex-1 rounded-2xl overflow-hidden bg-black shadow-2xl border border-white/10">
-          <Image
-            src={selectedImage.src}
-            alt={selectedImage.alt}
-            fill
-            className="object-contain"
-            sizes="(max-width: 1200px) 100vw, 1200px"
-            quality={100}
-            priority
-          />
-        </div>
-
-        {/* Informacje o produkcie */}
-        <div className="mt-6 bg-black border border-white/10 rounded-xl p-6 backdrop-blur-md">
-          <h3 className="text-2xl font-bold text-white mb-2">
-            {selectedImage.title}
-          </h3>
-          <p className="text-gray-400">
-            {selectedImage.description}
-          </p>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-});
-
-ImageModal.displayName = 'ImageModal';
-
 export default function ProductGallerySection() {
-  const [selectedImage, setSelectedImage] = useState<ProductImage | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [carouselOffset, setCarouselOffset] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
@@ -369,12 +305,24 @@ export default function ProductGallerySection() {
 
   // Zoptymalizowane funkcje z useCallback
   const openModal = useCallback((image: ProductImage) => {
-    setSelectedImage(image);
+    const index = productImages.findIndex((item) => item.id === image.id);
+    setSelectedIndex(index >= 0 ? index : 0);
   }, []);
 
   const closeModal = useCallback(() => {
-    setSelectedImage(null);
+    setSelectedIndex(null);
   }, []);
+
+  const lightboxItems = useMemo(
+    () =>
+      productImages.map((image) => ({
+        src: image.src,
+        alt: image.alt,
+        title: image.title,
+        description: image.description,
+      })),
+    []
+  );
 
   // Funkcje nawigacji karuzeli - używają stanu zamiast manipulacji DOM
   const goToPrevious = useCallback(() => {
@@ -490,10 +438,13 @@ export default function ProductGallerySection() {
         </div>
       </div>
 
-      {/* Modal dla powiększonego obrazu */}
-      <AnimatePresence>
-        <ImageModal selectedImage={selectedImage} onClose={closeModal} />
-      </AnimatePresence>
+      <GalleryLightbox
+        isOpen={selectedIndex !== null}
+        items={lightboxItems}
+        currentIndex={selectedIndex ?? 0}
+        onIndexChange={setSelectedIndex}
+        onClose={closeModal}
+      />
 
       {/* Call to Action */}
       <div className="container mx-auto px-4 relative z-10 mt-12 text-center">
