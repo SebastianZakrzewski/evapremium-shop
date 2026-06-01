@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -12,11 +12,14 @@ import { useAccessories } from "@/features/accessories/hooks/useAccessories";
 import { useBrands } from "@/features/brands/hooks/useBrands";
 import { useMatProductImages } from "@/features/mat-product-images";
 import { useConfiguratorState } from "@/features/car-configurator/hooks/useConfiguratorState";
+import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState";
 import { useConfiguratorCarData } from "@/features/car-configurator";
+import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext";
 import { normalizeBrandName } from "@/shared/brands";
 import { StepProgress } from "./StepProgress";
 import { StepAccordion } from "./StepAccordion";
 import { CarSelectionStep } from "./CarSelectionStep";
+import { LockedCarContextStep } from "./LockedCarContextStep";
 import { MatTypeStep } from "./MatTypeStep";
 import { VariantStep } from "./VariantStep";
 import { StructureStep } from "./StructureStep";
@@ -26,8 +29,25 @@ import { AccessoriesStep } from "./AccessoriesStep";
 import { MatTypeVariantStep } from "./MatTypeVariantStep";
 import { StructureColorStep } from "./StructureColorStep";
 import { ConfiguratorLoader } from "./ConfiguratorLoader";
-import { ZoomIn, ArrowLeft, ArrowRight, Info, RotateCcw, ShoppingCart } from "lucide-react";
-import { getStickyMainImage, getStickyPreviewImage, StickyPreviewTab } from "./stickyPreview";
+import { ZoomIn, ArrowLeft, ArrowRight, Info, ShoppingCart } from "lucide-react";
+import {
+  getStickyPreviewImage,
+  getStickyPreviewPaddingTop,
+  getStickyPreviewScrollMargin,
+  type StickyPreviewTab,
+  getMobileStickyStackHeightPx,
+} from "./stickyPreview";
+import { CarModelPreviewCarousel } from "./CarModelPreviewCarousel";
+import { ConfiguratorPreviewFrame } from "./ConfiguratorPreviewFrame";
+import { DesktopSidebarPreviewControls } from "./DesktopSidebarPreviewControls";
+import {
+  canShowRugSidebarPreview,
+  hasRugPreviewConfigChange,
+  isMatTypeSelected,
+} from "./rugPreviewConfig";
+import { PLACEHOLDER_CAR_MODEL_PREVIEW_SLIDES } from "./carModelPreviewCarousel.types";
+import { MobileStickyPreview } from "./MobileStickyPreview";
+import { MobileSummaryPreview } from "./MobileSummaryPreview";
 
 const TOTAL_STEPS_DESKTOP = 7;
 const TOTAL_STEPS_MOBILE = 5;
@@ -44,10 +64,17 @@ export default function ConfiguratorSimple() {
   const { addToCart, isLoading: cartLoading } = useCart();
   const { accessories } = useAccessories();
   const { brands, isLoading: brandsLoading } = useBrands();
-  const { config, updateConfig } = useConfiguratorState({
+  const { config, updateConfig: applyConfigUpdate } = useConfiguratorState({
     searchParams,
     brands,
   });
+
+  const productEntry = useMemo(
+    () => getProductEntryLock(searchParams),
+    [searchParams]
+  );
+
+  const step1Title = productEntry.isLocked ? "Twój samochód" : "Wybór samochodu";
 
   const brandApiName = useMemo(
     () =>
@@ -182,9 +209,55 @@ export default function ConfiguratorSimple() {
   // Stan modala z podglądem
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [modalImageType, setModalImageType] = useState<'dynamic' | 'product' | 'mat-product' | null>(null);
+  const [step1GalleryModalUrl, setStep1GalleryModalUrl] = useState<string | null>(null);
   
   // Stan aktywnego widoku podglądu (tabs)
   const [activePreviewTab, setActivePreviewTab] = useState<StickyPreviewTab>('dynamic');
+  const [isPreviewCollapsed, setIsPreviewCollapsed] = useState(false);
+  const [showPreviewHint, setShowPreviewHint] = useState(false);
+
+  const focusDynamicPreview = useCallback(() => {
+    setActivePreviewTab("dynamic");
+  }, []);
+
+  const updateConfig = useCallback(
+    (updates: Partial<ConfiguratorState>) => {
+      const switchToDynamicPreview = () => {
+        if (!hasRugPreviewConfigChange(updates)) return;
+        const matAfter = updates.matType ?? config.matType;
+        if (canShowRugSidebarPreview(activeStep, matAfter)) {
+          focusDynamicPreview();
+        }
+      };
+
+      if (productEntry.isLocked) {
+        const { brand, model, year, bodyType, ...rest } = updates;
+        const hasLockedFieldUpdate =
+          brand !== undefined ||
+          model !== undefined ||
+          year !== undefined ||
+          bodyType !== undefined;
+
+        if (hasLockedFieldUpdate && Object.keys(rest).length === 0) {
+          return;
+        }
+
+        applyConfigUpdate(rest);
+        switchToDynamicPreview();
+        return;
+      }
+
+      applyConfigUpdate(updates);
+      switchToDynamicPreview();
+    },
+    [
+      applyConfigUpdate,
+      productEntry.isLocked,
+      config.matType,
+      activeStep,
+      focusDynamicPreview,
+    ]
+  );
   
   // Stan wybranego zdjęcia produktu dla typu "classic" (bez rantów)
   const [selectedClassicProductImage, setSelectedClassicProductImage] = useState<string>('/bezrantowprodukt/1_-_1.webp');
@@ -260,11 +333,11 @@ export default function ConfiguratorSimple() {
 
   // Generuj ścieżkę do zdjęcia produktu (wybrane zdjęcie z galerii)
   const productPreviewPath = useMemo(() => {
-    if (activeStep < 2) return null;
-    if (config.matType === '3d-with-rims') return selectedRimsProductImage;
-    if (config.matType === 'classic') return selectedClassicProductImage;
+    if (!config.matType) return null;
+    if (config.matType === "3d-with-rims") return selectedRimsProductImage;
+    if (config.matType === "classic") return selectedClassicProductImage;
     return null;
-  }, [config.matType, activeStep, selectedClassicProductImage, selectedRimsProductImage]);
+  }, [config.matType, selectedClassicProductImage, selectedRimsProductImage]);
   
   // Resetuj wybrane zdjęcie gdy zmienia się typ dywaników
   useEffect(() => {
@@ -278,14 +351,230 @@ export default function ConfiguratorSimple() {
   // Sprawdź czy mamy pełny podgląd (wszystkie opcje wybrane)
   const hasFullPreview = !!(config.structure && config.color && config.edgeColor);
 
+  const isCarComplete = !!(
+    config.brand && config.model && config.year && config.bodyType
+  );
+
+  const carLabel = isCarComplete
+    ? `${config.brand} ${config.model} · ${config.year} · ${config.bodyType}`
+    : null;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setShowPreviewHint(sessionStorage.getItem("eva-configurator-preview-hint") !== "1");
+  }, []);
+
+  const handleDismissPreviewHint = () => {
+    setShowPreviewHint(false);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("eva-configurator-preview-hint", "1");
+    }
+  };
+
+  const handleOpenPreviewModal = (tab: StickyPreviewTab) => {
+    handleDismissPreviewHint();
+    setActivePreviewTab(tab);
+    setModalImageType(
+      tab === "mat-product" ? "mat-product" : tab === "product" ? "product" : "dynamic"
+    );
+    setIsPreviewModalOpen(true);
+  };
+
+  const handleStep1MainPreview = useCallback(() => {
+    setStep1GalleryModalUrl(null);
+    if (matProductImage && isCarComplete) {
+      handleOpenPreviewModal("mat-product");
+    }
+  }, [matProductImage, isCarComplete, handleOpenPreviewModal]);
+
+  const handleStep1GalleryPreview = useCallback(
+    (slide: { imageUrl: string }) => {
+      setStep1GalleryModalUrl(slide.imageUrl);
+      setModalImageType("product");
+      setIsPreviewModalOpen(true);
+    },
+    []
+  );
+
+  const step1PreviewCarouselProps = useMemo(
+    () => ({
+      brand: config.brand,
+      model: config.model,
+      carLabel,
+      isCarComplete,
+      mainImageUrl: matProductImage,
+      fallbackMainImage: PLACEHOLDER_CAR_MODEL_PREVIEW_SLIDES[0].imageUrl,
+      onOpenMainPreview: handleStep1MainPreview,
+      onOpenGalleryPreview: handleStep1GalleryPreview,
+    }),
+    [
+      config.brand,
+      config.model,
+      carLabel,
+      isCarComplete,
+      matProductImage,
+      handleStep1MainPreview,
+      handleStep1GalleryPreview,
+    ]
+  );
+
+  const step1PreviewCarouselMobile = useMemo(
+    () => <CarModelPreviewCarousel {...step1PreviewCarouselProps} />,
+    [step1PreviewCarouselProps]
+  );
+
+  const step1PreviewCarouselDesktop = useMemo(
+    () => (
+      <CarModelPreviewCarousel
+        {...step1PreviewCarouselProps}
+        heroLayout="preview-frame"
+        mainImageFit="cover"
+        className="mb-0"
+      />
+    ),
+    [step1PreviewCarouselProps]
+  );
+
+  const productSetGalleryImages =
+    config.matType === "classic"
+      ? classicProductImages
+      : config.matType === "3d-with-rims"
+        ? rimsProductImages
+        : [];
+
+  const handleSelectProductSetImage = useCallback(
+    (imagePath: string) => {
+      if (config.matType === "classic") {
+        setSelectedClassicProductImage(imagePath);
+      } else if (config.matType === "3d-with-rims") {
+        setSelectedRimsProductImage(imagePath);
+      }
+      setActivePreviewTab("product");
+    },
+    [config.matType]
+  );
+
+  const handleSelectDynamicPreview = focusDynamicPreview;
+
+  const hasMatTypeSelected = isMatTypeSelected(config.matType);
+
+  /** Podgląd dynamiczny i galeria zestawu — od kroku 2, po wyborze typu dywanika */
+  const canShowDynamicPreview = canShowRugSidebarPreview(activeStep, config.matType);
+
+  const canShowProductSetGallery = canShowDynamicPreview;
+
+  const showProductSetGallery =
+    canShowProductSetGallery &&
+    !!productPreviewPath &&
+    productSetGalleryImages.length > 0;
+
+  const showConfiguredDynamicPreview = canShowDynamicPreview && hasFullPreview;
+
+  const desktopSidebarPreview = useMemo(() => {
+    const showProductInFrame =
+      activePreviewTab === "product" && !!productPreviewPath;
+
+    if (showProductInFrame) {
+      return {
+        src: productPreviewPath,
+        imageKey: `product-${productPreviewPath}`,
+        modalType: "product" as const,
+      };
+    }
+
+    return {
+      src: dynamicPreviewPath,
+      imageKey: `dynamic-${config.color}-${config.edgeColor}`,
+      modalType: "dynamic" as const,
+    };
+  }, [
+    activePreviewTab,
+    productPreviewPath,
+    dynamicPreviewPath,
+    config.color,
+    config.edgeColor,
+  ]);
+
+  const showStep1MatProductPreview = activeStep === 1;
+
+  useEffect(() => {
+    if (activeStep === 1 && activePreviewTab !== "mat-product") {
+      if (matProductImage) setActivePreviewTab("mat-product");
+    }
+  }, [activeStep, activePreviewTab, matProductImage]);
+
+  useEffect(() => {
+    if (activeStep >= 2 && activeStep < 5 && activePreviewTab === "mat-product") {
+      if (canShowDynamicPreview) {
+        setActivePreviewTab("dynamic");
+      } else if (productPreviewPath) {
+        setActivePreviewTab("product");
+      } else {
+        setActivePreviewTab("dynamic");
+      }
+    }
+  }, [activeStep, activePreviewTab, canShowDynamicPreview, productPreviewPath]);
+
+  useEffect(() => {
+    if (!canShowDynamicPreview && activePreviewTab === "dynamic") {
+      if (showStep1MatProductPreview && matProductImage) {
+        setActivePreviewTab("mat-product");
+      } else if (productPreviewPath) {
+        setActivePreviewTab("product");
+      }
+    }
+  }, [
+    canShowDynamicPreview,
+    activePreviewTab,
+    matProductImage,
+    productPreviewPath,
+    showStep1MatProductPreview,
+  ]);
+
   // Automatyczne przełączanie na dostępny tab
   useEffect(() => {
-    if (activePreviewTab === 'dynamic' && !hasFullPreview && productPreviewPath) {
-      setActivePreviewTab('product');
-    } else if (activePreviewTab === 'product' && !productPreviewPath && hasFullPreview) {
-      setActivePreviewTab('dynamic');
+    if (
+      activePreviewTab === "dynamic" &&
+      (!canShowDynamicPreview || !hasFullPreview)
+    ) {
+      if (showStep1MatProductPreview && matProductImage) {
+        setActivePreviewTab("mat-product");
+      } else if (productPreviewPath) {
+        setActivePreviewTab("product");
+      }
+    } else if (activePreviewTab === "product" && !productPreviewPath) {
+      if (showStep1MatProductPreview && matProductImage) {
+        setActivePreviewTab("mat-product");
+      } else if (showConfiguredDynamicPreview) {
+        setActivePreviewTab("dynamic");
+      }
+    } else if (activePreviewTab === "mat-product" && !matProductImage) {
+      if (showConfiguredDynamicPreview) {
+        setActivePreviewTab("dynamic");
+      } else if (productPreviewPath) {
+        setActivePreviewTab("product");
+      }
+    } else if (
+      activePreviewTab === "mat-product" &&
+      !showStep1MatProductPreview
+    ) {
+      if (canShowDynamicPreview) {
+        setActivePreviewTab("dynamic");
+      } else if (productPreviewPath) {
+        setActivePreviewTab("product");
+      } else {
+        setActivePreviewTab("dynamic");
+      }
     }
-  }, [activePreviewTab, hasFullPreview, productPreviewPath]);
+  }, [
+    activePreviewTab,
+    hasFullPreview,
+    canShowDynamicPreview,
+    showConfiguredDynamicPreview,
+    productPreviewPath,
+    matProductImage,
+    showStep1MatProductPreview,
+  ]);
 
 
   // Walidacja kroku - desktop (7 kroków)
@@ -349,9 +638,14 @@ export default function ConfiguratorSimple() {
   };
 
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => e.key === 'Escape' && setIsPreviewModalOpen(false);
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsPreviewModalOpen(false);
+        setStep1GalleryModalUrl(null);
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
   }, []);
 
   // Nasłuchuj na otwarcie/zamknięcie koszyka
@@ -441,7 +735,7 @@ export default function ConfiguratorSimple() {
             // Oblicz wysokość sticky header dla konkretnego kroku
             // Krok 1: tylko navbar (64px)
             // Krok 5: tylko navbar (64px) - brak sticky preview
-            // Kroki 2-4: navbar (64px) + sticky preview (responsywne vh + galeria ~60px)
+            // Kroki 2-4: navbar + sticky podgląd (wysokość zsynchronizowana z MobileStickyPreview)
             const navbarHeight = 64; // h-16
             let stickyHeaderHeight = navbarHeight;
             
@@ -468,21 +762,11 @@ export default function ConfiguratorSimple() {
             if (activeStep >= 2 && activeStep < 5) {
               const hasStickyPreview = isStepValidMobile(2) || activeStep >= 2;
               if (hasStickyPreview) {
-                // Oblicz rzeczywistą wysokość sticky header z responsywnymi wartościami
-                // Optymalne wysokości: mobile <640px: 30vh, sm 640-768px: 33vh, md 768+: 36vh
-                // Balansują widoczność produktu z dostępnością menu wyboru
-                const viewportHeight = window.innerHeight;
-                const viewportWidth = window.innerWidth;
-                let previewHeightRatio = 0.30; // domyślnie mobile - optymalna widoczność
-                
-                if (viewportWidth >= 768) {
-                  previewHeightRatio = 0.36; // md i większe - maksymalna widoczność
-                } else if (viewportWidth >= 640) {
-                  previewHeightRatio = 0.33; // sm - zbalansowana widoczność
-                }
-                
-                // preview height + galeria (~60px) + navbar (64px)
-                stickyHeaderHeight = Math.round(viewportHeight * previewHeightRatio) + 60 + navbarHeight;
+                stickyHeaderHeight = getMobileStickyStackHeightPx(
+                  isPreviewCollapsed,
+                  window.innerHeight,
+                  window.innerWidth
+                );
               } else {
                 stickyHeaderHeight = navbarHeight;
               }
@@ -613,28 +897,47 @@ export default function ConfiguratorSimple() {
   // Pokazuj sticky preview gdy wybrano typ i wariant (mobile) lub gdy jesteśmy na kroku 2+ (desktop)
   // Na mobile sticky bottom bar pojawia się dopiero od sekcji 2 (activeStep >= 2)
   const shouldShowStickyPreview = activeStep >= 2 && !isCartOpen && activeStep !== 5;
-  const mainContainerPaddingBottom = shouldShowStickyPreview && config.matType 
-    ? 'pb-[180px]' 
-    : shouldShowStickyPreview 
-    ? 'pb-[100px]' 
-    : '';
+  const mainContainerPaddingBottom = shouldShowStickyPreview && config.matType
+    ? "pb-[200px]"
+    : shouldShowStickyPreview
+      ? "pb-[110px]"
+      : "";
 
   // Determine best image for sticky header
   const stickyPreviewFallback = "/dywaniki/3d/diamonds/black/5os-3d-diamonds-black-black.webp";
   const stickyHeaderImage = useMemo(() => {
-    return getStickyMainImage({
+    return getStickyPreviewImage({
+      activePreviewTab,
       hasFullPreview,
       dynamicPreviewPath,
+      productPreviewPath,
+      matProductImage,
       fallbackPath: stickyPreviewFallback,
+      canShowDynamicPreview,
+      includeMatProduct: false,
     });
-  }, [hasFullPreview, dynamicPreviewPath, stickyPreviewFallback]);
+  }, [
+    activePreviewTab,
+    hasFullPreview,
+    dynamicPreviewPath,
+    productPreviewPath,
+    matProductImage,
+    stickyPreviewFallback,
+    canShowDynamicPreview,
+  ]);
 
-  const mobileModalImageType = useMemo(() => {
-    if (activePreviewTab === "product" && productPreviewPath) return "product";
-    if (activePreviewTab === "dynamic") return "dynamic";
-    if (productPreviewPath) return "product";
-    return "dynamic";
-  }, [activePreviewTab, productPreviewPath]);
+  const productGalleryImages = canShowProductSetGallery
+    ? productSetGalleryImages
+    : [];
+  const selectedProductImage =
+    config.matType === "classic"
+      ? selectedClassicProductImage
+      : selectedRimsProductImage;
+
+  const mobileStickyPaddingTop = shouldShowStickyPreview
+    ? getStickyPreviewPaddingTop(isPreviewCollapsed)
+    : "pt-12";
+  const mobileStepScrollMargin = getStickyPreviewScrollMargin(isPreviewCollapsed);
 
   if (brandsLoading) return <ConfiguratorLoader />;
 
@@ -660,118 +963,31 @@ export default function ConfiguratorSimple() {
       )}
       */}
 
-      {/* Mobile Fixed Header with Product Image and Gallery */}
       {shouldShowStickyPreview && (
-        <div className="lg:hidden fixed top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg">
-          {/* Main Product Image */}
-          {/* Optimal preview size: 30vh (small) -> 33vh (medium) -> 36vh (large)
-              Balances product visibility with menu accessibility
-              Small screens (667px): ~200px preview, ~463px for menu
-              Medium screens (844px): ~278px preview, ~566px for menu  
-              Large screens (932px): ~335px preview, ~597px for menu */}
-          <div className="relative w-full h-[30vh] min-h-[200px] max-h-[280px] sm:h-[33vh] sm:min-h-[240px] sm:max-h-[320px] md:h-[36vh] md:min-h-[260px] md:max-h-[380px] group">
-            <Image
-              src={stickyHeaderImage}
-              alt="Podgląd produktu"
-              fill
-              className="object-contain p-4 transition-transform duration-300 group-active:scale-105"
-              priority
-            />
-            {/* Click to open modal */}
-            <button
-              onClick={() => {
-                setActivePreviewTab("dynamic");
-                setModalImageType("dynamic");
-                setIsPreviewModalOpen(true);
-              }}
-              className="absolute inset-0 w-full h-full"
-              aria-label="Powiększ obraz"
-            />
-            {/* Zoom hint badge */}
-            <div className="absolute top-2 left-2 bg-black/80 backdrop-blur-sm px-2 py-1 rounded-lg border border-white/20 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-2 duration-500">
-              <ZoomIn className="w-3.5 h-3.5 text-white animate-pulse" />
-              <span className="text-xs text-white font-medium">Kliknij aby powiększyć</span>
-            </div>
-            {/* Zoom button */}
-            <div className="absolute top-2 right-2">
-              <Button
-                size="icon"
-                variant="secondary"
-                className="h-10 w-10 rounded-full bg-red-600/90 backdrop-blur border-2 border-red-500/50 hover:bg-red-500 text-white shadow-lg shadow-red-500/30 animate-pulse"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActivePreviewTab("dynamic");
-                  setModalImageType("dynamic");
-                  setIsPreviewModalOpen(true);
-                }}
-              >
-                <ZoomIn className="w-5 h-5" />
-              </Button>
-            </div>
-          </div>
-
-          {/* Product Gallery - Sticky under main image, always visible */}
-          <div className="px-4 py-2 bg-black/95 border-t border-white/10">
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActivePreviewTab("dynamic");
-                  setModalImageType("dynamic");
-                  setIsPreviewModalOpen(true);
-                }}
-                className={`
-                      relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 active:scale-95
-                      ${activePreviewTab === "dynamic"
-                        ? 'border-red-500 shadow-lg shadow-red-500/20 scale-105 ring-1 ring-red-500/50'
-                        : 'border-white/10 opacity-60 active:opacity-100'
-                      }
-                    `}
-                aria-label="Podgląd dywanika"
-              >
-                <Image
-                  src={stickyHeaderImage}
-                  alt="Miniatura podglądu dywanika"
-                  fill
-                  className="object-cover"
-                  sizes="48px"
-                />
-              </button>
-              {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
-                  <button
-                    key={imagePath}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActivePreviewTab("product");
-                      if (config.matType === 'classic') {
-                        setSelectedClassicProductImage(imagePath);
-                      } else {
-                        setSelectedRimsProductImage(imagePath);
-                      }
-                    }}
-                    className={`
-                      relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 active:scale-95
-                      ${(config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath
-                        ? 'border-red-500 shadow-lg shadow-red-500/20 scale-105 ring-1 ring-red-500/50'
-                        : 'border-white/10 opacity-60 active:opacity-100'
-                      }
-                    `}
-                    aria-label={`Zobacz zdjęcie produktu`}
-                  >
-                    <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="48px" />
-                  </button>
-                ))}
-            </div>
-          </div>
-        </div>
+        <MobileStickyPreview
+          previewImage={stickyHeaderImage}
+          activeTab={activePreviewTab}
+          onTabChange={setActivePreviewTab}
+          onOpenModal={handleOpenPreviewModal}
+          isCollapsed={isPreviewCollapsed}
+          onToggleCollapse={() => setIsPreviewCollapsed((prev) => !prev)}
+          showDynamicTab={canShowDynamicPreview}
+          showProductTab={showProductSetGallery}
+          showMatProductTab={false}
+          dynamicThumbnail={dynamicPreviewPath}
+          matProductImage={matProductImage}
+          productGalleryImages={productGalleryImages}
+          selectedProductImage={selectedProductImage}
+          onSelectProductImage={handleSelectProductSetImage}
+          showPreviewHint={showPreviewHint}
+          onDismissPreviewHint={handleDismissPreviewHint}
+          showBackToDynamicButton={showProductSetGallery}
+          onBackToDynamic={handleSelectDynamicPreview}
+        />
       )}
 
       {/* Main Content - scale 1.01 = 1% powiększenie (minimalne) */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scale-[1] origin-top w-full min-w-0 mx-auto ${
-        shouldShowStickyPreview && activeStep !== 5 
-          ? 'pt-[calc(30vh+5rem+3rem)] sm:pt-[calc(33vh+5rem+3rem)] md:pt-[calc(36vh+5rem+3rem)]' 
-          : 'pt-12'
-      } lg:pt-32 pb-12 ${shouldShowStickyPreview ? `lg:pb-24 ${mainContainerPaddingBottom}` : ''}`}>
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scale-[1] origin-top w-full min-w-0 mx-auto ${mobileStickyPaddingTop} lg:pt-32 pb-12 ${shouldShowStickyPreview ? `lg:pb-24 ${mainContainerPaddingBottom}` : ''}`}>
         <div className="grid grid-cols-1 lg:grid-cols-7 gap-5 xl:gap-6">
           {/* Mobile: Krokowe etapy - jeden krok na raz (4 kroki) */}
           <div className="lg:hidden">
@@ -788,13 +1004,23 @@ export default function ConfiguratorSimple() {
                   <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isStepValidMobile(1) ? 'bg-red-600 text-white' : 'bg-white/5 text-gray-400 border border-white/10'}`}>
                     <span className="text-sm font-bold">1</span>
                   </div>
-                  <h2 className="text-xl font-semibold text-white">Wybór samochodu</h2>
+                  <h2 className="text-xl font-semibold text-white">{step1Title}</h2>
                 </div>
-                <CarSelectionStep
-                  config={config}
-                  onUpdate={updateConfig}
-                  onNext={goToNextStep}
-                />
+                {step1PreviewCarouselMobile}
+                {productEntry.isLocked ? (
+                  <LockedCarContextStep
+                    config={config}
+                    productEntry={productEntry}
+                    onUpdate={applyConfigUpdate}
+                    onNext={goToNextStep}
+                  />
+                ) : (
+                  <CarSelectionStep
+                    config={config}
+                    onUpdate={updateConfig}
+                    onNext={goToNextStep}
+                  />
+                )}
               </div>
             )}
 
@@ -802,7 +1028,7 @@ export default function ConfiguratorSimple() {
             {activeStep === 2 && (
               <div
                 ref={(el) => { stepRefs.current[2] = el; }}
-                className="bg-[#111] rounded-xl border border-white/10 p-6 transition-all duration-200 scroll-mt-[calc(30vh+5rem+3rem)] sm:scroll-mt-[calc(33vh+5rem+3rem)] md:scroll-mt-[calc(36vh+5rem+3rem)]"
+                className={`bg-[#111] rounded-xl border border-white/10 p-6 transition-all duration-200 ${mobileStepScrollMargin}`}
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[2] = el; }}
@@ -829,7 +1055,7 @@ export default function ConfiguratorSimple() {
             {activeStep === 3 && (
               <div
                 ref={(el) => { stepRefs.current[3] = el; }}
-                className="bg-[#111] rounded-xl border border-white/10 p-6 transition-all duration-200 scroll-mt-[calc(30vh+5rem+3rem)] sm:scroll-mt-[calc(33vh+5rem+3rem)] md:scroll-mt-[calc(36vh+5rem+3rem)]"
+                className={`bg-[#111] rounded-xl border border-white/10 p-6 transition-all duration-200 ${mobileStepScrollMargin}`}
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[3] = el; }}
@@ -858,7 +1084,7 @@ export default function ConfiguratorSimple() {
             {activeStep === 4 && (
               <div
                 ref={(el) => { stepRefs.current[4] = el; }}
-                className="bg-[#111] rounded-xl border border-white/10 p-6 transition-all duration-200 scroll-mt-[calc(30vh+5rem+3rem)] sm:scroll-mt-[calc(33vh+5rem+3rem)] md:scroll-mt-[calc(36vh+5rem+3rem)]"
+                className={`bg-[#111] rounded-xl border border-white/10 p-6 transition-all duration-200 ${mobileStepScrollMargin}`}
               >
                 <div 
                   ref={(el) => { stepHeaderRefs.current[4] = el; }}
@@ -894,6 +1120,22 @@ export default function ConfiguratorSimple() {
                   </div>
                   <h2 className="text-xl font-semibold text-white">Podsumowanie</h2>
                 </div>
+                <MobileSummaryPreview
+                  carLabel={carLabel ?? `${config.brand} ${config.model}`}
+                  matProductImage={matProductImage}
+                  dynamicPreviewPath={dynamicPreviewPath}
+                  productPreviewPath={productPreviewPath}
+                  hasFullPreview={showConfiguredDynamicPreview}
+                  onOpenPreview={() =>
+                    handleOpenPreviewModal(
+                      showConfiguredDynamicPreview
+                        ? "dynamic"
+                        : matProductImage
+                          ? "mat-product"
+                          : "product"
+                    )
+                  }
+                />
                 <SummaryStep
                   config={config}
                   priceBreakdown={priceBreakdown}
@@ -908,7 +1150,14 @@ export default function ConfiguratorSimple() {
           {/* Desktop: Konfigurator – po prawej (order-2), col-span-4 dla większych okien opcji */}
           <div className="hidden lg:block lg:col-span-4 lg:order-2 space-y-4">
             {[
-              { step: 1, title: "Wybór samochodu", comp: CarSelectionStep, desc: "Dopasujemy dywaniki idealnie do Twojego modelu" },
+              {
+                step: 1,
+                title: step1Title,
+                comp: CarSelectionStep,
+                desc: productEntry.isLocked
+                  ? "Dywaniki dopasowane do wybranego modelu z katalogu"
+                  : "Dopasujemy dywaniki idealnie do Twojego modelu",
+              },
               { step: 2, title: "Typ dywaników", comp: MatTypeStep, desc: "Wybierz poziom ochrony i stylu" },
               { step: 3, title: "Wariant zestawu", comp: VariantStep, desc: "Dostosuj zestaw do swoich potrzeb" },
               { step: 4, title: "Struktura", comp: StructureStep, desc: "Wybierz wzór komórek EVA" },
@@ -935,6 +1184,27 @@ export default function ConfiguratorSimple() {
                       onPrevious={goToPreviousStep}
                       onProductModalOpenChange={setIsProductModalOpen}
                     />
+                  ) : step === 1 ? (
+                    <>
+                      {productEntry.isLocked ? (
+                        <LockedCarContextStep
+                          config={config}
+                          productEntry={productEntry}
+                          onUpdate={applyConfigUpdate}
+                          onNext={goToNextStep}
+                        />
+                      ) : (
+                        <Comp
+                          config={config}
+                          priceBreakdown={priceBreakdown}
+                          onUpdate={updateConfig}
+                          onNext={goToNextStep}
+                          onPrevious={goToPreviousStep}
+                          onAddToCart={handleAddToCart}
+                          isAddingToCart={isAddingToCart || cartLoading}
+                        />
+                      )}
+                    </>
                   ) : (
                     <Comp
                       config={config}
@@ -1035,215 +1305,79 @@ export default function ConfiguratorSimple() {
                 </div>
               </div>
 
-              {/* 0. Mat Product Image - zdjęcie produktu z bazy danych (pod podglądem dywanika) */}
-              {matProductImage && (
-                <div className="order-3 space-y-4">
-                  <div 
-                    className="relative group bg-white/5 rounded-2xl border border-white/10 overflow-hidden shadow-lg backdrop-blur-sm transition-all hover:shadow-red-900/5 cursor-pointer"
-                    onClick={() => {
-                      setModalImageType('mat-product');
-                      setIsPreviewModalOpen(true);
-                    }}
-                  >
-                    <div className="relative aspect-square">
-                      <Image
-                        src={matProductImage}
-                        alt={`${config.brand} ${config.model} - Zdjęcie produktu`}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        priority
-                      />
-                      
-                      {/* Click hint overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4 pointer-events-none">
-                        <div className="bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-2">
-                          <ZoomIn className="w-4 h-4 text-white" />
-                          <span className="text-xs text-white font-medium">Kliknij aby powiększyć</span>
-                        </div>
-                      </div>
-                      
-                      {/* Overlay Controls */}
-                      <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Button
-                          size="icon"
-                          variant="secondary"
-                          className="h-10 w-10 rounded-full bg-red-600/90 backdrop-blur border-2 border-red-500/50 hover:bg-red-500 text-white shadow-lg shadow-red-500/30"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setModalImageType('mat-product');
-                            setIsPreviewModalOpen(true);
-                          }}
-                        >
-                          <ZoomIn className="w-5 h-5" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Product Gallery - pod zdjęciem modelu na tle dywaników */}
-                  {config.matType && ((config.matType === 'classic' && classicProductImages) || (config.matType === '3d-with-rims' && rimsProductImages)) && (
-                    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
-                      <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
-                        <RotateCcw className="w-3 h-3" />
-                        Galeria produktu
-                      </h4>
-                      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                        {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
-                          <button
-                            key={imagePath}
-                            onClick={() => config.matType === 'classic' ? setSelectedClassicProductImage(imagePath) : setSelectedRimsProductImage(imagePath)}
-                            className={`
-                              relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 flex-shrink-0
-                              ${(config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath
-                                ? 'border-red-500 shadow-lg shadow-red-500/20 scale-105'
-                                : 'border-transparent opacity-60 hover:opacity-100 hover:border-white/20'
-                              }
-                            `}
-                          >
-                            <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="64px" />
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+              {activeStep === 1 && (
+                <div className="order-2">{step1PreviewCarouselDesktop}</div>
               )}
 
-              {/* 1. Product Window - galeria zdjęć produktu z karuzelą (pod podglądem dywanika) */}
-              {productPreviewPath && (
-                <div className="order-3 space-y-4">
-                  <div 
-                    className="relative group bg-white/5 rounded-2xl border border-white/10 overflow-hidden shadow-lg backdrop-blur-sm transition-all hover:shadow-red-900/5 cursor-pointer"
-                    onClick={() => {
-                      setModalImageType('product');
-                      setIsPreviewModalOpen(true);
-                    }}
-                  >
-                    <div className="relative aspect-square">
-                      <Image
-                        src={productPreviewPath}
-                        alt="Podgląd produktu"
-                        fill
-                        className="object-contain p-4 transition-transform duration-700 group-hover:scale-105"
-                        priority
-                      />
-                      
-                      {/* Click hint overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4 pointer-events-none">
-                        <div className="bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-2">
-                          <ZoomIn className="w-4 h-4 text-white" />
-                          <span className="text-xs text-white font-medium">Kliknij aby powiększyć</span>
+              {canShowDynamicPreview && (
+              <div className="order-2 space-y-3">
+                <ConfiguratorPreviewFrame
+                  imageSrc={desktopSidebarPreview.src}
+                  alt={
+                    desktopSidebarPreview.modalType === "product"
+                      ? "Podgląd zestawu"
+                      : "Podgląd konfiguracji"
+                  }
+                  imageKey={desktopSidebarPreview.imageKey}
+                  imageFit={
+                    desktopSidebarPreview.modalType === "product" ? "contain" : "cover"
+                  }
+                  priority
+                  onOpen={() => {
+                    setModalImageType(desktopSidebarPreview.modalType)
+                    setIsPreviewModalOpen(true)
+                  }}
+                  onZoomClick={() => {
+                    setModalImageType(desktopSidebarPreview.modalType)
+                    setIsPreviewModalOpen(true)
+                  }}
+                  overlayFooter={
+                    desktopSidebarPreview.modalType === "dynamic" &&
+                    showConfiguredDynamicPreview ? (
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <div className="bg-black/70 backdrop-blur-md border border-white/10 rounded-lg p-3 flex items-center justify-between gap-4 shadow-lg transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-4 h-4 rounded-full border border-white/20 shadow-inner"
+                              style={{ backgroundColor: getColorInfo(config.color).color }}
+                            />
+                            <span className="text-xs font-medium text-white">
+                              {getColorInfo(config.color).name}
+                            </span>
+                          </div>
+                          <div className="h-3 w-px bg-white/20" />
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-4 h-4 rounded-full border border-white/20 shadow-inner"
+                              style={{ backgroundColor: getColorInfo(config.edgeColor).color }}
+                            />
+                            <span className="text-xs font-medium text-white">
+                              {getColorInfo(config.edgeColor).name}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      
-                      {/* Overlay Controls */}
-                      <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Button
-                          size="icon"
-                          variant="secondary"
-                          className="h-10 w-10 rounded-full bg-red-600/90 backdrop-blur border-2 border-red-500/50 hover:bg-red-500 text-white shadow-lg shadow-red-500/30"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setModalImageType('product');
-                            setIsPreviewModalOpen(true);
-                          }}
-                        >
-                          <ZoomIn className="w-5 h-5" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Karuzela pod zdjęciem – zmiana grafiki przed powiększeniem */}
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
-                    <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
-                      <RotateCcw className="w-3 h-3" />
-                      Wybierz zdjęcie
-                    </h4>
-                    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                      {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
-                        <button
-                          key={imagePath}
-                          onClick={() => config.matType === 'classic' ? setSelectedClassicProductImage(imagePath) : setSelectedRimsProductImage(imagePath)}
-                          className={`
-                            relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 flex-shrink-0
-                            ${(config.matType === 'classic' ? selectedClassicProductImage : selectedRimsProductImage) === imagePath
-                              ? 'border-red-500 shadow-lg shadow-red-500/20 scale-105'
-                              : 'border-transparent opacity-60 hover:opacity-100 hover:border-white/20'
-                            }
-                          `}
-                          aria-label={`Zobacz zdjęcie ${imagePath}`}
-                        >
-                          <Image src={imagePath} alt="Miniatura" fill className="object-cover" sizes="64px" />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
+                    ) : null
+                  }
+                />
 
-              {/* 2. Rug Preview Window - dynamiczny podgląd dywanika (nad grafikami) */}
-              <div 
-                className="order-2 relative group bg-[#111] rounded-2xl p-1 border border-white/10 shadow-2xl transition-all duration-500 hover:shadow-red-900/10 cursor-pointer"
-                onClick={() => {
-                  setModalImageType('dynamic');
-                  setIsPreviewModalOpen(true);
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-2xl pointer-events-none" />
-                
-                <div className="relative aspect-[4/5] bg-black/50 rounded-xl overflow-hidden">
-                  {/* Preview Image */}
-                  <Image
-                    key={`dynamic-${config.color}-${config.edgeColor}`}
-                    src={dynamicPreviewPath}
-                    alt="Podgląd konfiguracji"
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    priority
+                {showProductSetGallery && productPreviewPath && (
+                  <DesktopSidebarPreviewControls
+                    activeTab={activePreviewTab}
+                    dynamicThumbnail={dynamicPreviewPath}
+                    productImages={productSetGalleryImages}
+                    selectedProductImage={productPreviewPath}
+                    onSelectDynamic={handleSelectDynamicPreview}
+                    onSelectProduct={handleSelectProductSetImage}
+                    galleryTitle={
+                      config.matType === "classic"
+                        ? "Galeria zestawu Classic"
+                        : "Galeria zestawu 3D z rantami"
+                    }
                   />
-
-                  {/* Click hint overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4 pointer-events-none">
-                    <div className="bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-2">
-                      <ZoomIn className="w-4 h-4 text-white" />
-                      <span className="text-xs text-white font-medium">Kliknij aby powiększyć</span>
-                    </div>
-                  </div>
-
-                  {/* Overlay Controls */}
-                  <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="h-10 w-10 rounded-full bg-red-600/90 backdrop-blur border-2 border-red-500/50 hover:bg-red-500 text-white shadow-lg shadow-red-500/30"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setModalImageType('dynamic');
-                        setIsPreviewModalOpen(true);
-                      }}
-                    >
-                      <ZoomIn className="w-5 h-5" />
-                    </Button>
-                  </div>
-
-                  {/* Config Info Badge */}
-                  {hasFullPreview && (
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <div className="bg-black/70 backdrop-blur-md border border-white/10 rounded-lg p-3 flex items-center justify-between gap-4 shadow-lg transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded-full border border-white/20 shadow-inner" style={{ backgroundColor: getColorInfo(config.color).color }} />
-                          <span className="text-xs font-medium text-white">{getColorInfo(config.color).name}</span>
-                        </div>
-                        <div className="h-3 w-px bg-white/20" />
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded-full border border-white/20 shadow-inner" style={{ backgroundColor: getColorInfo(config.edgeColor).color }} />
-                          <span className="text-xs font-medium text-white">{getColorInfo(config.edgeColor).name}</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
+              )}
 
             </div>
           </div>
@@ -1319,8 +1453,23 @@ export default function ConfiguratorSimple() {
 
           {/* Main Content */}
           <div className="px-3 py-2.5">
-            {/* Price and CTA Row */}
             <div className="flex items-center gap-2">
+              {isPreviewCollapsed && (
+                <button
+                  type="button"
+                  onClick={() => handleOpenPreviewModal(activePreviewTab)}
+                  className="relative w-11 h-11 rounded-lg overflow-hidden border border-red-500/30 flex-shrink-0 active:scale-95"
+                  aria-label="Otwórz podgląd produktu"
+                >
+                  <Image
+                    src={stickyHeaderImage}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="44px"
+                  />
+                </button>
+              )}
               {/* Price Section - tylko gdy wybrano wariant zestawu */}
               {config.variant ? (
                 <div className="flex-1 min-w-0 overflow-hidden">
@@ -1401,11 +1550,17 @@ export default function ConfiguratorSimple() {
       {isPreviewModalOpen && (
         <div 
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md animate-in fade-in duration-300"
-          onClick={() => setIsPreviewModalOpen(false)}
+          onClick={() => {
+            setIsPreviewModalOpen(false);
+            setStep1GalleryModalUrl(null);
+          }}
         >
           <button 
             className="absolute top-4 right-4 p-2 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors z-50"
-            onClick={() => setIsPreviewModalOpen(false)}
+            onClick={() => {
+              setIsPreviewModalOpen(false);
+              setStep1GalleryModalUrl(null);
+            }}
           >
             <span className="sr-only">Zamknij</span>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -1416,9 +1571,13 @@ export default function ConfiguratorSimple() {
             <div className="flex-1 relative w-full">
               <Image
                 src={
-                  modalImageType === 'dynamic' 
+                  step1GalleryModalUrl
+                    ? step1GalleryModalUrl
+                    : modalImageType === 'dynamic' && canShowDynamicPreview
                     ? dynamicPreviewPath 
-                    : modalImageType === 'mat-product' && matProductImage
+                    : modalImageType === 'mat-product' &&
+                      showStep1MatProductPreview &&
+                      matProductImage
                     ? matProductImage
                     : (productPreviewPath || '')
                 }
@@ -1434,8 +1593,8 @@ export default function ConfiguratorSimple() {
             <div className="flex justify-center px-4 pb-8 pt-4">
               <div className="flex gap-2 p-2 bg-[#111]/90 backdrop-blur-md rounded-2xl border border-white/10 overflow-x-auto max-w-full scrollbar-hide shadow-2xl">
                 
-                {/* Opcja 1: Wizualizacja (tylko jeśli dostępna) */}
-                {hasFullPreview && (
+                {/* Wizualizacja dynamiczna — od kroku 2 po wyborze typu */}
+                {showConfiguredDynamicPreview && (
                    <button
                      onClick={(e) => {
                         e.stopPropagation();
@@ -1454,10 +1613,10 @@ export default function ConfiguratorSimple() {
                 )}
 
                 {/* Separator jeśli mamy obie opcje */}
-                {hasFullPreview && <div className="w-px bg-white/10 mx-1 self-center h-8" />}
+                {showConfiguredDynamicPreview && <div className="w-px bg-white/10 mx-1 self-center h-8" />}
 
                 {/* Opcja: Zdjęcie produktu z bazy danych (jeśli dostępne) */}
-                {matProductImage && (
+                {showStep1MatProductPreview && matProductImage && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -1473,11 +1632,13 @@ export default function ConfiguratorSimple() {
                   </button>
                 )}
 
-                {/* Separator jeśli mamy zdjęcie produktu z bazy */}
-                {matProductImage && <div className="w-px bg-white/10 mx-1 self-center h-8" />}
+                {showStep1MatProductPreview && matProductImage && (
+                  <div className="w-px bg-white/10 mx-1 self-center h-8" />
+                )}
 
-                {/* Opcja 2: Galeria produktu */}
-                {(config.matType === 'classic' ? classicProductImages : rimsProductImages).map((imagePath) => (
+                {/* Galeria zestawu — tylko od kroku 2 po wyborze typu */}
+                {canShowProductSetGallery &&
+                  productSetGalleryImages.map((imagePath) => (
                   <button
                     key={imagePath}
                     onClick={(e) => {
@@ -1493,7 +1654,7 @@ export default function ConfiguratorSimple() {
                   >
                     <Image src={imagePath} alt="" fill className="object-cover" />
                   </button>
-                ))}
+                  ))}
               </div>
             </div>
           </div>

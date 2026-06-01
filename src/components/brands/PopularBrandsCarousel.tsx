@@ -15,6 +15,7 @@ import { BrandCard } from "@/components/ui/BrandCard"
 import { useBrands } from "@/features/brands/hooks/useBrands"
 import { Brand } from "@/entities/car"
 import { getBrandsCarouselBehavior } from "@/components/brands/carouselBehavior"
+import { brandNameToNavigationSlug } from "@/shared/brands/brandParam"
 
 const swiperStyles = `
   .brands-swiper {
@@ -137,7 +138,7 @@ export default function PopularBrandsCarousel() {
   )
 
   const handleBrandClick = (brand: Brand) => {
-    router.push(`/modele/${encodeURIComponent(brand.name.toLowerCase())}`)
+    router.push(`/modele?brand=${encodeURIComponent(brandNameToNavigationSlug(brand.name))}`)
   }
 
   if (isLoading) {

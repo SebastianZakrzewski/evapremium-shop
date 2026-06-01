@@ -1,4 +1,5 @@
 import { humanizeBrandSlug, mapSlugToCanonicalBrand } from "./brandNormalizer";
+import { parseBrandFromUrl } from "./brandParam";
 
 const API_BASE_PATH = "/api/models";
 
@@ -70,7 +71,9 @@ export function resolveBrandApiName(
   brandSlug: string,
   override?: string | null
 ): { resolved: string | null; canonical: string | null } {
-  if (!brandSlug) {
+  const parsedSlug = parseBrandFromUrl(brandSlug);
+
+  if (!parsedSlug) {
     return { resolved: null, canonical: null };
   }
 
@@ -78,8 +81,8 @@ export function resolveBrandApiName(
     return { resolved: override, canonical: override };
   }
 
-  const canonical = mapSlugToCanonicalBrand(brandSlug);
-  const fallback = humanizeBrandSlug(brandSlug);
+  const canonical = mapSlugToCanonicalBrand(parsedSlug);
+  const fallback = humanizeBrandSlug(parsedSlug);
 
   return {
     canonical,

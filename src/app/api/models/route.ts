@@ -5,6 +5,7 @@ import { z } from 'zod';
 export const maxDuration = 30
 import { env } from '@/config/env';
 import { humanizeBrandSlug, mapApiNameToDbName, mapSlugToCanonicalBrand } from '@/shared/brands/brandNormalizer';
+import { parseBrandFromUrl } from '@/shared/brands/brandParam';
 import {
   CAR_MODELS_EXTENDED_SELECT,
   CAR_MODELS_EXTENDED_SELECT_MINIMAL,
@@ -63,7 +64,9 @@ export async function GET(request: NextRequest) {
     // Walidacja parametrów
     const validatedParams = QueryParamsSchema.parse(queryParams);
 
-    const requestedBrand = validatedParams.brand?.trim() || "";
+    const requestedBrand = validatedParams.brand
+      ? parseBrandFromUrl(validatedParams.brand.trim())
+      : "";
     const canonicalBrandName = requestedBrand ? mapSlugToCanonicalBrand(requestedBrand) : null;
     const brandNameForDb = requestedBrand
       ? (canonicalBrandName ? mapApiNameToDbName(canonicalBrandName) ?? canonicalBrandName : humanizeBrandSlug(requestedBrand))

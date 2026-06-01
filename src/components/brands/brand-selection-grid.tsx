@@ -7,6 +7,7 @@ import { Brand } from "@/entities/car";
 import { Loader2, Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useBrands } from "@/features/brands/hooks/useBrands";
+import { brandNameToNavigationSlug } from "@/shared/brands/brandParam";
 
 export default function BrandSelectionGrid() {
   const router = useRouter();
@@ -46,7 +47,7 @@ export default function BrandSelectionGrid() {
     setTimeout(() => {
       setClickedBrandId(null);
       // Przekierowanie do sekcji produktów (tak jak w karuzeli marek)
-      router.push(`/modele?brand=${encodeURIComponent(brand.name.toLowerCase())}`);
+      router.push(`/modele?brand=${encodeURIComponent(brandNameToNavigationSlug(brand.name))}`);
     }, 300);
   }, [router]);
 

@@ -108,41 +108,39 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
                   type="button"
                   onClick={() => onUpdate({ variant: variant.id })}
                   className={`
-                    p-2.5 md:p-3 cursor-pointer transition-all duration-300 flex flex-col h-full w-full text-left
-                    rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50
+                    p-2.5 md:p-3 cursor-pointer transition-all duration-300 flex flex-col items-center gap-2 h-full w-full text-center
+                    rounded-xl border border-white/10 bg-[#111] focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50
                     ${isSelected
-                      ? 'ring-2 ring-red-500/50 ring-offset-2 ring-offset-black scale-[1.01]'
-                      : 'hover:opacity-90 active:scale-[0.98]'
+                      ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10'
+                      : 'hover:border-white/20 hover:bg-white/5 active:scale-[0.98]'
                     }
                   `}
                 >
-                  {/* Nagłówek – stała wysokość, skrócone opisy mieszczą się w 2 liniach */}
-                  <div className="h-[46px] md:h-[52px] flex-shrink-0 flex flex-col justify-center min-h-0">
-                    <h4 className="text-sm md:text-base font-semibold leading-tight truncate text-white">{variant.name}</h4>
-                    <p className="text-gray-200 text-xs md:text-sm leading-tight line-clamp-2">{variant.description}</p>
+                  <div className="w-full space-y-0.5">
+                    <h4 className="text-sm font-semibold leading-tight text-white">{variant.name}</h4>
+                    <p className="text-xs leading-snug text-gray-300">{variant.description}</p>
                   </div>
-                  {/* Zdjęcie – stała wysokość, zapobiega nachodzeniu na cenę */}
-                  <div className="w-full h-[80px] md:h-[96px] flex-shrink-0 mt-1.5 rounded-2xl overflow-hidden bg-white/5 relative">
-                    <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                  <div className="flex justify-center flex-shrink-0">
+                    <div className="w-fit max-w-full rounded-2xl overflow-hidden bg-white/5">
                       <Image
                         src={variant.image}
                         alt={variant.name}
-                        fill
-                        className="object-contain p-0.5 md:p-2 rounded-2xl"
-                        sizes="(max-width: 768px) 50vw, 25vw"
+                        width={120}
+                        height={80}
+                        className="block h-auto w-auto max-h-[80px] md:max-h-[96px] object-contain"
+                        sizes="(max-width: 768px) 50vw, 120px"
                       />
                     </div>
                   </div>
-                  {/* Cena – stała wysokość, zawsze na dole */}
-                  <div className="h-[42px] flex-shrink-0 pt-1.5 mt-auto flex flex-col justify-end gap-0.5">
-                    <span className="text-gray-400 text-xs">Cena</span>
-                    <div className="flex items-baseline gap-1.5 flex-nowrap">
+                  <div className="w-full space-y-0.5 border-t border-white/5 pt-2">
+                    <span className="text-[10px] uppercase tracking-wide text-gray-400">Cena</span>
+                    <div className="flex flex-wrap items-baseline justify-center gap-1">
                       {hasDiscount && (
-                        <span className="text-xs text-gray-400 line-through whitespace-nowrap">
+                        <span className="text-xs text-gray-400 line-through">
                           {oldPrice.toFixed(2)} zł
                         </span>
                       )}
-                      <span className="text-sm md:text-base font-bold text-white whitespace-nowrap">
+                      <span className="text-sm font-bold text-white">
                         {displayPrice.toFixed(2)} zł
                       </span>
                     </div>
@@ -180,4 +178,3 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
     </div>
   );
 }
-

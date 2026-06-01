@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { brandNameToNavigationSlug, parseBrandFromUrl } from "@/shared/brands/brandParam";
 import CarModelsSection from "@/components/car-models-section";
 
 export default function BrandProductsPage({
@@ -15,9 +16,8 @@ export default function BrandProductsPage({
   useEffect(() => {
     const redirectToQueryParam = async () => {
       const resolvedParams = await params;
-      const brandName = resolvedParams.brand;
-      // Przekieruj do /dywaniki?brand=... żeby użyć CarModelsSection z query parameter
-      router.replace(`/dywaniki?brand=${encodeURIComponent(brandName)}`);
+      const brandSlug = brandNameToNavigationSlug(parseBrandFromUrl(resolvedParams.brand));
+      router.replace(`/dywaniki?brand=${encodeURIComponent(brandSlug)}`);
       setIsRedirecting(false);
     };
     redirectToQueryParam();

@@ -24,6 +24,11 @@ export interface UseConfiguratorCarDataReturn {
   getBodyTypesForYear: (modelName: string, year: number) => string[];
   /** Znajdź generację dla danego roku */
   findGenerationByYear: (modelName: string, year: number) => string | null;
+  /** Dopasuj rok i nadwozie po etykiecie generacji z karty produktu */
+  findCarDetailsByGeneration: (
+    modelName: string,
+    generationLabel: string
+  ) => { year: number; bodyType: string | null } | null;
   isLoading: boolean;
   error: Error | null;
 }
@@ -119,12 +124,37 @@ export function useConfiguratorCarData(
     [findModelByName]
   );
 
+  const findCarDetailsByGeneration = useMemo(
+    () =>
+      (
+        modelName: string,
+        generationLabel: string
+      ): { year: number; bodyType: string | null } | null => {
+        const model = findModelByName(modelName);
+        if (!model?.generations) return null;
+
+        const normalized = generationLabel.trim().toLowerCase();
+        const match = (model.generations as CarGenerationApiResponse[]).find(
+          (gen) => gen.generation?.trim().toLowerCase() === normalized
+        );
+
+        if (!match || match.yearFrom == null) return null;
+
+        return {
+          year: match.yearFrom,
+          bodyType: match.bodyType ?? null,
+        };
+      },
+    [findModelByName]
+  );
+
   return {
     models,
     getYearsForModel,
     getBodyTypesForModel,
     getBodyTypesForYear,
     findGenerationByYear,
+    findCarDetailsByGeneration,
     isLoading,
     error: error as Error | null,
   };

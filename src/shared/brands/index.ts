@@ -30,6 +30,14 @@ export {
   buildCarModelsApiUrl,
 } from './carModelsApi';
 
+// Brand URL params
+export {
+  parseBrandFromUrl,
+  resolveBrandFromUrlParam,
+  brandNameToNavigationSlug,
+  type ResolvedBrandParam,
+} from './brandParam';
+
 
 
 

@@ -79,11 +79,11 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
   }, [config.color, config.edgeColor, config.matType]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Struktura */}
       <div>
-        <h3 className="text-base font-semibold mb-2 text-white/90">Struktura komórek</h3>
-        <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+        <h3 className="text-sm font-semibold mb-1.5 text-white/90">Struktura komórek</h3>
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
           {structures.map((structure) => {
             const isAvailable = isStructureAvailable[structure.id];
             const isSelected = config.structure === structure.id;
@@ -111,30 +111,31 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                   }
                 }}
                 className={`
-                  p-1.5 sm:p-3 transition-all duration-300 flex flex-col h-full min-h-[70px] sm:min-h-[120px] relative
+                  p-2.5 sm:p-3 transition-all duration-300 flex flex-col items-center gap-2 h-full text-center relative
                   ${isSelected
-                    ? 'border-red-500 bg-red-500/10 ring-1 sm:ring-2 ring-red-500/30 shadow-md shadow-red-500/10 scale-[1.01]'
+                    ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10'
                     : isDisabled
                     ? 'border-white/10 bg-[#111]/50 opacity-50 cursor-not-allowed'
                     : 'border-white/10 bg-[#111] hover:border-white/20 hover:bg-white/5 hover:shadow-sm cursor-pointer active:scale-[0.98]'
                   }
                 `}
               >
-              <div className="space-y-0.5 sm:space-y-1.5 flex flex-col h-full">
-                <div className="flex-shrink-0">
-                  <h4 className="text-[11px] sm:text-base font-semibold mb-0 sm:mb-1 leading-tight">{structure.name}</h4>
-                  <p className="text-gray-400 text-[9px] sm:text-sm leading-tight sm:leading-relaxed">{structure.description}</p>
+              <div className="flex w-full flex-col items-center gap-2">
+                <div className="w-full space-y-0.5">
+                  <h4 className="text-sm font-semibold leading-tight text-white">{structure.name}</h4>
+                  <p className="text-xs leading-snug text-gray-300">{structure.description}</p>
                 </div>
-                <div 
-                  className="aspect-video bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] rounded sm:rounded-md overflow-hidden border border-white/10 relative flex-1 min-h-0"
-                >
-                  <Image
-                    src={structure.image}
-                    alt={structure.name}
-                    fill
-                    className="object-contain p-0.5 sm:p-1.5"
-                    sizes="(max-width: 768px) 50vw, 50vw"
-                  />
+                <div className="flex justify-center flex-shrink-0">
+                  <div className="w-fit max-w-full rounded sm:rounded-md overflow-hidden border border-white/10 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a]">
+                    <Image
+                      src={structure.image}
+                      alt={structure.name}
+                      width={120}
+                      height={80}
+                      className="block h-auto w-auto max-h-[56px] sm:max-h-[96px] object-contain p-0.5 sm:p-1.5"
+                      sizes="(max-width: 768px) 50vw, 120px"
+                    />
+                  </div>
                 </div>
               </div>
               {isDisabled && (
@@ -155,7 +156,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
         <>
           {/* Kolor materiału */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-white/90">Kolor materiału</h3>
+            <h3 className="text-sm font-semibold mb-2 text-white/90">Kolor materiału</h3>
             <div className="overflow-x-auto scrollbar-hide pb-2 sm:pb-0">
               <RadioGroup
                 value={config.color}
@@ -182,7 +183,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                           style={{ backgroundColor: colorInfo.color }}
                         />
                       </Label>
-                      <span className="text-[9px] sm:text-xs text-gray-400 text-center leading-tight whitespace-nowrap">{colorInfo.name}</span>
+                      <span className="text-xs text-gray-400 text-center leading-tight whitespace-nowrap">{colorInfo.name}</span>
                     </div>
                   );
                 })}
@@ -193,7 +194,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
           {/* Kolor obszycia */}
           {config.color && (
             <div>
-              <h3 className="text-lg font-semibold mb-3 text-white/90">Kolor obszycia</h3>
+              <h3 className="text-sm font-semibold mb-2 text-white/90">Kolor obszycia</h3>
               <div className="overflow-x-auto scrollbar-hide pb-2 sm:pb-0">
                 <RadioGroup
                   value={config.edgeColor}
@@ -231,7 +232,7 @@ export function StructureColorStep({ config, onUpdate, onNext, onPrevious }: Str
                             style={{ backgroundColor: colorInfo.color }}
                           />
                         </Label>
-                        <span className="text-[9px] sm:text-xs text-gray-400 text-center leading-tight whitespace-nowrap">{colorInfo.name}</span>
+                        <span className="text-xs text-gray-400 text-center leading-tight whitespace-nowrap">{colorInfo.name}</span>
                       </div>
                     );
                   })}

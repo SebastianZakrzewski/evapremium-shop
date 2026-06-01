@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { brandNameToNavigationSlug, parseBrandFromUrl } from "@/shared/brands/brandParam";
 
 interface BrandPageProps {
   params: Promise<{
@@ -16,9 +17,8 @@ export default function BrandPage({ params }: BrandPageProps) {
   useEffect(() => {
     const redirectToQueryParam = async () => {
       const resolvedParams = await params;
-      const brandName = resolvedParams.brand;
-      // Przekieruj do /modele?brand=... żeby użyć CarModelsSection z query parameter
-      router.replace(`/modele?brand=${encodeURIComponent(brandName)}`);
+      const brandSlug = brandNameToNavigationSlug(parseBrandFromUrl(resolvedParams.brand));
+      router.replace(`/modele?brand=${encodeURIComponent(brandSlug)}`);
       setIsRedirecting(false);
     };
     redirectToQueryParam();

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Brand } from "@/entities/car";
+import { brandNameToNavigationSlug } from "@/shared/brands/brandParam";
 import { Car } from "lucide-react";
 
 interface BrandGridCardProps {
@@ -29,7 +30,7 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
       onClick(brand);
     } else {
       // Default behavior - redirect to models page with selected brand
-      router.push(`/modele/${encodeURIComponent(brand.name.toLowerCase())}`);
+      router.push(`/modele?brand=${encodeURIComponent(brandNameToNavigationSlug(brand.name))}`);
     }
   };
 

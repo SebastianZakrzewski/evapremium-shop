@@ -40,26 +40,29 @@ export function StructureStep({ config, onUpdate, onNext, onPrevious }: Structur
               type="button"
               onClick={() => onUpdate({ structure: structure.id })}
               className={`
-                p-2.5 md:p-3 cursor-pointer transition-all duration-300 grid grid-rows-[auto_1fr] h-full text-left
-                rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50
+                p-2.5 md:p-3 cursor-pointer transition-all duration-300 flex flex-col items-center gap-2 h-full text-center
+                rounded-xl border border-white/10 bg-[#111] focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50
                 ${isSelected
-                  ? 'ring-2 ring-red-500/50 ring-offset-2 ring-offset-black scale-[1.01]'
-                  : 'hover:opacity-90 active:scale-[0.98]'
+                  ? 'border-red-500 bg-red-500/10 ring-2 ring-red-500/30 shadow-md shadow-red-500/10'
+                  : 'hover:border-white/20 hover:bg-white/5 active:scale-[0.98]'
                 }
               `}
             >
-              <div className="h-[44px] md:h-[48px] flex-shrink-0 flex flex-col justify-center min-h-0">
-                <h3 className="text-xs md:text-sm font-semibold leading-tight truncate">{structure.name}</h3>
-                <p className="text-gray-400 text-[10px] leading-tight line-clamp-2">{structure.description}</p>
+              <div className="w-full space-y-0.5">
+                <h3 className="text-sm font-semibold leading-tight text-white">{structure.name}</h3>
+                <p className="text-xs leading-snug text-gray-300">{structure.description}</p>
               </div>
-              <div className="w-full min-h-[80px] md:min-h-[96px] mt-1.5 rounded-xl overflow-hidden bg-white/5 relative">
-                <Image
-                  src={structure.image}
-                  alt={structure.name}
-                  fill
-                  className="object-contain p-1 md:p-2 rounded-2xl"
-                  sizes="(max-width: 768px) 50vw, 200px"
-                />
+              <div className="flex justify-center flex-shrink-0">
+                <div className="w-fit max-w-full rounded-xl overflow-hidden bg-white/5">
+                  <Image
+                    src={structure.image}
+                    alt={structure.name}
+                    width={120}
+                    height={80}
+                    className="block h-auto w-auto max-h-[80px] md:max-h-[96px] object-contain p-1 md:p-2"
+                    sizes="(max-width: 768px) 50vw, 120px"
+                  />
+                </div>
               </div>
             </button>
           );

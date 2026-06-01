@@ -25,6 +25,9 @@ export type ConfiguratorUrlParams = {
 const capitalize = (value: string): string =>
   value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
 
+const isSameToken = (left: string, right: string): boolean =>
+  left.trim().toLowerCase() === right.trim().toLowerCase();
+
 export const resolveBrandFromParam = (brandParam: string, brands: Brand[]): string => {
   if (!brandParam) return "";
   if (brands.length > 0) {
@@ -55,7 +58,7 @@ export const getConfigUpdatesFromUrl = ({
     }
   }
 
-  if (modelParam && previous.model !== modelParam) {
+  if (modelParam && !isSameToken(previous.model, modelParam)) {
     updates.model = modelParam;
   }
 
@@ -63,7 +66,7 @@ export const getConfigUpdatesFromUrl = ({
     updates.year = yearParam;
   }
 
-  if (bodyTypeParam && previous.bodyType !== bodyTypeParam) {
+  if (bodyTypeParam && !isSameToken(previous.bodyType, bodyTypeParam)) {
     updates.bodyType = bodyTypeParam;
   }
 
@@ -86,11 +89,25 @@ export const mergeStoredConfig = ({
   }
 
   if (urlParams.modelParam) {
-    updates.model = urlParams.modelParam;
+    if (
+      !previous.model ||
+      !isSameToken(previous.model, urlParams.modelParam)
+    ) {
+      updates.model = urlParams.modelParam;
+    } else {
+      delete updates.model;
+    }
   }
 
   if (urlParams.bodyTypeParam) {
-    updates.bodyType = urlParams.bodyTypeParam;
+    if (
+      !previous.bodyType ||
+      !isSameToken(previous.bodyType, urlParams.bodyTypeParam)
+    ) {
+      updates.bodyType = urlParams.bodyTypeParam;
+    } else {
+      delete updates.bodyType;
+    }
   }
 
   return { ...previous, ...updates };

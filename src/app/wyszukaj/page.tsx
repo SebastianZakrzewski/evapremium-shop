@@ -7,6 +7,7 @@ import { Search, Car, Loader2, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { brandNameToNavigationSlug } from "@/shared/brands/brandParam";
 
 interface SearchBrand {
   id: number;
@@ -181,7 +182,7 @@ function SearchPageContent() {
                   {results.brands.map((brand) => (
                     <Link
                       key={brand.id}
-                      href={`/modele/${encodeURIComponent(brand.name.toLowerCase())}`}
+                      href={`/modele?brand=${encodeURIComponent(brandNameToNavigationSlug(brand.name))}`}
                       className="
                         group relative
                         bg-[#111]/80 backdrop-blur-xl

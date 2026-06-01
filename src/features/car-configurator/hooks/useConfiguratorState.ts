@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Brand } from "@/entities/car";
 import {
   type ConfiguratorState,
@@ -93,9 +93,9 @@ export const useConfiguratorState = ({
     }
   }, [searchParams, storageKey]);
 
-  const updateConfig = (updates: Partial<ConfiguratorState>) => {
+  const updateConfig = useCallback((updates: Partial<ConfiguratorState>) => {
     setConfig((prev) => ({ ...prev, ...updates }));
-  };
+  }, []);
 
   return { config, setConfig, updateConfig };
 };

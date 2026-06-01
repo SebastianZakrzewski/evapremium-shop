@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  getConfigUpdatesFromUrl,
   mergeStoredConfig,
   resolveBrandFromParam,
   type ConfiguratorState,
@@ -36,6 +37,24 @@ describe("resolveBrandFromParam", () => {
   });
 });
 
+describe("getConfigUpdatesFromUrl", () => {
+  it("does not oscillate model casing between URL slug and API canonical name", () => {
+    const previous: ConfiguratorState = {
+      ...baseConfig,
+      brand: "Kia",
+      model: "Ceed",
+    };
+
+    const updates = getConfigUpdatesFromUrl({
+      previous,
+      urlParams: { modelParam: "ceed" },
+      brands: [],
+    });
+
+    expect(updates).toEqual({});
+  });
+});
+
 describe("mergeStoredConfig", () => {
   it("keeps URL brand and overrides model/bodyType from URL", () => {
     const previous: ConfiguratorState = {
@@ -67,5 +86,27 @@ describe("mergeStoredConfig", () => {
     expect(merged.model).toBe("3-series");
     expect(merged.bodyType).toBe("sedan");
     expect(merged.matType).toBe("classic");
+  });
+
+  it("preserves canonical model casing when URL slug differs only by case", () => {
+    const previous: ConfiguratorState = {
+      ...baseConfig,
+      brand: "Kia",
+      model: "Ceed",
+      bodyType: "Hatchback",
+    };
+
+    const merged = mergeStoredConfig({
+      previous,
+      stored: { ...baseConfig, model: "ceed", bodyType: "hatchback" },
+      urlParams: {
+        brandParam: "kia",
+        modelParam: "ceed",
+        bodyTypeParam: "hatchback",
+      },
+    });
+
+    expect(merged.model).toBe("Ceed");
+    expect(merged.bodyType).toBe("Hatchback");
   });
 });

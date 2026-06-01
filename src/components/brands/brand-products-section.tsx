@@ -177,10 +177,11 @@ export default function BrandProductsSection({ brandSlug }: BrandProductsSection
       const brandForImage = brandInfo?.apiName || brandSlug.charAt(0).toUpperCase() + brandSlug.slice(1);
       const modelForImage = product.model;
       const yearForImage = product.yearFrom;
-      const generation = product.generation && product.generation.trim() && !product.generation.includes('+') 
-        ? product.generation 
-        : undefined;
-      const bodyType = product.bodyType;
+      const generation =
+        product.generation && product.generation.trim()
+          ? product.generation.trim()
+          : undefined
+      const bodyType = product.bodyType?.toLowerCase().trim() || undefined
       const productKey = `${product.model}-${product.generation || ""}-${product.bodyType || ""}`;
 
       // Sprawdź czy już nie ma takiego zapytania

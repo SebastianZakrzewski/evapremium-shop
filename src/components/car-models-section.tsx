@@ -14,7 +14,11 @@ import { CarModel } from "../lib/types/car-model";
 import { BrandGridCard } from "./ui/BrandGridCard";
 import { fetchBrands, getFallbackBrands } from "@/lib/api/brands";
 import { fetchCarModels } from "@/lib/api/models";
-import { getBrandInfo, normalizeBrandName } from "@/shared/brands";
+import {
+  getBrandInfo,
+  resolveBrandFromUrlParam,
+  brandNameToNavigationSlug,
+} from "@/shared/brands";
 import { getDoorsCount, formatGenerationLabel } from "@/shared";
 import { useCarModelsFilters } from "@/features/brands/hooks";
 import { apiGet } from "@/lib/api/client";
@@ -101,33 +105,19 @@ export default function CarModelsSection() {
     setTimeout(() => {
       setClickedBrandId(null);
       // Przekierowanie do strony z modelami dla danej marki (używamy query parameter)
-      router.push(`${basePath}?brand=${encodeURIComponent(brand.name)}`);
+      router.push(`${basePath}?brand=${encodeURIComponent(brandNameToNavigationSlug(brand.name))}`);
     }, 300);
   }, [router, basePath]);
 
-  // Pobierz informacje o marce
-  const brandSlug = brandParam ? brandParam.toLowerCase().trim() : '';
-  const brandInfo = brandSlug ? getBrandInfo(brandSlug) : null;
-  
-  // Użyj normalizeBrandName jako fallback jeśli getBrandInfo nie znajdzie mapowania
-  const brandApiName = useMemo(() => {
-    if (brandInfo?.apiName) {
-      return brandInfo.apiName;
-    }
-    
-    if (brandSlug) {
-      const normalized = normalizeBrandName(brandSlug);
-      if (normalized) {
-        return normalized;
-      }
-    }
-    
-    // Fallback - użyj pierwszą literę wielką
-    const fallback = brandParam 
-      ? brandParam.charAt(0).toUpperCase() + brandParam.slice(1).toLowerCase()
-      : '';
-    return fallback;
-  }, [brandParam, brandSlug, brandInfo]);
+  const resolvedBrand = useMemo(
+    () => resolveBrandFromUrlParam(brandParam),
+    [brandParam]
+  )
+
+  const brandSlug = resolvedBrand?.slug ?? ''
+  const brandInfo = brandSlug ? getBrandInfo(brandSlug) : null
+  const brandDisplayName = resolvedBrand?.displayName ?? brandInfo?.displayName
+  const brandApiName = resolvedBrand?.apiName ?? ''
 
   // Użyj React Query do cache'owania modeli
   const { data: apiModels = [], isLoading: loading, error: modelsError } = useQuery({
@@ -259,7 +249,7 @@ export default function CarModelsSection() {
         if (model.generation && model.generation.trim()) {
           searchParams.set('generation', model.generation);
         }
-        if (model.bodyType) searchParams.set('bodyType', model.bodyType);
+        if (model.bodyType) searchParams.set('bodyType', model.bodyType.toLowerCase());
         
         const url = `/api/mat-product-images?${searchParams.toString()}`;
         
@@ -703,7 +693,7 @@ export default function CarModelsSection() {
                     <h3 className="text-xl font-semibold text-white mb-2">Nie znaleziono modeli</h3>
                     <p className="text-gray-400 max-w-md mx-auto mb-6">
                       {displayModels.length === 0 
-                        ? `Nie znaleziono modeli dla marki ${brandInfo?.displayName || brandParam}. Możliwe, że modele dla tej marki są w trakcie dodawania.`
+                        ? `Nie znaleziono modeli dla marki ${brandDisplayName || resolvedBrand?.raw || brandParam}. Możliwe, że modele dla tej marki są w trakcie dodawania.`
                         : 'Spróbuj zmienić kryteria wyszukiwania lub usuń filtry, aby zobaczyć więcej wyników.'
                       }
                     </p>
