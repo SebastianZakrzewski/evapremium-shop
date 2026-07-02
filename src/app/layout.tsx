@@ -91,9 +91,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Google Analytics ID - zastąp swoim ID
-  const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX' // Zastąp swoim ID z GA4
-  
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -132,23 +129,18 @@ export default function RootLayout({
   return (
     <html lang="pl">
       <head>
-        {/* Google Analytics */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
+        {/* Google Tag Manager */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TD2WDGKV');`,
+          }}
         />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              page_title: document.title,
-              page_location: window.location.href,
-            });
-          `}
-        </Script>
-        
+        {/* End Google Tag Manager */}
+
         {/* Microsoft Clarity */}
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`
@@ -189,6 +181,18 @@ export default function RootLayout({
         />
       </head>
       <body className={`${montserrat.variable} bg-black min-h-screen`}>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-TD2WDGKV"
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+            title="Google Tag Manager"
+          />
+        </noscript>
+        {/* End Google Tag Manager (noscript) */}
+
         <QueryProvider>
           <SessionProvider>
             <TrackingProvider>
