@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, ChevronUp, ZoomIn } from "lucide-react";
 import Image from "next/image";
 import { getColorInfo } from "@/lib/color-mapping";
+import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
 
 interface StickyBottomCTAProps {
   priceBreakdown: {
@@ -149,11 +150,11 @@ export function StickyBottomCTA({
                   <span className="text-xs text-gray-400">Cena:</span>
                   {priceBreakdown.discount > 0 && (
                     <span className="text-sm text-gray-400 line-through">
-                      {(priceBreakdown.basePrice).toFixed(2)} zł
+                      {formatPricePln(priceBreakdown.basePrice)}
                     </span>
                   )}
                   <span className="text-xl font-bold text-white">
-                    {totalPrice.toFixed(2)} zł
+                    {formatPricePln(totalPrice)}
                   </span>
                   <ChevronUp
                     className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
@@ -163,7 +164,7 @@ export function StickyBottomCTA({
                 </div>
                 {priceBreakdown.discount > 0 && (
                   <div className="text-xs text-green-400 mt-0.5">
-                    Rabat: -{priceBreakdown.discount.toFixed(2)} zł
+                    Rabat: -{formatPriceValue(priceBreakdown.discount)} zł
                   </div>
                 )}
               </button>
@@ -173,12 +174,12 @@ export function StickyBottomCTA({
                 <div className="mt-2 p-2 bg-[#111] rounded-lg border border-white/5 space-y-1 animate-in slide-in-from-top-2 duration-200">
                   <div className="flex justify-between text-xs">
                     <span className="text-gray-400">Cena bazowa</span>
-                    <span className="text-white">{priceBreakdown.basePrice.toFixed(2)} zł</span>
+                    <span className="text-white">{formatPricePln(priceBreakdown.basePrice)}</span>
                   </div>
                   {priceBreakdown.discount > 0 && (
                     <div className="flex justify-between text-xs">
                       <span className="text-gray-400">Rabat</span>
-                      <span className="text-green-400">-{priceBreakdown.discount.toFixed(2)} zł</span>
+                      <span className="text-green-400">-{formatPriceValue(priceBreakdown.discount)} zł</span>
                     </div>
                   )}
                 </div>

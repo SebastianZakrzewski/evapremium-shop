@@ -16,6 +16,7 @@ import { normalizeBodyTypeKey, formatBodyTypeLabel } from '@/shared';
 import { fetchCarModels } from '@/lib/api/models';
 import { apiGet } from '@/lib/api/client';
 import { useProductSelectionFilters } from '@/features/products/hooks';
+import { formatPricePln } from '@/lib/utils/formatPrice';
 
 interface FilterState {
   bodyTypes: string[];
@@ -538,7 +539,7 @@ export default function BrandProductsSection({ brandSlug }: BrandProductsSection
                       </div>
 
                       <p className="text-2xl font-bold text-red-600 mb-4">
-                        Od {product.price.toLocaleString("pl-PL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} zł
+                        Od {formatPricePln(product.price)}
                       </p>
 
                       {/* Przycisk */}

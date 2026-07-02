@@ -4,6 +4,7 @@ import { Car, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { memo } from "react";
+import { formatPriceValue } from "@/lib/utils/formatPrice";
 
 interface ProductDisplayItem {
   id: string;
@@ -106,7 +107,7 @@ function ProductCardV2({ product }: ProductCardV2Props) {
             <div className="flex flex-col">
               <span className="text-xs text-gray-400">Cena od</span>
               <span className="text-xl font-bold text-white">
-                {product.price.toLocaleString('pl-PL')} <span className="text-red-500">PLN</span>
+                {formatPriceValue(product.price)} <span className="text-red-500">PLN</span>
               </span>
             </div>
             

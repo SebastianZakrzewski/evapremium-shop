@@ -16,6 +16,7 @@ import { formatBodyTypeLabel } from '@/shared';
 import { useProductSelectionFilters } from '@/features/products/hooks';
 import { fetchCarModels } from '@/lib/api/models';
 import { apiGet } from '@/lib/api/client';
+import { formatPriceValue } from '@/lib/utils/formatPrice';
 
 interface FilterState {
   bodyTypes: string[];
@@ -571,7 +572,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">Cena od</span>
                           <span className="text-2xl font-bold text-white tracking-tight">
-                            {product.price.toLocaleString("pl-PL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-sm font-medium text-gray-400 ml-0.5">PLN</span>
+                            {formatPriceValue(product.price)} <span className="text-sm font-medium text-gray-400 ml-0.5">PLN</span>
                           </span>
                         </div>
 

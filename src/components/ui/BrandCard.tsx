@@ -2,6 +2,12 @@ import React from "react";
 import Image from "next/image";
 import { Brand } from "@/entities/car";
 import { ChevronRight } from "lucide-react";
+import {
+  BRAND_CAROUSEL_SIZES,
+  isBrandPhotoFile,
+  isModeleBrandPhoto,
+  shouldServeBrandImageUnoptimized,
+} from "@/shared/brands";
 
 interface BrandCardProps {
   brand: Brand;
@@ -11,11 +17,9 @@ interface BrandCardProps {
 }
 
 const BrandCardComponent: React.FC<BrandCardProps> = ({ brand, className = "", isPriority = false, onImageError }) => {
-  // Sprawdź czy to jest zdjęcie czy logo SVG
-  const isImage = brand.logo.includes('.jpg') || brand.logo.includes('.png') || brand.logo.includes('.jpeg') || brand.logo.includes('.avif') || brand.logo.includes('.webp');
-  
-  // Sprawdź czy to zdjęcie marki z katalogu /modele/
-  const isBrandImage = brand.logo.includes('/modele/');
+  const isImage = isBrandPhotoFile(brand.logo);
+  const isBrandImage = isModeleBrandPhoto(brand.logo);
+  const unoptimized = shouldServeBrandImageUnoptimized(brand.logo);
   
   return (
     <div
@@ -45,9 +49,10 @@ const BrandCardComponent: React.FC<BrandCardProps> = ({ brand, className = "", i
                 group-hover:scale-[1.02]
                 ${isBrandImage ? "object-cover object-center" : "object-contain p-8"}
               `}
-              sizes="(max-width: 640px) 224px, (max-width: 1024px) 288px, 320px"
+              sizes={BRAND_CAROUSEL_SIZES}
               priority={isPriority}
-              quality={90}
+              quality={100}
+              unoptimized={unoptimized}
               loading={isPriority ? "eager" : "lazy"}
               onError={onImageError}
             />
@@ -60,7 +65,8 @@ const BrandCardComponent: React.FC<BrandCardProps> = ({ brand, className = "", i
                 width={128}
                 height={128}
                 className="object-contain transition-transform duration-500 group-hover:scale-105"
-                quality={90}
+                quality={100}
+                unoptimized={unoptimized}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';

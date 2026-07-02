@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { env } from '@/config/env';
 
 export const maxDuration = 30
-import { resolveBrandLogo } from '@/shared/brands';
+import { resolveBrandLogo, resolveBrandDisplayNameFromDbName, resolveBrandSlugFromDbName } from '@/shared/brands';
 
 const supabase = createClient(env.supabase.url, env.supabase.anonKey);
 
@@ -93,15 +93,13 @@ export async function GET(request: NextRequest) {
     const brandMap = new Map();
     
     allBrands.forEach((brand: any) => {
-      const normalizedName = brand.brand_name
-        .toLowerCase()
-        .split(' ')
-        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-      
-      if (!brandMap.has(normalizedName)) {
-        brandMap.set(normalizedName, {
-          brand_name: normalizedName,
+      const slug = resolveBrandSlugFromDbName(brand.brand_name)
+      const displayName = resolveBrandDisplayNameFromDbName(brand.brand_name)
+
+      if (!brandMap.has(slug)) {
+        brandMap.set(slug, {
+          brand_name: displayName,
+          brand_db_name: brand.brand_name,
           brand_image: brand.brand_image
         });
       }
@@ -112,7 +110,7 @@ export async function GET(request: NextRequest) {
       .map((brand, index) => ({
         id: index + 1,
         name: brand.brand_name,
-        logo: resolveBrandLogo(brand.brand_name, brand.brand_image),
+        logo: resolveBrandLogo(brand.brand_db_name, brand.brand_image),
         description: `Dywaniki samochodowe dla marki ${brand.brand_name}`
       }));
 

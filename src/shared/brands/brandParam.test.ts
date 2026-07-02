@@ -27,6 +27,20 @@ describe('resolveBrandFromUrlParam', () => {
     const resolved = resolveBrandFromUrlParam('dacia-renault')
     expect(resolved?.dbName).toBe('Dacia Renault')
   })
+
+  it('maps ssang young to SsangYong with Ssang Young db name', () => {
+    const resolved = resolveBrandFromUrlParam('ssang young')
+    expect(resolved?.apiName).toBe('SsangYong')
+    expect(resolved?.displayName).toBe('SsangYong')
+    expect(resolved?.dbName).toBe('Ssang Young')
+    expect(resolved?.slug).toBe('ssangyong')
+  })
+
+  it('maps ssang-young slug to SsangYong', () => {
+    const resolved = resolveBrandFromUrlParam('ssang-young')
+    expect(resolved?.displayName).toBe('SsangYong')
+    expect(resolved?.dbName).toBe('Ssang Young')
+  })
 })
 
 describe('brandNameToNavigationSlug', () => {

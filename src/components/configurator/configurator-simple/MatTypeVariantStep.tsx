@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PricingService } from "@/lib/services/PricingService";
+import { formatPricePln } from "@/lib/utils/formatPrice";
 import { LowestPrice30DaysNotice } from "./LowestPrice30DaysNotice";
 
 interface MatTypeVariantStepProps {
@@ -15,6 +16,13 @@ interface MatTypeVariantStepProps {
   onUpdate: (updates: { matType?: "3d-with-rims" | "classic"; variant?: "front" | "basic" | "premium" | "complete" }) => void;
   onNext: () => void;
   onPrevious: () => void;
+  priceBreakdown?: {
+    basePrice: number;
+    discount: number;
+    priceAfterDiscount: number;
+    shippingCost: number;
+    totalPrice: number;
+  };
 }
 
 const matTypes = [
@@ -57,7 +65,7 @@ const variants = [
   },
 ];
 
-export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: MatTypeVariantStepProps) {
+export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdown }: MatTypeVariantStepProps) {
   const getVariantPricing = (variantId: string) => {
     const price = PricingService.calculateConfiguratorPrice(config.matType || "3d-with-rims", variantId as any);
     const isClassicFront = config.matType === 'classic' && variantId === 'front';
@@ -137,11 +145,11 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
                     <div className="flex flex-wrap items-baseline justify-center gap-1">
                       {hasDiscount && (
                         <span className="text-xs text-gray-400 line-through">
-                          {oldPrice.toFixed(2)} zł
+                          {formatPricePln(oldPrice)}
                         </span>
                       )}
                       <span className="text-sm font-bold text-white">
-                        {displayPrice.toFixed(2)} zł
+                        {formatPricePln(displayPrice)}
                       </span>
                     </div>
                   </div>
@@ -150,7 +158,10 @@ export function MatTypeVariantStep({ config, onUpdate, onNext, onPrevious }: Mat
             })}
           </div>
 
-          <LowestPrice30DaysNotice />
+          <LowestPrice30DaysNotice
+            priceAfterDiscount={priceBreakdown?.priceAfterDiscount || priceBreakdown?.totalPrice}
+            regularPrice={priceBreakdown?.basePrice}
+          />
         </div>
       )}
 

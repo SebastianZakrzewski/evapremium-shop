@@ -87,6 +87,48 @@ export function getBrandApiName(brandSlug: string): string | null {
   return normalizeBrandName(brandSlug);
 }
 
+const titleCaseBrandName = (brandName: string): string =>
+  brandName
+    .toLowerCase()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+
+/**
+ * Mapuje nazwę marki z bazy (np. "Ssang Young") na nazwę wyświetlaną w UI (np. "SsangYong").
+ */
+export function resolveBrandDisplayNameFromDbName(dbBrandName: string): string {
+  const meta = getBrandMetaBySlug(dbBrandName)
+  return meta?.displayName ?? titleCaseBrandName(dbBrandName)
+}
+
+/**
+ * Zwraca kanoniczny slug marki na podstawie nazwy z bazy — do deduplikacji list marek.
+ */
+export function resolveBrandSlugFromDbName(dbBrandName: string): string {
+  const meta = getBrandMetaBySlug(dbBrandName)
+  if (meta) {
+    return meta.slug
+  }
+  return brandNameToSlug(dbBrandName)
+}
+
+/**
+ * Normalizuje obiekt marki z API do spójnej nazwy wyświetlanej w UI.
+ */
+export function normalizeBrandForClient<T extends { name: string; logo?: string; description?: string }>(brand: T): T {
+  const name = resolveBrandDisplayNameFromDbName(brand.name)
+  const logo = resolveBrandLogo(brand.name, brand.logo ?? null)
+  return {
+    ...brand,
+    name,
+    logo,
+    description: brand.description?.includes(brand.name)
+      ? brand.description.replace(brand.name, name)
+      : `Dywaniki samochodowe dla marki ${name}`,
+  }
+}
+
 /**
  * Konwertuje nazwę marki na slug do wyszukiwania w mapowaniu
  * np. "Alfa Romeo" -> "alfa-romeo", "Mercedes-Benz" -> "mercedes-benz"

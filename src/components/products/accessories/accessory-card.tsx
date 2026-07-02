@@ -3,6 +3,7 @@ import { Accessory } from "@/entities/product";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart } from "lucide-react";
+import { formatPriceCurrency, formatPriceValue } from "@/lib/utils/formatPrice";
 
 interface AccessoryCardProps {
   accessory: Accessory;
@@ -29,7 +30,7 @@ export default function AccessoryCard({ accessory, onAddToCart, onView }: Access
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
-      aria-label={`Zobacz szczegóły produktu ${accessory.name}, cena ${accessory.price.toLocaleString('pl-PL')} PLN`}
+      aria-label={`Zobacz szczegóły produktu ${accessory.name}, cena ${formatPriceCurrency(accessory.price)}`}
       className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black rounded-xl"
     >
       <article className="h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1">
@@ -76,7 +77,7 @@ export default function AccessoryCard({ accessory, onAddToCart, onView }: Access
             <div className="flex flex-col">
               <span className="text-xs text-gray-400">Cena</span>
               <span className="text-xl font-bold text-white">
-                {accessory.price.toLocaleString('pl-PL')} <span className="text-red-500">PLN</span>
+                {formatPriceValue(accessory.price)} <span className="text-red-500">PLN</span>
               </span>
             </div>
             

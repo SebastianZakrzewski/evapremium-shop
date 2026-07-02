@@ -6,13 +6,15 @@
 
 import { apiGet } from './client';
 import { Brand } from '@/entities/car';
+import { normalizeBrandForClient } from '@/shared/brands';
 
 /**
  * Fetch all car brands
  */
 export async function fetchBrands(): Promise<Brand[]> {
   try {
-    return await apiGet<Brand[]>('/api/car-brands');
+    const brands = await apiGet<Brand[]>('/api/car-brands');
+    return brands.map(normalizeBrandForClient);
   } catch (error) {
     console.error('Error fetching brands:', error);
     // Return fallback brands on error

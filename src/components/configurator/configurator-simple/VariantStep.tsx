@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { PricingService } from "@/lib/services/PricingService";
+import { formatPricePln } from "@/lib/utils/formatPrice";
 import { LowestPrice30DaysNotice } from "./LowestPrice30DaysNotice";
 
 interface VariantStepProps {
@@ -17,6 +18,7 @@ interface VariantStepProps {
   priceBreakdown?: {
     basePrice: number;
     discount: number;
+    priceAfterDiscount: number;
     shippingCost: number;
     totalPrice: number;
   };
@@ -101,11 +103,11 @@ export function VariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdo
                 <div className="flex flex-wrap items-baseline justify-center gap-1">
                   {hasDiscount && (
                     <span className="text-xs text-gray-400 line-through">
-                      {oldPrice.toFixed(2)} zł
+                      {formatPricePln(oldPrice)}
                     </span>
                   )}
                   <span className="text-sm font-bold text-white">
-                    {displayPrice.toFixed(2)} zł
+                    {formatPricePln(displayPrice)}
                   </span>
                 </div>
               </div>
@@ -114,7 +116,10 @@ export function VariantStep({ config, onUpdate, onNext, onPrevious, priceBreakdo
         })}
       </div>
 
-      <LowestPrice30DaysNotice />
+      <LowestPrice30DaysNotice
+        priceAfterDiscount={priceBreakdown?.priceAfterDiscount || priceBreakdown?.totalPrice}
+        regularPrice={priceBreakdown?.basePrice}
+      />
 
       <div className="flex flex-col sm:flex-row gap-2 justify-end pt-3">
         <Button

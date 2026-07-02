@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "sourceFile": "CENNIK EVAMATS (1).xlsx",
+  "generatedAt": "2026-06-03T20:10:54.159Z",
+  "layers": {
+    "cennik": "evamats-cennik.normalized.json",
+    "vehicleCategories": "evamats-vehicle-category-mapping.normalized.json"
+  },
+  "vehicleCategoryToCennikTable": {
+    "minivan": "minivany",
+    "auto_osobowe": "auta_osobowe",
+    "bus": "busy",
+    "pickup": "pickup",
+    "indywidualna_wycena": null
+  }
+}

@@ -6,6 +6,7 @@ import Link from "next/link"
 import { ShoppingCart, TrendingUp, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { formatPriceCurrency } from "@/lib/utils/formatPrice"
 
 // TODO: Replace with real data from purchase tracking logic once implemented
 interface PopularProduct {
@@ -134,7 +135,7 @@ const ProductCard = ({ product }: { product: PopularProduct }) => (
           <div className="flex flex-col">
             <span className="text-xs text-gray-400">Cena od</span>
             <span className="text-xl font-bold text-white">
-              {product.price.toLocaleString("pl-PL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{" "}
+              {formatPriceCurrency(product.price)}{" "}
               <span className="text-red-500">PLN</span>
             </span>
           </div>

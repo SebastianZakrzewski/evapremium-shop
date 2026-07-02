@@ -50,6 +50,18 @@ describe("getBrandMetaBySlug", () => {
     expect(meta?.apiName).toBe("Land Rover");
   });
 
+  it("resolves Ssang Young from database name", () => {
+    const meta = getBrandMetaBySlug("Ssang Young");
+    expect(meta?.apiName).toBe("SsangYong");
+    expect(meta?.displayName).toBe("SsangYong");
+    expect(meta?.dbName).toBe("Ssang Young");
+  });
+
+  it("resolves ssang-young slug alias", () => {
+    const meta = getBrandMetaBySlug("ssang-young");
+    expect(meta?.displayName).toBe("SsangYong");
+  });
+
   it("returns null for unknown brands", () => {
     expect(getBrandMetaBySlug("unknown-brand-xyz")).toBeNull();
   });
@@ -75,6 +87,10 @@ describe("mapApiNameToDbName", () => {
 
   it("maps MG to uppercase (DB uses MG)", () => {
     expect(mapApiNameToDbName("MG")).toBe("MG");
+  });
+
+  it("maps SsangYong to Ssang Young for database", () => {
+    expect(mapApiNameToDbName("SsangYong")).toBe("Ssang Young");
   });
 
   it("returns null for empty input", () => {

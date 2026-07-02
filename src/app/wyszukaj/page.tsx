@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { brandNameToNavigationSlug } from "@/shared/brands/brandParam";
+import { formatPricePln } from "@/lib/utils/formatPrice";
 
 interface SearchBrand {
   id: number;
@@ -303,7 +304,7 @@ function SearchPageContent() {
                               <p className="text-gray-400 text-sm">Typ: {product.bodyType}</p>
                             )}
                             <p className="text-red-400 font-semibold mt-2">
-                              Od {product.basePrice.toFixed(2)} zł
+                              Od {formatPricePln(product.basePrice)}
                             </p>
                           </div>
                         </div>

@@ -19,8 +19,20 @@ export {
   getBrandLogo,
   getBrandApiName,
   resolveBrandLogo,
+  resolveBrandDisplayNameFromDbName,
+  resolveBrandSlugFromDbName,
+  normalizeBrandForClient,
   type BrandMappingInfo,
 } from './brandMapper';
+
+export {
+  shouldServeBrandImageUnoptimized,
+  BRAND_GRID_SIZES_COMPACT,
+  BRAND_GRID_SIZES_STANDARD,
+  BRAND_CAROUSEL_SIZES,
+  isBrandPhotoFile,
+  isModeleBrandPhoto,
+} from './brandImage';
 
 // Car models API
 export {

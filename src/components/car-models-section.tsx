@@ -22,6 +22,7 @@ import {
 import { getDoorsCount, formatGenerationLabel } from "@/shared";
 import { useCarModelsFilters } from "@/features/brands/hooks";
 import { apiGet } from "@/lib/api/client";
+import { formatPriceCurrency } from "@/lib/utils/formatPrice";
 import { Car, Loader2, SlidersHorizontal, X, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -89,7 +90,7 @@ export default function CarModelsSection() {
 
   // Pobierz marki dla sekcji wyboru marek
   const { data: availableBrands = getFallbackBrands(), isLoading: loadingBrands } = useQuery({
-    queryKey: ['car-brands'],
+    queryKey: ['car-brands', 'v3'],
     queryFn: fetchBrands,
     staleTime: 10 * 60 * 1000, // 10 minut
     gcTime: 30 * 60 * 1000, // 30 minut cache
@@ -121,7 +122,7 @@ export default function CarModelsSection() {
 
   // Użyj React Query do cache'owania modeli
   const { data: apiModels = [], isLoading: loading, error: modelsError } = useQuery({
-    queryKey: ['car-models', brandApiName],
+    queryKey: ['car-models', brandApiName, 'v2'],
     queryFn: () => {
       if (!brandApiName) {
         return Promise.resolve([]);
@@ -160,7 +161,7 @@ export default function CarModelsSection() {
     apiModels.forEach((model: any, modelIndex: number) => {
       // API zwraca zgrupowane modele z tablicą generations
       const modelName = model.model || model.name || `Model ${modelIndex + 1}`;
-      const modelBrand = model.brand || brandParam || 'Unknown';
+      const modelBrand = model.brand || brandDisplayName || brandParam || 'Unknown';
       
       // Jeśli model ma tablicę generations, rozpakuj je
       if (model.generations && Array.isArray(model.generations)) {
@@ -215,7 +216,7 @@ export default function CarModelsSection() {
     });
 
     return models;
-  }, [apiModels, brandParam, brandInfo, brandSlug]);
+  }, [apiModels, brandParam, brandInfo, brandSlug, brandDisplayName]);
 
   // Pobierz unikalne kombinacje modeli do zapytania o zdjęcia
   const uniqueModelQueries = useMemo(() => {
@@ -441,7 +442,7 @@ export default function CarModelsSection() {
             {brandParam && (
               <>
                 <span>/</span>
-                <span className="text-white">{brandInfo?.displayName || brandParam}</span>
+                <span className="text-white">{brandDisplayName || brandParam}</span>
               </>
             )}
           </nav>
@@ -460,10 +461,10 @@ export default function CarModelsSection() {
               </div>
             )}
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              MODELE <span className="text-red-600">{(brandInfo?.displayName || brandParam || '').toUpperCase()}</span>
+              MODELE <span className="text-red-600">{(brandDisplayName || brandParam || '').toUpperCase()}</span>
             </h1>
             <p className="text-lg text-gray-400 leading-relaxed">
-              Wybierz model {(brandInfo?.displayName || brandParam)} i spersonalizuj dywaniki samochodowe EVA Premium. Najwyższa jakość materiałów, precyzyjne dopasowanie i trwałość na lata.
+              Wybierz model {(brandDisplayName || brandParam)} i spersonalizuj dywaniki samochodowe EVA Premium. Najwyższa jakość materiałów, precyzyjne dopasowanie i trwałość na lata.
             </p>
           </div>
         </div>
@@ -619,7 +620,7 @@ export default function CarModelsSection() {
                     const yearParam = model.yearFrom ? `&year=${model.yearFrom}` : '';
                     const configuratorUrl = `/konfigurator?brand=${encodeURIComponent(brandSlug)}&model=${encodeURIComponent(model.name.toLowerCase())}${yearParam}${model.generation ? `&generation=${encodeURIComponent(model.generation)}` : ""}${model.bodyType ? `&bodyType=${encodeURIComponent(model.bodyType)}` : ""}`;
                     const imageSrc = model.imageSrc || '/vercel.svg';
-                    const brandLabel = model.brand || '';
+                    const brandLabel = brandDisplayName || model.brand || '';
 
                     return (
                       <article
@@ -644,7 +645,7 @@ export default function CarModelsSection() {
                           <div className="flex-1 flex flex-col p-5">
                             <div className="mb-2">
                               <h3 className="text-lg font-bold text-white leading-tight group-hover:text-red-500 transition-colors line-clamp-2">
-                                {model.brand} {model.name}
+                                {brandLabel} {model.name}
                               </h3>
                             </div>
                             
@@ -664,7 +665,7 @@ export default function CarModelsSection() {
                               <div className="flex flex-col">
                                 <span className="text-xs text-gray-400">Cena od</span>
                                 <span className="text-xl font-bold text-white">
-                                  150.00 <span className="text-red-500">PLN</span>
+                                  {formatPriceCurrency(150)}
                                 </span>
                               </div>
 

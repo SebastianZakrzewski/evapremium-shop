@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { SlidersHorizontal, X } from "lucide-react";
 import AccessoryCard from "./accessory-card";
 import AccessoryDetailsSheet from "./accessory-details-sheet";
+import { formatPriceCurrency } from "@/lib/utils/formatPrice";
 
 interface FilterState {
   categories: string[];
@@ -405,7 +406,7 @@ export default function AccessoriesSection() {
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Cena</h4>
                   <span className="text-sm font-mono text-white">
-                    do {filters.priceRange[1]} PLN
+                    do {formatPriceCurrency(filters.priceRange[1])}
                   </span>
                 </div>
                 <div className="pt-2">

@@ -31,17 +31,17 @@ vi.mock("next/image", () => ({
 }))
 
 describe("HeroSection", () => {
-  it("renders the spring promotion image as the active hero media", () => {
+  it("renders the summer promotion image as the active hero media", () => {
     render(<HeroSection />)
 
     const promotionImages = screen.getAllByAltText(
-      "Wiosenna promocja dywaników samochodowych EVA Premium"
+      "Letnia promocja dywaników samochodowych EVA Premium do -30%"
     )
 
     const srcs = promotionImages.map((img) => img.getAttribute("src"))
 
-    expect(srcs).toContain("/images/zalety/hero_mobile.png")
-    expect(srcs).toContain("/images/hero/wiosenna-zalety-hero2.png")
+    expect(srcs).toContain("/hero_4.png")
+    expect(srcs).toContain("/hero4_mobile.png")
   })
 
   it("scrolls to dywaniki section when promo CTA overlay is clicked", () => {

@@ -9,6 +9,7 @@ import type { ConfiguratorState } from "@/features/car-configurator/utils/config
 import { useAccessories } from "@/features/accessories/hooks/useAccessories";
 import { Plus, CheckCircle2, ShoppingCart } from "lucide-react";
 import { Brand } from "@/entities/car";
+import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
 
 interface SummaryStepProps {
   config: ConfiguratorState;
@@ -218,7 +219,7 @@ export function SummaryStep({
                         <p className="text-xs text-gray-400 mt-1">Kolor: {config.podpietkaColor}</p>
                       )}
                       <p className="text-sm text-gray-400 mt-1">
-                        {selectedPodpietka.price.toLocaleString('pl-PL')} PLN
+                        {formatPriceValue(selectedPodpietka.price)} PLN
                       </p>
                     </div>
                   </div>
@@ -245,29 +246,29 @@ export function SummaryStep({
                   {priceBreakdown.discount > 0 ? (
                     <>
                       <span className="text-gray-400 line-through text-sm">
-                        {priceBreakdown.basePrice.toFixed(2)} zł
+                        {formatPricePln(priceBreakdown.basePrice)}
                       </span>
                       <span className="text-white font-medium">
-                        {(priceBreakdown.basePrice - priceBreakdown.discount).toFixed(2)} zł
+                        {formatPricePln(priceBreakdown.basePrice - priceBreakdown.discount)}
                       </span>
                     </>
                   ) : (
-                    <span>{priceBreakdown.basePrice.toFixed(2)} zł</span>
+                    <span>{formatPricePln(priceBreakdown.basePrice)}</span>
                   )}
                 </div>
               </div>
               
               {priceBreakdown.discount > 0 && (
                 <div className="flex justify-between text-green-400 bg-green-500/5 px-2 py-1 rounded">
-                  <span>Rabat ({priceBreakdown.basePrice >= 910 ? "35%" : "25%"})</span>
-                  <span>-{priceBreakdown.discount.toFixed(2)} zł</span>
+                  <span>Rabat ({Math.round((priceBreakdown.discount / priceBreakdown.basePrice) * 100)}%)</span>
+                  <span>-{formatPriceValue(priceBreakdown.discount)} zł</span>
                 </div>
               )}
               
               {selectedPodpietka && (
                 <div className="flex justify-between text-gray-400 bg-white/5 px-2 py-1 rounded">
                   <span className="text-sm">Podpiętka</span>
-                  <span className="text-sm font-medium">{selectedPodpietka.price.toFixed(2)} zł</span>
+                  <span className="text-sm font-medium">{formatPricePln(selectedPodpietka.price)}</span>
                 </div>
               )}
             </div>
@@ -279,16 +280,16 @@ export function SummaryStep({
                   <div className="flex items-baseline gap-2">
                     {priceBreakdown.discount > 0 && (
                       <span className="text-base text-gray-400 line-through font-medium">
-                        {(priceBreakdown.basePrice + (selectedPodpietka?.price || 0)).toFixed(2)} zł
+                        {formatPricePln(priceBreakdown.basePrice + (selectedPodpietka?.price || 0))}
                       </span>
                     )}
                     <span className="text-3xl font-bold text-white tracking-tight">
-                      {(priceBreakdown.totalPrice + (selectedPodpietka?.price || 0)).toFixed(2)} <span className="text-lg text-gray-400 font-normal">zł</span>
+                      {formatPricePln(priceBreakdown.totalPrice + (selectedPodpietka?.price || 0))}
                     </span>
                   </div>
                   {priceBreakdown.discount > 0 && (
                     <span className="text-xs text-green-400 font-medium">
-                      Oszczędzasz {priceBreakdown.discount.toFixed(2)} zł
+                      Oszczędzasz {formatPriceValue(priceBreakdown.discount)} zł
                     </span>
                   )}
                 </div>

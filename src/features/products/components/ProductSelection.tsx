@@ -107,7 +107,7 @@ export default function ProductSelection() {
           <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
         </div>
 
-        {/* Karuzela z płynnym przewijaniem - jak galeria produktów */}
+        {/* Siatka marek — ten sam układ na mobile i desktop */}
         {filteredBrands.length > 0 ? (
           <BrandsScrollingCarousel
             brands={filteredBrands}

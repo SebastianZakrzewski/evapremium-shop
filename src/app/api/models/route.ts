@@ -6,6 +6,7 @@ export const maxDuration = 30
 import { env } from '@/config/env';
 import { humanizeBrandSlug, mapApiNameToDbName, mapSlugToCanonicalBrand } from '@/shared/brands/brandNormalizer';
 import { parseBrandFromUrl } from '@/shared/brands/brandParam';
+import { resolveBrandDisplayNameFromDbName } from '@/shared/brands/brandMapper';
 import {
   CAR_MODELS_EXTENDED_SELECT,
   CAR_MODELS_EXTENDED_SELECT_MINIMAL,
@@ -335,7 +336,7 @@ export async function GET(request: NextRequest) {
 
     // Konwersja do formatu odpowiedzi
     const response = Object.values(groupedModels).map((model) => ({
-      brand: model.brand,
+      brand: resolveBrandDisplayNameFromDbName(model.brand),
       model: model.model,
       brandImage: model.brandImage,
       modelImage: model.modelImage,

@@ -8,6 +8,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchBrands, getFallbackBrands } from '@/lib/api/brands';
 import { Brand } from '@/entities/car';
+import { normalizeBrandForClient } from '@/shared/brands';
 
 export interface UseBrandsReturn {
   brands: Brand[];
@@ -27,7 +28,7 @@ export function useBrands(options?: {
   gcTime?: number;
 }): UseBrandsReturn {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['car-brands'],
+    queryKey: ['car-brands', 'v3'],
     queryFn: fetchBrands,
     staleTime: options?.staleTime ?? 10 * 60 * 1000, // 10 minut
     gcTime: options?.gcTime ?? 30 * 60 * 1000, // 30 minut cache
@@ -37,7 +38,7 @@ export function useBrands(options?: {
   });
 
   return {
-    brands: data ?? getFallbackBrands(),
+    brands: (data ?? getFallbackBrands()).map(normalizeBrandForClient),
     isLoading,
     error: error as Error | null,
   };

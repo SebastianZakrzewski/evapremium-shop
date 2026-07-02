@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTracking, createPurchaseData } from '@/lib/tracking';
 import { useOrder } from '@/features/orders/hooks/useOrder';
+import { formatPricePln, formatPriceValue } from '@/lib/utils/formatPrice';
 
 interface PaymentStatus {
   status: 'pending' | 'paid' | 'failed' | 'cancelled' | 'refunded';
@@ -665,25 +666,25 @@ export function PaymentSuccess() {
                       {paymentStatus.subtotal !== undefined && (
                         <div className="flex justify-between items-center">
                           <span className="text-white/70">Wartość netto:</span>
-                          <span className="text-white">{paymentStatus.subtotal.toFixed(2)} zł</span>
+                          <span className="text-white">{formatPricePln(paymentStatus.subtotal)}</span>
                         </div>
                       )}
                       {paymentStatus.tax !== undefined && paymentStatus.tax > 0 && (
                         <div className="flex justify-between items-center">
                           <span className="text-white/70">Podatek:</span>
-                          <span className="text-white">{paymentStatus.tax.toFixed(2)} zł</span>
+                          <span className="text-white">{formatPricePln(paymentStatus.tax)}</span>
                         </div>
                       )}
                       {paymentStatus.discount !== undefined && paymentStatus.discount > 0 && (
                         <div className="flex justify-between items-center">
                           <span className="text-white/70">Rabat:</span>
-                          <span className="text-green-400">-{paymentStatus.discount.toFixed(2)} zł</span>
+                          <span className="text-green-400">-{formatPriceValue(paymentStatus.discount)} zł</span>
                         </div>
                       )}
                       {paymentStatus.total !== undefined && (
                         <div className="flex justify-between items-center pt-2 border-t border-white/10 mt-2">
                           <span className="text-white font-semibold">Suma całkowita:</span>
-                          <span className="text-red-400 font-bold text-lg">{paymentStatus.total.toFixed(2)} zł</span>
+                          <span className="text-red-400 font-bold text-lg">{formatPricePln(paymentStatus.total)}</span>
                         </div>
                       )}
                     </div>
@@ -716,9 +717,9 @@ export function PaymentSuccess() {
                             </div>
                             <span className="text-white font-semibold ml-2">
                               {item.subtotal !== undefined 
-                                ? `${item.subtotal.toFixed(2)} zł`
+                                ? formatPricePln(item.subtotal)
                                 : item.unitPrice !== undefined && item.quantity !== undefined
-                                  ? `${(item.unitPrice * item.quantity).toFixed(2)} zł`
+                                  ? formatPricePln(item.unitPrice * item.quantity)
                                   : '—'}
                             </span>
                           </div>
@@ -727,7 +728,7 @@ export function PaymentSuccess() {
                               <span>Ilość: {item.quantity}</span>
                             )}
                             {item.unitPrice !== undefined && (
-                              <span>Cena jednostkowa: {item.unitPrice.toFixed(2)} zł</span>
+                              <span>Cena jednostkowa: {formatPricePln(item.unitPrice)}</span>
                             )}
                           </div>
                           {item.configuration && Object.keys(item.configuration).length > 0 && (

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { formatPriceCurrency, formatPriceValue } from "@/lib/utils/formatPrice";
 import { Separator } from "@/components/ui/separator";
 import { ShoppingCart, Check, X as XIcon, Loader2, Minus, Plus } from "lucide-react";
 import { toast } from "react-hot-toast";
@@ -268,11 +269,11 @@ export default function AccessoryDetailsSheet({
              
              <div className="flex items-center gap-4">
                <div className="text-2xl font-bold text-white">
-                 {accessory.price.toLocaleString('pl-PL')} <span className="text-red-500">PLN</span>
+                 {formatPriceValue(accessory.price)} <span className="text-red-500">PLN</span>
                </div>
                {accessory.originalPrice && accessory.originalPrice > accessory.price && (
                   <span className="text-lg text-gray-400 line-through">
-                    {accessory.originalPrice.toLocaleString('pl-PL')} PLN
+                    {formatPriceCurrency(accessory.originalPrice)}
                   </span>
                )}
              </div>

@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { BrandGridCard } from "../ui/BrandGridCard";
+import BrandPopularGridCard from "@/components/brands/BrandPopularGridCard";
 import { Brand } from "@/entities/car";
 import { Loader2, Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -47,7 +47,7 @@ export default function BrandSelectionGrid() {
     setTimeout(() => {
       setClickedBrandId(null);
       // Przekierowanie do sekcji produktów (tak jak w karuzeli marek)
-      router.push(`/modele?brand=${encodeURIComponent(brandNameToNavigationSlug(brand.name))}`);
+      router.push(`/dywaniki?brand=${encodeURIComponent(brandNameToNavigationSlug(brand.name))}`);
     }, 300);
   }, [router]);
 
@@ -83,7 +83,7 @@ export default function BrandSelectionGrid() {
       id="brand-selection" 
       className="bg-black py-16 md:py-24 relative overflow-hidden min-h-screen"
     >
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 relative z-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Input wyszukiwania */}
         <div className="text-center mb-12 md:mb-16">
           <div className="max-w-md mx-auto">
@@ -140,25 +140,16 @@ export default function BrandSelectionGrid() {
           )}
         </div>
 
-        {/* Grid z kartami marek */}
+        {/* Siatka marek — spójna z sekcją popularnych marek */}
         {!searchQuery || filteredBrands.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-            {filteredBrands.map((brand, index) => (
-              <div
+          <div className="grid grid-cols-3 gap-2 px-2">
+            {filteredBrands.map((brand) => (
+              <BrandPopularGridCard
                 key={brand.id}
-                className="animate-fade-in"
-                style={{
-                  animationDelay: `${index * 0.05}s`,
-                }}
-              >
-                <BrandGridCard
-                  brand={brand}
-                  onClick={handleBrandClick}
-                  isClicked={clickedBrandId === brand.id}
-                  className="touch-target"
-                  isPriority={index < 4}
-                />
-              </div>
+                brand={brand}
+                isClicked={clickedBrandId === brand.id}
+                onClick={handleBrandClick}
+              />
             ))}
           </div>
         ) : null}

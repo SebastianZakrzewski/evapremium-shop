@@ -23,7 +23,7 @@ const contactInfo = [
     icon: Phone,
     title: "Infolinia",
     value: "+48 793 993 430",
-    subtext: "Pon-Pt: 8:00-18:00",
+    subtext: "od 9.00-17.00",
     action: "tel:+48793993430",
     color: "text-green-500",
     bg: "bg-green-500/10"

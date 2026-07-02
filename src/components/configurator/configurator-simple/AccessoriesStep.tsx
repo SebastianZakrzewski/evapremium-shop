@@ -9,6 +9,7 @@ import { Accessory } from "@/entities/product";
 import AccessoryDetailsSheet from "@/components/products/accessories/accessory-details-sheet";
 import { ShoppingCart, ExternalLink, Loader2 } from "lucide-react";
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState";
+import { formatPriceCurrency, formatPriceValue } from "@/lib/utils/formatPrice";
 
 interface AccessoriesStepProps {
   config: ConfiguratorState;
@@ -173,7 +174,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
 
                     <div className="flex items-center justify-between mt-1">
                       <span className="text-sm font-bold text-white">
-                        {podpietka.price.toLocaleString('pl-PL')} <span className="text-[10px] text-gray-400">PLN</span>
+                        {formatPriceValue(podpietka.price)} <span className="text-[10px] text-gray-400">PLN</span>
                       </span>
                       <Button
                         size="sm"
@@ -206,7 +207,7 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
                   <p className="text-[10px] text-gray-400 mt-0.5">Kolor: {config.podpietkaColor}</p>
                 )}
                 <p className="text-xs text-gray-400 mt-0.5">
-                  {selectedPodpietka.price.toLocaleString('pl-PL')} PLN
+                  {formatPriceCurrency(selectedPodpietka.price)}
                 </p>
               </div>
               <Button

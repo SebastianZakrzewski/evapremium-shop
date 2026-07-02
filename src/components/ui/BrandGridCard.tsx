@@ -5,6 +5,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Brand } from "@/entities/car";
 import { brandNameToNavigationSlug } from "@/shared/brands/brandParam";
+import {
+  BRAND_GRID_SIZES_STANDARD,
+  isBrandPhotoFile,
+  isModeleBrandPhoto,
+  shouldServeBrandImageUnoptimized,
+} from "@/shared/brands";
 import { Car } from "lucide-react";
 
 interface BrandGridCardProps {
@@ -35,14 +41,11 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
   };
 
   // Sprawdź czy to jest zdjęcie czy logo SVG
-  const isImage = brand.logo.includes('.jpg') || 
-                  brand.logo.includes('.png') || 
-                  brand.logo.includes('.jpeg') || 
-                  brand.logo.includes('.avif') || 
-                  brand.logo.includes('.webp');
+  const isImage = isBrandPhotoFile(brand.logo);
   
   // Sprawdź czy to zdjęcie marki z katalogu /modele/
-  const isBrandImage = brand.logo.includes('/modele/');
+  const isBrandImage = isModeleBrandPhoto(brand.logo);
+  const unoptimized = shouldServeBrandImageUnoptimized(brand.logo);
 
   return (
     <div
@@ -103,8 +106,9 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
               ${isBrandImage ? 'object-cover object-center' : 'object-contain'}
               group-hover:scale-[1.02]
             `}
-            sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            quality={90}
+            sizes={BRAND_GRID_SIZES_STANDARD}
+            quality={100}
+            unoptimized={unoptimized}
             loading={isPriority ? "eager" : "lazy"}
             placeholder={isBrandImage ? "empty" : "blur"}
             priority={isPriority}
@@ -119,7 +123,8 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
               width={128}
               height={128}
               className="object-contain transition-all duration-700 group-hover:scale-105 w-full h-full"
-              quality={90}
+              quality={100}
+              unoptimized={unoptimized}
               onError={() => setImageError(true)}
             />
           </div>

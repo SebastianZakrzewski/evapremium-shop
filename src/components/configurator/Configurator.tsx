@@ -29,6 +29,7 @@ import { useTracking } from "@/lib/tracking";
 import { Brand, Model } from "@/entities/car";
 import { normalizeBrandName } from "@/shared/brands";
 import { LowestPrice30DaysNotice } from "@/components/configurator/configurator-simple/LowestPrice30DaysNotice";
+import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
 import { useConfiguratorCarData } from "@/features/car-configurator";
 
 // Dodaj event do otwierania modala koszyka
@@ -1219,7 +1220,7 @@ export default function Configurator() {
                               {displayPrice > 0 && (
                                 <div className="text-right">
                                   <div className="text-lg font-bold text-green-400">
-                                    {displayPrice} zł
+                                    {formatPricePln(displayPrice)}
                                   </div>
                                   <div className="text-sm text-white/60">
                                     {selectedSetType === '3d-with-rims' ? 'z rantami' : 'bez rantów'}
@@ -1232,7 +1233,10 @@ export default function Configurator() {
                       );
                     })}
                   </RadioGroup>
-                  <LowestPrice30DaysNotice />
+                  <LowestPrice30DaysNotice
+                    priceAfterDiscount={priceBreakdown.priceAfterDiscount || priceBreakdown.totalPrice}
+                    regularPrice={priceBreakdown.basePrice}
+                  />
                 </div>
               </div>
             )}
@@ -1395,12 +1399,12 @@ export default function Configurator() {
                   <div className="space-y-2 text-base">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Zestaw ({setVariant.name})</span>
-                      <span className="text-white">{priceBreakdown.basePrice} zł</span>
+                      <span className="text-white">{formatPricePln(priceBreakdown.basePrice)}</span>
                     </div>
                     {priceBreakdown.discount > 0 && (
                       <div className="flex justify-between">
                         <span className="text-gray-400">Rabat ({Math.round((priceBreakdown.discount / priceBreakdown.basePrice) * 100)}%)</span>
-                        <span className="text-red-400">-{priceBreakdown.discount} zł</span>
+                        <span className="text-red-400">-{formatPriceValue(priceBreakdown.discount)} zł</span>
                       </div>
                     )}
                     <Separator className="my-2" />
@@ -1413,7 +1417,7 @@ export default function Configurator() {
                             Ładowanie...
                           </span>
                         ) : (
-                          `${priceBreakdown.totalPrice} zł`
+                          formatPricePln(priceBreakdown.totalPrice)
                         )}
                       </span>
                     </div>

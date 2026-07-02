@@ -16,6 +16,7 @@ import type { ConfiguratorState } from "@/features/car-configurator/utils/config
 import { useConfiguratorCarData } from "@/features/car-configurator";
 import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext";
 import { normalizeBrandName } from "@/shared/brands";
+import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
 import { StepProgress } from "./StepProgress";
 import { StepAccordion } from "./StepAccordion";
 import { CarSelectionStep } from "./CarSelectionStep";
@@ -1044,6 +1045,7 @@ export default function ConfiguratorSimple() {
                     matType: config.matType,
                     variant: config.variant || "front",
                   }}
+                  priceBreakdown={priceBreakdown}
                   onUpdate={updateConfig}
                   onNext={goToNextStep}
                   onPrevious={goToPreviousStep}
@@ -1251,16 +1253,16 @@ export default function ConfiguratorSimple() {
                           <div className="flex items-baseline gap-2">
                             {priceBreakdown.discount > 0 && (
                               <span className="text-lg text-gray-400 line-through font-medium">
-                                {priceBreakdown.basePrice.toFixed(2)} zł
+                                {formatPricePln(priceBreakdown.basePrice)}
                               </span>
                             )}
                             <span className="text-2xl font-bold text-white">
-                              {totalPriceWithAccessories.toFixed(2)} zł
+                              {formatPricePln(totalPriceWithAccessories)}
                             </span>
                           </div>
                           {priceBreakdown.discount > 0 && (
                             <span className="text-sm text-green-400 bg-green-400/10 px-2 py-0.5 rounded w-fit">
-                              Rabat {priceBreakdown.basePrice >= 910 ? "35%" : "25%"}: -{priceBreakdown.discount.toFixed(2)} zł
+                              Rabat {Math.round((priceBreakdown.discount / priceBreakdown.basePrice) * 100)}%: -{formatPriceValue(priceBreakdown.discount)} zł
                             </span>
                           )}
                         </div>
@@ -1398,12 +1400,12 @@ export default function ConfiguratorSimple() {
                   <div className="flex items-baseline gap-3">
                     <span className="text-sm text-gray-400">Cena:</span>
                     <span className="text-2xl font-bold text-white">
-                      {totalPriceWithAccessories.toFixed(2)} zł
+                      {formatPricePln(totalPriceWithAccessories)}
                     </span>
                   </div>
                   {priceBreakdown.discount > 0 && (
                     <div className="text-sm text-green-400 mt-1">
-                      Rabat: -{priceBreakdown.discount.toFixed(2)} zł
+                      Rabat: -{formatPriceValue(priceBreakdown.discount)} zł
                     </div>
                   )}
                 </div>
@@ -1477,16 +1479,16 @@ export default function ConfiguratorSimple() {
                     <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0">Cena:</span>
                     {priceBreakdown.discount > 0 && (
                       <span className="text-sm text-gray-400 line-through flex-shrink-0">
-                        {priceBreakdown.basePrice.toFixed(2)} zł
+                        {formatPricePln(priceBreakdown.basePrice)}
                       </span>
                     )}
                     <span className="text-lg font-bold text-white truncate">
-                      {totalPriceWithAccessories.toFixed(2)} zł
+                      {formatPricePln(totalPriceWithAccessories)}
                     </span>
                   </div>
                   {priceBreakdown.discount > 0 && (
                     <div className="text-xs text-green-400 mt-0.5 truncate">
-                      Rabat {priceBreakdown.basePrice >= 910 ? "35%" : "25%"}: -{priceBreakdown.discount.toFixed(2)} zł
+                      Rabat {Math.round((priceBreakdown.discount / priceBreakdown.basePrice) * 100)}%: -{formatPriceValue(priceBreakdown.discount)} zł
                     </div>
                   )}
                 </div>

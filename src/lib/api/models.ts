@@ -6,6 +6,7 @@
 
 import { apiGet } from './client';
 import type { CarModelApiResponse } from '@/lib/types/api';
+import { resolveBrandDisplayNameFromDbName } from '@/shared/brands';
 
 /**
  * Fetch car models by brand API name
@@ -20,9 +21,13 @@ export async function fetchCarModels(brandName: string): Promise<CarModelApiResp
   }
 
   try {
-    // API endpoint /api/models oczekuje parametru 'brand', nie 'brandName'
     const models = await apiGet<CarModelApiResponse[]>(`/api/models?brand=${encodeURIComponent(brandName)}`);
-    return Array.isArray(models) ? models : [];
+    if (!Array.isArray(models)) return [];
+
+    return models.map((model) => ({
+      ...model,
+      brand: resolveBrandDisplayNameFromDbName(model.brand),
+    }));
   } catch (error) {
     console.error('Error fetching car models:', error);
     return [];

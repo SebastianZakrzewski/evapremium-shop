@@ -5,6 +5,14 @@ import { useRouter } from "next/navigation";
 import { Phone, ChevronRight, ShieldCheck, Droplets, Truck } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import {
+  HERO_PROMO_ASPECT_CLASS,
+  HERO_PROMO_IMAGE_SIZES,
+  HERO_PROMO_IMAGE_SRC,
+  HERO_PROMO_MOBILE_IMAGE_SIZES,
+  HERO_PROMO_MOBILE_IMAGE_SRC,
+  heroPromoImageProps,
+} from "@/features/marketing/lib/heroImage";
 
 type HeroSlide = {
   id: number;
@@ -23,6 +31,8 @@ type HeroSlide = {
   ctaOverlay?: {
     label: string
     scrollToSectionId: string
+    /** Przycisk CTA jest już na grafice — tylko niewidoczny hit area. */
+    embeddedInImage?: boolean
   };
 };
 
@@ -31,9 +41,9 @@ const heroSlides: HeroSlide[] = [
     id: 1,
     title: "",
     subtitle: "",
-    image: "/images/hero/wiosenna-zalety-hero2.png",
-    imageMobile: "/images/zalety/hero_mobile.png",
-    imageAlt: "Wiosenna promocja dywaników samochodowych EVA Premium",
+    image: HERO_PROMO_IMAGE_SRC,
+    imageMobile: HERO_PROMO_MOBILE_IMAGE_SRC,
+    imageAlt: "Letnia promocja dywaników samochodowych EVA Premium do -30%",
     cta: "",
     price: "",
     benefits: [],
@@ -41,6 +51,7 @@ const heroSlides: HeroSlide[] = [
     ctaOverlay: {
       label: "Skonfiguruj dywaniki do swojego auta",
       scrollToSectionId: "products",
+      embeddedInImage: true,
     },
   }
 ]
@@ -130,8 +141,8 @@ export default function HeroSection() {
   }, [])
 
   const heroCarouselFrameClass = heroSlides.some((s) => s.imageMobile)
-    ? "aspect-[941/1672] md:aspect-[2045/769]"
-    : "min-h-[min(72vw,320px)] md:min-h-0 md:aspect-[2045/769]"
+    ? HERO_PROMO_ASPECT_CLASS
+    : "aspect-[1024/413]"
 
   return (
     <section
@@ -157,7 +168,7 @@ export default function HeroSection() {
       <div className="container relative mx-auto px-2 py-6 sm:px-4 sm:py-8 md:py-8">
         <div
           className={cn(
-            "relative mx-auto w-full max-w-[1240px] overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 sm:rounded-2xl md:rounded-3xl",
+            "relative mx-auto w-full max-w-[1024px] overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 sm:rounded-2xl md:rounded-3xl",
             heroCarouselFrameClass
           )}
         >
@@ -180,7 +191,7 @@ export default function HeroSection() {
               >
                 {isImageSlide && slide.image ? (
                   <>
-                    <div className="absolute inset-0 bg-black">
+                    <div className="absolute inset-0 bg-neutral-100">
                       {slide.imageMobile ? (
                         <>
                           <Image
@@ -189,8 +200,8 @@ export default function HeroSection() {
                             fill
                             className="object-contain object-center md:hidden"
                             priority={index === 0}
-                            quality={90}
-                            sizes="100vw"
+                            sizes={HERO_PROMO_MOBILE_IMAGE_SIZES}
+                            {...heroPromoImageProps}
                           />
                           <Image
                             src={slide.image}
@@ -198,8 +209,8 @@ export default function HeroSection() {
                             fill
                             className="hidden object-contain object-center md:block"
                             priority={index === 0}
-                            quality={90}
-                            sizes="(max-width: 1240px) 100vw, 1240px"
+                            sizes={HERO_PROMO_IMAGE_SIZES}
+                            {...heroPromoImageProps}
                           />
                         </>
                       ) : (
@@ -209,15 +220,19 @@ export default function HeroSection() {
                           fill
                           className="object-contain object-center"
                           priority={index === 0}
-                          quality={90}
-                          sizes="(max-width: 640px) 100vw, (max-width: 1240px) 100vw, 1240px"
+                          sizes={HERO_PROMO_IMAGE_SIZES}
+                          {...heroPromoImageProps}
                         />
                       )}
                     </div>
-                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.12)_50%,rgba(0,0,0,0.42)_100%)]" />
+                    {slide.ctaOverlay?.embeddedInImage ? null : (
+                    <div
+                      className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.12)_50%,rgba(0,0,0,0.42)_100%)]"
+                    />
+                    )}
                     {slide.ctaOverlay ? (
                       <div className="pointer-events-none absolute inset-0 z-30">
-                        {!slide.imageMobile ? (
+                        {!slide.imageMobile && !slide.ctaOverlay.embeddedInImage ? (
                           <button
                             type="button"
                             onClick={() => {
@@ -241,9 +256,11 @@ export default function HeroSection() {
                           data-testid="hero-promo-cta-hit-area"
                           className={cn(
                             "pointer-events-auto absolute inset-x-0 bottom-0 z-30 cursor-pointer border-0 bg-transparent p-0",
-                            slide.imageMobile
-                              ? "top-[30%]"
-                              : "top-[42%] hidden md:block"
+                            slide.ctaOverlay.embeddedInImage
+                              ? "top-[72%] sm:top-[74%] md:top-[76%]"
+                              : slide.imageMobile
+                                ? "top-[30%]"
+                                : "top-[42%] hidden md:block"
                           )}
                           aria-label={`${slide.ctaOverlay.label} — przewiń do wyboru dywaników`}
                         />

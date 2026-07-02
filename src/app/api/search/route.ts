@@ -5,7 +5,7 @@ import { env } from '@/config/env';
 import { MatService } from '@/lib/services/MatService';
 
 export const maxDuration = 30
-import { resolveBrandLogo } from '@/shared/brands';
+import { resolveBrandLogo, resolveBrandDisplayNameFromDbName, resolveBrandSlugFromDbName } from '@/shared/brands';
 
 const supabase = createClient(env.supabase.url, env.supabase.anonKey);
 const matService = new MatService();
@@ -122,15 +122,12 @@ export async function GET(request: NextRequest) {
         const brandMap = new Map<string, { brand_name: string; brand_image: string | null }>();
         
         brandsData.forEach((brand: any) => {
-          const normalizedName = brand.brand_name
-            .toLowerCase()
-            .split(' ')
-            .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-          
-          if (!brandMap.has(normalizedName)) {
-            brandMap.set(normalizedName, {
-              brand_name: normalizedName,
+          const slug = resolveBrandSlugFromDbName(brand.brand_name)
+          const displayName = resolveBrandDisplayNameFromDbName(brand.brand_name)
+
+          if (!brandMap.has(slug)) {
+            brandMap.set(slug, {
+              brand_name: displayName,
               brand_image: brand.brand_image
             });
           }
@@ -169,10 +166,11 @@ export async function GET(request: NextRequest) {
 
         modelsData.forEach((item: any) => {
           const key = `${item.brand_name}-${item.model_name}`;
+          const brandDisplayName = resolveBrandDisplayNameFromDbName(item.brand_name)
           
           if (!modelMap.has(key)) {
             modelMap.set(key, {
-              brand: item.brand_name,
+              brand: brandDisplayName,
               model: item.model_name,
               bodyTypes: new Set(),
               isCurrentlyProduced: item.is_currently_produced || false
