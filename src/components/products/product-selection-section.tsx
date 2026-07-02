@@ -17,6 +17,7 @@ import { useProductSelectionFilters } from '@/features/products/hooks';
 import { fetchCarModels } from '@/lib/api/models';
 import { apiGet } from '@/lib/api/client';
 import { formatPricePln } from '@/lib/utils/formatPrice';
+import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/buildConfiguratorEntryUrl";
 
 interface FilterState {
   bodyTypes: string[];
@@ -534,7 +535,12 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
                 {/* Product Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredProducts.map((product) => {
-                const configuratorUrl = `/konfigurator?brand=${encodeURIComponent(brandSlug)}&model=${encodeURIComponent(product.model.toLowerCase())}${product.generation ? `&generation=${encodeURIComponent(product.generation)}` : ""}${product.bodyType ? `&bodyType=${encodeURIComponent(product.bodyType)}` : ""}`;
+                const configuratorUrl = buildConfiguratorEntryUrl({
+                  brand: brandSlug,
+                  model: product.model.toLowerCase(),
+                  generation: product.generation,
+                  bodyType: product.bodyType,
+                });
 
                 return (
                   <article

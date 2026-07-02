@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Search, X, Car, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/buildConfiguratorEntryUrl";
+import { searchApi } from '@/lib/api';
 
 interface SearchBrand {
   id: number;
@@ -51,8 +53,6 @@ function useDebounce<T>(value: T, delay: number): T {
 
   return debouncedValue;
 }
-
-import { searchApi } from '@/lib/api';
 
 // Funkcja do pobierania wyników wyszukiwania
 const fetchSearchResults = async (query: string): Promise<SearchResults> => {
@@ -165,9 +165,23 @@ function SearchDropdown() {
     if (result.type === 'brand') {
       router.push(`/modele/${encodeURIComponent(result.data.name.toLowerCase())}`);
     } else if (result.type === 'model') {
-      router.push(`/konfigurator?brand=${encodeURIComponent(result.data.brand.toLowerCase())}&model=${encodeURIComponent(result.data.model)}`);
+      router.push(
+        buildConfiguratorEntryUrl({
+          brand: result.data.brand,
+          model: result.data.model,
+          generation: result.data.generation,
+          bodyType: result.data.bodyType,
+        })
+      );
     } else if (result.type === 'product') {
-      router.push(`/konfigurator?brand=${encodeURIComponent(result.data.carBrandSlug)}&model=${encodeURIComponent(result.data.carModelSlug)}`);
+      router.push(
+        buildConfiguratorEntryUrl({
+          brand: result.data.carBrandSlug,
+          model: result.data.carModelSlug,
+          generation: result.data.generation,
+          bodyType: result.data.bodyType,
+        })
+      );
     }
     setIsModalOpen(false);
     setQuery("");

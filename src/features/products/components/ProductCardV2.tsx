@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { memo } from "react";
 import { formatPriceValue } from "@/lib/utils/formatPrice";
+import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/buildConfiguratorEntryUrl";
 
 interface ProductDisplayItem {
   id: string;
@@ -52,7 +53,12 @@ function ProductCardV2({ product }: ProductCardV2Props) {
     return mapping[normalized] || bodyType.charAt(0).toUpperCase() + bodyType.slice(1).toLowerCase();
   };
 
-  const configuratorUrl = `/konfigurator?brand=${encodeURIComponent(product.brand.toLowerCase())}&model=${encodeURIComponent(product.model.toLowerCase())}${product.generation ? `&generation=${encodeURIComponent(product.generation)}` : ""}${product.bodyType ? `&bodyType=${encodeURIComponent(product.bodyType)}` : ""}`;
+  const configuratorUrl = buildConfiguratorEntryUrl({
+    brand: product.brand,
+    model: product.model.toLowerCase(),
+    generation: product.generation,
+    bodyType: product.bodyType,
+  });
 
   return (
     <Link href={configuratorUrl} className="group block h-full">

@@ -28,6 +28,9 @@ const capitalize = (value: string): string =>
 const isSameToken = (left: string, right: string): boolean =>
   left.trim().toLowerCase() === right.trim().toLowerCase();
 
+export const isLockedProductEntry = (urlParams: ConfiguratorUrlParams): boolean =>
+  !!(urlParams.brandParam?.trim() && urlParams.modelParam?.trim());
+
 export const resolveBrandFromParam = (brandParam: string, brands: Brand[]): string => {
   if (!brandParam) return "";
   if (brands.length > 0) {
@@ -60,10 +63,14 @@ export const getConfigUpdatesFromUrl = ({
 
   if (modelParam && !isSameToken(previous.model, modelParam)) {
     updates.model = modelParam;
+    updates.year = "";
+    if (!bodyTypeParam) {
+      updates.bodyType = "";
+    }
   }
 
-  if (yearParam && previous.year !== yearParam) {
-    updates.year = yearParam;
+  if (modelParam && yearParam && previous.year) {
+    updates.year = "";
   }
 
   if (bodyTypeParam && !isSameToken(previous.bodyType, bodyTypeParam)) {
@@ -89,6 +96,11 @@ export const mergeStoredConfig = ({
   }
 
   if (urlParams.modelParam) {
+    delete updates.year;
+
+    const storedModelMatchesUrl =
+      stored.model && isSameToken(stored.model, urlParams.modelParam);
+
     if (
       !previous.model ||
       !isSameToken(previous.model, urlParams.modelParam)
@@ -96,6 +108,10 @@ export const mergeStoredConfig = ({
       updates.model = urlParams.modelParam;
     } else {
       delete updates.model;
+    }
+
+    if (!storedModelMatchesUrl && !urlParams.bodyTypeParam) {
+      delete updates.bodyType;
     }
   }
 

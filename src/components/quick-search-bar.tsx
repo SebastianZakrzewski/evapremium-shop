@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { Search, X, ChevronDown, Loader2 } from "lucide-react";
 import { useBrands } from "@/features/brands/hooks/useBrands";
 import { useConfiguratorCarData } from "@/features/car-configurator";
+import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/buildConfiguratorEntryUrl";
+import { enrichCarContextFromModel } from "@/features/car-configurator/utils/enrichCarContextFromModel";
 import { normalizeBrandName } from "@/shared/brands";
 
 export default function QuickSearchBar() {
@@ -18,7 +20,13 @@ export default function QuickSearchBar() {
     ? (normalizeBrandName(selectedBrand.toLowerCase().trim()) ?? selectedBrand)
     : "";
 
-  const { models: apiModels, isLoading: modelsLoading } = useConfiguratorCarData({
+  const {
+    models: apiModels,
+    isLoading: modelsLoading,
+    getYearsForModel,
+    getBodyTypesForYear,
+    findGenerationByYear,
+  } = useConfiguratorCarData({
     brandApiName,
     enabled: !!brandApiName,
   });
@@ -35,15 +43,26 @@ export default function QuickSearchBar() {
 
   const handleSearch = () => {
     if (!selectedBrand) return;
-    
-    const params = new URLSearchParams();
-    params.set('brand', selectedBrand.toLowerCase());
-    
-    if (selectedModel) {
-      params.set('model', selectedModel);
+
+    if (!selectedModel) {
+      router.push(buildConfiguratorEntryUrl({ brand: selectedBrand }));
+      return;
     }
-    
-    router.push(`/konfigurator?${params.toString()}`);
+
+    const enrichment = enrichCarContextFromModel(selectedModel, {
+      getYearsForModel,
+      getBodyTypesForYear,
+      findGenerationByYear,
+    });
+
+    router.push(
+      buildConfiguratorEntryUrl({
+        brand: selectedBrand,
+        model: selectedModel,
+        generation: enrichment.generation,
+        bodyType: enrichment.bodyType,
+      })
+    );
   };
 
   const handleClearFilters = () => {

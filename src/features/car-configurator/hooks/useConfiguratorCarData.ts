@@ -7,6 +7,7 @@
 import { useMemo } from 'react';
 import { useCarModels } from '@/features/brands/hooks/useCarModels';
 import type { CarModelApiResponse, CarGenerationApiResponse } from '@/lib/types/api';
+import { getYearsFromGenerations } from '../utils/generationYears';
 
 export interface UseConfiguratorCarDataParams {
   brandApiName: string;
@@ -18,6 +19,8 @@ export interface UseConfiguratorCarDataReturn {
   models: string[];
   /** Pobierz dostępne lata dla modelu */
   getYearsForModel: (modelName: string) => number[];
+  /** Pobierz lata dla konkretnej generacji (lub wszystkie, gdy brak etykiety) */
+  getYearsForGeneration: (modelName: string, generationLabel?: string | null) => number[];
   /** Pobierz wszystkie typy nadwozia dla modelu */
   getBodyTypesForModel: (modelName: string) => string[];
   /** Pobierz typy nadwozia dla konkretnego rocznika */
@@ -82,6 +85,19 @@ export function useConfiguratorCarData(
       const model = findModelByName(modelName);
       return model?.years ?? [];
     },
+    [findModelByName]
+  );
+
+  const getYearsForGeneration = useMemo(
+    () =>
+      (modelName: string, generationLabel?: string | null): number[] => {
+        const model = findModelByName(modelName);
+        if (!model?.generations) return [];
+        return getYearsFromGenerations(
+          model.generations as CarGenerationApiResponse[],
+          generationLabel
+        );
+      },
     [findModelByName]
   );
 
@@ -151,6 +167,7 @@ export function useConfiguratorCarData(
   return {
     models,
     getYearsForModel,
+    getYearsForGeneration,
     getBodyTypesForModel,
     getBodyTypesForYear,
     findGenerationByYear,

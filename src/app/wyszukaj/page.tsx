@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { brandNameToNavigationSlug } from "@/shared/brands/brandParam";
+import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/buildConfiguratorEntryUrl";
 import { formatPricePln } from "@/lib/utils/formatPrice";
 
 interface SearchBrand {
@@ -222,7 +223,10 @@ function SearchPageContent() {
                   {results.models.map((model, index) => (
                     <Link
                       key={`${model.brand}-${model.model}-${index}`}
-                      href={`/konfigurator?brand=${encodeURIComponent(model.brand.toLowerCase())}&model=${encodeURIComponent(model.model)}`}
+                      href={buildConfiguratorEntryUrl({
+                        brand: model.brand,
+                        model: model.model,
+                      })}
                       className="
                         group relative
                         bg-[#111]/80 backdrop-blur-xl
@@ -280,7 +284,12 @@ function SearchPageContent() {
                   {results.products.map((product) => (
                     <Link
                       key={product.id}
-                      href={`/konfigurator?brand=${encodeURIComponent(product.carBrandSlug)}&model=${encodeURIComponent(product.carModelSlug)}`}
+                      href={buildConfiguratorEntryUrl({
+                        brand: product.carBrandSlug,
+                        model: product.carModelSlug,
+                        generation: product.generation,
+                        bodyType: product.bodyType,
+                      })}
                       className="
                         group relative
                         bg-[#111]/80 backdrop-blur-xl

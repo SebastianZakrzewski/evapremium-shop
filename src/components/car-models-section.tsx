@@ -14,6 +14,7 @@ import { CarModel } from "../lib/types/car-model";
 import { BrandGridCard } from "./ui/BrandGridCard";
 import { fetchBrands, getFallbackBrands } from "@/lib/api/brands";
 import { fetchCarModels } from "@/lib/api/models";
+import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/buildConfiguratorEntryUrl";
 import {
   getBrandInfo,
   resolveBrandFromUrlParam,
@@ -617,8 +618,12 @@ export default function CarModelsSection() {
                 {/* Model Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {filteredModels.map((model) => {
-                    const yearParam = model.yearFrom ? `&year=${model.yearFrom}` : '';
-                    const configuratorUrl = `/konfigurator?brand=${encodeURIComponent(brandSlug)}&model=${encodeURIComponent(model.name.toLowerCase())}${yearParam}${model.generation ? `&generation=${encodeURIComponent(model.generation)}` : ""}${model.bodyType ? `&bodyType=${encodeURIComponent(model.bodyType)}` : ""}`;
+                    const configuratorUrl = buildConfiguratorEntryUrl({
+                      brand: brandSlug,
+                      model: model.name.toLowerCase(),
+                      generation: model.generation,
+                      bodyType: model.bodyType,
+                    });
                     const imageSrc = model.imageSrc || '/vercel.svg';
                     const brandLabel = brandDisplayName || model.brand || '';
 

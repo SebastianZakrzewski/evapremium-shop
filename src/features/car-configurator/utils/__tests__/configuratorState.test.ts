@@ -53,6 +53,49 @@ describe("getConfigUpdatesFromUrl", () => {
 
     expect(updates).toEqual({});
   });
+
+  it("clears year when URL model changes on locked entry", () => {
+    const previous: ConfiguratorState = {
+      ...baseConfig,
+      brand: "BMW",
+      model: "3 G20",
+      year: "2022",
+      bodyType: "sedan",
+    };
+
+    const updates = getConfigUpdatesFromUrl({
+      previous,
+      urlParams: { brandParam: "bmw", modelParam: "3 E-46" },
+      brands: [],
+    });
+
+    expect(updates).toMatchObject({
+      model: "3 E-46",
+      year: "",
+      bodyType: "",
+    });
+  });
+
+  it("ignores year param when model is in URL", () => {
+    const previous: ConfiguratorState = {
+      ...baseConfig,
+      brand: "BMW",
+      model: "3 G20",
+      year: "",
+    };
+
+    const updates = getConfigUpdatesFromUrl({
+      previous,
+      urlParams: {
+        brandParam: "bmw",
+        modelParam: "3 G20",
+        yearParam: "2020",
+      },
+      brands: [{ id: 1, name: "BMW", logo: "/bmw.png" }],
+    });
+
+    expect(updates.year).toBeUndefined();
+  });
 });
 
 describe("mergeStoredConfig", () => {
@@ -108,5 +151,56 @@ describe("mergeStoredConfig", () => {
 
     expect(merged.model).toBe("Ceed");
     expect(merged.bodyType).toBe("Hatchback");
+  });
+
+  it("does not restore year from localStorage on locked product entry", () => {
+    const previous: ConfiguratorState = {
+      ...baseConfig,
+      brand: "BMW",
+      model: "3 G20",
+      year: "",
+      bodyType: "sedan",
+    };
+
+    const merged = mergeStoredConfig({
+      previous,
+      stored: { ...baseConfig, year: "2020", bodyType: "kombi" },
+      urlParams: {
+        brandParam: "bmw",
+        modelParam: "3 G20",
+        bodyTypeParam: "sedan",
+      },
+    });
+
+    expect(merged.year).toBe("");
+    expect(merged.bodyType).toBe("sedan");
+  });
+
+  it("clears stale year and bodyType when URL model changes", () => {
+    const previous: ConfiguratorState = {
+      ...baseConfig,
+      brand: "BMW",
+      model: "3 E-46",
+      year: "",
+      bodyType: "",
+    };
+
+    const merged = mergeStoredConfig({
+      previous,
+      stored: {
+        ...baseConfig,
+        model: "3 G20",
+        year: "2020",
+        bodyType: "sedan",
+      },
+      urlParams: {
+        brandParam: "bmw",
+        modelParam: "3 E-46",
+      },
+    });
+
+    expect(merged.model).toBe("3 E-46");
+    expect(merged.year).toBe("");
+    expect(merged.bodyType).toBe("");
   });
 });

@@ -21,11 +21,13 @@ const getInitialConfig = (
   baseState: ConfiguratorState
 ): ConfiguratorState => {
   const urlParams = getUrlParams(searchParams);
+  const lockedEntry = !!(urlParams.brandParam && urlParams.modelParam);
+
   return {
     ...baseState,
     brand: urlParams.brandParam || baseState.brand,
     model: urlParams.modelParam || baseState.model,
-    year: urlParams.yearParam || baseState.year,
+    year: lockedEntry ? "" : urlParams.yearParam || baseState.year,
     bodyType: urlParams.bodyTypeParam || baseState.bodyType,
   };
 };

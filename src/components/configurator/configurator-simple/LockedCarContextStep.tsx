@@ -7,10 +7,7 @@ import { Car, CheckCircle2 } from "lucide-react"
 import { normalizeBrandName } from "@/shared/brands"
 import { useBrands } from "@/features/brands/hooks/useBrands"
 import { useConfiguratorCarData } from "@/features/car-configurator"
-import {
-  parseYearFromGeneration,
-  type ProductEntryLock,
-} from "@/features/car-configurator/utils/productEntryContext"
+import type { ProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 
 type LockedCarContextStepProps = {
   config: {
@@ -35,6 +32,9 @@ const mapBrandNameForApi = (brandName: string): string => {
   return normalized ?? brandName.charAt(0).toUpperCase() + brandName.slice(1)
 }
 
+const selectClassName =
+  "w-full px-4 py-3 min-h-[44px] bg-[#111] border border-white/10 rounded-lg text-white text-sm appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+
 export const LockedCarContextStep = ({
   config,
   productEntry,
@@ -47,8 +47,8 @@ export const LockedCarContextStep = ({
   const {
     models: apiModels,
     getYearsForModel,
+    getYearsForGeneration,
     getBodyTypesForYear,
-    findCarDetailsByGeneration,
     isLoading: modelsLoading,
   } = useConfiguratorCarData({
     brandApiName,
@@ -71,6 +71,32 @@ export const LockedCarContextStep = ({
     return found ?? config.model
   }, [config.model, apiModels])
 
+  const availableYears = useMemo(() => {
+    if (!normalizedModel) return []
+
+    if (productEntry.generationParam) {
+      const generationYears = getYearsForGeneration(
+        normalizedModel,
+        productEntry.generationParam
+      )
+      if (generationYears.length > 0) return generationYears
+    }
+
+    return getYearsForModel(normalizedModel)
+  }, [
+    normalizedModel,
+    productEntry.generationParam,
+    getYearsForGeneration,
+    getYearsForModel,
+  ])
+
+  const availableBodyTypes = useMemo(() => {
+    if (!normalizedModel || !config.year) return []
+    const year = parseInt(config.year, 10)
+    if (Number.isNaN(year)) return []
+    return getBodyTypesForYear(normalizedModel, year)
+  }, [normalizedModel, config.year, getBodyTypesForYear])
+
   const onUpdateRef = useRef(onUpdate)
   onUpdateRef.current = onUpdate
 
@@ -79,7 +105,6 @@ export const LockedCarContextStep = ({
 
     const updates: {
       model?: string
-      year?: string
       bodyType?: string
     } = {}
 
@@ -87,53 +112,25 @@ export const LockedCarContextStep = ({
       updates.model = normalizedModel
     }
 
-    let resolvedYear = productEntry.yearParam || config.year
-    let resolvedBodyType = productEntry.bodyTypeParam || config.bodyType
-
-    if (!resolvedYear && productEntry.generationParam) {
-      const fromApi = findCarDetailsByGeneration(
-        normalizedModel,
-        productEntry.generationParam
-      )
-      if (fromApi) {
-        resolvedYear = String(fromApi.year)
-        if (!resolvedBodyType && fromApi.bodyType) {
-          resolvedBodyType = fromApi.bodyType
-        }
-      } else {
-        const parsedYear = parseYearFromGeneration(productEntry.generationParam)
-        if (parsedYear) resolvedYear = String(parsedYear)
-      }
-    }
-
-    if (!resolvedYear) {
-      const years = getYearsForModel(normalizedModel)
-      if (years.length > 0) {
-        resolvedYear = String(years[0])
-      }
-    }
-
-    if (resolvedYear && !resolvedBodyType) {
-      const yearNum = parseInt(resolvedYear, 10)
+    if (config.year && !config.bodyType) {
+      const yearNum = parseInt(config.year, 10)
       if (!Number.isNaN(yearNum)) {
         const bodyTypes = getBodyTypesForYear(normalizedModel, yearNum)
-        if (bodyTypes.length === 1) {
-          resolvedBodyType = bodyTypes[0]
-        } else if (productEntry.bodyTypeParam) {
+        let resolvedBodyType = productEntry.bodyTypeParam || ""
+
+        if (resolvedBodyType) {
           const match = bodyTypes.find(
-            (bt) =>
-              bt.toLowerCase() === productEntry.bodyTypeParam?.toLowerCase()
+            (bt) => bt.toLowerCase() === resolvedBodyType.toLowerCase()
           )
-          if (match) resolvedBodyType = match
+          resolvedBodyType = match ?? ""
+        } else if (bodyTypes.length === 1) {
+          resolvedBodyType = bodyTypes[0]
+        }
+
+        if (resolvedBodyType) {
+          updates.bodyType = resolvedBodyType
         }
       }
-    }
-
-    if (resolvedYear && resolvedYear !== config.year) {
-      updates.year = resolvedYear
-    }
-    if (resolvedBodyType && resolvedBodyType !== config.bodyType) {
-      updates.bodyType = resolvedBodyType
     }
 
     if (Object.keys(updates).length > 0) {
@@ -141,16 +138,12 @@ export const LockedCarContextStep = ({
     }
   }, [
     productEntry.isLocked,
-    productEntry.yearParam,
     productEntry.bodyTypeParam,
-    productEntry.generationParam,
     modelsLoading,
     normalizedModel,
     config.model,
     config.year,
     config.bodyType,
-    findCarDetailsByGeneration,
-    getYearsForModel,
     getBodyTypesForYear,
   ])
 
@@ -161,13 +154,44 @@ export const LockedCarContextStep = ({
     config.bodyType
   )
 
+  const needsManualYear =
+    !modelsLoading && !!normalizedModel && !config.year && availableYears.length > 0
+
+  const needsManualBodyType =
+    !modelsLoading &&
+    !!config.year &&
+    !config.bodyType &&
+    availableBodyTypes.length > 0
+
   const generationLabel = productEntry.generationParam
+
+  const handleYearChange = (year: string) => {
+    onUpdate({ year, bodyType: "" })
+  }
+
+  const handleBodyTypeChange = (bodyType: string) => {
+    onUpdate({ bodyType })
+  }
+
+  const hintMessage = (() => {
+    if (modelsLoading) return null
+    if (needsManualYear) {
+      return generationLabel
+        ? `Wybierz rok produkcji z generacji ${generationLabel}`
+        : "Wybierz rok produkcji z listy dostępnych roczników"
+    }
+    if (needsManualBodyType) return "Wybierz typ nadwozia, aby kontynuować"
+    if (!isStepComplete && !normalizedModel) {
+      return "Nie znaleźliśmy tego modelu w bazie — wybierz inny model"
+    }
+    return null
+  })()
 
   return (
     <div className="space-y-5">
       <p className="text-sm text-gray-400 leading-relaxed">
-        Konfigurujesz dywaniki dla wybranego modelu z katalogu. Dane pojazdu są
-        ustawione automatycznie.
+        Konfigurujesz dywaniki dla wybranego modelu. Uzupełnij rok produkcji i typ
+        nadwozia, aby dopasować szablon.
       </p>
 
       <div className="bg-black/30 border border-white/10 rounded-xl p-4 space-y-3">
@@ -196,8 +220,10 @@ export const LockedCarContextStep = ({
         </div>
 
         <DetailRow label="Model" value={normalizedModel || config.model} />
-        {config.year && <DetailRow label="Rok produkcji" value={config.year} />}
-        {config.bodyType && (
+        {config.year && !needsManualYear && (
+          <DetailRow label="Rok produkcji" value={config.year} />
+        )}
+        {config.bodyType && !needsManualBodyType && (
           <DetailRow label="Typ nadwozia" value={config.bodyType} />
         )}
         {generationLabel && (
@@ -209,11 +235,69 @@ export const LockedCarContextStep = ({
         <p className="text-xs text-gray-400 text-center">Ładowanie danych auta…</p>
       )}
 
+      {needsManualYear && (
+        <div>
+          <label
+            htmlFor="locked-car-year"
+            className="block text-sm font-medium text-gray-400 mb-2"
+          >
+            Rok produkcji *
+          </label>
+          <div className="relative">
+            <select
+              id="locked-car-year"
+              value={config.year}
+              onChange={(e) => handleYearChange(e.target.value)}
+              className={selectClassName}
+              aria-label="Wybierz rok produkcji"
+            >
+              <option value="">Wybierz rok</option>
+              {availableYears.map((year) => (
+                <option key={year} value={String(year)}>
+                  {year}
+                </option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <span className="text-gray-400">▼</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {needsManualBodyType && (
+        <div>
+          <label
+            htmlFor="locked-car-body-type"
+            className="block text-sm font-medium text-gray-400 mb-2"
+          >
+            Typ nadwozia *
+          </label>
+          <div className="relative">
+            <select
+              id="locked-car-body-type"
+              value={config.bodyType}
+              onChange={(e) => handleBodyTypeChange(e.target.value)}
+              className={selectClassName}
+              aria-label="Wybierz typ nadwozia"
+            >
+              <option value="">Wybierz typ nadwozia</option>
+              {availableBodyTypes.map((bodyType) => (
+                <option key={bodyType} value={bodyType}>
+                  {bodyType}
+                </option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <span className="text-gray-400">▼</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col items-end gap-2 pt-2">
-        {!isStepComplete && !modelsLoading && (
-          <p className="text-xs text-gray-400 text-right">
-            Uzupełniamy dane pojazdu na podstawie wybranego produktu…
-          </p>
+        {hintMessage && (
+          <p className="text-xs text-gray-400 text-right">{hintMessage}</p>
         )}
         <Button
           onClick={onNext}
