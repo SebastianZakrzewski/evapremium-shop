@@ -92,7 +92,7 @@ describe('CookieConsentBanner', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Akceptuję pliki cookie i przechodzę dalej' }))
 
-    expect(submitConsentMock).toHaveBeenCalledTimes(1)
+    expect(submitCustomConsentMock).toHaveBeenCalledWith(true, true, true)
     expect(runScriptsMock).toHaveBeenCalledTimes(1)
 
     await waitFor(() => {

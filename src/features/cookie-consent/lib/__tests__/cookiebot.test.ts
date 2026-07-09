@@ -50,26 +50,30 @@ describe('acceptAllCookieConsent', () => {
     window.Cookiebot = createCookiebotMock()
   })
 
-  it('uses native dialog submitConsent for full allow-all when available', () => {
+  it('submits all optional categories through submitCustomConsent', () => {
     const onComplete = vi.fn()
 
     acceptAllCookieConsent(onComplete)
 
-    expect(submitConsentMock).toHaveBeenCalledTimes(1)
-    expect(submitCustomConsentMock).not.toHaveBeenCalled()
+    expect(submitCustomConsentMock).toHaveBeenCalledWith(true, true, true)
     expect(runScriptsMock).toHaveBeenCalledTimes(1)
+    expect(isFullCookieConsentGranted()).toBe(true)
     expect(onComplete).toHaveBeenCalledTimes(1)
   })
 
-  it('falls back to submitCustomConsent with all categories enabled', () => {
-    window.Cookiebot = {
-      ...createCookiebotMock(),
-      dialog: undefined,
-    }
+  it('waits for Cookiebot before submitting consent', async () => {
+    vi.useFakeTimers()
+    window.Cookiebot = undefined
 
     acceptAllCookieConsent()
 
+    expect(submitCustomConsentMock).not.toHaveBeenCalled()
+
+    window.Cookiebot = createCookiebotMock()
+    await vi.advanceTimersByTimeAsync(100)
+
     expect(submitCustomConsentMock).toHaveBeenCalledWith(true, true, true)
-    expect(isFullCookieConsentGranted()).toBe(true)
+
+    vi.useRealTimers()
   })
 })

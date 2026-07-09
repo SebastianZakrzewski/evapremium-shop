@@ -116,13 +116,6 @@ export const isFullCookieConsentGranted = (): boolean => {
 }
 
 const submitFullConsentToCookiebot = (cookiebot: CookiebotApi): boolean => {
-  if (cookiebot.dialog?.submitConsent) {
-    cookiebot.dialog.submitConsent()
-    cookiebot.runScripts?.()
-    suppressDefaultCookiebotUi()
-    return true
-  }
-
   cookiebot.submitCustomConsent(true, true, true)
   cookiebot.runScripts?.()
   suppressDefaultCookiebotUi()
