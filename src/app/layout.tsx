@@ -8,6 +8,7 @@ import { SessionProvider } from "@/lib/contexts/session-context";
 import { TrackingProvider } from "@/components/tracking-provider";
 import { QueryProvider } from "@/lib/providers/query-provider";
 import Chatbot from "@/features/chatbot/components/Chatbot";
+import { CookieConsentBanner } from "@/features/cookie-consent";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -208,6 +209,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <Navbar />
               <div className="pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden">{children}</div>
               <Footer />
+              <CookieConsentBanner />
               <Chatbot />
             </TrackingProvider>
           </SessionProvider>

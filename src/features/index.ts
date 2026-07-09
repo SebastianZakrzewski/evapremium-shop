@@ -4,6 +4,9 @@
 // Marketing feature
 export * from './marketing';
 
+// Cookie consent feature
+export * from './cookie-consent';
+
 // Car Configurator feature
 export * from './car-configurator';
 
