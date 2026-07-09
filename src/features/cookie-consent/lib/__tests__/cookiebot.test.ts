@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   acceptAllCookieConsent,
+  hasOptionalConsentGranted,
   isFullCookieConsentGranted,
+  shouldShowCustomBanner,
 } from '../cookiebot'
 
 const submitCustomConsentMock = vi.fn()
@@ -75,5 +77,53 @@ describe('acceptAllCookieConsent', () => {
     expect(submitCustomConsentMock).toHaveBeenCalledWith(true, true, true)
 
     vi.useRealTimers()
+  })
+})
+
+describe('shouldShowCustomBanner', () => {
+  beforeEach(() => {
+    document.cookie = 'CookieConsent=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'
+    window.Cookiebot = createCookiebotMock()
+  })
+
+  it('returns true when user has not granted optional consent', () => {
+    expect(shouldShowCustomBanner()).toBe(true)
+  })
+
+  it('returns true after consent withdrawal when only necessary cookies remain', () => {
+    window.Cookiebot = {
+      ...createCookiebotMock(),
+      hasResponse: true,
+      declined: true,
+      consent: {
+        necessary: true,
+        preferences: false,
+        statistics: false,
+        marketing: false,
+        method: 'explicit',
+      },
+    }
+    document.cookie =
+      "CookieConsent={stamp:'x',necessary:true,preferences:false,statistics:false,marketing:false,method:'explicit'}"
+
+    expect(hasOptionalConsentGranted()).toBe(false)
+    expect(shouldShowCustomBanner()).toBe(true)
+  })
+
+  it('returns false when optional consent is active until lifecycle expiry', () => {
+    window.Cookiebot = {
+      ...createCookiebotMock(),
+      hasResponse: true,
+      consented: true,
+      consent: {
+        necessary: true,
+        preferences: true,
+        statistics: true,
+        marketing: true,
+        method: 'explicit',
+      },
+    }
+
+    expect(shouldShowCustomBanner()).toBe(false)
   })
 })

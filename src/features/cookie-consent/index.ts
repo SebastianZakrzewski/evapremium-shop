@@ -4,10 +4,13 @@ export {
   acceptAllCookieConsent,
   closeCookiebotPreferencesPanel,
   getCookiebot,
+  getConsentCookieValue,
+  hasOptionalConsentGranted,
   hasStoredCookieConsent,
   hideCookiebotWidget,
   hideDefaultCookiebotDialog,
   isFullCookieConsentGranted,
   openCookiebotPreferences,
+  shouldShowCustomBanner,
   suppressDefaultCookiebotUi,
 } from './lib/cookiebot'

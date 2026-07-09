@@ -70,17 +70,40 @@ describe('CookieConsentBanner', () => {
     expect(hideMock).toHaveBeenCalled()
   })
 
-  it('does not render when Cookiebot already has a stored response', () => {
+  it('does not render when user has active optional consent', () => {
     window.Cookiebot = createCookiebotMock(true)
-    document.cookie = 'CookieConsent={necessary:true}'
+    document.cookie =
+      "CookieConsent={stamp:'x',necessary:true,preferences:true,statistics:true,marketing:true,method:'explicit'}"
 
     render(<CookieConsentBanner />)
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
-  it('does not render when CookieConsent cookie already exists', () => {
-    document.cookie = 'CookieConsent={necessary:true,preferences:true}'
+  it('renders again when consent was withdrawn or declined', () => {
+    window.Cookiebot = {
+      ...createCookiebotMock(false),
+      hasResponse: true,
+      declined: true,
+      consent: {
+        necessary: true,
+        preferences: false,
+        statistics: false,
+        marketing: false,
+        method: 'explicit',
+      },
+    }
+    document.cookie =
+      "CookieConsent={stamp:'x',necessary:true,preferences:false,statistics:false,marketing:false,method:'explicit'}"
+
+    render(<CookieConsentBanner />)
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('does not render when CookieConsent cookie includes optional consent', () => {
+    document.cookie =
+      "CookieConsent={stamp:'x',necessary:true,preferences:true,statistics:false,marketing:false,method:'explicit'}"
 
     render(<CookieConsentBanner />)
 

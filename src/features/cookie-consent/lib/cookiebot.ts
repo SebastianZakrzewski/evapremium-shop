@@ -81,6 +81,57 @@ export const suppressDefaultCookiebotUi = (): void => {
   hideCookiebotWidget()
 }
 
+export const getConsentCookieValue = (): string | null => {
+  if (typeof document === 'undefined') {
+    return null
+  }
+
+  const consentCookie = document.cookie
+    .split(';')
+    .find((cookie) => cookie.trim().startsWith(`${COOKIEBOT_CONSENT_COOKIE}=`))
+
+  if (!consentCookie) {
+    return null
+  }
+
+  return decodeURIComponent(consentCookie.split('=').slice(1).join('='))
+}
+
+export const hasOptionalConsentGranted = (): boolean => {
+  const value = getConsentCookieValue()
+
+  if (value) {
+    const hasOptionalFromCookie =
+      value.includes('preferences:true') ||
+      value.includes('statistics:true') ||
+      value.includes('marketing:true')
+
+    if (hasOptionalFromCookie) {
+      return true
+    }
+  }
+
+  const cookiebot = getCookiebot()
+
+  if (cookiebot?.consent) {
+    return (
+      cookiebot.consent.preferences ||
+      cookiebot.consent.statistics ||
+      cookiebot.consent.marketing
+    )
+  }
+
+  return false
+}
+
+/**
+ * Banner widoczny gdy:
+ * - brak aktywnej zgody opcjonalnej (pierwsza wizyta, odmowa, wycofanie)
+ * Ukryty gdy użytkownik zaakceptował jakąkolwiek kategorię opcjonalną,
+ * do momentu wygaśnięcia cookie Cookiebot (lifecycle).
+ */
+export const shouldShowCustomBanner = (): boolean => !hasOptionalConsentGranted()
+
 export const isFullCookieConsentGranted = (): boolean => {
   const cookiebot = getCookiebot()
 
@@ -93,19 +144,11 @@ export const isFullCookieConsentGranted = (): boolean => {
     )
   }
 
-  if (!hasStoredCookieConsent()) {
+  const value = getConsentCookieValue()
+
+  if (!value) {
     return false
   }
-
-  const consentCookie = document.cookie
-    .split(';')
-    .find((cookie) => cookie.trim().startsWith(`${COOKIEBOT_CONSENT_COOKIE}=`))
-
-  if (!consentCookie) {
-    return false
-  }
-
-  const value = decodeURIComponent(consentCookie.split('=').slice(1).join('='))
 
   return (
     value.includes('necessary:true') &&

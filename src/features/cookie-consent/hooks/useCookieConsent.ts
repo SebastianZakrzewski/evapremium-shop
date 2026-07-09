@@ -5,8 +5,8 @@ import {
   acceptAllCookieConsent,
   closeCookiebotPreferencesPanel,
   getCookiebot,
-  hasStoredCookieConsent,
   openCookiebotPreferences,
+  shouldShowCustomBanner,
   suppressDefaultCookiebotUi,
 } from '../lib/cookiebot'
 
@@ -14,20 +14,6 @@ type UseCookieConsentReturn = {
   isBannerVisible: boolean
   handleAcceptAll: () => void
   handleManagePreferences: () => void
-}
-
-const shouldShowCustomBanner = (): boolean => {
-  if (hasStoredCookieConsent()) {
-    return false
-  }
-
-  const cookiebot = getCookiebot()
-
-  if (cookiebot?.hasResponse) {
-    return false
-  }
-
-  return true
 }
 
 export const useCookieConsent = (): UseCookieConsentReturn => {
@@ -55,8 +41,8 @@ export const useCookieConsent = (): UseCookieConsentReturn => {
   const handleConsentSettled = useCallback(() => {
     isManagingPreferencesRef.current = false
     closeCookiebotPreferencesPanel()
-    setIsBannerVisible(false)
-  }, [])
+    syncBannerVisibility()
+  }, [syncBannerVisibility])
 
   const handleDialogInit = useCallback(() => {
     if (isManagingPreferencesRef.current) {
