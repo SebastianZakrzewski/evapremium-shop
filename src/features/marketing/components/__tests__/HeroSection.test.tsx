@@ -40,7 +40,7 @@ describe("HeroSection", () => {
 
     const srcs = promotionImages.map((img) => img.getAttribute("src"))
 
-    expect(srcs).toContain("/hero_4.png")
+    expect(srcs).toContain("/hero_letnia_promocja_1234x413.png")
     expect(srcs).toContain("/hero4_mobile.png")
   })
 

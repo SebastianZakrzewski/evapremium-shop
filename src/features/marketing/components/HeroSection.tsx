@@ -142,7 +142,7 @@ export default function HeroSection() {
 
   const heroCarouselFrameClass = heroSlides.some((s) => s.imageMobile)
     ? HERO_PROMO_ASPECT_CLASS
-    : "aspect-[1024/413]"
+    : "aspect-[1234/413]"
 
   return (
     <section
@@ -168,7 +168,7 @@ export default function HeroSection() {
       <div className="container relative mx-auto px-2 py-6 sm:px-4 sm:py-8 md:py-8">
         <div
           className={cn(
-            "relative mx-auto w-full max-w-[1024px] overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 sm:rounded-2xl md:rounded-3xl",
+            "relative mx-auto w-full max-w-[1234px] overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 sm:rounded-2xl md:rounded-3xl",
             heroCarouselFrameClass
           )}
         >

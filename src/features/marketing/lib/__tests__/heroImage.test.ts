@@ -16,11 +16,11 @@ describe('heroPromoImageProps', () => {
   })
 
   it('matches native banner dimensions', () => {
-    expect(HERO_PROMO_IMAGE_SRC).toBe('/hero_4.png')
+    expect(HERO_PROMO_IMAGE_SRC).toBe('/hero_letnia_promocja_1234x413.png')
     expect(HERO_PROMO_MOBILE_IMAGE_SRC).toBe('/hero4_mobile.png')
-    expect(HERO_PROMO_NATIVE_WIDTH).toBe(1024)
+    expect(HERO_PROMO_NATIVE_WIDTH).toBe(1234)
     expect(HERO_PROMO_NATIVE_HEIGHT).toBe(413)
-    expect(HERO_PROMO_DISPLAY_MAX_WIDTH).toBe(1024)
-    expect(HERO_PROMO_IMAGE_SIZES).toContain('1024px')
+    expect(HERO_PROMO_DISPLAY_MAX_WIDTH).toBe(1234)
+    expect(HERO_PROMO_IMAGE_SIZES).toContain('1234px')
   })
 })

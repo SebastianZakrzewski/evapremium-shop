@@ -129,6 +129,15 @@ export default function RootLayout({
   return (
     <html lang="pl">
       <head>
+        {/* Cookiebot — musi być pierwszym skryptem w <head> */}
+        <script
+          id="Cookiebot"
+          src="https://consent.cookiebot.com/uc.js"
+          data-cbid="646107cd-5e5a-41eb-af5f-80b502582c41"
+          data-blockingmode="auto"
+          type="text/javascript"
+        />
+
         {/* Google Tag Manager */}
         <script
           dangerouslySetInnerHTML={{
