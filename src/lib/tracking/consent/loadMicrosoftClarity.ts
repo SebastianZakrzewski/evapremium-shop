@@ -2,9 +2,11 @@ const CLARITY_PROJECT_ID = 'ubkouhtkbb'
 
 let clarityLoaded = false
 
+type ClarityStub = ((...args: unknown[]) => void) & { q?: unknown[][] }
+
 declare global {
   interface Window {
-    clarity?: ((...args: unknown[]) => void) & { q?: unknown[][] }
+    clarity?: ClarityStub
   }
 }
 
@@ -20,11 +22,11 @@ export const loadMicrosoftClarity = (
     return
   }
 
-  const clarityFn = function (...args: unknown[]) {
+  const clarityFn: ClarityStub = (...args: unknown[]) => {
     const queue = clarityFn.q ?? []
     queue.push(args)
     clarityFn.q = queue
-  } as Window['clarity']
+  }
 
   window.clarity = clarityFn
 
