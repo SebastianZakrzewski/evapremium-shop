@@ -1,3 +1,9 @@
+export type CookieConsentCategory =
+  | 'necessary'
+  | 'preferences'
+  | 'statistics'
+  | 'marketing'
+
 export type CookiebotConsent = {
   necessary: boolean
   preferences: boolean
@@ -95,6 +101,29 @@ export const getConsentCookieValue = (): string | null => {
   }
 
   return decodeURIComponent(consentCookie.split('=').slice(1).join('='))
+}
+
+const hasConsentCategoryInCookie = (
+  value: string,
+  category: CookieConsentCategory
+): boolean => value.includes(`${category}:true`)
+
+export const hasConsentForCategory = (
+  category: CookieConsentCategory
+): boolean => {
+  const cookiebot = getCookiebot()
+
+  if (cookiebot?.consent) {
+    return cookiebot.consent[category]
+  }
+
+  const value = getConsentCookieValue()
+
+  if (!value) {
+    return false
+  }
+
+  return hasConsentCategoryInCookie(value, category)
 }
 
 export const hasOptionalConsentGranted = (): boolean => {

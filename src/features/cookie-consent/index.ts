@@ -5,6 +5,7 @@ export {
   closeCookiebotPreferencesPanel,
   getCookiebot,
   getConsentCookieValue,
+  hasConsentForCategory,
   hasOptionalConsentGranted,
   hasStoredCookieConsent,
   hideCookiebotWidget,
@@ -14,3 +15,4 @@ export {
   shouldShowCustomBanner,
   suppressDefaultCookiebotUi,
 } from './lib/cookiebot'
+export type { CookieConsentCategory } from './lib/cookiebot'

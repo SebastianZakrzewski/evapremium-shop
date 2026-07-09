@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   acceptAllCookieConsent,
+  hasConsentForCategory,
   hasOptionalConsentGranted,
   isFullCookieConsentGranted,
   shouldShowCustomBanner,
@@ -77,6 +78,44 @@ describe('acceptAllCookieConsent', () => {
     expect(submitCustomConsentMock).toHaveBeenCalledWith(true, true, true)
 
     vi.useRealTimers()
+  })
+})
+
+describe('hasConsentForCategory', () => {
+  beforeEach(() => {
+    document.cookie = 'CookieConsent=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'
+    window.Cookiebot = createCookiebotMock()
+  })
+
+  it('returns false for marketing before user grants consent', () => {
+    expect(hasConsentForCategory('marketing')).toBe(false)
+    expect(hasConsentForCategory('statistics')).toBe(false)
+  })
+
+  it('returns true only for granted categories', () => {
+    window.Cookiebot = {
+      ...createCookiebotMock(),
+      hasResponse: true,
+      consent: {
+        necessary: true,
+        preferences: false,
+        statistics: true,
+        marketing: false,
+        method: 'explicit',
+      },
+    }
+
+    expect(hasConsentForCategory('statistics')).toBe(true)
+    expect(hasConsentForCategory('marketing')).toBe(false)
+  })
+
+  it('reads consent categories from CookieConsent cookie fallback', () => {
+    window.Cookiebot = undefined
+    document.cookie =
+      "CookieConsent={stamp:'x',necessary:true,preferences:false,statistics:false,marketing:true,method:'explicit'}"
+
+    expect(hasConsentForCategory('marketing')).toBe(true)
+    expect(hasConsentForCategory('statistics')).toBe(false)
   })
 })
 

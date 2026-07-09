@@ -197,8 +197,10 @@ export default function RootLayout({
           }}
         />
 
-        {/* Google Tag Manager */}
+        {/* Google Tag Manager — blokowany przez Cookiebot do czasu zgody marketingowej */}
         <script
+          type="text/plain"
+          data-cookieconsent="marketing"
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -208,29 +210,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
         {/* End Google Tag Manager */}
-
-        {/* Microsoft Clarity */}
-        <Script id="microsoft-clarity" strategy="afterInteractive">
-          {`
-            (function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "ubkouhtkbb");
-          `}
-        </Script>
-        
-        {/* Facebook Pixel Noscript - dla użytkowników z wyłączonym JavaScript */}
-        <noscript>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img 
-            height="1" 
-            width="1" 
-            style={{ display: 'none' }}
-            src={`https://www.facebook.com/tr?id=${process.env.NEXT_PUBLIC_FB_PIXEL_ID || ''}&ev=PageView&noscript=1`}
-            alt=""
-          />
-        </noscript>
         
         {/* Schema.org */}
         <Script
@@ -249,18 +228,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         />
       </head>
       <body className={`${montserrat.variable} bg-black min-h-screen`}>
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-TD2WDGKV"
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-            title="Google Tag Manager"
-          />
-        </noscript>
-        {/* End Google Tag Manager (noscript) */}
-
         <CookieConsentBanner />
 
         <QueryProvider>

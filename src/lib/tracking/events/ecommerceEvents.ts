@@ -5,6 +5,7 @@
 
 import { FacebookPixelProvider } from '../providers/FacebookPixelProvider';
 import { getTrackingConfigInstance } from '@/lib/config/tracking';
+import { isMarketingTrackingAllowed } from '../consent/isMarketingTrackingAllowed';
 import type {
   PageViewData,
   ViewContentData,
@@ -25,10 +26,18 @@ import type { OrderItem } from '@/lib/types/order-new';
  */
 let providerInstance: FacebookPixelProvider | null = null;
 
+export const resetTrackingProviderForTests = (): void => {
+  providerInstance = null;
+};
+
 /**
  * Pobranie lub utworzenie instance providera
  */
-function getProvider(): FacebookPixelProvider {
+function getProvider(): FacebookPixelProvider | null {
+  if (!isMarketingTrackingAllowed()) {
+    return null;
+  }
+
   if (!providerInstance) {
     const config = getTrackingConfigInstance();
     providerInstance = new FacebookPixelProvider();
@@ -92,6 +101,9 @@ function orderItemToContentItem(item: OrderItem): ContentItem {
 export function trackPageView(data: PageViewData): void {
   try {
     const provider = getProvider();
+    if (!provider) {
+      return;
+    }
     provider.pageView(data);
   } catch (error) {
     console.error('[Tracking] Error tracking PageView:', error);
@@ -104,6 +116,9 @@ export function trackPageView(data: PageViewData): void {
 export function trackViewContent(data: ViewContentData): void {
   try {
     const provider = getProvider();
+    if (!provider) {
+      return;
+    }
     provider.track('ViewContent', data);
   } catch (error) {
     console.error('[Tracking] Error tracking ViewContent:', error);
@@ -116,6 +131,9 @@ export function trackViewContent(data: ViewContentData): void {
 export function trackAddToCart(data: AddToCartData): void {
   try {
     const provider = getProvider();
+    if (!provider) {
+      return;
+    }
     provider.track('AddToCart', data);
   } catch (error) {
     console.error('[Tracking] Error tracking AddToCart:', error);
@@ -128,6 +146,9 @@ export function trackAddToCart(data: AddToCartData): void {
 export function trackRemoveFromCart(data: AddToCartData): void {
   try {
     const provider = getProvider();
+    if (!provider) {
+      return;
+    }
     provider.track('RemoveFromCart', data);
   } catch (error) {
     console.error('[Tracking] Error tracking RemoveFromCart:', error);
@@ -140,6 +161,9 @@ export function trackRemoveFromCart(data: AddToCartData): void {
 export function trackInitiateCheckout(data: InitiateCheckoutData): void {
   try {
     const provider = getProvider();
+    if (!provider) {
+      return;
+    }
     provider.track('InitiateCheckout', data);
   } catch (error) {
     console.error('[Tracking] Error tracking InitiateCheckout:', error);
@@ -152,6 +176,9 @@ export function trackInitiateCheckout(data: InitiateCheckoutData): void {
 export function trackAddPaymentInfo(data: AddPaymentInfoData): void {
   try {
     const provider = getProvider();
+    if (!provider) {
+      return;
+    }
     provider.track('AddPaymentInfo', data);
   } catch (error) {
     console.error('[Tracking] Error tracking AddPaymentInfo:', error);
@@ -164,6 +191,9 @@ export function trackAddPaymentInfo(data: AddPaymentInfoData): void {
 export function trackPurchase(data: PurchaseData): void {
   try {
     const provider = getProvider();
+    if (!provider) {
+      return;
+    }
     provider.track('Purchase', data);
   } catch (error) {
     console.error('[Tracking] Error tracking Purchase:', error);
@@ -176,6 +206,9 @@ export function trackPurchase(data: PurchaseData): void {
 export function trackSearch(data: SearchData): void {
   try {
     const provider = getProvider();
+    if (!provider) {
+      return;
+    }
     provider.track('Search', data);
   } catch (error) {
     console.error('[Tracking] Error tracking Search:', error);
@@ -188,6 +221,9 @@ export function trackSearch(data: SearchData): void {
 export function trackLead(data: LeadData): void {
   try {
     const provider = getProvider();
+    if (!provider) {
+      return;
+    }
     provider.track('Lead', data);
   } catch (error) {
     console.error('[Tracking] Error tracking Lead:', error);

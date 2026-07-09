@@ -16,6 +16,7 @@ export interface SessionData {
 
 export class HybridSessionManager {
   private static readonly SESSION_COOKIE_NAME = 'eva-session-id';
+  private static readonly SESSION_STORAGE_KEY = 'eva-session-id';
   private static readonly SESSION_EXPIRY_DAYS = 7;
   private static readonly REDIS_TTL = 3600; // 1 godzina
   private static readonly DB_TTL = 30 * 24 * 3600; // 30 dni
@@ -25,18 +26,50 @@ export class HybridSessionManager {
    */
   static getSessionId(): string {
     if (typeof window !== 'undefined') {
-      let sessionId = getCookie(this.SESSION_COOKIE_NAME) as string;
-      
-      if (!sessionId) {
-        sessionId = this.generateSessionId();
-        this.setSessionCookie(sessionId);
-        console.log('🆔 Nowa sesja utworzona:', sessionId);
+      const cookieSessionId = getCookie(this.SESSION_COOKIE_NAME) as string | undefined;
+
+      if (cookieSessionId) {
+        return cookieSessionId;
       }
-      
+
+      const storageSessionId = sessionStorage.getItem(this.SESSION_STORAGE_KEY);
+
+      if (storageSessionId) {
+        return storageSessionId;
+      }
+
+      const sessionId = this.generateSessionId();
+      sessionStorage.setItem(this.SESSION_STORAGE_KEY, sessionId);
+      console.log('🆔 Nowa sesja utworzona (sessionStorage):', sessionId);
+
       return sessionId;
     }
     
     return `temp-session-${Date.now()}`;
+  }
+
+  /**
+   * Zapisuje ID sesji w cookie po interakcji z koszykiem lub wyrażeniu zgody.
+   */
+  static persistSessionCookie(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const existingCookie = getCookie(this.SESSION_COOKIE_NAME) as string | undefined;
+
+    if (existingCookie) {
+      return;
+    }
+
+    const sessionId = sessionStorage.getItem(this.SESSION_STORAGE_KEY);
+
+    if (!sessionId) {
+      return;
+    }
+
+    this.setSessionCookie(sessionId);
+    console.log('🍪 Sesja zapisana w cookie:', sessionId);
   }
 
   /**
@@ -76,6 +109,7 @@ export class HybridSessionManager {
    */
   static saveConfigData(sessionId: string, configData: any): void {
     if (typeof window !== 'undefined' && this.isValidSession(sessionId)) {
+      this.persistSessionCookie();
       const data = {
         ...configData,
         lastUpdated: new Date().toISOString()
@@ -104,6 +138,7 @@ export class HybridSessionManager {
    */
   static saveOrderData(sessionId: string, orderData: any): void {
     if (typeof window !== 'undefined' && this.isValidSession(sessionId)) {
+      this.persistSessionCookie();
       const data = {
         ...orderData,
         lastUpdated: new Date().toISOString()
@@ -289,6 +324,7 @@ export class HybridSessionManager {
       // Usuń z localStorage
       localStorage.removeItem(`config-${sessionId}`);
       localStorage.removeItem(`order-${sessionId}`);
+      sessionStorage.removeItem(this.SESSION_STORAGE_KEY);
       
       // Usuń cookie
       deleteCookie(this.SESSION_COOKIE_NAME);

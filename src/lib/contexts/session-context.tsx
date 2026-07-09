@@ -98,6 +98,22 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     }
   }, [userPreferences, sessionId, isSessionValid]);
 
+  useEffect(() => {
+    const handleConsentChange = () => {
+      HybridSessionManager.persistSessionCookie();
+    };
+
+    window.addEventListener('CookiebotOnAccept', handleConsentChange);
+    window.addEventListener('CookiebotOnDecline', handleConsentChange);
+    window.addEventListener('CookiebotOnConsentReady', handleConsentChange);
+
+    return () => {
+      window.removeEventListener('CookiebotOnAccept', handleConsentChange);
+      window.removeEventListener('CookiebotOnDecline', handleConsentChange);
+      window.removeEventListener('CookiebotOnConsentReady', handleConsentChange);
+    };
+  }, []);
+
   // Funkcje do zarządzania koszykiem
   const addToCart = (item: CartItem) => {
     setCartItems(prev => {
