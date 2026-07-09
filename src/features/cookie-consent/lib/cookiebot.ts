@@ -27,6 +27,8 @@ declare global {
   }
 }
 
+export const COOKIEBOT_CONSENT_COOKIE = 'CookieConsent'
+
 export const getCookiebot = (): CookiebotApi | undefined => {
   if (typeof window === 'undefined') {
     return undefined
@@ -35,8 +37,43 @@ export const getCookiebot = (): CookiebotApi | undefined => {
   return window.Cookiebot
 }
 
+export const hasStoredCookieConsent = (): boolean => {
+  if (typeof document === 'undefined') {
+    return false
+  }
+
+  return document.cookie
+    .split(';')
+    .some((cookie) => cookie.trim().startsWith(`${COOKIEBOT_CONSENT_COOKIE}=`))
+}
+
 export const hideDefaultCookiebotDialog = (): void => {
   getCookiebot()?.hide()
+}
+
+export const hideCookiebotWidget = (): void => {
+  if (typeof document === 'undefined') {
+    return
+  }
+
+  const widget = document.getElementById('CookiebotWidget')
+
+  if (widget) {
+    widget.style.setProperty('display', 'none', 'important')
+  }
+}
+
+export const suppressDefaultCookiebotUi = (): void => {
+  if (typeof document === 'undefined') {
+    return
+  }
+
+  if (document.body?.getAttribute('data-cookiebot-preferences') === 'open') {
+    return
+  }
+
+  hideDefaultCookiebotDialog()
+  hideCookiebotWidget()
 }
 
 export const acceptAllCookieConsent = (): void => {
@@ -44,5 +81,17 @@ export const acceptAllCookieConsent = (): void => {
 }
 
 export const openCookiebotPreferences = (): void => {
+  if (typeof document !== 'undefined') {
+    document.body.setAttribute('data-cookiebot-preferences', 'open')
+  }
+
   getCookiebot()?.renew()
+}
+
+export const closeCookiebotPreferencesPanel = (): void => {
+  if (typeof document !== 'undefined') {
+    document.body.removeAttribute('data-cookiebot-preferences')
+  }
+
+  suppressDefaultCookiebotUi()
 }

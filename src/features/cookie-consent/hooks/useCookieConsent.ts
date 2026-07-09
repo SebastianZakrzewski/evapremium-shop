@@ -3,9 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   acceptAllCookieConsent,
+  closeCookiebotPreferencesPanel,
   getCookiebot,
-  hideDefaultCookiebotDialog,
+  hasStoredCookieConsent,
   openCookiebotPreferences,
+  suppressDefaultCookiebotUi,
 } from '../lib/cookiebot'
 
 type UseCookieConsentReturn = {
@@ -14,20 +16,31 @@ type UseCookieConsentReturn = {
   handleManagePreferences: () => void
 }
 
+const shouldShowCustomBanner = (): boolean => {
+  if (hasStoredCookieConsent()) {
+    return false
+  }
+
+  const cookiebot = getCookiebot()
+
+  if (cookiebot?.hasResponse) {
+    return false
+  }
+
+  return true
+}
+
 export const useCookieConsent = (): UseCookieConsentReturn => {
   const [isBannerVisible, setIsBannerVisible] = useState(false)
   const isManagingPreferencesRef = useRef(false)
 
   const syncBannerVisibility = useCallback(() => {
-    const cookiebot = getCookiebot()
+    suppressDefaultCookiebotUi()
 
-    if (!cookiebot) {
-      return
-    }
-
-    if (cookiebot.hasResponse) {
+    if (!shouldShowCustomBanner()) {
       setIsBannerVisible(false)
       isManagingPreferencesRef.current = false
+      closeCookiebotPreferencesPanel()
       return
     }
 
@@ -36,12 +49,12 @@ export const useCookieConsent = (): UseCookieConsentReturn => {
       return
     }
 
-    hideDefaultCookiebotDialog()
     setIsBannerVisible(true)
   }, [])
 
   const handleConsentSettled = useCallback(() => {
     isManagingPreferencesRef.current = false
+    closeCookiebotPreferencesPanel()
     setIsBannerVisible(false)
   }, [])
 
@@ -50,21 +63,37 @@ export const useCookieConsent = (): UseCookieConsentReturn => {
       return
     }
 
-    hideDefaultCookiebotDialog()
+    suppressDefaultCookiebotUi()
     syncBannerVisibility()
   }, [syncBannerVisibility])
 
   useEffect(() => {
+    if (shouldShowCustomBanner()) {
+      setIsBannerVisible(true)
+    }
+
+    suppressDefaultCookiebotUi()
     syncBannerVisibility()
+
+    const pollInterval = window.setInterval(() => {
+      suppressDefaultCookiebotUi()
+
+      if (getCookiebot()) {
+        syncBannerVisibility()
+      }
+    }, 100)
 
     window.addEventListener('CookiebotOnConsentReady', syncBannerVisibility)
     window.addEventListener('CookiebotOnDialogInit', handleDialogInit)
+    window.addEventListener('CookiebotOnLoad', syncBannerVisibility)
     window.addEventListener('CookiebotOnAccept', handleConsentSettled)
     window.addEventListener('CookiebotOnDecline', handleConsentSettled)
 
     return () => {
+      window.clearInterval(pollInterval)
       window.removeEventListener('CookiebotOnConsentReady', syncBannerVisibility)
       window.removeEventListener('CookiebotOnDialogInit', handleDialogInit)
+      window.removeEventListener('CookiebotOnLoad', syncBannerVisibility)
       window.removeEventListener('CookiebotOnAccept', handleConsentSettled)
       window.removeEventListener('CookiebotOnDecline', handleConsentSettled)
     }
@@ -73,6 +102,7 @@ export const useCookieConsent = (): UseCookieConsentReturn => {
   const handleAcceptAll = useCallback(() => {
     acceptAllCookieConsent()
     isManagingPreferencesRef.current = false
+    closeCookiebotPreferencesPanel()
     setIsBannerVisible(false)
   }, [])
 

@@ -29,6 +29,7 @@ describe('CookieConsentBanner', () => {
     hideMock.mockClear()
     renewMock.mockClear()
     submitCustomConsentMock.mockClear()
+    document.cookie = 'CookieConsent=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'
     window.Cookiebot = createCookiebotMock(false)
   })
 
@@ -51,6 +52,15 @@ describe('CookieConsentBanner', () => {
 
   it('does not render when Cookiebot already has a stored response', () => {
     window.Cookiebot = createCookiebotMock(true)
+    document.cookie = 'CookieConsent={necessary:true}'
+
+    render(<CookieConsentBanner />)
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('does not render when CookieConsent cookie already exists', () => {
+    document.cookie = 'CookieConsent={necessary:true,preferences:true}'
 
     render(<CookieConsentBanner />)
 

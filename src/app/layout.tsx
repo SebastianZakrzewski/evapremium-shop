@@ -130,13 +130,71 @@ export default function RootLayout({
   return (
     <html lang="pl">
       <head>
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              #CybotCookiebotDialog,
+              #CookiebotWidget {
+                display: none !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+              }
+
+              body[data-cookiebot-preferences='open'] #CybotCookiebotDialog {
+                display: flex !important;
+                visibility: visible !important;
+                pointer-events: auto !important;
+              }
+            `,
+          }}
+        />
+
         {/* Cookiebot — musi być pierwszym skryptem w <head> */}
         <script
           id="Cookiebot"
           src="https://consent.cookiebot.com/uc.js"
           data-cbid="646107cd-5e5a-41eb-af5f-80b502582c41"
           data-blockingmode="auto"
+          data-widget-enabled="false"
           type="text/javascript"
+        />
+
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                var suppressCookiebotUi = function () {
+                  try {
+                    if (
+                      window.Cookiebot &&
+                      !window.Cookiebot.hasResponse &&
+                      document.body &&
+                      document.body.getAttribute('data-cookiebot-preferences') !== 'open'
+                    ) {
+                      window.Cookiebot.hide();
+                    }
+                  } catch (error) {}
+
+                  var widget = document.getElementById('CookiebotWidget');
+                  if (widget) {
+                    widget.style.setProperty('display', 'none', 'important');
+                  }
+                };
+
+                document.addEventListener('CookiebotOnDialogInit', suppressCookiebotUi);
+                document.addEventListener('CookiebotOnLoad', suppressCookiebotUi);
+
+                var attempts = 0;
+                var intervalId = window.setInterval(function () {
+                  suppressCookiebotUi();
+                  attempts += 1;
+                  if (window.Cookiebot || attempts > 100) {
+                    window.clearInterval(intervalId);
+                  }
+                }, 50);
+              })();
+            `,
+          }}
         />
 
         {/* Google Tag Manager */}
@@ -203,13 +261,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
         {/* End Google Tag Manager (noscript) */}
 
+        <CookieConsentBanner />
+
         <QueryProvider>
           <SessionProvider>
             <TrackingProvider>
               <Navbar />
               <div className="pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden">{children}</div>
               <Footer />
-              <CookieConsentBanner />
               <Chatbot />
             </TrackingProvider>
           </SessionProvider>
