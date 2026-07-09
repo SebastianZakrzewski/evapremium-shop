@@ -14,6 +14,11 @@ export type CookiebotApi = {
   hide: () => void
   show: () => void
   renew: () => void
+  runScripts?: () => void
+  dialog?: {
+    submitConsent: () => void
+    submitDecline: () => void
+  }
   submitCustomConsent: (
     optinPreferences: boolean,
     optinStatistics: boolean,
@@ -76,8 +81,81 @@ export const suppressDefaultCookiebotUi = (): void => {
   hideCookiebotWidget()
 }
 
-export const acceptAllCookieConsent = (): void => {
-  getCookiebot()?.submitCustomConsent(true, true, true)
+export const isFullCookieConsentGranted = (): boolean => {
+  const cookiebot = getCookiebot()
+
+  if (cookiebot?.consent) {
+    return (
+      cookiebot.consent.necessary &&
+      cookiebot.consent.preferences &&
+      cookiebot.consent.statistics &&
+      cookiebot.consent.marketing
+    )
+  }
+
+  if (!hasStoredCookieConsent()) {
+    return false
+  }
+
+  const consentCookie = document.cookie
+    .split(';')
+    .find((cookie) => cookie.trim().startsWith(`${COOKIEBOT_CONSENT_COOKIE}=`))
+
+  if (!consentCookie) {
+    return false
+  }
+
+  const value = decodeURIComponent(consentCookie.split('=').slice(1).join('='))
+
+  return (
+    value.includes('necessary:true') &&
+    value.includes('preferences:true') &&
+    value.includes('statistics:true') &&
+    value.includes('marketing:true')
+  )
+}
+
+const submitFullConsentToCookiebot = (cookiebot: CookiebotApi): boolean => {
+  if (cookiebot.dialog?.submitConsent) {
+    cookiebot.dialog.submitConsent()
+    cookiebot.runScripts?.()
+    suppressDefaultCookiebotUi()
+    return true
+  }
+
+  cookiebot.submitCustomConsent(true, true, true)
+  cookiebot.runScripts?.()
+  suppressDefaultCookiebotUi()
+
+  return cookiebot.hasResponse || isFullCookieConsentGranted()
+}
+
+export const acceptAllCookieConsent = (onComplete?: () => void): void => {
+  const submitConsent = (): boolean => {
+    const cookiebot = getCookiebot()
+
+    if (!cookiebot) {
+      return false
+    }
+
+    return submitFullConsentToCookiebot(cookiebot)
+  }
+
+  if (submitConsent()) {
+    onComplete?.()
+    return
+  }
+
+  let attempts = 0
+
+  const intervalId = window.setInterval(() => {
+    attempts += 1
+
+    if (submitConsent() || attempts >= 50) {
+      window.clearInterval(intervalId)
+      onComplete?.()
+    }
+  }, 100)
 }
 
 export const openCookiebotPreferences = (): void => {

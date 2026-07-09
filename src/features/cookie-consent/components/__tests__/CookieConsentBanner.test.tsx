@@ -1,19 +1,21 @@
 import '@testing-library/jest-dom/vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CookieConsentBanner } from '../CookieConsentBanner'
 
 const hideMock = vi.fn()
 const renewMock = vi.fn()
 const submitCustomConsentMock = vi.fn()
+const submitConsentMock = vi.fn()
+const runScriptsMock = vi.fn()
 
 const createCookiebotMock = (hasResponse = false) => ({
   consent: {
     necessary: true,
-    preferences: false,
-    statistics: false,
-    marketing: false,
-    method: null,
+    preferences: hasResponse,
+    statistics: hasResponse,
+    marketing: hasResponse,
+    method: hasResponse ? 'explicit' : null,
   },
   consented: hasResponse,
   declined: false,
@@ -21,7 +23,23 @@ const createCookiebotMock = (hasResponse = false) => ({
   hide: hideMock,
   show: vi.fn(),
   renew: renewMock,
-  submitCustomConsent: submitCustomConsentMock,
+  runScripts: runScriptsMock,
+  dialog: {
+    submitConsent: submitConsentMock,
+    submitDecline: vi.fn(),
+  },
+  submitCustomConsent: (...args: [boolean, boolean, boolean]) => {
+    submitCustomConsentMock(...args)
+    window.Cookiebot!.consent = {
+      necessary: true,
+      preferences: args[0],
+      statistics: args[1],
+      marketing: args[2],
+      method: 'explicit',
+    }
+    window.Cookiebot!.hasResponse = true
+    window.Cookiebot!.consented = true
+  },
 })
 
 describe('CookieConsentBanner', () => {
@@ -29,6 +47,8 @@ describe('CookieConsentBanner', () => {
     hideMock.mockClear()
     renewMock.mockClear()
     submitCustomConsentMock.mockClear()
+    submitConsentMock.mockClear()
+    runScriptsMock.mockClear()
     document.cookie = 'CookieConsent=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'
     window.Cookiebot = createCookiebotMock(false)
   })
@@ -67,13 +87,17 @@ describe('CookieConsentBanner', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
-  it('submits full consent to Cookiebot when accept button is clicked', () => {
+  it('submits full consent to Cookiebot when accept button is clicked', async () => {
     render(<CookieConsentBanner />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Akceptuję pliki cookie i przechodzę dalej' }))
 
-    expect(submitCustomConsentMock).toHaveBeenCalledWith(true, true, true)
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(submitConsentMock).toHaveBeenCalledTimes(1)
+    expect(runScriptsMock).toHaveBeenCalledTimes(1)
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    })
   })
 
   it('opens Cookiebot preferences when manage preferences is clicked', () => {

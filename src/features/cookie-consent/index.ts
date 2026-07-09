@@ -7,6 +7,7 @@ export {
   hasStoredCookieConsent,
   hideCookiebotWidget,
   hideDefaultCookiebotDialog,
+  isFullCookieConsentGranted,
   openCookiebotPreferences,
   suppressDefaultCookiebotUi,
 } from './lib/cookiebot'

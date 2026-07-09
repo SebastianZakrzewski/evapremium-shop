@@ -100,10 +100,11 @@ export const useCookieConsent = (): UseCookieConsentReturn => {
   }, [handleConsentSettled, handleDialogInit, syncBannerVisibility])
 
   const handleAcceptAll = useCallback(() => {
-    acceptAllCookieConsent()
-    isManagingPreferencesRef.current = false
-    closeCookiebotPreferencesPanel()
-    setIsBannerVisible(false)
+    acceptAllCookieConsent(() => {
+      isManagingPreferencesRef.current = false
+      closeCookiebotPreferencesPanel()
+      setIsBannerVisible(false)
+    })
   }, [])
 
   const handleManagePreferences = useCallback(() => {
