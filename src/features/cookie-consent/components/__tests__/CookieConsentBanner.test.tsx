@@ -61,7 +61,7 @@ describe('CookieConsentBanner', () => {
     expect(
       screen.getByText(/Aby zapewnić Ci najlepsze wrażenia na naszej stronie, używamy plików cookie\./)
     ).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Polityce prywatności' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Polityka prywatności' })).toHaveAttribute(
       'href',
       '/polityka-prywatnosci'
     )

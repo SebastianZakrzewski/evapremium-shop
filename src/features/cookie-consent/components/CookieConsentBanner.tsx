@@ -6,6 +6,9 @@ import { useCookieConsent } from '../hooks/useCookieConsent'
 
 const BANNER_TITLE = 'Cenimy Twoją prywatność'
 
+const BANNER_DESCRIPTION =
+  'Aby zapewnić Ci najlepsze wrażenia na naszej stronie, używamy plików cookie. Dzięki nim możemy analizować ruch, dostosowywać treści i prowadzić działania marketingowe. Więcej informacji znajdziesz w naszej'
+
 export const CookieConsentBanner = () => {
   const { isBannerVisible, handleAcceptAll, handleManagePreferences } = useCookieConsent()
 
@@ -15,7 +18,7 @@ export const CookieConsentBanner = () => {
 
   return (
     <div
-      className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/45 p-4 backdrop-blur-[2px]"
+      className="fixed inset-0 z-[10000] flex items-end justify-center bg-black/50 p-3 backdrop-blur-[2px] sm:items-center sm:p-4 md:p-6"
       role="presentation"
     >
       <section
@@ -23,36 +26,34 @@ export const CookieConsentBanner = () => {
         aria-modal="true"
         aria-labelledby="cookie-consent-title"
         aria-describedby="cookie-consent-description"
-        className="w-full max-w-3xl rounded-xl bg-white p-6 shadow-2xl sm:p-8 md:p-10"
+        className="w-full max-w-[720px] rounded-2xl bg-white px-5 py-6 shadow-2xl sm:px-8 sm:py-8 md:px-10 md:py-9"
       >
         <h2
           id="cookie-consent-title"
-          className="text-lg font-semibold text-black sm:text-xl"
+          className="text-left text-[1.35rem] font-semibold leading-tight text-black sm:text-2xl"
         >
           {BANNER_TITLE}
         </h2>
 
         <p
           id="cookie-consent-description"
-          className="mt-4 text-sm leading-relaxed text-gray-600 sm:text-base"
+          className="mt-4 text-left text-[0.95rem] leading-7 text-neutral-700 sm:mt-5 sm:text-base sm:leading-7"
         >
-          Aby zapewnić Ci najlepsze wrażenia na naszej stronie, używamy plików cookie.
-          Dzięki nim możemy analizować ruch, dostosowywać treści i prowadzić działania
-          marketingowe. Więcej informacji znajdziesz w naszej{' '}
+          {BANNER_DESCRIPTION}{' '}
           <Link
             href="/polityka-prywatnosci"
-            className="font-medium text-gray-800 underline underline-offset-2 hover:text-black"
+            className="font-medium text-neutral-900 underline underline-offset-[3px] transition-colors hover:text-black"
           >
-            Polityce prywatności
+            Polityka prywatności
           </Link>
           .
         </p>
 
-        <div className="mt-8 flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-6 flex flex-col gap-4 sm:mt-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
           <button
             type="button"
             onClick={handleManagePreferences}
-            className="text-left text-sm text-gray-700 underline underline-offset-2 transition-colors hover:text-black"
+            className="order-2 self-start text-left text-sm text-neutral-800 underline underline-offset-[3px] transition-colors hover:text-black sm:order-1"
             aria-label="Zarządzaj preferencjami plików cookie"
           >
             Zarządzaj preferencjami
@@ -61,7 +62,7 @@ export const CookieConsentBanner = () => {
           <Button
             type="button"
             onClick={handleAcceptAll}
-            className="h-11 rounded-md bg-black px-6 text-sm font-medium text-white hover:bg-gray-900 sm:min-w-[240px]"
+            className="order-1 h-12 w-full rounded-md bg-black px-5 text-sm font-medium text-white hover:bg-neutral-900 sm:order-2 sm:h-11 sm:w-auto sm:min-w-[260px] sm:shrink-0"
             aria-label="Akceptuję pliki cookie i przechodzę dalej"
           >
             Akceptuję i przechodzę dalej
