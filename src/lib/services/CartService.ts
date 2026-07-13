@@ -2,6 +2,7 @@ import { AccessoryService } from './AccessoryService';
 import { MatService } from './MatService';
 import { PricingService } from './PricingService';
 import { CartItem, Cart, AddToCartDTO, UpdateCartItemDTO } from '../types/cart-new';
+import { MatConfigurationSchema } from '@/features/vehicle-catalog/model/matConfiguration';
 
 export class CartService {
   private accessoryService: AccessoryService;
@@ -142,9 +143,20 @@ export class CartService {
       //   throw new Error('Accessory not available');
       // }
     } else if (item.productType === 'mat') {
-      // Dla dywaników, nie walidujemy dostępności w bazie danych
-      // ponieważ wszystkie kombinacje są dostępne
-      console.log('CartService: Skipping mat validation - all combinations available');
+      const parsedConfig = MatConfigurationSchema.safeParse(item.configuration)
+      if (!parsedConfig.success) {
+        throw new Error('Nieprawidłowa konfiguracja dywaników')
+      }
+
+      const clientUnitPrice = item.unitPrice
+      if (clientUnitPrice == null || clientUnitPrice <= 0) {
+        throw new Error('Brak ceny dla wybranych dywaników')
+      }
+
+      const config = parsedConfig.data
+      if (!config.carDetails.recordKey || !config.carDetails.bodyTypeKey) {
+        throw new Error('Niekompletna konfiguracja pojazdu — wybierz pojazd ponownie w konfiguratorze')
+      }
     }
   }
 
@@ -168,17 +180,18 @@ export class CartService {
       productImage = accessory.imageSrc || '';
       unitPrice = accessory.price;
     } else if (item.productType === 'mat') {
-      // Dla dywaników, używaj danych przekazanych w item
-      productName = item.productName || `Dywaniki ${item.configuration.carDetails.brand} ${item.configuration.carDetails.model}`;
-      productSku = item.productSku || `MAT-${item.configuration.carDetails.brand.toUpperCase()}-${item.configuration.carDetails.model.toUpperCase()}`;
+      const config = item.configuration
+      if (!config || !('carDetails' in config)) {
+        throw new Error('Brak konfiguracji dywaników')
+      }
+
+      productName = item.productName || `Dywaniki ${config.carDetails.brand} ${config.carDetails.model}`;
+      productSku = item.productSku || `MAT-${config.carDetails.brand.toUpperCase()}-${config.carDetails.model.toUpperCase()}`;
       productImage = item.productImage || '';
-      unitPrice = item.unitPrice || 300; // Fallback price
-      console.log('💰 CartService.createCartItem - Mat item:', {
-        unitPrice: item.unitPrice,
-        finalUnitPrice: unitPrice,
-        configuration: item.configuration,
-        'configuration.setVariant': item.configuration?.setVariant
-      });
+      unitPrice = item.unitPrice || config.pricing?.totalPrice || 0;
+      if (unitPrice <= 0) {
+        throw new Error('Nie udało się ustalić ceny dywaników')
+      }
     }
 
     return {

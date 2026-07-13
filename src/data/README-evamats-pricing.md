@@ -1,32 +1,54 @@
-# EVAMATS – znormalizowany cennik (z Excel)
+# EVAMATS – normalized pricing (from Excel)
 
-Źródło: `CENNIK EVAMATS (1).xlsx`, arkusz **Cennik** + **MinivanAuto osoboweBUSPickup**.
+Source: `CENNIK EVAMATS (3).xlsx`, sheets **Cennik**, **MinivanAuto osoboweBUSPickup**, **Wariant kompletu Bitrix**.
 
-## Pliki
+**Format:** `locale: en`, all keys `snake_case`, identifiers use `_` instead of spaces.
 
-| Plik | Warstwa |
-|------|---------|
-| `evamats-pricing.index.json` | Indeks + mapowanie kategorii → tabela cennika |
-| `evamats-cennik.normalized.json` | Cennik wg kategorii pojazdu |
-| `evamats-vehicle-category-mapping.normalized.json` | Model auta → kategoria (minivan / auto_osobowe / bus / pickup) |
+## Files
 
-## Przepływ
+| File | Layer |
+|------|-------|
+| `evamats-pricing.index.json` | Index + category → pricing table + Bitrix segment |
+| `evamats-pricing-segments.json` | Unified structure per vehicle segment |
+| `evamats-cennik.normalized.json` | Pricing by vehicle category |
+| `evamats-vehicle-category-mapping.normalized.json` | Car model → category |
+| `evamats-bitrix-variant-mapping.normalized.json` | Bitrix set variant labels |
 
-1. Z `bodyType` / modelu znajdź wpis w `vehicle-category-mapping` (`modelKey`).
-2. Weź `vehicleCategory` (np. `minivan`).
-3. Z indeksu: `vehicleCategoryToCennikTable.minivan` → `minivany`.
-4. Odczytaj cenę z `evamats-cennik.normalized.json` → `categories.minivany.items`.
+## Vehicle categories (English)
 
-## Regeneracja
+| Key | Pricing table |
+|-----|---------------|
+| `minivan` | `minivan` |
+| `passenger_car` | `passenger_car` |
+| `bus` | `bus` |
+| `pickup` | `pickup` |
+| `custom_quote` | `null` |
+
+## Flow
+
+1. Find model in `vehicle-category-mapping` by `model_key`
+2. Read `vehicle_category` (e.g. `passenger_car`)
+3. From index: `vehicle_category_to_pricing_table.passenger_car` → `passenger_car`
+4. Load price from `evamats-cennik.normalized.json` → `categories.passenger_car.items`
+5. Bitrix labels from `evamats-bitrix-variant-mapping.normalized.json` → `segments.passenger_car.variants`
+
+## Regenerate
 
 ```bash
-npx xlsx-cli "%USERPROFILE%/Downloads/CENNIK EVAMATS (1).xlsx" --sheet "Cennik" -J -o output/cennik-sheet-raw.json
-npx xlsx-cli "%USERPROFILE%/Downloads/CENNIK EVAMATS (1).xlsx" --sheet "MinivanAuto osoboweBUSPickup" -J -o output/vehicle-mapping-sheet-raw.json
+npx xlsx-cli "%USERPROFILE%/Downloads/CENNIK EVAMATS (3).xlsx" --sheet "Cennik" -J -o output/cennik-sheet-raw.json
+npx xlsx-cli "%USERPROFILE%/Downloads/CENNIK EVAMATS (3).xlsx" --sheet "MinivanAuto osoboweBUSPickup" -J -o output/vehicle-mapping-sheet-raw.json
+npx xlsx-cli "%USERPROFILE%/Downloads/CENNIK EVAMATS (3).xlsx" --sheet "Wariant kompletu Bitrix" -J -o output/bitrix-variant-sheet-raw.json
 node scripts/normalize-cennik-evamats.mjs
 ```
 
-## Uwagi
+## Field naming
 
-- Arkusz **Cennik Kwiecień 2026** ma rabaty 25%/35% (osobny export, jeśli potrzebny).
-- `variantSlug` (`front`, `basic`, `premium`, `complete`) tylko tam, gdzie nazwa zgadza się z konfiguratorem; reszta ma `null`.
-- Kolumna **indywidualna_wycena** w mapowaniu modeli to notatki/ceny specjalne, nie tabela macierzowa.
+| Old (PL/camelCase) | New (EN/snake_case) |
+|--------------------|---------------------|
+| `auto_osobowe` | `passenger_car` |
+| `variantLabel` | `variant_label` |
+| `variantKey` | `variant_key` |
+| `modelKey` | `model_key` |
+| `vehicleCategory` | `vehicle_category` |
+| `pricePln` | `price_pln` |
+| `rims3d` | `rims_3d` |

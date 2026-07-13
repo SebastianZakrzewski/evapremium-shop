@@ -1,3 +1,13 @@
+import type { MatConfiguration } from '@/features/vehicle-catalog/model/matConfiguration';
+
+export type AccessoryCartConfiguration = { color?: string }
+export type CartItemConfiguration = MatConfiguration | AccessoryCartConfiguration
+
+export const isMatCartConfiguration = (
+  configuration: CartItemConfiguration | undefined,
+): configuration is MatConfiguration =>
+  Boolean(configuration && "carDetails" in configuration && "setType" in configuration)
+
 export interface CartItem {
   id: string;
   quantity: number;
@@ -8,7 +18,7 @@ export interface CartItem {
   productName: string;
   productSku?: string;
   productImage?: string;
-  configuration?: any; // JSONB for mat configuration
+  configuration?: CartItemConfiguration;
 }
 
 export interface Cart {
@@ -25,7 +35,7 @@ export interface AddToCartDTO {
   productType: 'accessory' | 'mat';
   productId: string;
   quantity: number;
-  configuration?: any;
+  configuration?: CartItemConfiguration;
   productName?: string;
   productSku?: string;
   productImage?: string;

@@ -1,0 +1,205 @@
+{
+  "meta": {
+    "description": "Per-template pricing overrides: category remap, fixed base price, trunk surcharges",
+    "version": "1.0.0"
+  },
+  "overrides": [
+    {
+      "brand_key": "citroen",
+      "model_family_key": "c8",
+      "variant_key": "front",
+      "override_category_slug": "bus",
+      "fixed_base_price_pln": 850,
+      "surcharge_pln": 0,
+      "notes": "C8 front priced as bus"
+    },
+    {
+      "brand_key": "peugeot",
+      "model_family_key": "807mt",
+      "variant_key": "front",
+      "override_category_slug": "bus",
+      "fixed_base_price_pln": 850,
+      "surcharge_pln": 0,
+      "notes": "807 front priced as bus"
+    },
+    {
+      "brand_key": "mercedes_benz",
+      "model_family_key": "vito",
+      "variant_key": "front",
+      "override_category_slug": "passenger_car",
+      "fixed_base_price_pln": 550,
+      "surcharge_pln": 0,
+      "notes": "Vito front priced as passenger car"
+    },
+    {
+      "brand_key": "mercedes_benz",
+      "model_family_key": "viano",
+      "variant_key": "front",
+      "override_category_slug": "minivan",
+      "fixed_base_price_pln": 550,
+      "surcharge_pln": 0,
+      "notes": "Viano front priced as minivan"
+    },
+    {
+      "brand_key": "citroen",
+      "model_family_key": "berlingo",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Berlingo 7-seat trunk +100 PLN"
+    },
+    {
+      "brand_key": "peugeot",
+      "model_family_key": "partner",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Partner 7-seat trunk +100 PLN"
+    },
+    {
+      "brand_key": "peugeot",
+      "model_family_key": "riftermt",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Rifter trunk +100 PLN"
+    },
+    {
+      "brand_key": "peugeot",
+      "model_family_key": "e_rifter",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "e-Rifter trunk +100 PLN"
+    },
+    {
+      "brand_key": "opel",
+      "model_family_key": "combo_c",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Combo C trunk +100 PLN"
+    },
+    {
+      "brand_key": "opel",
+      "model_family_key": "combo_d",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Combo D trunk +100 PLN"
+    },
+    {
+      "brand_key": "opel",
+      "model_family_key": "combo_e",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Combo E trunk +100 PLN"
+    },
+    {
+      "brand_key": "dacia",
+      "model_family_key": "dokker",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Dokker trunk +100 PLN"
+    },
+    {
+      "brand_key": "fiat",
+      "model_family_key": "doblo",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Doblo trunk +100 PLN"
+    },
+    {
+      "brand_key": "fiat",
+      "model_family_key": "dobloe",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Doblo E trunk +100 PLN"
+    },
+    {
+      "brand_key": "volkswagen",
+      "model_family_key": "caddy",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Caddy trunk +100 PLN"
+    },
+    {
+      "brand_key": "volkswagen",
+      "model_family_key": "caddy_maxi",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Caddy Maxi trunk +100 PLN"
+    },
+    {
+      "brand_key": "nissan",
+      "model_family_key": "nv200",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "NV200 trunk +100 PLN"
+    },
+    {
+      "brand_key": "nissan",
+      "model_family_key": "e_nv200",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "e-NV200 trunk +100 PLN"
+    },
+    {
+      "brand_key": "ford",
+      "model_family_key": "tourneo_connect",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Tourneo Connect trunk +100 PLN"
+    },
+    {
+      "brand_key": "ford",
+      "model_family_key": "tourneo_courier",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Tourneo Courier trunk +100 PLN"
+    },
+    {
+      "brand_key": "ford",
+      "model_family_key": "grand_tourneo_connect",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Grand Tourneo Connect trunk +100 PLN"
+    },
+    {
+      "brand_key": "seat",
+      "model_family_key": "alhambra",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Alhambra/Sharan trunk +100 PLN"
+    },
+    {
+      "brand_key": "volkswagen",
+      "model_family_key": "sharan",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "Sharan trunk +100 PLN"
+    },
+    {
+      "brand_key": "toyota",
+      "model_family_key": "proace_city_verso",
+      "variant_key": "trunk_large",
+      "surcharge_pln": 100,
+      "notes": "ProAce City Verso trunk +100 PLN"
+    },
+    {
+      "brand_key": "ford",
+      "model_family_key": "tourneo_connect",
+      "variant_key": "row_3_large_trunk",
+      "surcharge_pln": 200,
+      "notes": "Tourneo Connect 3rd row trunk +200 PLN"
+    },
+    {
+      "brand_key": "nissan",
+      "model_family_key": "patroly61",
+      "variant_key": "front",
+      "surcharge_pln": 200,
+      "notes": "Patrol Y61 front +200 PLN"
+    },
+    {
+      "brand_key": "nissan",
+      "model_family_key": "patroly60",
+      "variant_key": "front",
+      "surcharge_pln": 200,
+      "notes": "Patrol Y60 front +200 PLN"
+    }
+  ]
+}

@@ -10,6 +10,9 @@ import { mapOrderToContact } from '../integrations/bitrix24/mappers/orderToConta
 import { mapOrderToDeal, createDealProducts } from '../integrations/bitrix24/mappers/orderToDeal';
 import { stageMappingService } from '../integrations/bitrix24/services/StageMappingService';
 import { randomUUID } from 'crypto';
+import 'server-only';
+import { revalidateMatItemPrice } from '@/features/vehicle-catalog/server/matCartValidation';
+import { MatConfigurationSchema } from '@/features/vehicle-catalog/model/matConfiguration';
 
 export class OrderService {
   private repository: OrderRepository;
@@ -282,7 +285,6 @@ export class OrderService {
   private async validateOrderItems(items: any[]): Promise<void> {
     for (const item of items) {
       if (item.productType === 'accessory') {
-        // Sprawdź dostępność akcesoriów
         const available = await this.accessoryService.checkAvailability(
           item.productId,
           item.quantity
@@ -291,12 +293,24 @@ export class OrderService {
         if (!available) {
           throw new Error(`Product ${item.productName} is not available`);
         }
-      } else if (item.productType === 'mat') {
-        // Dla dywaników: pomiń walidację (wyłączone dla testów)
-        console.log('🛒 OrderService: Skipping mat validation for item:', item);
-        console.log('🛒 OrderService: Car details:', item.configuration.carDetails);
-        console.log('✅ OrderService: Mat validation skipped - proceeding with order');
+        continue
       }
+
+      if (item.productType !== 'mat') continue
+
+      const parsedConfig = MatConfigurationSchema.safeParse(item.configuration)
+      if (!parsedConfig.success) {
+        throw new Error('Nieprawidłowa konfiguracja dywaników w zamówieniu')
+      }
+
+      const validatedConfiguration = await revalidateMatItemPrice(
+        item.configuration,
+        item.unitPrice,
+      )
+
+      item.configuration = validatedConfiguration
+      item.unitPrice = validatedConfiguration.pricing.totalPrice
+      item.subtotal = validatedConfiguration.pricing.totalPrice * item.quantity
     }
   }
 

@@ -6,11 +6,15 @@ import { Card } from "@/components/ui/card";
 
 interface MatTypeStepProps {
   config: {
-    matType: "3d-with-rims" | "classic";
-  };
-  onUpdate: (updates: { matType?: "3d-with-rims" | "classic" }) => void;
-  onNext: () => void;
-  onPrevious: () => void;
+    matType: "3d-with-rims" | "classic" | "single"
+  }
+  skipMatTypeStep?: boolean
+  onUpdate: (updates: {
+    matType?: "3d-with-rims" | "classic" | "single"
+    variant?: string
+  }) => void
+  onNext: () => void
+  onPrevious: () => void
 }
 
 const matTypes = [
@@ -26,14 +30,39 @@ const matTypes = [
   },
 ];
 
-export function MatTypeStep({ config, onUpdate, onNext, onPrevious }: MatTypeStepProps) {
+export function MatTypeStep({
+  config,
+  skipMatTypeStep = false,
+  onUpdate,
+  onNext,
+  onPrevious,
+}: MatTypeStepProps) {
+  if (skipMatTypeStep) {
+    return (
+      <div className="space-y-4">
+        <p className="text-sm text-gray-400">
+          Dla tego pojazdu obowiązuje jeden typ kompletu. Przejdź do wyboru
+          wariantu.
+        </p>
+        <div className="flex flex-col justify-end gap-2 pt-3 sm:flex-row">
+          <Button onClick={onPrevious} variant="outline" className="border-white/10">
+            Wstecz
+          </Button>
+          <Button onClick={onNext} className="bg-red-600 hover:bg-red-700">
+            Dalej
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 [&>*]:min-w-[150px]">
         {matTypes.map((type) => (
           <Card
             key={type.id}
-            onClick={() => onUpdate({ matType: type.id })}
+            onClick={() => onUpdate({ matType: type.id, variant: "" })}
             className={`
               p-3 md:p-4 cursor-pointer transition-all duration-300 min-h-[88px] md:min-h-[80px] active:scale-[0.98]
               ${config.matType === type.id

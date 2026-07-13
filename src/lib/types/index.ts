@@ -4,7 +4,8 @@ export * from './mat';
 
 // New types with aliases to avoid conflicts
 export type { Order as OrderV2, OrderItem, CustomerData as CustomerDataV2, AddressData, OrderStatus as OrderStatusV2, PaymentStatus, CreateOrderDTO, CreateOrderItemDTO } from './order-new';
-export type { Cart as CartV2, CartItem as CartItemV2, AddToCartDTO, UpdateCartItemDTO } from './cart-new';
+export type { Cart as CartV2, CartItem as CartItemV2, AddToCartDTO, UpdateCartItemDTO, CartItemConfiguration } from './cart-new';
+export { isMatCartConfiguration } from './cart-new';
 
 // Legacy types (for backward compatibility)
 export * from './product';

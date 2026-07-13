@@ -44,6 +44,12 @@ export const FEATURES = {
   ENABLE_CART_MIGRATION: false,
 
   /**
+   * Katalog pojazdów i cennik oparte o mat_templates (zamiast car_models_extended)
+   * @default true — wyłącz ustawiając NEXT_PUBLIC_MAT_TEMPLATES_CATALOG_ENABLED=false
+   */
+  MAT_TEMPLATES_CATALOG_ENABLED: env.features.matTemplatesCatalogEnabled,
+
+  /**
    * Tryb debug - dodatkowe logi w konsoli
    * @default true w development
    */
@@ -71,5 +77,9 @@ export function debugLog(message: string, ...args: any[]): void {
  */
 export function useV2Backend(): boolean {
   return FEATURES.USE_V2_BACKEND;
+}
+
+export function useMatTemplatesCatalog(): boolean {
+  return FEATURES.MAT_TEMPLATES_CATALOG_ENABLED;
 }
 

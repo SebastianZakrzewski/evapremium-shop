@@ -1,4 +1,13 @@
 import { z } from 'zod';
+import {
+  AccessoryConfigurationSchema,
+  MatConfigurationSchema,
+} from '@/features/vehicle-catalog/model/matConfiguration';
+
+const OrderItemConfigurationSchema = z.union([
+  MatConfigurationSchema,
+  AccessoryConfigurationSchema,
+]);
 
 export const CustomerDataSchema = z.object({
   name: z.string().min(1, 'Imię i nazwisko jest wymagane'),
@@ -27,7 +36,7 @@ const OrderItemBaseSchema = z.object({
   productName: z.string().min(1, 'Nazwa produktu jest wymagana'),
   productSku: z.string().optional(),
   productImage: z.string().url().optional(),
-  configuration: z.any().optional(), // JSONB for mat configuration
+  configuration: OrderItemConfigurationSchema.optional(),
   orderId: z.string().uuid(),
   createdAt: z.date(),
   updatedAt: z.date()

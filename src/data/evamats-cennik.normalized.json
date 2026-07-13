@@ -1,111 +1,121 @@
 {
   "meta": {
-    "sourceSheet": "Cennik",
-    "depositRules": "ZALICZKA Każde zamówienie uwarunkowane jest minimalna płatnąścią przedpłaty na poczet szycia dywaników: przody - 100 zł, przód i tył/ przód tył i bagażnik - 200 zł, zamówienia powyżej 2000 zł - 300 zł zaliczki, powyżej 3000 zł - 400 zł zaliczki itd. WYJĄTEK TO ZAMÓWIENIA NA SAME PRODUKTY OZNACZONE GWIAZDKĄ (podpiętki, organizery itd.)",
-    "discountLegend": {
-      "noDiscount": "X",
-      "tierBelow910": 0.2,
-      "tierFrom910": 0.3,
-      "note": "20% poniżej progu 910 zł, 30% od 910 zł (kolumny „Kwota po rabacie”)"
+    "source_sheet": "Cennik",
+    "deposit_rules": "DEPOSIT: Each order requires a minimum prepayment for mat production: fronts - 100 PLN, front+rear / front+rear+trunk - 200 PLN, orders above 2000 PLN - 300 PLN deposit, above 3000 PLN - 400 PLN deposit, etc. EXCEPTION: ORDERS FOR PRODUCTS MARKED WITH A STAR ONLY (heel pads, organizers, etc.)",
+    "discount_legend": {
+      "no_discount": "X",
+      "tier_below_910": 0.2,
+      "tier_from_910": 0.3,
+      "note": "20% below 910 PLN threshold, 30% from 910 PLN (after-discount columns)"
     },
     "shipping": {
-      "kosztdostawydywanikow": {
-        "label": "Koszt dostawy dywaników",
-        "pricePln": 27,
-        "discountExcluded": true
+      "koszt_dostawy_dywanikow": {
+        "label": "Koszt Dostawy Dywanikow",
+        "price_pln": 27,
+        "discount_excluded": true
       },
-      "kosztdostawyproduktow": {
-        "label": "Koszt dostawy produktów",
-        "pricePln": 20,
-        "discountExcluded": true
+      "koszt_dostawy_produktow": {
+        "label": "Koszt Dostawy Produktow",
+        "price_pln": 20,
+        "discount_excluded": true
       },
-      "realizacjapremium3dni(jezelimamypomiary)": {
-        "label": "Realizacja Premium 3 dni (jeżeli mamy pomiary)",
-        "pricePln": 155,
-        "discountExcluded": true
+      "realizacja_premium_3_dni_jezeli_mamy_pomiary": {
+        "label": "Realizacja Premium 3 Dni Jezeli Mamy Pomiary",
+        "price_pln": 155,
+        "discount_excluded": true
       },
-      "realizacjaexpress7dni(jezelimamypomiary)": {
-        "label": "Realizacja Express 7 dni (jeżeli mamy pomiary)",
-        "pricePln": 95,
-        "discountExcluded": true
+      "realizacja_express_7_dni_jezeli_mamy_pomiary": {
+        "label": "Realizacja Express 7 Dni Jezeli Mamy Pomiary",
+        "price_pln": 95,
+        "discount_excluded": true
       }
     },
     "extras": [
       {
-        "label": "Próbki materiału (za wysyłke )",
-        "pricePln": 20,
+        "extra_key": "material_samples_shipping",
+        "label": "Material Samples Shipping",
+        "price_pln": 20,
         "discount": {
           "excluded": true,
           "label": "no_discount"
         }
       },
       {
-        "label": "Dywanik na tunel",
-        "pricePln": 100,
+        "extra_key": "tunnel_mat",
+        "label": "Tunnel Mat",
+        "price_pln": 100,
         "discount": {
           "excluded": true,
           "label": "no_discount"
         }
       },
       {
-        "label": "3D jęzor na dywaniku klasycznym",
-        "pricePln": 60,
+        "extra_key": "classic_mat_3d_lip",
+        "label": "Classic Mat 3d Lip",
+        "price_pln": 60,
         "discount": {
           "excluded": true,
           "label": "no_discount"
         }
       },
       {
-        "label": "Tylne obicia siedzeń (Jeśli mamy pomiar)",
-        "pricePln": 400,
+        "extra_key": "rear_seat_upholstery_measured",
+        "label": "Rear Seat Upholstery Measured",
+        "price_pln": 400,
         "discount": {
           "excluded": true,
           "label": "no_discount"
         }
       },
       {
-        "label": "Romby pionowo",
-        "pricePln": 100,
+        "extra_key": "vertical_rhombus",
+        "label": "Vertical Rhombus",
+        "price_pln": 100,
         "discount": {
           "excluded": true,
           "label": "no_discount"
         }
       },
       {
-        "label": "Zmiana kolorów mat lub obszyć w jednym rzędzie w zestawie (przód i tył lub przód tył i bagażnik)",
-        "pricePln": 250,
+        "extra_key": "color_change_one_row_in_set",
+        "label": "Color Change One Row In Set",
+        "price_pln": 250,
         "discount": {
           "excluded": true,
           "label": "no_discount"
         }
       },
       {
-        "label": "Zmiana koloru maty lub obszycia jednego dywanika w zestawie",
-        "pricePln": 100,
+        "extra_key": "color_change_single_mat_in_set",
+        "label": "Color Change Single Mat In Set",
+        "price_pln": 100,
         "discount": {
           "excluded": true,
           "label": "no_discount"
         }
       },
       {
-        "label": "Poprawa dywaników na indywidualną prośbę klienta (np: zmiania koloru obszyć w gotowych dywanikach)",
-        "pricePln": 250,
+        "extra_key": "custom_mat_adjustment",
+        "label": "Custom Mat Adjustment",
+        "price_pln": 250,
         "discount": {
           "excluded": true,
           "label": "no_discount"
         }
       },
       {
-        "label": "Zmiana koloru nici w komplecie",
-        "pricePln": 100,
+        "extra_key": "thread_color_change_in_set",
+        "label": "Thread Color Change In Set",
+        "price_pln": 100,
         "discount": {
           "excluded": true,
           "label": "no_discount"
         }
       },
       {
-        "label": "Stopery do dywaników 1szt (góra, dół)",
-        "pricePln": 5,
+        "extra_key": "mat_stoppers_single",
+        "label": "Mat Stoppers Single",
+        "price_pln": 5,
         "discount": {
           "excluded": true,
           "label": "no_discount"
@@ -114,1480 +124,1280 @@
     ],
     "accessories": [
       {
+        "accessory_key": "akcesoria",
         "label": "Akcesoria",
-        "pricePln": null
+        "price_pln": null
       },
       {
-        "label": "Rodziaj kompletu",
-        "priceRaw": "Cena",
-        "pricePln": null
+        "accessory_key": "rodziaj_kompletu",
+        "label": "Rodziaj Kompletu",
+        "price_raw": "Cena",
+        "price_pln": null
       },
       {
-        "label": "Podpiętka EVAMATS (15*22cm)",
-        "priceRaw": "30 / gratis",
-        "pricePln": 30
+        "accessory_key": "podpietka_evamats_15_22cm",
+        "label": "Podpietka Evamats 15 22cm",
+        "price_raw": "30 / gratis",
+        "price_pln": 30
       },
       {
-        "label": "Podpiętka Metalowa (15*22cm)",
-        "priceRaw": 60,
-        "pricePln": 60
+        "accessory_key": "podpietka_metalowa_15_22cm",
+        "label": "Podpietka Metalowa 15 22cm",
+        "price_raw": 60,
+        "price_pln": 60
       },
       {
-        "label": "Podpiętka plastikowa (15*22cm)",
-        "priceRaw": 40,
-        "pricePln": 40
+        "accessory_key": "podpietka_plastikowa_15_22cm",
+        "label": "Podpietka Plastikowa 15 22cm",
+        "price_raw": 40,
+        "price_pln": 40
       },
       {
-        "label": "Podpiętka gumowa",
-        "priceRaw": 50,
-        "pricePln": 50
+        "accessory_key": "podpietka_gumowa",
+        "label": "Podpietka Gumowa",
+        "price_raw": 50,
+        "price_pln": 50
       },
       {
-        "label": "Montaż każdej podpiętki",
-        "priceRaw": 10,
-        "pricePln": 10
+        "accessory_key": "montaz_kazdej_podpietki",
+        "label": "Montaz Kazdej Podpietki",
+        "price_raw": 10,
+        "price_pln": 10
       },
       {
-        "label": "Organizer klasyczny XL (d48 x w33 x s22)/ M (d33 x w33 x s33)",
-        "priceRaw": "150/90",
-        "pricePln": 15090
+        "accessory_key": "organizer_klasyczny_xl_d48_x_w33_x_s22_m_d33_x_w33_x_s33",
+        "label": "Organizer Klasyczny Xl D48 X W33 X S22 M D33 X W33 X S33",
+        "price_raw": "150/90",
+        "price_pln": 15090
       },
       {
-        "label": "Organizer M (d35 x w 30 x s26)",
-        "priceRaw": 190,
-        "pricePln": 190
+        "accessory_key": "organizer_m_d35_x_w_30_x_s26",
+        "label": "Organizer M D35 X W 30 X S26",
+        "price_raw": 190,
+        "price_pln": 190
       },
       {
-        "label": "Organizer XL(d54 x w30 x s35)",
-        "priceRaw": 240,
-        "pricePln": 240
+        "accessory_key": "organizer_xl_d54_x_w30_x_s35",
+        "label": "Organizer Xl D54 X W30 X S35",
+        "price_raw": 240,
+        "price_pln": 240
       }
     ],
-    "otherProducts": [
+    "other_products": [
       {
+        "product_key": "inne",
         "label": "Inne",
-        "pricePln": null,
+        "price_pln": null,
         "note": null
       },
       {
+        "product_key": "rodzaj",
         "label": "Rodzaj",
-        "priceRaw": "Cena",
-        "pricePln": null,
+        "price_raw": "Cena",
+        "price_pln": null,
         "note": null
       },
       {
-        "label": "Dywanik pod dom 60cm*40cm",
-        "priceRaw": "89zł/szt",
-        "pricePln": 89,
+        "product_key": "dywanik_pod_dom_60cm_40cm",
+        "label": "Dywanik Pod Dom 60cm 40cm",
+        "price_raw": "89zł/szt",
+        "price_pln": 89,
         "note": null
       },
       {
-        "label": "1 m2",
-        "priceRaw": 270,
-        "pricePln": 270,
+        "product_key": "1_m2",
+        "label": "1 M2",
+        "price_raw": 270,
+        "price_pln": 270,
         "note": "tylko za zgodą przełożonego"
       },
       {
-        "label": "Arkusz 1.4*2.5m",
-        "priceRaw": "450 zł/szt Brutto",
-        "pricePln": 450,
+        "product_key": "arkusz_1_4_2_5m",
+        "label": "Arkusz 1 4 2 5m",
+        "price_raw": "450 zł/szt Brutto",
+        "price_pln": 450,
         "note": null
       },
       {
-        "label": "wysyłka za Arkusz",
-        "priceRaw": "150 zł/Brutto/szt",
-        "pricePln": 150,
+        "product_key": "wysylka_za_arkusz",
+        "label": "Wysylka Za Arkusz",
+        "price_raw": "150 zł/Brutto/szt",
+        "price_pln": 150,
         "note": null
       },
       {
-        "label": "wysyłka palety 72 arkusze max",
-        "priceRaw": 600,
-        "pricePln": 600,
+        "product_key": "wysylka_palety_72_arkusze_max",
+        "label": "Wysylka Palety 72 Arkusze Max",
+        "price_raw": 600,
+        "price_pln": 600,
         "note": null
       }
     ]
   },
   "categories": {
-    "auta_osobowe": {
-      "id": "auta_osobowe",
-      "label": "Auta osobowe",
-      "pricingModel": "dual_mat_type",
+    "passenger_car": {
+      "id": "passenger_car",
+      "label": "Passenger car",
+      "pricing_model": "dual_mat_type",
       "items": [
         {
-          "variantLabel": "Rodziaj kompletu",
-          "variantSlug": null,
-          "variantKey": "rodziajkompletu",
+          "variant_label": "Driver mat",
+          "variant_slug": "driver_mat",
+          "variant_key": "driver_mat",
           "classic": {
-            "basePricePln": 3,
-            "afterDiscount": {
-              "raw": "Kwota po rabacie"
-            }
-          },
-          "rims3d": {
-            "basePricePln": 3,
-            "afterDiscount": null
-          }
-        },
-        {
-          "variantLabel": "Dywanik kierowcy",
-          "variantSlug": "driver_mat",
-          "variantKey": "dywanikkierowcy",
-          "classic": {
-            "basePricePln": 150,
-            "afterDiscount": {
+            "base_price_pln": 150,
+            "after_discount": {
               "excluded": true,
               "label": "no_discount"
             }
           },
-          "rims3d": {
-            "basePricePln": 350,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 280
+          "rims_3d": {
+            "base_price_pln": 289,
+            "after_discount": {
+              "excluded": true,
+              "label": "no_discount"
             }
           }
         },
         {
-          "variantLabel": "Dywanik pasażera",
-          "variantSlug": "passenger_mat",
-          "variantKey": "dywanikpasazera",
+          "variant_label": "Passenger mat",
+          "variant_slug": "passenger_mat",
+          "variant_key": "passenger_mat",
           "classic": {
-            "basePricePln": 150,
-            "afterDiscount": {
+            "base_price_pln": 150,
+            "after_discount": {
               "excluded": true,
               "label": "no_discount"
             }
           },
-          "rims3d": {
-            "basePricePln": 350,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 280
+          "rims_3d": {
+            "base_price_pln": 289,
+            "after_discount": {
+              "price_after_discount_pln": 231.2
             }
           }
         },
         {
-          "variantLabel": "Tylko przód",
-          "variantSlug": "front",
-          "variantKey": "tylkoprzod",
+          "variant_label": "Front only",
+          "variant_slug": "front",
+          "variant_key": "front",
           "classic": {
-            "basePricePln": 290,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 232
+            "base_price_pln": 290,
+            "after_discount": {
+              "price_after_discount_pln": 232
             }
           },
-          "rims3d": {
-            "basePricePln": 550,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 440
+          "rims_3d": {
+            "base_price_pln": 550,
+            "after_discount": {
+              "price_after_discount_pln": 440
             }
           }
         },
         {
-          "variantLabel": "Tylko przód z tunelem",
-          "variantSlug": null,
-          "variantKey": "tylkoprzodztunelem",
+          "variant_label": "Front Only With Tunnel",
+          "variant_slug": null,
+          "variant_key": "front_only_with_tunnel",
           "classic": {
-            "basePricePln": 390,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 312
+            "base_price_pln": 390,
+            "after_discount": {
+              "price_after_discount_pln": 312
             }
           },
-          "rims3d": {
-            "basePricePln": 650,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 520
+          "rims_3d": {
+            "base_price_pln": 650,
+            "after_discount": {
+              "price_after_discount_pln": 520
             }
           }
         },
         {
-          "variantLabel": "Tylko tył",
-          "variantSlug": null,
-          "variantKey": "tylkotył",
+          "variant_label": "Rear Only",
+          "variant_slug": null,
+          "variant_key": "rear_only",
           "classic": {
-            "basePricePln": 290,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 232
+            "base_price_pln": 290,
+            "after_discount": {
+              "price_after_discount_pln": 232
             }
           },
-          "rims3d": {
-            "basePricePln": 550,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 440
+          "rims_3d": {
+            "base_price_pln": 550,
+            "after_discount": {
+              "price_after_discount_pln": 440
             }
           }
         },
         {
-          "variantLabel": "Przód i tył",
-          "variantSlug": "basic",
-          "variantKey": "przoditył",
+          "variant_label": "Front and rear",
+          "variant_slug": "basic",
+          "variant_key": "basic",
           "classic": {
-            "basePricePln": 510,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 408
+            "base_price_pln": 510,
+            "after_discount": {
+              "price_after_discount_pln": 408
             }
           },
-          "rims3d": {
-            "basePricePln": 910,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 637
+          "rims_3d": {
+            "base_price_pln": 910,
+            "after_discount": {
+              "price_after_discount_pln": 637
             }
           }
         },
         {
-          "variantLabel": "Przód tył + bagażnik",
-          "variantSlug": "premium",
-          "variantKey": "przodtył+bagaznik",
+          "variant_label": "Front rear and trunk",
+          "variant_slug": "premium",
+          "variant_key": "premium",
           "classic": {
-            "basePricePln": 710,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 568
+            "base_price_pln": 710,
+            "after_discount": {
+              "price_after_discount_pln": 568
             }
           },
-          "rims3d": {
-            "basePricePln": 1210,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 847
+          "rims_3d": {
+            "base_price_pln": 1210,
+            "after_discount": {
+              "price_after_discount_pln": 847
             }
           }
         },
         {
-          "variantLabel": "Mata do bagażnika",
-          "variantSlug": "complete",
-          "variantKey": "matadobagaznika",
+          "variant_label": "Trunk mat",
+          "variant_slug": "complete",
+          "variant_key": "complete",
           "classic": {
-            "basePricePln": 350,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 280
+            "base_price_pln": 350,
+            "after_discount": {
+              "price_after_discount_pln": 280
             }
           },
-          "rims3d": {
-            "basePricePln": null,
-            "afterDiscount": null
+          "rims_3d": {
+            "base_price_pln": null,
+            "after_discount": null
           }
         },
         {
-          "variantLabel": "Przód + bagażnik",
-          "variantSlug": null,
-          "variantKey": "przod+bagaznik",
+          "variant_label": "Front Trunk",
+          "variant_slug": null,
+          "variant_key": "front_trunk",
           "classic": {
-            "basePricePln": 560,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 448
+            "base_price_pln": 560,
+            "after_discount": {
+              "price_after_discount_pln": 448
             }
           },
-          "rims3d": {
-            "basePricePln": 860,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 688
-            }
-          }
-        },
-        {
-          "variantLabel": "Tył + bagażnik",
-          "variantSlug": null,
-          "variantKey": "tył+bagaznik",
-          "classic": {
-            "basePricePln": 560,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 448
-            }
-          },
-          "rims3d": {
-            "basePricePln": 860,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 688
+          "rims_3d": {
+            "base_price_pln": 860,
+            "after_discount": {
+              "price_after_discount_pln": 688
             }
           }
         },
         {
-          "variantLabel": "3 rzędy",
-          "variantSlug": "row_3",
-          "variantKey": "3rzedy",
+          "variant_label": "Rear Trunk",
+          "variant_slug": null,
+          "variant_key": "rear_trunk",
           "classic": {
-            "basePricePln": 710,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 568
+            "base_price_pln": 560,
+            "after_discount": {
+              "price_after_discount_pln": 448
             }
           },
-          "rims3d": {
-            "basePricePln": 1110,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 777
+          "rims_3d": {
+            "base_price_pln": 860,
+            "after_discount": {
+              "price_after_discount_pln": 688
             }
           }
         },
         {
-          "variantLabel": "3 rzędy + bagażnik mały (na rozłożony 3 rząd)",
-          "variantSlug": null,
-          "variantKey": "3rzedy+bagaznikmały(narozłozony3rzad)",
+          "variant_label": "Row 3",
+          "variant_slug": "row_3",
+          "variant_key": "row_3",
           "classic": {
-            "basePricePln": 910,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 637
+            "base_price_pln": 710,
+            "after_discount": {
+              "price_after_discount_pln": 568
             }
           },
-          "rims3d": {
-            "basePricePln": 1310,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 917
+          "rims_3d": {
+            "base_price_pln": 1110,
+            "after_discount": {
+              "price_after_discount_pln": 777
             }
           }
         },
         {
-          "variantLabel": "3 rzędy + bagażnik duży (na złożony 3 rząd)",
-          "variantSlug": null,
-          "variantKey": "3rzedy+bagaznikduzy(nazłozony3rzad)",
+          "variant_label": "Row 3 Small Trunk Unfolded",
+          "variant_slug": null,
+          "variant_key": "row_3_small_trunk_unfolded",
           "classic": {
-            "basePricePln": 1010,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 707
+            "base_price_pln": 910,
+            "after_discount": {
+              "price_after_discount_pln": 637
             }
           },
-          "rims3d": {
-            "basePricePln": 1410,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 987
+          "rims_3d": {
+            "base_price_pln": 1310,
+            "after_discount": {
+              "price_after_discount_pln": 917
             }
           }
         },
         {
-          "variantLabel": "3 rzędy + 2 bagażniki (mały i duży lub dolny i górny)",
-          "variantSlug": null,
-          "variantKey": "3rzedy+2bagazniki(małyiduzylubdolnyigorny)",
+          "variant_label": "Row 3 Large Trunk Folded",
+          "variant_slug": null,
+          "variant_key": "row_3_large_trunk_folded",
           "classic": {
-            "basePricePln": 1110,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 777
+            "base_price_pln": 1010,
+            "after_discount": {
+              "price_after_discount_pln": 707
             }
           },
-          "rims3d": {
-            "basePricePln": 1610,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 1127
+          "rims_3d": {
+            "base_price_pln": 1410,
+            "after_discount": {
+              "price_after_discount_pln": 987
             }
           }
         },
         {
-          "variantLabel": "3 rząd",
-          "variantSlug": null,
-          "variantKey": "3rzad",
+          "variant_label": "Row 3 Two Trunks",
+          "variant_slug": null,
+          "variant_key": "row_3_two_trunks",
           "classic": {
-            "basePricePln": 210,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 168
+            "base_price_pln": 1110,
+            "after_discount": {
+              "price_after_discount_pln": 777
             }
           },
-          "rims3d": {
-            "basePricePln": 350,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 280
+          "rims_3d": {
+            "base_price_pln": 1610,
+            "after_discount": {
+              "price_after_discount_pln": 1127
             }
           }
         },
         {
-          "variantLabel": "Przód + 3 rząd",
-          "variantSlug": null,
-          "variantKey": "przod+3rzad",
+          "variant_label": "Row 3 Single",
+          "variant_slug": null,
+          "variant_key": "row_3_single",
           "classic": {
-            "basePricePln": 510,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 408
+            "base_price_pln": 210,
+            "after_discount": {
+              "price_after_discount_pln": 168
             }
           },
-          "rims3d": {
-            "basePricePln": 910,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 637
+          "rims_3d": {
+            "base_price_pln": 350,
+            "after_discount": {
+              "price_after_discount_pln": 280
             }
           }
         },
         {
-          "variantLabel": "Tył + 3 rząd",
-          "variantSlug": null,
-          "variantKey": "tył+3rzad",
+          "variant_label": "Front Row 3",
+          "variant_slug": null,
+          "variant_key": "front_row_3",
           "classic": {
-            "basePricePln": 510,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 408
+            "base_price_pln": 510,
+            "after_discount": {
+              "price_after_discount_pln": 408
             }
           },
-          "rims3d": {
-            "basePricePln": 910,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 637
+          "rims_3d": {
+            "base_price_pln": 910,
+            "after_discount": {
+              "price_after_discount_pln": 637
             }
           }
         },
         {
-          "variantLabel": "Przód+3 rząd+bagażnik",
-          "variantSlug": null,
-          "variantKey": "przod+3rzad+bagaznik",
+          "variant_label": "Rear Row 3",
+          "variant_slug": null,
+          "variant_key": "rear_row_3",
           "classic": {
-            "basePricePln": 810,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 648
+            "base_price_pln": 510,
+            "after_discount": {
+              "price_after_discount_pln": 408
             }
           },
-          "rims3d": {
-            "basePricePln": 1210,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 847
+          "rims_3d": {
+            "base_price_pln": 910,
+            "after_discount": {
+              "price_after_discount_pln": 637
             }
           }
         },
         {
-          "variantLabel": "Tył + 3 rząd + bagażnik duży",
-          "variantSlug": null,
-          "variantKey": "tył+3rzad+bagaznikduzy",
+          "variant_label": "Front Row 3 Trunk",
+          "variant_slug": null,
+          "variant_key": "front_row_3_trunk",
           "classic": {
-            "basePricePln": 910,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 637
+            "base_price_pln": 810,
+            "after_discount": {
+              "price_after_discount_pln": 648
             }
           },
-          "rims3d": {
-            "basePricePln": 1210,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 847
+          "rims_3d": {
+            "base_price_pln": 1210,
+            "after_discount": {
+              "price_after_discount_pln": 847
             }
           }
         },
         {
-          "variantLabel": "Przód+3 rząd+bagażnik mały",
-          "variantSlug": null,
-          "variantKey": "przod+3rzad+bagaznikmały",
+          "variant_label": "Row 3 Single Small Trunk",
+          "variant_slug": null,
+          "variant_key": "row_3_single_small_trunk",
           "classic": {
-            "basePricePln": 860,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 688
+            "base_price_pln": 360,
+            "after_discount": {
+              "price_after_discount_pln": 288
             }
           },
-          "rims3d": {
-            "basePricePln": 1160,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 812
+          "rims_3d": {
+            "base_price_pln": 510,
+            "after_discount": {
+              "price_after_discount_pln": 408
             }
           }
         },
         {
-          "variantLabel": "Tył + 3 rząd + bagażnik mały",
-          "variantSlug": null,
-          "variantKey": "tył+3rzad+bagaznikmały",
+          "variant_label": "Row 3 Single Large Trunk",
+          "variant_slug": null,
+          "variant_key": "row_3_single_large_trunk",
           "classic": {
-            "basePricePln": 860,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 688
+            "base_price_pln": 460,
+            "after_discount": {
+              "price_after_discount_pln": 368
             }
           },
-          "rims3d": {
-            "basePricePln": 1160,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 812
+          "rims_3d": {
+            "base_price_pln": 660,
+            "after_discount": {
+              "price_after_discount_pln": 528
             }
           }
         },
         {
-          "variantLabel": "Przód + bagażnik mały",
-          "variantSlug": null,
-          "variantKey": "przod+bagaznikmały",
+          "variant_label": "Trunk Small Unfolded",
+          "variant_slug": null,
+          "variant_key": "trunk_small_unfolded",
           "classic": {
-            "basePricePln": 410,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 328
+            "base_price_pln": 200,
+            "after_discount": {
+              "price_after_discount_pln": 160
             }
           },
-          "rims3d": {
-            "basePricePln": 710,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 568
+          "rims_3d": {
+            "base_price_pln": null,
+            "after_discount": null
+          }
+        },
+        {
+          "variant_label": "Trunk Large Folded",
+          "variant_slug": null,
+          "variant_key": "trunk_large_folded",
+          "classic": {
+            "base_price_pln": 350,
+            "after_discount": {
+              "price_after_discount_pln": 280
+            }
+          },
+          "rims_3d": {
+            "base_price_pln": null,
+            "after_discount": null
+          }
+        },
+        {
+          "variant_label": "Front Rear Two Trunks",
+          "variant_slug": null,
+          "variant_key": "front_rear_two_trunks",
+          "classic": {
+            "base_price_pln": 810,
+            "after_discount": {
+              "price_after_discount_pln": 648
+            }
+          },
+          "rims_3d": {
+            "base_price_pln": 1410,
+            "after_discount": {
+              "price_after_discount_pln": 987
             }
           }
         },
         {
-          "variantLabel": "Tył + bagażnik mały",
-          "variantSlug": null,
-          "variantKey": "tył+bagaznikmały",
+          "variant_label": "Passenger Mat Rear",
+          "variant_slug": null,
+          "variant_key": "passenger_mat_rear",
           "classic": {
-            "basePricePln": 410,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 328
+            "base_price_pln": 100,
+            "after_discount": {
+              "price_after_discount_pln": 2090030900
             }
           },
-          "rims3d": {
-            "basePricePln": 710,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 568
-            }
-          }
-        },
-        {
-          "variantLabel": "3 rząd + bagażnik mały",
-          "variantSlug": null,
-          "variantKey": "3rzad+bagaznikmały",
-          "classic": {
-            "basePricePln": 360,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 288
-            }
-          },
-          "rims3d": {
-            "basePricePln": 510,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 408
-            }
-          }
-        },
-        {
-          "variantLabel": "3 rząd + bagażnik duży",
-          "variantSlug": null,
-          "variantKey": "3rzad+bagaznikduzy",
-          "classic": {
-            "basePricePln": 460,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 368
-            }
-          },
-          "rims3d": {
-            "basePricePln": 660,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 528
-            }
-          }
-        },
-        {
-          "variantLabel": "bagażnik mały (np. na rozłożony 3 rząd)",
-          "variantSlug": null,
-          "variantKey": "bagaznikmały(np.narozłozony3rzad)",
-          "classic": {
-            "basePricePln": 200,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 160
-            }
-          },
-          "rims3d": {
-            "basePricePln": null,
-            "afterDiscount": null
-          }
-        },
-        {
-          "variantLabel": "bagażnik duży (np. na złożony 3 rząd)",
-          "variantSlug": null,
-          "variantKey": "bagaznikduzy(np.nazłozony3rzad)",
-          "classic": {
-            "basePricePln": 350,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 280
-            }
-          },
-          "rims3d": {
-            "basePricePln": null,
-            "afterDiscount": null
-          }
-        },
-        {
-          "variantLabel": "Przód tył + 2 bagażniki",
-          "variantSlug": null,
-          "variantKey": "przodtył+2bagazniki",
-          "classic": {
-            "basePricePln": 810,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 648
-            }
-          },
-          "rims3d": {
-            "basePricePln": 1410,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 987
-            }
-          }
-        },
-        {
-          "variantLabel": "Uzupełnienie zestawu (dywanik pasażera + tył z tunelem lub dywanik pasażera + tył z tunelem + bagażnik)",
-          "variantSlug": null,
-          "variantKey": "uzupełnieniezestawu(dywanikpasazera+tyłztunelemlubdywanikpasazera+tyłztunelem+bagaznik)",
-          "classic": {
-            "basePricePln": 100,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 2090030900
-            }
-          },
-          "rims3d": {
-            "basePricePln": null,
-            "afterDiscount": null
+          "rims_3d": {
+            "base_price_pln": null,
+            "after_discount": null
           }
         }
       ]
     },
-    "minivany": {
-      "id": "minivany",
-      "label": "Minivany",
-      "pricingModel": "single_price",
+    "minivan": {
+      "id": "minivan",
+      "label": "Minivan",
+      "pricing_model": "single_price",
       "items": [
         {
-          "variantLabel": "Rodziaj kompletu",
-          "variantSlug": null,
-          "variantKey": "rodziajkompletu",
-          "pricePln": 33,
-          "afterDiscount20": {
-            "raw": "Kwota po rabacie"
+          "variant_label": "Driver mat",
+          "variant_slug": "driver_mat",
+          "variant_key": "driver_mat",
+          "price_pln": 350,
+          "after_discount_20": {
+            "excluded": true,
+            "label": "no_discount"
           },
-          "afterDiscount30": null
-        },
-        {
-          "variantLabel": "Tylko przód",
-          "variantSlug": "front",
-          "variantKey": "tylkoprzod",
-          "pricePln": 550,
-          "afterDiscount20": {
-            "priceAfterDiscountPln": 440
-          },
-          "afterDiscount30": {
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
           }
         },
         {
-          "variantLabel": "Przód z tunelem",
-          "variantSlug": null,
-          "variantKey": "przodztunelem",
-          "pricePln": 650,
-          "afterDiscount20": {
-            "priceAfterDiscountPln": 520
+          "variant_label": "Front only",
+          "variant_slug": "front",
+          "variant_key": "front",
+          "price_pln": 550,
+          "after_discount_20": {
+            "price_after_discount_pln": 440
           },
-          "afterDiscount30": {
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
           }
         },
         {
-          "variantLabel": "Tylko tył",
-          "variantSlug": null,
-          "variantKey": "tylkotył",
-          "pricePln": 650,
-          "afterDiscount20": {
-            "priceAfterDiscountPln": 520
+          "variant_label": "Front With Tunnel",
+          "variant_slug": null,
+          "variant_key": "front_with_tunnel",
+          "price_pln": 650,
+          "after_discount_20": {
+            "price_after_discount_pln": 520
           },
-          "afterDiscount30": {
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
           }
         },
         {
-          "variantLabel": "2 rzędy",
-          "variantSlug": "row_2",
-          "variantKey": "2rzedy",
-          "pricePln": 1050,
-          "afterDiscount20": {
-            "excluded": true,
-            "label": "no_discount"
+          "variant_label": "Rear Only",
+          "variant_slug": null,
+          "variant_key": "rear_only",
+          "price_pln": 650,
+          "after_discount_20": {
+            "price_after_discount_pln": 520
           },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 735
-          }
-        },
-        {
-          "variantLabel": "3 rzędy",
-          "variantSlug": "row_3",
-          "variantKey": "3rzedy",
-          "pricePln": 1410,
-          "afterDiscount20": {
-            "excluded": true,
-            "label": "no_discount"
-          },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 987
-          }
-        },
-        {
-          "variantLabel": "3 rzędy + bagażnik duży (na złożony 3 rząd)",
-          "variantSlug": null,
-          "variantKey": "3rzedy+bagaznikduzy(nazłozony3rzad)",
-          "pricePln": 1810,
-          "afterDiscount20": {
-            "excluded": true,
-            "label": "no_discount"
-          },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 1267
-          }
-        },
-        {
-          "variantLabel": "2 rzędy + bagażnik mały (na rozłożony 3 rząd)",
-          "variantSlug": null,
-          "variantKey": "2rzedy+bagaznikmały(narozłozony3rzad)",
-          "pricePln": 1410,
-          "afterDiscount20": {
-            "excluded": true,
-            "label": "no_discount"
-          },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 987
-          }
-        },
-        {
-          "variantLabel": "2 rzędy + bagażnik duży (na złożony 3 rząd)",
-          "variantSlug": null,
-          "variantKey": "2rzedy+bagaznikduzy(nazłozony3rzad)",
-          "pricePln": 1610,
-          "afterDiscount20": {
-            "excluded": true,
-            "label": "no_discount"
-          },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 1127
-          }
-        },
-        {
-          "variantLabel": "3 rzędy + 2 bagażniki (mały+duży)",
-          "variantSlug": null,
-          "variantKey": "3rzedy+2bagazniki(mały+duzy)",
-          "pricePln": 1910,
-          "afterDiscount20": {
-            "excluded": true,
-            "label": "no_discount"
-          },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 1337
-          }
-        },
-        {
-          "variantLabel": "3 rzędy + bagażnik mały (na rozłożony 3 rząd)",
-          "variantSlug": null,
-          "variantKey": "3rzedy+bagaznikmały(narozłozony3rzad)",
-          "pricePln": 1610,
-          "afterDiscount20": {
-            "excluded": true,
-            "label": "no_discount"
-          },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 1127
-          }
-        },
-        {
-          "variantLabel": "bagażnik mały",
-          "variantSlug": null,
-          "variantKey": "bagaznikmały",
-          "pricePln": 310,
-          "afterDiscount20": {
-            "priceAfterDiscountPln": 248
-          },
-          "afterDiscount30": {
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
           }
         },
         {
-          "variantLabel": "bagażnik duży",
-          "variantSlug": null,
-          "variantKey": "bagaznikduzy",
-          "pricePln": 510,
-          "afterDiscount20": {
-            "priceAfterDiscountPln": 408
+          "variant_label": "Row 2",
+          "variant_slug": "row_2",
+          "variant_key": "row_2",
+          "price_pln": 1050,
+          "after_discount_20": {
+            "excluded": true,
+            "label": "no_discount"
           },
-          "afterDiscount30": {
+          "after_discount_30": {
+            "price_after_discount_pln": 735
+          }
+        },
+        {
+          "variant_label": "Row 3",
+          "variant_slug": "row_3",
+          "variant_key": "row_3",
+          "price_pln": 1410,
+          "after_discount_20": {
+            "excluded": true,
+            "label": "no_discount"
+          },
+          "after_discount_30": {
+            "price_after_discount_pln": 987
+          }
+        },
+        {
+          "variant_label": "Row 3 Large Trunk Folded",
+          "variant_slug": null,
+          "variant_key": "row_3_large_trunk_folded",
+          "price_pln": 1810,
+          "after_discount_20": {
+            "excluded": true,
+            "label": "no_discount"
+          },
+          "after_discount_30": {
+            "price_after_discount_pln": 1267
+          }
+        },
+        {
+          "variant_label": "Row 2 Small Trunk Unfolded",
+          "variant_slug": null,
+          "variant_key": "row_2_small_trunk_unfolded",
+          "price_pln": 1410,
+          "after_discount_20": {
+            "excluded": true,
+            "label": "no_discount"
+          },
+          "after_discount_30": {
+            "price_after_discount_pln": 987
+          }
+        },
+        {
+          "variant_label": "Row 2 Large Trunk Folded",
+          "variant_slug": null,
+          "variant_key": "row_2_large_trunk_folded",
+          "price_pln": 1610,
+          "after_discount_20": {
+            "excluded": true,
+            "label": "no_discount"
+          },
+          "after_discount_30": {
+            "price_after_discount_pln": 1127
+          }
+        },
+        {
+          "variant_label": "Row 3 Two Trunks",
+          "variant_slug": null,
+          "variant_key": "row_3_two_trunks",
+          "price_pln": 1910,
+          "after_discount_20": {
+            "excluded": true,
+            "label": "no_discount"
+          },
+          "after_discount_30": {
+            "price_after_discount_pln": 1337
+          }
+        },
+        {
+          "variant_label": "Row 3 Small Trunk Unfolded",
+          "variant_slug": null,
+          "variant_key": "row_3_small_trunk_unfolded",
+          "price_pln": 1610,
+          "after_discount_20": {
+            "excluded": true,
+            "label": "no_discount"
+          },
+          "after_discount_30": {
+            "price_after_discount_pln": 1127
+          }
+        },
+        {
+          "variant_label": "Trunk Small",
+          "variant_slug": null,
+          "variant_key": "trunk_small",
+          "price_pln": 310,
+          "after_discount_20": {
+            "price_after_discount_pln": 248
+          },
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
           }
         },
         {
-          "variantLabel": "1 rząd + bagażnik mały (na rozłożony 3 rząd)",
-          "variantSlug": null,
-          "variantKey": "1rzad+bagaznikmały(narozłozony3rzad)",
-          "pricePln": 710,
-          "afterDiscount20": {
-            "priceAfterDiscountPln": 568
+          "variant_label": "Trunk Large",
+          "variant_slug": null,
+          "variant_key": "trunk_large",
+          "price_pln": 510,
+          "after_discount_20": {
+            "price_after_discount_pln": 408
           },
-          "afterDiscount30": {
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
           }
         },
         {
-          "variantLabel": "1 rząd + bagażnik duży (na złożóny 3 rząd)",
-          "variantSlug": null,
-          "variantKey": "1rzad+bagaznikduzy(nazłozony3rzad)",
-          "pricePln": 1010,
-          "afterDiscount20": {
-            "excluded": true,
-            "label": "no_discount"
+          "variant_label": "Row 1 Small Trunk Unfolded",
+          "variant_slug": null,
+          "variant_key": "row_1_small_trunk_unfolded",
+          "price_pln": 710,
+          "after_discount_20": {
+            "price_after_discount_pln": 568
           },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 707
-          }
-        },
-        {
-          "variantLabel": "3 rząd + bagażnik mały",
-          "variantSlug": null,
-          "variantKey": "3rzad+bagaznikmały",
-          "pricePln": 710,
-          "afterDiscount20": {
-            "priceAfterDiscountPln": 568
-          },
-          "afterDiscount30": {
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
           }
         },
         {
-          "variantLabel": "3 rząd + bagażnik duży",
-          "variantSlug": null,
-          "variantKey": "3rzad+bagaznikduzy",
-          "pricePln": 1010,
-          "afterDiscount20": {
+          "variant_label": "Row 1 Large Trunk Folded",
+          "variant_slug": null,
+          "variant_key": "row_1_large_trunk_folded",
+          "price_pln": 1010,
+          "after_discount_20": {
             "excluded": true,
             "label": "no_discount"
           },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 707
+          "after_discount_30": {
+            "price_after_discount_pln": 707
           }
         },
         {
-          "variantLabel": "Dywanik na progi (TYLKO JEŚLI MAMY POMIARY)",
-          "variantSlug": null,
-          "variantKey": "dywaniknaprogi(tylkojeslimamypomiary)",
-          "pricePln": 50,
-          "afterDiscount20": {
+          "variant_label": "Row 3 Single Small Trunk",
+          "variant_slug": null,
+          "variant_key": "row_3_single_small_trunk",
+          "price_pln": 710,
+          "after_discount_20": {
+            "price_after_discount_pln": 568
+          },
+          "after_discount_30": {
+            "excluded": true,
+            "label": "no_discount"
+          }
+        },
+        {
+          "variant_label": "Row 3 Single Large Trunk",
+          "variant_slug": null,
+          "variant_key": "row_3_single_large_trunk",
+          "price_pln": 1010,
+          "after_discount_20": {
             "excluded": true,
             "label": "no_discount"
           },
-          "afterDiscount30": null
+          "after_discount_30": {
+            "price_after_discount_pln": 707
+          }
+        },
+        {
+          "variant_label": "Sill Mat Measured",
+          "variant_slug": null,
+          "variant_key": "sill_mat_measured",
+          "price_pln": 50,
+          "after_discount_20": {
+            "excluded": true,
+            "label": "no_discount"
+          },
+          "after_discount_30": null
         }
       ]
     },
-    "busy": {
-      "id": "busy",
-      "label": "Busy",
-      "pricingModel": "single_price",
+    "bus": {
+      "id": "bus",
+      "label": "Bus",
+      "pricing_model": "single_price",
       "items": [
         {
-          "variantLabel": "Rodziaj kompletu",
-          "variantSlug": null,
-          "variantKey": "rodziajkompletu",
-          "pricePln": 33,
-          "afterDiscount20": {
-            "raw": "Kwota po rabacie"
+          "variant_label": "Driver mat",
+          "variant_slug": "driver_mat",
+          "variant_key": "driver_mat",
+          "price_pln": 350,
+          "after_discount_20": {
+            "excluded": true,
+            "label": "no_discount"
           },
-          "afterDiscount30": null
-        },
-        {
-          "variantLabel": "1 rząd",
-          "variantSlug": "row_1",
-          "variantKey": "1rzad",
-          "pricePln": 850,
-          "afterDiscount20": {
-            "priceAfterDiscountPln": 680
-          },
-          "afterDiscount30": {
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
           }
         },
         {
-          "variantLabel": "2 rzędy",
-          "variantSlug": "row_2",
-          "variantKey": "2rzedy",
-          "pricePln": 1450,
-          "afterDiscount20": {
-            "excluded": true,
-            "label": "no_discount"
+          "variant_label": "Row 1",
+          "variant_slug": "row_1",
+          "variant_key": "row_1",
+          "price_pln": 850,
+          "after_discount_20": {
+            "price_after_discount_pln": 680
           },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 1015
-          }
-        },
-        {
-          "variantLabel": "3 rzędy",
-          "variantSlug": "row_3",
-          "variantKey": "3rzedy",
-          "pricePln": 2010,
-          "afterDiscount20": {
-            "excluded": true,
-            "label": "no_discount"
-          },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 1407
-          }
-        },
-        {
-          "variantLabel": "3 rzędy+bagażnik",
-          "variantSlug": null,
-          "variantKey": "3rzedy+bagaznik",
-          "pricePln": 2860,
-          "afterDiscount20": {
-            "excluded": true,
-            "label": "no_discount"
-          },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 2002
-          }
-        },
-        {
-          "variantLabel": "Mata do bagażnika mała",
-          "variantSlug": null,
-          "variantKey": "matadobagaznikamała",
-          "pricePln": 510,
-          "afterDiscount20": {
-            "priceAfterDiscountPln": 408
-          },
-          "afterDiscount30": {
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
           }
         },
         {
-          "variantLabel": "Mata do bagażnika duza",
-          "variantSlug": null,
-          "variantKey": "matadobagaznikaduza",
-          "pricePln": 910,
-          "afterDiscount20": {
+          "variant_label": "Row 2",
+          "variant_slug": "row_2",
+          "variant_key": "row_2",
+          "price_pln": 1450,
+          "after_discount_20": {
             "excluded": true,
             "label": "no_discount"
           },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 637
+          "after_discount_30": {
+            "price_after_discount_pln": 1015
           }
         },
         {
-          "variantLabel": "1 rząd + bagażnik mały",
-          "variantSlug": null,
-          "variantKey": "1rzad+bagaznikmały",
-          "pricePln": 1210,
-          "afterDiscount20": {
+          "variant_label": "Row 3",
+          "variant_slug": "row_3",
+          "variant_key": "row_3",
+          "price_pln": 2010,
+          "after_discount_20": {
             "excluded": true,
             "label": "no_discount"
           },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 847
+          "after_discount_30": {
+            "price_after_discount_pln": 1407
           }
         },
         {
-          "variantLabel": "2 rzędy + bagażnik mały",
-          "variantSlug": null,
-          "variantKey": "2rzedy+bagaznikmały",
-          "pricePln": 1810,
-          "afterDiscount20": {
+          "variant_label": "Row 3 Trunk",
+          "variant_slug": null,
+          "variant_key": "row_3_trunk",
+          "price_pln": 2860,
+          "after_discount_20": {
             "excluded": true,
             "label": "no_discount"
           },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 1267
+          "after_discount_30": {
+            "price_after_discount_pln": 2002
           }
         },
         {
-          "variantLabel": "3 rzędy + bagażnik mały",
-          "variantSlug": null,
-          "variantKey": "3rzedy+bagaznikmały",
-          "pricePln": 2410,
-          "afterDiscount20": {
+          "variant_label": "Trunk Mat Small",
+          "variant_slug": null,
+          "variant_key": "trunk_mat_small",
+          "price_pln": 510,
+          "after_discount_20": {
+            "price_after_discount_pln": 408
+          },
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
-          },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 1687
           }
         },
         {
-          "variantLabel": "1 rząd + bagażnik duży",
-          "variantSlug": null,
-          "variantKey": "1rzad+bagaznikduzy",
-          "pricePln": 1660,
-          "afterDiscount20": {
+          "variant_label": "Trunk Mat Large",
+          "variant_slug": null,
+          "variant_key": "trunk_mat_large",
+          "price_pln": 910,
+          "after_discount_20": {
             "excluded": true,
             "label": "no_discount"
           },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 1162
+          "after_discount_30": {
+            "price_after_discount_pln": 637
           }
         },
         {
-          "variantLabel": "2 rzędy + bagażnik duży",
-          "variantSlug": null,
-          "variantKey": "2rzedy+bagaznikduzy",
-          "pricePln": 2250,
-          "afterDiscount20": {
+          "variant_label": "Row 1 Small Trunk",
+          "variant_slug": null,
+          "variant_key": "row_1_small_trunk",
+          "price_pln": 1210,
+          "after_discount_20": {
             "excluded": true,
             "label": "no_discount"
           },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 1575
+          "after_discount_30": {
+            "price_after_discount_pln": 847
           }
         },
         {
-          "variantLabel": "3 rzędy + bagażnik duży",
-          "variantSlug": null,
-          "variantKey": "3rzedy+bagaznikduzy",
-          "pricePln": 2860,
-          "afterDiscount20": {
+          "variant_label": "Trunk Small",
+          "variant_slug": null,
+          "variant_key": "trunk_small",
+          "price_pln": 1810,
+          "after_discount_20": {
             "excluded": true,
             "label": "no_discount"
           },
-          "afterDiscount30": {
-            "priceAfterDiscountPln": 2002
+          "after_discount_30": {
+            "price_after_discount_pln": 1267
           }
         },
         {
-          "variantLabel": "JEŚLI NIE MAMY SZABLONÓW do busów, ciągników i maszyn ciężkich poniżej 2000r doliczamy",
-          "variantSlug": null,
-          "variantKey": "jesliniemamyszablonowdobusow,ciagnikowimaszynciezkichponizej2000rdoliczamy",
-          "pricePln": 350,
-          "afterDiscount20": {
+          "variant_label": "Row 1 Trunk",
+          "variant_slug": null,
+          "variant_key": "row_1_trunk",
+          "price_pln": 1660,
+          "after_discount_20": {
             "excluded": true,
             "label": "no_discount"
           },
-          "afterDiscount30": null
+          "after_discount_30": {
+            "price_after_discount_pln": 1162
+          }
         },
         {
-          "variantLabel": "JEŚLI NIE MAMY SZABLONÓW do busów, ciągników i maszyn ciężkich poniżej 1990r doliczamy",
-          "variantSlug": null,
-          "variantKey": "jesliniemamyszablonowdobusow,ciagnikowimaszynciezkichponizej1990rdoliczamy",
-          "pricePln": 700,
-          "afterDiscount20": {
+          "variant_label": "Trunk Large",
+          "variant_slug": null,
+          "variant_key": "trunk_large",
+          "price_pln": 2250,
+          "after_discount_20": {
             "excluded": true,
             "label": "no_discount"
           },
-          "afterDiscount30": null
+          "after_discount_30": {
+            "price_after_discount_pln": 1575
+          }
         }
       ]
     },
     "pickup": {
       "id": "pickup",
-      "label": "Pickupy",
-      "pricingModel": "dual_mat_type",
+      "label": "Pickup",
+      "pricing_model": "dual_mat_type",
       "items": [
         {
-          "variantLabel": "Rodziaj kompletu",
-          "variantSlug": null,
-          "variantKey": "rodziajkompletu",
+          "variant_label": "Driver mat",
+          "variant_slug": "driver_mat",
+          "variant_key": "driver_mat",
           "classic": {
-            "basePricePln": 3,
-            "afterDiscount": {
-              "raw": "Kwota po rabacie"
-            }
-          },
-          "rims3d": {
-            "basePricePln": 3,
-            "afterDiscount": null
-          }
-        },
-        {
-          "variantLabel": "Dywanik kierowcy",
-          "variantSlug": "driver_mat",
-          "variantKey": "dywanikkierowcy",
-          "classic": {
-            "basePricePln": 175,
-            "afterDiscount": {
+            "base_price_pln": 175,
+            "after_discount": {
               "excluded": true,
               "label": "no_discount"
             }
           },
-          "rims3d": {
-            "basePricePln": 350,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 280
+          "rims_3d": {
+            "base_price_pln": 350,
+            "after_discount": {
+              "price_after_discount_pln": 280
             }
           }
         },
         {
-          "variantLabel": "Tylko przód",
-          "variantSlug": "front",
-          "variantKey": "tylkoprzod",
+          "variant_label": "Front only",
+          "variant_slug": "front",
+          "variant_key": "front",
           "classic": {
-            "basePricePln": 320,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 256
+            "base_price_pln": 320,
+            "after_discount": {
+              "price_after_discount_pln": 256
             }
           },
-          "rims3d": {
-            "basePricePln": 550,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 440
+          "rims_3d": {
+            "base_price_pln": 550,
+            "after_discount": {
+              "price_after_discount_pln": 440
             }
           }
         },
         {
-          "variantLabel": "Tylko przód z tunelem",
-          "variantSlug": null,
-          "variantKey": "tylkoprzodztunelem",
+          "variant_label": "Front Only With Tunnel",
+          "variant_slug": null,
+          "variant_key": "front_only_with_tunnel",
           "classic": {
-            "basePricePln": 420,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 336
+            "base_price_pln": 420,
+            "after_discount": {
+              "price_after_discount_pln": 336
             }
           },
-          "rims3d": {
-            "basePricePln": 590,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 472
+          "rims_3d": {
+            "base_price_pln": 590,
+            "after_discount": {
+              "price_after_discount_pln": 472
             }
           }
         },
         {
-          "variantLabel": "Tylko tył",
-          "variantSlug": null,
-          "variantKey": "tylkotył",
+          "variant_label": "Rear Only",
+          "variant_slug": null,
+          "variant_key": "rear_only",
           "classic": {
-            "basePricePln": 490,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 392
+            "base_price_pln": 490,
+            "after_discount": {
+              "price_after_discount_pln": 392
             }
           },
-          "rims3d": {
-            "basePricePln": 690,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 552
+          "rims_3d": {
+            "base_price_pln": 690,
+            "after_discount": {
+              "price_after_discount_pln": 552
             }
           }
         },
         {
-          "variantLabel": "Przód i tył",
-          "variantSlug": "basic",
-          "variantKey": "przoditył",
+          "variant_label": "Front and rear",
+          "variant_slug": "basic",
+          "variant_key": "basic",
           "classic": {
-            "basePricePln": 690,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 552
+            "base_price_pln": 690,
+            "after_discount": {
+              "price_after_discount_pln": 552
             }
           },
-          "rims3d": {
-            "basePricePln": 990,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 693
+          "rims_3d": {
+            "base_price_pln": 990,
+            "after_discount": {
+              "price_after_discount_pln": 693
             }
           }
         },
         {
-          "variantLabel": "Przód tył + bagażnik",
-          "variantSlug": "premium",
-          "variantKey": "przodtył+bagaznik",
+          "variant_label": "Front rear and trunk",
+          "variant_slug": "premium",
+          "variant_key": "premium",
           "classic": {
-            "basePricePln": 1150,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 805
+            "base_price_pln": 1150,
+            "after_discount": {
+              "price_after_discount_pln": 805
             }
           },
-          "rims3d": {
-            "basePricePln": 1490,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 1043
+          "rims_3d": {
+            "base_price_pln": 1490,
+            "after_discount": {
+              "price_after_discount_pln": 1043
             }
           }
         },
         {
-          "variantLabel": "Mata do bagażnika",
-          "variantSlug": "complete",
-          "variantKey": "matadobagaznika",
+          "variant_label": "Trunk mat",
+          "variant_slug": "complete",
+          "variant_key": "complete",
           "classic": {
-            "basePricePln": 690,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 552
+            "base_price_pln": 690,
+            "after_discount": {
+              "price_after_discount_pln": 552
             }
           },
-          "rims3d": {
-            "basePricePln": null,
-            "afterDiscount": null
+          "rims_3d": {
+            "base_price_pln": null,
+            "after_discount": null
           }
         },
         {
-          "variantLabel": "Przód + bagażnik",
-          "variantSlug": null,
-          "variantKey": "przod+bagaznik",
+          "variant_label": "Front Trunk",
+          "variant_slug": null,
+          "variant_key": "front_trunk",
           "classic": {
-            "basePricePln": 790,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 632
+            "base_price_pln": 790,
+            "after_discount": {
+              "price_after_discount_pln": 632
             }
           },
-          "rims3d": {
-            "basePricePln": 1090,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 763
+          "rims_3d": {
+            "base_price_pln": 1090,
+            "after_discount": {
+              "price_after_discount_pln": 763
             }
           }
         },
         {
-          "variantLabel": "Tył + bagażnik",
-          "variantSlug": null,
-          "variantKey": "tył+bagaznik",
+          "variant_label": "Rear Trunk",
+          "variant_slug": null,
+          "variant_key": "rear_trunk",
           "classic": {
-            "basePricePln": 950,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 665
+            "base_price_pln": 950,
+            "after_discount": {
+              "price_after_discount_pln": 665
             }
           },
-          "rims3d": {
-            "basePricePln": 1250,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 875
+          "rims_3d": {
+            "base_price_pln": 1250,
+            "after_discount": {
+              "price_after_discount_pln": 875
             }
           }
         }
       ]
     },
-    "auta_ciezarowe": {
-      "id": "auta_ciezarowe",
-      "label": "Auta ciężarowe",
-      "pricingModel": "single_price",
+    "heavy_truck": {
+      "id": "heavy_truck",
+      "label": "Heavy truck",
+      "pricing_model": "single_price",
       "items": [
         {
-          "variantLabel": "Rodziaj kompletu",
-          "variantSlug": null,
-          "variantKey": "rodziajkompletu",
-          "pricePln": 33,
-          "afterDiscount20": {
-            "raw": "Kwota po rabacie"
+          "variant_label": "Driver mat",
+          "variant_slug": "driver_mat",
+          "variant_key": "driver_mat",
+          "price_pln": 290,
+          "after_discount_20": {
+            "price_after_discount_pln": 232
           },
-          "afterDiscount30": null
-        },
-        {
-          "variantLabel": "Dywanik kierowcy",
-          "variantSlug": "driver_mat",
-          "variantKey": "dywanikkierowcy",
-          "pricePln": 290,
-          "afterDiscount20": {
-            "priceAfterDiscountPln": 232
-          },
-          "afterDiscount30": {
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
           }
         },
         {
-          "variantLabel": "Przód bez tunelu",
-          "variantSlug": null,
-          "variantKey": "przodbeztunelu",
-          "pricePln": 490,
-          "afterDiscount20": {
-            "priceAfterDiscountPln": 392
+          "variant_label": "Front Without Tunnel",
+          "variant_slug": null,
+          "variant_key": "front_without_tunnel",
+          "price_pln": 490,
+          "after_discount_20": {
+            "price_after_discount_pln": 392
           },
-          "afterDiscount30": {
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
           }
         },
         {
-          "variantLabel": "Przód z tunelem",
-          "variantSlug": null,
-          "variantKey": "przodztunelem",
-          "pricePln": 810,
-          "afterDiscount20": {
-            "priceAfterDiscountPln": 648
+          "variant_label": "Front With Tunnel",
+          "variant_slug": null,
+          "variant_key": "front_with_tunnel",
+          "price_pln": 810,
+          "after_discount_20": {
+            "price_after_discount_pln": 648
           },
-          "afterDiscount30": {
+          "after_discount_30": {
             "excluded": true,
             "label": "no_discount"
           }
         }
       ]
     },
-    "auto_osobowe_legacy": {
-      "id": "auto_osobowe_legacy",
-      "label": "Auto osobowe poniżej 2000 / \"angliki\" bez szablonów",
-      "pricingModel": "dual_mat_type",
+    "passenger_car_legacy": {
+      "id": "passenger_car_legacy",
+      "label": "Passenger car legacy (pre-2000 / no templates)",
+      "pricing_model": "dual_mat_type",
       "items": [
         {
-          "variantLabel": "Rodziaj kompletu",
-          "variantSlug": null,
-          "variantKey": "rodziajkompletu",
+          "variant_label": "Driver mat",
+          "variant_slug": "driver_mat",
+          "variant_key": "driver_mat",
           "classic": {
-            "basePricePln": 3,
-            "afterDiscount": {
-              "raw": "Kwota po rabacie"
-            }
-          },
-          "rims3d": {
-            "basePricePln": 3,
-            "afterDiscount": null
-          }
-        },
-        {
-          "variantLabel": "Dywanik kierowcy",
-          "variantSlug": "driver_mat",
-          "variantKey": "dywanikkierowcy",
-          "classic": {
-            "basePricePln": 310,
-            "afterDiscount": {
+            "base_price_pln": 310,
+            "after_discount": {
               "excluded": true,
               "label": "no_discount"
             }
           },
-          "rims3d": {
-            "basePricePln": 410,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 328
+          "rims_3d": {
+            "base_price_pln": 410,
+            "after_discount": {
+              "price_after_discount_pln": 328
             }
           }
         },
         {
-          "variantLabel": "Tylko przód",
-          "variantSlug": "front",
-          "variantKey": "tylkoprzod",
+          "variant_label": "Front only",
+          "variant_slug": "front",
+          "variant_key": "front",
           "classic": {
-            "basePricePln": 710,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 568
+            "base_price_pln": 710,
+            "after_discount": {
+              "price_after_discount_pln": 568
             }
           },
-          "rims3d": {
-            "basePricePln": 910,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 637
+          "rims_3d": {
+            "base_price_pln": 910,
+            "after_discount": {
+              "price_after_discount_pln": 637
             }
           }
         },
         {
-          "variantLabel": "Tylko tył",
-          "variantSlug": null,
-          "variantKey": "tylkotył",
+          "variant_label": "Rear Only",
+          "variant_slug": null,
+          "variant_key": "rear_only",
           "classic": {
-            "basePricePln": 710,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 568
+            "base_price_pln": 710,
+            "after_discount": {
+              "price_after_discount_pln": 568
             }
           },
-          "rims3d": {
-            "basePricePln": 910,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 637
+          "rims_3d": {
+            "base_price_pln": 910,
+            "after_discount": {
+              "price_after_discount_pln": 637
             }
           }
         },
         {
-          "variantLabel": "Przód i tył",
-          "variantSlug": "basic",
-          "variantKey": "przoditył",
+          "variant_label": "Front and rear",
+          "variant_slug": "basic",
+          "variant_key": "basic",
           "classic": {
-            "basePricePln": 1110,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 777
+            "base_price_pln": 1110,
+            "after_discount": {
+              "price_after_discount_pln": 777
             }
           },
-          "rims3d": {
-            "basePricePln": 1310,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 917
+          "rims_3d": {
+            "base_price_pln": 1310,
+            "after_discount": {
+              "price_after_discount_pln": 917
             }
           }
         },
         {
-          "variantLabel": "Przód tył + bagażnik",
-          "variantSlug": "premium",
-          "variantKey": "przodtył+bagaznik",
+          "variant_label": "Front rear and trunk",
+          "variant_slug": "premium",
+          "variant_key": "premium",
           "classic": {
-            "basePricePln": 1510,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 1057
+            "base_price_pln": 1510,
+            "after_discount": {
+              "price_after_discount_pln": 1057
             }
           },
-          "rims3d": {
-            "basePricePln": 1710,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 1197
+          "rims_3d": {
+            "base_price_pln": 1710,
+            "after_discount": {
+              "price_after_discount_pln": 1197
             }
           }
         },
         {
-          "variantLabel": "Mata do bagażnika",
-          "variantSlug": "complete",
-          "variantKey": "matadobagaznika",
+          "variant_label": "Trunk mat",
+          "variant_slug": "complete",
+          "variant_key": "complete",
           "classic": {
-            "basePricePln": 710,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 568
+            "base_price_pln": 710,
+            "after_discount": {
+              "price_after_discount_pln": 568
             }
           },
-          "rims3d": {
-            "basePricePln": 710,
-            "afterDiscount": {
+          "rims_3d": {
+            "base_price_pln": 710,
+            "after_discount": {
               "excluded": true,
               "label": "no_discount"
             }
           }
         },
         {
-          "variantLabel": "3 rzędy",
-          "variantSlug": "row_3",
-          "variantKey": "3rzedy",
+          "variant_label": "Row 3",
+          "variant_slug": "row_3",
+          "variant_key": "row_3",
           "classic": {
-            "basePricePln": 1410,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 987
+            "base_price_pln": 1410,
+            "after_discount": {
+              "price_after_discount_pln": 987
             }
           },
-          "rims3d": {
-            "basePricePln": 1710,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 1197
+          "rims_3d": {
+            "base_price_pln": 1710,
+            "after_discount": {
+              "price_after_discount_pln": 1197
             }
           }
         },
         {
-          "variantLabel": "3 rzędy + bagażnik",
-          "variantSlug": null,
-          "variantKey": "3rzedy+bagaznik",
+          "variant_label": "Row 3 Trunk",
+          "variant_slug": null,
+          "variant_key": "row_3_trunk",
           "classic": {
-            "basePricePln": 1710,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 1197
+            "base_price_pln": 1710,
+            "after_discount": {
+              "price_after_discount_pln": 1197
             }
           },
-          "rims3d": {
-            "basePricePln": 2010,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 1407
+          "rims_3d": {
+            "base_price_pln": 2010,
+            "after_discount": {
+              "price_after_discount_pln": 1407
             }
           }
         },
         {
-          "variantLabel": "Przód + bagaznik",
-          "variantSlug": null,
-          "variantKey": "przod+bagaznik",
+          "variant_label": "Front Trunk",
+          "variant_slug": null,
+          "variant_key": "front_trunk",
           "classic": {
-            "basePricePln": 1050,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 735
+            "base_price_pln": 1050,
+            "after_discount": {
+              "price_after_discount_pln": 735
             }
           },
-          "rims3d": {
-            "basePricePln": 1250,
-            "afterDiscount": {
-              "priceAfterDiscountPln": 875
-            }
-          }
-        },
-        {
-          "variantLabel": "JEŚLI NIE MAMY SZABLONÓW do aut osobowych poniżej 1990r doliczamy do standardowego cennika",
-          "variantSlug": null,
-          "variantKey": "jesliniemamyszablonowdoautosobowychponizej1990rdoliczamydostandardowegocennika",
-          "classic": {
-            "basePricePln": 700,
-            "afterDiscount": {
-              "excluded": true,
-              "label": "no_discount"
-            }
-          },
-          "rims3d": {
-            "basePricePln": null,
-            "afterDiscount": {
-              "excluded": true,
-              "label": "no_discount"
-            }
-          }
-        },
-        {
-          "variantLabel": "Pod każdy model auta wycena indywidualna w zależności od podłogi",
-          "variantSlug": null,
-          "variantKey": "podkazdymodelautawycenaindywidualnawzaleznosciodpodłogi",
-          "classic": {
-            "basePricePln": null,
-            "afterDiscount": {
-              "excluded": true,
-              "label": "no_discount"
-            }
-          },
-          "rims3d": {
-            "basePricePln": 3000,
-            "afterDiscount": {
-              "excluded": true,
-              "label": "no_discount"
+          "rims_3d": {
+            "base_price_pln": 1250,
+            "after_discount": {
+              "price_after_discount_pln": 875
             }
           }
         }

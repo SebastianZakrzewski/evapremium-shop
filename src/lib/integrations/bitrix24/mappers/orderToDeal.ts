@@ -6,6 +6,11 @@
 
 import { Bitrix24Deal } from '@/lib/types/bitrix';
 import { Order } from '@/lib/types/order-new';
+import {
+  resolveLegacySetTypeEnumId,
+  resolveLegacyVariantEnumId,
+} from '@/features/vehicle-catalog/server/bitrixMappingService';
+import type { MatConfiguration } from '@/features/vehicle-catalog/model/matConfiguration';
 
 export interface OrderToDealMappingOptions {
   contactId?: string;
@@ -119,6 +124,14 @@ export function mapOrderToDeal(
   console.log('🔍 mapOrderToDeal: Final deal object after cleaning:', cleanedDeal);
   
   return cleanedDeal;
+}
+
+function getMatConfiguration(order: Order): MatConfiguration | null {
+  const matItem = order.items?.find(
+    (item) => item.productType === 'mat' && item.configuration,
+  )
+  if (!matItem?.configuration) return null
+  return matItem.configuration as MatConfiguration
 }
 
 /**
@@ -406,50 +419,15 @@ export function createDealProducts(order: Order): Array<{
  * Extract product variant (enum value)
  */
 function extractProductVariant(order: Order): number | undefined {
-  console.log('🔍 extractProductVariant: Starting extraction for order:', order.orderNumber);
-  
-  // Rzeczywiste wartości enum z Bitrix24 dla pola UF_CRM_1757024931236 (Wariant kompletu)
-  // Uwaga: Pole nie ma wartości dla "Mata do Bagażnika" (complete), więc zwracamy undefined
-  const variantMap: Record<string, number | undefined> = {
-    'front': 270,      // Przód
-    'basic': 274,     // Przód + Tył
-    'premium': 276,   // Przód + Tył + Bagażnik
-    'complete': undefined, // Mata do Bagażnika - brak wartości w tym polu
-  };
-  
-  const firstItem = order.items?.[0];
-  if (!firstItem) {
-    console.log('🔍 extractProductVariant: No items found, using default value');
-    return 274; // Domyślnie "Podstawowy"
+  const config = getMatConfiguration(order)
+  if (config?.bitrix?.variantEnumId != null) {
+    return config.bitrix.variantEnumId
   }
-  
-  // Sprawdź czy item jest typu 'mat' i ma configuration
-  if (firstItem.productType !== 'mat' || !firstItem.configuration) {
-    console.log('🔍 extractProductVariant: Item is not mat or has no configuration, using default value');
-    return 274; // Domyślnie "Podstawowy"
-  }
-  
-  const variant = (firstItem.configuration as any)?.setVariant || 'basic';
-  const result = variantMap[variant];
-  
-  // Jeśli variant to 'complete', zwróć undefined (brak wartości w Bitrix24)
-  if (variant === 'complete') {
-    console.log('🔍 extractProductVariant: Variant "complete" nie ma wartości w polu UF_CRM_1757024931236, zwracam undefined');
-    return undefined;
-  }
-  
-  // Domyślnie "Przód + Tył" jeśli variant nie istnieje w mapie
-  return result !== undefined ? result : 274;
-  
-  console.log('🔍 extractProductVariant: Result:', {
-    firstItemProductType: firstItem.productType,
-    hasConfiguration: !!firstItem.configuration,
-    variant,
-    result,
-    mappedValue: variantMap[variant] ? `${variant} -> ${result}` : `${variant} -> default (274)`
-  });
-  
-  return result;
+
+  const variant = config?.setVariant || 'basic'
+  if (variant === 'complete') return undefined
+  const categoryKey = config?.pricing?.pricingCategoryKey ?? 'passenger_car'
+  return resolveLegacyVariantEnumId(categoryKey, variant) ?? 274
 }
 
 /**
@@ -484,39 +462,13 @@ function extractProductType(order: Order): number | undefined {
  * Extract set type (enum value)
  */
 function extractSetType(order: Order): number | undefined {
-  console.log('🔍 extractSetType: Starting extraction for order:', order.orderNumber);
-  
-  // Mapowanie typu zestawu na ID enum w Bitrix24
-  const setTypeMap: Record<string, number> = {
-    '3d-with-rims': 264,  // 3D EVAPREMIUM
-    'classic': 266,       // Klasyczne EVAPREMIUM
-  };
-  
-  const firstItem = order.items?.[0];
-  if (!firstItem) {
-    console.log('🔍 extractSetType: No items found, using default value');
-    return 264; // Domyślnie "3D EVAPREMIUM"
+  const config = getMatConfiguration(order)
+  if (config?.bitrix?.setTypeEnumId != null) {
+    return config.bitrix.setTypeEnumId
   }
-  
-  // Sprawdź czy item jest typu 'mat' i ma configuration
-  if (firstItem.productType !== 'mat' || !firstItem.configuration) {
-    console.log('🔍 extractSetType: Item is not mat or has no configuration, using default value');
-    return 264; // Domyślnie "3D EVAPREMIUM"
-  }
-  
-  const config = firstItem.configuration as any;
-  const setType = config.setType || '3d-with-rims';
-  const result = setTypeMap[setType] || 264; // Domyślnie "3D EVAPREMIUM"
-  
-  console.log('🔍 extractSetType: Result:', {
-    firstItemProductType: firstItem.productType,
-    hasConfiguration: !!firstItem.configuration,
-    setType,
-    result,
-    mappedValue: setTypeMap[setType] ? `${setType} -> ${result}` : `${setType} -> default (264)`
-  });
-  
-  return result;
+
+  const setType = config?.setType || '3d-with-rims'
+  return resolveLegacySetTypeEnumId(setType) ?? 264
 }
 
 /**

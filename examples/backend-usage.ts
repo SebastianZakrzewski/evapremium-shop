@@ -153,9 +153,10 @@ export async function cartManagementExample() {
           model: '3 Series',
           generation: 'F30',
           bodyType: 'sedan',
-          year: 2015
+          year: '2015'
         },
-        setType: 'premium',
+        setType: '3d-with-rims',
+        setVariant: 'premium',
         cellType: 'diamonds',
         materialColor: 'black',
         edgeColor: 'gray',

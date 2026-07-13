@@ -20,7 +20,12 @@ import {
   resolveBrandFromUrlParam,
   brandNameToNavigationSlug,
 } from "@/shared/brands";
-import { getDoorsCount, formatGenerationLabel } from "@/shared";
+import { getDoorsCount } from "@/shared";
+import {
+  formatBodyTypeDisplayPl,
+  formatModelWithGenerationDisplay,
+  formatYearRangeDisplay,
+} from "@/shared/vehicle/displayLabels";
 import { useCarModelsFilters } from "@/features/brands/hooks";
 import { apiGet } from "@/lib/api/client";
 import { formatPriceCurrency } from "@/lib/utils/formatPrice";
@@ -144,13 +149,16 @@ export default function CarModelsSection() {
     const models: Array<{
       id: string;
       name: string;
+      nameDisplay: string;
+      modelFamilyKey: string;
       brand: string;
       bodyType: string;
+      bodyTypeDisplay: string;
       yearFrom?: number;
       yearTo?: number;
       imageSrc: string;
       generation: string;
-      // Dodatkowe pola do pobierania zdjęć
+      generationDisplay: string;
       brandForImage: string;
       modelForImage: string;
       yearForImage?: number;
@@ -162,6 +170,7 @@ export default function CarModelsSection() {
     apiModels.forEach((model: any, modelIndex: number) => {
       // API zwraca zgrupowane modele z tablicą generations
       const modelName = model.model || model.name || `Model ${modelIndex + 1}`;
+      const modelFamilyKey = model.modelFamilyKey || modelName;
       const modelBrand = model.brand || brandDisplayName || brandParam || 'Unknown';
       
       // Jeśli model ma tablicę generations, rozpakuj je
@@ -176,15 +185,28 @@ export default function CarModelsSection() {
             const modelData = {
               id: `${modelIndex}-${genIndex}-${gen.bodyType || ''}-${gen.generation || ''}`,
               name: modelName,
-              brand: modelBrand,
+              nameDisplay:
+                gen.modelDisplay ||
+                formatModelWithGenerationDisplay(
+                  modelName,
+                  gen.modelKey ?? modelName,
+                  modelFamilyKey,
+                ),
+              modelFamilyKey,
+              brand: model.brandDisplay || modelBrand,
               bodyType: gen.bodyType || '',
+              bodyTypeDisplay:
+                gen.bodyTypeDisplay || formatBodyTypeDisplayPl(gen.bodyType || ''),
               yearFrom: gen.yearFrom,
               yearTo: gen.yearTo,
-              imageSrc: brandInfo?.logo || '/images/products/audi.jpg', // Fallback, będzie nadpisane
+              imageSrc: brandInfo?.logo || '/images/products/audi.jpg',
               generation: gen.generation || '',
+              generationDisplay:
+                gen.generationDisplay ||
+                formatYearRangeDisplay(gen.yearFrom, gen.yearTo, gen.generation),
               brandForImage: brandSlug || brandParam?.toLowerCase() || modelBrand?.toLowerCase() || '',
-              modelForImage: modelName.toLowerCase(), // Konwertuj na małe litery dla API
-              yearForImage: gen.yearFrom, // Użyj pierwszego roku z zakresu
+              modelForImage: modelName.toLowerCase(),
+              yearForImage: gen.yearFrom,
             };
             uniqueModelsMap.set(uniqueKey, modelData);
             models.push(modelData);
@@ -200,14 +222,24 @@ export default function CarModelsSection() {
           const modelData = {
             id: `${modelIndex}-${model.id || modelIndex}`,
             name: modelName,
-            brand: modelBrand,
+            nameDisplay: model.modelDisplay || modelName,
+            modelFamilyKey,
+            brand: model.brandDisplay || modelBrand,
             bodyType: model.bodyType || model.bodyTypes?.[0] || '',
+            bodyTypeDisplay: formatBodyTypeDisplayPl(
+              model.bodyType || model.bodyTypes?.[0] || '',
+            ),
             yearFrom: model.yearFrom,
             yearTo: model.yearTo,
-            imageSrc: brandInfo?.logo || '/images/products/audi.jpg', // Fallback, będzie nadpisane
+            imageSrc: brandInfo?.logo || '/images/products/audi.jpg',
             generation: model.generation || '',
+            generationDisplay: formatYearRangeDisplay(
+              model.yearFrom,
+              model.yearTo,
+              model.generation,
+            ),
             brandForImage: brandSlug || brandParam?.toLowerCase() || modelBrand?.toLowerCase() || '',
-            modelForImage: modelName.toLowerCase(), // Konwertuj na małe litery dla API
+            modelForImage: modelName.toLowerCase(),
             yearForImage: model.yearFrom,
           };
           uniqueModelsMap.set(uniqueKey, modelData);
@@ -347,17 +379,19 @@ export default function CarModelsSection() {
   };
 
   // Pobierz unikalne nazwy modeli dla nawigacji
-  const uniqueModelNames = useMemo(() => {
+  const uniqueModelNavItems = useMemo(() => {
     if (!brandParam || modelsWithImages.length === 0) {
       return [];
     }
-    const modelNames = new Set<string>();
-    modelsWithImages.forEach(model => {
-      if (model.name) {
-        modelNames.add(model.name);
-      }
+    const items = new Map<string, string>();
+    modelsWithImages.forEach((model) => {
+      const key = model.modelFamilyKey ?? model.name;
+      if (!key) return;
+      items.set(key, model.nameDisplay ?? model.name);
     });
-    return Array.from(modelNames).sort();
+    return [...items.entries()]
+      .map(([value, label]) => ({ value, label }))
+      .sort((left, right) => left.label.localeCompare(right.label, "pl"));
   }, [modelsWithImages, brandParam]);
 
   // Jeśli nie ma wybranej marki, pokaż sekcję wyboru marek
@@ -472,9 +506,9 @@ export default function CarModelsSection() {
       </div>
 
       {/* Model Navigation Bar */}
-      {uniqueModelNames.length > 0 && (
+      {uniqueModelNavItems.length > 0 && (
         <ModelNavigationBar
-          models={uniqueModelNames}
+          models={uniqueModelNavItems}
           selectedModel={selectedModel}
           onModelSelect={setSelectedModel}
         />
@@ -557,20 +591,20 @@ export default function CarModelsSection() {
                   <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Generacja</h4>
                   <div className="space-y-3 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent pr-2">
                     {availableGenerations.map((generation) => (
-                      <div key={generation} className="flex items-center space-x-3 group">
+                      <div key={generation.value} className="flex items-center space-x-3 group">
                         <Checkbox
-                          id={`generation-${generation}`}
-                          checked={filters.generations.includes(generation)}
+                          id={`generation-${generation.value}`}
+                          checked={filters.generations.includes(generation.value)}
                           onCheckedChange={(checked) =>
-                            handleGenerationChange(generation, checked as boolean)
+                            handleGenerationChange(generation.value, checked as boolean)
                           }
                           className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                         />
                         <Label
-                          htmlFor={`generation-${generation}`}
+                          htmlFor={`generation-${generation.value}`}
                           className="text-gray-400 group-hover:text-white cursor-pointer transition-colors"
                         >
-                          {generation}
+                          {generation.label}
                         </Label>
                       </div>
                     ))}
@@ -620,7 +654,7 @@ export default function CarModelsSection() {
                   {filteredModels.map((model) => {
                     const configuratorUrl = buildConfiguratorEntryUrl({
                       brand: brandSlug,
-                      model: model.name.toLowerCase(),
+                      model: model.modelFamilyKey ?? model.name.toLowerCase(),
                       generation: model.generation,
                       bodyType: model.bodyType,
                     });
@@ -650,20 +684,19 @@ export default function CarModelsSection() {
                           <div className="flex-1 flex flex-col p-5">
                             <div className="mb-2">
                               <h3 className="text-lg font-bold text-white leading-tight group-hover:text-red-500 transition-colors line-clamp-2">
-                                {brandLabel} {model.name}
+                                {brandLabel} {model.nameDisplay ?? model.name}
                               </h3>
                             </div>
                             
-                            <div className="text-sm text-gray-400 mb-4 flex-1">
-                              <div className="flex flex-wrap gap-2">
-                                {formatGenerationLabel(model.generation, model.yearFrom, model.yearTo) && (
-                                  <span>{formatGenerationLabel(model.generation, model.yearFrom, model.yearTo)}</span>
-                                )}
-                                {getEngineType(model.name, brandLabel) && (
-                                  <span>{getEngineType(model.name, brandLabel)}</span>
-                                )}
-                                {model.bodyType && <span className="uppercase">{model.bodyType}</span>}
-                              </div>
+                            <div className="text-sm text-gray-400 mb-4 flex-1 space-y-1">
+                              {model.generationDisplay && (
+                                <span className="block">{model.generationDisplay}</span>
+                              )}
+                              {model.bodyTypeDisplay && (
+                                <span className="block uppercase tracking-wide text-xs text-gray-500">
+                                  {model.bodyTypeDisplay}
+                                </span>
+                              )}
                             </div>
 
                             <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between gap-3">

@@ -1,4 +1,13 @@
 import { z } from 'zod';
+import {
+  AccessoryConfigurationSchema,
+  MatConfigurationSchema,
+} from '@/features/vehicle-catalog/model/matConfiguration';
+
+const CartItemConfigurationSchema = z.union([
+  MatConfigurationSchema,
+  AccessoryConfigurationSchema,
+]);
 
 export const CartItemSchema = z.object({
   id: z.string().min(1, 'ID pozycji jest wymagane'),
@@ -12,7 +21,7 @@ export const CartItemSchema = z.object({
   productName: z.string().min(1, 'Nazwa produktu jest wymagana'),
   productSku: z.string().optional(),
   productImage: z.string().url().optional(),
-  configuration: z.any().optional() // JSONB for mat configuration
+  configuration: CartItemConfigurationSchema.optional()
 });
 
 export const CartSchema = z.object({
@@ -31,7 +40,7 @@ export const AddToCartSchema = z.object({
   }),
   productId: z.string().min(1, 'ID produktu jest wymagane'),
   quantity: z.number().int().positive('Ilość musi być większa od 0'),
-  configuration: z.any().optional() // JSONB for mat configuration
+  configuration: CartItemConfigurationSchema.optional()
 });
 
 export const UpdateCartItemSchema = z.object({
@@ -48,7 +57,7 @@ export const CartActionSchema = z.object({
   quantity: z.number().int().positive().optional(),
   productType: z.enum(['accessory', 'mat']).optional(),
   productId: z.string().optional(),
-  configuration: z.any().optional()
+  configuration: CartItemConfigurationSchema.optional()
 });
 
 export type CartItemInput = z.infer<typeof CartItemSchema>;

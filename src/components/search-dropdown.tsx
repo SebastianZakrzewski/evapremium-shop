@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback, memo } from "react";
+import React, { useState, useEffect, useRef, useCallback, memo, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Search, X, Car, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/buildConfiguratorEntryUrl";
 import { searchApi } from '@/lib/api';
+import { toComparableSearchQuery } from "@/shared/vehicle/searchQuery";
 
 interface SearchBrand {
   id: number;
@@ -18,6 +19,11 @@ interface SearchBrand {
 interface SearchModel {
   brand: string;
   model: string;
+  modelFamilyKey?: string;
+  displayLabel?: string;
+  generation?: string;
+  bodyType?: string;
+  bodyTypeDisplay?: string;
   bodyTypes: string[];
   isCurrentlyProduced: boolean;
 }
@@ -67,12 +73,16 @@ function SearchDropdown() {
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const debouncedQuery = useDebounce(query, 400);
+  const comparableQuery = useMemo(
+    () => toComparableSearchQuery(debouncedQuery),
+    [debouncedQuery],
+  );
 
   // Pobierz wyniki wyszukiwania
   const { data: searchResults, isLoading, error } = useQuery<SearchResults>({
-    queryKey: ['search', debouncedQuery],
-    queryFn: () => fetchSearchResults(debouncedQuery),
-    enabled: debouncedQuery.trim().length > 0,
+    queryKey: ['search', comparableQuery],
+    queryFn: () => fetchSearchResults(comparableQuery),
+    enabled: comparableQuery.length > 0,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
@@ -283,7 +293,7 @@ function SearchDropdown() {
                     shadow-lg md:shadow-none
                   "
                   aria-label="Wyszukaj marki, modele lub produkty"
-                  aria-expanded={debouncedQuery.trim().length > 0}
+                  aria-expanded={comparableQuery.length > 0}
                   aria-haspopup="listbox"
                   autoComplete="off"
                 />
@@ -308,7 +318,7 @@ function SearchDropdown() {
                 WebkitOverflowScrolling: 'touch'
               }}
             >
-              {debouncedQuery.trim() ? (
+              {comparableQuery ? (
                 <div
                   ref={dropdownRef}
                   className="p-3 sm:p-4"
@@ -380,7 +390,7 @@ function SearchDropdown() {
                             const flatIndex = results.brands.length + index;
                             return (
                               <button
-                                key={`${model.brand}-${model.model}`}
+                                key={`${model.brand}-${model.displayLabel ?? model.model}-${index}`}
                                 onClick={() => handleResultClick({ type: 'model', data: model })}
                                 className={`
                                   w-full flex items-center gap-3 px-4 py-3 sm:py-2 rounded-lg mb-1
@@ -396,14 +406,8 @@ function SearchDropdown() {
                                 <Car className="w-5 h-5 sm:w-4 sm:h-4 text-red-500 flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
                                   <div className="font-medium truncate text-base sm:text-base">
-                                    {model.brand} {model.model}
+                                    {model.displayLabel ?? `${model.brand} ${model.model}`}
                                   </div>
-                                  {model.bodyTypes.length > 0 && (
-                                    <div className="text-sm sm:text-xs text-gray-400 truncate mt-0.5">
-                                      {model.bodyTypes.slice(0, 2).join(', ')}
-                                      {model.bodyTypes.length > 2 && '...'}
-                                    </div>
-                                  )}
                                 </div>
                               </button>
                             );

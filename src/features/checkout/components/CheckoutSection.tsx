@@ -30,6 +30,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from '@/features/shopping-cart/hooks/useCart';
+import { isMatCartConfiguration } from '@/lib/types/cart-new';
 import { useOrder } from '@/features/orders/hooks/useOrder';
 import { CreateOrderDTO } from '@/lib/types/order-new';
 import { PricingService } from '@/lib/services/PricingService';
@@ -222,19 +223,22 @@ export default function CheckoutSection() {
     
     // Find first mat item to extract car and configuration
     const firstMatItem = items.find(item => item.productType === 'mat');
-    const carData = firstMatItem?.configuration?.carDetails ? {
-      make: firstMatItem.configuration.carDetails.brand,
-      model: firstMatItem.configuration.carDetails.model,
-      year: firstMatItem.configuration.carDetails.year,
-      bodyType: firstMatItem.configuration.carDetails.bodyType,
+    const matConfig = isMatCartConfiguration(firstMatItem?.configuration)
+      ? firstMatItem.configuration
+      : undefined
+    const carData = matConfig?.carDetails ? {
+      make: matConfig.carDetails.brand,
+      model: matConfig.carDetails.model,
+      year: matConfig.carDetails.year,
+      bodyType: matConfig.carDetails.bodyType,
     } : undefined;
 
-    const configurationData = firstMatItem?.configuration ? {
-      variant: firstMatItem.configuration.setVariant,
-      setType: firstMatItem.configuration.setType,
-      cellShape: firstMatItem.configuration.cellType,
-      materialColor: firstMatItem.configuration.materialColor,
-      trimColor: firstMatItem.configuration.edgeColor,
+    const configurationData = matConfig ? {
+      variant: matConfig.setVariant,
+      setType: matConfig.setType,
+      cellShape: matConfig.cellType,
+      materialColor: matConfig.materialColor,
+      trimColor: matConfig.edgeColor,
     } : undefined;
     
     return {
@@ -653,7 +657,9 @@ export default function CheckoutSection() {
           modifiers: 0
         },
         configuration: item.configuration,
-        carDetails: item.configuration?.carDetails || {},
+        carDetails: isMatCartConfiguration(item.configuration)
+          ? item.configuration.carDetails
+          : {},
         status: 'cached' as const,
         createdAt: new Date(),
         // Dodaj brakujące pola dla kompatybilności
@@ -683,7 +689,9 @@ export default function CheckoutSection() {
             item_price: item.unitPrice,
             item_name: item.productName,
             item_category: item.productType === 'mat' ? 'car_mats' : 'accessories',
-            item_brand: item.configuration?.carDetails?.brand || 'EvaPremium',
+            item_brand: isMatCartConfiguration(item.configuration)
+              ? item.configuration.carDetails.brand
+              : 'EvaPremium',
             item_variant: item.productSku,
           })),
         };
@@ -1380,7 +1388,11 @@ export default function CheckoutSection() {
                 <div className="space-y-3 md:space-y-4">
                   {/* Items */}
                   <div className="space-y-2 md:space-y-3">
-                    {items.map((item, index) => (
+                    {items.map((item, index) => {
+                      const matConfig = isMatCartConfiguration(item.configuration)
+                        ? item.configuration
+                        : null
+                      return (
                       <div key={item.id} className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-white/10 rounded-lg p-3 md:p-4 shadow-lg hover:shadow-xl transition-all duration-300">
                         {/* Header z nazwą produktu */}
                         <div className="flex items-start justify-between mb-2 md:mb-3">
@@ -1390,16 +1402,16 @@ export default function CheckoutSection() {
                             </h3>
                             
                             {/* Szczegóły samochodu */}
-                            {item.configuration?.carDetails && (
+                            {matConfig?.carDetails && (
                               <div className="text-xs md:text-sm text-neutral-300">
                                 <p className="font-medium">
-                                  {item.configuration.carDetails.brand} {item.configuration.carDetails.model}
-                                  {item.configuration.carDetails.generation && ` ${item.configuration.carDetails.generation}`}
-                                  {item.configuration.carDetails.year && ` (${item.configuration.carDetails.year})`}
+                                  {matConfig.carDetails.brand} {matConfig.carDetails.model}
+                                  {matConfig.carDetails.generation && ` ${matConfig.carDetails.generation}`}
+                                  {matConfig.carDetails.year && ` (${matConfig.carDetails.year})`}
                                 </p>
-                                {item.configuration.carDetails.bodyType && (
+                                {matConfig.carDetails.bodyType && (
                                   <p className="text-xs text-neutral-400 capitalize mt-0.5">
-                                    {item.configuration.carDetails.bodyType}
+                                    {matConfig.carDetails.bodyType}
                                   </p>
                                 )}
                               </div>
@@ -1425,76 +1437,71 @@ export default function CheckoutSection() {
                         </div>
 
                         {/* Konfiguracja dywaników */}
-                        {item.configuration && item.productType === 'mat' && (
+                        {matConfig && (
                           <div className="mb-2 md:mb-3">
                             <div className="grid grid-cols-1 gap-2">
-                              {/* Wariant zestawu */}
-                              {item.configuration.setVariant && (
+                              {matConfig.setVariant && (
                                 <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
                                   <span className="text-xs md:text-sm text-neutral-300">Zestaw:</span>
                                   <span className="text-xs md:text-sm font-medium text-white text-right">
-                                    {item.configuration.setVariant === 'front' ? 'Starter' :
-                                     item.configuration.setVariant === 'basic' ? 'Podstawowy' :
-                                     item.configuration.setVariant === 'premium' ? 'Premium' :
-                                     item.configuration.setVariant === 'complete' ? 'Mata do bagażnika' :
-                                     item.configuration.setVariant}
-                                    {item.configuration.setVariant === 'front' && (
+                                    {matConfig.setVariant === 'front' ? 'Starter' :
+                                     matConfig.setVariant === 'basic' ? 'Podstawowy' :
+                                     matConfig.setVariant === 'premium' ? 'Premium' :
+                                     matConfig.setVariant === 'complete' ? 'Mata do bagażnika' :
+                                     matConfig.setVariant}
+                                    {matConfig.setVariant === 'front' && (
                                       <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">(przód)</span>
                                     )}
-                                    {item.configuration.setVariant === 'basic' && (
+                                    {matConfig.setVariant === 'basic' && (
                                       <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">(przód + tył)</span>
                                     )}
-                                    {item.configuration.setVariant === 'premium' && (
+                                    {matConfig.setVariant === 'premium' && (
                                       <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">(przód + tył + bagażnik)</span>
                                     )}
                                   </span>
                                 </div>
                               )}
 
-                              {/* Typ dywaników */}
-                              {item.configuration.setType && (
+                              {matConfig.setType && (
                                 <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
                                   <span className="text-xs md:text-sm text-neutral-300">Typ:</span>
                                   <span className="text-xs md:text-sm font-medium text-white">
-                                    {item.configuration.setType === '3d-with-rims' ? '3D z rantami' :
-                                     item.configuration.setType === 'classic' ? '3D bez rantów' :
-                                     item.configuration.setType}
+                                    {matConfig.setType === '3d-with-rims' ? '3D z rantami' :
+                                     matConfig.setType === 'classic' ? '3D bez rantów' :
+                                     matConfig.setType}
                                   </span>
                                 </div>
                               )}
 
-                              {/* Struktura komórek */}
-                              {item.configuration.cellType && (
+                              {matConfig.cellType && (
                                 <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
                                   <span className="text-xs md:text-sm text-neutral-300">Struktura:</span>
                                   <span className="text-xs md:text-sm font-medium text-white">
-                                    {item.configuration.cellType === 'diamonds' ? 'Romby' :
-                                     item.configuration.cellType === 'honey' ? 'Plaster miodu' :
-                                     item.configuration.cellType}
+                                    {matConfig.cellType === 'diamonds' ? 'Romby' :
+                                     matConfig.cellType === 'honey' ? 'Plaster miodu' :
+                                     matConfig.cellType}
                                   </span>
                                 </div>
                               )}
 
-                              {/* Kolory */}
-                              {(item.configuration.materialColor || item.configuration.edgeColor) && (
+                              {(matConfig.materialColor || matConfig.edgeColor) && (
                                 <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
                                   <span className="text-xs md:text-sm text-neutral-300">Kolor:</span>
                                   <span className="text-xs md:text-sm font-medium text-white text-right">
-                                    {item.configuration.materialColor && (
-                                      <span>{getColorInfo(item.configuration.materialColor).name}</span>
+                                    {matConfig.materialColor && (
+                                      <span>{getColorInfo(matConfig.materialColor).name}</span>
                                     )}
-                                    {item.configuration.materialColor && item.configuration.edgeColor && (
+                                    {matConfig.materialColor && matConfig.edgeColor && (
                                       <span className="mx-1">+</span>
                                     )}
-                                    {item.configuration.edgeColor && (
-                                      <span className="text-neutral-400">{getColorInfo(item.configuration.edgeColor).name} obszycie</span>
+                                    {matConfig.edgeColor && (
+                                      <span className="text-neutral-400">{getColorInfo(matConfig.edgeColor).name} obszycie</span>
                                     )}
                                   </span>
                                 </div>
                               )}
 
-                              {/* Ochraniacze pięt */}
-                              {item.configuration.heelPad === 'yes' && (
+                              {matConfig.heelPad === 'yes' && (
                                 <div className="flex items-center justify-between py-1.5 px-2.5 bg-orange-900/20 border border-orange-700/30 rounded-lg">
                                   <span className="text-xs md:text-sm text-orange-300">Dodatki:</span>
                                   <span className="text-xs md:text-sm font-medium text-orange-200">
@@ -1525,7 +1532,7 @@ export default function CheckoutSection() {
                           </div>
                         </div>
                       </div>
-                    ))}
+                    )})}
                   </div>
 
                   <Separator className="bg-white/10 my-2 md:my-3" />

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Accessory, AccessoryCategory, AccessoryFilters } from '@/lib/types';
-import { AccessoryService } from '@/lib/services';
+import { AccessoryService } from '@/lib/services/AccessoryService';
 import { debugLog } from '@/lib/config/features';
 
 const accessoryService = new AccessoryService();

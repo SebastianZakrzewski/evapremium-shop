@@ -1,913 +1,935 @@
 {
   "meta": {
-    "sourceSheet": "MinivanAuto osoboweBUSPickup",
-    "description": "Mapowanie modeli aut na kategorię cennika (kolumny arkusza). Użyj vehicleCategory do wyboru tabeli z warstwy cennik.",
-    "categoryLabels": {
+    "source_sheet": "MinivanAuto osoboweBUSPickup",
+    "description": "Maps car models to pricing category. Use vehicle_category to select the pricing table.",
+    "category_labels": {
       "minivan": "Minivan",
-      "auto_osobowe": "Auto osobowe",
-      "bus": "BUS",
+      "passenger_car": "Passenger car",
+      "bus": "Bus",
       "pickup": "Pickup",
-      "indywidualna_wycena": "Wycena indywidualna / wyjątki"
+      "custom_quote": "Custom quote / exceptions"
     },
     "counts": {
-      "minivan": 33,
-      "auto_osobowe": 66,
+      "minivan": 34,
+      "passenger_car": 66,
       "bus": 33,
       "pickup": 20,
-      "indywidualna_wycena": 16
+      "custom_quote": 17
     },
-    "totalModels": 168
+    "total_models": 170
   },
   "models": [
     {
-      "model": "Dacia Jogger",
-      "modelKey": "daciajogger",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Dacia Jogger",
+      "model_key": "dacia_jogger",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Dodge Ram",
-      "modelKey": "dodgeram",
-      "vehicleCategory": "pickup"
+      "model_name": "Dodge Ram",
+      "model_key": "dodge_ram",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Ford Galaxy 1995-2006",
-      "modelKey": "fordgalaxy19952006",
-      "vehicleCategory": "minivan"
+      "model_name": "Ford Galaxy 1995-2006",
+      "model_key": "ford_galaxy_1995_2006",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Ford Galaxy MK2 2006-2015 minivan 5/7os",
-      "modelKey": "fordgalaxymk220062015minivan57os",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Ford Galaxy MK2 2006-2015 minivan 5/7os",
+      "model_key": "ford_galaxy_mk2_2006_2015_minivan_5_7os",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Ford Ranger",
-      "modelKey": "fordranger",
-      "vehicleCategory": "pickup"
+      "model_name": "Ford Ranger",
+      "model_key": "ford_ranger",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Renault Espace 1,2, 3, 4",
-      "modelKey": "renaultespace1,2,3,4",
-      "vehicleCategory": "minivan"
+      "model_name": "Renault Espace 1,2, 3, 4",
+      "model_key": "renault_espace_1_2_3_4",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Ford C-max",
-      "modelKey": "fordcmax",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Ford C-max",
+      "model_key": "ford_c_max",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Fiat Scudo 2021+",
-      "modelKey": "fiatscudo2021+",
-      "vehicleCategory": "bus"
+      "model_name": "Fiat Scudo 2021+",
+      "model_key": "fiat_scudo_2021",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Ford Ranger Raptor",
-      "modelKey": "fordrangerraptor",
-      "vehicleCategory": "pickup"
+      "model_name": "Ford Ranger Raptor",
+      "model_key": "ford_ranger_raptor",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Chrysler town countries",
-      "modelKey": "chryslertowncountries",
-      "vehicleCategory": "minivan"
+      "model_name": "Chrysler town countries",
+      "model_key": "chrysler_town_countries",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Ford B-max",
-      "modelKey": "fordbmax",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Ford B-max",
+      "model_key": "ford_b_max",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Fiat Multipla 1998-2010",
-      "modelKey": "fiatmultipla19982010",
-      "vehicleCategory": "bus"
+      "model_name": "Fiat Multipla 1998-2010",
+      "model_key": "fiat_multipla_1998_2010",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Nissan Navara",
-      "modelKey": "nissannavara",
-      "vehicleCategory": "pickup"
+      "model_name": "Nissan Navara",
+      "model_key": "nissan_navara",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Chrysler pacifica 2016+ (mata do bagażnika ze złożonym 3 rzędem nie pokrywa 3 rzędu, 3 rząd trzeba domawiać osobno)",
-      "modelKey": "chryslerpacifica2016+(matadobagaznikazezłozonym3rzedemniepokrywa3rzedu,3rzadtrzebadomawiacosobno)",
-      "vehicleCategory": "minivan"
+      "model_name": "Chrysler pacifica 2016+ (mata do bagażnika ze złożonym 3 rzędem nie pokrywa 3 rzędu, 3 rząd trzeba domawiać osobno)",
+      "model_key": "chrysler_pacifica_2016_mata_do_bagaznika_ze_zlozonym_3_rzedem_nie_pokrywa_3_rzedu_3_rzad_trzeba_domawiac_osobno",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Opel Zafira A",
-      "modelKey": "opelzafiraa",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Opel Zafira A",
+      "model_key": "opel_zafira_a",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Peugeot Expert Tepee",
-      "modelKey": "peugeotexperttepee",
-      "vehicleCategory": "bus"
+      "model_name": "Peugeot Expert Tepee",
+      "model_key": "peugeot_expert_tepee",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Hummer H2",
-      "modelKey": "hummerh2",
-      "vehicleCategory": "pickup"
+      "model_name": "Hummer H2",
+      "model_key": "hummer_h2",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "3D z rantami przód - 550 zł (+100 zł tunel)",
-      "modelKey": "3dzrantamiprzod550zł(+100złtunel)",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "3D z rantami przód - 550 zł (+100 zł tunel)",
+      "model_key": "3d_z_rantami_przod_550_zl_100_zl_tunel",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Dodge grand caravan",
-      "modelKey": "dodgegrandcaravan",
-      "vehicleCategory": "minivan"
+      "model_name": "Dodge grand caravan",
+      "model_key": "dodge_grand_caravan",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Opel Zafira B",
-      "modelKey": "opelzafirab",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Opel Zafira B",
+      "model_key": "opel_zafira_b",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Volkswagen T6, T5, T4, Caravelle, California, Multivan",
-      "modelKey": "volkswagent6,t5,t4,caravelle,california,multivan",
-      "vehicleCategory": "bus"
+      "model_name": "Volkswagen T6, T5, T4, Caravelle, California, Multivan",
+      "model_key": "volkswagen_t6_t5_t4_caravelle_california_multivan",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Hummer H3",
-      "modelKey": "hummerh3",
-      "vehicleCategory": "pickup"
+      "model_name": "Hummer H3",
+      "model_key": "hummer_h3",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Mercedes R-class w251",
-      "modelKey": "mercedesrclassw251",
-      "vehicleCategory": "minivan"
+      "model_name": "Mercedes R-class w251",
+      "model_key": "mercedes_r_class_w251",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Seat Alhambra +Volkswagen Sharan 2010-2020 (bagażnik 5,7os +100zl)",
-      "modelKey": "seatalhambra+volkswagensharan20102020(bagaznik5,7os+100zl)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Seat Alhambra +Volkswagen Sharan 2010-2020 (bagażnik 5,7os +100zl)",
+      "model_key": "seat_alhambra_volkswagen_sharan_2010_2020_bagaznik_5_7os_100zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Toyota Proace Verso",
-      "modelKey": "toyotaproaceverso",
-      "vehicleCategory": "bus"
+      "model_name": "Toyota Proace Verso",
+      "model_key": "toyota_proace_verso",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Chevrolet Silverado",
-      "modelKey": "chevroletsilverado",
-      "vehicleCategory": "pickup"
+      "model_name": "Chevrolet Silverado",
+      "model_key": "chevrolet_silverado",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "3D z rantami + mata na pake - 1310 zł",
-      "modelKey": "3dzrantami+matanapake1310zł",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "3D z rantami + mata na pake - 1310 zł",
+      "model_key": "3d_z_rantami_mata_na_pake_1310_zl",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Renault scenic  2009-2016 (grand)",
-      "modelKey": "renaultscenic20092016(grand)",
-      "vehicleCategory": "minivan"
+      "model_name": "Renault scenic  2009-2016 (grand)",
+      "model_key": "renault_scenic_2009_2016_grand",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Toyota Verso",
-      "modelKey": "toyotaverso",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Toyota Verso",
+      "model_key": "toyota_verso",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Toyota Proace",
-      "modelKey": "toyotaproace",
-      "vehicleCategory": "bus"
+      "model_name": "Toyota Proace",
+      "model_key": "toyota_proace",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Ford F-150",
-      "modelKey": "fordf150",
-      "vehicleCategory": "pickup"
+      "model_name": "Ford F-150",
+      "model_key": "ford_f_150",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Toyota sienna",
-      "modelKey": "toyotasienna",
-      "vehicleCategory": "minivan"
+      "model_name": "Toyota sienna",
+      "model_key": "toyota_sienna",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Volkswagen Touran",
-      "modelKey": "volkswagentouran",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Volkswagen Touran",
+      "model_key": "volkswagen_touran",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Renault Master",
-      "modelKey": "renaultmaster",
-      "vehicleCategory": "bus"
+      "model_name": "Renault Master",
+      "model_key": "renault_master",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Ford F-250",
-      "modelKey": "fordf250",
-      "vehicleCategory": "pickup"
+      "model_name": "Ford F-250",
+      "model_key": "ford_f_250",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Peugeot 807 (sam przód cena jak do busa)",
-      "modelKey": "peugeot807(samprzodcenajakdobusa)",
-      "vehicleCategory": "minivan"
+      "model_name": "Peugeot 807 (sam przód cena jak do busa)",
+      "model_key": "peugeot_807_sam_przod_cena_jak_do_busa",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Seat Altea XL",
-      "modelKey": "seatalteaxl",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Seat Altea XL",
+      "model_key": "seat_altea_xl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Mercedes Sprinter",
-      "modelKey": "mercedessprinter",
-      "vehicleCategory": "bus"
+      "model_name": "Mercedes Sprinter",
+      "model_key": "mercedes_sprinter",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Ford Maverick 2021+",
-      "modelKey": "fordmaverick2021+",
-      "vehicleCategory": "pickup"
+      "model_name": "Ford Maverick 2021+",
+      "model_key": "ford_maverick_2021",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Ford Transit/Tourneo Connect Long 2013-2022 rok (2/3 os.)",
-      "modelKey": "fordtransittourneoconnectlong20132022rok(23os.)",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "Ford Transit/Tourneo Connect Long 2013-2022 rok (2/3 os.)",
+      "model_key": "ford_transit_tourneo_connect_long_2013_2022_rok_2_3_os",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Lancia Phedra",
-      "modelKey": "lanciaphedra",
-      "vehicleCategory": "minivan"
+      "model_name": "Lancia Phedra",
+      "model_key": "lancia_phedra",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Toyota  Prius+",
-      "modelKey": "toyotaprius+",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Toyota  Prius+",
+      "model_key": "toyota_prius",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Citroen Jumper",
-      "modelKey": "citroenjumper",
-      "vehicleCategory": "bus"
+      "model_name": "Citroen Jumper",
+      "model_key": "citroen_jumper",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Honda Ridgeline",
-      "modelKey": "hondaridgeline",
-      "vehicleCategory": "pickup"
+      "model_name": "Honda Ridgeline",
+      "model_key": "honda_ridgeline",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Opel Combo 2/3os.",
-      "modelKey": "opelcombo23os.",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "Opel Combo 2/3os.",
+      "model_key": "opel_combo_2_3os",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Fiat Ulysse",
-      "modelKey": "fiatulysse",
-      "vehicleCategory": "minivan"
+      "model_name": "Fiat Ulysse",
+      "model_key": "fiat_ulysse",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Toyota proAce city oraz proAce city verso (bagaznik 7 os + 100zl) (w wersji 7os. 3 rząd musi być sprzedany z bagaznikiem!)",
-      "modelKey": "toyotaproacecityorazproacecityverso(bagaznik7os+100zl)(wwersji7os.3rzadmusibycsprzedanyzbagaznikiem!)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Toyota proAce city oraz proAce city verso (bagaznik 7 os + 100zl) (w wersji 7os. 3 rząd musi być sprzedany z bagaznikiem!)",
+      "model_key": "toyota_proace_city_oraz_proace_city_verso_bagaznik_7_os_100zl_w_wersji_7os_3_rzad_musi_byc_sprzedany_z_bagaznikiem",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Citroen Jumpy",
-      "modelKey": "citroenjumpy",
-      "vehicleCategory": "bus"
+      "model_name": "Citroen Jumpy",
+      "model_key": "citroen_jumpy",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Isuzu D-max",
-      "modelKey": "isuzudmax",
-      "vehicleCategory": "pickup"
+      "model_name": "Isuzu D-max",
+      "model_key": "isuzu_d_max",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Toyota Proace city 3os.",
-      "modelKey": "toyotaproacecity3os.",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "Toyota Proace city 3os.",
+      "model_key": "toyota_proace_city_3os",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Citroën C8 (sam przód cena jak do busa)",
-      "modelKey": "citroenc8(samprzodcenajakdobusa)",
-      "vehicleCategory": "minivan"
+      "model_name": "Citroën C8 (sam przód cena jak do busa)",
+      "model_key": "citroen_c8_sam_przod_cena_jak_do_busa",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Citroen Berlingo (Bagażnik 7 oś +100zl)",
-      "modelKey": "citroenberlingo(bagaznik7os+100zl)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Citroen Berlingo (Bagażnik 7 oś +100zl)",
+      "model_key": "citroen_berlingo_bagaznik_7_os_100zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Citroen Space Tourer",
-      "modelKey": "citroenspacetourer",
-      "vehicleCategory": "bus"
+      "model_name": "Citroen Space Tourer",
+      "model_key": "citroen_space_tourer",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Mercedes-Benz X",
-      "modelKey": "mercedesbenzx",
-      "vehicleCategory": "pickup"
+      "model_name": "Mercedes-Benz X",
+      "model_key": "mercedes_benz_x",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Fiat Doblo 2os. Fiat Fiorino",
-      "modelKey": "fiatdoblo2os.fiatfiorino",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "Fiat Doblo 2os. Fiat Fiorino",
+      "model_key": "fiat_doblo_2os_fiat_fiorino",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "vw sharan 1995-2010 (Bagażnik TYLKO z 3 rzędem, nie sprzedajemy 3 rzędu bez bagażnika i na odwrót.)",
-      "modelKey": "vwsharan19952010(bagazniktylkoz3rzedem,niesprzedajemy3rzedubezbagaznikainaodwrot.)",
-      "vehicleCategory": "minivan"
+      "model_name": "vw sharan 1995-2010 (Bagażnik TYLKO z 3 rzędem, nie sprzedajemy 3 rzędu bez bagażnika i na odwrót.)",
+      "model_key": "vw_sharan_1995_2010_bagaznik_tylko_z_3_rzedem_nie_sprzedajemy_3_rzedu_bez_bagaznika_i_na_odwrot",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Peugeot partner (bagażnik 7os +100zl)",
-      "modelKey": "peugeotpartner(bagaznik7os+100zl)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Peugeot partner (bagażnik 7os +100zl)",
+      "model_key": "peugeot_partner_bagaznik_7os_100zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Mercedes V-class, Vito, Viano (sam przód cenna jak minivan)",
-      "modelKey": "mercedesvclass,vito,viano(samprzodcennajakminivan)",
-      "vehicleCategory": "bus"
+      "model_name": "Mercedes V-class, Vito, Viano (sam przód cenna jak minivan)",
+      "model_key": "mercedes_v_class_vito_viano_sam_przod_cenna_jak_minivan",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Mitsubishi L200",
-      "modelKey": "mitsubishil200",
-      "vehicleCategory": "pickup"
+      "model_name": "Mitsubishi L200",
+      "model_key": "mitsubishi_l200",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Mercedes-Benz Citan 2/3 os.",
-      "modelKey": "mercedesbenzcitan23os.",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "Mercedes-Benz Citan 2/3 os.",
+      "model_key": "mercedes_benz_citan_2_3_os",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Buick Enclave",
-      "modelKey": "buickenclave",
-      "vehicleCategory": "minivan"
+      "model_name": "Buick Enclave",
+      "model_key": "buick_enclave",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Opel combo (bagażnik 7os + 100zl)",
-      "modelKey": "opelcombo(bagaznik7os+100zl)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Opel combo (bagażnik 7os + 100zl)",
+      "model_key": "opel_combo_bagaznik_7os_100zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Ford Transit",
-      "modelKey": "fordtransit",
-      "vehicleCategory": "bus"
+      "model_name": "Ford Transit",
+      "model_key": "ford_transit",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Ssangyong musso 2018+",
-      "modelKey": "ssangyongmusso2018+",
-      "vehicleCategory": "pickup"
+      "model_name": "Ssangyong musso 2018+",
+      "model_key": "ssangyong_musso_2018",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Honda Element",
-      "modelKey": "hondaelement",
-      "vehicleCategory": "minivan"
+      "model_name": "Honda Element",
+      "model_key": "honda_element",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Kia carens",
-      "modelKey": "kiacarens",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Kia carens",
+      "model_key": "kia_carens",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Renault Trafic",
-      "modelKey": "renaulttrafic",
-      "vehicleCategory": "bus"
+      "model_name": "Renault Trafic",
+      "model_key": "renault_trafic",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Toyota Hilux 2004-2015",
-      "modelKey": "toyotahilux20042015",
-      "vehicleCategory": "pickup"
+      "model_name": "Toyota Hilux 2004-2015",
+      "model_key": "toyota_hilux_2004_2015",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Honda Odyssey",
-      "modelKey": "hondaodyssey",
-      "vehicleCategory": "minivan"
+      "model_name": "Honda Odyssey",
+      "model_key": "honda_odyssey",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Nissan NV200 Evalia (bagażnik +100zl)",
-      "modelKey": "nissannv200evalia(bagaznik+100zl)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Nissan NV200 Evalia (bagażnik +100zl)",
+      "model_key": "nissan_nv200_evalia_bagaznik_100zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Peugeot Boxer",
-      "modelKey": "peugeotboxer",
-      "vehicleCategory": "bus"
+      "model_name": "Peugeot Boxer",
+      "model_key": "peugeot_boxer",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Toyota Tundra",
-      "modelKey": "toyotatundra",
-      "vehicleCategory": "pickup"
+      "model_name": "Toyota Tundra",
+      "model_key": "toyota_tundra",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Tesla X 2015+",
-      "modelKey": "teslax2015+",
-      "vehicleCategory": "minivan"
+      "model_name": "Tesla X 2015+",
+      "model_key": "tesla_x_2015",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Ford tourneo Connect new,Transit Connect 2013+ (bagażnik +100zl)",
-      "modelKey": "fordtourneoconnectnew,transitconnect2013+(bagaznik+100zl)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Ford tourneo Connect new,Transit Connect 2013+ (bagażnik +100zl)",
+      "model_key": "ford_tourneo_connect_new_transit_connect_2013_bagaznik_100zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Iveco Daily",
-      "modelKey": "ivecodaily",
-      "vehicleCategory": "bus"
+      "model_name": "Iveco Daily",
+      "model_key": "iveco_daily",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Volkswagen Amarok",
-      "modelKey": "volkswagenamarok",
-      "vehicleCategory": "pickup"
+      "model_name": "Volkswagen Amarok",
+      "model_key": "volkswagen_amarok",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Patrol Y61 1997-2013 (+200 zł do przodu, reszta zestawów +300zł)",
-      "modelKey": "patroly6119972013(+200złdoprzodu,resztazestawow+300zł)",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "Patrol Y61 1997-2013 (+200 zł do przodu, reszta zestawów +300zł)",
+      "model_key": "patrol_y61_1997_2013_200_zl_do_przodu_reszta_zestawow_300zl",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Seat Alhambra (1996-2010)",
-      "modelKey": "seatalhambra(19962010)",
-      "vehicleCategory": "minivan"
+      "model_name": "Seat Alhambra (1996-2010)",
+      "model_key": "seat_alhambra_1996_2010",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Ford tourneo Connect 2013-2022 bagażnik z 3 rzędu +200zl",
-      "modelKey": "fordtourneoconnect20132022bagaznikz3rzedu+200zl",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Ford tourneo Connect 2013-2022 bagażnik z 3 rzędu +200zl",
+      "model_key": "ford_tourneo_connect_2013_2022_bagaznik_z_3_rzedu_200zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Fiat Ducato",
-      "modelKey": "fiatducato",
-      "vehicleCategory": "bus"
+      "model_name": "Fiat Ducato",
+      "model_key": "fiat_ducato",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Toyota Hilux 2015+",
-      "modelKey": "toyotahilux2015+",
-      "vehicleCategory": "pickup"
+      "model_name": "Toyota Hilux 2015+",
+      "model_key": "toyota_hilux_2015",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Patrol Y60 5os Long 1989-1997 (+200 zł do przodu, reszta zestawów +300zł)",
-      "modelKey": "patroly605oslong19891997(+200złdoprzodu,resztazestawow+300zł)",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "Patrol Y60 5os Long 1989-1997 (+200 zł do przodu, reszta zestawów +300zł)",
+      "model_key": "patrol_y60_5os_long_1989_1997_200_zl_do_przodu_reszta_zestawow_300zl",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "KIA Carnival  (1998–2005)",
-      "modelKey": "kiacarnival(19982005)",
-      "vehicleCategory": "minivan"
+      "model_name": "KIA Carnival  (1998–2005)",
+      "model_key": "kia_carnival_1998_2005",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Renault scenic  2003 -2009 (grand)",
-      "modelKey": "renaultscenic20032009(grand)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Renault scenic  2003 -2009 (grand)",
+      "model_key": "renault_scenic_2003_2009_grand",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Volkswagen Crafter",
-      "modelKey": "volkswagencrafter",
-      "vehicleCategory": "bus"
+      "model_name": "Volkswagen Crafter",
+      "model_key": "volkswagen_crafter",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Subaru Baja",
-      "modelKey": "subarubaja",
-      "vehicleCategory": "pickup"
+      "model_name": "Subaru Baja",
+      "model_key": "subaru_baja",
+      "vehicle_category": "pickup"
     },
     {
-      "model": "Chevrolet Express 2 gen 2010-2025 rok VAN",
-      "modelKey": "chevroletexpress2gen20102025rokvan",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "Chevrolet Express 2 gen 2010-2025 rok VAN",
+      "model_key": "chevrolet_express_2_gen_2010_2025_rok_van",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Suzuki XL-7 1998-2006",
-      "modelKey": "suzukixl719982006",
-      "vehicleCategory": "minivan"
+      "model_name": "Suzuki XL-7 1998-2006",
+      "model_key": "suzuki_xl_7_1998_2006",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Renault scenic  2016 -2022 (grand)",
-      "modelKey": "renaultscenic20162022(grand)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Renault scenic  2016 -2022 (grand)",
+      "model_key": "renault_scenic_2016_2022_grand",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Ford Transit Custom",
-      "modelKey": "fordtransitcustom",
-      "vehicleCategory": "bus"
+      "model_name": "Ford Transit Custom",
+      "model_key": "ford_transit_custom",
+      "vehicle_category": "bus"
     },
     {
-      "model": "1 rząd - 2550 zł",
-      "modelKey": "1rzad2550zł",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "1 rząd - 2550 zł",
+      "model_key": "1_rzad_2550_zl",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Ford Explorer 2010-2019",
-      "modelKey": "fordexplorer20102019",
-      "vehicleCategory": "minivan"
+      "model_name": "Ford Explorer 2010-2019",
+      "model_key": "ford_explorer_2010_2019",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Renault kango",
-      "modelKey": "renaultkango",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Renault kango",
+      "model_key": "renault_kango",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Ford Tourneo Custom",
-      "modelKey": "fordtourneocustom",
-      "vehicleCategory": "bus"
+      "model_name": "Ford Tourneo Custom",
+      "model_key": "ford_tourneo_custom",
+      "vehicle_category": "bus"
     },
     {
-      "model": "1 rząd + mata na pakę - 4980 zł",
-      "modelKey": "1rzad+matanapake4980zł",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "1 rząd + mata na pakę - 4980 zł",
+      "model_key": "1_rzad_mata_na_pake_4980_zl",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Nissan e-NV200 2009-2021",
-      "modelKey": "nissanenv20020092021",
-      "vehicleCategory": "minivan"
+      "model_name": "Nissan e-NV200 2009-2021",
+      "model_key": "nissan_e_nv200_2009_2021",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Dacia Dokker (bagażnik +100zl)",
-      "modelKey": "daciadokker(bagaznik+100zl)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Dacia Dokker (bagażnik +100zl)",
+      "model_key": "dacia_dokker_bagaznik_100zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Opel Movano",
-      "modelKey": "opelmovano",
-      "vehicleCategory": "bus"
+      "model_name": "Opel Movano",
+      "model_key": "opel_movano",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Nissan NV200 2009-2021",
-      "modelKey": "nissannv20020092021",
-      "vehicleCategory": "minivan"
+      "model_name": "Nissan NV200 2009-2021",
+      "model_key": "nissan_nv200_2009_2021",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Dacia lodgy",
-      "modelKey": "dacialodgy",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Dacia lodgy",
+      "model_key": "dacia_lodgy",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Mercedes T1, T2, T3 (kaczka)",
-      "modelKey": "mercedest1,t2,t3(kaczka)",
-      "vehicleCategory": "bus"
+      "model_name": "Mercedes T1, T2, T3 (kaczka)",
+      "model_key": "mercedes_t1_t2_t3_kaczka",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Tesla Model X 2023+",
-      "modelKey": "teslamodelx2023+",
-      "vehicleCategory": "minivan"
+      "model_name": "Tesla Model X 2023+",
+      "model_key": "tesla_model_x_2023",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Fiat Doblo (bagażnik +100zl)",
-      "modelKey": "fiatdoblo(bagaznik+100zl)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Fiat Doblo (bagażnik +100zl)",
+      "model_key": "fiat_doblo_bagaznik_100zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Opel Zafira LIFE",
-      "modelKey": "opelzafiralife",
-      "vehicleCategory": "bus"
+      "model_name": "Opel Zafira LIFE",
+      "model_key": "opel_zafira_life",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Renault Espace 4 GRAND",
-      "modelKey": "renaultespace4grand",
-      "vehicleCategory": "minivan"
+      "model_name": "Renault Espace 4 GRAND",
+      "model_key": "renault_espace_4_grand",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Fiat Qubo",
-      "modelKey": "fiatqubo",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Fiat Qubo",
+      "model_key": "fiat_qubo",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Kamper (głownie cena na busa lub indywidulana, pytać na grupie)",
-      "modelKey": "kamper(głowniecenanabusalubindywidulana,pytacnagrupie)",
-      "vehicleCategory": "bus"
+      "model_name": "Kamper (głownie cena na busa lub indywidulana, pytać na grupie)",
+      "model_key": "kamper_glownie_cena_na_busa_lub_indywidulana_pytac_na_grupie",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Chevrolet Suburban",
-      "modelKey": "chevroletsuburban",
-      "vehicleCategory": "minivan"
+      "model_name": "Chevrolet Suburban",
+      "model_key": "chevrolet_suburban",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Fiat Panda",
-      "modelKey": "fiatpanda",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Fiat Panda",
+      "model_key": "fiat_panda",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Renault Mascott",
-      "modelKey": "renaultmascott",
-      "vehicleCategory": "bus"
+      "model_name": "Renault Mascott",
+      "model_key": "renault_mascott",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Ford Galaxy (1995-2006)",
-      "modelKey": "fordgalaxy(19952006)",
-      "vehicleCategory": "minivan"
+      "model_name": "Ford Galaxy (1995-2006)",
+      "model_key": "ford_galaxy_1995_2006",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Fiat 500L",
-      "modelKey": "fiat500l",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Fiat 500L",
+      "model_key": "fiat_500l",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Opel Vivaro",
-      "modelKey": "opelvivaro",
-      "vehicleCategory": "bus"
+      "model_name": "Opel Vivaro",
+      "model_key": "opel_vivaro",
+      "vehicle_category": "bus"
     },
     {
-      "model": "1 rząd - 850 zł",
-      "modelKey": "1rzad850zł",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "1 rząd - 850 zł",
+      "model_key": "1_rzad_850_zl",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Forthing U Tour",
-      "modelKey": "forthingutour",
-      "vehicleCategory": "minivan"
+      "model_name": "Forthing U Tour",
+      "model_key": "forthing_u_tour",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Citroen Xsara",
-      "modelKey": "citroenxsara",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Citroen Xsara",
+      "model_key": "citroen_xsara",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Peugeot Expert III",
-      "modelKey": "peugeotexpertiii",
-      "vehicleCategory": "bus"
+      "model_name": "Peugeot Expert III",
+      "model_key": "peugeot_expert_iii",
+      "vehicle_category": "bus"
     },
     {
-      "model": "1 rząd + mata na pakę - 1960 zł",
-      "modelKey": "1rzad+matanapake1960zł",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "1 rząd + mata na pakę - 1960 zł",
+      "model_key": "1_rzad_mata_na_pake_1960_zl",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Honda Fr-v",
-      "modelKey": "hondafrv",
-      "vehicleCategory": "minivan"
+      "model_name": "Honda Fr-v",
+      "model_key": "honda_fr_v",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Citroën Grand C4 Picasso II/С4 SpaceTourer/ C4 Picasso",
-      "modelKey": "citroengrandc4picassoiiс4spacetourerc4picasso",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Citroën Grand C4 Picasso II/С4 SpaceTourer/ C4 Picasso",
+      "model_key": "citroen_grand_c4_picasso_ii_4_spacetourer_c4_picasso",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Peugeot Traveller",
-      "modelKey": "peugeottraveller",
-      "vehicleCategory": "bus"
+      "model_name": "Peugeot Traveller",
+      "model_key": "peugeot_traveller",
+      "vehicle_category": "bus"
     },
     {
-      "model": "citroen xsara picasso",
-      "modelKey": "citroenxsarapicasso",
-      "vehicleCategory": "minivan"
+      "model_name": "citroen xsara picasso",
+      "model_key": "citroen_xsara_picasso",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Chevrolet Orlando",
-      "modelKey": "chevroletorlando",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Chevrolet Orlando",
+      "model_key": "chevrolet_orlando",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Hyundai H1",
-      "modelKey": "hyundaih1",
-      "vehicleCategory": "bus"
+      "model_name": "Hyundai H1",
+      "model_key": "hyundai_h1",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Kia Carnival IV gen",
-      "modelKey": "kiacarnivalivgen",
-      "vehicleCategory": "minivan"
+      "model_name": "Kia Carnival IV gen",
+      "model_key": "kia_carnival_iv_gen",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Mazda 5 1 gen.",
-      "modelKey": "mazda51gen.",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Mazda 5 1 gen.",
+      "model_key": "mazda_5_1_gen",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Citroen Ami (przód cena jak do busa)",
-      "modelKey": "citroenami(przodcenajakdobusa)",
-      "vehicleCategory": "bus"
+      "model_name": "Citroen Ami (przód cena jak do busa)",
+      "model_key": "citroen_ami_przod_cena_jak_do_busa",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Chrysler grand voyager",
-      "modelKey": "chryslergrandvoyager",
-      "vehicleCategory": "minivan"
+      "model_name": "Chrysler grand voyager",
+      "model_key": "chrysler_grand_voyager",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Mazda Premacy",
-      "modelKey": "mazdapremacy",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Mazda Premacy",
+      "model_key": "mazda_premacy",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Hyundai Staria",
-      "modelKey": "hyundaistaria",
-      "vehicleCategory": "bus"
+      "model_name": "Hyundai Staria",
+      "model_key": "hyundai_staria",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Citroen evasion",
-      "modelKey": "citroenevasion",
-      "vehicleCategory": "minivan"
+      "model_name": "Citroen evasion",
+      "model_key": "citroen_evasion",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Volkswagen Caddy +100 zl do bagaznika",
-      "modelKey": "volkswagencaddy+100zldobagaznika",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Volkswagen Caddy +100 zl do bagaznika",
+      "model_key": "volkswagen_caddy_100_zl_do_bagaznika",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Fiat Scudo 2006-2016",
-      "modelKey": "fiatscudo20062016",
-      "vehicleCategory": "bus"
+      "model_name": "Fiat Scudo 2006-2016",
+      "model_key": "fiat_scudo_2006_2016",
+      "vehicle_category": "bus"
     },
     {
-      "model": "BYD Seal mata do bagażnika tylnia dolna - 175 zł",
-      "modelKey": "bydsealmatadobagaznikatylniadolna175zł",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "BYD Seal mata do bagażnika tylnia dolna - 175 zł",
+      "model_key": "byd_seal_mata_do_bagaznika_tylnia_dolna_175_zl",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Mercedes-Benz Citan 5/7 os. (t-class)",
-      "modelKey": "mercedesbenzcitan57os.(tclass)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Forthing v-tour",
+      "model_key": "forthing_v_tour",
+      "vehicle_category": "minivan"
     },
     {
-      "model": "Lexus LM",
-      "modelKey": "lexuslm",
-      "vehicleCategory": "bus"
+      "model_name": "Mercedes-Benz Citan 5/7 os. (t-class)",
+      "model_key": "mercedes_benz_citan_5_7_os_t_class",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Dodge Challenger mata do bagażnika - 400 zł",
-      "modelKey": "dodgechallengermatadobagaznika400zł",
-      "vehicleCategory": "indywidualna_wycena"
+      "model_name": "Lexus LM",
+      "model_key": "lexus_lm",
+      "vehicle_category": "bus"
     },
     {
-      "model": "Skoda Roomster",
-      "modelKey": "skodaroomster",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Dodge Challenger mata do bagażnika - 400 zł",
+      "model_key": "dodge_challenger_mata_do_bagaznika_400_zl",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Toyota Verso 2017 (2014-2018)",
-      "modelKey": "toyotaverso2017(20142018)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Skoda Roomster",
+      "model_key": "skoda_roomster",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Nissan Note",
-      "modelKey": "nissannote",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Toyota Verso 2017 (2014-2018)",
+      "model_key": "toyota_verso_2017_2014_2018",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Peugeot Rifter (bagażnik +100zl)",
-      "modelKey": "peugeotrifter(bagaznik+100zl)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Mercedes-Benz Tourismo 1994-2006 Cena za 1 rząd 900 zł, schodki 400 zł",
+      "model_key": "mercedes_benz_tourismo_1994_2006_cena_za_1_rzad_900_zl_schodki_400_zl",
+      "vehicle_category": "custom_quote"
     },
     {
-      "model": "Opel Meriva",
-      "modelKey": "opelmeriva",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Nissan Note",
+      "model_key": "nissan_note",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Dodge Durango",
-      "modelKey": "dodgedurango",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Peugeot Rifter (bagażnik +100zl)",
+      "model_key": "peugeot_rifter_bagaznik_100zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Fiat Freemont",
-      "modelKey": "fiatfreemont",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Opel Meriva",
+      "model_key": "opel_meriva",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Mercedes-Benz Vito wszystkie modele (tylko przód jest w cenie auta osobowego 550zł)",
-      "modelKey": "mercedesbenzvitowszystkiemodele(tylkoprzodjestwcenieautaosobowego550zł)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Dodge Durango",
+      "model_key": "dodge_durango",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Mercedes-Benz Viano W639 2003-2014 wszystkie wersję (tylko przód jest w cenie auta osobowego 550 zł)",
-      "modelKey": "mercedesbenzvianow63920032014wszystkiewersje(tylkoprzodjestwcenieautaosobowego550zł)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Fiat Freemont",
+      "model_key": "fiat_freemont",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Honda Element 2002-2011",
-      "modelKey": "hondaelement20022011",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Mercedes-Benz Vito wszystkie modele (tylko przód jest w cenie auta osobowego 550zł)",
+      "model_key": "mercedes_benz_vito_wszystkie_modele_tylko_przod_jest_w_cenie_auta_osobowego_550zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Renault Espace  5, 6",
-      "modelKey": "renaultespace5,6",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Mercedes-Benz Viano W639 2003-2014 wszystkie wersję (tylko przód jest w cenie minivan 550 zł)",
+      "model_key": "mercedes_benz_viano_w639_2003_2014_wszystkie_wersje_tylko_przod_jest_w_cenie_minivan_550_zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "C3 picasso",
-      "modelKey": "c3picasso",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Honda Element 2002-2011",
+      "model_key": "honda_element_2002_2011",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Nissan Townstar",
-      "modelKey": "nissantownstar",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Renault Espace  5, 6",
+      "model_key": "renault_espace_5_6",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Ford Galaxy (2006-2015 i 2015-2023)",
-      "modelKey": "fordgalaxy(20062015i20152023)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "C3 picasso",
+      "model_key": "c3_picasso",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "BMW  2 Gran Tourer",
-      "modelKey": "bmw2grantourer",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Nissan Townstar",
+      "model_key": "nissan_townstar",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Ford tourneo Courier (bagażnik +100zl)",
-      "modelKey": "fordtourneocourier(bagaznik+100zl)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Ford Galaxy (2006-2015 i 2015-2023)",
+      "model_key": "ford_galaxy_2006_2015_i_2015_2023",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Galaxy mk3",
-      "modelKey": "galaxymk3",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "BMW  2 Gran Tourer",
+      "model_key": "bmw_2_gran_tourer",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Chrysler Pacifica 1 gen 2003-2008",
-      "modelKey": "chryslerpacifica1gen20032008",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Ford tourneo Courier (bagażnik +100zl)",
+      "model_key": "ford_tourneo_courier_bagaznik_100zl",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Golf Sportsvan",
-      "modelKey": "golfsportsvan",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Galaxy mk3",
+      "model_key": "galaxy_mk3",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Peugeot 5008",
-      "modelKey": "peugeot5008",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Chrysler Pacifica 1 gen 2003-2008",
+      "model_key": "chrysler_pacifica_1_gen_2003_2008",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Kia Venga",
-      "modelKey": "kiavenga",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Golf Sportsvan",
+      "model_key": "golf_sportsvan",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Zafira C",
-      "modelKey": "zafirac",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Peugeot 5008",
+      "model_key": "peugeot_5008",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Volkswagen Golf Plus",
-      "modelKey": "volkswagengolfplus",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Kia Venga",
+      "model_key": "kia_venga",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Renault scenic  1996 -2003 (grand)",
-      "modelKey": "renaultscenic19962003(grand)",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Zafira C",
+      "model_key": "zafira_c",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Chrysler PT Cruiser",
-      "modelKey": "chryslerptcruiser",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Volkswagen Golf Plus",
+      "model_key": "volkswagen_golf_plus",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Fiat Idea",
-      "modelKey": "fiatidea",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Renault scenic  1996 -2003 (grand)",
+      "model_key": "renault_scenic_1996_2003_grand",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Renault Modus",
-      "modelKey": "renaultmodus",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Chrysler PT Cruiser",
+      "model_key": "chrysler_pt_cruiser",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Mercedes B-class W246",
-      "modelKey": "mercedesbclassw246",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Fiat Idea",
+      "model_key": "fiat_idea",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Mercedes B-class W247",
-      "modelKey": "mercedesbclassw247",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Renault Modus",
+      "model_key": "renault_modus",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Hyundai IX20",
-      "modelKey": "hyundaiix20",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Mercedes B-class W246",
+      "model_key": "mercedes_b_class_w246",
+      "vehicle_category": "passenger_car"
     },
     {
-      "model": "Ford s-max",
-      "modelKey": "fordsmax",
-      "vehicleCategory": "auto_osobowe"
+      "model_name": "Mercedes B-class W247",
+      "model_key": "mercedes_b_class_w247",
+      "vehicle_category": "passenger_car"
+    },
+    {
+      "model_name": "Hyundai IX20",
+      "model_key": "hyundai_ix20",
+      "vehicle_category": "passenger_car"
+    },
+    {
+      "model_name": "Ford s-max",
+      "model_key": "ford_s_max",
+      "vehicle_category": "passenger_car"
     }
   ],
-  "specialNotes": [
+  "special_notes": [
     {
-      "category": "indywidualna_wycena",
-      "text": "Indywidualna wycena - ceny podane niżej !!!!!!!"
+      "category": "custom_quote",
+      "note_key": "indywidualna_wycena_ceny_podane_nizej",
+      "note_label": "Indywidualna wycena - ceny podane niżej !!!!!!!"
     },
     {
-      "category": "indywidualna_wycena",
-      "text": "Van, Kombivan, Furgon 3/2os."
+      "category": "custom_quote",
+      "note_key": "van_kombivan_furgon_3_2os",
+      "note_label": "Van, Kombivan, Furgon 3/2os."
     },
     {
-      "category": "indywidualna_wycena",
-      "text": "MATA NA PAKĘ CZĘSTO WYKONANA JEST Z DWÓCH CZĘŚCI!"
+      "category": "custom_quote",
+      "note_key": "mata_na_pake_czesto_wykonana_jest_z_dwoch_czesci",
+      "note_label": "MATA NA PAKĘ CZĘSTO WYKONANA JEST Z DWÓCH CZĘŚCI!"
     },
     {
-      "category": "indywidualna_wycena",
-      "text": "3D bez rantów przód - 290 zł (+100 zł tunel)"
+      "category": "custom_quote",
+      "note_key": "3d_bez_rantow_przod_290_zl_100_zl_tunel",
+      "note_label": "3D bez rantów przód - 290 zł (+100 zł tunel)"
     },
     {
-      "category": "indywidualna_wycena",
-      "text": "3D bez rantów + mata na pake - 1210 zł"
+      "category": "custom_quote",
+      "note_key": "3d_bez_rantow_mata_na_pake_1210_zl",
+      "note_label": "3D bez rantów + mata na pake - 1210 zł"
     },
     {
-      "category": "indywidualna_wycena",
-      "text": "Mata na pake - 910 zł"
+      "category": "custom_quote",
+      "note_key": "mata_na_pake_910_zl",
+      "note_label": "Mata na pake - 910 zł"
     },
     {
-      "category": "indywidualna_wycena",
-      "text": "Przykłady:"
+      "category": "custom_quote",
+      "note_key": "przyklady",
+      "note_label": "Przykłady:"
     },
     {
-      "category": "indywidualna_wycena",
-      "text": "mata na pakę - 2730 zł"
+      "category": "custom_quote",
+      "note_key": "mata_na_pake_2730_zl",
+      "note_label": "mata na pakę - 2730 zł"
     },
     {
-      "category": "indywidualna_wycena",
-      "text": "BUS 2/3 os."
+      "category": "custom_quote",
+      "note_key": "bus_2_3_os",
+      "note_label": "BUS 2/3 os."
     },
     {
-      "category": "indywidualna_wycena",
-      "text": "mata na pake -1210 zł"
+      "category": "custom_quote",
+      "note_key": "mata_na_pake_1210_zl",
+      "note_label": "mata na pake -1210 zł"
     },
     {
-      "category": "indywidualna_wycena",
-      "text": "Tesla bagażnik przedni lub tylni dolny - 175 zł"
+      "category": "custom_quote",
+      "note_key": "tesla_bagaznik_przedni_lub_tylni_dolny_175_zl",
+      "note_label": "Tesla bagażnik przedni lub tylni dolny - 175 zł"
     },
     {
-      "category": "indywidualna_wycena",
-      "text": "Fortwo 450 mata do bagażnik - 175 zł, (cena za przód + 50 zł)"
+      "category": "custom_quote",
+      "note_key": "fortwo_450_mata_do_bagaznik_175_zl_cena_za_przod_50_zl",
+      "note_label": "Fortwo 450 mata do bagażnik - 175 zł, (cena za przód + 50 zł)"
     }
   ]
 }

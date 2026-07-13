@@ -150,16 +150,18 @@ export default function RootLayout({
         />
 
         {/* Cookiebot — musi być pierwszym skryptem w <head> */}
-        <script
+        <Script
           id="Cookiebot"
           src="https://consent.cookiebot.com/uc.js"
           data-cbid="646107cd-5e5a-41eb-af5f-80b502582c41"
           data-blockingmode="auto"
           data-widget-enabled="false"
-          type="text/javascript"
+          strategy="beforeInteractive"
         />
 
-        <script
+        <Script
+          id="cookiebot-ui-suppress"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function () {
@@ -198,9 +200,11 @@ export default function RootLayout({
         />
 
         {/* Google Tag Manager — blokowany przez Cookiebot do czasu zgody marketingowej */}
-        <script
+        <Script
+          id="gtm"
           type="text/plain"
           data-cookieconsent="marketing"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

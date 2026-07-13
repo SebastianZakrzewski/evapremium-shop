@@ -5,7 +5,6 @@ import { useSearchParams, usePathname } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/features/shopping-cart/hooks/useCart";
-import { calculatePriceBreakdown } from "@/features/car-configurator/domain/pricing";
 import { getMatImagePath } from "@/lib/image-mapping";
 import { getColorInfo } from "@/lib/color-mapping";
 import { useAccessories } from "@/features/accessories/hooks/useAccessories";
@@ -13,7 +12,7 @@ import { useBrands } from "@/features/brands/hooks/useBrands";
 import { useMatProductImages } from "@/features/mat-product-images";
 import { useConfiguratorState } from "@/features/car-configurator/hooks/useConfiguratorState";
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState";
-import { useConfiguratorCarData } from "@/features/car-configurator";
+import { useResolvedPricing } from "@/features/vehicle-catalog/hooks/useResolvedPricing";
 import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext";
 import { normalizeBrandName } from "@/shared/brands";
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
@@ -56,7 +55,7 @@ const TOTAL_STEPS_MOBILE = 5;
 // Mapowanie ID na typy dla funkcji getMatImagePath
 const getMatTypeForImage = (setTypeId: string): '3d' | 'classic' => {
   if (setTypeId === 'classic') return 'classic';
-  return '3d'; // dla '3d-with-rims'
+  return '3d'; // dla '3d-with-rims' i 'single'
 };
 
 export default function ConfiguratorSimple() {
@@ -77,19 +76,6 @@ export default function ConfiguratorSimple() {
 
   const step1Title = productEntry.isLocked ? "Twój samochód" : "Wybór samochodu";
 
-  const brandApiName = useMemo(
-    () =>
-      normalizeBrandName(
-        (searchParams.get("brand") || config.brand || "").toLowerCase()
-      ) ?? config.brand,
-    [config.brand, searchParams]
-  );
-
-  const { findGenerationByYear } = useConfiguratorCarData({
-    brandApiName,
-    enabled: !!brandApiName,
-  });
-  
   // Funkcja do pobierania logo marki
   const getBrandLogo = (brandName: string): string | null => {
     if (!brandName || !brands.length) return null;
@@ -149,13 +135,7 @@ export default function ConfiguratorSimple() {
   }, [searchParams, brands.length]);
 
 
-  // Oblicz generację na podstawie roku (z car_models_extended przez API)
-  const generation = useMemo(() => {
-    if (!config.model || !config.year) return undefined;
-    const year = parseInt(config.year, 10);
-    if (isNaN(year)) return undefined;
-    return findGenerationByYear(config.model, year) ?? undefined;
-  }, [config.model, config.year, findGenerationByYear]);
+  const generation = config.generation || undefined;
 
   // Normalizuj markę dla API (użyj slug z URL)
   const brandForImage = useMemo(() => {
@@ -288,9 +268,44 @@ export default function ConfiguratorSimple() {
     '/zrantamiprodukt/komplet5dyw.webp',
   ];
 
-  // Oblicz cenę na podstawie konfiguracji – tylko gdy wybrano wariant zestawu
+  const pricingQuery = useResolvedPricing({
+    recordKey: config.recordKey || undefined,
+    year: config.year ? Number(config.year) : undefined,
+    bodyTypeKey: config.bodyTypeKey || undefined,
+    matType: config.matType,
+    variantKey: config.variant || undefined,
+  });
+  const pricingVariants = pricingQuery.data?.variants ?? [];
+  const skipMatTypeStep =
+    pricingQuery.data?.availableMatTypes?.length === 1 &&
+    pricingQuery.data.availableMatTypes[0] === "single";
+
+  useEffect(() => {
+    const pricing = pricingQuery.data;
+    if (!pricing) return;
+
+    const updates: Partial<ConfiguratorState> = {};
+    if (pricing.matType === "single" && config.matType !== "single") {
+      updates.matType = "single";
+    }
+    if (config.pricingCategoryKey !== pricing.pricingCategoryKey) {
+      updates.pricingCategoryKey = pricing.pricingCategoryKey;
+    }
+    if (config.catalogVersionCode !== pricing.catalogVersionCode) {
+      updates.catalogVersionCode = pricing.catalogVersionCode;
+    }
+    if (Object.keys(updates).length > 0) applyConfigUpdate(updates);
+  }, [
+    pricingQuery.data,
+    config.matType,
+    config.pricingCategoryKey,
+    config.catalogVersionCode,
+    applyConfigUpdate,
+  ]);
+
   const priceBreakdown = useMemo(() => {
-    if (!config.variant) {
+    const selectedVariant = pricingQuery.data?.selectedVariant;
+    if (!config.variant || !selectedVariant) {
       return {
         basePrice: 0,
         discount: 0,
@@ -299,12 +314,14 @@ export default function ConfiguratorSimple() {
         totalPrice: 0,
       };
     }
-    return calculatePriceBreakdown(config.matType, config.variant, {
-      brand: config.brand,
-      model: config.model,
-      bodyType: config.bodyType,
-    });
-  }, [config.matType, config.variant, config.brand, config.model, config.bodyType]);
+    return {
+      basePrice: selectedVariant.basePrice,
+      discount: selectedVariant.discount,
+      priceAfterDiscount: selectedVariant.priceAfterDiscount,
+      shippingCost: 0,
+      totalPrice: selectedVariant.priceAfterDiscount,
+    };
+  }, [config.variant, pricingQuery.data?.selectedVariant]);
 
   // Znajdź wybraną podpiętkę
   const selectedPodpietka = useMemo(() => {
@@ -335,7 +352,9 @@ export default function ConfiguratorSimple() {
   // Generuj ścieżkę do zdjęcia produktu (wybrane zdjęcie z galerii)
   const productPreviewPath = useMemo(() => {
     if (!config.matType) return null;
-    if (config.matType === "3d-with-rims") return selectedRimsProductImage;
+    if (config.matType === "3d-with-rims" || config.matType === "single") {
+      return selectedRimsProductImage;
+    }
     if (config.matType === "classic") return selectedClassicProductImage;
     return null;
   }, [config.matType, selectedClassicProductImage, selectedRimsProductImage]);
@@ -582,7 +601,7 @@ export default function ConfiguratorSimple() {
   const isStepValidDesktop = (step: number): boolean => {
     switch (step) {
       case 1: return !!(config.brand && config.model && config.year && config.bodyType);
-      case 2: return !!config.matType;
+      case 2: return skipMatTypeStep ? true : !!config.matType;
       case 3: return !!config.variant;
       case 4: return !!config.structure;
       case 5: return !!(config.color && config.edgeColor);
@@ -596,7 +615,9 @@ export default function ConfiguratorSimple() {
   const isStepValidMobile = (step: number): boolean => {
     switch (step) {
       case 1: return !!(config.brand && config.model && config.year && config.bodyType);
-      case 2: return !!(config.matType && config.variant);
+      case 2: return skipMatTypeStep
+        ? !!config.variant
+        : !!(config.matType && config.variant);
       case 3: return !!(config.structure && config.color && config.edgeColor);
       case 4: return true; // Dodatki są opcjonalne
       case 5: return isStepValidMobile(1) && isStepValidMobile(2) && isStepValidMobile(3); // Podsumowanie - wszystkie wymagane kroki muszą być wypełnione
@@ -830,7 +851,8 @@ export default function ConfiguratorSimple() {
     setIsAddingToCart(true);
     try {
       const productId = crypto.randomUUID();
-      const matTypeForImage: '3d' | 'classic' = config.matType === '3d-with-rims' ? '3d' : 'classic';
+      const matTypeForImage: '3d' | 'classic' =
+        config.matType === 'classic' ? 'classic' : '3d';
       const productImagePath = getMatImagePath(
         matTypeForImage,
         config.structure as 'diamonds' | 'honey',
@@ -850,9 +872,23 @@ export default function ConfiguratorSimple() {
         configuration: {
           carDetails: {
             brand: config.brand,
+            brandKey: config.brandKey,
             model: config.model,
+            modelFamilyKey: config.modelFamilyKey,
+            modelKey: config.modelKey,
+            generation: config.generation,
             year: config.year,
             bodyType: config.bodyType,
+            bodyTypeKey: config.bodyTypeKey,
+            recordKey: config.recordKey,
+            templateId: config.templateId,
+          },
+          pricing: {
+            pricingCategoryKey: config.pricingCategoryKey,
+            catalogVersionCode: config.catalogVersionCode,
+            basePrice: priceBreakdown.basePrice,
+            priceAfterDiscount: priceBreakdown.priceAfterDiscount,
+            totalPrice: priceBreakdown.totalPrice,
           },
           setType: config.matType,
           setVariant: config.variant,
@@ -1045,6 +1081,10 @@ export default function ConfiguratorSimple() {
                     matType: config.matType,
                     variant: config.variant || "front",
                   }}
+                  pricingVariants={pricingVariants}
+                  pricingCategoryKey={config.pricingCategoryKey}
+                  bodyTypeKey={config.bodyTypeKey}
+                  skipMatTypeStep={skipMatTypeStep}
                   priceBreakdown={priceBreakdown}
                   onUpdate={updateConfig}
                   onNext={goToNextStep}
@@ -1207,6 +1247,25 @@ export default function ConfiguratorSimple() {
                         />
                       )}
                     </>
+                  ) : step === 2 ? (
+                    <MatTypeStep
+                      config={{ matType: config.matType }}
+                      skipMatTypeStep={skipMatTypeStep}
+                      onUpdate={updateConfig}
+                      onNext={goToNextStep}
+                      onPrevious={goToPreviousStep}
+                    />
+                  ) : step === 3 ? (
+                    <VariantStep
+                      config={{ variant: config.variant || "" }}
+                      pricingVariants={pricingVariants}
+                      pricingCategoryKey={config.pricingCategoryKey}
+                      bodyTypeKey={config.bodyTypeKey}
+                      priceBreakdown={priceBreakdown}
+                      onUpdate={updateConfig}
+                      onNext={goToNextStep}
+                      onPrevious={goToPreviousStep}
+                    />
                   ) : (
                     <Comp
                       config={config}

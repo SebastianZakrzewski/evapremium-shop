@@ -1,92 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { env } from '@/config/env';
+import { NextResponse } from "next/server"
+import { getLegacyBodyTypes } from "@/features/vehicle-catalog/server/legacyCatalogService"
 
-const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+export const dynamic = "force-dynamic"
+export const maxDuration = 30
 
-export async function GET(request: NextRequest) {
+export const GET = async () => {
   try {
-    // Pobierz unikalne typy nadwozia z tabeli car_models_extended
-    const { data: bodyTypes, error } = await supabase
-      .from('car_models_extended')
-      .select('body_type')
-      .not('body_type', 'is', null)
-      .order('body_type');
-
-    if (error) {
-      console.error('Supabase error:', error);
-      return NextResponse.json(
-        { error: 'Błąd podczas pobierania typów nadwozia' },
-        { status: 500 }
-      );
-    }
-
-    if (!bodyTypes || bodyTypes.length === 0) {
-      return NextResponse.json([]);
-    }
-
-    // Usuń duplikaty i przygotuj dane
-    const uniqueBodyTypes = Array.from(
-      new Set(bodyTypes.map(item => item.body_type))
-    ).map((bodyType, index) => ({
-      id: index + 1,
-      name: bodyType,
-      category: getBodyTypeCategory(bodyType),
-      description: getBodyTypeDescription(bodyType)
-    }));
-
-    return NextResponse.json(uniqueBodyTypes);
+    const bodyTypes = await getLegacyBodyTypes()
+    return NextResponse.json(bodyTypes)
   } catch (error) {
-    console.error('API error:', error);
+    console.error("Body types catalog request failed", error)
     return NextResponse.json(
-      { error: 'Wystąpił błąd serwera' },
-      { status: 500 }
-    );
+      { error: "Wystąpił błąd serwera" },
+      { status: 500 },
+    )
   }
-}
-
-// Funkcja pomocnicza do kategoryzacji typów nadwozia
-function getBodyTypeCategory(bodyType: string): string {
-  const lowerType = bodyType.toLowerCase();
-  
-  if (lowerType.includes('hatchback')) return 'hatchback';
-  if (lowerType.includes('sedan')) return 'sedan';
-  if (lowerType.includes('suv')) return 'suv';
-  if (lowerType.includes('coupe')) return 'coupe';
-  if (lowerType.includes('roadster') || lowerType.includes('cabrio')) return 'convertible';
-  if (lowerType.includes('kombi') || lowerType.includes('wagon')) return 'wagon';
-  if (lowerType.includes('van') || lowerType.includes('dostawczak')) return 'van';
-  if (lowerType.includes('minivan')) return 'minivan';
-  if (lowerType.includes('fastback') || lowerType.includes('liftback')) return 'fastback';
-  
-  return 'other';
-}
-
-// Funkcja pomocnicza do generowania opisu typu nadwozia
-function getBodyTypeDescription(bodyType: string): string {
-  const descriptions: Record<string, string> = {
-    'hatchback 2drzwi': 'Hatchback 2-drzwiowy',
-    'hatchback 3drzwi': 'Hatchback 3-drzwiowy',
-    'hatchback 5drzwi': 'Hatchback 5-drzwiowy',
-    'hatchback 3/5drzwi': 'Hatchback 3 lub 5-drzwiowy',
-    'hatchback': 'Hatchback',
-    'sedan': 'Sedan',
-    'coupe': 'Coupe',
-    'roadster': 'Roadster',
-    'cabrio': 'Kabriolet',
-    'SUV': 'SUV',
-    'SUV 5os.': 'SUV 5-osobowy',
-    'SUV 7os.': 'SUV 7-osobowy',
-    'kombi': 'Kombi',
-    'kombi/ sedan': 'Kombi lub sedan',
-    'minivan': 'Minivan',
-    'VAN': 'Van',
-    'dostawczak': 'Dostawczak',
-    'van 4drzwi': 'Van 4-drzwiowy',
-    'fastback': 'Fastback',
-    'liftback': 'Liftback',
-    'shooting brake': 'Shooting brake'
-  };
-  
-  return descriptions[bodyType] || bodyType;
 }

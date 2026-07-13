@@ -1,0 +1,2515 @@
+{
+  "version": "2.0.0",
+  "locale": "en",
+  "key_format": "snake_case",
+  "source_file": "CENNIK EVAMATS (3).xlsx",
+  "generated_at": "2026-07-12T23:04:26.420Z",
+  "description": "Unified structure per vehicle segment (minivan, passenger_car, bus, pickup) with three data layers",
+  "layers": {
+    "pricing": {
+      "file": "evamats-cennik.normalized.json",
+      "source_sheet": "Cennik"
+    },
+    "vehicle_mapping": {
+      "file": "evamats-vehicle-category-mapping.normalized.json",
+      "source_sheet": "MinivanAuto osoboweBUSPickup"
+    },
+    "bitrix_variants": {
+      "file": "evamats-bitrix-variant-mapping.normalized.json",
+      "source_sheet": "Wariant kompletu Bitrix"
+    }
+  },
+  "segments": {
+    "minivan": {
+      "id": "minivan",
+      "label": "Minivan",
+      "vehicle_category": "minivan",
+      "pricing_table": "minivan",
+      "bitrix_segment": "minivan",
+      "vehicle_mapping": {
+        "model_count": 34,
+        "models": [
+          {
+            "model_name": "Ford Galaxy 1995-2006",
+            "model_key": "ford_galaxy_1995_2006",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Renault Espace 1,2, 3, 4",
+            "model_key": "renault_espace_1_2_3_4",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Chrysler town countries",
+            "model_key": "chrysler_town_countries",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Chrysler pacifica 2016+ (mata do bagażnika ze złożonym 3 rzędem nie pokrywa 3 rzędu, 3 rząd trzeba domawiać osobno)",
+            "model_key": "chrysler_pacifica_2016_mata_do_bagaznika_ze_zlozonym_3_rzedem_nie_pokrywa_3_rzedu_3_rzad_trzeba_domawiac_osobno",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Dodge grand caravan",
+            "model_key": "dodge_grand_caravan",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Mercedes R-class w251",
+            "model_key": "mercedes_r_class_w251",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Renault scenic  2009-2016 (grand)",
+            "model_key": "renault_scenic_2009_2016_grand",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Toyota sienna",
+            "model_key": "toyota_sienna",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Peugeot 807 (sam przód cena jak do busa)",
+            "model_key": "peugeot_807_sam_przod_cena_jak_do_busa",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Lancia Phedra",
+            "model_key": "lancia_phedra",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Fiat Ulysse",
+            "model_key": "fiat_ulysse",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Citroën C8 (sam przód cena jak do busa)",
+            "model_key": "citroen_c8_sam_przod_cena_jak_do_busa",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "vw sharan 1995-2010 (Bagażnik TYLKO z 3 rzędem, nie sprzedajemy 3 rzędu bez bagażnika i na odwrót.)",
+            "model_key": "vw_sharan_1995_2010_bagaznik_tylko_z_3_rzedem_nie_sprzedajemy_3_rzedu_bez_bagaznika_i_na_odwrot",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Buick Enclave",
+            "model_key": "buick_enclave",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Honda Element",
+            "model_key": "honda_element",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Honda Odyssey",
+            "model_key": "honda_odyssey",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Tesla X 2015+",
+            "model_key": "tesla_x_2015",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Seat Alhambra (1996-2010)",
+            "model_key": "seat_alhambra_1996_2010",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "KIA Carnival  (1998–2005)",
+            "model_key": "kia_carnival_1998_2005",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Suzuki XL-7 1998-2006",
+            "model_key": "suzuki_xl_7_1998_2006",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Ford Explorer 2010-2019",
+            "model_key": "ford_explorer_2010_2019",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Nissan e-NV200 2009-2021",
+            "model_key": "nissan_e_nv200_2009_2021",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Nissan NV200 2009-2021",
+            "model_key": "nissan_nv200_2009_2021",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Tesla Model X 2023+",
+            "model_key": "tesla_model_x_2023",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Renault Espace 4 GRAND",
+            "model_key": "renault_espace_4_grand",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Chevrolet Suburban",
+            "model_key": "chevrolet_suburban",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Ford Galaxy (1995-2006)",
+            "model_key": "ford_galaxy_1995_2006",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Forthing U Tour",
+            "model_key": "forthing_u_tour",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Honda Fr-v",
+            "model_key": "honda_fr_v",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "citroen xsara picasso",
+            "model_key": "citroen_xsara_picasso",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Kia Carnival IV gen",
+            "model_key": "kia_carnival_iv_gen",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Chrysler grand voyager",
+            "model_key": "chrysler_grand_voyager",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Citroen evasion",
+            "model_key": "citroen_evasion",
+            "vehicle_category": "minivan"
+          },
+          {
+            "model_name": "Forthing v-tour",
+            "model_key": "forthing_v_tour",
+            "vehicle_category": "minivan"
+          }
+        ],
+        "special_notes": []
+      },
+      "pricing": {
+        "pricing_model": "single_price",
+        "item_count": 17,
+        "items": [
+          {
+            "variant_label": "Front only",
+            "variant_slug": "front",
+            "variant_key": "front",
+            "price_pln": 550,
+            "after_discount_20": {
+              "price_after_discount_pln": 440
+            },
+            "after_discount_30": {
+              "excluded": true,
+              "label": "no_discount"
+            }
+          },
+          {
+            "variant_label": "Front With Tunnel",
+            "variant_slug": null,
+            "variant_key": "front_with_tunnel",
+            "price_pln": 650,
+            "after_discount_20": {
+              "price_after_discount_pln": 520
+            },
+            "after_discount_30": {
+              "excluded": true,
+              "label": "no_discount"
+            }
+          },
+          {
+            "variant_label": "Rear Only",
+            "variant_slug": null,
+            "variant_key": "rear_only",
+            "price_pln": 650,
+            "after_discount_20": {
+              "price_after_discount_pln": 520
+            },
+            "after_discount_30": {
+              "excluded": true,
+              "label": "no_discount"
+            }
+          },
+          {
+            "variant_label": "Row 2",
+            "variant_slug": "row_2",
+            "variant_key": "row_2",
+            "price_pln": 1050,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 735
+            }
+          },
+          {
+            "variant_label": "Row 3",
+            "variant_slug": "row_3",
+            "variant_key": "row_3",
+            "price_pln": 1410,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 987
+            }
+          },
+          {
+            "variant_label": "Row 3 Large Trunk Folded",
+            "variant_slug": null,
+            "variant_key": "row_3_large_trunk_folded",
+            "price_pln": 1810,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 1267
+            }
+          },
+          {
+            "variant_label": "Row 2 Small Trunk Unfolded",
+            "variant_slug": null,
+            "variant_key": "row_2_small_trunk_unfolded",
+            "price_pln": 1410,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 987
+            }
+          },
+          {
+            "variant_label": "Row 2 Large Trunk Folded",
+            "variant_slug": null,
+            "variant_key": "row_2_large_trunk_folded",
+            "price_pln": 1610,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 1127
+            }
+          },
+          {
+            "variant_label": "Row 3 Two Trunks",
+            "variant_slug": null,
+            "variant_key": "row_3_two_trunks",
+            "price_pln": 1910,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 1337
+            }
+          },
+          {
+            "variant_label": "Row 3 Small Trunk Unfolded",
+            "variant_slug": null,
+            "variant_key": "row_3_small_trunk_unfolded",
+            "price_pln": 1610,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 1127
+            }
+          },
+          {
+            "variant_label": "Trunk Small",
+            "variant_slug": null,
+            "variant_key": "trunk_small",
+            "price_pln": 310,
+            "after_discount_20": {
+              "price_after_discount_pln": 248
+            },
+            "after_discount_30": {
+              "excluded": true,
+              "label": "no_discount"
+            }
+          },
+          {
+            "variant_label": "Trunk Large",
+            "variant_slug": null,
+            "variant_key": "trunk_large",
+            "price_pln": 510,
+            "after_discount_20": {
+              "price_after_discount_pln": 408
+            },
+            "after_discount_30": {
+              "excluded": true,
+              "label": "no_discount"
+            }
+          },
+          {
+            "variant_label": "Row 1 Small Trunk Unfolded",
+            "variant_slug": null,
+            "variant_key": "row_1_small_trunk_unfolded",
+            "price_pln": 710,
+            "after_discount_20": {
+              "price_after_discount_pln": 568
+            },
+            "after_discount_30": {
+              "excluded": true,
+              "label": "no_discount"
+            }
+          },
+          {
+            "variant_label": "Row 1 Large Trunk Folded",
+            "variant_slug": null,
+            "variant_key": "row_1_large_trunk_folded",
+            "price_pln": 1010,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 707
+            }
+          },
+          {
+            "variant_label": "Row 3 Single Small Trunk",
+            "variant_slug": null,
+            "variant_key": "row_3_single_small_trunk",
+            "price_pln": 710,
+            "after_discount_20": {
+              "price_after_discount_pln": 568
+            },
+            "after_discount_30": {
+              "excluded": true,
+              "label": "no_discount"
+            }
+          },
+          {
+            "variant_label": "Row 3 Single Large Trunk",
+            "variant_slug": null,
+            "variant_key": "row_3_single_large_trunk",
+            "price_pln": 1010,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 707
+            }
+          },
+          {
+            "variant_label": "Sill Mat Measured",
+            "variant_slug": null,
+            "variant_key": "sill_mat_measured",
+            "price_pln": 50,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": null
+          }
+        ]
+      },
+      "bitrix": {
+        "bitrix_field": "UF_CRM_1757024931236",
+        "variant_count": 32,
+        "variants": [
+          {
+            "variant_label": "Driver mat",
+            "variant_key": "driver_mat",
+            "variant_slug": "driver_mat",
+            "pricing_variant_key": "driver_mat"
+          },
+          {
+            "variant_label": "Front",
+            "variant_key": "front",
+            "variant_slug": null,
+            "pricing_variant_key": "front"
+          },
+          {
+            "variant_label": "Rear",
+            "variant_key": "rear",
+            "variant_slug": null,
+            "pricing_variant_key": "rear"
+          },
+          {
+            "variant_label": "Front With Tunnel",
+            "variant_key": "front_with_tunnel",
+            "variant_slug": null,
+            "pricing_variant_key": "front_with_tunnel"
+          },
+          {
+            "variant_label": "Front And Rear",
+            "variant_key": "front_and_rear",
+            "variant_slug": null,
+            "pricing_variant_key": "front_and_rear"
+          },
+          {
+            "variant_label": "Row 2",
+            "variant_key": "row_2",
+            "variant_slug": "row_2",
+            "pricing_variant_key": "row_2"
+          },
+          {
+            "variant_label": "Row 3",
+            "variant_key": "row_3",
+            "variant_slug": "row_3",
+            "pricing_variant_key": "row_3"
+          },
+          {
+            "variant_label": "Row 3 Large Trunk",
+            "variant_key": "row_3_large_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_large_trunk"
+          },
+          {
+            "variant_label": "Row 3 Small Trunk",
+            "variant_key": "row_3_small_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_small_trunk"
+          },
+          {
+            "variant_label": "Home Mat",
+            "variant_key": "home_mat",
+            "variant_slug": null,
+            "pricing_variant_key": "home_mat"
+          },
+          {
+            "variant_label": "Row 2 Large Trunk",
+            "variant_key": "row_2_large_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_2_large_trunk"
+          },
+          {
+            "variant_label": "Row 3 Large And Small Trunk",
+            "variant_key": "row_3_large_and_small_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_large_and_small_trunk"
+          },
+          {
+            "variant_label": "Trunk Large",
+            "variant_key": "trunk_large",
+            "variant_slug": null,
+            "pricing_variant_key": "trunk_large"
+          },
+          {
+            "variant_label": "Trunk Small",
+            "variant_key": "trunk_small",
+            "variant_slug": null,
+            "pricing_variant_key": "trunk_small"
+          },
+          {
+            "variant_label": "Trunk Custom",
+            "variant_key": "trunk_custom",
+            "variant_slug": null,
+            "pricing_variant_key": "trunk_custom"
+          },
+          {
+            "variant_label": "Row 1 Trunk",
+            "variant_key": "row_1_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_1_trunk"
+          },
+          {
+            "variant_label": "Row 1 Large Trunk",
+            "variant_key": "row_1_large_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_1_large_trunk"
+          },
+          {
+            "variant_label": "Row 2 Single",
+            "variant_key": "row_2_single",
+            "variant_slug": null,
+            "pricing_variant_key": "row_2_single"
+          },
+          {
+            "variant_label": "Row 3 Single",
+            "variant_key": "row_3_single",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_single"
+          },
+          {
+            "variant_label": "Custom Order",
+            "variant_key": "custom_order",
+            "variant_slug": null,
+            "pricing_variant_key": "custom_order"
+          },
+          {
+            "variant_label": "Driver Mat Large Trunk",
+            "variant_key": "driver_mat_large_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "driver_mat_large_trunk"
+          },
+          {
+            "variant_label": "Front Rear Two Trunks",
+            "variant_key": "front_rear_two_trunks",
+            "variant_slug": null,
+            "pricing_variant_key": "front_rear_two_trunks"
+          },
+          {
+            "variant_label": "Trunk mat",
+            "variant_key": "complete",
+            "variant_slug": "complete",
+            "pricing_variant_key": "complete"
+          },
+          {
+            "variant_label": "Row 3 Passenger",
+            "variant_key": "row_3_passenger",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_passenger"
+          },
+          {
+            "variant_label": "Row 3 Small Trunk Passenger",
+            "variant_key": "row_3_small_trunk_passenger",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_small_trunk_passenger"
+          },
+          {
+            "variant_label": "Row 3 Large Trunk Passenger",
+            "variant_key": "row_3_large_trunk_passenger",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_large_trunk_passenger"
+          },
+          {
+            "variant_label": "Row 3 Large And Small Trunk Passenger",
+            "variant_key": "row_3_large_and_small_trunk_passenger",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_large_and_small_trunk_passenger"
+          },
+          {
+            "variant_label": "Passenger Mat Rear",
+            "variant_key": "passenger_mat_rear",
+            "variant_slug": null,
+            "pricing_variant_key": "passenger_mat_rear"
+          },
+          {
+            "variant_label": "Passenger Mat Rear Trunk",
+            "variant_key": "passenger_mat_rear_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "passenger_mat_rear_trunk"
+          },
+          {
+            "variant_label": "Passenger mat",
+            "variant_key": "passenger_mat",
+            "variant_slug": "passenger_mat",
+            "pricing_variant_key": "passenger_mat"
+          },
+          {
+            "variant_label": "Tunnel Mat",
+            "variant_key": "tunnel_mat",
+            "variant_slug": null,
+            "pricing_variant_key": "tunnel_mat"
+          },
+          {
+            "variant_label": "Front Rear Trunk",
+            "variant_key": "front_rear_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "front_rear_trunk"
+          }
+        ],
+        "body_types": [],
+        "notes": [
+          "jeśli jest zamówienie na 2 rząd albo 3 rząd + bagażnik to zaznaczamy ten wariant i w kolumnie \"Uwagi Evamats dział produkcji\" piszemy jaki to będzie dokładnie rząd",
+          "W bitrix wybieramy Klasyczne"
+        ]
+      }
+    },
+    "passenger_car": {
+      "id": "passenger_car",
+      "label": "Passenger car",
+      "vehicle_category": "passenger_car",
+      "pricing_table": "passenger_car",
+      "bitrix_segment": "passenger_car",
+      "vehicle_mapping": {
+        "model_count": 66,
+        "models": [
+          {
+            "model_name": "Dacia Jogger",
+            "model_key": "dacia_jogger",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Ford Galaxy MK2 2006-2015 minivan 5/7os",
+            "model_key": "ford_galaxy_mk2_2006_2015_minivan_5_7os",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Ford C-max",
+            "model_key": "ford_c_max",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Ford B-max",
+            "model_key": "ford_b_max",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Opel Zafira A",
+            "model_key": "opel_zafira_a",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Opel Zafira B",
+            "model_key": "opel_zafira_b",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Seat Alhambra +Volkswagen Sharan 2010-2020 (bagażnik 5,7os +100zl)",
+            "model_key": "seat_alhambra_volkswagen_sharan_2010_2020_bagaznik_5_7os_100zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Toyota Verso",
+            "model_key": "toyota_verso",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Volkswagen Touran",
+            "model_key": "volkswagen_touran",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Seat Altea XL",
+            "model_key": "seat_altea_xl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Toyota  Prius+",
+            "model_key": "toyota_prius",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Toyota proAce city oraz proAce city verso (bagaznik 7 os + 100zl) (w wersji 7os. 3 rząd musi być sprzedany z bagaznikiem!)",
+            "model_key": "toyota_proace_city_oraz_proace_city_verso_bagaznik_7_os_100zl_w_wersji_7os_3_rzad_musi_byc_sprzedany_z_bagaznikiem",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Citroen Berlingo (Bagażnik 7 oś +100zl)",
+            "model_key": "citroen_berlingo_bagaznik_7_os_100zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Peugeot partner (bagażnik 7os +100zl)",
+            "model_key": "peugeot_partner_bagaznik_7os_100zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Opel combo (bagażnik 7os + 100zl)",
+            "model_key": "opel_combo_bagaznik_7os_100zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Kia carens",
+            "model_key": "kia_carens",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Nissan NV200 Evalia (bagażnik +100zl)",
+            "model_key": "nissan_nv200_evalia_bagaznik_100zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Ford tourneo Connect new,Transit Connect 2013+ (bagażnik +100zl)",
+            "model_key": "ford_tourneo_connect_new_transit_connect_2013_bagaznik_100zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Ford tourneo Connect 2013-2022 bagażnik z 3 rzędu +200zl",
+            "model_key": "ford_tourneo_connect_2013_2022_bagaznik_z_3_rzedu_200zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Renault scenic  2003 -2009 (grand)",
+            "model_key": "renault_scenic_2003_2009_grand",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Renault scenic  2016 -2022 (grand)",
+            "model_key": "renault_scenic_2016_2022_grand",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Renault kango",
+            "model_key": "renault_kango",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Dacia Dokker (bagażnik +100zl)",
+            "model_key": "dacia_dokker_bagaznik_100zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Dacia lodgy",
+            "model_key": "dacia_lodgy",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Fiat Doblo (bagażnik +100zl)",
+            "model_key": "fiat_doblo_bagaznik_100zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Fiat Qubo",
+            "model_key": "fiat_qubo",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Fiat Panda",
+            "model_key": "fiat_panda",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Fiat 500L",
+            "model_key": "fiat_500l",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Citroen Xsara",
+            "model_key": "citroen_xsara",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Citroën Grand C4 Picasso II/С4 SpaceTourer/ C4 Picasso",
+            "model_key": "citroen_grand_c4_picasso_ii_4_spacetourer_c4_picasso",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Chevrolet Orlando",
+            "model_key": "chevrolet_orlando",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Mazda 5 1 gen.",
+            "model_key": "mazda_5_1_gen",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Mazda Premacy",
+            "model_key": "mazda_premacy",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Volkswagen Caddy +100 zl do bagaznika",
+            "model_key": "volkswagen_caddy_100_zl_do_bagaznika",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Mercedes-Benz Citan 5/7 os. (t-class)",
+            "model_key": "mercedes_benz_citan_5_7_os_t_class",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Skoda Roomster",
+            "model_key": "skoda_roomster",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Toyota Verso 2017 (2014-2018)",
+            "model_key": "toyota_verso_2017_2014_2018",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Nissan Note",
+            "model_key": "nissan_note",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Peugeot Rifter (bagażnik +100zl)",
+            "model_key": "peugeot_rifter_bagaznik_100zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Opel Meriva",
+            "model_key": "opel_meriva",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Dodge Durango",
+            "model_key": "dodge_durango",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Fiat Freemont",
+            "model_key": "fiat_freemont",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Mercedes-Benz Vito wszystkie modele (tylko przód jest w cenie auta osobowego 550zł)",
+            "model_key": "mercedes_benz_vito_wszystkie_modele_tylko_przod_jest_w_cenie_auta_osobowego_550zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Mercedes-Benz Viano W639 2003-2014 wszystkie wersję (tylko przód jest w cenie minivan 550 zł)",
+            "model_key": "mercedes_benz_viano_w639_2003_2014_wszystkie_wersje_tylko_przod_jest_w_cenie_minivan_550_zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Honda Element 2002-2011",
+            "model_key": "honda_element_2002_2011",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Renault Espace  5, 6",
+            "model_key": "renault_espace_5_6",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "C3 picasso",
+            "model_key": "c3_picasso",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Nissan Townstar",
+            "model_key": "nissan_townstar",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Ford Galaxy (2006-2015 i 2015-2023)",
+            "model_key": "ford_galaxy_2006_2015_i_2015_2023",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "BMW  2 Gran Tourer",
+            "model_key": "bmw_2_gran_tourer",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Ford tourneo Courier (bagażnik +100zl)",
+            "model_key": "ford_tourneo_courier_bagaznik_100zl",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Galaxy mk3",
+            "model_key": "galaxy_mk3",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Chrysler Pacifica 1 gen 2003-2008",
+            "model_key": "chrysler_pacifica_1_gen_2003_2008",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Golf Sportsvan",
+            "model_key": "golf_sportsvan",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Peugeot 5008",
+            "model_key": "peugeot_5008",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Kia Venga",
+            "model_key": "kia_venga",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Zafira C",
+            "model_key": "zafira_c",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Volkswagen Golf Plus",
+            "model_key": "volkswagen_golf_plus",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Renault scenic  1996 -2003 (grand)",
+            "model_key": "renault_scenic_1996_2003_grand",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Chrysler PT Cruiser",
+            "model_key": "chrysler_pt_cruiser",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Fiat Idea",
+            "model_key": "fiat_idea",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Renault Modus",
+            "model_key": "renault_modus",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Mercedes B-class W246",
+            "model_key": "mercedes_b_class_w246",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Mercedes B-class W247",
+            "model_key": "mercedes_b_class_w247",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Hyundai IX20",
+            "model_key": "hyundai_ix20",
+            "vehicle_category": "passenger_car"
+          },
+          {
+            "model_name": "Ford s-max",
+            "model_key": "ford_s_max",
+            "vehicle_category": "passenger_car"
+          }
+        ],
+        "special_notes": []
+      },
+      "pricing": {
+        "pricing_model": "dual_mat_type",
+        "item_count": 24,
+        "items": [
+          {
+            "variant_label": "Driver mat",
+            "variant_slug": "driver_mat",
+            "variant_key": "driver_mat",
+            "classic": {
+              "base_price_pln": 150,
+              "after_discount": {
+                "excluded": true,
+                "label": "no_discount"
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 289,
+              "after_discount": {
+                "excluded": true,
+                "label": "no_discount"
+              }
+            }
+          },
+          {
+            "variant_label": "Passenger mat",
+            "variant_slug": "passenger_mat",
+            "variant_key": "passenger_mat",
+            "classic": {
+              "base_price_pln": 150,
+              "after_discount": {
+                "excluded": true,
+                "label": "no_discount"
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 289,
+              "after_discount": {
+                "price_after_discount_pln": 231.2
+              }
+            }
+          },
+          {
+            "variant_label": "Front only",
+            "variant_slug": "front",
+            "variant_key": "front",
+            "classic": {
+              "base_price_pln": 290,
+              "after_discount": {
+                "price_after_discount_pln": 232
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 550,
+              "after_discount": {
+                "price_after_discount_pln": 440
+              }
+            }
+          },
+          {
+            "variant_label": "Front Only With Tunnel",
+            "variant_slug": null,
+            "variant_key": "front_only_with_tunnel",
+            "classic": {
+              "base_price_pln": 390,
+              "after_discount": {
+                "price_after_discount_pln": 312
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 650,
+              "after_discount": {
+                "price_after_discount_pln": 520
+              }
+            }
+          },
+          {
+            "variant_label": "Rear Only",
+            "variant_slug": null,
+            "variant_key": "rear_only",
+            "classic": {
+              "base_price_pln": 290,
+              "after_discount": {
+                "price_after_discount_pln": 232
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 550,
+              "after_discount": {
+                "price_after_discount_pln": 440
+              }
+            }
+          },
+          {
+            "variant_label": "Front and rear",
+            "variant_slug": "basic",
+            "variant_key": "basic",
+            "classic": {
+              "base_price_pln": 510,
+              "after_discount": {
+                "price_after_discount_pln": 408
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 910,
+              "after_discount": {
+                "price_after_discount_pln": 637
+              }
+            }
+          },
+          {
+            "variant_label": "Front rear and trunk",
+            "variant_slug": "premium",
+            "variant_key": "premium",
+            "classic": {
+              "base_price_pln": 710,
+              "after_discount": {
+                "price_after_discount_pln": 568
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 1210,
+              "after_discount": {
+                "price_after_discount_pln": 847
+              }
+            }
+          },
+          {
+            "variant_label": "Trunk mat",
+            "variant_slug": "complete",
+            "variant_key": "complete",
+            "classic": {
+              "base_price_pln": 350,
+              "after_discount": {
+                "price_after_discount_pln": 280
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": null,
+              "after_discount": null
+            }
+          },
+          {
+            "variant_label": "Front Trunk",
+            "variant_slug": null,
+            "variant_key": "front_trunk",
+            "classic": {
+              "base_price_pln": 560,
+              "after_discount": {
+                "price_after_discount_pln": 448
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 860,
+              "after_discount": {
+                "price_after_discount_pln": 688
+              }
+            }
+          },
+          {
+            "variant_label": "Rear Trunk",
+            "variant_slug": null,
+            "variant_key": "rear_trunk",
+            "classic": {
+              "base_price_pln": 560,
+              "after_discount": {
+                "price_after_discount_pln": 448
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 860,
+              "after_discount": {
+                "price_after_discount_pln": 688
+              }
+            }
+          },
+          {
+            "variant_label": "Row 3",
+            "variant_slug": "row_3",
+            "variant_key": "row_3",
+            "classic": {
+              "base_price_pln": 710,
+              "after_discount": {
+                "price_after_discount_pln": 568
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 1110,
+              "after_discount": {
+                "price_after_discount_pln": 777
+              }
+            }
+          },
+          {
+            "variant_label": "Row 3 Small Trunk Unfolded",
+            "variant_slug": null,
+            "variant_key": "row_3_small_trunk_unfolded",
+            "classic": {
+              "base_price_pln": 910,
+              "after_discount": {
+                "price_after_discount_pln": 637
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 1310,
+              "after_discount": {
+                "price_after_discount_pln": 917
+              }
+            }
+          },
+          {
+            "variant_label": "Row 3 Large Trunk Folded",
+            "variant_slug": null,
+            "variant_key": "row_3_large_trunk_folded",
+            "classic": {
+              "base_price_pln": 1010,
+              "after_discount": {
+                "price_after_discount_pln": 707
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 1410,
+              "after_discount": {
+                "price_after_discount_pln": 987
+              }
+            }
+          },
+          {
+            "variant_label": "Row 3 Two Trunks",
+            "variant_slug": null,
+            "variant_key": "row_3_two_trunks",
+            "classic": {
+              "base_price_pln": 1110,
+              "after_discount": {
+                "price_after_discount_pln": 777
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 1610,
+              "after_discount": {
+                "price_after_discount_pln": 1127
+              }
+            }
+          },
+          {
+            "variant_label": "Row 3 Single",
+            "variant_slug": null,
+            "variant_key": "row_3_single",
+            "classic": {
+              "base_price_pln": 210,
+              "after_discount": {
+                "price_after_discount_pln": 168
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 350,
+              "after_discount": {
+                "price_after_discount_pln": 280
+              }
+            }
+          },
+          {
+            "variant_label": "Front Row 3",
+            "variant_slug": null,
+            "variant_key": "front_row_3",
+            "classic": {
+              "base_price_pln": 510,
+              "after_discount": {
+                "price_after_discount_pln": 408
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 910,
+              "after_discount": {
+                "price_after_discount_pln": 637
+              }
+            }
+          },
+          {
+            "variant_label": "Rear Row 3",
+            "variant_slug": null,
+            "variant_key": "rear_row_3",
+            "classic": {
+              "base_price_pln": 510,
+              "after_discount": {
+                "price_after_discount_pln": 408
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 910,
+              "after_discount": {
+                "price_after_discount_pln": 637
+              }
+            }
+          },
+          {
+            "variant_label": "Front Row 3 Trunk",
+            "variant_slug": null,
+            "variant_key": "front_row_3_trunk",
+            "classic": {
+              "base_price_pln": 810,
+              "after_discount": {
+                "price_after_discount_pln": 648
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 1210,
+              "after_discount": {
+                "price_after_discount_pln": 847
+              }
+            }
+          },
+          {
+            "variant_label": "Row 3 Single Small Trunk",
+            "variant_slug": null,
+            "variant_key": "row_3_single_small_trunk",
+            "classic": {
+              "base_price_pln": 360,
+              "after_discount": {
+                "price_after_discount_pln": 288
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 510,
+              "after_discount": {
+                "price_after_discount_pln": 408
+              }
+            }
+          },
+          {
+            "variant_label": "Row 3 Single Large Trunk",
+            "variant_slug": null,
+            "variant_key": "row_3_single_large_trunk",
+            "classic": {
+              "base_price_pln": 460,
+              "after_discount": {
+                "price_after_discount_pln": 368
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 660,
+              "after_discount": {
+                "price_after_discount_pln": 528
+              }
+            }
+          },
+          {
+            "variant_label": "Trunk Small Unfolded",
+            "variant_slug": null,
+            "variant_key": "trunk_small_unfolded",
+            "classic": {
+              "base_price_pln": 200,
+              "after_discount": {
+                "price_after_discount_pln": 160
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": null,
+              "after_discount": null
+            }
+          },
+          {
+            "variant_label": "Trunk Large Folded",
+            "variant_slug": null,
+            "variant_key": "trunk_large_folded",
+            "classic": {
+              "base_price_pln": 350,
+              "after_discount": {
+                "price_after_discount_pln": 280
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": null,
+              "after_discount": null
+            }
+          },
+          {
+            "variant_label": "Front Rear Two Trunks",
+            "variant_slug": null,
+            "variant_key": "front_rear_two_trunks",
+            "classic": {
+              "base_price_pln": 810,
+              "after_discount": {
+                "price_after_discount_pln": 648
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 1410,
+              "after_discount": {
+                "price_after_discount_pln": 987
+              }
+            }
+          },
+          {
+            "variant_label": "Passenger Mat Rear",
+            "variant_slug": null,
+            "variant_key": "passenger_mat_rear",
+            "classic": {
+              "base_price_pln": 100,
+              "after_discount": {
+                "price_after_discount_pln": 2090030900
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": null,
+              "after_discount": null
+            }
+          }
+        ]
+      },
+      "bitrix": {
+        "bitrix_field": "UF_CRM_1757024931236",
+        "variant_count": 34,
+        "variants": [
+          {
+            "variant_label": "Driver mat",
+            "variant_key": "driver_mat",
+            "variant_slug": "driver_mat",
+            "pricing_variant_key": "driver_mat"
+          },
+          {
+            "variant_label": "Driver Mat Large Trunk",
+            "variant_key": "driver_mat_large_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "driver_mat_large_trunk"
+          },
+          {
+            "variant_label": "Front",
+            "variant_key": "front",
+            "variant_slug": null,
+            "pricing_variant_key": "front"
+          },
+          {
+            "variant_label": "Front With Tunnel",
+            "variant_key": "front_with_tunnel",
+            "variant_slug": null,
+            "pricing_variant_key": "front_with_tunnel"
+          },
+          {
+            "variant_label": "Rear",
+            "variant_key": "rear",
+            "variant_slug": null,
+            "pricing_variant_key": "rear"
+          },
+          {
+            "variant_label": "Front And Rear",
+            "variant_key": "front_and_rear",
+            "variant_slug": null,
+            "pricing_variant_key": "front_and_rear"
+          },
+          {
+            "variant_label": "Front Rear Trunk",
+            "variant_key": "front_rear_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "front_rear_trunk"
+          },
+          {
+            "variant_label": "Front Rear Two Trunks",
+            "variant_key": "front_rear_two_trunks",
+            "variant_slug": null,
+            "pricing_variant_key": "front_rear_two_trunks"
+          },
+          {
+            "variant_label": "Front Trunk",
+            "variant_key": "front_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "front_trunk"
+          },
+          {
+            "variant_label": "Rear Trunk",
+            "variant_key": "rear_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "rear_trunk"
+          },
+          {
+            "variant_label": "Row 3",
+            "variant_key": "row_3",
+            "variant_slug": "row_3",
+            "pricing_variant_key": "row_3"
+          },
+          {
+            "variant_label": "Trunk Small",
+            "variant_key": "trunk_small",
+            "variant_slug": null,
+            "pricing_variant_key": "trunk_small"
+          },
+          {
+            "variant_label": "Trunk Custom",
+            "variant_key": "trunk_custom",
+            "variant_slug": null,
+            "pricing_variant_key": "trunk_custom"
+          },
+          {
+            "variant_label": "Trunk Large",
+            "variant_key": "trunk_large",
+            "variant_slug": null,
+            "pricing_variant_key": "trunk_large"
+          },
+          {
+            "variant_label": "Row 3 Small Trunk",
+            "variant_key": "row_3_small_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_small_trunk"
+          },
+          {
+            "variant_label": "Row 3 Large Trunk",
+            "variant_key": "row_3_large_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_large_trunk"
+          },
+          {
+            "variant_label": "Row 3 Large And Small Trunk",
+            "variant_key": "row_3_large_and_small_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_large_and_small_trunk"
+          },
+          {
+            "variant_label": "Front Row 3",
+            "variant_key": "front_row_3",
+            "variant_slug": null,
+            "pricing_variant_key": "front_row_3"
+          },
+          {
+            "variant_label": "Rear Row 3",
+            "variant_key": "rear_row_3",
+            "variant_slug": null,
+            "pricing_variant_key": "rear_row_3"
+          },
+          {
+            "variant_label": "Front Row 3 Large Trunk Folded",
+            "variant_key": "front_row_3_large_trunk_folded",
+            "variant_slug": null,
+            "pricing_variant_key": "front_row_3_large_trunk_folded"
+          },
+          {
+            "variant_label": "Rear Row 3 Large Trunk Folded",
+            "variant_key": "rear_row_3_large_trunk_folded",
+            "variant_slug": null,
+            "pricing_variant_key": "rear_row_3_large_trunk_folded"
+          },
+          {
+            "variant_label": "Front Row 3 Small Trunk Unfolded",
+            "variant_key": "front_row_3_small_trunk_unfolded",
+            "variant_slug": null,
+            "pricing_variant_key": "front_row_3_small_trunk_unfolded"
+          },
+          {
+            "variant_label": "Rear Row 3 Small Trunk Unfolded",
+            "variant_key": "rear_row_3_small_trunk_unfolded",
+            "variant_slug": null,
+            "pricing_variant_key": "rear_row_3_small_trunk_unfolded"
+          },
+          {
+            "variant_label": "Custom Order",
+            "variant_key": "custom_order",
+            "variant_slug": null,
+            "pricing_variant_key": "custom_order"
+          },
+          {
+            "variant_label": "Trunk mat",
+            "variant_key": "complete",
+            "variant_slug": "complete",
+            "pricing_variant_key": "complete"
+          },
+          {
+            "variant_label": "Row 3 Single",
+            "variant_key": "row_3_single",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_single"
+          },
+          {
+            "variant_label": "Home Mat",
+            "variant_key": "home_mat",
+            "variant_slug": null,
+            "pricing_variant_key": "home_mat"
+          },
+          {
+            "variant_label": "Passenger Mat Rear",
+            "variant_key": "passenger_mat_rear",
+            "variant_slug": null,
+            "pricing_variant_key": "passenger_mat_rear"
+          },
+          {
+            "variant_label": "Passenger Mat Rear Trunk",
+            "variant_key": "passenger_mat_rear_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "passenger_mat_rear_trunk"
+          },
+          {
+            "variant_label": "Passenger mat",
+            "variant_key": "passenger_mat",
+            "variant_slug": "passenger_mat",
+            "pricing_variant_key": "passenger_mat"
+          },
+          {
+            "variant_label": "Tunnel Mat",
+            "variant_key": "tunnel_mat",
+            "variant_slug": null,
+            "pricing_variant_key": "tunnel_mat"
+          },
+          {
+            "variant_label": "Front Rear Row 3 Three Trunks Large",
+            "variant_key": "front_rear_row_3_three_trunks_large",
+            "variant_slug": null,
+            "pricing_variant_key": "front_rear_row_3_three_trunks_large"
+          },
+          {
+            "variant_label": "Front Rear Row 3 Three Trunks Small",
+            "variant_key": "front_rear_row_3_three_trunks_small",
+            "variant_slug": null,
+            "pricing_variant_key": "front_rear_row_3_three_trunks_small"
+          },
+          {
+            "variant_label": "Front Rear Three Trunks",
+            "variant_key": "front_rear_three_trunks",
+            "variant_slug": null,
+            "pricing_variant_key": "front_rear_three_trunks"
+          }
+        ],
+        "body_types": [
+          {
+            "body_type_key": "hatchback_5_door",
+            "body_type_label": "Hatchback 5 door"
+          },
+          {
+            "body_type_key": "hatchback_3_door",
+            "body_type_label": "Hatchback 3 door"
+          },
+          {
+            "body_type_key": "liftback",
+            "body_type_label": "Liftback"
+          },
+          {
+            "body_type_key": "wagon",
+            "body_type_label": "Wagon"
+          },
+          {
+            "body_type_key": "sedan",
+            "body_type_label": "Sedan"
+          },
+          {
+            "body_type_key": "off_road",
+            "body_type_label": "Off-road"
+          },
+          {
+            "body_type_key": "limousine",
+            "body_type_label": "Limousine"
+          },
+          {
+            "body_type_key": "coupe",
+            "body_type_label": "Coupe"
+          },
+          {
+            "body_type_key": "suv_coupe",
+            "body_type_label": "SUV coupe"
+          },
+          {
+            "body_type_key": "convertible",
+            "body_type_label": "Convertible"
+          },
+          {
+            "body_type_key": "suv_3_door",
+            "body_type_label": "SUV 3 door"
+          },
+          {
+            "body_type_key": "suv_5_door",
+            "body_type_label": "SUV 5 door"
+          },
+          {
+            "body_type_key": "suv_7_seater",
+            "body_type_label": "SUV 7 seater"
+          },
+          {
+            "body_type_key": "suv_6_seater",
+            "body_type_label": "SUV 6 seater"
+          },
+          {
+            "body_type_key": "fastback",
+            "body_type_label": "Fastback"
+          },
+          {
+            "body_type_key": "combi_van",
+            "body_type_label": "Combi van"
+          },
+          {
+            "body_type_key": "suv",
+            "body_type_label": "SUV"
+          },
+          {
+            "body_type_key": "hatchback",
+            "body_type_label": "Hatchback"
+          },
+          {
+            "body_type_key": "liftback_3_door",
+            "body_type_label": "Liftback 3 door"
+          },
+          {
+            "body_type_key": "roadster",
+            "body_type_label": "Roadster"
+          },
+          {
+            "body_type_key": "buggy",
+            "body_type_label": "Buggy"
+          }
+        ],
+        "notes": [
+          "Typ nadwozia: Pickup oraz Minivan i Furgon i VAN jeśli cena jest jak do auta osobowego to też zaznaczamy ten wariant",
+          "W bitrix wybieramy 3D lub Klasyczne"
+        ]
+      }
+    },
+    "bus": {
+      "id": "bus",
+      "label": "Bus",
+      "vehicle_category": "bus",
+      "pricing_table": "bus",
+      "bitrix_segment": "bus",
+      "vehicle_mapping": {
+        "model_count": 33,
+        "models": [
+          {
+            "model_name": "Fiat Scudo 2021+",
+            "model_key": "fiat_scudo_2021",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Fiat Multipla 1998-2010",
+            "model_key": "fiat_multipla_1998_2010",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Peugeot Expert Tepee",
+            "model_key": "peugeot_expert_tepee",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Volkswagen T6, T5, T4, Caravelle, California, Multivan",
+            "model_key": "volkswagen_t6_t5_t4_caravelle_california_multivan",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Toyota Proace Verso",
+            "model_key": "toyota_proace_verso",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Toyota Proace",
+            "model_key": "toyota_proace",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Renault Master",
+            "model_key": "renault_master",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Mercedes Sprinter",
+            "model_key": "mercedes_sprinter",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Citroen Jumper",
+            "model_key": "citroen_jumper",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Citroen Jumpy",
+            "model_key": "citroen_jumpy",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Citroen Space Tourer",
+            "model_key": "citroen_space_tourer",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Mercedes V-class, Vito, Viano (sam przód cenna jak minivan)",
+            "model_key": "mercedes_v_class_vito_viano_sam_przod_cenna_jak_minivan",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Ford Transit",
+            "model_key": "ford_transit",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Renault Trafic",
+            "model_key": "renault_trafic",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Peugeot Boxer",
+            "model_key": "peugeot_boxer",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Iveco Daily",
+            "model_key": "iveco_daily",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Fiat Ducato",
+            "model_key": "fiat_ducato",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Volkswagen Crafter",
+            "model_key": "volkswagen_crafter",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Ford Transit Custom",
+            "model_key": "ford_transit_custom",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Ford Tourneo Custom",
+            "model_key": "ford_tourneo_custom",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Opel Movano",
+            "model_key": "opel_movano",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Mercedes T1, T2, T3 (kaczka)",
+            "model_key": "mercedes_t1_t2_t3_kaczka",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Opel Zafira LIFE",
+            "model_key": "opel_zafira_life",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Kamper (głownie cena na busa lub indywidulana, pytać na grupie)",
+            "model_key": "kamper_glownie_cena_na_busa_lub_indywidulana_pytac_na_grupie",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Renault Mascott",
+            "model_key": "renault_mascott",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Opel Vivaro",
+            "model_key": "opel_vivaro",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Peugeot Expert III",
+            "model_key": "peugeot_expert_iii",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Peugeot Traveller",
+            "model_key": "peugeot_traveller",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Hyundai H1",
+            "model_key": "hyundai_h1",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Citroen Ami (przód cena jak do busa)",
+            "model_key": "citroen_ami_przod_cena_jak_do_busa",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Hyundai Staria",
+            "model_key": "hyundai_staria",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Fiat Scudo 2006-2016",
+            "model_key": "fiat_scudo_2006_2016",
+            "vehicle_category": "bus"
+          },
+          {
+            "model_name": "Lexus LM",
+            "model_key": "lexus_lm",
+            "vehicle_category": "bus"
+          }
+        ],
+        "special_notes": []
+      },
+      "pricing": {
+        "pricing_model": "single_price",
+        "item_count": 10,
+        "items": [
+          {
+            "variant_label": "Row 1",
+            "variant_slug": "row_1",
+            "variant_key": "row_1",
+            "price_pln": 850,
+            "after_discount_20": {
+              "price_after_discount_pln": 680
+            },
+            "after_discount_30": {
+              "excluded": true,
+              "label": "no_discount"
+            }
+          },
+          {
+            "variant_label": "Row 2",
+            "variant_slug": "row_2",
+            "variant_key": "row_2",
+            "price_pln": 1450,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 1015
+            }
+          },
+          {
+            "variant_label": "Row 3",
+            "variant_slug": "row_3",
+            "variant_key": "row_3",
+            "price_pln": 2010,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 1407
+            }
+          },
+          {
+            "variant_label": "Row 3 Trunk",
+            "variant_slug": null,
+            "variant_key": "row_3_trunk",
+            "price_pln": 2860,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 2002
+            }
+          },
+          {
+            "variant_label": "Trunk Mat Small",
+            "variant_slug": null,
+            "variant_key": "trunk_mat_small",
+            "price_pln": 510,
+            "after_discount_20": {
+              "price_after_discount_pln": 408
+            },
+            "after_discount_30": {
+              "excluded": true,
+              "label": "no_discount"
+            }
+          },
+          {
+            "variant_label": "Trunk Mat Large",
+            "variant_slug": null,
+            "variant_key": "trunk_mat_large",
+            "price_pln": 910,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 637
+            }
+          },
+          {
+            "variant_label": "Row 1 Small Trunk",
+            "variant_slug": null,
+            "variant_key": "row_1_small_trunk",
+            "price_pln": 1210,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 847
+            }
+          },
+          {
+            "variant_label": "Trunk Small",
+            "variant_slug": null,
+            "variant_key": "trunk_small",
+            "price_pln": 1810,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 1267
+            }
+          },
+          {
+            "variant_label": "Row 1 Trunk",
+            "variant_slug": null,
+            "variant_key": "row_1_trunk",
+            "price_pln": 1660,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 1162
+            }
+          },
+          {
+            "variant_label": "Trunk Large",
+            "variant_slug": null,
+            "variant_key": "trunk_large",
+            "price_pln": 2250,
+            "after_discount_20": {
+              "excluded": true,
+              "label": "no_discount"
+            },
+            "after_discount_30": {
+              "price_after_discount_pln": 1575
+            }
+          }
+        ]
+      },
+      "bitrix": {
+        "bitrix_field": "UF_CRM_1757024931236",
+        "variant_count": 20,
+        "variants": [
+          {
+            "variant_label": "Driver mat",
+            "variant_key": "driver_mat",
+            "variant_slug": "driver_mat",
+            "pricing_variant_key": "driver_mat"
+          },
+          {
+            "variant_label": "Row 1",
+            "variant_key": "row_1",
+            "variant_slug": "row_1",
+            "pricing_variant_key": "row_1"
+          },
+          {
+            "variant_label": "Row 2",
+            "variant_key": "row_2",
+            "variant_slug": "row_2",
+            "pricing_variant_key": "row_2"
+          },
+          {
+            "variant_label": "Row 3",
+            "variant_key": "row_3",
+            "variant_slug": "row_3",
+            "pricing_variant_key": "row_3"
+          },
+          {
+            "variant_label": "Row 3 Large Trunk",
+            "variant_key": "row_3_large_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_large_trunk"
+          },
+          {
+            "variant_label": "Row 3 Small Trunk",
+            "variant_key": "row_3_small_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_small_trunk"
+          },
+          {
+            "variant_label": "Row 2 Small Trunk",
+            "variant_key": "row_2_small_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_2_small_trunk"
+          },
+          {
+            "variant_label": "Row 2 Large Trunk",
+            "variant_key": "row_2_large_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_2_large_trunk"
+          },
+          {
+            "variant_label": "Trunk Large",
+            "variant_key": "trunk_large",
+            "variant_slug": null,
+            "pricing_variant_key": "trunk_large"
+          },
+          {
+            "variant_label": "Trunk Small",
+            "variant_key": "trunk_small",
+            "variant_slug": null,
+            "pricing_variant_key": "trunk_small"
+          },
+          {
+            "variant_label": "Trunk Custom",
+            "variant_key": "trunk_custom",
+            "variant_slug": null,
+            "pricing_variant_key": "trunk_custom"
+          },
+          {
+            "variant_label": "Row 1 Trunk",
+            "variant_key": "row_1_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_1_trunk"
+          },
+          {
+            "variant_label": "Row 1 Large Trunk",
+            "variant_key": "row_1_large_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "row_1_large_trunk"
+          },
+          {
+            "variant_label": "Row 2 Single",
+            "variant_key": "row_2_single",
+            "variant_slug": null,
+            "pricing_variant_key": "row_2_single"
+          },
+          {
+            "variant_label": "Row 3 Single",
+            "variant_key": "row_3_single",
+            "variant_slug": null,
+            "pricing_variant_key": "row_3_single"
+          },
+          {
+            "variant_label": "Custom Order",
+            "variant_key": "custom_order",
+            "variant_slug": null,
+            "pricing_variant_key": "custom_order"
+          },
+          {
+            "variant_label": "Driver Mat Large Trunk",
+            "variant_key": "driver_mat_large_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "driver_mat_large_trunk"
+          },
+          {
+            "variant_label": "Home Mat",
+            "variant_key": "home_mat",
+            "variant_slug": null,
+            "pricing_variant_key": "home_mat"
+          },
+          {
+            "variant_label": "Passenger mat",
+            "variant_key": "passenger_mat",
+            "variant_slug": "passenger_mat",
+            "pricing_variant_key": "passenger_mat"
+          },
+          {
+            "variant_label": "Tunnel Mat",
+            "variant_key": "tunnel_mat",
+            "variant_slug": null,
+            "pricing_variant_key": "tunnel_mat"
+          }
+        ],
+        "body_types": [],
+        "notes": [
+          "Typ nadwozia który dotyczy cennik: Autobus, BUS, Koparka, Ciągnik, Dźwig , Kombajn, Van TRAKUJEMY JAKOS 1 RZĄD",
+          "W bitrix wybieramy Klasyczne"
+        ]
+      }
+    },
+    "pickup": {
+      "id": "pickup",
+      "label": "Pickup",
+      "vehicle_category": "pickup",
+      "pricing_table": "pickup",
+      "bitrix_segment": "pickup",
+      "vehicle_mapping": {
+        "model_count": 20,
+        "models": [
+          {
+            "model_name": "Dodge Ram",
+            "model_key": "dodge_ram",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Ford Ranger",
+            "model_key": "ford_ranger",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Ford Ranger Raptor",
+            "model_key": "ford_ranger_raptor",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Nissan Navara",
+            "model_key": "nissan_navara",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Hummer H2",
+            "model_key": "hummer_h2",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Hummer H3",
+            "model_key": "hummer_h3",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Chevrolet Silverado",
+            "model_key": "chevrolet_silverado",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Ford F-150",
+            "model_key": "ford_f_150",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Ford F-250",
+            "model_key": "ford_f_250",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Ford Maverick 2021+",
+            "model_key": "ford_maverick_2021",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Honda Ridgeline",
+            "model_key": "honda_ridgeline",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Isuzu D-max",
+            "model_key": "isuzu_d_max",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Mercedes-Benz X",
+            "model_key": "mercedes_benz_x",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Mitsubishi L200",
+            "model_key": "mitsubishi_l200",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Ssangyong musso 2018+",
+            "model_key": "ssangyong_musso_2018",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Toyota Hilux 2004-2015",
+            "model_key": "toyota_hilux_2004_2015",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Toyota Tundra",
+            "model_key": "toyota_tundra",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Volkswagen Amarok",
+            "model_key": "volkswagen_amarok",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Toyota Hilux 2015+",
+            "model_key": "toyota_hilux_2015",
+            "vehicle_category": "pickup"
+          },
+          {
+            "model_name": "Subaru Baja",
+            "model_key": "subaru_baja",
+            "vehicle_category": "pickup"
+          }
+        ],
+        "special_notes": []
+      },
+      "pricing": {
+        "pricing_model": "dual_mat_type",
+        "item_count": 9,
+        "items": [
+          {
+            "variant_label": "Driver mat",
+            "variant_slug": "driver_mat",
+            "variant_key": "driver_mat",
+            "classic": {
+              "base_price_pln": 175,
+              "after_discount": {
+                "excluded": true,
+                "label": "no_discount"
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 350,
+              "after_discount": {
+                "price_after_discount_pln": 280
+              }
+            }
+          },
+          {
+            "variant_label": "Front only",
+            "variant_slug": "front",
+            "variant_key": "front",
+            "classic": {
+              "base_price_pln": 320,
+              "after_discount": {
+                "price_after_discount_pln": 256
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 550,
+              "after_discount": {
+                "price_after_discount_pln": 440
+              }
+            }
+          },
+          {
+            "variant_label": "Front Only With Tunnel",
+            "variant_slug": null,
+            "variant_key": "front_only_with_tunnel",
+            "classic": {
+              "base_price_pln": 420,
+              "after_discount": {
+                "price_after_discount_pln": 336
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 590,
+              "after_discount": {
+                "price_after_discount_pln": 472
+              }
+            }
+          },
+          {
+            "variant_label": "Rear Only",
+            "variant_slug": null,
+            "variant_key": "rear_only",
+            "classic": {
+              "base_price_pln": 490,
+              "after_discount": {
+                "price_after_discount_pln": 392
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 690,
+              "after_discount": {
+                "price_after_discount_pln": 552
+              }
+            }
+          },
+          {
+            "variant_label": "Front and rear",
+            "variant_slug": "basic",
+            "variant_key": "basic",
+            "classic": {
+              "base_price_pln": 690,
+              "after_discount": {
+                "price_after_discount_pln": 552
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 990,
+              "after_discount": {
+                "price_after_discount_pln": 693
+              }
+            }
+          },
+          {
+            "variant_label": "Front rear and trunk",
+            "variant_slug": "premium",
+            "variant_key": "premium",
+            "classic": {
+              "base_price_pln": 1150,
+              "after_discount": {
+                "price_after_discount_pln": 805
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 1490,
+              "after_discount": {
+                "price_after_discount_pln": 1043
+              }
+            }
+          },
+          {
+            "variant_label": "Trunk mat",
+            "variant_slug": "complete",
+            "variant_key": "complete",
+            "classic": {
+              "base_price_pln": 690,
+              "after_discount": {
+                "price_after_discount_pln": 552
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": null,
+              "after_discount": null
+            }
+          },
+          {
+            "variant_label": "Front Trunk",
+            "variant_slug": null,
+            "variant_key": "front_trunk",
+            "classic": {
+              "base_price_pln": 790,
+              "after_discount": {
+                "price_after_discount_pln": 632
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 1090,
+              "after_discount": {
+                "price_after_discount_pln": 763
+              }
+            }
+          },
+          {
+            "variant_label": "Rear Trunk",
+            "variant_slug": null,
+            "variant_key": "rear_trunk",
+            "classic": {
+              "base_price_pln": 950,
+              "after_discount": {
+                "price_after_discount_pln": 665
+              }
+            },
+            "rims_3d": {
+              "base_price_pln": 1250,
+              "after_discount": {
+                "price_after_discount_pln": 875
+              }
+            }
+          }
+        ]
+      },
+      "bitrix": {
+        "bitrix_field": "UF_CRM_1757024931236",
+        "variant_count": 17,
+        "variants": [
+          {
+            "variant_label": "Driver mat",
+            "variant_key": "driver_mat",
+            "variant_slug": "driver_mat",
+            "pricing_variant_key": "driver_mat"
+          },
+          {
+            "variant_label": "Front",
+            "variant_key": "front",
+            "variant_slug": null,
+            "pricing_variant_key": "front"
+          },
+          {
+            "variant_label": "Rear",
+            "variant_key": "rear",
+            "variant_slug": null,
+            "pricing_variant_key": "rear"
+          },
+          {
+            "variant_label": "Front And Rear",
+            "variant_key": "front_and_rear",
+            "variant_slug": null,
+            "pricing_variant_key": "front_and_rear"
+          },
+          {
+            "variant_label": "Front Rear Trunk",
+            "variant_key": "front_rear_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "front_rear_trunk"
+          },
+          {
+            "variant_label": "Front With Tunnel",
+            "variant_key": "front_with_tunnel",
+            "variant_slug": null,
+            "pricing_variant_key": "front_with_tunnel"
+          },
+          {
+            "variant_label": "Front Trunk",
+            "variant_key": "front_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "front_trunk"
+          },
+          {
+            "variant_label": "Rear Trunk",
+            "variant_key": "rear_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "rear_trunk"
+          },
+          {
+            "variant_label": "Trunk mat",
+            "variant_key": "complete",
+            "variant_slug": "complete",
+            "pricing_variant_key": "complete"
+          },
+          {
+            "variant_label": "Trunk Custom",
+            "variant_key": "trunk_custom",
+            "variant_slug": null,
+            "pricing_variant_key": "trunk_custom"
+          },
+          {
+            "variant_label": "Custom Order",
+            "variant_key": "custom_order",
+            "variant_slug": null,
+            "pricing_variant_key": "custom_order"
+          },
+          {
+            "variant_label": "Driver Mat Large Trunk",
+            "variant_key": "driver_mat_large_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "driver_mat_large_trunk"
+          },
+          {
+            "variant_label": "Home Mat",
+            "variant_key": "home_mat",
+            "variant_slug": null,
+            "pricing_variant_key": "home_mat"
+          },
+          {
+            "variant_label": "Passenger Mat Rear",
+            "variant_key": "passenger_mat_rear",
+            "variant_slug": null,
+            "pricing_variant_key": "passenger_mat_rear"
+          },
+          {
+            "variant_label": "Passenger Mat Rear Trunk",
+            "variant_key": "passenger_mat_rear_trunk",
+            "variant_slug": null,
+            "pricing_variant_key": "passenger_mat_rear_trunk"
+          },
+          {
+            "variant_label": "Passenger mat",
+            "variant_key": "passenger_mat",
+            "variant_slug": "passenger_mat",
+            "pricing_variant_key": "passenger_mat"
+          },
+          {
+            "variant_label": "Tunnel Mat",
+            "variant_key": "tunnel_mat",
+            "variant_slug": null,
+            "pricing_variant_key": "tunnel_mat"
+          }
+        ],
+        "body_types": [],
+        "notes": [
+          "W bitrix wybieramy 3D lub Klasyczne"
+        ]
+      }
+    }
+  }
+}

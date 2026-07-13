@@ -18,6 +18,10 @@ import { apiGet } from '@/lib/api/client';
 import { useProductSelectionFilters } from '@/features/products/hooks';
 import { formatPricePln } from '@/lib/utils/formatPrice';
 import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/buildConfiguratorEntryUrl";
+import {
+  buildVehicleDisplayLabels,
+  formatVehicleCardTitle,
+} from "@/shared/vehicle/displayLabels";
 
 interface FilterState {
   bodyTypes: string[];
@@ -28,6 +32,9 @@ interface ProductDisplayItem {
   id: string;
   brand: string;
   model: string;
+  modelFamilyKey?: string;
+  modelKey?: string;
+  modelDisplay?: string;
   generation?: string;
   bodyType?: string;
   yearFrom?: number;
@@ -147,6 +154,9 @@ export default function BrandProductsSection({ brandSlug }: BrandProductsSection
                 id: `${model.brand}-${model.model}-${gen.generation || ""}`,
                 brand: currentBrand?.displayName || brandSlug,
                 model: model.model,
+                modelFamilyKey: model.modelFamilyKey || model.model,
+                modelKey: gen.modelKey,
+                modelDisplay: gen.modelDisplay || model.modelDisplay,
                 generation: gen.generation,
                 bodyType: gen.bodyType,
                 yearFrom: gen.yearFrom,
@@ -500,9 +510,23 @@ export default function BrandProductsSection({ brandSlug }: BrandProductsSection
                 {/* Product Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredProducts.map((product) => {
+                const labels = buildVehicleDisplayLabels({
+                  brandName: product.brand,
+                  modelFamilyName: product.model,
+                  modelFamilyKey: product.modelFamilyKey ?? product.model,
+                  modelKey: product.modelKey ?? product.modelFamilyKey ?? product.model,
+                  generation: product.generation,
+                  yearFrom: product.yearFrom,
+                  yearTo: product.yearTo,
+                  bodyType: product.bodyType,
+                })
+                const title = product.modelDisplay
+                  ? `${labels.brandDisplay} ${product.modelDisplay}`
+                  : formatVehicleCardTitle(labels)
+
                 const configuratorUrl = buildConfiguratorEntryUrl({
                   brand: brandSlug,
-                  model: product.model.toLowerCase(),
+                  model: (product.modelFamilyKey ?? product.model).toLowerCase(),
                   generation: product.generation,
                   bodyType: product.bodyType,
                 });
@@ -517,7 +541,7 @@ export default function BrandProductsSection({ brandSlug }: BrandProductsSection
                       {product.imageSrc ? (
                         <Image
                           src={product.imageSrc}
-                          alt={`${product.brand} ${product.model}`}
+                          alt={title}
                           fill
                           className="object-contain p-4"
                         />
@@ -531,16 +555,15 @@ export default function BrandProductsSection({ brandSlug }: BrandProductsSection
                     {/* Informacje o produkcie */}
                     <div className="p-6">
                       <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2">
-                        {product.brand} {product.model}
-                        {product.generation && ` (${product.generation})`}
+                        {title}
                       </h3>
                       
                       <div className="text-sm text-gray-400 mb-2">
-                        {product.yearFrom && product.yearTo && (
-                          <p>{product.yearFrom}-{product.yearTo} rok</p>
+                        {labels.yearRangeDisplay && (
+                          <p>{labels.yearRangeDisplay}</p>
                         )}
-                        {product.bodyType && (
-                          <p className="uppercase">{formatBodyTypeLabel(product.bodyType)}</p>
+                        {labels.bodyTypeDisplay && (
+                          <p className="uppercase">{labels.bodyTypeDisplay}</p>
                         )}
                       </div>
 

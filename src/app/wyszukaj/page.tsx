@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Search, Car, Loader2, ArrowRight } from "lucide-react";
@@ -10,6 +10,7 @@ import Link from "next/link";
 import { brandNameToNavigationSlug } from "@/shared/brands/brandParam";
 import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/buildConfiguratorEntryUrl";
 import { formatPricePln } from "@/lib/utils/formatPrice";
+import { toComparableSearchQuery } from "@/shared/vehicle/searchQuery";
 
 interface SearchBrand {
   id: number;
@@ -21,6 +22,11 @@ interface SearchBrand {
 interface SearchModel {
   brand: string;
   model: string;
+  modelFamilyKey?: string;
+  displayLabel?: string;
+  generation?: string;
+  bodyType?: string;
+  bodyTypeDisplay?: string;
   bodyTypes: string[];
   isCurrentlyProduced: boolean;
 }
@@ -59,11 +65,12 @@ function useDebounce<T>(value: T, delay: number): T {
 
 // Funkcja do pobierania wyników wyszukiwania
 const fetchSearchResults = async (query: string): Promise<SearchResults> => {
-  if (!query.trim()) {
+  const comparableQuery = toComparableSearchQuery(query)
+  if (!comparableQuery) {
     return { brands: [], models: [], products: [] };
   }
 
-  const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+  const response = await fetch(`/api/search?q=${encodeURIComponent(comparableQuery)}`);
   
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -78,21 +85,25 @@ function SearchPageContent() {
   const initialQuery = searchParams.get('q') || '';
   const [query, setQuery] = useState(initialQuery);
   const debouncedQuery = useDebounce(query, 400);
+  const comparableQuery = useMemo(
+    () => toComparableSearchQuery(debouncedQuery),
+    [debouncedQuery],
+  );
 
   // Aktualizuj URL gdy query się zmienia
   useEffect(() => {
-    if (debouncedQuery.trim()) {
-      router.replace(`/wyszukaj?q=${encodeURIComponent(debouncedQuery)}`, { scroll: false });
+    if (comparableQuery) {
+      router.replace(`/wyszukaj?q=${encodeURIComponent(comparableQuery)}`, { scroll: false });
     } else {
       router.replace('/wyszukaj', { scroll: false });
     }
-  }, [debouncedQuery, router]);
+  }, [comparableQuery, router]);
 
   // Pobierz wyniki wyszukiwania
   const { data: searchResults, isLoading, error } = useQuery<SearchResults>({
-    queryKey: ['search', debouncedQuery],
-    queryFn: () => fetchSearchResults(debouncedQuery),
-    enabled: debouncedQuery.trim().length > 0,
+    queryKey: ['search', comparableQuery],
+    queryFn: () => fetchSearchResults(comparableQuery),
+    enabled: comparableQuery.length > 0,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
@@ -140,7 +151,7 @@ function SearchPageContent() {
         </div>
 
         {/* Wyniki wyszukiwania */}
-        {!debouncedQuery.trim() && (
+        {!comparableQuery && (
           <div className="text-center py-16">
             <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-400 text-lg">
@@ -149,20 +160,20 @@ function SearchPageContent() {
           </div>
         )}
 
-        {isLoading && debouncedQuery.trim() && (
+        {isLoading && comparableQuery && (
           <div className="flex items-center justify-center py-16">
             <Loader2 className="w-8 h-8 text-red-500 animate-spin" />
           </div>
         )}
 
-        {error && debouncedQuery.trim() && (
+        {error && comparableQuery && (
           <div className="text-center py-16">
             <p className="text-red-400 text-lg mb-2">Wystąpił błąd podczas wyszukiwania</p>
             <p className="text-gray-400 text-sm">Spróbuj ponownie później</p>
           </div>
         )}
 
-        {!isLoading && !error && debouncedQuery.trim() && totalResults === 0 && (
+        {!isLoading && !error && comparableQuery && totalResults === 0 && (
           <div className="text-center py-16">
             <p className="text-gray-400 text-lg mb-2">
               Nie znaleziono wyników dla &quot;{debouncedQuery}&quot;
@@ -171,7 +182,7 @@ function SearchPageContent() {
           </div>
         )}
 
-        {!isLoading && !error && debouncedQuery.trim() && totalResults > 0 && (
+        {!isLoading && !error && comparableQuery && totalResults > 0 && (
           <div className="space-y-8">
             {/* Marki */}
             {results.brands.length > 0 && (
@@ -222,10 +233,12 @@ function SearchPageContent() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {results.models.map((model, index) => (
                     <Link
-                      key={`${model.brand}-${model.model}-${index}`}
+                      key={`${model.brand}-${model.displayLabel ?? model.model}-${index}`}
                       href={buildConfiguratorEntryUrl({
                         brand: model.brand,
                         model: model.model,
+                        generation: model.generation,
+                        bodyType: model.bodyType,
                       })}
                       className="
                         group relative
@@ -240,25 +253,8 @@ function SearchPageContent() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors">
-                            {model.brand} {model.model}
+                            {model.displayLabel ?? `${model.brand} ${model.model}`}
                           </h3>
-                          {model.bodyTypes.length > 0 && (
-                            <div className="flex flex-wrap gap-2 mt-2">
-                              {model.bodyTypes.slice(0, 3).map((bodyType, idx) => (
-                                <span
-                                  key={idx}
-                                  className="px-2 py-1 bg-red-500/20 border border-red-500/30 rounded text-xs text-red-300"
-                                >
-                                  {bodyType}
-                                </span>
-                              ))}
-                              {model.bodyTypes.length > 3 && (
-                                <span className="px-2 py-1 text-xs text-gray-400">
-                                  +{model.bodyTypes.length - 3}
-                                </span>
-                              )}
-                            </div>
-                          )}
                           {model.isCurrentlyProduced && (
                             <span className="inline-block mt-2 px-2 py-1 bg-green-500/20 border border-green-500/30 rounded text-xs text-green-300">
                               W produkcji

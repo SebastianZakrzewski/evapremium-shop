@@ -1,7 +1,6 @@
 /**
- * Hook do pobierania danych samochodowych dla konfiguratora z car_models_extended (API)
- *
- * Zastępuje statyczne dane z car-model-years.json danymi dynamicznymi z bazy.
+ * @deprecated Użyj useVehicleCatalog z @/features/vehicle-catalog (mat_templates).
+ * Hook pozostaje dla legacy Configurator.tsx — dane pochodzą już z /api/models na mat_templates.
  */
 
 import { useMemo } from 'react';
@@ -45,7 +44,7 @@ function yearInRange(year: number, yearFrom?: number | null, yearTo?: number | n
 
 /**
  * Hook dostarczający dane samochodowe (modele, lata, generacje, typy nadwozia)
- * z tabeli car_models_extended przez API /api/models
+ * z tabeli mat_templates przez API /api/models
  */
 export function useConfiguratorCarData(
   params: UseConfiguratorCarDataParams

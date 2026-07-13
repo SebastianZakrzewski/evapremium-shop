@@ -6,10 +6,14 @@ import { formatBodyTypeLabel, formatGenerationLabel, normalizeBodyTypeKey, getDo
 type CarModelItem = {
   id?: string | number;
   name: string;
+  nameDisplay?: string;
+  modelFamilyKey?: string;
   brand?: string;
   imageSrc?: string;
   bodyType?: string | null;
+  bodyTypeDisplay?: string | null;
   generation?: string | null;
+  generationDisplay?: string | null;
   yearFrom?: number;
   yearTo?: number;
 };
@@ -57,13 +61,18 @@ export function useCarModelsFilters({
 
   const availableGenerations = useMemo(() => {
     if (brandParam && displayModels.length > 0) {
-      const generations = new Set<string>();
+      const generations = new Map<string, string>();
       displayModels.forEach((model) => {
         if (model.generation) {
-          generations.add(model.generation);
+          generations.set(
+            model.generation,
+            model.generationDisplay ?? model.generation,
+          );
         }
       });
-      return Array.from(generations).sort();
+      return [...generations.entries()]
+        .sort(([left], [right]) => left.localeCompare(right, "pl"))
+        .map(([value, label]) => ({ value, label }));
     }
     return [];
   }, [displayModels, brandParam]);
@@ -75,7 +84,8 @@ export function useCarModelsFilters({
 
     return modelsWithImages.filter((model) => {
       if (selectedModel) {
-        if (model.name.toLowerCase() !== selectedModel.toLowerCase()) {
+        const familyKey = model.modelFamilyKey ?? model.name;
+        if (familyKey.toLowerCase() !== selectedModel.toLowerCase()) {
           return false;
         }
       }

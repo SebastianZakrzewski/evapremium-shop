@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import Image from 'next/image';
-import { CartItemV2 as CartItemType } from '@/lib/types';
+import { CartItemV2 as CartItemType, isMatCartConfiguration } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Trash2, Minus, Plus } from 'lucide-react';
 import { PricingService } from '@/lib/services/PricingService';
@@ -137,8 +137,10 @@ function MatCartItem({
   onRemove: () => void; 
   onUpdateQuantity: (quantity: number) => void; 
 }) {
-  const config = item.configuration;
-  const carDetails = config?.carDetails;
+  const config = isMatCartConfiguration(item.configuration)
+    ? item.configuration
+    : null
+  const carDetails = config?.carDetails
 
   return (
     <div className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-white/10 rounded-xl p-5 shadow-lg hover:shadow-xl transition-all duration-300">

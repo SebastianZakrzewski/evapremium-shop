@@ -40,6 +40,18 @@ export {
   getDoorsCount,
   formatGenerationLabel,
 } from './vehicle/bodyType';
+export {
+  buildVehicleDisplayLabels,
+  extractGenerationNumber,
+  formatBodyTypeDisplayPl,
+  formatBrandDisplayName,
+  formatModelFamilyDisplayName,
+  formatModelWithGenerationDisplay,
+  formatVehicleCardSubtitle,
+  formatVehicleCardTitle,
+  formatYearRangeDisplay,
+  inferBodyTypeKeyFromValue,
+} from './vehicle/displayLabels';
 
 // Hooks (będą dodane po migracji)
 // export { useLocalStorage } from './hooks/useLocalStorage';

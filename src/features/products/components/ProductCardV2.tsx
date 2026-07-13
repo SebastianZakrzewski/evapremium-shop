@@ -3,14 +3,19 @@ import Link from "next/link";
 import { Car, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { formatPriceValue } from "@/lib/utils/formatPrice";
 import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/buildConfiguratorEntryUrl";
+import {
+  buildVehicleDisplayLabels,
+  formatVehicleCardTitle,
+} from "@/shared/vehicle/displayLabels";
 
 interface ProductDisplayItem {
   id: string;
   brand: string;
   model: string;
+  modelFamilyKey?: string;
   generation?: string;
   bodyType?: string;
   yearFrom?: number;
@@ -24,38 +29,26 @@ interface ProductCardV2Props {
 }
 
 function ProductCardV2({ product }: ProductCardV2Props) {
-  // Body type mapping function (same as in other components, could be extracted to utils)
-  const formatBodyType = (bodyType: string) => {
-    const mapping: Record<string, string> = {
-      'sedan': 'Sedan',
-      'suv': 'SUV',
-      'hatchback': 'Hatchback',
-      'coupe': 'Coupe',
-      'roadster': 'Roadster',
-      'cabrio': 'Kabriolet',
-      'kombi': 'Kombi',
-      'minivan': 'Minivan',
-      'van': 'Van',
-      'dostawczak': 'Dostawczak',
-      'fastback': 'Fastback',
-      'liftback': 'Liftback',
-      'hatchback 2drzwi': 'Hatchback 2-drzwiowy',
-      'hatchback 3drzwi': 'Hatchback 3-drzwiowy',
-      'hatchback 5drzwi': 'Hatchback 5-drzwiowy',
-      'hatchback 3/5drzwi': 'Hatchback 3/5-drzwiowy',
-      'SUV 5os.': 'SUV 5-osobowy',
-      'SUV 7os.': 'SUV 7-osobowy',
-      'kombi/ sedan': 'Kombi/Sedan',
-      'van 4drzwi': 'Van 4-drzwiowy',
-      'shooting brake': 'Shooting Brake',
-    };
-    const normalized = bodyType.toLowerCase().trim();
-    return mapping[normalized] || bodyType.charAt(0).toUpperCase() + bodyType.slice(1).toLowerCase();
-  };
+  const labels = useMemo(
+    () =>
+      buildVehicleDisplayLabels({
+        brandName: product.brand,
+        modelFamilyName: product.model,
+        modelFamilyKey: product.modelFamilyKey ?? product.model,
+        modelKey: product.modelFamilyKey ?? product.model,
+        generation: product.generation,
+        yearFrom: product.yearFrom,
+        yearTo: product.yearTo,
+        bodyType: product.bodyType,
+      }),
+    [product],
+  );
+
+  const title = formatVehicleCardTitle(labels);
 
   const configuratorUrl = buildConfiguratorEntryUrl({
     brand: product.brand,
-    model: product.model.toLowerCase(),
+    model: (product.modelFamilyKey ?? product.model).toLowerCase(),
     generation: product.generation,
     bodyType: product.bodyType,
   });
@@ -63,13 +56,12 @@ function ProductCardV2({ product }: ProductCardV2Props) {
   return (
     <Link href={configuratorUrl} className="group block h-full">
       <article className="h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1">
-        {/* Image Container */}
         <div className="relative aspect-square bg-gradient-to-br from-gray-900 to-black overflow-hidden p-8 flex items-center justify-center">
           {product.imageSrc ? (
             <div className="relative w-full h-full">
               <Image
                 src={product.imageSrc}
-                alt={`${product.brand} ${product.model}`}
+                alt={title}
                 fill
                 loading="lazy"
                 className="object-contain transition-transform duration-500 group-hover:scale-110"
@@ -81,32 +73,30 @@ function ProductCardV2({ product }: ProductCardV2Props) {
               <Car className="w-24 h-24 opacity-20" />
             </div>
           )}
-          
-          {/* Badges */}
+
           <div className="absolute top-3 left-3 flex flex-col gap-2">
             {product.yearFrom && product.yearTo && (
               <Badge variant="secondary" className="bg-black/70 backdrop-blur-sm text-white border-white/10 hover:bg-black/90">
-                {product.yearFrom}-{product.yearTo}
+                {labels.yearRangeDisplay || `${product.yearFrom}-${product.yearTo}`}
               </Badge>
             )}
           </div>
         </div>
 
-        {/* Content */}
         <div className="flex-1 flex flex-col p-5">
           <div className="mb-2">
             <h3 className="text-lg font-bold text-white leading-tight group-hover:text-red-500 transition-colors line-clamp-2">
-              {product.brand} {product.model}
+              {title}
             </h3>
           </div>
-          
+
           <div className="text-sm text-gray-400 mb-4 flex-1">
-             {product.generation && (
-               <span className="block">{product.generation}</span>
-             )}
-             {product.bodyType && (
-               <span className="block text-xs uppercase mt-1">{formatBodyType(product.bodyType)}</span>
-             )}
+            {labels.yearRangeDisplay && (
+              <span className="block">{labels.yearRangeDisplay}</span>
+            )}
+            {labels.bodyTypeDisplay && (
+              <span className="block text-xs uppercase mt-1">{labels.bodyTypeDisplay}</span>
+            )}
           </div>
 
           <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between gap-3">
@@ -116,7 +106,7 @@ function ProductCardV2({ product }: ProductCardV2Props) {
                 {formatPriceValue(product.price)} <span className="text-red-500">PLN</span>
               </span>
             </div>
-            
+
             <Button
               size="sm"
               className="bg-red-600 text-white hover:bg-red-700 shrink-0 gap-2 transition-all duration-300"
@@ -132,25 +122,3 @@ function ProductCardV2({ product }: ProductCardV2Props) {
 }
 
 export default memo(ProductCardV2);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

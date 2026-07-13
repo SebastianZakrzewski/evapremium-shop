@@ -2,6 +2,8 @@ export interface BrandMeta {
   slug: string;
   apiName: string;
   displayName: string;
+  /** Klucz w mat_templates.brand_key gdy różny od slug (np. mercedes → mercedes_benz) */
+  catalogKey?: string;
   /** Nazwa w bazie danych (np. "BMW") – gdy różna od apiName, używana w zapytaniach */
   dbName?: string;
   logo?: string;
@@ -132,7 +134,7 @@ export const MODELE_IMAGE_MAP: Record<string, string> = {
 
 const BRAND_DEFINITIONS: BrandMeta[] = [
   { slug: "bmw", apiName: "Bmw", displayName: "BMW", dbName: "BMW", logo: `${MODELE_LOGO_BASE}/bmw.png`, aliases: ["bmw"] },
-  { slug: "mercedes", apiName: "Mercedes-Benz", displayName: "Mercedes", logo: `${MODELE_LOGO_BASE}/mercedes_benz.jpg`, aliases: ["mercedes", "mercedes-benz", "mercedes benz", "mercedes_benz"] },
+  { slug: "mercedes", apiName: "Mercedes-Benz", displayName: "Mercedes", catalogKey: "mercedes_benz", logo: `${MODELE_LOGO_BASE}/mercedes_benz.jpg`, aliases: ["mercedes", "mercedes-benz", "mercedes benz", "mercedes_benz"] },
   { slug: "audi", apiName: "Audi", displayName: "Audi", logo: `${MODELE_LOGO_BASE}/audi.avif`, aliases: ["audi"] },
   { slug: "porsche", apiName: "Porsche", displayName: "Porsche", logo: `${MODELE_LOGO_BASE}/porsche.jpg`, aliases: ["porsche"] },
   { slug: "tesla", apiName: "Tesla", displayName: "Tesla", logo: `${MODELE_LOGO_BASE}/tesla.avif`, aliases: ["tesla"] },
@@ -282,7 +284,32 @@ export function getBrandMetaBySlug(slug?: string | null): BrandMeta | null {
   return BRAND_ALIAS_INDEX.get(normalized) ?? null;
 }
 
+/** mat_templates.brand_key z parametru URL / slugu nawigacji */
+export const brandMetaToCatalogKey = (meta: BrandMeta): string =>
+  meta.catalogKey ?? meta.slug.replace(/-/g, "_");
+
 export const supportedBrands = BRAND_DEFINITIONS;
+
+/** Token do dopasowania marki niezależnie od spacji, myślników i podkreśleń (alfa-romeo ≡ Alfa Romeo). */
+export const brandMatchToken = (value: string): string =>
+  value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, "");
+
+/** Etykiety marki z meta (apiName, dbName, catalogKey…) do wyszukiwania w mat_templates.brand_key */
+export const getBrandMetaLookupLabels = (meta: BrandMeta): string[] => {
+  const labels = [
+    meta.catalogKey,
+    meta.dbName,
+    meta.apiName,
+    meta.displayName,
+    ...meta.aliases,
+  ].filter((label): label is string => Boolean(label?.trim()))
+  return [...new Set(labels)]
+}
 
 
 

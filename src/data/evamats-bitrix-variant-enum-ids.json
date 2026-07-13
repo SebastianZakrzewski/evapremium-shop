@@ -1,0 +1,330 @@
+{
+  "meta": {
+    "field": "UF_CRM_1757024931236",
+    "fetched_at": "2026-07-13T00:04:14.273Z",
+    "enum_count": 15,
+    "unresolved_count": 30
+  },
+  "enums": [
+    {
+      "id": 270,
+      "value": "Przód"
+    },
+    {
+      "id": 272,
+      "value": "Tył"
+    },
+    {
+      "id": 274,
+      "value": "Przód + Tył"
+    },
+    {
+      "id": 276,
+      "value": "Przód + Tył + Bagażnik"
+    },
+    {
+      "id": 1072,
+      "value": "3 Rzędy + Duży Bagażnik"
+    },
+    {
+      "id": 1080,
+      "value": "3 Rzędy + Mały Bagażnik"
+    },
+    {
+      "id": 1088,
+      "value": "3 Rzędy + Mały i Duży Bagażnik"
+    },
+    {
+      "id": 1250,
+      "value": "Mata Do Bagażnika"
+    },
+    {
+      "id": 1260,
+      "value": "1 Rząd"
+    },
+    {
+      "id": 1270,
+      "value": "3 Rząd"
+    },
+    {
+      "id": 1280,
+      "value": "3 Rzędy"
+    },
+    {
+      "id": 1290,
+      "value": "2 Rzędy"
+    },
+    {
+      "id": 1300,
+      "value": "Dywanik Kierowcy"
+    },
+    {
+      "id": 1310,
+      "value": "Dywanik Pasażera"
+    },
+    {
+      "id": 1332,
+      "value": "Przód + Bagażnik"
+    }
+  ],
+  "variant_labels_pl": {
+    "driver_mat": "Dywanik Kierowcy",
+    "driver_mat_large_trunk": "Dywanik kierowcy + bagażnik duży",
+    "front": "Przód",
+    "front_with_tunnel": "Przód z tunelem",
+    "rear": "Tył",
+    "front_and_rear": "Przód + Tył",
+    "front_rear_trunk": "Przód + Tył + Bagażnik",
+    "front_trunk": "Przód + Bagażnik",
+    "rear_trunk": "Tył + Bagażnik",
+    "row_3": "3 Rzędy",
+    "trunk_small": "Bagażnik mały",
+    "trunk_custom": "Bagażnik niestandardowy",
+    "trunk_large": "Mata Do Bagażnika",
+    "row_3_small_trunk": "3 Rzędy + Mały Bagażnik",
+    "row_3_large_trunk": "3 Rzędy + Duży Bagażnik",
+    "row_3_large_and_small_trunk": "3 Rzędy + Mały i Duży Bagażnik",
+    "custom_order": "Niestandardowe zamówienie",
+    "complete": "Mata do bagażnika",
+    "row_3_single": "3 Rząd",
+    "home_mat": "Mata do domu",
+    "passenger_mat_rear": "Dywanik Pasażera + Tył",
+    "passenger_mat_rear_trunk": "Dywanik Pasażera + Tył + Bagażnik",
+    "passenger_mat": "Dywanik Pasażera",
+    "tunnel_mat": "Dywanik na Tunel",
+    "row_2": "2 Rzędy",
+    "row_2_large_trunk": "2 Rzędy + Duży Bagażnik",
+    "row_1_trunk": "1 Rząd + Bagażnik",
+    "row_1_large_trunk": "1 Rząd + Duży Bagażnik",
+    "row_1": "1 Rząd",
+    "row_2_small_trunk": "2 Rzędy + Mały Bagażnik",
+    "front_without_tunnel": "Przód bez tunelu"
+  },
+  "by_segment": {
+    "passenger_car": {
+      "driver_mat": 1300,
+      "driver_mat_large_trunk": 1300,
+      "front": 270,
+      "front_with_tunnel": 270,
+      "rear": 272,
+      "front_and_rear": 274,
+      "front_rear_trunk": 276,
+      "front_trunk": 1332,
+      "row_3": 1280,
+      "trunk_large": 1250,
+      "row_3_small_trunk": 1080,
+      "row_3_large_trunk": 1072,
+      "row_3_large_and_small_trunk": 1088,
+      "complete": 1250,
+      "row_3_single": 1270,
+      "passenger_mat": 1310
+    },
+    "pickup": {
+      "driver_mat": 1300,
+      "front": 270,
+      "rear": 272,
+      "front_and_rear": 274,
+      "front_rear_trunk": 276,
+      "front_with_tunnel": 270,
+      "front_trunk": 1332,
+      "complete": 1250,
+      "driver_mat_large_trunk": 1300,
+      "passenger_mat": 1310
+    },
+    "minivan": {
+      "driver_mat": 1300,
+      "front": 270,
+      "rear": 272,
+      "front_with_tunnel": 270,
+      "front_and_rear": 274,
+      "row_2": 1290,
+      "row_3": 1280,
+      "row_3_large_trunk": 1072,
+      "row_3_small_trunk": 1080,
+      "row_2_large_trunk": 1290,
+      "row_3_large_and_small_trunk": 1088,
+      "trunk_large": 1250,
+      "row_1_trunk": 1260,
+      "row_1_large_trunk": 1260,
+      "row_3_single": 1270,
+      "driver_mat_large_trunk": 1300,
+      "complete": 1250,
+      "passenger_mat": 1310,
+      "front_rear_trunk": 276
+    },
+    "bus": {
+      "driver_mat": 1300,
+      "row_1": 1260,
+      "row_2": 1290,
+      "row_3": 1280,
+      "row_3_large_trunk": 1072,
+      "row_3_small_trunk": 1080,
+      "row_2_small_trunk": 1290,
+      "row_2_large_trunk": 1290,
+      "trunk_large": 1250,
+      "row_1_trunk": 1260,
+      "row_1_large_trunk": 1260,
+      "row_3_single": 1270,
+      "driver_mat_large_trunk": 1300,
+      "passenger_mat": 1310
+    },
+    "heavy_truck": {
+      "driver_mat": 1300,
+      "front_with_tunnel": 270,
+      "front_without_tunnel": 270,
+      "passenger_mat": 1310
+    }
+  },
+  "unresolved": [
+    {
+      "segment": "passenger_car",
+      "variant_key": "rear_trunk",
+      "polish_label": "Tył + Bagażnik"
+    },
+    {
+      "segment": "passenger_car",
+      "variant_key": "trunk_small",
+      "polish_label": "Bagażnik mały"
+    },
+    {
+      "segment": "passenger_car",
+      "variant_key": "trunk_custom",
+      "polish_label": "Bagażnik niestandardowy"
+    },
+    {
+      "segment": "passenger_car",
+      "variant_key": "custom_order",
+      "polish_label": "Niestandardowe zamówienie"
+    },
+    {
+      "segment": "passenger_car",
+      "variant_key": "home_mat",
+      "polish_label": "Mata do domu"
+    },
+    {
+      "segment": "passenger_car",
+      "variant_key": "passenger_mat_rear",
+      "polish_label": "Dywanik Pasażera + Tył"
+    },
+    {
+      "segment": "passenger_car",
+      "variant_key": "passenger_mat_rear_trunk",
+      "polish_label": "Dywanik Pasażera + Tył + Bagażnik"
+    },
+    {
+      "segment": "passenger_car",
+      "variant_key": "tunnel_mat",
+      "polish_label": "Dywanik na Tunel"
+    },
+    {
+      "segment": "pickup",
+      "variant_key": "rear_trunk",
+      "polish_label": "Tył + Bagażnik"
+    },
+    {
+      "segment": "pickup",
+      "variant_key": "trunk_custom",
+      "polish_label": "Bagażnik niestandardowy"
+    },
+    {
+      "segment": "pickup",
+      "variant_key": "custom_order",
+      "polish_label": "Niestandardowe zamówienie"
+    },
+    {
+      "segment": "pickup",
+      "variant_key": "home_mat",
+      "polish_label": "Mata do domu"
+    },
+    {
+      "segment": "pickup",
+      "variant_key": "passenger_mat_rear",
+      "polish_label": "Dywanik Pasażera + Tył"
+    },
+    {
+      "segment": "pickup",
+      "variant_key": "passenger_mat_rear_trunk",
+      "polish_label": "Dywanik Pasażera + Tył + Bagażnik"
+    },
+    {
+      "segment": "pickup",
+      "variant_key": "tunnel_mat",
+      "polish_label": "Dywanik na Tunel"
+    },
+    {
+      "segment": "minivan",
+      "variant_key": "home_mat",
+      "polish_label": "Mata do domu"
+    },
+    {
+      "segment": "minivan",
+      "variant_key": "trunk_small",
+      "polish_label": "Bagażnik mały"
+    },
+    {
+      "segment": "minivan",
+      "variant_key": "trunk_custom",
+      "polish_label": "Bagażnik niestandardowy"
+    },
+    {
+      "segment": "minivan",
+      "variant_key": "custom_order",
+      "polish_label": "Niestandardowe zamówienie"
+    },
+    {
+      "segment": "minivan",
+      "variant_key": "passenger_mat_rear",
+      "polish_label": "Dywanik Pasażera + Tył"
+    },
+    {
+      "segment": "minivan",
+      "variant_key": "passenger_mat_rear_trunk",
+      "polish_label": "Dywanik Pasażera + Tył + Bagażnik"
+    },
+    {
+      "segment": "minivan",
+      "variant_key": "tunnel_mat",
+      "polish_label": "Dywanik na Tunel"
+    },
+    {
+      "segment": "bus",
+      "variant_key": "trunk_small",
+      "polish_label": "Bagażnik mały"
+    },
+    {
+      "segment": "bus",
+      "variant_key": "trunk_custom",
+      "polish_label": "Bagażnik niestandardowy"
+    },
+    {
+      "segment": "bus",
+      "variant_key": "custom_order",
+      "polish_label": "Niestandardowe zamówienie"
+    },
+    {
+      "segment": "bus",
+      "variant_key": "home_mat",
+      "polish_label": "Mata do domu"
+    },
+    {
+      "segment": "bus",
+      "variant_key": "tunnel_mat",
+      "polish_label": "Dywanik na Tunel"
+    },
+    {
+      "segment": "heavy_truck",
+      "variant_key": "custom_order",
+      "polish_label": "Niestandardowe zamówienie"
+    },
+    {
+      "segment": "heavy_truck",
+      "variant_key": "home_mat",
+      "polish_label": "Mata do domu"
+    },
+    {
+      "segment": "heavy_truck",
+      "variant_key": "tunnel_mat",
+      "polish_label": "Dywanik na Tunel"
+    }
+  ]
+}

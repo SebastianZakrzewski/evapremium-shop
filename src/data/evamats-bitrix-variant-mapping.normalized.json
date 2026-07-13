@@ -1,0 +1,1116 @@
+{
+  "meta": {
+    "source_sheet": "Wariant kompletu Bitrix",
+    "description": "Bitrix24 field UF_CRM_1757024931236 (set variant) labels per pricing segment",
+    "bitrix_field": "UF_CRM_1757024931236",
+    "counts": {
+      "passenger_car": 34,
+      "pickup": 17,
+      "minivan": 32,
+      "bus": 20,
+      "heavy_truck": 7
+    },
+    "total_cross_rows": 40
+  },
+  "segments": {
+    "passenger_car": {
+      "id": "passenger_car",
+      "label": "Passenger car",
+      "pricing_table": "passenger_car",
+      "vehicle_category": "passenger_car",
+      "bitrix_field": "UF_CRM_1757024931236",
+      "notes": [
+        "Typ nadwozia: Pickup oraz Minivan i Furgon i VAN jeśli cena jest jak do auta osobowego to też zaznaczamy ten wariant",
+        "W bitrix wybieramy 3D lub Klasyczne"
+      ],
+      "body_types": [
+        {
+          "body_type_key": "hatchback_5_door",
+          "body_type_label": "Hatchback 5 door"
+        },
+        {
+          "body_type_key": "hatchback_3_door",
+          "body_type_label": "Hatchback 3 door"
+        },
+        {
+          "body_type_key": "liftback",
+          "body_type_label": "Liftback"
+        },
+        {
+          "body_type_key": "wagon",
+          "body_type_label": "Wagon"
+        },
+        {
+          "body_type_key": "sedan",
+          "body_type_label": "Sedan"
+        },
+        {
+          "body_type_key": "off_road",
+          "body_type_label": "Off-road"
+        },
+        {
+          "body_type_key": "limousine",
+          "body_type_label": "Limousine"
+        },
+        {
+          "body_type_key": "coupe",
+          "body_type_label": "Coupe"
+        },
+        {
+          "body_type_key": "suv_coupe",
+          "body_type_label": "SUV coupe"
+        },
+        {
+          "body_type_key": "convertible",
+          "body_type_label": "Convertible"
+        },
+        {
+          "body_type_key": "suv_3_door",
+          "body_type_label": "SUV 3 door"
+        },
+        {
+          "body_type_key": "suv_5_door",
+          "body_type_label": "SUV 5 door"
+        },
+        {
+          "body_type_key": "suv_7_seater",
+          "body_type_label": "SUV 7 seater"
+        },
+        {
+          "body_type_key": "suv_6_seater",
+          "body_type_label": "SUV 6 seater"
+        },
+        {
+          "body_type_key": "fastback",
+          "body_type_label": "Fastback"
+        },
+        {
+          "body_type_key": "combi_van",
+          "body_type_label": "Combi van"
+        },
+        {
+          "body_type_key": "suv",
+          "body_type_label": "SUV"
+        },
+        {
+          "body_type_key": "hatchback",
+          "body_type_label": "Hatchback"
+        },
+        {
+          "body_type_key": "liftback_3_door",
+          "body_type_label": "Liftback 3 door"
+        },
+        {
+          "body_type_key": "roadster",
+          "body_type_label": "Roadster"
+        },
+        {
+          "body_type_key": "buggy",
+          "body_type_label": "Buggy"
+        }
+      ],
+      "variants": [
+        {
+          "variant_label": "Driver mat",
+          "variant_key": "driver_mat",
+          "variant_slug": "driver_mat",
+          "pricing_variant_key": "driver_mat"
+        },
+        {
+          "variant_label": "Driver Mat Large Trunk",
+          "variant_key": "driver_mat_large_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "driver_mat_large_trunk"
+        },
+        {
+          "variant_label": "Front",
+          "variant_key": "front",
+          "variant_slug": null,
+          "pricing_variant_key": "front"
+        },
+        {
+          "variant_label": "Front With Tunnel",
+          "variant_key": "front_with_tunnel",
+          "variant_slug": null,
+          "pricing_variant_key": "front_with_tunnel"
+        },
+        {
+          "variant_label": "Rear",
+          "variant_key": "rear",
+          "variant_slug": null,
+          "pricing_variant_key": "rear"
+        },
+        {
+          "variant_label": "Front And Rear",
+          "variant_key": "front_and_rear",
+          "variant_slug": null,
+          "pricing_variant_key": "front_and_rear"
+        },
+        {
+          "variant_label": "Front Rear Trunk",
+          "variant_key": "front_rear_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "front_rear_trunk"
+        },
+        {
+          "variant_label": "Front Rear Two Trunks",
+          "variant_key": "front_rear_two_trunks",
+          "variant_slug": null,
+          "pricing_variant_key": "front_rear_two_trunks"
+        },
+        {
+          "variant_label": "Front Trunk",
+          "variant_key": "front_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "front_trunk"
+        },
+        {
+          "variant_label": "Rear Trunk",
+          "variant_key": "rear_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "rear_trunk"
+        },
+        {
+          "variant_label": "Row 3",
+          "variant_key": "row_3",
+          "variant_slug": "row_3",
+          "pricing_variant_key": "row_3"
+        },
+        {
+          "variant_label": "Trunk Small",
+          "variant_key": "trunk_small",
+          "variant_slug": null,
+          "pricing_variant_key": "trunk_small"
+        },
+        {
+          "variant_label": "Trunk Custom",
+          "variant_key": "trunk_custom",
+          "variant_slug": null,
+          "pricing_variant_key": "trunk_custom"
+        },
+        {
+          "variant_label": "Trunk Large",
+          "variant_key": "trunk_large",
+          "variant_slug": null,
+          "pricing_variant_key": "trunk_large"
+        },
+        {
+          "variant_label": "Row 3 Small Trunk",
+          "variant_key": "row_3_small_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_small_trunk"
+        },
+        {
+          "variant_label": "Row 3 Large Trunk",
+          "variant_key": "row_3_large_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_large_trunk"
+        },
+        {
+          "variant_label": "Row 3 Large And Small Trunk",
+          "variant_key": "row_3_large_and_small_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_large_and_small_trunk"
+        },
+        {
+          "variant_label": "Front Row 3",
+          "variant_key": "front_row_3",
+          "variant_slug": null,
+          "pricing_variant_key": "front_row_3"
+        },
+        {
+          "variant_label": "Rear Row 3",
+          "variant_key": "rear_row_3",
+          "variant_slug": null,
+          "pricing_variant_key": "rear_row_3"
+        },
+        {
+          "variant_label": "Front Row 3 Large Trunk Folded",
+          "variant_key": "front_row_3_large_trunk_folded",
+          "variant_slug": null,
+          "pricing_variant_key": "front_row_3_large_trunk_folded"
+        },
+        {
+          "variant_label": "Rear Row 3 Large Trunk Folded",
+          "variant_key": "rear_row_3_large_trunk_folded",
+          "variant_slug": null,
+          "pricing_variant_key": "rear_row_3_large_trunk_folded"
+        },
+        {
+          "variant_label": "Front Row 3 Small Trunk Unfolded",
+          "variant_key": "front_row_3_small_trunk_unfolded",
+          "variant_slug": null,
+          "pricing_variant_key": "front_row_3_small_trunk_unfolded"
+        },
+        {
+          "variant_label": "Rear Row 3 Small Trunk Unfolded",
+          "variant_key": "rear_row_3_small_trunk_unfolded",
+          "variant_slug": null,
+          "pricing_variant_key": "rear_row_3_small_trunk_unfolded"
+        },
+        {
+          "variant_label": "Custom Order",
+          "variant_key": "custom_order",
+          "variant_slug": null,
+          "pricing_variant_key": "custom_order"
+        },
+        {
+          "variant_label": "Trunk mat",
+          "variant_key": "complete",
+          "variant_slug": "complete",
+          "pricing_variant_key": "complete"
+        },
+        {
+          "variant_label": "Row 3 Single",
+          "variant_key": "row_3_single",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_single"
+        },
+        {
+          "variant_label": "Home Mat",
+          "variant_key": "home_mat",
+          "variant_slug": null,
+          "pricing_variant_key": "home_mat"
+        },
+        {
+          "variant_label": "Passenger Mat Rear",
+          "variant_key": "passenger_mat_rear",
+          "variant_slug": null,
+          "pricing_variant_key": "passenger_mat_rear"
+        },
+        {
+          "variant_label": "Passenger Mat Rear Trunk",
+          "variant_key": "passenger_mat_rear_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "passenger_mat_rear_trunk"
+        },
+        {
+          "variant_label": "Passenger mat",
+          "variant_key": "passenger_mat",
+          "variant_slug": "passenger_mat",
+          "pricing_variant_key": "passenger_mat"
+        },
+        {
+          "variant_label": "Tunnel Mat",
+          "variant_key": "tunnel_mat",
+          "variant_slug": null,
+          "pricing_variant_key": "tunnel_mat"
+        },
+        {
+          "variant_label": "Front Rear Row 3 Three Trunks Large",
+          "variant_key": "front_rear_row_3_three_trunks_large",
+          "variant_slug": null,
+          "pricing_variant_key": "front_rear_row_3_three_trunks_large"
+        },
+        {
+          "variant_label": "Front Rear Row 3 Three Trunks Small",
+          "variant_key": "front_rear_row_3_three_trunks_small",
+          "variant_slug": null,
+          "pricing_variant_key": "front_rear_row_3_three_trunks_small"
+        },
+        {
+          "variant_label": "Front Rear Three Trunks",
+          "variant_key": "front_rear_three_trunks",
+          "variant_slug": null,
+          "pricing_variant_key": "front_rear_three_trunks"
+        }
+      ]
+    },
+    "pickup": {
+      "id": "pickup",
+      "label": "Pickup",
+      "pricing_table": "pickup",
+      "vehicle_category": "pickup",
+      "bitrix_field": "UF_CRM_1757024931236",
+      "notes": [
+        "W bitrix wybieramy 3D lub Klasyczne"
+      ],
+      "body_types": [],
+      "variants": [
+        {
+          "variant_label": "Driver mat",
+          "variant_key": "driver_mat",
+          "variant_slug": "driver_mat",
+          "pricing_variant_key": "driver_mat"
+        },
+        {
+          "variant_label": "Front",
+          "variant_key": "front",
+          "variant_slug": null,
+          "pricing_variant_key": "front"
+        },
+        {
+          "variant_label": "Rear",
+          "variant_key": "rear",
+          "variant_slug": null,
+          "pricing_variant_key": "rear"
+        },
+        {
+          "variant_label": "Front And Rear",
+          "variant_key": "front_and_rear",
+          "variant_slug": null,
+          "pricing_variant_key": "front_and_rear"
+        },
+        {
+          "variant_label": "Front Rear Trunk",
+          "variant_key": "front_rear_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "front_rear_trunk"
+        },
+        {
+          "variant_label": "Front With Tunnel",
+          "variant_key": "front_with_tunnel",
+          "variant_slug": null,
+          "pricing_variant_key": "front_with_tunnel"
+        },
+        {
+          "variant_label": "Front Trunk",
+          "variant_key": "front_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "front_trunk"
+        },
+        {
+          "variant_label": "Rear Trunk",
+          "variant_key": "rear_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "rear_trunk"
+        },
+        {
+          "variant_label": "Trunk mat",
+          "variant_key": "complete",
+          "variant_slug": "complete",
+          "pricing_variant_key": "complete"
+        },
+        {
+          "variant_label": "Trunk Custom",
+          "variant_key": "trunk_custom",
+          "variant_slug": null,
+          "pricing_variant_key": "trunk_custom"
+        },
+        {
+          "variant_label": "Custom Order",
+          "variant_key": "custom_order",
+          "variant_slug": null,
+          "pricing_variant_key": "custom_order"
+        },
+        {
+          "variant_label": "Driver Mat Large Trunk",
+          "variant_key": "driver_mat_large_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "driver_mat_large_trunk"
+        },
+        {
+          "variant_label": "Home Mat",
+          "variant_key": "home_mat",
+          "variant_slug": null,
+          "pricing_variant_key": "home_mat"
+        },
+        {
+          "variant_label": "Passenger Mat Rear",
+          "variant_key": "passenger_mat_rear",
+          "variant_slug": null,
+          "pricing_variant_key": "passenger_mat_rear"
+        },
+        {
+          "variant_label": "Passenger Mat Rear Trunk",
+          "variant_key": "passenger_mat_rear_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "passenger_mat_rear_trunk"
+        },
+        {
+          "variant_label": "Passenger mat",
+          "variant_key": "passenger_mat",
+          "variant_slug": "passenger_mat",
+          "pricing_variant_key": "passenger_mat"
+        },
+        {
+          "variant_label": "Tunnel Mat",
+          "variant_key": "tunnel_mat",
+          "variant_slug": null,
+          "pricing_variant_key": "tunnel_mat"
+        }
+      ]
+    },
+    "minivan": {
+      "id": "minivan",
+      "label": "Minivan / van",
+      "pricing_table": "minivan",
+      "vehicle_category": "minivan",
+      "bitrix_field": "UF_CRM_1757024931236",
+      "notes": [
+        "jeśli jest zamówienie na 2 rząd albo 3 rząd + bagażnik to zaznaczamy ten wariant i w kolumnie \"Uwagi Evamats dział produkcji\" piszemy jaki to będzie dokładnie rząd",
+        "W bitrix wybieramy Klasyczne"
+      ],
+      "body_types": [],
+      "variants": [
+        {
+          "variant_label": "Driver mat",
+          "variant_key": "driver_mat",
+          "variant_slug": "driver_mat",
+          "pricing_variant_key": "driver_mat"
+        },
+        {
+          "variant_label": "Front",
+          "variant_key": "front",
+          "variant_slug": null,
+          "pricing_variant_key": "front"
+        },
+        {
+          "variant_label": "Rear",
+          "variant_key": "rear",
+          "variant_slug": null,
+          "pricing_variant_key": "rear"
+        },
+        {
+          "variant_label": "Front With Tunnel",
+          "variant_key": "front_with_tunnel",
+          "variant_slug": null,
+          "pricing_variant_key": "front_with_tunnel"
+        },
+        {
+          "variant_label": "Front And Rear",
+          "variant_key": "front_and_rear",
+          "variant_slug": null,
+          "pricing_variant_key": "front_and_rear"
+        },
+        {
+          "variant_label": "Row 2",
+          "variant_key": "row_2",
+          "variant_slug": "row_2",
+          "pricing_variant_key": "row_2"
+        },
+        {
+          "variant_label": "Row 3",
+          "variant_key": "row_3",
+          "variant_slug": "row_3",
+          "pricing_variant_key": "row_3"
+        },
+        {
+          "variant_label": "Row 3 Large Trunk",
+          "variant_key": "row_3_large_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_large_trunk"
+        },
+        {
+          "variant_label": "Row 3 Small Trunk",
+          "variant_key": "row_3_small_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_small_trunk"
+        },
+        {
+          "variant_label": "Home Mat",
+          "variant_key": "home_mat",
+          "variant_slug": null,
+          "pricing_variant_key": "home_mat"
+        },
+        {
+          "variant_label": "Row 2 Large Trunk",
+          "variant_key": "row_2_large_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_2_large_trunk"
+        },
+        {
+          "variant_label": "Row 3 Large And Small Trunk",
+          "variant_key": "row_3_large_and_small_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_large_and_small_trunk"
+        },
+        {
+          "variant_label": "Trunk Large",
+          "variant_key": "trunk_large",
+          "variant_slug": null,
+          "pricing_variant_key": "trunk_large"
+        },
+        {
+          "variant_label": "Trunk Small",
+          "variant_key": "trunk_small",
+          "variant_slug": null,
+          "pricing_variant_key": "trunk_small"
+        },
+        {
+          "variant_label": "Trunk Custom",
+          "variant_key": "trunk_custom",
+          "variant_slug": null,
+          "pricing_variant_key": "trunk_custom"
+        },
+        {
+          "variant_label": "Row 1 Trunk",
+          "variant_key": "row_1_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_1_trunk"
+        },
+        {
+          "variant_label": "Row 1 Large Trunk",
+          "variant_key": "row_1_large_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_1_large_trunk"
+        },
+        {
+          "variant_label": "Row 2 Single",
+          "variant_key": "row_2_single",
+          "variant_slug": null,
+          "pricing_variant_key": "row_2_single"
+        },
+        {
+          "variant_label": "Row 3 Single",
+          "variant_key": "row_3_single",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_single"
+        },
+        {
+          "variant_label": "Custom Order",
+          "variant_key": "custom_order",
+          "variant_slug": null,
+          "pricing_variant_key": "custom_order"
+        },
+        {
+          "variant_label": "Driver Mat Large Trunk",
+          "variant_key": "driver_mat_large_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "driver_mat_large_trunk"
+        },
+        {
+          "variant_label": "Front Rear Two Trunks",
+          "variant_key": "front_rear_two_trunks",
+          "variant_slug": null,
+          "pricing_variant_key": "front_rear_two_trunks"
+        },
+        {
+          "variant_label": "Trunk mat",
+          "variant_key": "complete",
+          "variant_slug": "complete",
+          "pricing_variant_key": "complete"
+        },
+        {
+          "variant_label": "Row 3 Passenger",
+          "variant_key": "row_3_passenger",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_passenger"
+        },
+        {
+          "variant_label": "Row 3 Small Trunk Passenger",
+          "variant_key": "row_3_small_trunk_passenger",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_small_trunk_passenger"
+        },
+        {
+          "variant_label": "Row 3 Large Trunk Passenger",
+          "variant_key": "row_3_large_trunk_passenger",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_large_trunk_passenger"
+        },
+        {
+          "variant_label": "Row 3 Large And Small Trunk Passenger",
+          "variant_key": "row_3_large_and_small_trunk_passenger",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_large_and_small_trunk_passenger"
+        },
+        {
+          "variant_label": "Passenger Mat Rear",
+          "variant_key": "passenger_mat_rear",
+          "variant_slug": null,
+          "pricing_variant_key": "passenger_mat_rear"
+        },
+        {
+          "variant_label": "Passenger Mat Rear Trunk",
+          "variant_key": "passenger_mat_rear_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "passenger_mat_rear_trunk"
+        },
+        {
+          "variant_label": "Passenger mat",
+          "variant_key": "passenger_mat",
+          "variant_slug": "passenger_mat",
+          "pricing_variant_key": "passenger_mat"
+        },
+        {
+          "variant_label": "Tunnel Mat",
+          "variant_key": "tunnel_mat",
+          "variant_slug": null,
+          "pricing_variant_key": "tunnel_mat"
+        },
+        {
+          "variant_label": "Front Rear Trunk",
+          "variant_key": "front_rear_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "front_rear_trunk"
+        }
+      ]
+    },
+    "bus": {
+      "id": "bus",
+      "label": "Bus / van / coach",
+      "pricing_table": "bus",
+      "vehicle_category": "bus",
+      "bitrix_field": "UF_CRM_1757024931236",
+      "notes": [
+        "Typ nadwozia który dotyczy cennik: Autobus, BUS, Koparka, Ciągnik, Dźwig , Kombajn, Van TRAKUJEMY JAKOS 1 RZĄD",
+        "W bitrix wybieramy Klasyczne"
+      ],
+      "body_types": [],
+      "variants": [
+        {
+          "variant_label": "Driver mat",
+          "variant_key": "driver_mat",
+          "variant_slug": "driver_mat",
+          "pricing_variant_key": "driver_mat"
+        },
+        {
+          "variant_label": "Row 1",
+          "variant_key": "row_1",
+          "variant_slug": "row_1",
+          "pricing_variant_key": "row_1"
+        },
+        {
+          "variant_label": "Row 2",
+          "variant_key": "row_2",
+          "variant_slug": "row_2",
+          "pricing_variant_key": "row_2"
+        },
+        {
+          "variant_label": "Row 3",
+          "variant_key": "row_3",
+          "variant_slug": "row_3",
+          "pricing_variant_key": "row_3"
+        },
+        {
+          "variant_label": "Row 3 Large Trunk",
+          "variant_key": "row_3_large_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_large_trunk"
+        },
+        {
+          "variant_label": "Row 3 Small Trunk",
+          "variant_key": "row_3_small_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_small_trunk"
+        },
+        {
+          "variant_label": "Row 2 Small Trunk",
+          "variant_key": "row_2_small_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_2_small_trunk"
+        },
+        {
+          "variant_label": "Row 2 Large Trunk",
+          "variant_key": "row_2_large_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_2_large_trunk"
+        },
+        {
+          "variant_label": "Trunk Large",
+          "variant_key": "trunk_large",
+          "variant_slug": null,
+          "pricing_variant_key": "trunk_large"
+        },
+        {
+          "variant_label": "Trunk Small",
+          "variant_key": "trunk_small",
+          "variant_slug": null,
+          "pricing_variant_key": "trunk_small"
+        },
+        {
+          "variant_label": "Trunk Custom",
+          "variant_key": "trunk_custom",
+          "variant_slug": null,
+          "pricing_variant_key": "trunk_custom"
+        },
+        {
+          "variant_label": "Row 1 Trunk",
+          "variant_key": "row_1_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_1_trunk"
+        },
+        {
+          "variant_label": "Row 1 Large Trunk",
+          "variant_key": "row_1_large_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "row_1_large_trunk"
+        },
+        {
+          "variant_label": "Row 2 Single",
+          "variant_key": "row_2_single",
+          "variant_slug": null,
+          "pricing_variant_key": "row_2_single"
+        },
+        {
+          "variant_label": "Row 3 Single",
+          "variant_key": "row_3_single",
+          "variant_slug": null,
+          "pricing_variant_key": "row_3_single"
+        },
+        {
+          "variant_label": "Custom Order",
+          "variant_key": "custom_order",
+          "variant_slug": null,
+          "pricing_variant_key": "custom_order"
+        },
+        {
+          "variant_label": "Driver Mat Large Trunk",
+          "variant_key": "driver_mat_large_trunk",
+          "variant_slug": null,
+          "pricing_variant_key": "driver_mat_large_trunk"
+        },
+        {
+          "variant_label": "Home Mat",
+          "variant_key": "home_mat",
+          "variant_slug": null,
+          "pricing_variant_key": "home_mat"
+        },
+        {
+          "variant_label": "Passenger mat",
+          "variant_key": "passenger_mat",
+          "variant_slug": "passenger_mat",
+          "pricing_variant_key": "passenger_mat"
+        },
+        {
+          "variant_label": "Tunnel Mat",
+          "variant_key": "tunnel_mat",
+          "variant_slug": null,
+          "pricing_variant_key": "tunnel_mat"
+        }
+      ]
+    },
+    "heavy_truck": {
+      "id": "heavy_truck",
+      "label": "Heavy truck",
+      "pricing_table": "heavy_truck",
+      "vehicle_category": null,
+      "bitrix_field": "UF_CRM_1757024931236",
+      "notes": [
+        "Typ nadwozia który dotyczy cennik: TIR",
+        "W bitrix wybieramy Klasyczne"
+      ],
+      "body_types": [],
+      "variants": [
+        {
+          "variant_label": "Driver mat",
+          "variant_key": "driver_mat",
+          "variant_slug": "driver_mat",
+          "pricing_variant_key": "driver_mat"
+        },
+        {
+          "variant_label": "Front With Tunnel",
+          "variant_key": "front_with_tunnel",
+          "variant_slug": null,
+          "pricing_variant_key": "front_with_tunnel"
+        },
+        {
+          "variant_label": "Front Without Tunnel",
+          "variant_key": "front_without_tunnel",
+          "variant_slug": null,
+          "pricing_variant_key": "front_without_tunnel"
+        },
+        {
+          "variant_label": "Custom Order",
+          "variant_key": "custom_order",
+          "variant_slug": null,
+          "pricing_variant_key": "custom_order"
+        },
+        {
+          "variant_label": "Home Mat",
+          "variant_key": "home_mat",
+          "variant_slug": null,
+          "pricing_variant_key": "home_mat"
+        },
+        {
+          "variant_label": "Passenger mat",
+          "variant_key": "passenger_mat",
+          "variant_slug": "passenger_mat",
+          "pricing_variant_key": "passenger_mat"
+        },
+        {
+          "variant_label": "Tunnel Mat",
+          "variant_key": "tunnel_mat",
+          "variant_slug": null,
+          "pricing_variant_key": "tunnel_mat"
+        }
+      ]
+    }
+  },
+  "cross_category_rows": [
+    {
+      "row_index": 5,
+      "passenger_car": "driver_mat",
+      "pickup": "driver_mat",
+      "minivan": "driver_mat",
+      "bus": "driver_mat",
+      "heavy_truck": "driver_mat"
+    },
+    {
+      "row_index": 6,
+      "passenger_car": "driver_mat_large_trunk",
+      "pickup": "front",
+      "minivan": "front",
+      "bus": "row_1",
+      "heavy_truck": "front_with_tunnel"
+    },
+    {
+      "row_index": 7,
+      "passenger_car": "front",
+      "pickup": "rear",
+      "minivan": "rear",
+      "bus": "row_2",
+      "heavy_truck": "front_without_tunnel"
+    },
+    {
+      "row_index": 8,
+      "passenger_car": "front_with_tunnel",
+      "pickup": "front_and_rear",
+      "minivan": "front_with_tunnel",
+      "bus": "row_3",
+      "heavy_truck": "custom_order"
+    },
+    {
+      "row_index": 9,
+      "passenger_car": "rear",
+      "pickup": "front_rear_trunk",
+      "minivan": "front_and_rear",
+      "bus": "row_3_large_trunk",
+      "heavy_truck": "home_mat"
+    },
+    {
+      "row_index": 10,
+      "passenger_car": "front_and_rear",
+      "pickup": "front_with_tunnel",
+      "minivan": "row_2",
+      "bus": "row_3_small_trunk",
+      "heavy_truck": "passenger_mat"
+    },
+    {
+      "row_index": 11,
+      "passenger_car": "front_rear_trunk",
+      "pickup": "front_trunk",
+      "minivan": "row_3",
+      "bus": "row_2_small_trunk",
+      "heavy_truck": "tunnel_mat"
+    },
+    {
+      "row_index": 12,
+      "passenger_car": "front_rear_two_trunks",
+      "pickup": "rear_trunk",
+      "minivan": "row_3_large_trunk",
+      "bus": "row_2_large_trunk"
+    },
+    {
+      "row_index": 13,
+      "passenger_car": "front_trunk",
+      "pickup": "complete",
+      "minivan": "row_3_small_trunk",
+      "bus": "trunk_large"
+    },
+    {
+      "row_index": 14,
+      "passenger_car": "rear_trunk",
+      "pickup": "trunk_custom",
+      "minivan": "home_mat",
+      "bus": "trunk_small"
+    },
+    {
+      "row_index": 15,
+      "passenger_car": "row_3",
+      "pickup": "custom_order",
+      "minivan": "row_2_large_trunk",
+      "bus": "trunk_custom"
+    },
+    {
+      "row_index": 16,
+      "passenger_car": "trunk_small",
+      "pickup": "driver_mat_large_trunk",
+      "minivan": "row_3_large_and_small_trunk",
+      "bus": "row_1_trunk"
+    },
+    {
+      "row_index": 17,
+      "passenger_car": "trunk_custom",
+      "pickup": "home_mat",
+      "minivan": "trunk_large",
+      "bus": "row_1_large_trunk"
+    },
+    {
+      "row_index": 18,
+      "passenger_car": "trunk_large",
+      "pickup": "passenger_mat_rear",
+      "minivan": "trunk_small",
+      "bus": "row_2_single"
+    },
+    {
+      "row_index": 19,
+      "passenger_car": "row_3_small_trunk",
+      "pickup": "passenger_mat_rear_trunk",
+      "minivan": "trunk_custom",
+      "bus": "row_3_single"
+    },
+    {
+      "row_index": 20,
+      "passenger_car": "row_3_large_trunk",
+      "pickup": "passenger_mat",
+      "minivan": "row_1_trunk",
+      "bus": "custom_order"
+    },
+    {
+      "row_index": 21,
+      "passenger_car": "row_3_large_and_small_trunk",
+      "pickup": "tunnel_mat",
+      "minivan": "row_1_large_trunk",
+      "bus": "driver_mat_large_trunk"
+    },
+    {
+      "row_index": 22,
+      "passenger_car": "front_row_3",
+      "minivan": "row_2_single",
+      "bus": "home_mat"
+    },
+    {
+      "row_index": 23,
+      "passenger_car": "rear_row_3",
+      "minivan": "row_3_single",
+      "bus": "passenger_mat"
+    },
+    {
+      "row_index": 24,
+      "passenger_car": "front_row_3_large_trunk_folded",
+      "minivan": "custom_order",
+      "bus": "tunnel_mat"
+    },
+    {
+      "row_index": 25,
+      "passenger_car": "rear_row_3_large_trunk_folded",
+      "minivan": "driver_mat_large_trunk"
+    },
+    {
+      "row_index": 26,
+      "passenger_car": "front_row_3_small_trunk_unfolded"
+    },
+    {
+      "row_index": 27,
+      "passenger_car": "rear_row_3_small_trunk_unfolded",
+      "minivan": "row_1_trunk"
+    },
+    {
+      "row_index": 28,
+      "passenger_car": "custom_order",
+      "minivan": "row_2_large_trunk"
+    },
+    {
+      "row_index": 29,
+      "passenger_car": "complete",
+      "minivan": "row_3_small_trunk"
+    },
+    {
+      "row_index": 30,
+      "passenger_car": "row_3_single",
+      "minivan": "row_3_large_trunk"
+    },
+    {
+      "row_index": 31,
+      "passenger_car": "home_mat",
+      "minivan": "row_3_large_and_small_trunk"
+    },
+    {
+      "row_index": 32,
+      "passenger_car": "passenger_mat_rear"
+    },
+    {
+      "row_index": 33,
+      "passenger_car": "passenger_mat_rear_trunk",
+      "minivan": "row_1_trunk"
+    },
+    {
+      "row_index": 34,
+      "passenger_car": "passenger_mat",
+      "minivan": "front_rear_two_trunks"
+    },
+    {
+      "row_index": 35,
+      "passenger_car": "tunnel_mat",
+      "minivan": "complete"
+    },
+    {
+      "row_index": 36,
+      "passenger_car": "front_rear_row_3_three_trunks_large",
+      "minivan": "row_3_passenger"
+    },
+    {
+      "row_index": 37,
+      "passenger_car": "front_rear_row_3_three_trunks_small",
+      "minivan": "row_3_small_trunk_passenger"
+    },
+    {
+      "row_index": 38,
+      "passenger_car": "front_rear_three_trunks",
+      "minivan": "row_3_large_trunk_passenger"
+    },
+    {
+      "row_index": 39,
+      "minivan": "row_3_large_and_small_trunk_passenger"
+    },
+    {
+      "row_index": 40,
+      "minivan": "passenger_mat_rear"
+    },
+    {
+      "row_index": 41,
+      "minivan": "passenger_mat_rear_trunk"
+    },
+    {
+      "row_index": 42,
+      "minivan": "passenger_mat"
+    },
+    {
+      "row_index": 43,
+      "minivan": "tunnel_mat"
+    },
+    {
+      "row_index": 44,
+      "minivan": "front_rear_trunk"
+    }
+  ],
+  "global_notes": [
+    {
+      "segment_id": "passenger_car",
+      "note_key": "typ_nadwozia_pickup_oraz_minivan_i_furgon_i_van_jesli_cena_jest_jak_do_auta_osob",
+      "note_label": "Typ nadwozia: Pickup oraz Minivan i Furgon i VAN jeśli cena jest jak do auta osobowego to też zaznaczamy ten wariant"
+    },
+    {
+      "segment_id": "pickup",
+      "note_key": "w_bitrix_wybieramy_3d_lub_klasyczne",
+      "note_label": "W bitrix wybieramy 3D lub Klasyczne"
+    },
+    {
+      "segment_id": "minivan",
+      "note_key": "jesli_jest_zamowienie_na_2_rzad_albo_3_rzad_bagaznik_to_zaznaczamy_ten_wariant_i",
+      "note_label": "jeśli jest zamówienie na 2 rząd albo 3 rząd + bagażnik to zaznaczamy ten wariant i w kolumnie \"Uwagi Evamats dział produkcji\" piszemy jaki to będzie dokładnie rząd"
+    },
+    {
+      "segment_id": "bus",
+      "note_key": "typ_nadwozia_ktory_dotyczy_cennik_autobus_bus_koparka_ciagnik_dzwig_kombajn_van_",
+      "note_label": "Typ nadwozia który dotyczy cennik: Autobus, BUS, Koparka, Ciągnik, Dźwig , Kombajn, Van TRAKUJEMY JAKOS 1 RZĄD"
+    },
+    {
+      "segment_id": "heavy_truck",
+      "note_key": "typ_nadwozia_ktory_dotyczy_cennik_tir",
+      "note_label": "Typ nadwozia który dotyczy cennik: TIR"
+    },
+    {
+      "segment_id": "passenger_car",
+      "note_key": "w_bitrix_wybieramy_3d_lub_klasyczne",
+      "note_label": "W bitrix wybieramy 3D lub Klasyczne"
+    },
+    {
+      "segment_id": "minivan",
+      "note_key": "w_bitrix_wybieramy_klasyczne",
+      "note_label": "W bitrix wybieramy Klasyczne"
+    },
+    {
+      "segment_id": "bus",
+      "note_key": "w_bitrix_wybieramy_klasyczne",
+      "note_label": "W bitrix wybieramy Klasyczne"
+    },
+    {
+      "segment_id": "heavy_truck",
+      "note_key": "w_bitrix_wybieramy_klasyczne",
+      "note_label": "W bitrix wybieramy Klasyczne"
+    }
+  ]
+}

@@ -19,6 +19,7 @@ import type {
   ProductData,
 } from '../types';
 import type { CartItem } from '@/lib/types/cart-new';
+import { isMatCartConfiguration } from '@/lib/types/cart-new';
 import type { OrderItem } from '@/lib/types/order-new';
 
 /**
@@ -75,7 +76,9 @@ function cartItemToContentItem(item: CartItem): ContentItem {
     item_price: item.unitPrice,
     item_name: item.productName,
     item_category: item.productType === 'mat' ? 'car_mats' : 'accessories',
-    item_brand: item.configuration?.carDetails?.brand || 'EvaPremium',
+    item_brand: isMatCartConfiguration(item.configuration)
+      ? item.configuration.carDetails.brand
+      : 'EvaPremium',
     item_variant: item.productSku,
   };
 }
@@ -90,7 +93,9 @@ function orderItemToContentItem(item: OrderItem): ContentItem {
     item_price: item.unitPrice,
     item_name: item.productName,
     item_category: item.productType === 'mat' ? 'car_mats' : 'accessories',
-    item_brand: item.configuration?.carDetails?.brand || 'EvaPremium',
+    item_brand: isMatCartConfiguration(item.configuration)
+      ? item.configuration.carDetails.brand
+      : 'EvaPremium',
     item_variant: item.productSku,
   };
 }

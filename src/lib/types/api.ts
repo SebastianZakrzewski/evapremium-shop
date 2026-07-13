@@ -1,9 +1,14 @@
 // Typy dla nowych API samochodów
 
-/** Odpowiedź API – pojedyncza generacja modelu (z car_models_extended) */
+/** Odpowiedź API – pojedyncza generacja modelu (z mat_templates) */
 export interface CarGenerationApiResponse {
   generation: string;
+  generationDisplay?: string;
+  generationNumberDisplay?: string | null;
+  modelDisplay?: string;
+  modelKey?: string;
   bodyType: string;
+  bodyTypeDisplay?: string;
   yearFrom?: number | null;
   yearTo?: number | null;
   isCurrentlyProduced: boolean;
@@ -25,11 +30,15 @@ export interface CarGenerationApiResponse {
 /** Odpowiedź API – model auta z zgrupowanymi generacjami */
 export interface CarModelApiResponse {
   brand: string;
+  brandDisplay?: string;
   model: string;
+  modelDisplay?: string;
+  modelFamilyKey?: string;
   brandImage?: string | null;
   modelImage?: string | null;
   vehicleCategory?: string | null;
   bodyTypes: string[];
+  bodyTypesDisplay?: string[];
   years: number[];
   isCurrentlyProduced: boolean;
   generations: CarGenerationApiResponse[];

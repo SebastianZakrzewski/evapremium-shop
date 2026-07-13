@@ -3,6 +3,7 @@ export interface Brand {
   name: string;
   logo: string;
   description?: string;
+  key?: string;
 }
 
 export interface Model {

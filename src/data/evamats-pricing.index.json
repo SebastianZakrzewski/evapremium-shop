@@ -1,16 +1,33 @@
 {
-  "version": "1.0.0",
-  "sourceFile": "CENNIK EVAMATS (1).xlsx",
-  "generatedAt": "2026-06-03T20:10:54.159Z",
+  "version": "2.0.0",
+  "locale": "en",
+  "key_format": "snake_case",
+  "source_file": "CENNIK EVAMATS (3).xlsx",
+  "generated_at": "2026-07-12T23:04:26.421Z",
   "layers": {
-    "cennik": "evamats-cennik.normalized.json",
-    "vehicleCategories": "evamats-vehicle-category-mapping.normalized.json"
+    "pricing": "evamats-cennik.normalized.json",
+    "vehicle_categories": "evamats-vehicle-category-mapping.normalized.json",
+    "bitrix_variants": "evamats-bitrix-variant-mapping.normalized.json",
+    "vehicle_segments": "evamats-pricing-segments.json"
   },
-  "vehicleCategoryToCennikTable": {
-    "minivan": "minivany",
-    "auto_osobowe": "auta_osobowe",
-    "bus": "busy",
+  "vehicle_category_to_pricing_table": {
+    "minivan": "minivan",
+    "passenger_car": "passenger_car",
+    "bus": "bus",
     "pickup": "pickup",
-    "indywidualna_wycena": null
+    "custom_quote": null
+  },
+  "vehicle_category_to_bitrix_segment": {
+    "minivan": "minivan",
+    "passenger_car": "passenger_car",
+    "bus": "bus",
+    "pickup": "pickup",
+    "custom_quote": null
+  },
+  "summary": {
+    "pricing_categories": 6,
+    "mapped_models": 170,
+    "bitrix_segments": 5,
+    "vehicle_segments": 4
   }
 }

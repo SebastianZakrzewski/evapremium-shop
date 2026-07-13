@@ -14,6 +14,7 @@ const getUrlParams = (searchParams: URLSearchParams): ConfiguratorUrlParams => (
   modelParam: searchParams.get("model"),
   yearParam: searchParams.get("year"),
   bodyTypeParam: searchParams.get("bodyType"),
+  generationParam: searchParams.get("generation"),
 });
 
 const getInitialConfig = (
@@ -27,6 +28,7 @@ const getInitialConfig = (
     ...baseState,
     brand: urlParams.brandParam || baseState.brand,
     model: urlParams.modelParam || baseState.model,
+    generation: urlParams.generationParam || baseState.generation,
     year: lockedEntry ? "" : urlParams.yearParam || baseState.year,
     bodyType: urlParams.bodyTypeParam || baseState.bodyType,
   };
@@ -34,9 +36,18 @@ const getInitialConfig = (
 
 const defaultState: ConfiguratorState = {
   brand: "",
+  brandKey: "",
   model: "",
+  modelFamilyKey: "",
+  modelKey: "",
+  generation: "",
+  templateId: "",
+  recordKey: "",
   year: "",
   bodyType: "",
+  bodyTypeKey: "",
+  pricingCategoryKey: "",
+  catalogVersionCode: "",
   matType: "3d-with-rims",
   variant: "",
   structure: "diamonds",
@@ -89,7 +100,7 @@ export const useConfiguratorState = ({
       const parsed = JSON.parse(saved) as Partial<ConfiguratorState>;
       setConfig((prev) =>
         mergeStoredConfig({ previous: prev, stored: parsed, urlParams })
-      );
+      )
     } catch (error) {
       console.error("Error loading saved config:", error);
     }

@@ -34,6 +34,7 @@ const variantNames: Record<string, string> = {
 const matTypeNames: Record<string, string> = {
   "3d-with-rims": "3D z rantami",
   classic: "3D bez rantów",
+  single: "Komplet jednocenowy",
 };
 
 const structureNames: Record<string, string> = {

@@ -5,6 +5,7 @@
  */
 
 import { apiGet, ApiError } from './client';
+import { toComparableSearchQuery } from '@/shared/vehicle/searchQuery';
 
 export interface SearchBrand {
   id: number;
@@ -16,6 +17,11 @@ export interface SearchBrand {
 export interface SearchModel {
   brand: string;
   model: string;
+  modelFamilyKey?: string;
+  displayLabel?: string;
+  generation?: string;
+  bodyType?: string;
+  bodyTypeDisplay?: string;
   bodyTypes: string[];
   isCurrentlyProduced: boolean;
 }
@@ -45,13 +51,14 @@ interface ApiResponse<T> {
  * Search for brands, models, and products
  */
 export async function search(query: string): Promise<SearchResults> {
-  if (!query.trim()) {
+  const normalizedQuery = toComparableSearchQuery(query)
+  if (!normalizedQuery) {
     return { brands: [], models: [], products: [] };
   }
 
   try {
     const response = await apiGet<SearchResults | ApiResponse<SearchResults>>(
-      `/api/search?q=${encodeURIComponent(query)}`
+      `/api/search?q=${encodeURIComponent(normalizedQuery)}`
     );
     
     // API może zwracać bezpośrednio SearchResults lub opakowane w ApiResponse

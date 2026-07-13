@@ -21,8 +21,8 @@ export const buildConfiguratorEntryUrl = ({
   const brandSlug = brandNameToNavigationSlug(brand) || brand.toLowerCase().trim()
   params.set("brand", brandSlug)
 
-  if (model?.trim()) {
-    params.set("model", model.trim())
+  if (model != null && model.length > 0) {
+    params.set("model", model)
   }
   if (generation?.trim()) {
     params.set("generation", generation.trim())

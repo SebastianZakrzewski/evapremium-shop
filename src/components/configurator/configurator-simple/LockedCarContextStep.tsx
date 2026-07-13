@@ -1,39 +1,52 @@
 "use client"
 
 import { useEffect, useMemo, useRef } from "react"
+import { buildVehicleDisplayLabels } from "@/shared/vehicle/displayLabels"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Car, CheckCircle2 } from "lucide-react"
-import { normalizeBrandName } from "@/shared/brands"
 import { useBrands } from "@/features/brands/hooks/useBrands"
-import { useConfiguratorCarData } from "@/features/car-configurator"
+import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
 import type { ProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
+import {
+  bodyTypeMatchesParam,
+  resolveCatalogBrandKey,
+  resolveModelFamiliesFromParam,
+} from "@/features/vehicle-catalog/domain/catalogKeys"
+import { useVehicleCatalog } from "@/features/vehicle-catalog/hooks/useVehicleCatalog"
 
 type LockedCarContextStepProps = {
-  config: {
-    brand: string
-    model: string
-    year: string
-    bodyType: string
-  }
+  config: Pick<
+    ConfiguratorState,
+    | "brand"
+    | "brandKey"
+    | "model"
+    | "modelFamilyKey"
+    | "modelKey"
+    | "generation"
+    | "year"
+    | "bodyType"
+    | "bodyTypeKey"
+    | "recordKey"
+    | "templateId"
+    | "pricingCategoryKey"
+  >
   productEntry: ProductEntryLock
-  onUpdate: (updates: {
-    brand?: string
-    model?: string
-    year?: string
-    bodyType?: string
-  }) => void
+  onUpdate: (updates: Partial<ConfiguratorState>) => void
   onNext: () => void
-}
-
-const mapBrandNameForApi = (brandName: string): string => {
-  if (!brandName) return ""
-  const normalized = normalizeBrandName(brandName.toLowerCase().trim())
-  return normalized ?? brandName.charAt(0).toUpperCase() + brandName.slice(1)
 }
 
 const selectClassName =
   "w-full px-4 py-3 min-h-[44px] bg-[#111] border border-white/10 rounded-lg text-white text-sm appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+
+const yearsInRange = (from: number | null, to: number | null): number[] => {
+  if (from == null) return []
+  const end = Math.min(to ?? new Date().getFullYear() + 1, 2100)
+  return Array.from({ length: end - from + 1 }, (_, index) => from + index).reverse()
+}
+
+const normalizeToken = (value: string): string =>
+  value.toLowerCase().replace(/[\s_-]+/g, "")
 
 export const LockedCarContextStep = ({
   config,
@@ -42,147 +55,323 @@ export const LockedCarContextStep = ({
   onNext,
 }: LockedCarContextStepProps) => {
   const { brands } = useBrands()
-  const brandApiName = mapBrandNameForApi(config.brand)
+  const provisionalBrandKey =
+    config.brandKey || productEntry.brandParam || ""
+  const { brands: catalogBrands, models, isLoading: isModelsLoading } =
+    useVehicleCatalog(provisionalBrandKey, "", "", productEntry.modelParam ?? "")
+  const brandKey = useMemo(
+    () =>
+      resolveCatalogBrandKey(
+        productEntry.brandParam,
+        config.brandKey,
+        catalogBrands,
+      ),
+    [catalogBrands, config.brandKey, productEntry.brandParam],
+  )
+  const catalogBrandKey = brandKey || provisionalBrandKey
 
-  const {
-    models: apiModels,
-    getYearsForModel,
-    getYearsForGeneration,
-    getBodyTypesForYear,
-    isLoading: modelsLoading,
-  } = useConfiguratorCarData({
-    brandApiName,
-    enabled: !!config.brand,
-  })
-
-  const brandLogo = useMemo(() => {
-    if (!config.brand || !brands.length) return null
-    const brand = brands.find(
-      (b) => b.name.toLowerCase() === config.brand.toLowerCase()
-    )
-    return brand?.logo ?? null
-  }, [config.brand, brands])
-
-  const normalizedModel = useMemo(() => {
-    if (!config.model || apiModels.length === 0) return config.model
-    const found = apiModels.find(
-      (m) => m.toLowerCase() === config.model.toLowerCase()
-    )
-    return found ?? config.model
-  }, [config.model, apiModels])
-
-  const availableYears = useMemo(() => {
-    if (!normalizedModel) return []
-
-    if (productEntry.generationParam) {
-      const generationYears = getYearsForGeneration(
-        normalizedModel,
-        productEntry.generationParam
-      )
-      if (generationYears.length > 0) return generationYears
+  const modelResolution = useMemo(() => {
+    if (!productEntry.modelParam || models.length === 0) {
+      return { mode: "none" as const }
     }
+    return resolveModelFamiliesFromParam(productEntry.modelParam, models)
+  }, [productEntry.modelParam, models])
 
-    return getYearsForModel(normalizedModel)
-  }, [
-    normalizedModel,
-    productEntry.generationParam,
-    getYearsForGeneration,
-    getYearsForModel,
-  ])
+  const templateModelFamilyKey =
+    modelResolution.mode === "single" ? modelResolution.family.key : ""
+  const templateModelFamilyPrefix =
+    modelResolution.mode === "prefix" ? modelResolution.prefix : ""
 
-  const availableBodyTypes = useMemo(() => {
-    if (!normalizedModel || !config.year) return []
-    const year = parseInt(config.year, 10)
-    if (Number.isNaN(year)) return []
-    return getBodyTypesForYear(normalizedModel, year)
-  }, [normalizedModel, config.year, getBodyTypesForYear])
+  const { templates, isLoading: isTemplatesLoading } = useVehicleCatalog(
+    catalogBrandKey,
+    templateModelFamilyKey,
+    templateModelFamilyPrefix,
+  )
+  const isLoading = isModelsLoading || isTemplatesLoading
+  const isModelCatalogResolved = modelResolution.mode !== "none"
 
   const onUpdateRef = useRef(onUpdate)
   onUpdateRef.current = onUpdate
 
   useEffect(() => {
-    if (!productEntry.isLocked || modelsLoading || !normalizedModel) return
+    if (!brandKey || config.brandKey === brandKey) return
+    const brand = catalogBrands.find((item) => item.key === brandKey)
+    onUpdateRef.current({
+      brandKey,
+      ...(brand ? { brand: brand.name } : {}),
+    })
+  }, [brandKey, catalogBrands, config.brandKey])
 
-    const updates: {
-      model?: string
-      bodyType?: string
-    } = {}
-
-    if (normalizedModel !== config.model) {
-      updates.model = normalizedModel
-    }
-
-    if (config.year && !config.bodyType) {
-      const yearNum = parseInt(config.year, 10)
-      if (!Number.isNaN(yearNum)) {
-        const bodyTypes = getBodyTypesForYear(normalizedModel, yearNum)
-        let resolvedBodyType = productEntry.bodyTypeParam || ""
-
-        if (resolvedBodyType) {
-          const match = bodyTypes.find(
-            (bt) => bt.toLowerCase() === resolvedBodyType.toLowerCase()
-          )
-          resolvedBodyType = match ?? ""
-        } else if (bodyTypes.length === 1) {
-          resolvedBodyType = bodyTypes[0]
-        }
-
-        if (resolvedBodyType) {
-          updates.bodyType = resolvedBodyType
-        }
+  useEffect(() => {
+    if (modelResolution.mode === "single") {
+      if (
+        config.modelFamilyKey === modelResolution.family.key &&
+        config.model === modelResolution.displayName
+      ) {
+        return
       }
+      onUpdateRef.current({
+        model: modelResolution.displayName,
+        modelFamilyKey: modelResolution.family.key,
+      })
+      return
     }
 
-    if (Object.keys(updates).length > 0) {
-      onUpdateRef.current(updates)
+    if (modelResolution.mode === "prefix" && config.model !== modelResolution.displayName) {
+      onUpdateRef.current({ model: modelResolution.displayName })
     }
-  }, [
-    productEntry.isLocked,
-    productEntry.bodyTypeParam,
-    modelsLoading,
-    normalizedModel,
-    config.model,
-    config.year,
-    config.bodyType,
-    getBodyTypesForYear,
-  ])
+  }, [modelResolution, config.modelFamilyKey, config.model])
 
-  const isStepComplete = !!(
-    config.brand &&
-    config.model &&
-    config.year &&
-    config.bodyType
+  const brandLogo = useMemo(() => {
+    if (!config.brand || !brands.length) return null
+    const brand = brands.find(
+      (item) => item.name.toLowerCase() === config.brand.toLowerCase(),
+    )
+    return brand?.logo ?? null
+  }, [config.brand, brands])
+
+  const generations = useMemo(() => {
+    const items = templates.map((template) => ({
+      value: `${template.modelKey}|${template.generation}`,
+      modelKey: template.modelKey,
+      generation: template.generation,
+      yearFrom: template.yearFrom,
+      yearTo: template.yearTo,
+    }))
+
+    if (productEntry.generationParam) {
+      const generationToken = normalizeToken(productEntry.generationParam)
+      return items.filter(
+        (item) =>
+          normalizeToken(item.generation).includes(generationToken) ||
+          generationToken.includes(normalizeToken(item.generation)),
+      )
+    }
+
+    return [...new Map(items.map((item) => [item.value, item])).values()].sort(
+      (left, right) => (right.yearFrom ?? 0) - (left.yearFrom ?? 0),
+    )
+  }, [templates, productEntry.generationParam])
+
+  const selectedGeneration = generations.find(
+    (item) =>
+      item.modelKey === config.modelKey &&
+      item.generation === config.generation,
   )
 
-  const needsManualYear =
-    !modelsLoading && !!normalizedModel && !config.year && availableYears.length > 0
+  const resolvedGeneration = useMemo(
+    () =>
+      selectedGeneration ??
+      (generations.length === 1 ? generations[0] : null),
+    [selectedGeneration, generations],
+  )
 
+  const availableYears = useMemo(() => {
+    if (productEntry.yearParam) {
+      const year = Number(productEntry.yearParam)
+      if (!Number.isNaN(year)) return [year]
+    }
+    if (!resolvedGeneration) return []
+    return yearsInRange(resolvedGeneration.yearFrom, resolvedGeneration.yearTo)
+  }, [resolvedGeneration, productEntry.yearParam])
+
+  const matchingTemplates = templates.filter((template) => {
+    if (!config.year) return false
+    const year = Number(config.year)
+    if (productEntry.generationParam && config.modelKey) {
+      if (template.modelKey !== config.modelKey) return false
+    }
+    return (
+      (template.yearFrom == null || year >= template.yearFrom) &&
+      (template.yearTo == null || year <= template.yearTo)
+    )
+  })
+
+  const bodyOptions = matchingTemplates.flatMap((template) =>
+    template.bodyTypes.map((bodyType) => ({
+      value: `${template.recordKey}::${bodyType.key}`,
+      template,
+      bodyType,
+    })),
+  )
+
+  const activeTemplate = useMemo(
+    () => templates.find((template) => template.recordKey === config.recordKey) ?? null,
+    [templates, config.recordKey],
+  )
+
+  const vehicleDisplay = useMemo(() => {
+    if (!activeTemplate) {
+      return buildVehicleDisplayLabels({
+        brandName: config.brand,
+        modelFamilyName: config.model,
+        modelFamilyKey: config.modelFamilyKey,
+        modelKey: config.modelKey || config.model,
+        generation: config.generation,
+        yearFrom: resolvedGeneration?.yearFrom,
+        yearTo: resolvedGeneration?.yearTo,
+        bodyType: config.bodyType,
+      })
+    }
+
+    return buildVehicleDisplayLabels({
+      brandName: config.brand,
+      modelFamilyName: config.model,
+      modelFamilyKey: config.modelFamilyKey,
+      modelKey: activeTemplate.modelKey,
+      generation: activeTemplate.generation,
+      yearFrom: activeTemplate.yearFrom,
+      yearTo: activeTemplate.yearTo,
+      isOpenEnded: activeTemplate.isOpenEnded,
+      bodyType:
+        activeTemplate.bodyTypes.find((item) => item.key === config.bodyTypeKey)?.label
+        ?? config.bodyType,
+    })
+  }, [
+    activeTemplate,
+    config.brand,
+    config.bodyType,
+    config.bodyTypeKey,
+    config.generation,
+    config.model,
+    config.modelFamilyKey,
+    config.modelKey,
+    resolvedGeneration?.yearFrom,
+    resolvedGeneration?.yearTo,
+  ])
+
+  useEffect(() => {
+    if (isLoading || generations.length !== 1 || config.modelKey) return
+    const generation = generations[0]
+    onUpdateRef.current({
+      modelKey: generation.modelKey,
+      generation: generation.generation,
+    })
+  }, [isLoading, generations, config.modelKey])
+
+  useEffect(() => {
+    if (config.year || isLoading || availableYears.length === 0) return
+    if (!productEntry.yearParam) return
+
+    const year = Number(productEntry.yearParam)
+    if (!Number.isNaN(year) && availableYears.includes(year)) {
+      onUpdateRef.current({ year: String(year) })
+    }
+  }, [productEntry.yearParam, config.year, availableYears, isLoading])
+
+  useEffect(() => {
+    if (!config.year || availableYears.length === 0) return
+    const year = Number(config.year)
+    if (availableYears.includes(year)) return
+
+    onUpdateRef.current({
+      year: "",
+      bodyType: "",
+      bodyTypeKey: "",
+      recordKey: "",
+      templateId: "",
+      pricingCategoryKey: "",
+    })
+  }, [config.year, availableYears])
+
+  useEffect(() => {
+    if (!config.year || config.bodyTypeKey || bodyOptions.length === 0) return
+
+    let resolved = bodyOptions.find(
+      (option) =>
+        productEntry.bodyTypeParam &&
+        bodyTypeMatchesParam(option.bodyType, productEntry.bodyTypeParam),
+    )
+
+    if (!resolved && productEntry.bodyTypeParam) {
+      resolved = bodyOptions.find(
+        (option) =>
+          option.bodyType.label.toLowerCase() ===
+          productEntry.bodyTypeParam?.toLowerCase(),
+      )
+    }
+
+    if (!resolved && bodyOptions.length === 1) {
+      resolved = bodyOptions[0]
+    }
+
+    if (resolved) {
+      onUpdateRef.current({
+        bodyType: resolved.bodyType.displayLabel ?? resolved.bodyType.label,
+        bodyTypeKey: resolved.bodyType.key,
+        recordKey: resolved.template.recordKey,
+        templateId: resolved.template.id,
+        pricingCategoryKey: resolved.template.pricingCategoryKey,
+      })
+    }
+  }, [
+    bodyOptions,
+    config.year,
+    config.bodyTypeKey,
+    productEntry.bodyTypeParam,
+  ])
+
+  const showYearSelect = !isLoading && availableYears.length > 0
   const needsManualBodyType =
-    !modelsLoading &&
-    !!config.year &&
-    !config.bodyType &&
-    availableBodyTypes.length > 0
+    !isLoading && !!config.year && !config.bodyTypeKey && bodyOptions.length > 0
 
-  const generationLabel = productEntry.generationParam
+  const isStepComplete = Boolean(
+    config.brand &&
+      config.model &&
+      config.year &&
+      config.bodyTypeKey &&
+      config.recordKey,
+  )
 
   const handleYearChange = (year: string) => {
-    onUpdate({ year, bodyType: "" })
+    onUpdate({
+      year,
+      bodyType: "",
+      bodyTypeKey: "",
+      recordKey: "",
+      templateId: "",
+      pricingCategoryKey: "",
+    })
   }
 
-  const handleBodyTypeChange = (bodyType: string) => {
-    onUpdate({ bodyType })
+  const handleBodyTypeChange = (value: string) => {
+    const option = bodyOptions.find((item) => item.value === value)
+    if (!option) return
+    onUpdate({
+      bodyType: option.bodyType.displayLabel ?? option.bodyType.label,
+      bodyTypeKey: option.bodyType.key,
+      recordKey: option.template.recordKey,
+      templateId: option.template.id,
+      pricingCategoryKey: option.template.pricingCategoryKey,
+    })
   }
+
+  const bodyTypeParamMismatch =
+    !!config.year &&
+    !!productEntry.bodyTypeParam &&
+    bodyOptions.length > 0 &&
+    !bodyOptions.some((option) =>
+      bodyTypeMatchesParam(option.bodyType, productEntry.bodyTypeParam!),
+    )
 
   const hintMessage = (() => {
-    if (modelsLoading) return null
-    if (needsManualYear) {
-      return generationLabel
-        ? `Wybierz rok produkcji z generacji ${generationLabel}`
+    if (isLoading) return null
+    if (showYearSelect && !config.year) {
+      return vehicleDisplay.yearRangeDisplay
+        ? `Wybierz rok produkcji z zakresu ${vehicleDisplay.yearRangeDisplay}`
         : "Wybierz rok produkcji z listy dostępnych roczników"
     }
+    if (bodyTypeParamMismatch) {
+      return `Typ nadwozia „${productEntry.bodyTypeParam}” nie jest dostępny dla wybranego rocznika — wybierz z listy`
+    }
     if (needsManualBodyType) return "Wybierz typ nadwozia, aby kontynuować"
-    if (!isStepComplete && !normalizedModel) {
-      return "Nie znaleźliśmy tego modelu w bazie — wybierz inny model"
+    if (
+      !isStepComplete &&
+      !isModelCatalogResolved &&
+      !isLoading &&
+      models.length > 0
+    ) {
+      return "Nie znaleźliśmy tego modelu w katalogu — sprawdź parametry wejścia"
     }
     return null
   })()
@@ -219,23 +408,39 @@ export const LockedCarContextStep = ({
           </div>
         </div>
 
-        <DetailRow label="Model" value={normalizedModel || config.model} />
-        {config.year && !needsManualYear && (
-          <DetailRow label="Rok produkcji" value={config.year} />
+        <DetailRow
+          label="Model"
+          value={vehicleDisplay.modelDisplay || config.model}
+          verified={isModelCatalogResolved}
+        />
+        {vehicleDisplay.generationNumberDisplay && (
+          <DetailRow
+            label="Generacja"
+            value={vehicleDisplay.generationNumberDisplay}
+            verified
+          />
         )}
-        {config.bodyType && !needsManualBodyType && (
-          <DetailRow label="Typ nadwozia" value={config.bodyType} />
+        {!config.year && vehicleDisplay.yearRangeDisplay && (
+          <DetailRow
+            label="Roczniki"
+            value={vehicleDisplay.yearRangeDisplay}
+            verified={!!resolvedGeneration}
+          />
         )}
-        {generationLabel && (
-          <DetailRow label="Generacja" value={generationLabel} />
+        {config.bodyTypeKey && !needsManualBodyType && (
+          <DetailRow
+            label="Typ nadwozia"
+            value={vehicleDisplay.bodyTypeDisplay || config.bodyType}
+            verified
+          />
         )}
       </div>
 
-      {modelsLoading && (
-        <p className="text-xs text-gray-400 text-center">Ładowanie danych auta…</p>
+      {isLoading && (
+        <p className="text-xs text-gray-400 text-center">Ładowanie katalogu pojazdów…</p>
       )}
 
-      {needsManualYear && (
+      {showYearSelect && (
         <div>
           <label
             htmlFor="locked-car-year"
@@ -247,7 +452,7 @@ export const LockedCarContextStep = ({
             <select
               id="locked-car-year"
               value={config.year}
-              onChange={(e) => handleYearChange(e.target.value)}
+              onChange={(event) => handleYearChange(event.target.value)}
               className={selectClassName}
               aria-label="Wybierz rok produkcji"
             >
@@ -276,15 +481,19 @@ export const LockedCarContextStep = ({
           <div className="relative">
             <select
               id="locked-car-body-type"
-              value={config.bodyType}
-              onChange={(e) => handleBodyTypeChange(e.target.value)}
+              value={
+                config.recordKey && config.bodyTypeKey
+                  ? `${config.recordKey}::${config.bodyTypeKey}`
+                  : ""
+              }
+              onChange={(event) => handleBodyTypeChange(event.target.value)}
               className={selectClassName}
               aria-label="Wybierz typ nadwozia"
             >
               <option value="">Wybierz typ nadwozia</option>
-              {availableBodyTypes.map((bodyType) => (
-                <option key={bodyType} value={bodyType}>
-                  {bodyType}
+              {bodyOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.bodyType.displayLabel ?? option.bodyType.label}
                 </option>
               ))}
             </select>
@@ -300,8 +509,9 @@ export const LockedCarContextStep = ({
           <p className="text-xs text-gray-400 text-right">{hintMessage}</p>
         )}
         <Button
+          type="button"
           onClick={onNext}
-          disabled={!isStepComplete || modelsLoading}
+          disabled={!isStepComplete || isLoading}
           className="w-full sm:w-auto px-6 py-3 min-h-[44px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
         >
           Dalej
@@ -311,11 +521,21 @@ export const LockedCarContextStep = ({
   )
 }
 
-const DetailRow = ({ label, value }: { label: string; value: string }) => (
+const DetailRow = ({
+  label,
+  value,
+  verified = false,
+}: {
+  label: string
+  value: string
+  verified?: boolean
+}) => (
   <div className="flex items-center justify-between gap-3 py-2 border-t border-white/5 first:border-t-0 first:pt-0">
     <span className="text-xs text-gray-500">{label}</span>
     <span className="text-sm text-white font-medium text-right flex items-center gap-1.5">
-      <CheckCircle2 className="w-3.5 h-3.5 text-green-500 flex-shrink-0" aria-hidden />
+      {verified && (
+        <CheckCircle2 className="w-3.5 h-3.5 text-green-500 flex-shrink-0" aria-hidden />
+      )}
       {value}
     </span>
   </div>

@@ -7,7 +7,7 @@ import { getAvailableColors, getColorInfo, getAvailableMaterialColorsForEdge } f
 interface CombinedColorPickerProps {
   config: {
     structure: "diamonds" | "honey";
-    matType: "3d-with-rims" | "classic";
+    matType: "3d-with-rims" | "classic" | "single";
     color: string;
     edgeColor: string;
   };

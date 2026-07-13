@@ -10,7 +10,7 @@ import { getColorInfo, getAvailableColors, getAvailableMaterialColorsForEdge } f
 
 interface StructureColorStepProps {
   config: {
-    matType: "3d-with-rims" | "classic";
+    matType: "3d-with-rims" | "classic" | "single";
     structure: "diamonds" | "honey";
     color: string;
     edgeColor: string;

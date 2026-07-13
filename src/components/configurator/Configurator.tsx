@@ -1,3 +1,7 @@
+/**
+ * @deprecated Legacy konfigurator oparty o car_models_extended.
+ * Produkcja używa ConfiguratorSimple + useVehicleCatalog (mat_templates).
+ */
 "use client";
 import React, { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -24,6 +28,7 @@ import { ConfiguratorService } from "@/lib/services/ConfiguratorService";
 import { PricingService } from "@/lib/services/PricingService";
 import { MatService } from "@/lib/services/MatService";
 import { ConfigurationData } from "@/entities/product";
+import type { AddToCartDTO } from "@/lib/types/cart-new";
 import { debugLog } from "@/lib/config/features";
 import { useTracking } from "@/lib/tracking";
 import { Brand, Model } from "@/entities/car";
@@ -617,7 +622,7 @@ export default function Configurator() {
         productType: 'mat',
         productId: productId,
         quantity: 1,
-        configuration: configData,
+        configuration: configData as AddToCartDTO['configuration'],
         productName: `Dywaniki EVA Premium - ${selectedCarBrand} ${selectedCarModel}`,
         productSku: `EVA-${selectedSetType}-${selectedCellType}-${selectedMat}-${selectedEdge}`,
         productImage: matImagePath,

@@ -9,9 +9,18 @@ import type { Brand } from "@/entities/car";
 
 const baseConfig: ConfiguratorState = {
   brand: "",
+  brandKey: "",
   model: "",
+  modelFamilyKey: "",
+  modelKey: "",
+  generation: "",
+  templateId: "",
+  recordKey: "",
   year: "",
   bodyType: "",
+  bodyTypeKey: "",
+  pricingCategoryKey: "",
+  catalogVersionCode: "",
   matType: "3d-with-rims",
   variant: "front",
   structure: "diamonds",
@@ -175,6 +184,23 @@ describe("mergeStoredConfig", () => {
     expect(merged.year).toBe("");
     expect(merged.bodyType).toBe("sedan");
   });
+
+  it("clears stale brandKey from localStorage on locked product entry", () => {
+    const merged = mergeStoredConfig({
+      previous: baseConfig,
+      stored: { ...baseConfig, brandKey: "Renault", modelFamilyKey: "espace" },
+      urlParams: {
+        brandParam: "renault",
+        modelParam: "espace",
+        bodyTypeParam: "minivan",
+      },
+    })
+
+    expect(merged.brandKey).toBe("")
+    expect(merged.modelFamilyKey).toBe("")
+    expect(merged.recordKey).toBe("")
+    expect(merged.bodyTypeKey).toBe("")
+  })
 
   it("clears stale year and bodyType when URL model changes", () => {
     const previous: ConfiguratorState = {

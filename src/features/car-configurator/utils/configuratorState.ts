@@ -2,11 +2,20 @@ import type { Brand } from "@/entities/car";
 
 export interface ConfiguratorState {
   brand: string;
+  brandKey: string;
   model: string;
+  modelFamilyKey: string;
+  modelKey: string;
+  generation: string;
+  templateId: string;
+  recordKey: string;
   year: string;
   bodyType: string;
-  matType: "3d-with-rims" | "classic";
-  variant: "" | "front" | "basic" | "premium" | "complete";
+  bodyTypeKey: string;
+  pricingCategoryKey: string;
+  catalogVersionCode: string;
+  matType: "3d-with-rims" | "classic" | "single";
+  variant: string;
   structure: "diamonds" | "honey";
   color: string;
   edgeColor: string;
@@ -20,6 +29,7 @@ export type ConfiguratorUrlParams = {
   modelParam?: string | null;
   yearParam?: string | null;
   bodyTypeParam?: string | null;
+  generationParam?: string | null;
 };
 
 const capitalize = (value: string): string =>
@@ -52,7 +62,7 @@ export const getConfigUpdatesFromUrl = ({
   brands: Brand[];
 }): Partial<ConfiguratorState> => {
   const updates: Partial<ConfiguratorState> = {};
-  const { brandParam, modelParam, yearParam, bodyTypeParam } = urlParams;
+  const { brandParam, modelParam, yearParam, bodyTypeParam, generationParam } = urlParams;
 
   if (brandParam) {
     const resolvedBrand = resolveBrandFromParam(brandParam, brands);
@@ -67,6 +77,10 @@ export const getConfigUpdatesFromUrl = ({
     if (!bodyTypeParam) {
       updates.bodyType = "";
     }
+  }
+
+  if (generationParam && previous.generation !== generationParam) {
+    updates.generation = generationParam;
   }
 
   if (modelParam && yearParam && previous.year) {
@@ -92,30 +106,45 @@ export const mergeStoredConfig = ({
   const updates: Partial<ConfiguratorState> = { ...stored };
 
   if (urlParams.brandParam) {
-    delete updates.brand;
+    delete updates.brand
+    delete updates.brandKey
   }
 
   if (urlParams.modelParam) {
-    delete updates.year;
+    delete updates.year
+    delete updates.modelFamilyKey
+    delete updates.modelKey
+    delete updates.recordKey
+    delete updates.templateId
+    delete updates.pricingCategoryKey
+    delete updates.bodyTypeKey
+
+    if (!urlParams.generationParam) {
+      delete updates.generation
+    }
 
     const storedModelMatchesUrl =
-      stored.model && isSameToken(stored.model, urlParams.modelParam);
+      stored.model && isSameToken(stored.model, urlParams.modelParam)
 
     if (
       !previous.model ||
       !isSameToken(previous.model, urlParams.modelParam)
     ) {
-      updates.model = urlParams.modelParam;
+      updates.model = urlParams.modelParam
     } else {
-      delete updates.model;
+      delete updates.model
     }
 
     if (!storedModelMatchesUrl && !urlParams.bodyTypeParam) {
-      delete updates.bodyType;
+      delete updates.bodyType
     }
   }
 
   if (urlParams.bodyTypeParam) {
+    delete updates.recordKey
+    delete updates.templateId
+    delete updates.bodyTypeKey
+    delete updates.pricingCategoryKey
     if (
       !previous.bodyType ||
       !isSameToken(previous.bodyType, urlParams.bodyTypeParam)
@@ -124,6 +153,10 @@ export const mergeStoredConfig = ({
     } else {
       delete updates.bodyType;
     }
+  }
+
+  if (urlParams.generationParam) {
+    updates.generation = urlParams.generationParam;
   }
 
   return { ...previous, ...updates };

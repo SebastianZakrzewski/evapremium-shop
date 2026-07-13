@@ -1,8 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CartService } from '@/lib/services/CartService';
-import { Cart, AddToCartDTO, UpdateCartItemDTO } from '@/lib/types/cart-new';
+import { Cart, AddToCartDTO } from '@/lib/types/cart-new';
+import { revalidateMatItemPrice } from '@/features/vehicle-catalog/server/matCartValidation';
 
 const cartService = new CartService();
+
+const revalidateMatCartItem = async (item: AddToCartDTO): Promise<AddToCartDTO> => {
+  if (item.productType !== 'mat') return item
+  if (item.unitPrice == null || item.unitPrice <= 0) {
+    throw new Error('Brak ceny dla wybranych dywaników')
+  }
+
+  const validatedConfiguration = await revalidateMatItemPrice(
+    item.configuration,
+    item.unitPrice,
+  )
+
+  return {
+    ...item,
+    configuration: validatedConfiguration,
+    unitPrice: validatedConfiguration.pricing.totalPrice,
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,7 +32,10 @@ export async function POST(request: NextRequest) {
     
     switch (action) {
       case 'add':
-        result = await cartService.addToCart(cart, data as AddToCartDTO);
+        result = await cartService.addToCart(
+          cart,
+          await revalidateMatCartItem(data as AddToCartDTO),
+        );
         break;
         
       case 'remove':

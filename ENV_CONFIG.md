@@ -15,8 +15,20 @@ Centralny plik konfiguracyjny z typami TypeScript i wartościami domyślnymi.
 
 ### Supabase
 - **URL**: https://kmepxyervpeujwvgdqtm.supabase.co
-- **Anon Key**: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImttZXB4eWVydnBldWp3dmdkcXRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MDk0MjUsImV4cCI6MjA3MzA4NTQyNX0.PlhrCXHWb3YhOnqu8jVrt_P7nGMx3ETUmrxSwdj48rE
-- **Service Role Key**: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImttZXB4eWVydnBldWp3dmdkcXRtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NzUwOTQyNSwiZXhwIjoyMDczMDg1NDI1fQ.sr3YFtozFZCJpTKTfjX7180oI_fjT0rxG0sx2i0YKlI
+- **Anon Key**: ustawiany przez `NEXT_PUBLIC_SUPABASE_ANON_KEY` w `.env`
+- **Service Role Key**: ustawiany przez `SUPABASE_SERVICE_ROLE_KEY` wyłącznie po stronie serwera
+
+### Feature flags
+- **NEXT_PUBLIC_MAT_TEMPLATES_CATALOG_ENABLED**: domyślnie `true` (brak zmiennej = włączone). Ustaw `false`, aby wyłączyć katalog mat_templates w UI.
+
+### Skrypty synchronizacji katalogu
+```bash
+npm run seed:mat-templates
+npm run verify:mat-templates
+npm run fetch:bitrix-enums
+npm run sync:pricing-catalog
+npm run sync:bitrix-enum-ids
+```
 
 
 ## Użycie w Kodzie
@@ -49,8 +61,8 @@ validateEnv();
 ## Bezpieczeństwo
 
 - Plik `.env` jest ignorowany przez Git
-- Plik `env.example` zawiera dane deweloperskie (bezpieczne do commitowania)
-- Plik `src/config/env.ts` zawiera wartości domyślne jako fallback
+- `env.example` zawiera wyłącznie nazwy zmiennych i bezpieczne placeholdery
+- `src/config/env.ts` nie może zawierać kluczy jako fallback
 
 ## Dostępność w Nowym Kontekście
 
