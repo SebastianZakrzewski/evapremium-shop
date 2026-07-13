@@ -41,6 +41,14 @@ import { useTracking, createInitiateCheckoutData } from '@/lib/tracking';
 import { motion } from 'framer-motion';
 import { getColorInfo } from '@/lib/color-mapping';
 import { paymentsApi } from '@/lib/api';
+import type { MatConfiguration } from '@/features/vehicle-catalog/model/matConfiguration';
+import {
+  getMatConfigurationLabelContext,
+  getMatProductSubtitleLabel,
+  getMatSetVariantLabel,
+  getMatTypeLabel,
+  isSinglePriceSetType,
+} from '@/shared/mat-set-labels';
 
 // Schema walidacji - zaktualizowany dla nowego formatu
 const checkoutSchema = z.object({
@@ -1444,31 +1452,41 @@ export default function CheckoutSection() {
                                 <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
                                   <span className="text-xs md:text-sm text-neutral-300">Zestaw:</span>
                                   <span className="text-xs md:text-sm font-medium text-white text-right">
-                                    {matConfig.setVariant === 'front' ? 'Starter' :
-                                     matConfig.setVariant === 'basic' ? 'Podstawowy' :
-                                     matConfig.setVariant === 'premium' ? 'Premium' :
-                                     matConfig.setVariant === 'complete' ? 'Mata do bagażnika' :
-                                     matConfig.setVariant}
-                                    {matConfig.setVariant === 'front' && (
+                                    {getMatSetVariantLabel(
+                                      getMatConfigurationLabelContext(
+                                        matConfig as MatConfiguration,
+                                      ),
+                                    )}
+                                    {isSinglePriceSetType(matConfig.setType) && (
+                                      <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">
+                                        {getMatProductSubtitleLabel(
+                                          getMatConfigurationLabelContext(
+                                            matConfig as MatConfiguration,
+                                          ),
+                                        )}
+                                      </span>
+                                    )}
+                                    {!isSinglePriceSetType(matConfig.setType) &&
+                                      matConfig.setVariant === 'front' && (
                                       <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">(przód)</span>
                                     )}
-                                    {matConfig.setVariant === 'basic' && (
+                                    {!isSinglePriceSetType(matConfig.setType) &&
+                                      matConfig.setVariant === 'basic' && (
                                       <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">(przód + tył)</span>
                                     )}
-                                    {matConfig.setVariant === 'premium' && (
+                                    {!isSinglePriceSetType(matConfig.setType) &&
+                                      matConfig.setVariant === 'premium' && (
                                       <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">(przód + tył + bagażnik)</span>
                                     )}
                                   </span>
                                 </div>
                               )}
 
-                              {matConfig.setType && (
+                              {matConfig.setType && !isSinglePriceSetType(matConfig.setType) && (
                                 <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
                                   <span className="text-xs md:text-sm text-neutral-300">Typ:</span>
                                   <span className="text-xs md:text-sm font-medium text-white">
-                                    {matConfig.setType === '3d-with-rims' ? '3D z rantami' :
-                                     matConfig.setType === 'classic' ? '3D bez rantów' :
-                                     matConfig.setType}
+                                    {getMatTypeLabel(matConfig.setType)}
                                   </span>
                                 </div>
                               )}

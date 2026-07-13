@@ -5,6 +5,11 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { getColorInfo } from "@/lib/color-mapping";
 import { getMatImagePath } from "@/lib/image-mapping";
+import { getMatTypeForDynamicPreview } from "./rugPreviewConfig";
+import {
+  getMatProductSubtitleLabel,
+  getMatProductTitleLabel,
+} from "@/shared/mat-set-labels";
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState";
 import { useAccessories } from "@/features/accessories/hooks/useAccessories";
 import { Plus, CheckCircle2, ShoppingCart } from "lucide-react";
@@ -23,19 +28,6 @@ interface SummaryStepProps {
   onAddToCart: () => void;
   isAddingToCart: boolean;
 }
-
-const variantNames: Record<string, string> = {
-  front: "Starter",
-  basic: "Podstawowy",
-  premium: "Premium",
-  complete: "Bagażnik",
-};
-
-const matTypeNames: Record<string, string> = {
-  "3d-with-rims": "3D z rantami",
-  classic: "3D bez rantów",
-  single: "Komplet jednocenowy",
-};
 
 const structureNames: Record<string, string> = {
   diamonds: "Romby",
@@ -72,14 +64,23 @@ export function SummaryStep({
   // Generuj miniaturkę dywanika
   const matThumbnail = useMemo(() => {
     if (!config.structure || !config.color || !config.edgeColor) return null;
-    const matType = config.matType === '3d-with-rims' ? '3d' : 'classic';
+    const matType = getMatTypeForDynamicPreview(
+      config.matType,
+      config.pricingCategoryKey,
+    );
     return getMatImagePath(
       matType,
       config.structure as 'diamonds' | 'honey',
       config.color,
       config.edgeColor
     );
-  }, [config.matType, config.structure, config.color, config.edgeColor]);
+  }, [
+    config.matType,
+    config.pricingCategoryKey,
+    config.structure,
+    config.color,
+    config.edgeColor,
+  ]);
   
   // Ścieżka do miniaturki struktury
   const structureThumbnail = useMemo(() => {
@@ -88,6 +89,24 @@ export function SummaryStep({
       ? '/images/konfigurator/struktura komorek/romby.png'
       : '/images/konfigurator/struktura komorek/plaster.png';
   }, [config.structure]);
+
+  const labelContext = useMemo(
+    () => ({
+      setType: config.matType,
+      setVariant: config.variant,
+      pricingCategoryKey: config.pricingCategoryKey,
+      bodyTypeKey: config.bodyTypeKey,
+    }),
+    [
+      config.matType,
+      config.variant,
+      config.pricingCategoryKey,
+      config.bodyTypeKey,
+    ],
+  );
+
+  const productTitle = getMatProductTitleLabel(labelContext);
+  const productSubtitle = getMatProductSubtitleLabel(labelContext);
   
   if (!priceBreakdown) {
     return null;
@@ -134,7 +153,7 @@ export function SummaryStep({
                 {matThumbnail ? (
                   <Image
                     src={matThumbnail}
-                    alt={`${matTypeNames[config.matType]} - ${variantNames[config.variant]}`}
+                    alt={`${productTitle}${productSubtitle ? ` - ${productSubtitle}` : ""}`}
                     fill
                     className="object-contain p-1"
                     sizes="56px"
@@ -147,8 +166,10 @@ export function SummaryStep({
               </div>
               <div>
                 <p className="text-xs text-gray-400 uppercase tracking-wider font-medium mb-0.5">Produkt</p>
-                <p className="text-white font-medium">{matTypeNames[config.matType]}</p>
-                <p className="text-sm text-gray-400">{variantNames[config.variant]}</p>
+                <p className="text-white font-medium">{productTitle}</p>
+                {productSubtitle ? (
+                  <p className="text-sm text-gray-400">{productSubtitle}</p>
+                ) : null}
               </div>
             </div>
 

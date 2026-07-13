@@ -34,6 +34,7 @@ export const MatConfigurationSchema = z.object({
   bitrix: MatBitrixSnapshotSchema.optional(),
   setType: z.enum(["3d-with-rims", "classic", "single"]),
   setVariant: z.string().trim().min(1),
+  setVariantLabel: z.string().trim().min(1).optional(),
   cellType: z.enum(["diamonds", "honey"]),
   materialColor: z.string().trim().min(1),
   edgeColor: z.string().trim().min(1),

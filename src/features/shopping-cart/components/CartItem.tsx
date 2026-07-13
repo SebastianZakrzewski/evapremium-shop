@@ -5,17 +5,13 @@ import { CartItemV2 as CartItemType, isMatCartConfiguration } from '@/lib/types'
 import { Button } from '@/components/ui/button';
 import { Trash2, Minus, Plus } from 'lucide-react';
 import { PricingService } from '@/lib/services/PricingService';
-
-// Funkcje tłumaczące angielskie opisy na polskie
-function getPolishSetType(setType: string): string {
-  const translations: Record<string, string> = {
-    '3d-with-rims': '3D z rantami',
-    'classic': '3D bez rantów',
-    'premium': 'Premium',
-    'standard': 'Standardowe'
-  };
-  return translations[setType] || setType;
-}
+import type { MatConfiguration } from '@/features/vehicle-catalog/model/matConfiguration';
+import {
+  getMatConfigurationLabelContext,
+  getMatSetVariantLabel,
+  getMatTypeLabel,
+  isSinglePriceSetType,
+} from '@/shared/mat-set-labels';
 
 function getPolishCellType(cellType: string): string {
   const translations: Record<string, string> = {
@@ -31,15 +27,8 @@ function getPolishCellType(cellType: string): string {
   return translations[cellType] || cellType;
 }
 
-function getPolishSetVariant(setVariant: string): string {
-  const translations: Record<string, string> = {
-    'front': 'Starter (przód)',
-    'basic': 'Podstawowy (przód + tył)',
-    'premium': 'Premium (przód + tył + bagażnik)',
-    'complete': 'Mata do bagażnika'
-  };
-  return translations[setVariant] || setVariant;
-}
+const getMatVariantLabel = (matConfig: MatConfiguration): string =>
+  getMatSetVariantLabel(getMatConfigurationLabelContext(matConfig));
 
 function getPolishColor(color: string): string {
   const translations: Record<string, string> = {
@@ -196,17 +185,19 @@ function MatCartItem({
             <div className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">
               <span className="text-sm text-neutral-300">Zestaw:</span>
               <span className="text-sm font-medium text-white">
-                {getPolishSetVariant(config.setVariant)}
+                {getMatVariantLabel(config)}
               </span>
             </div>
 
-            {/* Typ dywaników */}
+            {/* Typ dywaników — pomijany dla kompletów jednocenowych */}
+            {!isSinglePriceSetType(config.setType) && (
             <div className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">
               <span className="text-sm text-neutral-300">Typ:</span>
               <span className="text-sm font-medium text-white">
-                {getPolishSetType(config.setType)}
+                {getMatTypeLabel(config.setType)}
               </span>
             </div>
+            )}
 
             {/* Struktura komórek */}
             <div className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">

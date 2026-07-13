@@ -6,6 +6,7 @@ import {
   type MatConfiguration,
 } from "../model/matConfiguration"
 import { resolveBitrixSnapshots } from "./bitrixMappingService"
+import { resolvePersistedMatSetVariantLabel } from "@/shared/mat-set-labels"
 
 const PRICE_TOLERANCE_PLN = 0.01
 
@@ -73,6 +74,14 @@ export const revalidateMatItemPrice = async (
       priceAfterDiscount: selectedVariant.priceAfterDiscount,
       totalPrice: selectedVariant.priceAfterDiscount,
     },
+    setVariantLabel: resolvePersistedMatSetVariantLabel({
+      setType: config.setType,
+      setVariant: config.setVariant,
+      setVariantLabel: selectedVariant.label || config.setVariantLabel,
+      pricingCategoryKey: pricing.pricingCategoryKey,
+      bodyTypeKey: config.carDetails.bodyTypeKey,
+      pricingLabel: selectedVariant.label,
+    }),
     bitrix,
   }
 }

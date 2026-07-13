@@ -11,6 +11,12 @@ import {
   resolveLegacyVariantEnumId,
 } from '@/features/vehicle-catalog/server/bitrixMappingService';
 import type { MatConfiguration } from '@/features/vehicle-catalog/model/matConfiguration';
+import {
+  getMatConfigurationLabelContext,
+  getMatSetVariantLabel,
+  getMatTypeLabel,
+  isSinglePriceSetType,
+} from '@/shared/mat-set-labels';
 
 export interface OrderToDealMappingOptions {
   contactId?: string;
@@ -332,8 +338,14 @@ function buildDealComments(order: Order): string {
           const car = config.carDetails;
           comments.push(`   Samochód: ${car.brand} ${car.model} ${car.year || ''} ${car.bodyType || ''}`);
         }
-        if (config.setType) {
-          comments.push(`   Typ zestawu: ${config.setType}`);
+        if (config.setVariant) {
+          const matConfig = config as MatConfiguration
+          comments.push(
+            `   Wariant zestawu: ${getMatSetVariantLabel(getMatConfigurationLabelContext(matConfig))}`,
+          )
+        }
+        if (config.setType && !isSinglePriceSetType(config.setType)) {
+          comments.push(`   Typ zestawu: ${getMatTypeLabel(config.setType)}`);
         }
         if (config.cellType) {
           comments.push(`   Struktura komórek: ${config.cellType}`);

@@ -15,6 +15,9 @@ import type { ConfiguratorState } from "@/features/car-configurator/utils/config
 import { useResolvedPricing } from "@/features/vehicle-catalog/hooks/useResolvedPricing";
 import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext";
 import { normalizeBrandName } from "@/shared/brands";
+import {
+  resolvePersistedMatSetVariantLabel,
+} from "@/shared/mat-set-labels";
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
 import { StepProgress } from "./StepProgress";
 import { StepAccordion } from "./StepAccordion";
@@ -42,8 +45,10 @@ import { ConfiguratorPreviewFrame } from "./ConfiguratorPreviewFrame";
 import { DesktopSidebarPreviewControls } from "./DesktopSidebarPreviewControls";
 import {
   canShowRugSidebarPreview,
+  getMatTypeForDynamicPreview,
   hasRugPreviewConfigChange,
   isMatTypeSelected,
+  usesClassicOnlyDynamicPreview,
 } from "./rugPreviewConfig";
 import { PLACEHOLDER_CAR_MODEL_PREVIEW_SLIDES } from "./carModelPreviewCarousel.types";
 import { MobileStickyPreview } from "./MobileStickyPreview";
@@ -51,12 +56,6 @@ import { MobileSummaryPreview } from "./MobileSummaryPreview";
 
 const TOTAL_STEPS_DESKTOP = 7;
 const TOTAL_STEPS_MOBILE = 5;
-
-// Mapowanie ID na typy dla funkcji getMatImagePath
-const getMatTypeForImage = (setTypeId: string): '3d' | 'classic' => {
-  if (setTypeId === 'classic') return 'classic';
-  return '3d'; // dla '3d-with-rims' i 'single'
-};
 
 export default function ConfiguratorSimple() {
   const searchParams = useSearchParams();
@@ -340,24 +339,43 @@ export default function ConfiguratorSimple() {
       return '/dywaniki/3d/diamonds/black/5os-3d-diamonds-black-black.webp'; // Fallback
     }
     
-    const matType = getMatTypeForImage(config.matType);
+    const matType = getMatTypeForDynamicPreview(
+      config.matType,
+      config.pricingCategoryKey,
+    );
     return getMatImagePath(
       matType,
       config.structure,
       config.color,
       config.edgeColor
     );
-  }, [config.matType, config.structure, config.color, config.edgeColor]);
+  }, [
+    config.matType,
+    config.pricingCategoryKey,
+    config.structure,
+    config.color,
+    config.edgeColor,
+  ]);
 
   // Generuj ścieżkę do zdjęcia produktu (wybrane zdjęcie z galerii)
   const productPreviewPath = useMemo(() => {
     if (!config.matType) return null;
-    if (config.matType === "3d-with-rims" || config.matType === "single") {
+    if (
+      usesClassicOnlyDynamicPreview(config.matType, config.pricingCategoryKey)
+    ) {
+      return null;
+    }
+    if (config.matType === "3d-with-rims") {
       return selectedRimsProductImage;
     }
     if (config.matType === "classic") return selectedClassicProductImage;
     return null;
-  }, [config.matType, selectedClassicProductImage, selectedRimsProductImage]);
+  }, [
+    config.matType,
+    config.pricingCategoryKey,
+    selectedClassicProductImage,
+    selectedRimsProductImage,
+  ]);
   
   // Resetuj wybrane zdjęcie gdy zmienia się typ dywaników
   useEffect(() => {
@@ -481,7 +499,9 @@ export default function ConfiguratorSimple() {
   /** Podgląd dynamiczny i galeria zestawu — od kroku 2, po wyborze typu dywanika */
   const canShowDynamicPreview = canShowRugSidebarPreview(activeStep, config.matType);
 
-  const canShowProductSetGallery = canShowDynamicPreview;
+  const canShowProductSetGallery =
+    canShowDynamicPreview &&
+    !usesClassicOnlyDynamicPreview(config.matType, config.pricingCategoryKey);
 
   const showProductSetGallery =
     canShowProductSetGallery &&
@@ -851,14 +871,24 @@ export default function ConfiguratorSimple() {
     setIsAddingToCart(true);
     try {
       const productId = crypto.randomUUID();
-      const matTypeForImage: '3d' | 'classic' =
-        config.matType === 'classic' ? 'classic' : '3d';
+      const matTypeForImage = getMatTypeForDynamicPreview(
+        config.matType,
+        config.pricingCategoryKey,
+      );
       const productImagePath = getMatImagePath(
         matTypeForImage,
         config.structure as 'diamonds' | 'honey',
         config.color,
         config.edgeColor
       );
+
+      const setVariantLabel = resolvePersistedMatSetVariantLabel({
+        setType: config.matType,
+        setVariant: config.variant,
+        pricingCategoryKey: config.pricingCategoryKey,
+        bodyTypeKey: config.bodyTypeKey,
+        pricingLabel: pricingQuery.data?.selectedVariant?.label,
+      });
 
       // Dodaj dywaniki do koszyka
       await addToCart({
@@ -892,6 +922,7 @@ export default function ConfiguratorSimple() {
           },
           setType: config.matType,
           setVariant: config.variant,
+          setVariantLabel,
           cellType: config.structure,
           materialColor: config.color,
           edgeColor: config.edgeColor,

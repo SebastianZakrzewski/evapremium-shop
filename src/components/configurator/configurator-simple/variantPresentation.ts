@@ -134,6 +134,51 @@ const fallbackPresentation: VariantPresentation = {
   image: "/konfigurator/zestaw/pt.png",
 }
 
+const hasPresentationEntry = (
+  map: Record<string, VariantPresentation>,
+  variantKey: string,
+): boolean => Object.prototype.hasOwnProperty.call(map, variantKey)
+
+export const hasKnownVariantPresentation = (
+  variantKey: string,
+  pricingCategoryKey?: string,
+  bodyTypeKey?: string,
+): boolean => {
+  if (pricingCategoryKey === "minivan") {
+    return hasPresentationEntry(minivanVariantPresentation, variantKey)
+  }
+  if (pricingCategoryKey === "bus") {
+    return hasPresentationEntry(busVariantPresentation, variantKey)
+  }
+  if (
+    isMinivanBodyTypeKey(bodyTypeKey) &&
+    hasPresentationEntry(passengerPricedMinivanVariantPresentation, variantKey)
+  ) {
+    return true
+  }
+  return hasPresentationEntry(passengerVariantPresentation, variantKey)
+}
+
+export const getCanonicalVariantLabel = (
+  variantKey: string,
+  pricingCategoryKey?: string,
+  bodyTypeKey?: string,
+): string | null => {
+  if (
+    !hasKnownVariantPresentation(variantKey, pricingCategoryKey, bodyTypeKey)
+  ) {
+    return null
+  }
+
+  const presentation = getVariantPresentation(
+    variantKey,
+    pricingCategoryKey,
+    bodyTypeKey,
+  )
+
+  return presentation.name ?? presentation.description ?? null
+}
+
 export const getVariantPresentation = (
   variantKey: string,
   pricingCategoryKey?: string,
