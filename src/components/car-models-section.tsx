@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useQuery, useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { Brand } from "@/entities/car";
@@ -19,6 +19,9 @@ import {
   getBrandInfo,
   resolveBrandFromUrlParam,
   brandNameToNavigationSlug,
+  resolveBrandLogo,
+  shouldServeBrandImageUnoptimized,
+  isModeleBrandPhoto,
 } from "@/shared/brands";
 import { getDoorsCount } from "@/shared";
 import {
@@ -27,7 +30,6 @@ import {
   formatYearRangeDisplay,
 } from "@/shared/vehicle/displayLabels";
 import { useCarModelsFilters } from "@/features/brands/hooks";
-import { apiGet } from "@/lib/api/client";
 import { formatPriceCurrency } from "@/lib/utils/formatPrice";
 import { Car, Loader2, SlidersHorizontal, X, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
@@ -126,6 +128,18 @@ export default function CarModelsSection() {
   const brandDisplayName = resolvedBrand?.displayName ?? brandInfo?.displayName
   const brandApiName = resolvedBrand?.apiName ?? ''
 
+  const brandLogo = useMemo(() => {
+    if (!brandParam) return null
+
+    const brandName =
+      resolvedBrand?.dbName ??
+      brandDisplayName ??
+      brandApiName ??
+      brandParam
+
+    return resolveBrandLogo(brandName, null)
+  }, [brandParam, resolvedBrand, brandDisplayName, brandApiName])
+
   // Użyj React Query do cache'owania modeli
   const { data: apiModels = [], isLoading: loading, error: modelsError } = useQuery({
     queryKey: ['car-models', brandApiName, 'v2'],
@@ -159,9 +173,6 @@ export default function CarModelsSection() {
       imageSrc: string;
       generation: string;
       generationDisplay: string;
-      brandForImage: string;
-      modelForImage: string;
-      yearForImage?: number;
     }> = [];
 
     // Map do deduplikacji modeli - klucz: brand-name-bodyType-generation-yearFrom
@@ -199,14 +210,11 @@ export default function CarModelsSection() {
                 gen.bodyTypeDisplay || formatBodyTypeDisplayPl(gen.bodyType || ''),
               yearFrom: gen.yearFrom,
               yearTo: gen.yearTo,
-              imageSrc: brandInfo?.logo || '/images/products/audi.jpg',
+              imageSrc: brandLogo ?? '/images/products/audi.jpg',
               generation: gen.generation || '',
               generationDisplay:
                 gen.generationDisplay ||
                 formatYearRangeDisplay(gen.yearFrom, gen.yearTo, gen.generation),
-              brandForImage: brandSlug || brandParam?.toLowerCase() || modelBrand?.toLowerCase() || '',
-              modelForImage: modelName.toLowerCase(),
-              yearForImage: gen.yearFrom,
             };
             uniqueModelsMap.set(uniqueKey, modelData);
             models.push(modelData);
@@ -231,16 +239,13 @@ export default function CarModelsSection() {
             ),
             yearFrom: model.yearFrom,
             yearTo: model.yearTo,
-            imageSrc: brandInfo?.logo || '/images/products/audi.jpg',
+            imageSrc: brandLogo ?? '/images/products/audi.jpg',
             generation: model.generation || '',
             generationDisplay: formatYearRangeDisplay(
               model.yearFrom,
               model.yearTo,
               model.generation,
             ),
-            brandForImage: brandSlug || brandParam?.toLowerCase() || modelBrand?.toLowerCase() || '',
-            modelForImage: modelName.toLowerCase(),
-            yearForImage: model.yearFrom,
           };
           uniqueModelsMap.set(uniqueKey, modelData);
           models.push(modelData);
@@ -249,94 +254,7 @@ export default function CarModelsSection() {
     });
 
     return models;
-  }, [apiModels, brandParam, brandInfo, brandSlug, brandDisplayName]);
-
-  // Pobierz unikalne kombinacje modeli do zapytania o zdjęcia
-  const uniqueModelQueries = useMemo(() => {
-    const uniqueModels = new Map<string, typeof displayModels[0]>();
-    
-    displayModels.forEach((model) => {
-      // Użyj pełnej generacji (włączając "+" jak "2024+") - nie usuwaj jej
-      const generation = (model.generation && model.generation.trim()) ? model.generation : '';
-      // Normalizuj bodyType do lowercase (jak w bazie danych)
-      const normalizedBodyType = (model.bodyType && model.bodyType.trim()) ? model.bodyType.toLowerCase() : '';
-      // Klucz: brand-model-year-generation-bodyType (używamy pełnej generacji i znormalizowanego bodyType)
-      const key = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${generation}-${normalizedBodyType}`;
-      if (!uniqueModels.has(key)) {
-        uniqueModels.set(key, model);
-      }
-    });
-    
-    return Array.from(uniqueModels.values());
-  }, [displayModels, brandParam, brandSlug]);
-
-  // Pobierz zdjęcia dla każdego unikalnego modelu
-  const imageQueries = useQueries({
-    queries: uniqueModelQueries.map((model) => ({
-      queryKey: ['mat-product-images', model.brandForImage, model.modelForImage, model.yearForImage, model.generation, model.bodyType],
-      queryFn: async () => {
-        const searchParams = new URLSearchParams();
-        if (model.brandForImage) searchParams.set('brand', model.brandForImage);
-        if (model.modelForImage) searchParams.set('model', model.modelForImage);
-        if (model.yearForImage) searchParams.set('year', model.yearForImage.toString());
-        // Przekazuj generację jeśli istnieje (włączając "+" jak "2024+")
-        if (model.generation && model.generation.trim()) {
-          searchParams.set('generation', model.generation);
-        }
-        if (model.bodyType) searchParams.set('bodyType', model.bodyType.toLowerCase());
-        
-        const url = `/api/mat-product-images?${searchParams.toString()}`;
-        
-        const data = await apiGet<{ images: Array<{ image_url: string; [key: string]: any }>; count: number }>(url);
-        
-        // Użyj pełnej generacji w kluczu (włączając "+")
-        const generation = (model.generation && model.generation.trim()) ? model.generation : '';
-        // Normalizuj bodyType do lowercase (jak w bazie danych)
-        const normalizedBodyType = (model.bodyType && model.bodyType.trim()) ? model.bodyType.toLowerCase() : '';
-        const modelKey = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${generation}-${normalizedBodyType}`;
-        
-        return { 
-          modelKey,
-          images: data.images || [] 
-        };
-      },
-      enabled: !!model.brandForImage && !!model.modelForImage && !!brandParam,
-      staleTime: 10 * 60 * 1000,
-      gcTime: 30 * 60 * 1000,
-    })),
-  });
-
-  // Stwórz mapę zdjęć dla każdego modelu
-  const imagesMap = useMemo(() => {
-    const map = new Map<string, string>();
-    
-    imageQueries.forEach((query) => {
-      if (query.data?.images && query.data.images.length > 0) {
-        // Użyj pierwszego dostępnego zdjęcia
-        const imageUrl = query.data.images[0].image_url;
-        map.set(query.data.modelKey, imageUrl);
-      }
-    });
-    
-    return map;
-  }, [imageQueries]);
-
-  // Mapuj zdjęcia do modeli
-  const modelsWithImages = useMemo(() => {
-    return displayModels.map((model) => {
-      // Użyj pełnej generacji w kluczu (włączając "+")
-      const generation = (model.generation && model.generation.trim()) ? model.generation : '';
-      // Normalizuj bodyType do lowercase (jak w bazie danych)
-      const normalizedBodyType = (model.bodyType && model.bodyType.trim()) ? model.bodyType.toLowerCase() : '';
-      const modelKey = `${model.brandForImage}-${model.modelForImage}-${model.yearForImage || ''}-${generation}-${normalizedBodyType}`;
-      const imageUrl = imagesMap.get(modelKey);
-      
-      return {
-        ...model,
-        imageSrc: imageUrl || model.imageSrc, // Fallback do logo marki jeśli brak zdjęcia
-      };
-    });
-  }, [displayModels, imagesMap, imageQueries]);
+  }, [apiModels, brandParam, brandLogo, brandDisplayName]);
 
   const {
     availableBodyTypes,
@@ -346,7 +264,7 @@ export default function CarModelsSection() {
   } = useCarModelsFilters({
     brandParam,
     displayModels,
-    modelsWithImages,
+    modelsWithImages: displayModels,
     filters,
     selectedModel,
   });
@@ -380,11 +298,11 @@ export default function CarModelsSection() {
 
   // Pobierz unikalne nazwy modeli dla nawigacji
   const uniqueModelNavItems = useMemo(() => {
-    if (!brandParam || modelsWithImages.length === 0) {
+    if (!brandParam || displayModels.length === 0) {
       return [];
     }
     const items = new Map<string, string>();
-    modelsWithImages.forEach((model) => {
+    displayModels.forEach((model) => {
       const key = model.modelFamilyKey ?? model.name;
       if (!key) return;
       items.set(key, model.nameDisplay ?? model.name);
@@ -392,7 +310,7 @@ export default function CarModelsSection() {
     return [...items.entries()]
       .map(([value, label]) => ({ value, label }))
       .sort((left, right) => left.label.localeCompare(right.label, "pl"));
-  }, [modelsWithImages, brandParam]);
+  }, [displayModels, brandParam]);
 
   // Jeśli nie ma wybranej marki, pokaż sekcję wyboru marek
   if (!brandParam) {
@@ -483,14 +401,15 @@ export default function CarModelsSection() {
           </nav>
           
           <div className="max-w-3xl">
-            {brandInfo?.logo && (
+            {brandLogo && (
               <div className="flex items-center gap-6 mb-6">
                 <div className="w-20 h-20 relative p-2 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
                   <Image
-                    src={brandInfo.logo}
-                    alt={`${brandInfo.displayName} logo`}
+                    src={brandLogo}
+                    alt={`${brandDisplayName || brandParam} logo`}
                     fill
-                    className="object-contain p-2"
+                    className={`object-contain p-2 ${isModeleBrandPhoto(brandLogo) ? 'object-cover object-center' : ''}`}
+                    unoptimized={shouldServeBrandImageUnoptimized(brandLogo)}
                   />
                 </div>
               </div>
@@ -660,6 +579,7 @@ export default function CarModelsSection() {
                     });
                     const imageSrc = model.imageSrc || '/vercel.svg';
                     const brandLabel = brandDisplayName || model.brand || '';
+                    const useBrandPhoto = isModeleBrandPhoto(imageSrc);
 
                     return (
                       <article
@@ -673,10 +593,13 @@ export default function CarModelsSection() {
                               src={imageSrc}
                               alt={`Dywaniki do ${brandLabel} ${model.name} - Spersonalizowane dywaniki samochodowe`}
                               fill
-                              className="object-cover transition-transform duration-500 group-hover:scale-110"
+                              className={`transition-transform duration-500 group-hover:scale-110 ${
+                                useBrandPhoto ? 'object-cover object-center' : 'object-cover'
+                              }`}
                               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                               priority={parseInt(String(model.id)) <= 6}
                               quality={90}
+                              unoptimized={shouldServeBrandImageUnoptimized(imageSrc)}
                             />
                           </div>
                           

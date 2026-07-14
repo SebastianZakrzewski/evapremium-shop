@@ -1,4 +1,5 @@
 import type { CarGenerationApiResponse, CarModelApiResponse } from "@/lib/types/api"
+import { brandMatchToken } from "@/shared/brands/brandNormalizer"
 import {
   buildVehicleDisplayLabels,
   formatBodyTypeDisplayPl,
@@ -136,17 +137,39 @@ export type CatalogSearchModel = {
   isCurrentlyProduced: boolean
 }
 
+export const collectUniqueBrandsFromRows = (
+  rows: MatTemplateDbRow[],
+): CatalogSearchBrand[] => {
+  const brands = new Map<string, CatalogSearchBrand>()
+
+  rows.forEach((row) => {
+    const token = brandMatchToken(row.brand_name || row.brand_key)
+    if (!token) return
+
+    const cleanKey = row.brand_key.trim()
+    const cleanName = row.brand_name.trim()
+    const existing = brands.get(token)
+
+    if (!existing) {
+      brands.set(token, { key: cleanKey, name: cleanName })
+      return
+    }
+
+    const rowIsClean =
+      row.brand_key === cleanKey && row.brand_name === cleanName
+    if (rowIsClean) {
+      brands.set(token, { key: cleanKey, name: cleanName })
+    }
+  })
+
+  return [...brands.values()]
+}
+
 export const extractSearchBrands = (
   rows: MatTemplateDbRow[],
   limit = 10,
 ): CatalogSearchBrand[] => {
-  const brands = new Map<string, CatalogSearchBrand>()
-  rows.forEach((row) => {
-    if (!brands.has(row.brand_key)) {
-      brands.set(row.brand_key, { key: row.brand_key, name: row.brand_name })
-    }
-  })
-  return [...brands.values()].slice(0, limit)
+  return collectUniqueBrandsFromRows(rows).slice(0, limit)
 }
 
 export const extractSearchModels = (

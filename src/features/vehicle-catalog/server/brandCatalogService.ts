@@ -4,6 +4,7 @@ import {
   resolveBrandLogo,
 } from "@/shared/brands"
 import {
+  collectUniqueBrandsFromRows,
   extractSearchBrands,
   extractSearchModels,
   groupTemplatesToCarModels,
@@ -47,18 +48,8 @@ export type CatalogSearchResult = {
 
 export const getSellableBrands = async (): Promise<SellableBrand[]> => {
   const rows = await getMatTemplates()
-  const brandMap = new Map<string, { key: string; name: string }>()
 
-  rows.forEach((row) => {
-    if (!brandMap.has(row.brand_key)) {
-      brandMap.set(row.brand_key, {
-        key: row.brand_key,
-        name: row.brand_name,
-      })
-    }
-  })
-
-  return [...brandMap.values()]
+  return collectUniqueBrandsFromRows(rows)
     .sort((left, right) => left.name.localeCompare(right.name, "pl"))
     .map((brand, index) => ({
       id: index + 1,

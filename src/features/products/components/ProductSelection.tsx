@@ -21,7 +21,7 @@ export default function ProductSelection() {
                       brand.logo.includes('.jpeg') || 
                       brand.logo.includes('.avif') || 
                       brand.logo.includes('.webp');
-      const isExcluded = ['asia', 'bestune', 'chery'].includes(brand.name.toLowerCase());
+      const isExcluded = ['asia', 'bestune'].includes(brand.name.toLowerCase());
       return isImage && !isExcluded;
     });
 

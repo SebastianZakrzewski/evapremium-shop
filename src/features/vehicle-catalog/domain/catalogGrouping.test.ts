@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import {
+  collectUniqueBrandsFromRows,
   extractSearchBrands,
   extractSearchModels,
   groupTemplatesToCarModels,
@@ -64,6 +65,17 @@ describe("extractSearchBrands", () => {
       baseRow({ brand_key: "bmw", brand_name: "BMW" }),
     ])
     expect(brands).toHaveLength(2)
+  })
+
+  it("deduplicates Citroen variants with trailing whitespace", () => {
+    const brands = collectUniqueBrandsFromRows([
+      baseRow({ brand_key: "Citroen", brand_name: "Citroen" }),
+      baseRow({ brand_key: "Citroen ", brand_name: "Citroen " }),
+    ])
+
+    expect(brands).toHaveLength(1)
+    expect(brands[0]?.key).toBe("Citroen")
+    expect(brands[0]?.name).toBe("Citroen")
   })
 })
 
