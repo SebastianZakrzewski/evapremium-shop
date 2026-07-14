@@ -50,6 +50,13 @@ export {
   type ResolvedBrandParam,
 } from './brandParam';
 
+// Brand popularity sorting
+export {
+  POPULAR_BRAND_SLUGS,
+  getBrandPopularityRank,
+  sortBrandsByPopularity,
+} from './brandPopularity';
+
 
 
 

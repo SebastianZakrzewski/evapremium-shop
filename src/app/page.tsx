@@ -1,6 +1,6 @@
 import { HeroSection } from "@/features/marketing";
 import QuickSearchBar from "@/components/quick-search-bar";
-import { ProductGallerySection, ProductSelection, PopularProductsSection } from "@/features/products";
+import { ProductGallerySection, ProductSelection } from "@/features/products";
 import CustomFitSection from "@/components/custom-fit-section";
 import InteractiveFeaturesSection from "@/components/interactive-features-section";
 import RoznorodnaKolorystykaSection from "@/components/roznorodna-kolorystyka-section";
@@ -21,7 +21,7 @@ export default function Home() {
       <CustomFitSection />
       <RoznorodnaKolorystykaSection />
       <GlebokaStrukturaKomorekSection />
-      <PopularProductsSection />
+      {/* PopularProductsSection — tymczasowo ukryte */}
       <CustomerReviews />
       <FAQSection />
     </div>

@@ -6,6 +6,7 @@ import BrandsScrollingCarousel from "@/components/brands/BrandsScrollingCarousel
 import { Brand } from "@/entities/car"
 import { Loader2, Search } from "lucide-react"
 import { useBrands } from "@/features/brands/hooks/useBrands"
+import { sortBrandsByPopularity } from "@/shared/brands/brandPopularity"
 
 export default function ProductSelection() {
   const router = useRouter()
@@ -24,6 +25,8 @@ export default function ProductSelection() {
       const isExcluded = ['asia', 'bestune'].includes(brand.name.toLowerCase());
       return isImage && !isExcluded;
     });
+
+    result = sortBrandsByPopularity(result)
 
     if (!search.trim()) return result;
     const term = search.toLowerCase().trim();
