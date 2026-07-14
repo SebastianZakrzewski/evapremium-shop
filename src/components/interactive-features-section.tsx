@@ -9,28 +9,28 @@ const features = [
     id: "ochrona",
     title: "Doskonała ochrona",
     description: "Ranty 3D o wysokości do 8 cm skutecznie chronią przed wnikaniem brudu, wilgoci i zanieczyszczeń pod dywanik, zapewniając długotrwałą ochronę podłogi Twojego samochodu.",
-    position: { top: "25%", left: "20%" },
+    position: { top: "25%", left: "80%" },
     image: "/7.webp"
   },
   {
     id: "jezor",
     title: "3D Jęzor",
     description: "Jęzor 3D pod pedałami gazu jest zintegrowany z dywanikiem, nie przesuwa się i skutecznie chroni wykładzinę w miejscu najbardziej narażonym na zużycie.",
-    position: { top: "12%", left: "65%" },
+    position: { top: "14%", left: "20%" },
     image: "/images/zalety/3d-jezor-detail.png"
   },
   {
     id: "bezpieczenstwo",
     title: "Bezpieczeństwo",
     description: "Specjalne antypoślizgowe właściwości dywaników 3D zapewniają maksymalne bezpieczeństwo podczas jazdy. Materiał EVA o wysokiej gęstości zapobiega przesuwaniu się dywaników.",
-    position: { top: "45%", left: "35%" },
+    position: { top: "60%", left: "65%" },
     image: "/1.webp"
   },
   {
     id: "czyszczenie",
     title: "Łatwość czyszczenia",
     description: "Głęboka struktura komórek 3D ułatwia szybkie i skuteczne czyszczenie dywaników. Brud i zanieczyszczenia nie wnikają głęboko w materiał, co pozwala na łatwe usunięcie ich za pomocą wody.",
-    position: { top: "60%", left: "65%" },
+    position: { top: "45%", left: "35%" },
     image: "/komorki.png"
   },
   {
