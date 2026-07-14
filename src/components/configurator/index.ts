@@ -5,6 +5,9 @@ export { default as CarMatPreview } from './CarMatPreview';
 // Re-export configurator-simple components
 export * from './configurator-simple/ConfiguratorSimple';
 
+// Configurator V2 (Tesla-inspired layout)
+export * from './configurator-v2';
+
 
 
 

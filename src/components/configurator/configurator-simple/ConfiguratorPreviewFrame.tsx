@@ -15,6 +15,8 @@ export type ConfiguratorPreviewFrameProps = {
   onZoomClick?: (e: MouseEvent<HTMLButtonElement>) => void
   overlayFooter?: ReactNode
   className?: string
+  /** Wypełnia dostępną wysokość (konfigurator V2 / Tesla-style) zamiast sztywnego aspect ratio */
+  fillHeight?: boolean
 }
 
 export const ConfiguratorPreviewFrame = ({
@@ -27,6 +29,7 @@ export const ConfiguratorPreviewFrame = ({
   onZoomClick,
   overlayFooter,
   className = "",
+  fillHeight = false,
 }: ConfiguratorPreviewFrameProps) => {
   const isInteractive = !!onOpen
 
@@ -49,30 +52,40 @@ export const ConfiguratorPreviewFrame = ({
 
   const imageClassName =
     imageFit === "contain"
-      ? "object-contain w-full h-full max-w-full max-h-full"
-      : "object-cover transition-transform duration-700 group-hover:scale-105"
+      ? fillHeight
+        ? "object-contain w-full h-full"
+        : "object-contain w-full h-full max-w-full max-h-full"
+      : "object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
 
   return (
     <div
-      className={`relative group bg-[#111] rounded-2xl p-1 border border-white/10 shadow-2xl transition-all duration-500 hover:shadow-red-900/10 ${
-        isInteractive ? "cursor-pointer" : ""
-      } ${className}`.trim()}
+      className={`relative group transition-all duration-500 ${
+        fillHeight
+          ? "h-full w-full min-h-0 flex flex-col bg-[#111]"
+          : "bg-[#111] rounded-2xl p-1 border border-white/10 shadow-2xl hover:shadow-red-900/10"
+      } ${isInteractive ? "cursor-pointer" : ""} ${className}`.trim()}
       onClick={onOpen}
       onKeyDown={handleShellKeyDown}
       role={isInteractive ? "button" : undefined}
       tabIndex={isInteractive ? 0 : undefined}
       aria-label={isInteractive ? `Powiększ: ${alt}` : undefined}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-2xl pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
 
-      <div className="relative aspect-[4/5] bg-black/50 rounded-xl overflow-hidden">
+      <div
+        className={
+          fillHeight
+            ? "relative flex-1 min-h-0 w-full h-full bg-[#111] overflow-hidden"
+            : "relative aspect-[4/5] bg-black/50 rounded-xl overflow-hidden"
+        }
+      >
         <Image
           key={imageKey}
           src={imageSrc}
           alt={alt}
           fill
           className={imageClassName}
-          sizes="(max-width: 1024px) 100vw, 360px"
+          sizes={fillHeight ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 1024px) 100vw, 360px"}
           priority={priority}
         />
 

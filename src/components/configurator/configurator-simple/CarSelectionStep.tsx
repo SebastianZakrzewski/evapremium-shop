@@ -9,6 +9,7 @@ type CarSelectionStepProps = {
   config: ConfiguratorState
   onUpdate: (updates: Partial<ConfiguratorState>) => void
   onNext: () => void
+  hideNextButton?: boolean
 }
 
 const selectClassName =
@@ -24,6 +25,7 @@ export const CarSelectionStep = ({
   config,
   onUpdate,
   onNext,
+  hideNextButton = false,
 }: CarSelectionStepProps) => {
   const { brands, models, templates, isLoading, error } = useVehicleCatalog(
     config.brandKey,
@@ -265,14 +267,16 @@ export const CarSelectionStep = ({
         </p>
       )}
 
-      <Button
-        type="button"
-        onClick={onNext}
-        disabled={!isComplete}
-        className="w-full bg-red-600 hover:bg-red-700 disabled:opacity-50"
-      >
-        Dalej
-      </Button>
+      {!hideNextButton && (
+        <Button
+          type="button"
+          onClick={onNext}
+          disabled={!isComplete}
+          className="w-full bg-red-600 hover:bg-red-700 disabled:opacity-50"
+        >
+          Dalej
+        </Button>
+      )}
     </div>
   )
 }

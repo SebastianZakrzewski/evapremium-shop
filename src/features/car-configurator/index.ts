@@ -23,3 +23,11 @@ export type { UseConfiguratorCarDataReturn, UseConfiguratorCarDataParams } from 
 
 // Domain
 export * from "./domain/pricing";
+
+// V2 adapters
+export { mapConfiguratorV2Sections } from "./adapters/configuratorV2SectionMapper";
+export type {
+  ConfiguratorV2SectionId,
+  ConfiguratorV2Metric,
+  SectionReadiness,
+} from "./adapters/configuratorV2SectionMapper";

@@ -1,0 +1,5 @@
+export { default as ConfiguratorV2 } from "./ConfiguratorV2"
+export { ConfiguratorV2Layout } from "./ConfiguratorV2Layout"
+export { ConfiguratorV2SpecsBar } from "./ConfiguratorV2SpecsBar"
+export { ConfiguratorV2PreviewPanel } from "./ConfiguratorV2PreviewPanel"
+export { ConfiguratorV2StickyBar } from "./sticky/ConfiguratorV2StickyBar"

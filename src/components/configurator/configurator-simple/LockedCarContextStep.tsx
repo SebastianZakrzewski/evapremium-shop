@@ -34,6 +34,7 @@ type LockedCarContextStepProps = {
   productEntry: ProductEntryLock
   onUpdate: (updates: Partial<ConfiguratorState>) => void
   onNext: () => void
+  hideNextButton?: boolean
 }
 
 const selectClassName =
@@ -53,6 +54,7 @@ export const LockedCarContextStep = ({
   productEntry,
   onUpdate,
   onNext,
+  hideNextButton = false,
 }: LockedCarContextStepProps) => {
   const { brands } = useBrands()
   const provisionalBrandKey =
@@ -504,19 +506,23 @@ export const LockedCarContextStep = ({
         </div>
       )}
 
-      <div className="flex flex-col items-end gap-2 pt-2">
-        {hintMessage && (
-          <p className="text-xs text-gray-400 text-right">{hintMessage}</p>
-        )}
-        <Button
-          type="button"
-          onClick={onNext}
-          disabled={!isStepComplete || isLoading}
-          className="w-full sm:w-auto px-6 py-3 min-h-[44px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
-        >
-          Dalej
-        </Button>
-      </div>
+      {(hintMessage || !hideNextButton) && (
+        <div className="flex flex-col items-end gap-2 pt-2">
+          {hintMessage && (
+            <p className="text-xs text-gray-400 text-right">{hintMessage}</p>
+          )}
+          {!hideNextButton && (
+            <Button
+              type="button"
+              onClick={onNext}
+              disabled={!isStepComplete || isLoading}
+              className="w-full sm:w-auto px-6 py-3 min-h-[44px] bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+            >
+              Dalej
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   )
 }
