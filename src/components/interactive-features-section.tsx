@@ -49,56 +49,109 @@ const features = [
   },
 ];
 
+const CONTENT_TRANSITION_MS = 180
+const TEXT_TRANSITION_MS = 120
+
 export default function InteractiveFeaturesSection() {
-  // Domyślnie wybrana pierwsza cecha
-  const [activeFeature, setActiveFeature] = useState<string>(features[0].id);
-  const [displayedFeature, setDisplayedFeature] = useState(features[0]);
-  const [isFading, setIsFading] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const detailsRef = useRef<HTMLDivElement>(null);
+  const [activeFeature, setActiveFeature] = useState<string>(features[0].id)
+  const [displayedImageFeature, setDisplayedImageFeature] = useState(features[0])
+  const [displayedTextFeature, setDisplayedTextFeature] = useState(features[0])
+  const [outgoingFeature, setOutgoingFeature] = useState<typeof features[0] | null>(null)
+  const [isImageTransitioning, setIsImageTransitioning] = useState(false)
+  const [isTextVisible, setIsTextVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
+  const [hasEntranceCompleted, setHasEntranceCompleted] = useState(false)
+  const detailsRef = useRef<HTMLDivElement>(null)
+  const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const textTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleFeatureClick = (id: string) => {
-    if (id === activeFeature) return; // Ignoruj kliknięcie w już aktywną cechę
-    
-    setActiveFeature(id);
-    setIsFading(true); // Rozpocznij zanikanie
-    
-    // Po zakończeniu zanikania (300ms), zmień dane i pokaż ponownie
-    setTimeout(() => {
-      const newFeature = features.find(f => f.id === id) || features[0];
-      setDisplayedFeature(newFeature);
-      setIsFading(false);
-    }, 300);
-    
-    // Automatyczne przewijanie na urządzeniach mobilnych
-    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      setTimeout(() => {
-        if (detailsRef.current) {
-          const yOffset = -100; // Margines od góry (np. na sticky navbar)
-          const y = detailsRef.current.getBoundingClientRect().top + window.scrollY + yOffset;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        }
-      }, 350); // Przewijamy po zakończeniu animacji fade
+    if (id === activeFeature) return
+
+    const newFeature = features.find((feature) => feature.id === id) || features[0]
+
+    setActiveFeature(id)
+    setOutgoingFeature(displayedImageFeature)
+    setDisplayedImageFeature(newFeature)
+    setIsImageTransitioning(false)
+    setIsTextVisible(false)
+
+    if (transitionTimeoutRef.current) {
+      clearTimeout(transitionTimeoutRef.current)
     }
-  };
+
+    if (textTimeoutRef.current) {
+      clearTimeout(textTimeoutRef.current)
+    }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setIsImageTransitioning(true)
+      })
+    })
+
+    transitionTimeoutRef.current = setTimeout(() => {
+      setOutgoingFeature(null)
+      setIsImageTransitioning(false)
+      transitionTimeoutRef.current = null
+    }, CONTENT_TRANSITION_MS)
+
+    textTimeoutRef.current = setTimeout(() => {
+      setDisplayedTextFeature(newFeature)
+      setIsTextVisible(true)
+      textTimeoutRef.current = null
+    }, TEXT_TRANSITION_MS)
+
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      setTimeout(() => {
+        if (!detailsRef.current) return
+
+        const yOffset = -100
+        const y = detailsRef.current.getBoundingClientRect().top + window.scrollY + yOffset
+        window.scrollTo({ top: y, behavior: "smooth" })
+      }, CONTENT_TRANSITION_MS + 40)
+    }
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
+          setIsVisible(true)
         }
       },
       { threshold: 0.1 }
-    );
+    )
 
-    const section = document.getElementById('interactive-features');
+    const section = document.getElementById("interactive-features")
     if (section) {
-      observer.observe(section);
+      observer.observe(section)
     }
 
-    return () => observer.disconnect();
-  }, []);
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (!isVisible || hasEntranceCompleted) return
+
+    const entranceTimeout = setTimeout(() => {
+      setHasEntranceCompleted(true)
+    }, 1200)
+
+    return () => clearTimeout(entranceTimeout)
+  }, [isVisible, hasEntranceCompleted])
+
+  useEffect(() => {
+    return () => {
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current)
+      }
+
+      if (textTimeoutRef.current) {
+        clearTimeout(textTimeoutRef.current)
+      }
+    }
+  }, [])
 
   return (
     <section 
@@ -127,18 +180,33 @@ export default function InteractiveFeaturesSection() {
             <div className="relative group">
               {/* Kontener na zdjęcie */}
               <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
-                <div className={cn("relative rounded-2xl overflow-hidden bg-[#111] flex transition-opacity duration-300 ease-in-out", isFading ? "opacity-0" : "opacity-100")}>
+                <div className="relative rounded-2xl overflow-hidden bg-[#111] flex min-h-[220px] sm:min-h-[280px]">
+                  {outgoingFeature && (
+                    <Image
+                      src={outgoingFeature.image}
+                      alt={outgoingFeature.title}
+                      width={1000}
+                      height={1000}
+                      className={cn(
+                        "absolute inset-0 w-full h-auto transition-opacity duration-200 ease-out",
+                        isImageTransitioning ? "opacity-0" : "opacity-100"
+                      )}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  )}
                   <Image
-                    src={displayedFeature.image}
-                    alt={displayedFeature.title}
+                    src={displayedImageFeature.image}
+                    alt={displayedImageFeature.title}
                     width={1000}
                     height={1000}
-                    className="w-full h-auto"
+                    className={cn(
+                      "relative w-full h-auto transition-opacity duration-200 ease-out",
+                      outgoingFeature && !isImageTransitioning ? "opacity-0" : "opacity-100"
+                    )}
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                  
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
                 </div>
                 
                 {/* Shine Effect */}
@@ -148,12 +216,17 @@ export default function InteractiveFeaturesSection() {
               </div>
               
               {/* Opis pod zdjęciem */}
-              <div className={cn("mt-8 p-6 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 transition-opacity duration-300 ease-in-out", isFading ? "opacity-0" : "opacity-100")}>
+              <div
+                className={cn(
+                  "mt-8 p-6 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 transition-all duration-150 ease-out",
+                  isTextVisible ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
+                )}
+              >
                 <h3 className="text-2xl font-bold text-white mb-4">
-                  {displayedFeature.title}
+                  {displayedTextFeature.title}
                 </h3>
                 <p className="text-gray-400 leading-relaxed">
-                  {displayedFeature.description}
+                  {displayedTextFeature.description}
                 </p>
               </div>
             </div>
@@ -178,15 +251,18 @@ export default function InteractiveFeaturesSection() {
                     key={feature.id}
                     onClick={() => handleFeatureClick(feature.id)}
                     className={cn(
-                      "absolute -translate-x-1/2 -translate-y-1/2 px-4 py-2 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap z-20 shadow-xl border-2",
-                      isActive 
-                        ? "bg-red-600 text-white border-red-500 shadow-[0_0_20px_rgba(220,38,38,0.6)]" 
+                      "absolute -translate-x-1/2 -translate-y-1/2 px-4 py-2 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap z-20 shadow-xl border-2 transition-colors duration-150 ease-out",
+                      isActive
+                        ? "bg-red-600 text-white border-red-500 shadow-[0_0_20px_rgba(220,38,38,0.6)]"
                         : "bg-white/90 text-black border-transparent hover:bg-white"
                     )}
-                    style={{ 
-                      top: feature.position.top, 
+                    style={{
+                      top: feature.position.top,
                       left: feature.position.left,
-                      transitionDelay: isVisible && !isActive ? `${400 + (index * 150)}ms` : '0ms'
+                      transitionDelay:
+                        isVisible && !hasEntranceCompleted && !isActive
+                          ? `${400 + index * 150}ms`
+                          : "0ms",
                     }}
                     aria-label={`Zobacz cechę: ${feature.title}`}
                   >
