@@ -4,6 +4,7 @@ import { ZoomIn } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { KeyboardEvent, MouseEvent } from "react"
 import { ConfiguratorV2CrossfadeImage } from "./ui/ConfiguratorV2CrossfadeImage"
+import { getMatPreviewCanvasClass } from "./matPreviewCanvas"
 
 type ConfiguratorV2PreviewPanelProps = {
   imageSrc: string
@@ -17,6 +18,7 @@ export const ConfiguratorV2PreviewPanel = ({
   onOpenZoom,
 }: ConfiguratorV2PreviewPanelProps) => {
   const isInteractive = !!onOpenZoom
+  const canvasClass = getMatPreviewCanvasClass(imageSrc)
 
   const handleShellKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (!onOpenZoom) return
@@ -44,10 +46,11 @@ export const ConfiguratorV2PreviewPanel = ({
     >
       <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10" />
 
-      <div className="relative flex-1 min-h-0 w-full h-full bg-[#111] overflow-hidden">
+      <div className={`relative flex-1 min-h-0 w-full h-full overflow-hidden ${canvasClass}`}>
         <ConfiguratorV2CrossfadeImage
           imageSrc={imageSrc}
           alt={alt}
+          canvasClassName={canvasClass}
           priority
         />
 

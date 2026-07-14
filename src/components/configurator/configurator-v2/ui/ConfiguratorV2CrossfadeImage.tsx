@@ -6,6 +6,7 @@ type ConfiguratorV2CrossfadeImageProps = {
   imageSrc: string
   alt: string
   className?: string
+  canvasClassName?: string
   priority?: boolean
 }
 
@@ -15,6 +16,7 @@ const imageClassName =
 export const ConfiguratorV2CrossfadeImage = ({
   imageSrc,
   alt,
+  canvasClassName = "bg-[#111]",
   priority = false,
 }: ConfiguratorV2CrossfadeImageProps) => {
   const { front, back, durationMs } = useCrossfadeImageSrc(imageSrc)
@@ -27,7 +29,7 @@ export const ConfiguratorV2CrossfadeImage = ({
   } as const
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#111]">
+    <div className={`absolute inset-0 overflow-hidden ${canvasClassName}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={back.src}

@@ -32,8 +32,7 @@ export const ConfiguratorV2Layout = ({
   >
     {mobilePreview && (
       <div
-        className="lg:hidden fixed top-16 md:top-20 left-0 right-0 z-30
-          bg-black border-b border-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.45)]"
+        className="lg:hidden fixed top-16 md:top-20 left-0 right-0 z-30 border-b border-black/10 shadow-[0_8px_24px_rgba(0,0,0,0.08)]"
       >
         {mobilePreview}
       </div>
