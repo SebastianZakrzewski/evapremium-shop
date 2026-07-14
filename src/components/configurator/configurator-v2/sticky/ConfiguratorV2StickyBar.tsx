@@ -18,6 +18,8 @@ type ConfiguratorV2StickyBarProps = {
   isAddingToCart: boolean
   onAddToCart: () => void
   onPriceClick?: () => void
+  /** desktop: w kolumnie opcji; mobile: fixed na dole ekranu */
+  variant?: "column" | "fixed"
 }
 
 export const ConfiguratorV2StickyBar = ({
@@ -27,13 +29,22 @@ export const ConfiguratorV2StickyBar = ({
   isAddingToCart,
   onAddToCart,
   onPriceClick,
+  variant = "fixed",
 }: ConfiguratorV2StickyBarProps) => {
   const totalWithAccessories = priceBreakdown.totalPrice + accessoryPrice
   const hasPrice = priceBreakdown.totalPrice > 0
 
+  const positionClass =
+    variant === "column"
+      ? "relative"
+      : "fixed bottom-0 left-0 right-0 z-40 pb-safe"
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-black/95 backdrop-blur-xl pb-safe">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <div
+      className={`${positionClass} border-t border-white/10 bg-black/95 backdrop-blur-xl`}
+      data-variant={variant}
+    >
+      <div className="px-4 lg:px-6 xl:px-10 py-3 flex items-center justify-between gap-4">
         <button
           type="button"
           onClick={onPriceClick}
@@ -44,7 +55,7 @@ export const ConfiguratorV2StickyBar = ({
           {hasPrice ? (
             <>
               <div className="flex items-baseline gap-2">
-                <span className="text-xl lg:text-2xl font-bold text-white">
+                <span className="text-xl lg:text-2xl font-bold text-white tabular-nums">
                   {formatPricePln(totalWithAccessories)}
                 </span>
                 {onPriceClick && (
@@ -63,7 +74,9 @@ export const ConfiguratorV2StickyBar = ({
               )}
             </>
           ) : (
-            <span className="text-sm text-gray-400">Wybierz wariant aby zobaczyć cenę</span>
+            <span className="text-sm text-gray-400">
+              Wybierz wariant aby zobaczyć cenę
+            </span>
           )}
         </button>
 
@@ -71,7 +84,7 @@ export const ConfiguratorV2StickyBar = ({
           type="button"
           onClick={onAddToCart}
           disabled={!isReadyForCart || isAddingToCart}
-          className="min-h-[48px] min-w-[140px] lg:min-w-[160px] bg-red-600 hover:bg-red-700 text-white font-semibold shrink-0"
+          className="min-h-[48px] min-w-[140px] lg:min-w-[160px] bg-red-600 hover:bg-red-700 text-white font-semibold shrink-0 rounded-md"
           aria-label="Dodaj do koszyka"
         >
           {isAddingToCart ? (

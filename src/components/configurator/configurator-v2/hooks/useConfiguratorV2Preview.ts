@@ -79,10 +79,11 @@ export const useConfiguratorV2Preview = (
     config.matType === "3d-with-rims" ? RIMS_GALLERY_DEFAULT : CLASSIC_GALLERY_DEFAULT
 
   const hasVehicleOnly = !!(config.brand && config.model) && !config.variant
-  const imageSrc = hasVehicleOnly && matProductImage
-    ? matProductImage
-    : config.variant
-      ? dynamicPreviewPath
+
+  const imageSrc = config.variant
+    ? dynamicPreviewPath
+    : hasVehicleOnly && matProductImage
+      ? matProductImage
       : matProductImage || dynamicPreviewPath
 
   const alt = config.brand && config.model

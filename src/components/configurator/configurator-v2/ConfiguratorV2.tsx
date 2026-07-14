@@ -21,6 +21,7 @@ import { ConfiguratorV2SpecsBar } from "./ConfiguratorV2SpecsBar"
 import { ConfiguratorV2PreviewPanel } from "./ConfiguratorV2PreviewPanel"
 import { ConfiguratorV2MobilePreview } from "./ConfiguratorV2MobilePreview"
 import { useConfiguratorV2Preview } from "./hooks/useConfiguratorV2Preview"
+import { useMatPreviewPreload } from "./hooks/useMatPreviewPreload"
 import { VehicleContextSection } from "./sections/VehicleContextSection"
 import { MatTypeSection } from "./sections/MatTypeSection"
 import { VariantSection } from "./sections/VariantSection"
@@ -149,6 +150,16 @@ export default function ConfiguratorV2() {
 
   const preview = useConfiguratorV2Preview(config, matProductImage)
 
+  useMatPreviewPreload({
+    matType: config.matType,
+    pricingCategoryKey: config.pricingCategoryKey,
+    structure: config.structure,
+    color: config.color,
+    edgeColor: config.edgeColor,
+    variant: config.variant,
+    extraPaths: matProductImage ? [matProductImage] : [],
+  })
+
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false)
   const [isCompareMatTypesOpen, setIsCompareMatTypesOpen] = useState(false)
@@ -260,6 +271,15 @@ export default function ConfiguratorV2() {
     return <ConfiguratorLoader />
   }
 
+  const stickyBarProps = {
+    priceBreakdown,
+    accessoryPrice: selectedPodpietka?.price ?? 0,
+    isReadyForCart: mapperResult.isReadyForCart,
+    isAddingToCart: isAddingToCart || cartLoading,
+    onAddToCart: handleAddToCart,
+    onPriceClick: () => setIsPriceModalOpen(true),
+  }
+
   return (
     <ConfiguratorV2Layout
       specsBar={
@@ -338,15 +358,11 @@ export default function ConfiguratorV2() {
           </div>
         </>
       }
-      stickyBar={
-        <ConfiguratorV2StickyBar
-          priceBreakdown={priceBreakdown}
-          accessoryPrice={selectedPodpietka?.price ?? 0}
-          isReadyForCart={mapperResult.isReadyForCart}
-          isAddingToCart={isAddingToCart || cartLoading}
-          onAddToCart={handleAddToCart}
-          onPriceClick={() => setIsPriceModalOpen(true)}
-        />
+      stickyBarDesktop={
+        <ConfiguratorV2StickyBar {...stickyBarProps} variant="column" />
+      }
+      stickyBarMobile={
+        <ConfiguratorV2StickyBar {...stickyBarProps} variant="fixed" />
       }
       modals={
         <>

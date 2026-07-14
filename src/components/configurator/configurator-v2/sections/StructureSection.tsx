@@ -1,7 +1,7 @@
 "use client"
 
-import Image from "next/image"
 import type { SectionReadiness } from "@/features/car-configurator/adapters/configuratorV2SectionMapper"
+import { ConfiguratorV2ImageOptionCard } from "../ui/ConfiguratorV2ImageOptionCard"
 import { ConfiguratorV2SectionShell } from "./ConfiguratorV2SectionShell"
 
 const structures = [
@@ -29,44 +29,35 @@ export const StructureSection = ({
   config,
   readiness,
   onUpdate,
-}: StructureSectionProps) => (
-  <ConfiguratorV2SectionShell
-    id="section-structure"
-    title="Struktura komórek"
-    subtitle="W zestawie — wybierz wzór powierzchni"
-    readiness={readiness}
-  >
-    <div className="flex gap-4">
-      {structures.map((structure) => {
-        const isSelected = config.structure === structure.id
-        return (
-          <button
+}: StructureSectionProps) => {
+  const selected = structures.find((s) => s.id === config.structure)
+
+  return (
+    <ConfiguratorV2SectionShell
+      id="section-structure"
+      title="Struktura komórek"
+      selectedLabel={selected?.name}
+      included
+      readiness={readiness}
+    >
+      <div
+        className="inline-flex max-w-full flex-wrap items-stretch gap-2 rounded-xl border border-white/8 bg-white/[0.02] p-2"
+        role="group"
+        aria-label="Wybór struktury komórek"
+      >
+        {structures.map((structure) => (
+          <ConfiguratorV2ImageOptionCard
             key={structure.id}
-            type="button"
-            onClick={() => onUpdate({ structure: structure.id })}
-            aria-label={structure.name}
-            aria-pressed={isSelected}
-            className={`flex flex-col items-center gap-2 p-3 rounded-full border-2 transition-all ${
-              isSelected
-                ? "border-red-500 ring-2 ring-red-500/30"
-                : "border-white/20 hover:border-white/40"
-            }`}
-          >
-            <div className="w-14 h-14 rounded-full overflow-hidden bg-white/5">
-              <Image
-                src={structure.image}
-                alt=""
-                width={56}
-                height={56}
-                className="object-cover w-full h-full"
-              />
-            </div>
-            <span className="text-xs text-gray-300 text-center max-w-[80px]">
-              {structure.name}
-            </span>
-          </button>
-        )
-      })}
-    </div>
-  </ConfiguratorV2SectionShell>
-)
+            inline
+            selected={config.structure === structure.id}
+            title={structure.name}
+            description={structure.description}
+            imageSrc={structure.image}
+            imageAlt={structure.name}
+            onSelect={() => onUpdate({ structure: structure.id })}
+          />
+        ))}
+      </div>
+    </ConfiguratorV2SectionShell>
+  )
+}

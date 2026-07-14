@@ -8,28 +8,29 @@ type ConfiguratorV2SpecsBarProps = {
   contextLine?: string
 }
 
+/** Metryki w stylu Tesla — duże liczby, małe etykiety pod spodem */
 export const ConfiguratorV2SpecsBar = ({
   title,
   metrics,
   contextLine,
 }: ConfiguratorV2SpecsBarProps) => (
-  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+  <div className="space-y-3 lg:space-y-4">
     <div>
-      <p className="text-xs uppercase tracking-widest text-red-500 font-semibold mb-0.5">
-        Konfigurator V2
-      </p>
-      <h1 className="text-xl sm:text-2xl font-bold text-white">{title}</h1>
+      <h1 className="text-xl sm:text-2xl lg:text-[1.75rem] font-semibold text-white tracking-tight">
+        {title}
+      </h1>
       {contextLine && (
-        <p className="text-xs text-gray-400 mt-1 truncate max-w-md">{contextLine}</p>
+        <p className="text-xs text-gray-400 mt-1 truncate">{contextLine}</p>
       )}
     </div>
-    <div className="flex gap-6 sm:gap-8">
+
+    <div className="flex flex-wrap gap-x-6 gap-y-2 sm:gap-x-8 sm:gap-y-3 lg:justify-end">
       {metrics.map((metric) => (
-        <div key={metric.label} className="text-center sm:text-right min-w-0">
-          <p className="text-lg sm:text-xl font-semibold text-white truncate">
+        <div key={metric.label} className="min-w-[4rem]">
+          <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-white tabular-nums leading-none">
             {metric.value}
           </p>
-          <p className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide">
+          <p className="text-[10px] sm:text-[11px] text-gray-400 mt-1 leading-tight">
             {metric.label}
           </p>
         </div>

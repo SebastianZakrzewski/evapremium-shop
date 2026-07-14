@@ -75,4 +75,18 @@ describe("ConfiguratorV2StickyBar", () => {
 
     expect(screen.getByText(/Rabat: -51,00 zł/)).toBeInTheDocument()
   })
+
+  it("uses relative positioning for column variant", () => {
+    const { container } = render(
+      <ConfiguratorV2StickyBar
+        priceBreakdown={baseBreakdown}
+        isReadyForCart
+        isAddingToCart={false}
+        onAddToCart={vi.fn()}
+        variant="column"
+      />,
+    )
+
+    expect(container.firstChild).toHaveAttribute("data-variant", "column")
+  })
 })

@@ -25,7 +25,6 @@ export const VehicleContextSection = ({
   <ConfiguratorV2SectionShell
     id="section-vehicle"
     title={productEntry.isLocked ? "Twój samochód" : "Wybór samochodu"}
-    subtitle="Dopasuj dywaniki do modelu i roku produkcji"
     readiness={readiness}
   >
     {productEntry.isLocked ? (

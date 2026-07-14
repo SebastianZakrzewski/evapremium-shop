@@ -7,6 +7,7 @@ import {
   getColorInfo,
 } from "@/lib/color-mapping"
 import type { SectionReadiness } from "@/features/car-configurator/adapters/configuratorV2SectionMapper"
+import { TeslaSwatchRow } from "../ui/TeslaSwatchRow"
 import { ConfiguratorV2SectionShell } from "./ConfiguratorV2SectionShell"
 
 type EdgeColorSectionProps = {
@@ -47,35 +48,19 @@ export const EdgeColorSection = ({
     <ConfiguratorV2SectionShell
       id="section-edgeColor"
       title="Kolor obszycia"
-      subtitle={
-        config.edgeColor
-          ? getColorInfo(config.edgeColor).name
-          : "Wnętrze — wybierz kolor obrzeża"
-      }
+      selectedLabel={config.edgeColor ? getColorInfo(config.edgeColor).name : undefined}
+      included
       readiness={readiness}
     >
-      <div className="flex flex-wrap gap-3">
-        {availableEdgeColors.map((colorKey) => {
-          const colorInfo = getColorInfo(colorKey)
-          const isSelected = config.edgeColor === colorKey
-          return (
-            <button
-              key={colorKey}
-              type="button"
-              onClick={() => handleEdgeSelect(colorKey)}
-              aria-label={colorInfo.name}
-              aria-pressed={isSelected}
-              title={colorInfo.name}
-              className={`w-10 h-10 rounded-full border-2 transition-all ${
-                isSelected
-                  ? "border-red-500 ring-2 ring-red-500/40 scale-110"
-                  : "border-white/20 hover:border-white/40"
-              }`}
-              style={{ backgroundColor: colorInfo.color }}
-            />
-          )
-        })}
-      </div>
+      <TeslaSwatchRow
+        items={availableEdgeColors.map((colorKey) => ({
+          id: colorKey,
+          label: getColorInfo(colorKey).name,
+          color: getColorInfo(colorKey).color,
+        }))}
+        selectedId={config.edgeColor}
+        onSelect={handleEdgeSelect}
+      />
     </ConfiguratorV2SectionShell>
   )
 }

@@ -23,7 +23,6 @@ export const AccessoriesSection = ({
   <ConfiguratorV2SectionShell
     id="section-accessories"
     title="Akcesoria"
-    subtitle="Opcjonalne podpiętki i dodatki"
     readiness={readiness}
   >
     <AccessoriesStep
