@@ -54,10 +54,16 @@ export default function Chatbot() {
   }, [messages]);
 
   useEffect(() => {
-    if (isOpen && inputRef.current) {
+    if (isOpen && inputRef.current && !showContactForm) {
       inputRef.current.focus();
     }
-  }, [isOpen]);
+  }, [isOpen, showContactForm]);
+
+  useEffect(() => {
+    if (showContactForm && nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
+  }, [showContactForm]);
 
   // Listen for cart modal state changes
   useEffect(() => {
@@ -148,22 +154,24 @@ export default function Chatbot() {
       timestamp: new Date(),
     };
 
+    const messageText = inputValue.trim();
+
     setMessages((prev) => [...prev, newMessage]);
-    setContactData(prev => ({ ...prev, message: inputValue.trim() }));
+    setContactData(prev => ({ ...prev, message: messageText }));
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate bot response (contact form disabled for now)
     setTimeout(() => {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Dziękuję za wiadomość! Skontaktuję się z Tobą wkrótce.",
+        text: "Dziękuję za wiadomość! Podaj proszę swoje imię i numer telefonu, abyśmy mogli się z Tobą skontaktować.",
         sender: "bot",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, botResponse]);
       setIsTyping(false);
-    }, 1500);
+      setShowContactForm(true);
+    }, 1000);
   };
 
   const formatTime = (date: Date) => {

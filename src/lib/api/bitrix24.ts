@@ -6,12 +6,6 @@
 
 import { apiPost, ApiError } from './client';
 
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
-
 export interface ChatMessageData {
   name: string;
   phone: string;
@@ -28,22 +22,37 @@ export interface ChatResponse {
 /**
  * Send chat message to Bitrix24
  */
+interface ChatApiResponse {
+  success: boolean
+  error?: string
+  message?: string
+  details?: {
+    dealId?: string
+    contactId?: string
+  }
+}
+
 export async function sendChatMessage(data: ChatMessageData): Promise<ChatResponse> {
   try {
-    const response = await apiPost<ApiResponse<ChatResponse>>(
+    const response = await apiPost<ChatApiResponse>(
       '/api/bitrix24/chat',
       data
-    );
+    )
     
     if (!response.success) {
       throw new ApiError(
         response.error || 'Failed to submit contact form',
         400,
         response
-      );
+      )
     }
     
-    return response.data || { success: true };
+    return {
+      success: true,
+      dealId: response.details?.dealId,
+      contactId: response.details?.contactId,
+      message: response.message,
+    }
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;
