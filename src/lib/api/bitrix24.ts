@@ -6,12 +6,6 @@
 
 import { apiPost, ApiError } from './client';
 
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
-
 export interface ChatMessageData {
   name: string;
   phone: string;
@@ -23,6 +17,14 @@ export interface ChatResponse {
   dealId?: string;
   contactId?: string;
   message?: string;
+  details?: {
+    dealId?: string;
+    contactId?: string;
+    contactCreated?: boolean;
+    stageId?: string;
+    categoryId?: number;
+    syncedAt?: string;
+  };
 }
 
 /**
@@ -30,7 +32,7 @@ export interface ChatResponse {
  */
 export async function sendChatMessage(data: ChatMessageData): Promise<ChatResponse> {
   try {
-    const response = await apiPost<ApiResponse<ChatResponse>>(
+    const response = await apiPost<ChatResponse & { error?: string }>(
       '/api/bitrix24/chat',
       data
     );
@@ -43,7 +45,13 @@ export async function sendChatMessage(data: ChatMessageData): Promise<ChatRespon
       );
     }
     
-    return response.data || { success: true };
+    return {
+      success: true,
+      dealId: response.details?.dealId,
+      contactId: response.details?.contactId,
+      message: response.message,
+      details: response.details,
+    };
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;

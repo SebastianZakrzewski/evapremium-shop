@@ -153,16 +153,16 @@ export default function Chatbot() {
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate bot response (contact form disabled for now)
     setTimeout(() => {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Dziękuję za wiadomość! Skontaktuję się z Tobą wkrótce.",
+        text: "Dziękuję za wiadomość! Podaj proszę swoje dane kontaktowe, żebym mogła się z Tobą skontaktować.",
         sender: "bot",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, botResponse]);
       setIsTyping(false);
+      setShowContactForm(true);
     }, 1500);
   };
 
