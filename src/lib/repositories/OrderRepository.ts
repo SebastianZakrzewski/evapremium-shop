@@ -1,12 +1,15 @@
-import { BaseRepository } from './BaseRepository';
-import { Order, OrderStatus, PaymentStatus } from '../types/order-new';
+import 'server-only'
+
+import { supabaseAdmin } from '@/lib/database/supabase'
+import { BaseRepository } from './BaseRepository'
+import { Order, OrderStatus, PaymentStatus } from '../types/order-new'
 
 export class OrderRepository extends BaseRepository<Order> {
-  protected tableName = 'orders';
+  protected tableName = 'orders'
 
-  // Publiczny getter do supabase dla OrderService
+  // Server-side only: orders must not use the public anon key.
   get supabase() {
-    return super.supabase;
+    return supabaseAdmin
   }
 
   // Mapuj dane z bazy (snake_case) na camelCase dla order_item

@@ -2,6 +2,8 @@ import { MatRepository } from '../repositories/MatRepository';
 import { PricingService } from './PricingService';
 import { Mat, MatConfiguration, MatFilters, CreateMatDTO, UpdateMatDTO } from '@/entities/product';
 
+import 'server-only'
+
 export class MatService {
   private repository: MatRepository;
   private pricingService: PricingService;

@@ -26,7 +26,6 @@ import {
 } from "@/features/car-configurator/domain/pricing";
 import { ConfiguratorService } from "@/lib/services/ConfiguratorService";
 import { PricingService } from "@/lib/services/PricingService";
-import { MatService } from "@/lib/services/MatService";
 import { ConfigurationData } from "@/entities/product";
 import type { AddToCartDTO } from "@/lib/types/cart-new";
 import { debugLog } from "@/lib/config/features";
@@ -123,7 +122,30 @@ export default function Configurator() {
   const generationParam = searchParams.get('generation');
   const { addToCart, isLoading: cartLoading, error: cartError } = useCart();
   const { trackViewContent, createViewContentData: createViewContent } = useTracking();
-  const matService = new MatService();
+  
+  const findMatForCar = async (params: {
+    brandSlug: string
+    modelSlug: string
+    generation?: string | null
+    bodyType?: string | null
+  }) => {
+    const response = await fetch('/api/mats/find', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    })
+
+    if (response.status === 404) {
+      return null
+    }
+
+    const json = await response.json()
+    if (!response.ok || !json.success) {
+      throw new Error(json.error || 'Failed to find mat')
+    }
+
+    return json.data
+  }
   
   // Pobierz marki używając hooka useBrands
   const { brands, isLoading: brandsLoading } = useBrands();
@@ -418,7 +440,7 @@ export default function Configurator() {
         if (selectedBodyType) {
           // Jeśli wybrano typ nadwozia, spróbuj znaleźć dla konkretnej kombinacji
           try {
-            availableMat = await matService.findMatForCar({
+            availableMat = await findMatForCar({
               brandSlug: selectedCarBrand.toLowerCase().replace(/\s+/g, '-'),
               modelSlug: selectedCarModel.toLowerCase().replace(/\s+/g, '-'),
               generation: selectedCarYear,

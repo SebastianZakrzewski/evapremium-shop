@@ -1,5 +1,5 @@
 import { getCookie, setCookie, deleteCookie } from 'cookies-next';
-import { env } from '@/config/env';
+import { clientEnv } from '@/config/env.client';
 
 export interface SessionData {
   sessionId: string;
@@ -79,7 +79,7 @@ export class HybridSessionManager {
     setCookie(this.SESSION_COOKIE_NAME, sessionId, {
       maxAge: this.SESSION_EXPIRY_DAYS * 24 * 60 * 60,
       httpOnly: false,
-      secure: Boolean(env.nodeEnv === 'production'),
+      secure: Boolean(clientEnv.nodeEnv === 'production'),
       sameSite: 'lax',
       path: '/'
     });
@@ -337,7 +337,7 @@ export class HybridSessionManager {
    * Debugowanie sesji (tylko development)
    */
   static debugSession(sessionId: string): void {
-    if (env.nodeEnv === 'development') {
+    if (clientEnv.nodeEnv === 'development') {
       console.log('🆔 Session ID:', sessionId);
       console.log('💾 LocalStorage config:', localStorage.getItem(`config-${sessionId}`));
       console.log('💾 LocalStorage order:', localStorage.getItem(`order-${sessionId}`));

@@ -4,7 +4,7 @@
  * Kontroluje włączanie/wyłączanie nowych funkcjonalności.
  * Pozwala na stopniowe wdrażanie zmian i łatwe cofnięcie w razie problemów.
  */
-import { env } from '@/config/env';
+import { clientEnv } from '@/config/env.client';
 
 export const FEATURES = {
   /**
@@ -47,13 +47,13 @@ export const FEATURES = {
    * Katalog pojazdów i cennik oparte o mat_templates (zamiast car_models_extended)
    * @default true — wyłącz ustawiając NEXT_PUBLIC_MAT_TEMPLATES_CATALOG_ENABLED=false
    */
-  MAT_TEMPLATES_CATALOG_ENABLED: env.features.matTemplatesCatalogEnabled,
+  MAT_TEMPLATES_CATALOG_ENABLED: clientEnv.features.matTemplatesCatalogEnabled,
 
   /**
    * Tryb debug - dodatkowe logi w konsoli
    * @default true w development
    */
-  DEBUG_MODE: env.nodeEnv === 'development',
+  DEBUG_MODE: clientEnv.nodeEnv === 'development',
 } as const;
 
 /**
