@@ -2,21 +2,17 @@ import { fetchAccessoryById } from '@/features/accessories/api/accessoriesClient
 import { PricingService } from './PricingService'
 import { CartItem, Cart, AddToCartDTO } from '../types/cart-new'
 import { MatConfigurationSchema } from '@/features/vehicle-catalog/model/matConfiguration'
+import type { Accessory } from '@/lib/types'
 
-const resolveAccessoryById = async (id: string) => {
-  if (typeof window !== 'undefined') {
-    return fetchAccessoryById(id)
-  }
-
-  const { AccessoryService } = await import('./AccessoryService')
-  return new AccessoryService().getAccessoryById(id)
-}
+type AccessoryResolver = (id: string) => Promise<Accessory | null>
 
 export class CartService {
   private pricingService: PricingService
+  private resolveAccessoryById: AccessoryResolver
 
-  constructor() {
+  constructor(resolveAccessoryById: AccessoryResolver = fetchAccessoryById) {
     this.pricingService = new PricingService()
+    this.resolveAccessoryById = resolveAccessoryById
   }
 
   async addToCart(cart: Cart, item: AddToCartDTO): Promise<Cart> {
@@ -87,7 +83,7 @@ export class CartService {
 
   private async validateCartItem(item: AddToCartDTO): Promise<void> {
     if (item.productType === 'accessory') {
-      const accessory = await resolveAccessoryById(item.productId)
+      const accessory = await this.resolveAccessoryById(item.productId)
 
       if (!accessory) {
         throw new Error('Accessory not found')
@@ -117,7 +113,7 @@ export class CartService {
     let unitPrice = 0
 
     if (item.productType === 'accessory') {
-      const accessory = await resolveAccessoryById(item.productId)
+      const accessory = await this.resolveAccessoryById(item.productId)
       if (!accessory) {
         throw new Error('Accessory not found')
       }

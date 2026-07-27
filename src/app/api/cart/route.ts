@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CartService } from '@/lib/services/CartService';
+import { AccessoryService } from '@/lib/services/AccessoryService';
 import { Cart, AddToCartDTO } from '@/lib/types/cart-new';
 import { revalidateMatItemPrice } from '@/features/vehicle-catalog/server/matCartValidation';
 
-const cartService = new CartService();
+const accessoryService = new AccessoryService();
+const cartService = new CartService((id) => accessoryService.getAccessoryById(id));
 
 const revalidateMatCartItem = async (item: AddToCartDTO): Promise<AddToCartDTO> => {
   if (item.productType !== 'mat') return item
