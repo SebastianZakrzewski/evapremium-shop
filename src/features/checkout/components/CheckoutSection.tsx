@@ -41,6 +41,10 @@ import { useTracking, createInitiateCheckoutData } from '@/lib/tracking';
 import { motion } from 'framer-motion';
 import { getColorInfo } from '@/lib/color-mapping';
 import { paymentsApi } from '@/lib/api';
+import {
+  isPaynowCheckoutEnabled,
+  getClientPaymentProviderLabel,
+} from '@/lib/config/payment-provider';
 import type { MatConfiguration } from '@/features/vehicle-catalog/model/matConfiguration';
 import {
   getMatConfigurationLabelContext,
@@ -82,8 +86,8 @@ const checkoutSchema = z.object({
       return cleaned && cleaned.length === 10 ? cleaned : undefined;
     }),
   
-  // Metoda płatności - tylko Przelewy24
-  paymentMethod: z.literal("p24", {
+  // Metoda płatności
+  paymentMethod: z.enum(['p24', 'paynow'], {
     required_error: "Wybierz metodę płatności"
   }),
   
@@ -112,6 +116,9 @@ type CheckoutFormData = z.infer<typeof checkoutSchema>;
  */
 export default function CheckoutSection() {
   const router = useRouter();
+  const paynowCheckoutEnabled = isPaynowCheckoutEnabled();
+  const checkoutPaymentMethod = paynowCheckoutEnabled ? 'paynow' : 'p24';
+  const checkoutPaymentLabel = getClientPaymentProviderLabel();
   const { items, cart, total, itemCount, clearCart, refreshCart } = useCart();
   const { createOrder, saveOrder, isLoading: orderLoading, error: orderError } = useOrder();
   const { trackInitiateCheckout, trackAddPaymentInfo, createInitiateCheckoutData: createInitiateCheckout } = useTracking();
@@ -291,7 +298,7 @@ export default function CheckoutSection() {
     defaultValues: {
       country: "Polska",
       sameAsShipping: true,
-      paymentMethod: "p24",
+      paymentMethod: checkoutPaymentMethod,
       termsAccepted: false,
       marketingAccepted: false,
     }
@@ -747,6 +754,30 @@ export default function CheckoutSection() {
       console.log('🔄 Order created successfully:', order.id);
 
       // Sprawdź metodę płatności
+      if (data.paymentMethod === 'paynow') {
+        try {
+          console.log('🔄 Starting Paynow payment registration via API endpoint...');
+          const result = await paymentsApi.registerPaynowPayment(order.id);
+
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem('pending_order_id', order.id);
+          }
+
+          clearCart();
+
+          if (result.paymentUrl) {
+            window.location.href = result.paymentUrl;
+          } else {
+            throw new Error('Brak URL płatności w odpowiedzi');
+          }
+          return;
+        } catch (error) {
+          console.error('❌ Paynow payment error:', error);
+          setErrorMessage(`Błąd płatności: ${error instanceof Error ? error.message : 'Nieznany błąd'}`);
+          return;
+        }
+      }
+
       if (data.paymentMethod === 'p24') {
         try {
           console.log('🔄 Starting P24 payment registration via API endpoint...');
@@ -1197,53 +1228,55 @@ export default function CheckoutSection() {
                   </CardHeader>
                   <CardContent className="space-y-6 md:space-y-8 px-4 md:px-8 pb-6 md:pb-8">
                     <div className="space-y-4">
-                      <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 md:p-6 rounded-lg border transition-all duration-300 cursor-pointer border-red-500 bg-red-900/30`}
-                      onClick={() => setValue("paymentMethod", "p24")}>
-                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center border-red-500 bg-red-500 flex-shrink-0`}>
+                      <div
+                        className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 md:p-6 rounded-lg border transition-all duration-300 cursor-pointer border-red-500 bg-red-900/30"
+                        onClick={() => setValue("paymentMethod", checkoutPaymentMethod)}
+                      >
+                        <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center border-red-500 bg-red-500 flex-shrink-0">
                           <div className="w-2 h-2 bg-white rounded-full"></div>
                         </div>
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 flex-1 cursor-pointer w-full">
-                          <CreditCard className={`w-5 h-5 md:w-6 md:h-6 text-red-400 flex-shrink-0`} />
+                          <CreditCard className="w-5 h-5 md:w-6 md:h-6 text-red-400 flex-shrink-0" />
                           <div className="flex-1 min-w-0 w-full">
-                            <div className={`font-medium text-base text-white mb-1`}>
-                              Przelewy24
+                            <div className="font-medium text-base text-white mb-1">
+                              {checkoutPaymentLabel}
                             </div>
-                            <div className={`text-xs md:text-sm text-gray-400 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-2`}>
+                            <div className="text-xs md:text-sm text-gray-400 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-2">
                               <span className="whitespace-normal">Karty, BLIK, przelewy, Apple Pay, Google Pay</span>
                               <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                                <Image 
-                                  src="/formy_platnosci/visa.png" 
-                                  alt="Visa" 
-                                  width={32} 
-                                  height={20} 
+                                <Image
+                                  src="/formy_platnosci/visa.png"
+                                  alt="Visa"
+                                  width={32}
+                                  height={20}
                                   className="object-contain md:w-10 md:h-[26px]"
                                 />
-                                <Image 
-                                  src="/formy_platnosci/mastercard.png" 
-                                  alt="Mastercard" 
-                                  width={32} 
-                                  height={20} 
+                                <Image
+                                  src="/formy_platnosci/mastercard.png"
+                                  alt="Mastercard"
+                                  width={32}
+                                  height={20}
                                   className="object-contain md:w-10 md:h-[26px]"
                                 />
-                                <Image 
-                                  src="/formy_platnosci/blik.png" 
-                                  alt="BLIK" 
-                                  width={32} 
-                                  height={20} 
+                                <Image
+                                  src="/formy_platnosci/blik.png"
+                                  alt="BLIK"
+                                  width={32}
+                                  height={20}
                                   className="object-contain md:w-10 md:h-[26px]"
                                 />
-                                <Image 
-                                  src="/formy_platnosci/apple.jpg" 
-                                  alt="Apple Pay" 
-                                  width={32} 
-                                  height={20} 
+                                <Image
+                                  src="/formy_platnosci/apple.jpg"
+                                  alt="Apple Pay"
+                                  width={32}
+                                  height={20}
                                   className="object-contain md:w-10 md:h-[26px]"
                                 />
-                                <Image 
-                                  src="/formy_platnosci/google.png" 
-                                  alt="Google Pay" 
-                                  width={32} 
-                                  height={20} 
+                                <Image
+                                  src="/formy_platnosci/google.png"
+                                  alt="Google Pay"
+                                  width={32}
+                                  height={20}
                                   className="object-contain md:w-10 md:h-[26px]"
                                 />
                               </div>
@@ -1252,7 +1285,6 @@ export default function CheckoutSection() {
                           <Check className="w-5 h-5 text-red-400 flex-shrink-0 sm:ml-auto" />
                         </div>
                       </div>
-                      
                     </div>
 
                     {errors.paymentMethod && (
