@@ -3,6 +3,7 @@
 
 // Tymczasowo importujemy z oryginalnych lokalizacji, aby zachować kompatybilność
 export { default as Configurator } from '../../components/configurator/Configurator';
+export { default as ConfiguratorV2 } from '../../components/configurator/configurator-v2/ConfiguratorV2';
 export { default as CarMatPreview } from '../../components/configurator/CarMatPreview';
 
 // Services (tymczasowo z oryginalnych lokalizacji)

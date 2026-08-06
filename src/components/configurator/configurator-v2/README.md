@@ -4,8 +4,9 @@ Layout inspirowany UX konfiguratora Tesli, z logiką biznesową EvaPremium (dywa
 
 ## Trasa
 
-- **Testowa:** `/konfigurator-v2` (`noindex`)
-- **Produkcja (V1):** `/konfigurator` — bez zmian
+- **Produkcja:** `/konfigurator` (ConfiguratorV2)
+- **Legacy redirect:** `/konfigurator-v2` → `/konfigurator`
+- **Legacy (V1):** `/konfigurator-simple` — poprzedni konfigurator krokowy
 
 ## Użycie
 
@@ -20,7 +21,7 @@ export default function Page() {
 Wejście z produktu (zablokowany pojazd):
 
 ```
-/konfigurator-v2?brand=audi&model=A4
+/konfigurator?brand=audi&model=A4
 ```
 
 ## Architektura
