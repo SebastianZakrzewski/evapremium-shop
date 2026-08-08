@@ -35,6 +35,7 @@ export type ConfiguratorV2PreviewState = {
   activeGalleryId: string | null
   showGallery: boolean
   showEmptyInCarSlot: boolean
+  usesMatPreviewCanvas: boolean
   lightboxImages: string[]
   lightboxIndex: number
   selectGalleryItem: (id: string) => void
@@ -216,11 +217,9 @@ export const useConfiguratorV2Preview = (
     productEntry.previewImageParam,
     config.variant,
     config.structure,
-    config.color,
-    config.edgeColor,
     config.matType,
-    dynamicPreviewPath,
     modelTemplateUrl,
+    hasDynamicMatPreview,
   ].join("|")
 
   useEffect(() => {
@@ -230,7 +229,10 @@ export const useConfiguratorV2Preview = (
   const activeGalleryItem =
     galleryItems.find((item) => item.id === activeGalleryId) ?? galleryItems[0]
 
-  const imageSrc = activeGalleryItem?.imageUrl ?? autoImageSrc
+  const imageSrc =
+    activeGalleryItem?.kind === "dynamic"
+      ? dynamicPreviewPath
+      : activeGalleryItem?.imageUrl ?? autoImageSrc
   const hasInCarPhotos = galleryItems.some((item) => item.kind === "in-car-photo")
   const showEmptyInCarSlot = isVehiclePreviewReady && !hasInCarPhotos
   const showGallery =
@@ -253,6 +255,7 @@ export const useConfiguratorV2Preview = (
     activeGalleryId: activeGalleryItem?.id ?? null,
     showGallery,
     showEmptyInCarSlot,
+    usesMatPreviewCanvas: hasDynamicMatPreview,
     lightboxImages,
     lightboxIndex,
     selectGalleryItem: setActiveGalleryId,

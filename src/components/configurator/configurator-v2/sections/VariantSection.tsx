@@ -5,6 +5,8 @@ import type { SectionReadiness } from "@/features/car-configurator/adapters/conf
 import { getVariantPresentation } from "@/components/configurator/configurator-simple/variantPresentation"
 import { ConfiguratorV2ImageOptionCard, CONFIGURATOR_V2_IMAGE_CARD_MIN_WIDTH } from "../ui/ConfiguratorV2ImageOptionCard"
 import { ConfiguratorV2SectionShell } from "./ConfiguratorV2SectionShell"
+import { VariantTunnelBonusNotice } from "../variant/VariantTunnelBonusNotice"
+import { shouldShowVariantTunnelBonus } from "../variant/variantTunnelBonus"
 
 const compareLinkClass =
   "text-xs text-gray-400 hover:text-white underline-offset-2 hover:underline whitespace-nowrap transition-colors"
@@ -32,6 +34,7 @@ export const VariantSection = ({
   const selectedPresentation = selectedVariant
     ? getVariantPresentation(selectedVariant.key, pricingCategoryKey, bodyTypeKey)
     : null
+  const showTunnelBonus = shouldShowVariantTunnelBonus(pricingCategoryKey)
 
   return (
     <ConfiguratorV2SectionShell
@@ -74,6 +77,9 @@ export const VariantSection = ({
           )
         })}
       </div>
+      {showTunnelBonus && pricingVariants.length > 0 && (
+        <VariantTunnelBonusNotice />
+      )}
       {pricingVariants.length === 0 && (
         <p role="status" className="text-sm text-gray-400">
           Wybierz typ dywaników, aby zobaczyć dostępne warianty.

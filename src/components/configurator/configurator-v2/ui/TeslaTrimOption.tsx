@@ -1,11 +1,14 @@
 "use client"
 
 import { formatPricePln } from "@/lib/utils/formatPrice"
+import { MatTypeOptionIcon } from "../mat-type/MatTypeOptionIcon"
 
 type TeslaTrimOptionProps = {
   selected: boolean
   title: string
   subtitle?: string
+  iconSrc?: string
+  iconAlt?: string
   priceAfterDiscount?: number
   onSelect: () => void
 }
@@ -14,6 +17,8 @@ export const TeslaTrimOption = ({
   selected,
   title,
   subtitle,
+  iconSrc,
+  iconAlt = "",
   priceAfterDiscount,
   onSelect,
 }: TeslaTrimOptionProps) => (
@@ -28,7 +33,14 @@ export const TeslaTrimOption = ({
     }`}
   >
     <div className="flex items-start justify-between gap-4">
-      <div className="flex items-start gap-3 min-w-0">
+      <div className="flex min-w-0 items-start gap-3">
+        {iconSrc && (
+          <MatTypeOptionIcon
+            src={iconSrc}
+            alt={iconAlt || title}
+            selected={selected}
+          />
+        )}
         <span
           className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border-2 transition-colors ${
             selected ? "border-red-500 bg-red-500" : "border-white/40 bg-transparent"

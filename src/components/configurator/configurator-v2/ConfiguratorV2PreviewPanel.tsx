@@ -9,16 +9,20 @@ import { getMatPreviewCanvasClass } from "./matPreviewCanvas"
 type ConfiguratorV2PreviewPanelProps = {
   imageSrc: string
   alt: string
+  usesMatPreviewCanvas?: boolean
   onOpenZoom?: () => void
 }
 
 export const ConfiguratorV2PreviewPanel = ({
   imageSrc,
   alt,
+  usesMatPreviewCanvas = false,
   onOpenZoom,
 }: ConfiguratorV2PreviewPanelProps) => {
   const isInteractive = !!onOpenZoom
-  const canvasClass = getMatPreviewCanvasClass(imageSrc)
+  const canvasClass = usesMatPreviewCanvas
+    ? getMatPreviewCanvasClass("/dywaniki/preview.webp")
+    : getMatPreviewCanvasClass(imageSrc)
 
   const handleShellKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (!onOpenZoom) return
@@ -35,7 +39,7 @@ export const ConfiguratorV2PreviewPanel = ({
 
   return (
     <div
-      className={`relative group transition-all duration-500 h-full w-full min-h-0 flex flex-col bg-[#111] rounded-xl border border-white/10 overflow-hidden ${
+      className={`relative group h-full w-full min-h-0 flex flex-col bg-[#111] rounded-xl border border-white/10 overflow-hidden ${
         isInteractive ? "cursor-pointer" : ""
       }`}
       onClick={onOpenZoom}

@@ -11,16 +11,21 @@ import { ConfiguratorV2CrossfadeImage } from "./ui/ConfiguratorV2CrossfadeImage"
 type ConfiguratorV2MobilePreviewProps = {
   imageSrc: string
   alt: string
+  usesMatPreviewCanvas?: boolean
   onOpenZoom?: () => void
 }
 
 export const ConfiguratorV2MobilePreview = ({
   imageSrc,
   alt,
+  usesMatPreviewCanvas = false,
   onOpenZoom,
 }: ConfiguratorV2MobilePreviewProps) => {
-  const canvasClass = getMatPreviewCanvasClass(imageSrc)
-  const scaleClass = imageSrc.startsWith("/dywaniki/")
+  const canvasClass = usesMatPreviewCanvas
+    ? getMatPreviewCanvasClass("/dywaniki/preview.webp")
+    : getMatPreviewCanvasClass(imageSrc)
+  const scaleClass =
+    usesMatPreviewCanvas || imageSrc.startsWith("/dywaniki/")
     ? CONFIGURATOR_V2_MOBILE_MAT_IMAGE_SCALE
     : "scale-100"
 

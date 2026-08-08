@@ -1,5 +1,8 @@
 "use client"
 
+import Image from "next/image"
+import { MATERIAL_COLOR_SWATCH_SIZE } from "../material-color/materialColorPresentation"
+
 type TeslaSwatchItem = {
   id: string
   label: string
@@ -29,17 +32,29 @@ export const TeslaSwatchRow = ({
           aria-label={item.label}
           aria-pressed={isSelected}
           title={item.label}
-          className={`h-11 w-11 rounded-full border-2 transition-all ${
+          className={`h-11 w-11 overflow-hidden rounded-full border-2 transition-all ${
             isSelected
               ? "border-red-500 ring-2 ring-red-500/40 scale-105"
               : "border-white/25 hover:border-white/50"
           }`}
-          style={item.color ? { backgroundColor: item.color } : undefined}
+          style={
+            !item.imageSrc && item.color
+              ? { backgroundColor: item.color }
+              : undefined
+          }
         >
           {item.imageSrc && (
-            <span
-              className="block h-full w-full rounded-full bg-cover bg-center"
-              style={{ backgroundImage: `url(${item.imageSrc})` }}
+            <Image
+              src={item.imageSrc}
+              alt=""
+              aria-hidden
+              width={MATERIAL_COLOR_SWATCH_SIZE}
+              height={MATERIAL_COLOR_SWATCH_SIZE}
+              quality={100}
+              unoptimized
+              sizes="44px"
+              className="h-full w-full object-cover"
+              draggable={false}
             />
           )}
         </button>

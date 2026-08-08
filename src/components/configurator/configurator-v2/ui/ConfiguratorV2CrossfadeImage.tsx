@@ -19,12 +19,13 @@ export const ConfiguratorV2CrossfadeImage = ({
   canvasClassName = "bg-[#111]",
   priority = false,
 }: ConfiguratorV2CrossfadeImageProps) => {
-  const { front, back, durationMs } = useCrossfadeImageSrc(imageSrc)
+  const { layers, durationMs } = useCrossfadeImageSrc(imageSrc)
+  const [baseLayer, topLayer] = layers
 
   const transitionStyle = {
     transitionProperty: "opacity",
     transitionDuration: `${durationMs}ms`,
-    transitionTimingFunction: "ease-in-out",
+    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
     willChange: "opacity",
   } as const
 
@@ -32,23 +33,31 @@ export const ConfiguratorV2CrossfadeImage = ({
     <div className={`absolute inset-0 overflow-hidden ${canvasClassName}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={back.src}
+        src={baseLayer.src}
         alt=""
         aria-hidden
         decoding="async"
         draggable={false}
         className={imageClassName}
-        style={{ ...transitionStyle, opacity: back.opacity, zIndex: 1 }}
+        style={{
+          ...transitionStyle,
+          opacity: baseLayer.opacity,
+          zIndex: baseLayer.zIndex,
+        }}
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={front.src}
+        src={topLayer.src}
         alt={alt}
         decoding={priority ? "sync" : "async"}
         loading={priority ? "eager" : "lazy"}
         draggable={false}
         className={imageClassName}
-        style={{ ...transitionStyle, opacity: front.opacity, zIndex: 2 }}
+        style={{
+          ...transitionStyle,
+          opacity: topLayer.opacity,
+          zIndex: topLayer.zIndex,
+        }}
       />
     </div>
   )

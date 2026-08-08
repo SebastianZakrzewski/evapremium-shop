@@ -12,8 +12,9 @@ import {
 } from "@/shared/mat-set-labels";
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState";
 import { useAccessories } from "@/features/accessories/hooks/useAccessories";
+import { resolveConfiguratorBrandImage } from "@/features/car-configurator/utils/resolveConfiguratorBrandImage";
+import { shouldServeBrandImageUnoptimized } from "@/shared/brands";
 import { Plus, CheckCircle2, ShoppingCart } from "lucide-react";
-import { Brand } from "@/entities/car";
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
 
 interface SummaryStepProps {
@@ -34,8 +35,6 @@ const structureNames: Record<string, string> = {
   honey: "Plaster miodu",
 };
 
-import { useBrands } from "@/features/brands/hooks/useBrands";
-
 export function SummaryStep({
   config,
   priceBreakdown,
@@ -45,21 +44,19 @@ export function SummaryStep({
 }: SummaryStepProps) {
   const { accessories } = useAccessories();
   
-  // Pobierz marki używając hooka useBrands
-  const { brands } = useBrands();
-  
-  // Znajdź wybraną podpiętkę
   const selectedPodpietka = useMemo(() => {
     if (!config.selectedPodpietka) return null;
     return accessories.find(acc => acc.id === config.selectedPodpietka) || null;
   }, [accessories, config.selectedPodpietka]);
   
-  // Pobierz logo marki
-  const brandLogo = useMemo(() => {
-    if (!config.brand || !brands.length) return null;
-    const brand = brands.find(b => b.name.toLowerCase() === config.brand.toLowerCase());
-    return brand?.logo || null;
-  }, [config.brand, brands]);
+  const brandLogo = useMemo(
+    () =>
+      resolveConfiguratorBrandImage({
+        brand: config.brand,
+        brandKey: config.brandKey,
+      }),
+    [config.brand, config.brandKey],
+  );
   
   // Generuj miniaturkę dywanika
   const matThumbnail = useMemo(() => {
@@ -133,6 +130,7 @@ export function SummaryStep({
                     fill
                     className="object-contain p-1.5"
                     sizes="56px"
+                    unoptimized={shouldServeBrandImageUnoptimized(brandLogo)}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-red-400">

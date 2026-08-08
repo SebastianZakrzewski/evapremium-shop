@@ -5,7 +5,10 @@ import { buildVehicleDisplayLabels } from "@/shared/vehicle/displayLabels"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Car, CheckCircle2 } from "lucide-react"
-import { useBrands } from "@/features/brands/hooks/useBrands"
+import { resolveConfiguratorBrandImage } from "@/features/car-configurator/utils/resolveConfiguratorBrandImage"
+import {
+  shouldServeBrandImageUnoptimized,
+} from "@/shared/brands"
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
 import type { ProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import {
@@ -55,7 +58,6 @@ export const LockedCarContextStep = ({
   onNext,
   hideNextButton = false,
 }: LockedCarContextStepProps) => {
-  const { brands } = useBrands()
   const provisionalBrandKey =
     config.brandKey || productEntry.brandParam || ""
   const { brands: catalogBrands, models, isLoading: isModelsQueryLoading } =
@@ -129,13 +131,15 @@ export const LockedCarContextStep = ({
     }
   }, [modelResolution, config.modelFamilyKey, config.model])
 
-  const brandLogo = useMemo(() => {
-    if (!config.brand || !brands.length) return null
-    const brand = brands.find(
-      (item) => item.name.toLowerCase() === config.brand.toLowerCase(),
-    )
-    return brand?.logo ?? null
-  }, [config.brand, brands])
+  const brandLogo = useMemo(
+    () =>
+      resolveConfiguratorBrandImage({
+        brand: config.brand,
+        brandKey: config.brandKey || brandKey,
+        brandParam: productEntry.brandParam,
+      }),
+    [brandKey, config.brand, config.brandKey, productEntry.brandParam],
+  )
 
   const generations = useMemo(() => {
     const items = templates.map((template) => ({
@@ -426,6 +430,7 @@ export const LockedCarContextStep = ({
                 fill
                 className="object-contain p-1.5"
                 sizes="48px"
+                unoptimized={shouldServeBrandImageUnoptimized(brandLogo)}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-red-400">

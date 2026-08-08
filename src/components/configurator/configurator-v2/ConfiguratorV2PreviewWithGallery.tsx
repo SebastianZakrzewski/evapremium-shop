@@ -8,6 +8,7 @@ import type { PreviewGalleryItem } from "./preview/buildConfiguratorV2PreviewGal
 type ConfiguratorV2PreviewWithGalleryProps = {
   imageSrc: string
   alt: string
+  usesMatPreviewCanvas?: boolean
   onOpenZoom?: () => void
   showGallery: boolean
   showEmptyInCarSlot?: boolean
@@ -20,6 +21,7 @@ type ConfiguratorV2PreviewWithGalleryProps = {
 export const ConfiguratorV2PreviewWithGallery = ({
   imageSrc,
   alt,
+  usesMatPreviewCanvas = false,
   onOpenZoom,
   showGallery,
   showEmptyInCarSlot = false,
@@ -34,6 +36,7 @@ export const ConfiguratorV2PreviewWithGallery = ({
         <ConfiguratorV2MobilePreview
           imageSrc={imageSrc}
           alt={alt}
+          usesMatPreviewCanvas={usesMatPreviewCanvas}
           onOpenZoom={onOpenZoom}
         />
         {showGallery && (
@@ -55,6 +58,7 @@ export const ConfiguratorV2PreviewWithGallery = ({
         <ConfiguratorV2PreviewPanel
           imageSrc={imageSrc}
           alt={alt}
+          usesMatPreviewCanvas={usesMatPreviewCanvas}
           onOpenZoom={onOpenZoom}
         />
       </div>

@@ -7,6 +7,7 @@ import {
   getColorInfo,
 } from "@/lib/color-mapping"
 import type { SectionReadiness } from "@/features/car-configurator/adapters/configuratorV2SectionMapper"
+import { getEdgeColorIconSrc } from "../edge-color/edgeColorIcons"
 import { TeslaSwatchRow } from "../ui/TeslaSwatchRow"
 import { ConfiguratorV2SectionShell } from "./ConfiguratorV2SectionShell"
 
@@ -57,6 +58,7 @@ export const EdgeColorSection = ({
           id: colorKey,
           label: getColorInfo(colorKey).name,
           color: getColorInfo(colorKey).color,
+          imageSrc: getEdgeColorIconSrc(colorKey),
         }))}
         selectedId={config.edgeColor}
         onSelect={handleEdgeSelect}

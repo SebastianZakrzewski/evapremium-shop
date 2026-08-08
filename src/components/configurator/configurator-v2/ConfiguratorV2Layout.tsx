@@ -32,8 +32,8 @@ export const ConfiguratorV2Layout = ({
   modals,
 }: ConfiguratorV2LayoutProps) => (
   <div
-    className="min-h-screen bg-black text-white flex flex-col
-      lg:h-[calc(100dvh-6rem)] lg:max-h-[calc(100dvh-6rem)] lg:overflow-hidden"
+    className="h-[100dvh] max-h-[100dvh] min-h-0 bg-black text-white flex flex-col overflow-hidden
+      lg:h-[calc(100dvh-6rem)] lg:max-h-[calc(100dvh-6rem)]"
   >
     {mobilePreview && (
       <div
@@ -72,13 +72,15 @@ export const ConfiguratorV2Layout = ({
           {optionPanel}
         </main>
 
-        <div className="hidden lg:block shrink-0 border-t border-white/10 bg-black/95 backdrop-blur-md">
+        <div className="hidden lg:block shrink-0 sticky bottom-0 z-20 border-t border-white/10 bg-black/95 backdrop-blur-md">
           {stickyBarDesktop}
         </div>
       </div>
     </div>
 
-    <div className="lg:hidden">{stickyBarMobile}</div>
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 pb-safe">
+      {stickyBarMobile}
+    </div>
 
     {modals}
   </div>

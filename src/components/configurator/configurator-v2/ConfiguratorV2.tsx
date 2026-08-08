@@ -28,6 +28,7 @@ import { StructureSection } from "./sections/StructureSection"
 import { ColorSection } from "./sections/ColorSection"
 import { EdgeColorSection } from "./sections/EdgeColorSection"
 import { AccessoriesSection } from "./sections/AccessoriesSection"
+import { SummarySection } from "./sections/SummarySection"
 import { ConfiguratorV2StickyBar } from "./sticky/ConfiguratorV2StickyBar"
 import { PriceBreakdownModal } from "./sticky/PriceBreakdownModal"
 import { CompareMatTypesModal } from "./modals/CompareMatTypesModal"
@@ -174,6 +175,44 @@ export default function ConfiguratorV2() {
   const [isCompareVariantsOpen, setIsCompareVariantsOpen] = useState(false)
   const [isFeaturesModalOpen, setIsFeaturesModalOpen] = useState(false)
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false)
+  const [showSummary, setShowSummary] = useState(false)
+
+  const summaryPriceBreakdown = useMemo(
+    () => ({
+      basePrice: priceBreakdown.basePrice,
+      discount: priceBreakdown.discount,
+      shippingCost: 0,
+      totalPrice: priceBreakdown.totalPrice,
+    }),
+    [priceBreakdown],
+  )
+
+  const scrollToSection = useCallback((sectionId: string) => {
+    requestAnimationFrame(() => {
+      document
+        .getElementById(sectionId)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" })
+    })
+  }, [])
+
+  const handleGoToSummary = useCallback(() => {
+    if (!mapperResult.isReadyForCart) return
+    setShowSummary(true)
+  }, [mapperResult.isReadyForCart])
+
+  useEffect(() => {
+    if (!showSummary) return
+    scrollToSection("section-summary")
+  }, [showSummary, scrollToSection])
+
+  const handleBackFromSummary = useCallback(() => {
+    setShowSummary(false)
+    scrollToSection("section-accessories")
+  }, [scrollToSection])
+
+  const handleBackToEdgeColors = useCallback(() => {
+    scrollToSection("section-edgeColor")
+  }, [scrollToSection])
 
   const handleAddToCart = useCallback(async () => {
     if (!mapperResult.isReadyForCart) return
@@ -282,9 +321,9 @@ export default function ConfiguratorV2() {
   const stickyBarProps = {
     priceBreakdown,
     accessoryPrice: selectedPodpietka?.price ?? 0,
-    isReadyForCart: mapperResult.isReadyForCart,
-    isAddingToCart: isAddingToCart || cartLoading,
-    onAddToCart: handleAddToCart,
+    isConfigComplete: mapperResult.isReadyForCart,
+    showSummaryCta: !showSummary,
+    onGoToSummary: handleGoToSummary,
     onPriceClick: () => setIsPriceModalOpen(true),
   }
 
@@ -303,6 +342,7 @@ export default function ConfiguratorV2() {
           layout="mobile"
           imageSrc={preview.imageSrc}
           alt={preview.alt}
+          usesMatPreviewCanvas={preview.usesMatPreviewCanvas}
           onOpenZoom={() => setIsPreviewModalOpen(true)}
           showGallery={preview.showGallery}
           showEmptyInCarSlot={preview.showEmptyInCarSlot}
@@ -316,6 +356,7 @@ export default function ConfiguratorV2() {
           layout="desktop"
           imageSrc={preview.imageSrc}
           alt={preview.alt}
+          usesMatPreviewCanvas={preview.usesMatPreviewCanvas}
           onOpenZoom={() => setIsPreviewModalOpen(true)}
           showGallery={preview.showGallery}
           showEmptyInCarSlot={preview.showEmptyInCarSlot}
@@ -367,7 +408,19 @@ export default function ConfiguratorV2() {
             config={config}
             readiness={mapperResult.sections.accessories}
             onUpdate={updateConfig}
+            onNext={handleGoToSummary}
+            onPrevious={handleBackToEdgeColors}
+            canProceedToSummary={mapperResult.isReadyForCart}
           />
+          {showSummary && (
+            <SummarySection
+              config={config}
+              priceBreakdown={summaryPriceBreakdown}
+              onPrevious={handleBackFromSummary}
+              onAddToCart={handleAddToCart}
+              isAddingToCart={isAddingToCart || cartLoading}
+            />
+          )}
           <div className="pt-2">
             <button
               type="button"
