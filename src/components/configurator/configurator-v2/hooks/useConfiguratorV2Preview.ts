@@ -99,7 +99,7 @@ export const useConfiguratorV2Preview = (
     config.matType === "3d-with-rims" ? RIMS_GALLERY_DEFAULT : CLASSIC_GALLERY_DEFAULT
 
   const entryPreviewImage = productEntry.previewImageParam
-  const brandLogoFallback = useMemo(() => {
+  const brandPlaceholderUrl = useMemo(() => {
     const slug =
       config.brandKey ||
       productEntry.brandParam ||
@@ -142,11 +142,9 @@ export const useConfiguratorV2Preview = (
 
   const autoImageSrc = resolveVehiclePreviewImageSrc({
     hasFullDynamicPreview: hasDynamicMatPreview,
-    isVehiclePreviewReady,
+    brandPlaceholderUrl,
     modelTemplateUrl,
     dynamicPreviewPath,
-    suppressDynamicFallback: productEntry.isLocked,
-    brandLogoFallback,
   })
 
   const alt =
@@ -164,6 +162,7 @@ export const useConfiguratorV2Preview = (
         productGalleryImages,
         showProductGallery,
         defaultAlt: alt,
+        brandPlaceholderUrl,
         entryPreviewImage,
         preferEntryPreviewImage: productEntry.isLocked,
       }),
@@ -177,16 +176,20 @@ export const useConfiguratorV2Preview = (
       alt,
       entryPreviewImage,
       productEntry.isLocked,
+      brandPlaceholderUrl,
     ],
   )
 
   const defaultGalleryId = useMemo(
     () =>
       resolveDefaultGalleryItemId(galleryItems, autoImageSrc, {
+        preferBrandPlaceholder:
+          !!brandPlaceholderUrl && !hasDynamicMatPreview,
         preferModelTemplate:
           productEntry.isLocked &&
           isVehiclePreviewReady &&
-          !hasDynamicMatPreview,
+          !hasDynamicMatPreview &&
+          !brandPlaceholderUrl,
       }),
     [
       galleryItems,
@@ -194,6 +197,7 @@ export const useConfiguratorV2Preview = (
       productEntry.isLocked,
       isVehiclePreviewReady,
       hasDynamicMatPreview,
+      brandPlaceholderUrl,
     ],
   )
 
@@ -229,7 +233,10 @@ export const useConfiguratorV2Preview = (
   const imageSrc = activeGalleryItem?.imageUrl ?? autoImageSrc
   const hasInCarPhotos = galleryItems.some((item) => item.kind === "in-car-photo")
   const showEmptyInCarSlot = isVehiclePreviewReady && !hasInCarPhotos
-  const showGallery = isVehiclePreviewReady || galleryItems.length > 1
+  const showGallery =
+    !!brandPlaceholderUrl ||
+    isVehiclePreviewReady ||
+    galleryItems.length > 1
   const lightboxImages = galleryItems.map((item) => item.imageUrl)
   const lightboxIndex = Math.max(
     0,

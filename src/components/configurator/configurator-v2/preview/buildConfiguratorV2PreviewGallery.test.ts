@@ -46,6 +46,28 @@ const inCarImages = [
 ]
 
 describe("buildConfiguratorV2PreviewGallery", () => {
+  it("shows brand placeholder before dynamic preview is ready", () => {
+    const items = buildConfiguratorV2PreviewGallery({
+      dynamicPreviewPath: "/dywaniki/fallback.webp",
+      hasFullDynamicPreview: false,
+      isVehiclePreviewReady: true,
+      matProductImages: [templateImage, ...inCarImages],
+      productGalleryImages: [],
+      showProductGallery: false,
+      defaultAlt: "Podgląd",
+      brandPlaceholderUrl: "/modele/bmw.png",
+    })
+
+    expect(items).toEqual([
+      {
+        id: "brand-placeholder",
+        imageUrl: "/modele/bmw.png",
+        altText: "Podgląd",
+        kind: "brand-placeholder",
+      },
+    ])
+  })
+
   it("orders vehicle gallery as model template first, then in-car photos", () => {
     const items = buildConfiguratorV2PreviewGallery({
       dynamicPreviewPath: "/dywaniki/test.webp",
@@ -154,11 +176,21 @@ describe("resolveDefaultGalleryItemId", () => {
 })
 
 describe("resolveVehiclePreviewImageSrc", () => {
-  it("uses model template after vehicle context is complete", () => {
+  it("uses brand placeholder before dynamic preview is ready", () => {
     expect(
       resolveVehiclePreviewImageSrc({
         hasFullDynamicPreview: false,
-        isVehiclePreviewReady: true,
+        brandPlaceholderUrl: "/modele/bmw.png",
+        modelTemplateUrl: "/mat/template.webp",
+        dynamicPreviewPath: "/dywaniki/fallback.webp",
+      }),
+    ).toBe("/modele/bmw.png")
+  })
+
+  it("uses model template when brand placeholder is unavailable", () => {
+    expect(
+      resolveVehiclePreviewImageSrc({
+        hasFullDynamicPreview: false,
         modelTemplateUrl: "/mat/template.webp",
         dynamicPreviewPath: "/dywaniki/fallback.webp",
       }),
@@ -169,35 +201,20 @@ describe("resolveVehiclePreviewImageSrc", () => {
     expect(
       resolveVehiclePreviewImageSrc({
         hasFullDynamicPreview: true,
-        isVehiclePreviewReady: true,
+        brandPlaceholderUrl: "/modele/bmw.png",
         modelTemplateUrl: "/mat/template.webp",
         dynamicPreviewPath: "/dywaniki/test.webp",
       }),
     ).toBe("/dywaniki/test.webp")
   })
 
-  it("uses brand logo fallback on locked vehicle entry without template", () => {
+  it("falls back to dynamic preview when no brand or template exists", () => {
     expect(
       resolveVehiclePreviewImageSrc({
         hasFullDynamicPreview: false,
-        isVehiclePreviewReady: true,
         modelTemplateUrl: null,
         dynamicPreviewPath: "/dywaniki/fallback.webp",
-        suppressDynamicFallback: true,
-        brandLogoFallback: "/modele/bmw.jpg",
       }),
-    ).toBe("/modele/bmw.jpg")
-  })
-
-  it("avoids generic mat fallback on locked vehicle entry without any preview", () => {
-    expect(
-      resolveVehiclePreviewImageSrc({
-        hasFullDynamicPreview: false,
-        isVehiclePreviewReady: true,
-        modelTemplateUrl: null,
-        dynamicPreviewPath: "/dywaniki/fallback.webp",
-        suppressDynamicFallback: true,
-      }),
-    ).toBe("")
+    ).toBe("/dywaniki/fallback.webp")
   })
 })

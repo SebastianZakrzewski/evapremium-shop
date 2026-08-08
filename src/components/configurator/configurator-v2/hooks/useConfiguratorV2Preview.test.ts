@@ -79,22 +79,33 @@ const matImages = [
 ]
 
 describe("useConfiguratorV2Preview", () => {
-  it("shows model template first after vehicle context is complete", () => {
+  it("shows brand placeholder before dynamic mat preview is ready", () => {
     const { result } = renderHook(() =>
       useConfiguratorV2Preview(baseConfig, matImages, unlockedEntry),
     )
 
-    expect(result.current.imageSrc).toBe("/mat/template.webp")
+    expect(result.current.imageSrc).toBe("/modele/bmw.png")
     expect(result.current.galleryItems.map((item) => item.kind)).toEqual([
-      "model-template",
-      "in-car-photo",
+      "brand-placeholder",
     ])
     expect(result.current.showGallery).toBe(true)
   })
 
-  it("switches gallery selection manually", () => {
+  it("switches gallery selection manually after dynamic preview is active", () => {
     const { result } = renderHook(() =>
-      useConfiguratorV2Preview(baseConfig, matImages, unlockedEntry),
+      useConfiguratorV2Preview(
+        {
+          ...baseConfig,
+          matType: "3d-with-rims",
+          pricingCategoryKey: "standard",
+          variant: "",
+          structure: "diamonds",
+          color: "black",
+          edgeColor: "black",
+        },
+        matImages,
+        unlockedEntry,
+      ),
     )
 
     act(() => {
@@ -105,7 +116,7 @@ describe("useConfiguratorV2Preview", () => {
     expect(result.current.activeGalleryId).toBe("in-car-photo-11")
   })
 
-  it("shows entry preview image on locked card entry before year is selected", () => {
+  it("shows brand placeholder on locked card entry before year is selected", () => {
     const { result } = renderHook(() =>
       useConfiguratorV2Preview(
         { ...baseConfig, year: "" },
@@ -114,14 +125,14 @@ describe("useConfiguratorV2Preview", () => {
       ),
     )
 
-    expect(result.current.imageSrc).toBe("/mat/from-card.webp")
-    expect(result.current.galleryItems[0]?.kind).toBe("model-template")
-    expect(result.current.activeGalleryId).toBe("model-template-entry")
+    expect(result.current.imageSrc).toBe("/modele/bmw.png")
+    expect(result.current.galleryItems[0]?.kind).toBe("brand-placeholder")
+    expect(result.current.activeGalleryId).toBe("brand-placeholder")
     expect(result.current.showGallery).toBe(true)
     expect(result.current.showEmptyInCarSlot).toBe(true)
   })
 
-  it("shows entry preview image before mat images are loaded", () => {
+  it("shows brand placeholder before mat images are loaded", () => {
     const { result } = renderHook(() =>
       useConfiguratorV2Preview(
         baseConfig,
@@ -130,8 +141,8 @@ describe("useConfiguratorV2Preview", () => {
       ),
     )
 
-    expect(result.current.imageSrc).toBe("/mat/from-card.webp")
-    expect(result.current.galleryItems[0]?.kind).toBe("model-template")
+    expect(result.current.imageSrc).toBe("/modele/bmw.png")
+    expect(result.current.galleryItems[0]?.kind).toBe("brand-placeholder")
   })
 
   it("does not show product-set gallery until variant is selected", () => {
@@ -152,12 +163,24 @@ describe("useConfiguratorV2Preview", () => {
     expect(result.current.galleryItems.every((item) => item.kind !== "product-set")).toBe(
       true,
     )
-    expect(result.current.imageSrc).toBe("/mat/from-card.webp")
+    expect(result.current.imageSrc).toBe("/modele/bmw.png")
   })
 
   it("hides empty in-car placeholders when real photos exist", () => {
     const { result } = renderHook(() =>
-      useConfiguratorV2Preview(baseConfig, matImages, unlockedEntry),
+      useConfiguratorV2Preview(
+        {
+          ...baseConfig,
+          matType: "3d-with-rims",
+          pricingCategoryKey: "standard",
+          variant: "",
+          structure: "diamonds",
+          color: "black",
+          edgeColor: "black",
+        },
+        matImages,
+        unlockedEntry,
+      ),
     )
 
     expect(result.current.showEmptyInCarSlot).toBe(false)

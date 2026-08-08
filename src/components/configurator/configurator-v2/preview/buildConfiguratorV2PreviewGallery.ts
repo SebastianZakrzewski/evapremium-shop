@@ -3,6 +3,7 @@ import { partitionMatProductImages } from "./partitionMatProductImages"
 
 export type PreviewGalleryItemKind =
   | "dynamic"
+  | "brand-placeholder"
   | "model-template"
   | "in-car-photo"
   | "product-set"
@@ -22,6 +23,7 @@ type BuildConfiguratorV2PreviewGalleryParams = {
   productGalleryImages: string[]
   showProductGallery: boolean
   defaultAlt: string
+  brandPlaceholderUrl?: string | null
   entryPreviewImage?: string | null
   preferEntryPreviewImage?: boolean
 }
@@ -34,10 +36,21 @@ export const buildConfiguratorV2PreviewGallery = ({
   productGalleryImages,
   showProductGallery,
   defaultAlt,
+  brandPlaceholderUrl = null,
   entryPreviewImage = null,
   preferEntryPreviewImage = false,
 }: BuildConfiguratorV2PreviewGalleryParams): PreviewGalleryItem[] => {
   const items: PreviewGalleryItem[] = []
+
+  if (brandPlaceholderUrl && !hasFullDynamicPreview) {
+    items.push({
+      id: "brand-placeholder",
+      imageUrl: brandPlaceholderUrl,
+      altText: defaultAlt,
+      kind: "brand-placeholder",
+    })
+    return items
+  }
 
   if (hasFullDynamicPreview) {
     items.push({
@@ -97,9 +110,16 @@ export const buildConfiguratorV2PreviewGallery = ({
 export const resolveDefaultGalleryItemId = (
   galleryItems: PreviewGalleryItem[],
   autoImageSrc: string,
-  options?: { preferModelTemplate?: boolean },
+  options?: { preferBrandPlaceholder?: boolean; preferModelTemplate?: boolean },
 ): string | null => {
   if (galleryItems.length === 0) return null
+
+  if (options?.preferBrandPlaceholder) {
+    const brandPlaceholderItem = galleryItems.find(
+      (item) => item.kind === "brand-placeholder",
+    )
+    if (brandPlaceholderItem) return brandPlaceholderItem.id
+  }
 
   if (options?.preferModelTemplate) {
     const modelTemplateItem = galleryItems.find(
@@ -114,30 +134,22 @@ export const resolveDefaultGalleryItemId = (
 
 export const resolveVehiclePreviewImageSrc = ({
   hasFullDynamicPreview,
-  isVehiclePreviewReady,
+  brandPlaceholderUrl = null,
   modelTemplateUrl,
   dynamicPreviewPath,
-  suppressDynamicFallback = false,
-  brandLogoFallback = null,
 }: {
   hasFullDynamicPreview: boolean
-  isVehiclePreviewReady: boolean
+  brandPlaceholderUrl?: string | null
   modelTemplateUrl: string | null
   dynamicPreviewPath: string
-  suppressDynamicFallback?: boolean
-  brandLogoFallback?: string | null
 }): string => {
   if (hasFullDynamicPreview) {
     return dynamicPreviewPath
   }
 
-  if (isVehiclePreviewReady && modelTemplateUrl) {
-    return modelTemplateUrl
+  if (brandPlaceholderUrl) {
+    return brandPlaceholderUrl
   }
 
-  if (suppressDynamicFallback && isVehiclePreviewReady) {
-    return modelTemplateUrl ?? brandLogoFallback ?? ""
-  }
-
-  return modelTemplateUrl || brandLogoFallback || dynamicPreviewPath
+  return modelTemplateUrl || dynamicPreviewPath
 }
