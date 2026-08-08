@@ -7,6 +7,9 @@ export { CartModal, CartModalWrapper, CartItem } from './components';
 // Hooks
 export { useCart } from './hooks/useCart';
 
+// Utils
+export { openCartModal } from './utils/openCartModal';
+
 // Services (tymczasowo z oryginalnych lokalizacji)
 export { CartService } from '../../lib/services/CartService';
 

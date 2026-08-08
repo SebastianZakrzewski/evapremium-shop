@@ -13,6 +13,8 @@ type ConfiguratorV2ImageOptionCardProps = {
   priceAfterDiscount?: number
   discount?: number
   inline?: boolean
+  imageUnoptimized?: boolean
+  imageFit?: "contain" | "cover"
   onSelect: () => void
 }
 
@@ -29,10 +31,20 @@ export const ConfiguratorV2ImageOptionCard = ({
   priceAfterDiscount,
   discount = 0,
   inline = false,
+  imageUnoptimized = false,
+  imageFit = "contain",
   onSelect,
 }: ConfiguratorV2ImageOptionCardProps) => {
   const showPrice =
     priceAfterDiscount != null && priceAfterDiscount > 0
+
+  const imageClassName =
+    imageFit === "cover"
+      ? "h-24 w-24 rounded-sm object-cover drop-shadow-[0_2px_8px_rgba(255,255,255,0.2)]"
+      : "h-24 w-auto max-w-[9rem] object-contain drop-shadow-[0_2px_8px_rgba(255,255,255,0.2)]"
+
+  const imageWidth = imageFit === "cover" ? 160 : 160
+  const imageHeight = imageFit === "cover" ? 160 : 112
 
   return (
     <button
@@ -57,9 +69,10 @@ export const ConfiguratorV2ImageOptionCard = ({
         <Image
           src={imageSrc}
           alt={imageAlt || title}
-          width={160}
-          height={112}
-          className="h-24 w-auto max-w-[9rem] object-contain drop-shadow-[0_2px_8px_rgba(255,255,255,0.2)]"
+          width={imageWidth}
+          height={imageHeight}
+          unoptimized={imageUnoptimized}
+          className={imageClassName}
         />
       </div>
 

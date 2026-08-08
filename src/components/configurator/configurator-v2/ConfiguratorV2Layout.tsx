@@ -14,6 +14,7 @@ type ConfiguratorV2LayoutProps = {
   stickyBarMobile: ReactNode
   mobilePreview?: ReactNode
   mobilePreviewHasGallery?: boolean
+  hideMobileStickyBar?: boolean
   modals?: ReactNode
 }
 
@@ -29,6 +30,7 @@ export const ConfiguratorV2Layout = ({
   stickyBarMobile,
   mobilePreview,
   mobilePreviewHasGallery = false,
+  hideMobileStickyBar = false,
   modals,
 }: ConfiguratorV2LayoutProps) => (
   <div
@@ -78,7 +80,11 @@ export const ConfiguratorV2Layout = ({
       </div>
     </div>
 
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 pb-safe">
+    <div
+      className={`lg:hidden fixed bottom-0 left-0 right-0 z-40 pb-safe ${
+        hideMobileStickyBar ? "hidden" : ""
+      }`}
+    >
       {stickyBarMobile}
     </div>
 

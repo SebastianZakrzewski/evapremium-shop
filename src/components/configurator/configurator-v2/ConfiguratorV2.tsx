@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { useCart } from "@/features/shopping-cart/hooks/useCart"
+import { openCartModal } from "@/features/shopping-cart/utils/openCartModal"
 import { useAccessories } from "@/features/accessories/hooks/useAccessories"
 import { useBrands } from "@/features/brands/hooks/useBrands"
 import { useMatProductImages } from "@/features/mat-product-images"
@@ -29,6 +30,7 @@ import { ColorSection } from "./sections/ColorSection"
 import { EdgeColorSection } from "./sections/EdgeColorSection"
 import { AccessoriesSection } from "./sections/AccessoriesSection"
 import { SummarySection } from "./sections/SummarySection"
+import { scrollConfiguratorV2ToElementWhenReady } from "./utils/scrollConfiguratorV2ToElement"
 import { ConfiguratorV2StickyBar } from "./sticky/ConfiguratorV2StickyBar"
 import { PriceBreakdownModal } from "./sticky/PriceBreakdownModal"
 import { CompareMatTypesModal } from "./modals/CompareMatTypesModal"
@@ -176,6 +178,7 @@ export default function ConfiguratorV2() {
   const [isFeaturesModalOpen, setIsFeaturesModalOpen] = useState(false)
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false)
   const [showSummary, setShowSummary] = useState(false)
+  const [cartActionError, setCartActionError] = useState<string | null>(null)
 
   const summaryPriceBreakdown = useMemo(
     () => ({
@@ -188,11 +191,7 @@ export default function ConfiguratorV2() {
   )
 
   const scrollToSection = useCallback((sectionId: string) => {
-    requestAnimationFrame(() => {
-      document
-        .getElementById(sectionId)
-        ?.scrollIntoView({ behavior: "smooth", block: "start" })
-    })
+    scrollConfiguratorV2ToElementWhenReady(sectionId)
   }, [])
 
   const handleGoToSummary = useCallback(() => {
@@ -202,8 +201,12 @@ export default function ConfiguratorV2() {
 
   useEffect(() => {
     if (!showSummary) return
-    scrollToSection("section-summary")
-  }, [showSummary, scrollToSection])
+    const cancelScroll = scrollConfiguratorV2ToElementWhenReady("summary-order-heading", {
+      alignToContentStart: true,
+      offset: 12,
+    })
+    return cancelScroll
+  }, [showSummary])
 
   const handleBackFromSummary = useCallback(() => {
     setShowSummary(false)
@@ -215,7 +218,14 @@ export default function ConfiguratorV2() {
   }, [scrollToSection])
 
   const handleAddToCart = useCallback(async () => {
-    if (!mapperResult.isReadyForCart) return
+    if (!mapperResult.isReadyForCart) {
+      setCartActionError(
+        "Uzupełnij konfigurację pojazdu (rok i typ nadwozia), aby dodać produkt do koszyka.",
+      )
+      return
+    }
+
+    setCartActionError(null)
     setIsAddingToCart(true)
     try {
       const productId = crypto.randomUUID()
@@ -281,22 +291,38 @@ export default function ConfiguratorV2() {
           selectedPodpietka.images?.[0] ??
           selectedPodpietka.imageSrc ??
           ""
-        await addToCart({
-          productType: "accessory",
-          productId: selectedPodpietka.id,
-          quantity: 1,
-          unitPrice: selectedPodpietka.price,
-          productName: `${selectedPodpietka.name}${config.podpietkaColor ? ` - ${config.podpietkaColor}` : ""}`,
-          productSku: selectedPodpietka.sku,
-          productImage: podpietkaImage,
-          configuration: {
-            color: config.podpietkaColor || undefined,
-          },
-        })
+        try {
+          await addToCart({
+            productType: "accessory",
+            productId: selectedPodpietka.id,
+            quantity: 1,
+            unitPrice: selectedPodpietka.price,
+            productName: `${selectedPodpietka.name}${config.podpietkaColor ? ` - ${config.podpietkaColor}` : ""}`,
+            productSku: selectedPodpietka.sku,
+            productImage: podpietkaImage,
+            configuration: {
+              color: config.podpietkaColor || undefined,
+            },
+          })
+        } catch (accessoryError) {
+          console.error("Error adding accessory to cart:", accessoryError)
+          const accessoryMessage =
+            accessoryError instanceof Error
+              ? accessoryError.message
+              : "Nie udało się dodać akcesorium"
+          setCartActionError(
+            `Dywaniki dodano do koszyka, ale akcesorium nie zostało dodane: ${accessoryMessage}`,
+          )
+        }
       }
 
-      window.dispatchEvent(new CustomEvent("openCartModal"))
+      openCartModal()
     } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Nie udało się dodać produktu do koszyka"
+      setCartActionError(message)
       console.error("Error adding to cart:", error)
     } finally {
       setIsAddingToCart(false)
@@ -330,6 +356,7 @@ export default function ConfiguratorV2() {
   return (
     <ConfiguratorV2Layout
       mobilePreviewHasGallery={preview.showGallery}
+      hideMobileStickyBar={showSummary}
       specsBar={
         <ConfiguratorV2SpecsBar
           title={pageTitle}
@@ -419,8 +446,10 @@ export default function ConfiguratorV2() {
               onPrevious={handleBackFromSummary}
               onAddToCart={handleAddToCart}
               isAddingToCart={isAddingToCart || cartLoading}
+              cartActionError={cartActionError}
             />
           )}
+          {!showSummary && (
           <div className="pt-2">
             <button
               type="button"
@@ -430,6 +459,7 @@ export default function ConfiguratorV2() {
               Dowiedz się więcej o dywanikach EVA
             </button>
           </div>
+          )}
         </>
       }
       stickyBarDesktop={

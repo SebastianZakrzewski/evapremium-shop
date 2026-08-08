@@ -1,23 +1,9 @@
 "use client"
 
 import type { SectionReadiness } from "@/features/car-configurator/adapters/configuratorV2SectionMapper"
+import { cellStructureOptions } from "../structure/cellStructurePresentation"
 import { ConfiguratorV2ImageOptionCard } from "../ui/ConfiguratorV2ImageOptionCard"
 import { ConfiguratorV2SectionShell } from "./ConfiguratorV2SectionShell"
-
-const structures = [
-  {
-    id: "diamonds" as const,
-    name: "Romby",
-    description: "Klasyczny wygląd",
-    image: "/images/konfigurator/struktura komorek/romby.png",
-  },
-  {
-    id: "honey" as const,
-    name: "Plaster miodu",
-    description: "Nowoczesny design",
-    image: "/images/konfigurator/struktura komorek/plaster.png",
-  },
-]
 
 type StructureSectionProps = {
   config: { structure: "diamonds" | "honey" }
@@ -30,7 +16,7 @@ export const StructureSection = ({
   readiness,
   onUpdate,
 }: StructureSectionProps) => {
-  const selected = structures.find((s) => s.id === config.structure)
+  const selected = cellStructureOptions.find((s) => s.id === config.structure)
 
   return (
     <ConfiguratorV2SectionShell
@@ -45,15 +31,17 @@ export const StructureSection = ({
         role="group"
         aria-label="Wybór struktury komórek"
       >
-        {structures.map((structure) => (
+        {cellStructureOptions.map((structure) => (
           <ConfiguratorV2ImageOptionCard
             key={structure.id}
             inline
             selected={config.structure === structure.id}
             title={structure.name}
             description={structure.description}
-            imageSrc={structure.image}
-            imageAlt={structure.name}
+            imageSrc={structure.iconSrc}
+            imageAlt={structure.iconAlt}
+            imageUnoptimized
+            imageFit="cover"
             onSelect={() => onUpdate({ structure: structure.id })}
           />
         ))}

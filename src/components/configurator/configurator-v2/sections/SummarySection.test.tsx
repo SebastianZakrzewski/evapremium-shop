@@ -56,6 +56,7 @@ describe("SummarySection", () => {
     expect(screen.getByRole("heading", { name: "Podsumowanie zamówienia" })).toBeInTheDocument()
     expect(screen.getByText("Twoja konfiguracja")).toBeInTheDocument()
     expect(screen.getByText("Podsumowanie")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: /Zamawiam/i })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /Przejdź do koszyka/i })).toBeInTheDocument()
+    expect(screen.getByTestId("summary-mobile-actions")).toBeInTheDocument()
   })
 })

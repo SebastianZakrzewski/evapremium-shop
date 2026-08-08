@@ -15,6 +15,7 @@ type SummarySectionProps = {
   config: ConfiguratorState
   priceBreakdown: SummaryPriceBreakdown
   isAddingToCart: boolean
+  cartActionError?: string | null
   onPrevious: () => void
   onAddToCart: () => void
 }
@@ -23,11 +24,13 @@ export const SummarySection = ({
   config,
   priceBreakdown,
   isAddingToCart,
+  cartActionError,
   onPrevious,
   onAddToCart,
 }: SummarySectionProps) => (
   <ConfiguratorV2SectionShell
     id="section-summary"
+    headingId="summary-order-heading"
     title="Podsumowanie zamówienia"
     readiness={{ isComplete: true, isDisabled: false }}
   >
@@ -37,6 +40,8 @@ export const SummarySection = ({
       onPrevious={onPrevious}
       onAddToCart={onAddToCart}
       isAddingToCart={isAddingToCart}
+      cartActionError={cartActionError}
+      stickyMobileActions
     />
   </ConfiguratorV2SectionShell>
 )

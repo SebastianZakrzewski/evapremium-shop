@@ -56,6 +56,32 @@ describe("groupTemplatesToCarModels", () => {
     expect(models[0]?.years).toContain(2024)
     expect(models[0]?.years).toContain(2018)
   })
+
+  it("emits separate generation entries for each body type on a template row", () => {
+    const models = groupTemplatesToCarModels([
+      baseRow({
+        brand_name: "Audi",
+        brand_key: "Audi",
+        model_family_name: "A4(B6) 2 gen",
+        model_family_key: "A4(B6) 2 gen",
+        model_name: "A4(B6) 2 gen",
+        model_key: "A4(B6) 2 gen",
+        generation: "2000-2006",
+        year_from: 2000,
+        year_to: 2006,
+        body_type: "wagon",
+        body_type_key: "wagon",
+        body_type_1: "wagon",
+        body_type_1_key: "wagon",
+        body_type_2: "sedan",
+        body_type_2_key: "sedan",
+        record_key: "passenger_car|audi|a4b6_2_gen|2000-2006|wagon|65",
+      }),
+    ])
+
+    const bodyTypes = models[0]?.generations.map((gen) => gen.bodyType).sort()
+    expect(bodyTypes).toEqual(["sedan", "wagon"])
+  })
 })
 
 describe("extractSearchBrands", () => {
