@@ -46,8 +46,8 @@ export const ConfiguratorV2MobilePreview = ({
           priority
         />
       </div>
-      <span className="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 text-[11px] text-white bg-black/65 backdrop-blur-sm px-2.5 py-1 rounded-full border border-black/10">
-        <ZoomIn className="w-3.5 h-3.5" aria-hidden />
+      <span className="absolute bottom-2 right-2 z-10 flex items-center gap-1 text-[10px] text-white bg-black/65 backdrop-blur-sm px-2 py-0.5 rounded-full border border-black/10">
+        <ZoomIn className="w-3 h-3" aria-hidden />
         Powiększ
       </span>
     </button>

@@ -22,6 +22,8 @@ import {
   isCatalogResolving,
   resolveLockedCarGeneration,
 } from "@/features/car-configurator/utils/lockedCarContextLogic"
+import { useConfiguratorV2InitialVehicleScroll } from "@/components/configurator/configurator-v2/hooks/useConfiguratorV2InitialVehicleScroll"
+import { resolveConfiguratorV2VehicleScrollTarget } from "@/components/configurator/configurator-v2/utils/resolveConfiguratorV2VehicleScrollTarget"
 
 type LockedCarContextStepProps = {
   config: Pick<
@@ -352,6 +354,36 @@ export const LockedCarContextStep = ({
   const needsManualBodyType =
     !isLoading && !!config.year && !config.bodyTypeKey && bodyOptions.length > 0
 
+  const initialScrollTargetId = useMemo(
+    () =>
+      resolveConfiguratorV2VehicleScrollTarget({
+        isLocked: true,
+        brandSelected: Boolean(config.brand),
+        modelSelected: Boolean(config.model),
+        year: config.year,
+        bodyTypeKey: config.bodyTypeKey,
+        modelKey: config.modelKey,
+        isLoading,
+        bodyOptionsCount: config.year ? bodyOptions.length : 0,
+        yearOptionsCount: availableYears.length,
+      }),
+    [
+      availableYears.length,
+      bodyOptions.length,
+      config.brand,
+      config.bodyTypeKey,
+      config.model,
+      config.modelKey,
+      config.year,
+      isLoading,
+    ],
+  )
+
+  useConfiguratorV2InitialVehicleScroll({
+    scrollTargetId: initialScrollTargetId,
+    isReady: !isLoading,
+  })
+
   const isStepComplete = Boolean(
     config.brand &&
       config.model &&
@@ -479,16 +511,16 @@ export const LockedCarContextStep = ({
       )}
 
       {showYearSelect && (
-        <div>
+        <div id="locked-car-year" className="scroll-mt-4">
           <label
-            htmlFor="locked-car-year"
+            htmlFor="locked-car-year-select"
             className="block text-sm font-medium text-gray-400 mb-2"
           >
             Rok produkcji *
           </label>
           <div className="relative">
             <select
-              id="locked-car-year"
+              id="locked-car-year-select"
               value={config.year}
               onChange={(event) => handleYearChange(event.target.value)}
               className={selectClassName}
@@ -509,16 +541,16 @@ export const LockedCarContextStep = ({
       )}
 
       {needsManualBodyType && (
-        <div>
+        <div id="locked-car-body-type" className="scroll-mt-4">
           <label
-            htmlFor="locked-car-body-type"
+            htmlFor="locked-car-body-type-select"
             className="block text-sm font-medium text-gray-400 mb-2"
           >
             Typ nadwozia *
           </label>
           <div className="relative">
             <select
-              id="locked-car-body-type"
+              id="locked-car-body-type-select"
               value={
                 config.recordKey && config.bodyTypeKey
                   ? `${config.recordKey}::${config.bodyTypeKey}`

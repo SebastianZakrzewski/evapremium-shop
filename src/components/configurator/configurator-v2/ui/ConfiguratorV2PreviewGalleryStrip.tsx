@@ -46,7 +46,7 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
   }
 
   const isMobile = variant === "mobile"
-  const thumbClassName = isMobile ? "w-14 h-14" : "w-16 h-16 sm:w-20 sm:h-20"
+  const thumbClassName = isMobile ? "w-12 h-12" : "w-16 h-16 sm:w-20 sm:h-20"
 
   return (
     <div
@@ -133,7 +133,7 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
                   alt={item.altText}
                   fill
                   className="object-cover"
-                  sizes={isMobile ? "56px" : "80px"}
+                  sizes={isMobile ? "48px" : "80px"}
                 />
                 {item.kind === "dynamic" && (
                   <span className="absolute bottom-0.5 right-0.5 rounded bg-black/80 px-0.5 text-white">

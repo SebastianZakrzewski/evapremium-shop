@@ -4,6 +4,7 @@ import type { ReactNode } from "react"
 import {
   CONFIGURATOR_V2_MOBILE_CONTENT_PT,
   CONFIGURATOR_V2_MOBILE_CONTENT_PT_WITH_GALLERY,
+  CONFIGURATOR_V2_MOBILE_MAIN_PB,
 } from "./configuratorV2MobileLayout"
 
 type ConfiguratorV2LayoutProps = {
@@ -61,14 +62,14 @@ export const ConfiguratorV2Layout = ({
 
         <main
           className={`flex-1 overflow-y-auto overscroll-contain
-            px-4 py-5 lg:px-6 xl:px-10 lg:py-6 pb-28 lg:pb-4
+            px-4 py-3 lg:px-6 xl:px-10 lg:py-6 ${CONFIGURATOR_V2_MOBILE_MAIN_PB} lg:pb-4
             ${
               mobilePreviewHasGallery
                 ? CONFIGURATOR_V2_MOBILE_CONTENT_PT_WITH_GALLERY
                 : CONFIGURATOR_V2_MOBILE_CONTENT_PT
             } lg:pt-6`}
         >
-          <div className="lg:hidden mb-5 pb-4 border-b border-white/10">
+          <div className="lg:hidden mb-3 pb-3 border-b border-white/10">
             {specsBar}
           </div>
           {optionPanel}
