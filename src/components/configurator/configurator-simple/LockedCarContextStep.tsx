@@ -14,6 +14,11 @@ import {
   resolveModelFamiliesFromParam,
 } from "@/features/vehicle-catalog/domain/catalogKeys"
 import { useVehicleCatalog } from "@/features/vehicle-catalog/hooks/useVehicleCatalog"
+import {
+  computeLockedCarAvailableYears,
+  isCatalogResolving,
+  resolveLockedCarGeneration,
+} from "@/features/car-configurator/utils/lockedCarContextLogic"
 
 type LockedCarContextStepProps = {
   config: Pick<
@@ -40,12 +45,6 @@ type LockedCarContextStepProps = {
 const selectClassName =
   "w-full px-4 py-3 min-h-[44px] bg-[#111] border border-white/10 rounded-lg text-white text-sm appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
 
-const yearsInRange = (from: number | null, to: number | null): number[] => {
-  if (from == null) return []
-  const end = Math.min(to ?? new Date().getFullYear() + 1, 2100)
-  return Array.from({ length: end - from + 1 }, (_, index) => from + index).reverse()
-}
-
 const normalizeToken = (value: string): string =>
   value.toLowerCase().replace(/[\s_-]+/g, "")
 
@@ -59,7 +58,7 @@ export const LockedCarContextStep = ({
   const { brands } = useBrands()
   const provisionalBrandKey =
     config.brandKey || productEntry.brandParam || ""
-  const { brands: catalogBrands, models, isLoading: isModelsLoading } =
+  const { brands: catalogBrands, models, isLoading: isModelsQueryLoading } =
     useVehicleCatalog(provisionalBrandKey, "", "", productEntry.modelParam ?? "")
   const brandKey = useMemo(
     () =>
@@ -84,12 +83,18 @@ export const LockedCarContextStep = ({
   const templateModelFamilyPrefix =
     modelResolution.mode === "prefix" ? modelResolution.prefix : ""
 
-  const { templates, isLoading: isTemplatesLoading } = useVehicleCatalog(
+  const { templates, isLoading: isTemplatesQueryLoading } = useVehicleCatalog(
     catalogBrandKey,
     templateModelFamilyKey,
     templateModelFamilyPrefix,
   )
-  const isLoading = isModelsLoading || isTemplatesLoading
+  const isLoading = isCatalogResolving({
+    isModelsQueryLoading,
+    modelsCount: models.length,
+    isTemplatesQueryLoading,
+    templatesCount: templates.length,
+    hasTemplateQuery: Boolean(templateModelFamilyKey || templateModelFamilyPrefix),
+  })
   const isModelCatalogResolved = modelResolution.mode !== "none"
 
   const onUpdateRef = useRef(onUpdate)
@@ -163,19 +168,37 @@ export const LockedCarContextStep = ({
 
   const resolvedGeneration = useMemo(
     () =>
-      selectedGeneration ??
-      (generations.length === 1 ? generations[0] : null),
-    [selectedGeneration, generations],
+      resolveLockedCarGeneration({
+        generations,
+        selectedGeneration,
+        modelResolution,
+        modelParam: productEntry.modelParam,
+        generationParam: productEntry.generationParam,
+      }),
+    [
+      generations,
+      selectedGeneration,
+      modelResolution,
+      productEntry.modelParam,
+      productEntry.generationParam,
+    ],
   )
 
-  const availableYears = useMemo(() => {
-    if (productEntry.yearParam) {
-      const year = Number(productEntry.yearParam)
-      if (!Number.isNaN(year)) return [year]
-    }
-    if (!resolvedGeneration) return []
-    return yearsInRange(resolvedGeneration.yearFrom, resolvedGeneration.yearTo)
-  }, [resolvedGeneration, productEntry.yearParam])
+  const availableYears = useMemo(
+    () =>
+      computeLockedCarAvailableYears({
+        yearParam: productEntry.yearParam,
+        generationParam: productEntry.generationParam,
+        resolvedGeneration,
+        templates,
+      }),
+    [
+      resolvedGeneration,
+      productEntry.yearParam,
+      productEntry.generationParam,
+      templates,
+    ],
+  )
 
   const matchingTemplates = templates.filter((template) => {
     if (!config.year) return false
@@ -241,6 +264,14 @@ export const LockedCarContextStep = ({
     resolvedGeneration?.yearFrom,
     resolvedGeneration?.yearTo,
   ])
+
+  useEffect(() => {
+    if (isLoading || !resolvedGeneration || config.modelKey) return
+    onUpdateRef.current({
+      modelKey: resolvedGeneration.modelKey,
+      generation: resolvedGeneration.generation,
+    })
+  }, [isLoading, resolvedGeneration, config.modelKey])
 
   useEffect(() => {
     if (isLoading || generations.length !== 1 || config.modelKey) return

@@ -15,11 +15,10 @@ import { normalizeBrandName } from "@/shared/brands"
 import { getMatImagePath } from "@/lib/image-mapping"
 import { getMatTypeForDynamicPreview } from "@/components/configurator/configurator-simple/rugPreviewConfig"
 import { ConfiguratorLoader } from "@/components/configurator/configurator-simple/ConfiguratorLoader"
-import { GalleryLightbox } from "@/components/ui/gallery-lightbox"
 import { ConfiguratorV2Layout } from "./ConfiguratorV2Layout"
 import { ConfiguratorV2SpecsBar } from "./ConfiguratorV2SpecsBar"
-import { ConfiguratorV2PreviewPanel } from "./ConfiguratorV2PreviewPanel"
-import { ConfiguratorV2MobilePreview } from "./ConfiguratorV2MobilePreview"
+import { ConfiguratorV2PreviewWithGallery } from "./ConfiguratorV2PreviewWithGallery"
+import { ConfiguratorV2MatPreviewLightbox } from "./ConfiguratorV2MatPreviewLightbox"
 import { useConfiguratorV2Preview } from "./hooks/useConfiguratorV2Preview"
 import { useMatPreviewPreload } from "./hooks/useMatPreviewPreload"
 import { VehicleContextSection } from "./sections/VehicleContextSection"
@@ -68,11 +67,6 @@ export default function ConfiguratorV2() {
     bodyType: config.bodyType || undefined,
     enabled: !!(brandForImage && config.model && config.year && config.bodyType),
   })
-
-  const matProductImage = useMemo(
-    () => matProductImages?.[0]?.image_url ?? null,
-    [matProductImages],
-  )
 
   const pricingQuery = useResolvedPricing({
     recordKey: config.recordKey || undefined,
@@ -148,7 +142,21 @@ export default function ConfiguratorV2() {
     ],
   )
 
-  const preview = useConfiguratorV2Preview(config, matProductImage)
+  const preview = useConfiguratorV2Preview(
+    config,
+    matProductImages,
+    productEntry,
+  )
+
+  const entryPreviewImage = productEntry.previewImageParam
+
+  const matProductImagePaths = useMemo(() => {
+    const paths = matProductImages.map((image) => image.image_url)
+    if (entryPreviewImage && !paths.includes(entryPreviewImage)) {
+      paths.unshift(entryPreviewImage)
+    }
+    return paths
+  }, [entryPreviewImage, matProductImages])
 
   useMatPreviewPreload({
     matType: config.matType,
@@ -157,7 +165,7 @@ export default function ConfiguratorV2() {
     color: config.color,
     edgeColor: config.edgeColor,
     variant: config.variant,
-    extraPaths: matProductImage ? [matProductImage] : [],
+    extraPaths: matProductImagePaths,
   })
 
   const [isAddingToCart, setIsAddingToCart] = useState(false)
@@ -282,6 +290,7 @@ export default function ConfiguratorV2() {
 
   return (
     <ConfiguratorV2Layout
+      mobilePreviewHasGallery={preview.showGallery}
       specsBar={
         <ConfiguratorV2SpecsBar
           title={pageTitle}
@@ -290,17 +299,29 @@ export default function ConfiguratorV2() {
         />
       }
       mobilePreview={
-        <ConfiguratorV2MobilePreview
+        <ConfiguratorV2PreviewWithGallery
+          layout="mobile"
           imageSrc={preview.imageSrc}
           alt={preview.alt}
           onOpenZoom={() => setIsPreviewModalOpen(true)}
+          showGallery={preview.showGallery}
+          showEmptyInCarSlot={preview.showEmptyInCarSlot}
+          galleryItems={preview.galleryItems}
+          activeGalleryId={preview.activeGalleryId}
+          onSelectGalleryItem={preview.selectGalleryItem}
         />
       }
       previewPanel={
-        <ConfiguratorV2PreviewPanel
+        <ConfiguratorV2PreviewWithGallery
+          layout="desktop"
           imageSrc={preview.imageSrc}
           alt={preview.alt}
           onOpenZoom={() => setIsPreviewModalOpen(true)}
+          showGallery={preview.showGallery}
+          showEmptyInCarSlot={preview.showEmptyInCarSlot}
+          galleryItems={preview.galleryItems}
+          activeGalleryId={preview.activeGalleryId}
+          onSelectGalleryItem={preview.selectGalleryItem}
         />
       }
       optionPanel={
@@ -390,12 +411,17 @@ export default function ConfiguratorV2() {
             isOpen={isFeaturesModalOpen}
             onClose={() => setIsFeaturesModalOpen(false)}
           />
-          <GalleryLightbox
+          <ConfiguratorV2MatPreviewLightbox
             isOpen={isPreviewModalOpen}
-            items={[{ src: preview.imageSrc, alt: preview.alt }]}
-            currentIndex={0}
-            onIndexChange={() => {}}
+            imageSrc={preview.imageSrc}
+            alt={preview.alt}
             onClose={() => setIsPreviewModalOpen(false)}
+            galleryImages={preview.lightboxImages}
+            initialIndex={preview.lightboxIndex}
+            onGalleryIndexChange={(index) => {
+              const item = preview.galleryItems[index]
+              if (item) preview.selectGalleryItem(item.id)
+            }}
           />
         </>
       }

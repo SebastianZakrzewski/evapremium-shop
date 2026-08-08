@@ -43,7 +43,7 @@ export const TeslaTrimOption = ({
         </div>
       </div>
       {priceAfterDiscount != null && priceAfterDiscount > 0 && (
-        <span className="shrink-0 text-sm font-semibold text-white tabular-nums">
+        <span className="shrink-0 text-sm font-semibold text-green-400 tabular-nums">
           {formatPricePln(priceAfterDiscount)}
         </span>
       )}

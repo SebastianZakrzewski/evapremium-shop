@@ -27,7 +27,11 @@ export const ConfiguratorV2SpecsBar = ({
     <div className="flex flex-wrap gap-x-6 gap-y-2 sm:gap-x-8 sm:gap-y-3 lg:justify-end">
       {metrics.map((metric) => (
         <div key={metric.label} className="min-w-[4rem]">
-          <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-white tabular-nums leading-none">
+          <p
+            className={`text-lg sm:text-xl lg:text-2xl font-semibold tabular-nums leading-none ${
+              metric.label === "Cena" ? "text-green-400" : "text-white"
+            }`}
+          >
             {metric.value}
           </p>
           <p className="text-[10px] sm:text-[11px] text-gray-400 mt-1 leading-tight">

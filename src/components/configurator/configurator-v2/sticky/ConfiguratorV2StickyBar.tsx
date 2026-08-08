@@ -55,7 +55,7 @@ export const ConfiguratorV2StickyBar = ({
           {hasPrice ? (
             <>
               <div className="flex items-baseline gap-2">
-                <span className="text-xl lg:text-2xl font-bold text-white tabular-nums">
+                <span className="text-xl lg:text-2xl font-bold text-green-400 tabular-nums">
                   {formatPricePln(totalWithAccessories)}
                 </span>
                 {onPriceClick && (

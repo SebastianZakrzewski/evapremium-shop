@@ -1,7 +1,10 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { CONFIGURATOR_V2_MOBILE_CONTENT_PT } from "./configuratorV2MobileLayout"
+import {
+  CONFIGURATOR_V2_MOBILE_CONTENT_PT,
+  CONFIGURATOR_V2_MOBILE_CONTENT_PT_WITH_GALLERY,
+} from "./configuratorV2MobileLayout"
 
 type ConfiguratorV2LayoutProps = {
   specsBar: ReactNode
@@ -10,6 +13,7 @@ type ConfiguratorV2LayoutProps = {
   stickyBarDesktop: ReactNode
   stickyBarMobile: ReactNode
   mobilePreview?: ReactNode
+  mobilePreviewHasGallery?: boolean
   modals?: ReactNode
 }
 
@@ -24,6 +28,7 @@ export const ConfiguratorV2Layout = ({
   stickyBarDesktop,
   stickyBarMobile,
   mobilePreview,
+  mobilePreviewHasGallery = false,
   modals,
 }: ConfiguratorV2LayoutProps) => (
   <div
@@ -55,7 +60,11 @@ export const ConfiguratorV2Layout = ({
         <main
           className={`flex-1 overflow-y-auto overscroll-contain
             px-4 py-5 lg:px-6 xl:px-10 lg:py-6 pb-28 lg:pb-4
-            ${CONFIGURATOR_V2_MOBILE_CONTENT_PT} lg:pt-6`}
+            ${
+              mobilePreviewHasGallery
+                ? CONFIGURATOR_V2_MOBILE_CONTENT_PT_WITH_GALLERY
+                : CONFIGURATOR_V2_MOBILE_CONTENT_PT
+            } lg:pt-6`}
         >
           <div className="lg:hidden mb-5 pb-4 border-b border-white/10">
             {specsBar}

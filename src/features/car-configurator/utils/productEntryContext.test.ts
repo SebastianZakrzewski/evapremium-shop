@@ -11,6 +11,15 @@ describe("getProductEntryLock", () => {
     const params = new URLSearchParams("brand=dacia")
     expect(getProductEntryLock(params).isLocked).toBe(false)
   })
+
+  it("reads previewImage from URL", () => {
+    const params = new URLSearchParams(
+      "brand=dacia&model=duster&previewImage=%2Fmat%2Ffrom-card.webp",
+    )
+    expect(getProductEntryLock(params).previewImageParam).toBe(
+      "/mat/from-card.webp",
+    )
+  })
 })
 
 describe("parseYearFromGeneration", () => {

@@ -1,13 +1,24 @@
 "use client"
 
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { getMatImagePath } from "@/lib/image-mapping"
 import {
   getMatTypeForDynamicPreview,
   isMatTypeSelected,
   usesClassicOnlyDynamicPreview,
 } from "@/components/configurator/configurator-simple/rugPreviewConfig"
+import type { ProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
+import type { MatProductImage } from "@/features/mat-product-images"
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
+import { brandNameToNavigationSlug, getBrandLogo } from "@/shared/brands"
+import {
+  buildConfiguratorV2PreviewGallery,
+  resolveDefaultGalleryItemId,
+  resolveVehiclePreviewImageSrc,
+  type PreviewGalleryItem,
+} from "../preview/buildConfiguratorV2PreviewGallery"
+import { partitionMatProductImages } from "../preview/partitionMatProductImages"
+import { resolveVehiclePreviewContext } from "../preview/resolveVehiclePreviewContext"
 
 const CLASSIC_GALLERY_DEFAULT = "/bezrantowprodukt/5-_4_red.webp"
 const RIMS_GALLERY_DEFAULT = "/zrantamiprodukt/5_-_1.webp"
@@ -20,11 +31,19 @@ export type ConfiguratorV2PreviewState = {
   showProductGallery: boolean
   productGalleryImages: string[]
   selectedProductImage: string
+  galleryItems: PreviewGalleryItem[]
+  activeGalleryId: string | null
+  showGallery: boolean
+  showEmptyInCarSlot: boolean
+  lightboxImages: string[]
+  lightboxIndex: number
+  selectGalleryItem: (id: string) => void
 }
 
 export const useConfiguratorV2Preview = (
   config: ConfiguratorState,
-  matProductImage: string | null,
+  matProductImages: MatProductImage[],
+  productEntry: ProductEntryLock,
 ): ConfiguratorV2PreviewState => {
   const classicProductImages = useMemo(
     () => [
@@ -70,7 +89,8 @@ export const useConfiguratorV2Preview = (
 
   const showProductGallery =
     isMatTypeSelected(config.matType) &&
-    !usesClassicOnlyDynamicPreview(config.matType, config.pricingCategoryKey)
+    !usesClassicOnlyDynamicPreview(config.matType, config.pricingCategoryKey) &&
+    !!config.variant
 
   const productGalleryImages =
     config.matType === "3d-with-rims" ? rimsProductImages : classicProductImages
@@ -78,23 +98,156 @@ export const useConfiguratorV2Preview = (
   const selectedProductImage =
     config.matType === "3d-with-rims" ? RIMS_GALLERY_DEFAULT : CLASSIC_GALLERY_DEFAULT
 
-  const hasVehicleOnly = !!(config.brand && config.model) && !config.variant
+  const entryPreviewImage = productEntry.previewImageParam
+  const brandLogoFallback = useMemo(() => {
+    const slug =
+      config.brandKey ||
+      productEntry.brandParam ||
+      (config.brand ? brandNameToNavigationSlug(config.brand) : "")
+    if (!slug) return null
+    return getBrandLogo(slug)
+  }, [config.brand, config.brandKey, productEntry.brandParam])
+  const { isVehiclePreviewReady } = resolveVehiclePreviewContext(
+    config,
+    productEntry,
+  )
 
-  const imageSrc = config.variant
-    ? dynamicPreviewPath
-    : hasVehicleOnly && matProductImage
-      ? matProductImage
-      : matProductImage || dynamicPreviewPath
+  const { modelTemplate } = useMemo(
+    () => partitionMatProductImages(matProductImages),
+    [matProductImages],
+  )
 
-  const alt = config.brand && config.model
-    ? `Podgląd dywaników ${config.brand} ${config.model}`
-    : "Podgląd dywaników EVA"
+  const modelTemplateUrl = useMemo(() => {
+    const entryImage = entryPreviewImage?.trim() ?? null
+    if (productEntry.isLocked && entryImage) {
+      return entryImage
+    }
+    return modelTemplate?.image_url ?? entryImage
+  }, [entryPreviewImage, modelTemplate, productEntry.isLocked])
+
+  const isVehicleContextComplete = !!(
+    config.brand &&
+    config.model &&
+    config.year &&
+    config.bodyType
+  )
+
+  const hasDynamicMatPreview = !!(
+    isMatTypeSelected(config.matType) &&
+    isVehicleContextComplete &&
+    config.structure &&
+    config.color &&
+    config.edgeColor
+  )
+
+  const autoImageSrc = resolveVehiclePreviewImageSrc({
+    hasFullDynamicPreview: hasDynamicMatPreview,
+    isVehiclePreviewReady,
+    modelTemplateUrl,
+    dynamicPreviewPath,
+    suppressDynamicFallback: productEntry.isLocked,
+    brandLogoFallback,
+  })
+
+  const alt =
+    config.brand && config.model
+      ? `Podgląd dywaników ${config.brand} ${config.model}`
+      : "Podgląd dywaników EVA"
+
+  const galleryItems = useMemo(
+    () =>
+      buildConfiguratorV2PreviewGallery({
+        dynamicPreviewPath,
+        hasFullDynamicPreview: hasDynamicMatPreview,
+        isVehiclePreviewReady,
+        matProductImages,
+        productGalleryImages,
+        showProductGallery,
+        defaultAlt: alt,
+        entryPreviewImage,
+        preferEntryPreviewImage: productEntry.isLocked,
+      }),
+    [
+      dynamicPreviewPath,
+      hasDynamicMatPreview,
+      isVehiclePreviewReady,
+      matProductImages,
+      productGalleryImages,
+      showProductGallery,
+      alt,
+      entryPreviewImage,
+      productEntry.isLocked,
+    ],
+  )
+
+  const defaultGalleryId = useMemo(
+    () =>
+      resolveDefaultGalleryItemId(galleryItems, autoImageSrc, {
+        preferModelTemplate:
+          productEntry.isLocked &&
+          isVehiclePreviewReady &&
+          !hasDynamicMatPreview,
+      }),
+    [
+      galleryItems,
+      autoImageSrc,
+      productEntry.isLocked,
+      isVehiclePreviewReady,
+      hasDynamicMatPreview,
+    ],
+  )
+
+  const [activeGalleryId, setActiveGalleryId] = useState<string | null>(
+    defaultGalleryId,
+  )
+
+  const dynamicSelectionKey = [
+    config.brand,
+    config.model,
+    config.year,
+    config.generation,
+    config.bodyType,
+    productEntry.bodyTypeParam,
+    productEntry.generationParam,
+    productEntry.previewImageParam,
+    config.variant,
+    config.structure,
+    config.color,
+    config.edgeColor,
+    config.matType,
+    dynamicPreviewPath,
+    modelTemplateUrl,
+  ].join("|")
+
+  useEffect(() => {
+    setActiveGalleryId(defaultGalleryId)
+  }, [defaultGalleryId, dynamicSelectionKey])
+
+  const activeGalleryItem =
+    galleryItems.find((item) => item.id === activeGalleryId) ?? galleryItems[0]
+
+  const imageSrc = activeGalleryItem?.imageUrl ?? autoImageSrc
+  const hasInCarPhotos = galleryItems.some((item) => item.kind === "in-car-photo")
+  const showEmptyInCarSlot = isVehiclePreviewReady && !hasInCarPhotos
+  const showGallery = isVehiclePreviewReady || galleryItems.length > 1
+  const lightboxImages = galleryItems.map((item) => item.imageUrl)
+  const lightboxIndex = Math.max(
+    0,
+    galleryItems.findIndex((item) => item.id === activeGalleryItem?.id),
+  )
 
   return {
     imageSrc,
-    alt,
+    alt: activeGalleryItem?.altText ?? alt,
     showProductGallery,
     productGalleryImages,
     selectedProductImage,
+    galleryItems,
+    activeGalleryId: activeGalleryItem?.id ?? null,
+    showGallery,
+    showEmptyInCarSlot,
+    lightboxImages,
+    lightboxIndex,
+    selectGalleryItem: setActiveGalleryId,
   }
 }
