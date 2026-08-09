@@ -148,7 +148,9 @@ backups/
 !public/video_carusela/
 !public/video_carusela/*.mov
 !public/video_carusela/*.MOV
-public/video_carusela/copy_57CDEDB2-A3CE-4647-848B-BD6862827900.mov
+
+# local tooling
+.tmp-ffmpeg/
 
 # temporary files
 *.tmp

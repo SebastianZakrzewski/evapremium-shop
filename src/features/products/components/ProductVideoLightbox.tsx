@@ -94,14 +94,50 @@ export const ProductVideoLightbox = ({
   }, [isOpen, onClose, goToPrevious, goToNext])
 
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen) {
+      const el = videoRef.current
+      if (el) {
+        el.pause()
+        el.muted = true
+      }
+      return
+    }
+
     const el = videoRef.current
     if (!el) return
 
-    el.currentTime = 0
-    const playPromise = el.play()
-    if (playPromise !== undefined) {
-      playPromise.catch(() => undefined)
+    const playWithSound = () => {
+      el.muted = false
+      el.defaultMuted = false
+      el.volume = 1
+      try {
+        el.currentTime = 0
+      } catch {
+        // Ignore seek errors before metadata is ready
+      }
+      return el.play()
+    }
+
+    const tryPlayWithSound = () => {
+      playWithSound().catch(() => {
+        // Retry once after the next frame — still within open gesture window on most browsers
+        requestAnimationFrame(() => {
+          playWithSound().catch(() => undefined)
+        })
+      })
+    }
+
+    if (el.readyState >= 2) {
+      tryPlayWithSound()
+    } else {
+      el.addEventListener("loadeddata", tryPlayWithSound, { once: true })
+      el.addEventListener("canplay", tryPlayWithSound, { once: true })
+    }
+
+    return () => {
+      el.pause()
+      el.removeEventListener("loadeddata", tryPlayWithSound)
+      el.removeEventListener("canplay", tryPlayWithSound)
     }
   }, [isOpen, safeIndex])
 
@@ -183,7 +219,6 @@ export const ProductVideoLightbox = ({
                 src={current.src}
                 poster={current.poster}
                 controls
-                muted
                 loop
                 playsInline
                 autoPlay

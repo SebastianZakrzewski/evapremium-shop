@@ -81,6 +81,13 @@ export const productVideos: ProductVideo[] = [
     alt: "Montaż dywaników EVA Premium w kabinie",
   },
   {
+    id: "copy-57cdedb2",
+    src: encodeVideoPath("copy_57CDEDB2-A3CE-4647-848B-BD6862827900.mp4"),
+    poster: "/galeria/photo_2025-04-25_17.12.47.webp",
+    title: "Detal wykończenia",
+    alt: "Detal wykończenia dywaników EVA Premium",
+  },
+  {
     id: "copy-58501d63",
     src: encodeVideoPath("copy_58501D63-EB8A-4C90-A7FF-5943D141301F.MOV"),
     poster: "/galeria/photo_2025-04-25_17.12.48.webp",
