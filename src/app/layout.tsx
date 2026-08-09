@@ -32,10 +32,15 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://evapremium.pl'),
   icons: {
     icon: [
-      { url: '/icon.png', type: 'image/png' },
-      { url: '/favicon.ico', type: 'image/x-icon' },
+      { url: '/icon-48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/icon-96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
     ],
-    apple: '/icon.png',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
     shortcut: '/favicon.ico',
   },
   alternates: {
@@ -97,7 +102,7 @@ export default function RootLayout({
     "@type": "Organization",
     "name": "EvaPremium",
     "url": "https://evapremium.pl",
-    "logo": "https://evapremium.pl/Logo svg.svg",
+    "logo": "https://evapremium.pl/icon.png",
     "description": "Profesjonalne dywaniki samochodowe EVA Premium",
     "address": {
       "@type": "PostalAddress",
