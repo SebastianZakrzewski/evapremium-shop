@@ -24,6 +24,7 @@ export const ProductVideoLightbox = ({
   onClose,
 }: ProductVideoLightboxProps) => {
   const [mounted, setMounted] = useState(false)
+  const [isMediaReady, setIsMediaReady] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   const itemCount = videos.length
@@ -59,6 +60,10 @@ export const ProductVideoLightbox = ({
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  useEffect(() => {
+    setIsMediaReady(false)
+  }, [isOpen, safeIndex])
 
   useEffect(() => {
     if (!isOpen) return
@@ -106,38 +111,66 @@ export const ProductVideoLightbox = ({
     const el = videoRef.current
     if (!el) return
 
-    const playWithSound = () => {
+    let cancelled = false
+
+    const playWithSound = async () => {
+      if (cancelled) return
+
       el.muted = false
       el.defaultMuted = false
       el.volume = 1
-      try {
-        el.currentTime = 0
-      } catch {
-        // Ignore seek errors before metadata is ready
-      }
-      return el.play()
-    }
 
-    const tryPlayWithSound = () => {
-      playWithSound().catch(() => {
-        // Retry once after the next frame — still within open gesture window on most browsers
-        requestAnimationFrame(() => {
-          playWithSound().catch(() => undefined)
+      // Avoid seek flash — only restart if the clip already progressed
+      if (el.currentTime > 0.15) {
+        await new Promise<void>((resolve) => {
+          const handleSeeked = () => {
+            el.removeEventListener("seeked", handleSeeked)
+            resolve()
+          }
+          el.addEventListener("seeked", handleSeeked)
+          try {
+            el.currentTime = 0
+          } catch {
+            el.removeEventListener("seeked", handleSeeked)
+            resolve()
+          }
         })
-      })
+      }
+
+      if (cancelled) return
+
+      try {
+        await el.play()
+        if (!cancelled) {
+          setIsMediaReady(true)
+        }
+      } catch {
+        if (cancelled) return
+        requestAnimationFrame(() => {
+          if (cancelled) return
+          el.play()
+            .then(() => {
+              if (!cancelled) setIsMediaReady(true)
+            })
+            .catch(() => undefined)
+        })
+      }
     }
 
-    if (el.readyState >= 2) {
-      tryPlayWithSound()
+    const handleCanPlay = () => {
+      void playWithSound()
+    }
+
+    if (el.readyState >= 3) {
+      void playWithSound()
     } else {
-      el.addEventListener("loadeddata", tryPlayWithSound, { once: true })
-      el.addEventListener("canplay", tryPlayWithSound, { once: true })
+      el.addEventListener("canplay", handleCanPlay, { once: true })
     }
 
     return () => {
+      cancelled = true
       el.pause()
-      el.removeEventListener("loadeddata", tryPlayWithSound)
-      el.removeEventListener("canplay", tryPlayWithSound)
+      el.removeEventListener("canplay", handleCanPlay)
     }
   }, [isOpen, safeIndex])
 
@@ -151,7 +184,7 @@ export const ProductVideoLightbox = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 p-3 backdrop-blur-[2px] sm:p-4 md:p-8"
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black p-0 md:bg-black/40 md:p-8 md:backdrop-blur-[2px]"
           onClick={onClose}
           role="dialog"
           aria-modal="true"
@@ -198,11 +231,11 @@ export const ProductVideoLightbox = ({
           )}
 
           <motion.div
-            initial={{ scale: 0.96, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.96, opacity: 0 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative z-[205] flex w-full max-w-md flex-col items-center px-10 md:max-w-lg md:px-14"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="relative z-[205] flex h-full w-full flex-col items-center md:h-auto md:max-w-md md:px-14 lg:max-w-lg"
             onClick={(event) => event.stopPropagation()}
           >
             <motion.div
@@ -210,24 +243,25 @@ export const ProductVideoLightbox = ({
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.12}
               onDragEnd={handleDragEnd}
-              className="relative w-full max-h-[78vh] overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl aspect-[9/16]"
+              className="relative h-full w-full overflow-hidden bg-black shadow-2xl md:aspect-[9/16] md:h-auto md:max-h-[78vh] md:rounded-2xl md:border md:border-white/10"
             >
               <video
                 key={current.id}
                 ref={videoRef}
-                className="h-full w-full object-contain bg-black"
+                className={`h-full w-full bg-black object-cover transition-opacity duration-150 md:object-contain ${
+                  isMediaReady ? "opacity-100" : "opacity-0"
+                }`}
                 src={current.src}
-                poster={current.poster}
                 controls
                 loop
                 playsInline
-                autoPlay
                 preload="auto"
                 aria-label={current.alt}
+                onPlaying={() => setIsMediaReady(true)}
               />
 
               {canNavigate && (
-                <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 -translate-x-1/2 rounded-full border border-white/10 bg-black/70 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                <div className="pointer-events-none absolute bottom-16 left-1/2 z-10 -translate-x-1/2 rounded-full border border-white/10 bg-black/70 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm md:bottom-3">
                   {safeIndex + 1} / {itemCount}
                 </div>
               )}
