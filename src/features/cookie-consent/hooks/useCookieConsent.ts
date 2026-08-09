@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   acceptAllCookieConsent,
   closeCookiebotPreferencesPanel,
+  dispatchCookieConsentAccepted,
   getCookiebot,
   openCookiebotPreferences,
   shouldShowCustomBanner,
@@ -90,6 +91,7 @@ export const useCookieConsent = (): UseCookieConsentReturn => {
       isManagingPreferencesRef.current = false
       closeCookiebotPreferencesPanel()
       setIsBannerVisible(false)
+      dispatchCookieConsentAccepted()
     })
   }, [])
 

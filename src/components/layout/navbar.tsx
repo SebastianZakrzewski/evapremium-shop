@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { CartModalWrapper } from "@/features/shopping-cart/components";
 import { useCart } from "@/features/shopping-cart/hooks/useCart";
 import SearchDropdown from "../search-dropdown";
+import { NavbarLogo } from "./NavbarLogo";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -67,17 +67,8 @@ export default function Navbar() {
         <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 md:h-20 lg:h-24 flex items-center justify-between overflow-x-hidden">
-          {/* Logo */}
-          <Link href="/" className="flex items-center justify-center gap-2 text-white font-bold text-lg hover:opacity-80 transition-opacity z-10">
-            <Image
-              src="/Logo svg .svg"
-              alt="EvaPremium Logo"
-              width={450}
-              height={180}
-              className="object-contain h-14 md:h-16 lg:h-20"
-              priority
-            />
-          </Link>
+          {/* Logo — animacja power-on po akceptacji cookies */}
+          <NavbarLogo />
           
           {/* Desktop Links - Centered */}
           <div className="hidden md:flex gap-8 items-center absolute left-1/2 transform -translate-x-1/2">

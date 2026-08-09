@@ -3,6 +3,8 @@ export { useCookieConsent } from './hooks/useCookieConsent'
 export {
   acceptAllCookieConsent,
   closeCookiebotPreferencesPanel,
+  COOKIE_CONSENT_ACCEPTED_EVENT,
+  dispatchCookieConsentAccepted,
   getCookiebot,
   getConsentCookieValue,
   hasConsentForCategory,
