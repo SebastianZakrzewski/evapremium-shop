@@ -1,6 +1,6 @@
 import { HeroSection } from "@/features/marketing";
 import QuickSearchBar from "@/components/quick-search-bar";
-import { ProductGallerySection, ProductSelection } from "@/features/products";
+import { ProductGallerySection, ProductSelection, ProductVideoCarouselSection } from "@/features/products";
 import CustomFitSection from "@/components/custom-fit-section";
 import InteractiveFeaturesSection from "@/components/interactive-features-section";
 import RoznorodnaKolorystykaSection from "@/components/roznorodna-kolorystyka-section";
@@ -15,6 +15,7 @@ export default function Home() {
       <HeroSection />
       <QuickSearchBar />
       <ProductGallerySection />
+      <ProductVideoCarouselSection />
       <InteractiveFeaturesSection />
       <MatComparisonSection />
       <ProductSelection />
