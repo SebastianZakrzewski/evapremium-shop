@@ -116,8 +116,8 @@ export default function DeliveryAndPaymentTermsPage() {
                         <p>ul. Tadeusza Kościuszki 34/1</p>
                         <p>81-198 Pogórze</p>
                         <p>NIP: 5871715880</p>
-                        <p><strong>Numer rachunku (Alior Bank S.A.):</strong></p>
-                        <p className="text-lg font-mono bg-white/5 p-2 rounded text-green-400">78 2490 0005 0000 4530 1376 8507</p>
+                        <p><strong>Numer rachunku (mBank S.A.):</strong></p>
+                        <p className="text-lg font-mono bg-white/5 p-2 rounded text-green-400">47 1140 2004 0000 3702 7951 8739</p>
                       </div>
                     </div>
                     <p className="text-gray-400 mt-4">
@@ -199,7 +199,7 @@ export default function DeliveryAndPaymentTermsPage() {
                 </p>
                 <p><strong>Adres:</strong> ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze</p>
                 <p><strong>NIP:</strong> 5871715880</p>
-                <p><strong>Rachunek bankowy:</strong> 78 2490 0005 0000 4530 1376 8507 (Alior Bank S.A.)</p>
+                <p><strong>Rachunek bankowy:</strong> 47 1140 2004 0000 3702 7951 8739 (mBank S.A.)</p>
               </div>
             </div>
           </div>
