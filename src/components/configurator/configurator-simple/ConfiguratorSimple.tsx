@@ -14,6 +14,7 @@ import { useConfiguratorState } from "@/features/car-configurator/hooks/useConfi
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState";
 import { useResolvedPricing } from "@/features/vehicle-catalog/hooks/useResolvedPricing";
 import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext";
+import { getPodpietkaTotalPrice } from "@/features/car-configurator/domain/podpietkaMounting";
 import { normalizeBrandName } from "@/shared/brands";
 import {
   resolvePersistedMatSetVariantLabel,
@@ -330,8 +331,11 @@ export default function ConfiguratorSimple() {
 
   // Oblicz całkowitą cenę z podpiętką
   const totalPriceWithAccessories = useMemo(() => {
-    return priceBreakdown.totalPrice + (selectedPodpietka?.price || 0);
-  }, [priceBreakdown.totalPrice, selectedPodpietka?.price]);
+    const accessoryPrice = selectedPodpietka
+      ? getPodpietkaTotalPrice(selectedPodpietka.price, config.podpietkaMounting)
+      : 0;
+    return priceBreakdown.totalPrice + accessoryPrice;
+  }, [priceBreakdown.totalPrice, selectedPodpietka, config.podpietkaMounting]);
 
   // Generuj ścieżkę do dynamicznego obrazu dywanika (zmienia się z kolorami/strukturą)
   const dynamicPreviewPath = useMemo(() => {
@@ -941,12 +945,16 @@ export default function ConfiguratorSimple() {
             productType: 'accessory',
             productId: selectedPodpietka.id,
             quantity: 1,
-            unitPrice: selectedPodpietka.price,
+            unitPrice: getPodpietkaTotalPrice(
+              selectedPodpietka.price,
+              config.podpietkaMounting,
+            ),
             productName: `${selectedPodpietka.name}${config.podpietkaColor ? ` - ${config.podpietkaColor}` : ''}`,
             productSku: selectedPodpietka.sku,
             productImage: podpietkaImage,
             configuration: {
               color: config.podpietkaColor || undefined,
+              mounting: config.podpietkaMounting,
             },
           });
         }

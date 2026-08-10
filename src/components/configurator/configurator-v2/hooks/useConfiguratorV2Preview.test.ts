@@ -25,6 +25,7 @@ const baseConfig: ConfiguratorState = {
   edgeColor: "",
   selectedPodpietka: null,
   podpietkaColor: "",
+  podpietkaMounting: undefined,
   heelPad: false,
 }
 

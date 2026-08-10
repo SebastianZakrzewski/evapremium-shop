@@ -61,6 +61,7 @@ export const CatalogMatConfigurationSchema = MatConfigurationSchema.extend({
 export const AccessoryConfigurationSchema = z
   .object({
     color: z.string().trim().optional(),
+    mounting: z.enum(["professional", "self"]).optional(),
   })
   .optional()
 

@@ -15,6 +15,10 @@ import { useConfiguratorState } from "@/features/car-configurator/hooks/useConfi
 import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import { useResolvedPricing } from "@/features/vehicle-catalog/hooks/useResolvedPricing"
 import { mapConfiguratorV2Sections } from "@/features/car-configurator/adapters/configuratorV2SectionMapper"
+import {
+  getPodpietkaMountingFee,
+  getPodpietkaTotalPrice,
+} from "@/features/car-configurator/domain/podpietkaMounting"
 import { resolvePersistedMatSetVariantLabel } from "@/shared/mat-set-labels"
 import { normalizeBrandName } from "@/shared/brands"
 import { getMatImagePath } from "@/lib/image-mapping"
@@ -153,6 +157,19 @@ export default function ConfiguratorV2() {
     if (!config.selectedPodpietka) return null
     return accessories.find((acc) => acc.id === config.selectedPodpietka) ?? null
   }, [accessories, config.selectedPodpietka])
+
+  const accessoryPrice = useMemo(() => {
+    if (!selectedPodpietka) return 0
+    return getPodpietkaTotalPrice(
+      selectedPodpietka.price,
+      config.podpietkaMounting,
+    )
+  }, [selectedPodpietka, config.podpietkaMounting])
+
+  const accessoryMountingFee = useMemo(
+    () => getPodpietkaMountingFee(config.podpietkaMounting),
+    [config.podpietkaMounting],
+  )
 
   const mapperResult = useMemo(
     () =>
@@ -325,12 +342,16 @@ export default function ConfiguratorV2() {
             productType: "accessory",
             productId: selectedPodpietka.id,
             quantity: 1,
-            unitPrice: selectedPodpietka.price,
+            unitPrice: getPodpietkaTotalPrice(
+              selectedPodpietka.price,
+              config.podpietkaMounting,
+            ),
             productName: `${selectedPodpietka.name}${config.podpietkaColor ? ` - ${config.podpietkaColor}` : ""}`,
             productSku: selectedPodpietka.sku,
             productImage: podpietkaImage,
             configuration: {
               color: config.podpietkaColor || undefined,
+              mounting: config.podpietkaMounting,
             },
           })
         } catch (accessoryError) {
@@ -375,7 +396,7 @@ export default function ConfiguratorV2() {
 
   const stickyBarProps = {
     priceBreakdown,
-    accessoryPrice: selectedPodpietka?.price ?? 0,
+    accessoryPrice,
     isConfigComplete: mapperResult.isReadyForCart,
     showSummaryCta: !showSummary,
     onGoToSummary: handleGoToSummary,
@@ -505,8 +526,9 @@ export default function ConfiguratorV2() {
             isOpen={isPriceModalOpen}
             onClose={() => setIsPriceModalOpen(false)}
             priceBreakdown={priceBreakdown}
-            accessoryPrice={selectedPodpietka?.price ?? 0}
+            accessoryPrice={accessoryPrice}
             accessoryName={selectedPodpietka?.name}
+            accessoryMountingFee={accessoryMountingFee}
           />
           <CompareMatTypesModal
             isOpen={isCompareMatTypesOpen}

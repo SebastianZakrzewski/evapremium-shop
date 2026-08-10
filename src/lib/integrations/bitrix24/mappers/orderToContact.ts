@@ -6,6 +6,7 @@
 
 import { Bitrix24Contact } from '@/lib/types/bitrix';
 import { Order } from '@/lib/types/order-new';
+import { getPodpietkaMountingBitrixLabel } from '@/features/car-configurator/domain/podpietkaMounting';
 
 export interface OrderToContactMappingOptions {
   sourceId?: string;
@@ -97,6 +98,15 @@ function buildContactComments(order: Order): string {
         }
         if (config.borderColor) {
           comments.push(`   Kolor obszycia: ${config.borderColor}`);
+        }
+        if (config.mounting) {
+          const mountingLabel = getPodpietkaMountingBitrixLabel(config.mounting);
+          if (mountingLabel) {
+            comments.push(`   ${mountingLabel}`);
+          }
+        }
+        if (config.color && !config.materialColor) {
+          comments.push(`   Kolor: ${config.color}`);
         }
       }
     });

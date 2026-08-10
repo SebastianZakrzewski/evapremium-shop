@@ -56,6 +56,7 @@ const defaultState: ConfiguratorState = {
   heelPad: false,
   selectedPodpietka: undefined,
   podpietkaColor: undefined,
+  podpietkaMounting: undefined,
 };
 
 export type UseConfiguratorStateArgs = {

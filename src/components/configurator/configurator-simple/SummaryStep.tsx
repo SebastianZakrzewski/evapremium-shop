@@ -17,6 +17,11 @@ import { shouldServeBrandImageUnoptimized } from "@/shared/brands";
 import { Plus, CheckCircle2, ShoppingCart } from "lucide-react";
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
 import {
+  getPodpietkaMountingFee,
+  getPodpietkaMountingLabel,
+  getPodpietkaTotalPrice,
+} from "@/features/car-configurator/domain/podpietkaMounting";
+import {
   CELL_STRUCTURE_DIAMONDS_ICON_SRC,
   CELL_STRUCTURE_HONEY_ICON_SRC,
 } from "@/components/configurator/configurator-v2/structure/cellStructurePresentation";
@@ -56,6 +61,11 @@ export function SummaryStep({
     if (!config.selectedPodpietka) return null;
     return accessories.find(acc => acc.id === config.selectedPodpietka) || null;
   }, [accessories, config.selectedPodpietka]);
+
+  const accessoryPrice = selectedPodpietka
+    ? getPodpietkaTotalPrice(selectedPodpietka.price, config.podpietkaMounting)
+    : 0;
+  const accessoryMountingFee = getPodpietkaMountingFee(config.podpietkaMounting);
   
   const brandLogo = useMemo(
     () =>
@@ -118,7 +128,7 @@ export function SummaryStep({
   }
   
   const totalWithAccessories =
-    priceBreakdown.totalPrice + (selectedPodpietka?.price || 0);
+    priceBreakdown.totalPrice + accessoryPrice;
 
   const actionsClassName = stickyMobileActions
     ? "fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-black/95 backdrop-blur-xl px-4 py-3 pb-safe lg:static lg:z-auto lg:border-0 lg:bg-transparent lg:backdrop-blur-none lg:px-0 lg:py-0"
@@ -174,6 +184,13 @@ export function SummaryStep({
                   <span className="font-medium">{formatPricePln(selectedPodpietka.price)}</span>
                 </div>
               )}
+
+              {accessoryMountingFee > 0 && (
+                <div className="flex justify-between text-gray-400 bg-white/5 px-2 py-1 rounded text-sm">
+                  <span>Montaż podpiętki</span>
+                  <span className="font-medium">{formatPricePln(accessoryMountingFee)}</span>
+                </div>
+              )}
             </div>
 
             <div className="pt-4 md:pt-6 mt-4 md:mt-6 border-t border-white/10 relative z-10">
@@ -183,7 +200,7 @@ export function SummaryStep({
                   <div className="flex items-baseline gap-2 flex-wrap justify-end">
                     {priceBreakdown.discount > 0 && (
                       <span className="text-sm md:text-base text-gray-400 line-through font-medium">
-                        {formatPricePln(priceBreakdown.basePrice + (selectedPodpietka?.price || 0))}
+                        {formatPricePln(priceBreakdown.basePrice + accessoryPrice)}
                       </span>
                     )}
                     <span className="text-2xl md:text-3xl font-bold text-white tracking-tight tabular-nums">
@@ -329,8 +346,13 @@ export function SummaryStep({
                       {config.podpietkaColor && (
                         <p className="text-xs text-gray-400 mt-1">Kolor: {config.podpietkaColor}</p>
                       )}
+                      {config.podpietkaMounting && (
+                        <p className="text-xs text-gray-400 mt-1">
+                          {getPodpietkaMountingLabel(config.podpietkaMounting)}
+                        </p>
+                      )}
                       <p className="text-sm text-gray-400 mt-1">
-                        {formatPriceValue(selectedPodpietka.price)} PLN
+                        {formatPriceValue(accessoryPrice)} PLN
                       </p>
                     </div>
                   </div>

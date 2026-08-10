@@ -12,6 +12,11 @@ import {
   getMatTypeLabel,
   isSinglePriceSetType,
 } from '@/shared/mat-set-labels';
+import {
+  getPodpietkaMountingLabel,
+  isPodpietkaMounting,
+} from '@/features/car-configurator/domain/podpietkaMounting';
+import type { AccessoryCartConfiguration } from '@/lib/types/cart-new';
 
 function getPolishCellType(cellType: string): string {
   const translations: Record<string, string> = {
@@ -292,6 +297,13 @@ function AccessoryCartItem({
   onRemove: () => void; 
   onUpdateQuantity: (quantity: number) => void; 
 }) {
+  const accessoryConfig = item.configuration as AccessoryCartConfiguration | undefined
+  const mountingLabel =
+    accessoryConfig?.mounting && isPodpietkaMounting(accessoryConfig.mounting)
+      ? getPodpietkaMountingLabel(accessoryConfig.mounting)
+      : ""
+  const colorLabel = accessoryConfig?.color
+
   return (
     <div className="flex items-center space-x-4 p-4 border border-white/10 rounded-lg bg-white/5 backdrop-blur">
       {/* Obraz produktu */}
@@ -318,6 +330,16 @@ function AccessoryCartItem({
         <h3 className="text-lg font-semibold text-white leading-tight">
           {item.productName}
         </h3>
+        {(colorLabel || mountingLabel) && (
+          <div className="mt-1 space-y-0.5">
+            {colorLabel && (
+              <p className="text-sm text-gray-400">Kolor: {colorLabel}</p>
+            )}
+            {mountingLabel && (
+              <p className="text-sm text-gray-400">{mountingLabel}</p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Kontrolki ilości i cena */}
@@ -329,6 +351,7 @@ function AccessoryCartItem({
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity - 1)}
             className="h-8 w-8 p-0 border-white/10 text-gray-400 hover:bg-white/10"
+            aria-label="Zmniejsz ilość"
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -342,6 +365,7 @@ function AccessoryCartItem({
             size="sm"
             onClick={() => onUpdateQuantity(item.quantity + 1)}
             className="h-8 w-8 p-0 border-white/10 text-gray-400 hover:bg-white/10"
+            aria-label="Zwiększ ilość"
           >
             <Plus className="h-4 w-4" />
           </Button>
@@ -363,6 +387,7 @@ function AccessoryCartItem({
           size="sm"
           onClick={onRemove}
           className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+          aria-label="Usuń z koszyka"
         >
           <Trash2 className="h-4 w-4" />
         </Button>

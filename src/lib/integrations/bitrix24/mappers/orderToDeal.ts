@@ -16,7 +16,8 @@ import {
   getMatSetVariantLabel,
   getMatTypeLabel,
   isSinglePriceSetType,
-} from '@/shared/mat-set-labels';
+} from '@/shared/mat-set-labels'
+import { getPodpietkaMountingBitrixLabel } from '@/features/car-configurator/domain/podpietkaMounting';
 
 export interface OrderToDealMappingOptions {
   contactId?: string;
@@ -358,6 +359,15 @@ function buildDealComments(order: Order): string {
         }
         if (config.heelPad) {
           comments.push(`   Podkładka pod pięty: ${config.heelPad ? 'Tak' : 'Nie'}`);
+        }
+        if (config.mounting) {
+          const mountingLabel = getPodpietkaMountingBitrixLabel(config.mounting)
+          if (mountingLabel) {
+            comments.push(`   ${mountingLabel}`)
+          }
+        }
+        if (config.color && !config.materialColor) {
+          comments.push(`   Kolor: ${config.color}`)
         }
       }
     });

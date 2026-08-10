@@ -1,6 +1,9 @@
 import type { MatConfiguration } from '@/features/vehicle-catalog/model/matConfiguration';
 
-export type AccessoryCartConfiguration = { color?: string }
+export type AccessoryCartConfiguration = {
+  color?: string
+  mounting?: "professional" | "self"
+}
 export type CartItemConfiguration = MatConfiguration | AccessoryCartConfiguration
 
 export const isMatCartConfiguration = (
