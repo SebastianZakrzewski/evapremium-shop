@@ -1,5 +1,8 @@
 "use client"
 
+import { useCallback, useEffect, useRef } from "react"
+import type { KeyboardEvent } from "react"
+import { useHorizontalDragScroll } from "../hooks/useHorizontalDragScroll"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight, ImageIcon, Layers } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -7,6 +10,7 @@ import {
   CONFIGURATOR_V2_MOBILE_GALLERY_STRIP_HEIGHT,
 } from "../configuratorV2MobileLayout"
 import type { PreviewGalleryItem } from "../preview/buildConfiguratorV2PreviewGallery"
+import { getAdjacentGalleryItemId } from "../preview/getAdjacentGalleryItemId"
 
 const EMPTY_IN_CAR_SLOT_COUNT = 3
 
@@ -25,28 +29,51 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
   variant = "panel",
   showEmptyInCarSlot = false,
 }: ConfiguratorV2PreviewGalleryStripProps) => {
-  if (items.length === 0 && !showEmptyInCarSlot) return null
+  const itemRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
+  const {
+    scrollRef,
+    onPointerDown,
+    onPointerMove,
+    onPointerUp,
+    onPointerCancel,
+  } = useHorizontalDragScroll({ onThumbnailTap: onSelect })
 
-  const activeIndex = Math.max(
-    0,
-    items.findIndex((item) => item.id === activeId),
+  const handleThumbKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLButtonElement>, itemId: string) => {
+      if (event.key !== "Enter" && event.key !== " ") return
+      event.preventDefault()
+      onSelect(itemId)
+    },
+    [onSelect],
   )
 
-  const handlePrevious = () => {
-    const previousIndex =
-      (activeIndex - 1 + items.length) % items.length
-    const previousItem = items[previousIndex]
-    if (previousItem) onSelect(previousItem.id)
-  }
+  const handlePrevious = useCallback(() => {
+    const previousId = getAdjacentGalleryItemId(items, activeId, "previous")
+    if (previousId) onSelect(previousId)
+  }, [activeId, items, onSelect])
 
-  const handleNext = () => {
-    const nextIndex = (activeIndex + 1) % items.length
-    const nextItem = items[nextIndex]
-    if (nextItem) onSelect(nextItem.id)
-  }
+  const handleNext = useCallback(() => {
+    const nextId = getAdjacentGalleryItemId(items, activeId, "next")
+    if (nextId) onSelect(nextId)
+  }, [activeId, items, onSelect])
+
+  useEffect(() => {
+    if (!activeId) return
+    const activeElement = itemRefs.current.get(activeId)
+    if (!activeElement?.scrollIntoView) return
+
+    activeElement.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    })
+  }, [activeId, items])
+
+  if (items.length === 0 && !showEmptyInCarSlot) return null
 
   const isMobile = variant === "mobile"
   const thumbClassName = isMobile ? "w-12 h-12" : "w-16 h-16 sm:w-20 sm:h-20"
+  const hasMultipleItems = items.length > 1
 
   return (
     <div
@@ -65,11 +92,11 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
       )}
 
       <div
-        className={`relative flex h-full items-center ${
+        className={`relative flex h-full min-w-0 items-center ${
           isMobile ? "px-2" : "px-2 pb-3"
         }`}
       >
-        {items.length > 1 && (
+        {hasMultipleItems && (
           <>
             <Button
               type="button"
@@ -99,8 +126,13 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
         )}
 
         <div
-          className={`flex gap-2 overflow-x-auto scrollbar-hide py-1 ${
-            items.length > 1 ? "px-8" : "px-1"
+          ref={scrollRef}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerCancel}
+          className={`flex min-w-0 flex-1 gap-2 overflow-x-auto overscroll-x-contain touch-pan-x scrollbar-hide py-1 snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none ${
+            hasMultipleItems ? "px-8" : "px-1"
           }`}
           role="list"
           aria-label="Galeria zdjęć podglądowych"
@@ -117,10 +149,18 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
             return (
               <button
                 key={item.id}
+                data-gallery-thumb-id={item.id}
+                ref={(element) => {
+                  if (element) {
+                    itemRefs.current.set(item.id, element)
+                    return
+                  }
+                  itemRefs.current.delete(item.id)
+                }}
                 type="button"
                 role="listitem"
-                onClick={() => onSelect(item.id)}
-                className={`relative rounded-lg overflow-hidden border-2 flex-shrink-0 transition-all active:scale-95 ${thumbClassName} ${
+                onKeyDown={(event) => handleThumbKeyDown(event, item.id)}
+                className={`relative rounded-lg overflow-hidden border-2 flex-shrink-0 snap-center transition-all active:scale-95 ${thumbClassName} ${
                   isActive
                     ? "border-red-500 ring-1 ring-red-500/40 scale-105"
                     : "border-white/10 opacity-70 hover:opacity-100"
@@ -134,6 +174,7 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
                   fill
                   className="object-cover"
                   sizes={isMobile ? "48px" : "80px"}
+                  draggable={false}
                 />
                 {item.kind === "dynamic" && (
                   <span className="absolute bottom-0.5 right-0.5 rounded bg-black/80 px-0.5 text-white">
@@ -151,7 +192,7 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
 
           {showEmptyInCarSlot && (
             <div
-              className="flex items-center gap-2 flex-shrink-0"
+              className="flex items-center gap-2 flex-shrink-0 snap-center"
               role="group"
               aria-label="Zdjęcia w aucie — wkrótce"
             >

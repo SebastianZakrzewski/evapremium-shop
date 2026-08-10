@@ -1,10 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    // Ignoruj ESLint podczas builda - warningi nie powinny blokować deploymentu
-    // Warningi są naprawiane w trakcie developmentu, ale nie blokują produkcji
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     // Ignoruj błędy TypeScript podczas builda (tylko warningi)
     ignoreBuildErrors: false,

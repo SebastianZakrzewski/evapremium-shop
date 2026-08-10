@@ -9,6 +9,7 @@ import {
 } from "@/components/configurator/configurator-simple/rugPreviewConfig"
 import type { ProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import type { MatProductImage } from "@/features/mat-product-images"
+import type { MatRealizationPhoto } from "@/features/mat-realization-photos"
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
 import { brandNameToNavigationSlug, getBrandLogo } from "@/shared/brands"
 import {
@@ -19,6 +20,8 @@ import {
 } from "../preview/buildConfiguratorV2PreviewGallery"
 import { partitionMatProductImages } from "../preview/partitionMatProductImages"
 import { resolveVehiclePreviewContext } from "../preview/resolveVehiclePreviewContext"
+import { buildRealizationPreviewCaption } from "../preview/buildRealizationPreviewCaption"
+import { isMatRealizationMatType } from "@/features/mat-realization-photos"
 
 const CLASSIC_GALLERY_DEFAULT = "/bezrantowprodukt/5-_4_red.webp"
 const RIMS_GALLERY_DEFAULT = "/zrantamiprodukt/5_-_1.webp"
@@ -38,6 +41,7 @@ export type ConfiguratorV2PreviewState = {
   usesMatPreviewCanvas: boolean
   lightboxImages: string[]
   lightboxIndex: number
+  realizationCaption: string | null
   selectGalleryItem: (id: string) => void
 }
 
@@ -45,6 +49,7 @@ export const useConfiguratorV2Preview = (
   config: ConfiguratorState,
   matProductImages: MatProductImage[],
   productEntry: ProductEntryLock,
+  realizationPhotos: MatRealizationPhoto[] = [],
 ): ConfiguratorV2PreviewState => {
   const classicProductImages = useMemo(
     () => [
@@ -99,6 +104,17 @@ export const useConfiguratorV2Preview = (
   const selectedProductImage =
     config.matType === "3d-with-rims" ? RIMS_GALLERY_DEFAULT : CLASSIC_GALLERY_DEFAULT
 
+  const orderedProductGalleryImages = useMemo(() => {
+    if (!productGalleryImages.includes(selectedProductImage)) {
+      return productGalleryImages
+    }
+
+    return [
+      selectedProductImage,
+      ...productGalleryImages.filter((imageUrl) => imageUrl !== selectedProductImage),
+    ]
+  }, [productGalleryImages, selectedProductImage])
+
   const entryPreviewImage = productEntry.previewImageParam
   const brandPlaceholderUrl = useMemo(() => {
     const slug =
@@ -143,8 +159,13 @@ export const useConfiguratorV2Preview = (
 
   const autoImageSrc = resolveVehiclePreviewImageSrc({
     hasFullDynamicPreview: hasDynamicMatPreview,
-    brandPlaceholderUrl,
-    modelTemplateUrl,
+    brandPlaceholderUrl:
+      isVehiclePreviewReady && !hasDynamicMatPreview
+        ? null
+        : brandPlaceholderUrl,
+    modelTemplateUrl:
+      modelTemplateUrl ??
+      (realizationPhotos[0]?.image_url ?? null),
     dynamicPreviewPath,
   })
 
@@ -160,7 +181,8 @@ export const useConfiguratorV2Preview = (
         hasFullDynamicPreview: hasDynamicMatPreview,
         isVehiclePreviewReady,
         matProductImages,
-        productGalleryImages,
+        realizationPhotos,
+        productGalleryImages: orderedProductGalleryImages,
         showProductGallery,
         defaultAlt: alt,
         brandPlaceholderUrl,
@@ -172,7 +194,8 @@ export const useConfiguratorV2Preview = (
       hasDynamicMatPreview,
       isVehiclePreviewReady,
       matProductImages,
-      productGalleryImages,
+      realizationPhotos,
+      orderedProductGalleryImages,
       showProductGallery,
       alt,
       entryPreviewImage,
@@ -185,7 +208,9 @@ export const useConfiguratorV2Preview = (
     () =>
       resolveDefaultGalleryItemId(galleryItems, autoImageSrc, {
         preferBrandPlaceholder:
-          !!brandPlaceholderUrl && !hasDynamicMatPreview,
+          !!brandPlaceholderUrl &&
+          !hasDynamicMatPreview &&
+          !isVehiclePreviewReady,
         preferModelTemplate:
           productEntry.isLocked &&
           isVehiclePreviewReady &&
@@ -217,6 +242,9 @@ export const useConfiguratorV2Preview = (
     productEntry.previewImageParam,
     config.variant,
     config.structure,
+    config.color,
+    config.edgeColor,
+    config.pricingCategoryKey,
     config.matType,
     modelTemplateUrl,
     hasDynamicMatPreview,
@@ -224,7 +252,9 @@ export const useConfiguratorV2Preview = (
 
   useEffect(() => {
     setActiveGalleryId(defaultGalleryId)
-  }, [defaultGalleryId, dynamicSelectionKey])
+    // Reset preview only when configuration changes, not when gallery items load.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- defaultGalleryId is read from the same render as dynamicSelectionKey
+  }, [dynamicSelectionKey])
 
   const activeGalleryItem =
     galleryItems.find((item) => item.id === activeGalleryId) ?? galleryItems[0]
@@ -245,6 +275,17 @@ export const useConfiguratorV2Preview = (
     galleryItems.findIndex((item) => item.id === activeGalleryItem?.id),
   )
 
+  const realizationCaption =
+    activeGalleryItem?.kind === "in-car-photo" &&
+    isMatRealizationMatType(config.matType)
+      ? buildRealizationPreviewCaption({
+          matType: config.matType,
+          brand: config.brand,
+          model: config.model,
+          generation: config.generation,
+        })
+      : null
+
   return {
     imageSrc,
     alt: activeGalleryItem?.altText ?? alt,
@@ -258,6 +299,7 @@ export const useConfiguratorV2Preview = (
     usesMatPreviewCanvas: hasDynamicMatPreview,
     lightboxImages,
     lightboxIndex,
+    realizationCaption,
     selectGalleryItem: setActiveGalleryId,
   }
 }

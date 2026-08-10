@@ -25,7 +25,7 @@ const items = [
 ]
 
 describe("ConfiguratorV2PreviewGalleryStrip", () => {
-  it("selects gallery item on thumbnail click", () => {
+  it("selects gallery item on thumbnail tap", () => {
     const onSelect = vi.fn()
 
     render(
@@ -36,8 +36,31 @@ describe("ConfiguratorV2PreviewGalleryStrip", () => {
       />,
     )
 
-    fireEvent.click(screen.getByRole("listitem", { name: "Schemat modelu" }))
+    fireEvent.keyDown(screen.getByRole("listitem", { name: "Schemat modelu" }), {
+      key: "Enter",
+    })
     expect(onSelect).toHaveBeenCalledWith("model-template-1")
+  })
+
+  it("does not select thumbnail after drag gesture", () => {
+    const onSelect = vi.fn()
+
+    render(
+      <ConfiguratorV2PreviewGalleryStrip
+        items={items}
+        activeId="dynamic"
+        onSelect={onSelect}
+      />,
+    )
+
+    const thumbnail = screen.getByRole("listitem", { name: "Schemat modelu" })
+    const list = screen.getByRole("list", { name: "Galeria zdjęć podglądowych" })
+
+    fireEvent.pointerDown(thumbnail, { button: 0, pointerId: 1 })
+    fireEvent.pointerMove(list, { button: 0, pointerId: 1, clientX: 80 })
+    fireEvent.pointerUp(list, { button: 0, pointerId: 1, clientX: 80 })
+
+    expect(onSelect).not.toHaveBeenCalled()
   })
 
   it("navigates with next button", () => {

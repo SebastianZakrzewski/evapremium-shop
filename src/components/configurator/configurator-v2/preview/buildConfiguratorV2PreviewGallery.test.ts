@@ -46,11 +46,11 @@ const inCarImages = [
 ]
 
 describe("buildConfiguratorV2PreviewGallery", () => {
-  it("shows brand placeholder before dynamic preview is ready", () => {
+  it("shows brand placeholder before vehicle context is ready", () => {
     const items = buildConfiguratorV2PreviewGallery({
       dynamicPreviewPath: "/dywaniki/fallback.webp",
       hasFullDynamicPreview: false,
-      isVehiclePreviewReady: true,
+      isVehiclePreviewReady: false,
       matProductImages: [templateImage, ...inCarImages],
       productGalleryImages: [],
       showProductGallery: false,
@@ -66,6 +66,51 @@ describe("buildConfiguratorV2PreviewGallery", () => {
         kind: "brand-placeholder",
       },
     ])
+  })
+
+  it("prefers realization photos over mat_product_images in-car photos", () => {
+    const items = buildConfiguratorV2PreviewGallery({
+      dynamicPreviewPath: "/dywaniki/fallback.webp",
+      hasFullDynamicPreview: false,
+      isVehiclePreviewReady: true,
+      matProductImages: [templateImage, ...inCarImages],
+      realizationPhotos: [
+        {
+          id: "11111111-1111-1111-1111-111111111111",
+          mat_template_id: "22222222-2222-2222-2222-222222222222",
+          mat_type: "3d-with-rims",
+          image_url: "/realization/qashqai-1.png",
+          alt_text: "Realizacja Qashqai 1",
+          caption: "Kierowca",
+          sort_order: 0,
+          is_primary: true,
+          is_active: true,
+        },
+        {
+          id: "33333333-3333-3333-3333-333333333333",
+          mat_template_id: "22222222-2222-2222-2222-222222222222",
+          mat_type: "3d-with-rims",
+          image_url: "/realization/qashqai-2.png",
+          alt_text: "Realizacja Qashqai 2",
+          caption: "Tył",
+          sort_order: 1,
+          is_primary: false,
+          is_active: true,
+        },
+      ],
+      productGalleryImages: [],
+      showProductGallery: false,
+      defaultAlt: "Podgląd",
+      brandPlaceholderUrl: "/modele/nissan.png",
+    })
+
+    expect(items.map((item) => item.kind)).toEqual([
+      "model-template",
+      "in-car-photo",
+      "in-car-photo",
+    ])
+    expect(items[1]?.imageUrl).toBe("/realization/qashqai-1.png")
+    expect(items[2]?.imageUrl).toBe("/realization/qashqai-2.png")
   })
 
   it("orders vehicle gallery as model template first, then in-car photos", () => {
@@ -120,7 +165,7 @@ describe("buildConfiguratorV2PreviewGallery", () => {
     expect(items).toEqual([])
   })
 
-  it("appends product-set gallery when enabled", () => {
+  it("places product-set gallery right after dynamic preview when enabled", () => {
     const items = buildConfiguratorV2PreviewGallery({
       dynamicPreviewPath: "/dywaniki/test.webp",
       hasFullDynamicPreview: true,
@@ -133,10 +178,11 @@ describe("buildConfiguratorV2PreviewGallery", () => {
 
     expect(items.map((item) => item.kind)).toEqual([
       "dynamic",
+      "product-set",
+      "product-set",
       "model-template",
-      "product-set",
-      "product-set",
     ])
+    expect(items[1]?.imageUrl).toBe("/set/1.webp")
   })
 
   it("uses entry preview image before mat_product_images load", () => {

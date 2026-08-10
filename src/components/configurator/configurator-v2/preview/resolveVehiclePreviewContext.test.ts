@@ -38,7 +38,7 @@ describe("resolveVehiclePreviewContext", () => {
     expect(result.bodyType).toBe("sedan")
   })
 
-  it("requires year when entry is not locked", () => {
+  it("requires generation (modelKey) when entry is not locked", () => {
     const result = resolveVehiclePreviewContext(
       {
         ...baseConfig,
@@ -56,5 +56,26 @@ describe("resolveVehiclePreviewContext", () => {
     )
 
     expect(result.isVehiclePreviewReady).toBe(false)
+  })
+
+  it("is ready after generation without year", () => {
+    const result = resolveVehiclePreviewContext(
+      {
+        ...baseConfig,
+        brand: "Nissan",
+        model: "Qashqai(J12) III gen",
+        modelKey: "Qashqai(J12) III gen",
+        generation: "2021-2028",
+      },
+      {
+        isLocked: false,
+        brandParam: null,
+        modelParam: null,
+        bodyTypeParam: null,
+        generationParam: null,
+      },
+    )
+
+    expect(result.isVehiclePreviewReady).toBe(true)
   })
 })

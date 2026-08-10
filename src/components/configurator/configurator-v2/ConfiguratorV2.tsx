@@ -7,6 +7,10 @@ import { openCartModal } from "@/features/shopping-cart/utils/openCartModal"
 import { useAccessories } from "@/features/accessories/hooks/useAccessories"
 import { useBrands } from "@/features/brands/hooks/useBrands"
 import { useMatProductImages } from "@/features/mat-product-images"
+import {
+  isMatRealizationMatType,
+  useMatRealizationPhotos,
+} from "@/features/mat-realization-photos"
 import { useConfiguratorState } from "@/features/car-configurator/hooks/useConfiguratorState"
 import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import { useResolvedPricing } from "@/features/vehicle-catalog/hooks/useResolvedPricing"
@@ -69,6 +73,27 @@ export default function ConfiguratorV2() {
     generation,
     bodyType: config.bodyType || undefined,
     enabled: !!(brandForImage && config.model && config.year && config.bodyType),
+  })
+
+  const realizationMatType = isMatRealizationMatType(config.matType)
+    ? config.matType
+    : undefined
+
+  const isRealizationPhotosReady = !!(
+    config.brand &&
+    config.model &&
+    config.year &&
+    config.bodyType &&
+    (config.modelKey || config.recordKey) &&
+    realizationMatType
+  )
+
+  const { photos: realizationPhotos } = useMatRealizationPhotos({
+    recordKey: config.recordKey || undefined,
+    brandKey: config.brandKey || config.brand || undefined,
+    modelKey: config.modelKey || config.model || undefined,
+    matType: realizationMatType,
+    enabled: isRealizationPhotosReady,
   })
 
   const pricingQuery = useResolvedPricing({
@@ -149,17 +174,21 @@ export default function ConfiguratorV2() {
     config,
     matProductImages,
     productEntry,
+    realizationPhotos,
   )
 
   const entryPreviewImage = productEntry.previewImageParam
 
   const matProductImagePaths = useMemo(() => {
-    const paths = matProductImages.map((image) => image.image_url)
+    const paths = [
+      ...matProductImages.map((image) => image.image_url),
+      ...realizationPhotos.map((photo) => photo.image_url),
+    ]
     if (entryPreviewImage && !paths.includes(entryPreviewImage)) {
       paths.unshift(entryPreviewImage)
     }
     return paths
-  }, [entryPreviewImage, matProductImages])
+  }, [entryPreviewImage, matProductImages, realizationPhotos])
 
   useMatPreviewPreload({
     matType: config.matType,
@@ -376,6 +405,7 @@ export default function ConfiguratorV2() {
           galleryItems={preview.galleryItems}
           activeGalleryId={preview.activeGalleryId}
           onSelectGalleryItem={preview.selectGalleryItem}
+          realizationCaption={preview.realizationCaption}
         />
       }
       previewPanel={
@@ -390,6 +420,7 @@ export default function ConfiguratorV2() {
           galleryItems={preview.galleryItems}
           activeGalleryId={preview.activeGalleryId}
           onSelectGalleryItem={preview.selectGalleryItem}
+          realizationCaption={preview.realizationCaption}
         />
       }
       optionPanel={

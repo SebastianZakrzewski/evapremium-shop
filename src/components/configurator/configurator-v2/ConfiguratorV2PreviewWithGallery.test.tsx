@@ -38,4 +38,30 @@ describe("ConfiguratorV2PreviewWithGallery", () => {
     expect(screen.getByRole("list", { name: "Galeria zdjęć podglądowych" }))
       .toBeInTheDocument()
   })
+
+  it("renders realization caption under the preview image", () => {
+    render(
+      <ConfiguratorV2PreviewWithGallery
+        layout="desktop"
+        imageSrc="/realization/1.png"
+        alt="Podgląd"
+        showGallery
+        galleryItems={[
+          {
+            id: "in-car-photo-1",
+            imageUrl: "/realization/1.png",
+            altText: "Realizacja",
+            kind: "in-car-photo",
+          },
+        ]}
+        activeGalleryId="in-car-photo-1"
+        onSelectGalleryItem={vi.fn()}
+        realizationCaption="Są to realne zdjęcia realizacji dywaników 3D z rantami do Nissan Qashqai(J12) III gen 2021-2028"
+      />,
+    )
+
+    expect(screen.getByRole("note")).toHaveTextContent(
+      "Są to realne zdjęcia realizacji dywaników 3D z rantami do Nissan Qashqai(J12) III gen 2021-2028",
+    )
+  })
 })

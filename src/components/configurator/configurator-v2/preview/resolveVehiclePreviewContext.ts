@@ -13,11 +13,12 @@ export const resolveVehiclePreviewContext = (
   const brand = config.brand || productEntry.brandParam || ""
   const model = config.model || productEntry.modelParam || ""
 
+  // Podgląd realizacji od razu po wyborze generacji (modelKey) —
+  // bez czekania na rocznik / nadwozie.
   const isVehiclePreviewReady = !!(
     brand &&
     model &&
-    bodyType &&
-    (config.year || productEntry.isLocked)
+    (config.modelKey || generation || productEntry.isLocked)
   )
 
   return {

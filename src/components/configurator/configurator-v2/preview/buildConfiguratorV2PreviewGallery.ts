@@ -1,4 +1,5 @@
 import type { MatProductImage } from "@/features/mat-product-images"
+import type { MatRealizationPhoto } from "@/features/mat-realization-photos"
 import { partitionMatProductImages } from "./partitionMatProductImages"
 
 export type PreviewGalleryItemKind =
@@ -20,6 +21,7 @@ type BuildConfiguratorV2PreviewGalleryParams = {
   hasFullDynamicPreview: boolean
   isVehiclePreviewReady: boolean
   matProductImages: MatProductImage[]
+  realizationPhotos?: MatRealizationPhoto[]
   productGalleryImages: string[]
   showProductGallery: boolean
   defaultAlt: string
@@ -33,6 +35,7 @@ export const buildConfiguratorV2PreviewGallery = ({
   hasFullDynamicPreview,
   isVehiclePreviewReady,
   matProductImages,
+  realizationPhotos = [],
   productGalleryImages,
   showProductGallery,
   defaultAlt,
@@ -42,7 +45,8 @@ export const buildConfiguratorV2PreviewGallery = ({
 }: BuildConfiguratorV2PreviewGalleryParams): PreviewGalleryItem[] => {
   const items: PreviewGalleryItem[] = []
 
-  if (brandPlaceholderUrl && !hasFullDynamicPreview) {
+  // Logo marki tylko przed kompletnym wyborem pojazdu (etap 1 częściowo)
+  if (brandPlaceholderUrl && !hasFullDynamicPreview && !isVehiclePreviewReady) {
     items.push({
       id: "brand-placeholder",
       imageUrl: brandPlaceholderUrl,
@@ -58,6 +62,17 @@ export const buildConfiguratorV2PreviewGallery = ({
       imageUrl: dynamicPreviewPath,
       altText: defaultAlt,
       kind: "dynamic",
+    })
+  }
+
+  if (showProductGallery) {
+    productGalleryImages.forEach((imageUrl, index) => {
+      items.push({
+        id: `product-set-${index}`,
+        imageUrl,
+        altText: `Zdjęcie produktu ${index + 1}`,
+        kind: "product-set",
+      })
     })
   }
 
@@ -81,27 +96,30 @@ export const buildConfiguratorV2PreviewGallery = ({
       })
     }
 
-    inCarPhotos
-      .filter((image) => image.image_url !== templateUrl)
-      .forEach((image) => {
-        items.push({
-          id: `in-car-photo-${image.id}`,
-          imageUrl: image.image_url,
-          altText: image.alt_text ?? `Dywaniki w aucie — ${defaultAlt}`,
-          kind: "in-car-photo",
-        })
-      })
-  }
+    const realizationItems = realizationPhotos
+      .filter((photo) => photo.image_url !== templateUrl)
+      .map((photo) => ({
+        id: `in-car-photo-${photo.id}`,
+        imageUrl: photo.image_url,
+        altText:
+          photo.alt_text ?? `Realizacja w aucie — ${defaultAlt}`,
+        kind: "in-car-photo" as const,
+      }))
 
-  if (showProductGallery) {
-    productGalleryImages.forEach((imageUrl, index) => {
-      items.push({
-        id: `product-set-${index}`,
-        imageUrl,
-        altText: `Zdjęcie produktu ${index + 1}`,
-        kind: "product-set",
-      })
-    })
+    if (realizationItems.length > 0) {
+      items.push(...realizationItems)
+    } else {
+      inCarPhotos
+        .filter((image) => image.image_url !== templateUrl)
+        .forEach((image) => {
+          items.push({
+            id: `in-car-photo-${image.id}`,
+            imageUrl: image.image_url,
+            altText: image.alt_text ?? `Dywaniki w aucie — ${defaultAlt}`,
+            kind: "in-car-photo",
+          })
+        })
+    }
   }
 
   return items
