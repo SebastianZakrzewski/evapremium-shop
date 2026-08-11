@@ -39,41 +39,83 @@ const resolveContactId = async (order: ConvertAbandonedCartsOnPaidInput['order']
 const promoteAbandonedDealToPaidOrder = async (
   dealId: string,
   order: ConvertAbandonedCartsOnPaidInput['order']
-): Promise<boolean> => {
+): Promise<string | null> => {
   const { stageId } = await stageMappingService.resolveStage({
     type: 'order',
     orderStatus: order.status,
     paymentStatus: order.paymentStatus,
   })
 
+  const paidCategoryId = 0
   const contactId = await resolveContactId(order)
   const dealData = mapOrderToDeal(order, contactId, { stageId })
 
-  const updateDealResult = await dealService.updateDeal(dealId, dealData)
-  if (!updateDealResult.success) {
-    console.error('[AbandonedCartConversion] Failed to update abandoned deal with order data', {
+  // 1) Try in-place pipeline move (CATEGORY_ID + STAGE_ID together)
+  const pipelineMove = await dealService.updateDeal(dealId, {
+    ...dealData,
+    CATEGORY_ID: paidCategoryId,
+    STAGE_ID: stageId,
+    COMMENTS: `Porzucony koszyk przekształcony w opłacone zamówienie ${order.orderNumber}`,
+  } as any)
+
+  if (pipelineMove.success) {
+    const afterMove = await dealService.getDeal(dealId)
+    if (
+      afterMove &&
+      Number(afterMove.categoryId ?? -1) === paidCategoryId &&
+      afterMove.stageId === stageId
+    ) {
+      if (contactId) {
+        await dealService.linkContact(dealId, contactId)
+      }
+
+      const products = createDealProducts(order)
+      if (products.length > 0) {
+        const dealProducts = products.map((product) => ({
+          PRODUCT_ID: product.PRODUCT_NAME,
+          QUANTITY: product.QUANTITY,
+          PRICE: product.PRICE,
+        }))
+        await dealService.addProductsToDeal(dealId, dealProducts)
+      }
+
+      return dealId
+    }
+
+    console.warn('[AbandonedCartConversion] Bitrix ignored CATEGORY_ID move; recreating deal in paid pipeline', {
       dealId,
-      error: updateDealResult.error,
+      actualCategoryId: afterMove?.categoryId,
+      actualStageId: afterMove?.stageId,
+      expectedCategoryId: paidCategoryId,
+      expectedStageId: stageId,
     })
-    return false
+  } else {
+    console.error('[AbandonedCartConversion] Failed to update abandoned deal before recreate', {
+      dealId,
+      error: pipelineMove.error,
+    })
   }
 
-  const updateStageResult = await dealService.updateDealStage(dealId, {
-    stageId,
-    comment: `Porzucony koszyk przekształcony w opłacone zamówienie ${order.orderNumber}`,
-  })
+  // 2) Fallback: Bitrix webhooks often cannot move deals across pipelines.
+  // Recreate in paid pipeline and delete the abandoned deal to avoid duplicates.
+  const created = await dealService.createDeal(
+    {
+      ...dealData,
+      CATEGORY_ID: paidCategoryId,
+      STAGE_ID: stageId,
+    } as any,
+    {
+      currencyId: 'PLN',
+      contactId,
+    }
+  )
 
-  if (!updateStageResult.success) {
-    console.error('[AbandonedCartConversion] Failed to move abandoned deal to paid stage', {
+  if (!created.success || !created.id) {
+    console.error('[AbandonedCartConversion] Failed to recreate paid deal', {
       dealId,
-      stageId,
-      error: updateStageResult.error,
+      error: created.error,
     })
-    return false
-  }
-
-  if (contactId) {
-    await dealService.linkContact(dealId, contactId)
+    return null
   }
 
   const products = createDealProducts(order)
@@ -83,17 +125,25 @@ const promoteAbandonedDealToPaidOrder = async (
       QUANTITY: product.QUANTITY,
       PRICE: product.PRICE,
     }))
-
-    const productResult = await dealService.addProductsToDeal(dealId, dealProducts)
-    if (!productResult.success) {
-      console.warn('[AbandonedCartConversion] Deal promoted but products update failed', {
-        dealId,
-        error: productResult.error,
-      })
-    }
+    await dealService.addProductsToDeal(created.id, dealProducts)
   }
 
-  return true
+  const deleted = await dealService.deleteDeal(dealId)
+  if (!deleted.success) {
+    console.warn('[AbandonedCartConversion] Paid deal created but abandoned deal delete failed', {
+      abandonedDealId: dealId,
+      paidDealId: created.id,
+      error: deleted.error,
+    })
+  } else {
+    console.log('[AbandonedCartConversion] Recreated abandoned deal in paid pipeline', {
+      abandonedDealId: dealId,
+      paidDealId: created.id,
+      stageId,
+    })
+  }
+
+  return created.id
 }
 
 /**
@@ -168,13 +218,27 @@ export const convertAbandonedCartsOnPaid = async (
       }
 
       try {
-        const promoted = await promoteAbandonedDealToPaidOrder(cart.bitrix_deal_id, input.order)
-        if (!promoted) {
+        const promotedDealId = await promoteAbandonedDealToPaidOrder(cart.bitrix_deal_id, input.order)
+        if (!promotedDealId) {
           result.failedDealIds.push(cart.bitrix_deal_id)
           continue
         }
 
-        result.promotedDealIds.push(cart.bitrix_deal_id)
+        if (promotedDealId !== cart.bitrix_deal_id) {
+          await supabaseAdmin
+            .from('abandoned_carts')
+            .update({
+              bitrix_deal_id: promotedDealId,
+              metadata: {
+                ...nextMetadata,
+                promoted_from_deal_id: cart.bitrix_deal_id,
+                promoted_deal_id: promotedDealId,
+              },
+            })
+            .eq('id', cart.id)
+        }
+
+        result.promotedDealIds.push(promotedDealId)
       } catch (dealError) {
         console.error('[AbandonedCartConversion] Unexpected Bitrix promotion error', {
           dealId: cart.bitrix_deal_id,

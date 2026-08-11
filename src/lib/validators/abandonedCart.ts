@@ -43,7 +43,7 @@ export const abandonedCartAddressSchema = z.object({
   country: z.string().max(100).optional(),
 }).strict().partial();
 
-const abandonedCartUpsertInputObjectSchema = z.object({
+export const abandonedCartUpsertInputObjectSchema = z.object({
   sessionId: z.string().min(8),
   stage: z.enum(['checkout_step2', 'checkout_step3']),
   cartHasItems: z.boolean(),
@@ -63,6 +63,13 @@ const abandonedCartUpsertInputObjectSchema = z.object({
 export const abandonedCartUpsertInputSchema = z.preprocess(
   sanitizeAbandonedCartRawInput,
   abandonedCartUpsertInputObjectSchema
+);
+
+export const abandonedCartWebhookInputSchema = z.preprocess(
+  sanitizeAbandonedCartRawInput,
+  abandonedCartUpsertInputObjectSchema.extend({
+    event: z.enum(['pagehide', 'beforeunload', 'heartbeat', 'payment_redirect']).optional(),
+  })
 );
 
 export const abandonedCartRecordSchema = z.object({

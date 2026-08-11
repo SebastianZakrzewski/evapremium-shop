@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { z } from 'zod';
 import { env } from '@/config/env';
-import { abandonedCartUpsertInputSchema } from '@/lib/validators/abandonedCart';
+import { abandonedCartWebhookInputSchema } from '@/lib/validators/abandonedCart';
 import type { AbandonedCartRecord } from '@/lib/types/abandonedCart';
 import { isAbandonedPaymentRedirectEvent } from '@/lib/services/abandonedCartPaymentRedirectPolicy'
 import { findRecentBlockingOrderForBitrixExport, findRecentBlockingOrderForHeartbeat } from '@/lib/services/abandonedCartExportGuard'
@@ -10,9 +9,7 @@ import { dealService } from '@/lib/integrations/bitrix24/services/DealService';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
-const webhookInputSchema = abandonedCartUpsertInputSchema.extend({
-  event: z.enum(['pagehide', 'beforeunload', 'heartbeat', 'payment_redirect']).optional(),
-});
+const webhookInputSchema = abandonedCartWebhookInputSchema;
 
 export async function POST(request: NextRequest) {
   try {
