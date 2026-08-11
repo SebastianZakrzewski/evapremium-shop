@@ -187,9 +187,11 @@ html {
   overflow-x: hidden;
 }
 
-/* Responsywne animacje - wyłącz na urządzeniach z preferencją reduced motion */
+/* Responsywne animacje - ogranicz motion, ale nie zabijaj intentional marquees */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *:not([data-allow-motion="true"]),
+  *:not([data-allow-motion="true"])::before,
+  *:not([data-allow-motion="true"])::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -282,20 +284,20 @@ html {
     animation: scroll-left 180s linear infinite;
     will-change: transform;
     backface-visibility: hidden;
-    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
   }
 
   .animate-scroll-right-seamless {
     animation: scroll-right-seamless 30s linear infinite;
     will-change: transform;
     backface-visibility: hidden;
-    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
   }
 
   /* Ostrzejsze renderowanie zdjęć w przewijanych karuzelach (bez dodatkowego scale na img) */
   .gallery-slider-track img {
     backface-visibility: hidden;
-    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
   }
 
   .gallery-slider-mask {
@@ -758,11 +760,11 @@ html {
   font-size: clamp(3rem, 8vw, 4rem);
 }
 
-/* Reduced motion support */
+/* Reduced motion support — keep intentional gallery marquees controllable in JS */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *:not([data-allow-motion="true"]),
+  *:not([data-allow-motion="true"])::before,
+  *:not([data-allow-motion="true"])::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

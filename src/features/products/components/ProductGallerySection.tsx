@@ -207,7 +207,7 @@ export default function ProductGallerySection() {
 
       {/* Auto-scrolling gallery */}
       <div className="relative z-10 w-full py-4">
-        <ImageAutoSlider images={productImages} speed={150} />
+        <ImageAutoSlider images={productImages} speed={40} />
       </div>
 
       {/* CTA */}
