@@ -5,7 +5,7 @@ import { env } from '@/config/env';
 import { abandonedCartUpsertInputSchema } from '@/lib/validators/abandonedCart';
 import type { AbandonedCartRecord } from '@/lib/types/abandonedCart';
 import { isAbandonedPaymentRedirectEvent } from '@/lib/services/abandonedCartPaymentRedirectPolicy'
-import { findRecentBlockingOrder } from '@/lib/services/abandonedCartExportGuard'
+import { findRecentBlockingOrderForBitrixExport, findRecentBlockingOrderForHeartbeat } from '@/lib/services/abandonedCartExportGuard'
 import { dealService } from '@/lib/integrations/bitrix24/services/DealService';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
@@ -55,10 +55,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Not eligible (stage/cart)' }, { status: 400 });
     }
 
-    // Skip Bitrix abandon export when customer has pending/paid order in progress
+    // Skip only when customer already paid a matching order
     if (input.contact?.email) {
       try {
-        const blocking = await findRecentBlockingOrder({
+        const blocking = await findRecentBlockingOrderForHeartbeat({
           email: input.contact.email,
           totalAmount: input.totalAmount,
           windowMs: 30 * 60 * 1000,
@@ -196,7 +196,7 @@ export async function POST(request: NextRequest) {
     // Sprawdź ponownie dla istniejącego rekordu (może być race condition)
     if (existing && input.contact?.email) {
       try {
-        const blocking = await findRecentBlockingOrder({
+        const blocking = await findRecentBlockingOrderForHeartbeat({
           email: input.contact.email,
           totalAmount: input.totalAmount,
           windowMs: 60 * 60 * 1000,
@@ -354,6 +354,52 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: false, error: insertError.message }, { status: 500 });
       }
       record = inserted as unknown as AbandonedCartRecord;
+    }
+
+    // Don't export to Bitrix while payment is still pending for a matching order
+    if (input.contact?.email) {
+      try {
+        const blockingExport = await findRecentBlockingOrderForBitrixExport({
+          email: input.contact.email,
+          totalAmount: input.totalAmount,
+          windowMs: 60 * 60 * 1000,
+        })
+
+        if (blockingExport) {
+          if (blockingExport.reason === 'order_already_paid') {
+            console.log('[AbandonedCart:Webhook] Found paid order before export, marking as converted', {
+              cartId: (record as any).id,
+              orderId: blockingExport.order.id,
+            })
+
+            await supabase
+              .from('abandoned_carts')
+              .update({
+                status: 'converted',
+                metadata: {
+                  ...((record as any).metadata || {}),
+                  converted_reason: 'order_paid',
+                  converted_order_id: blockingExport.order.id,
+                  converted_at: new Date().toISOString(),
+                },
+              })
+              .eq('id', (record as any).id)
+          }
+
+          return NextResponse.json(
+            {
+              success: true,
+              skipped: true,
+              reason: blockingExport.reason,
+              orderId: blockingExport.order.id,
+              recordId: (record as any).id,
+            },
+            { status: 200 }
+          )
+        }
+      } catch (checkError) {
+        console.error('[AbandonedCart:Webhook] Error checking export guard before Bitrix', checkError)
+      }
     }
 
     // Atomic lock: set status to 'processing' to prevent concurrent processing

@@ -1,19 +1,16 @@
-export const resolveAbandonedDealLoseStageId = (categoryId?: number | null): string => {
-  if (categoryId == null || categoryId === 0) {
-    return 'LOSE'
-  }
-
-  return `C${categoryId}:LOSE`
-}
+import type { Order } from '@/lib/types/order-new'
 
 export type ConvertAbandonedCartsOnPaidInput = {
   email: string
   orderId: string
   orderNumber: string
+  order: Order
 }
 
 export type ConvertAbandonedCartsOnPaidResult = {
   convertedCount: number
-  closedDealIds: string[]
+  promotedDealIds: string[]
   failedDealIds: string[]
 }
+
+export const resolvePaidOrderDealStageId = (): string => 'UC_DMBNNJ'

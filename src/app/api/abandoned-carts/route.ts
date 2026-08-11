@@ -4,7 +4,7 @@ import { env } from '@/config/env';
 
 export const maxDuration = 30
 import { abandonedCartUpsertInputSchema } from '@/lib/validators/abandonedCart';
-import { findRecentBlockingOrder } from '@/lib/services/abandonedCartExportGuard';
+import { findRecentBlockingOrderForHeartbeat } from '@/lib/services/abandonedCartExportGuard';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -30,10 +30,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Not eligible (stage/cart)' }, { status: 400 });
     }
 
-    // Skip abandoned tracking when customer already has pending/paid order in progress
+    // Skip heartbeat only when customer already paid a matching order
     if (input.contact?.email) {
       try {
-        const blocking = await findRecentBlockingOrder({
+        const blocking = await findRecentBlockingOrderForHeartbeat({
           email: input.contact.email,
           totalAmount: input.totalAmount,
           windowMs: 30 * 60 * 1000,
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
       // Sprawdź ponownie czy zamówienie blokuje abandon (dla istniejącego rekordu)
       if (input.contact?.email) {
         try {
-          const blocking = await findRecentBlockingOrder({
+          const blocking = await findRecentBlockingOrderForHeartbeat({
             email: input.contact.email,
             totalAmount: input.totalAmount,
             windowMs: 60 * 60 * 1000,

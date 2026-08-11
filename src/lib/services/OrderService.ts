@@ -477,19 +477,38 @@ export class OrderService {
       // Synchronizuj zmiany z Bitrix24
       const bitrix24Config = getBitrix24Config();
       const syncDecision = resolveBitrixPaymentSyncDecision(status);
+      const orderForSync = await this.getOrderById(orderId);
+
+      // Po udanej płatności promuj porzucone koszyki do etapu opłaconego PRZED sync zamówienia
+      if (status === 'paid' && orderForSync) {
+        const customerEmail =
+          orderForSync.customer &&
+          typeof orderForSync.customer === 'object' &&
+          'email' in orderForSync.customer
+            ? String((orderForSync.customer as { email?: string }).email || '')
+            : ''
+
+        if (customerEmail) {
+          await convertAbandonedCartsOnPaid({
+            email: customerEmail,
+            orderId: orderForSync.id,
+            orderNumber: orderForSync.orderNumber,
+            order: orderForSync,
+          })
+        }
+      }
+
       if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders && syncDecision.shouldSync) {
         try {
-          // Pobierz ŚWIEŻE dane zamówienia PO aktualizacji
-          const order = await this.getOrderById(orderId);
           console.log('🔍 OrderService: Order after update (before sync):', {
-            id: order?.id,
-            orderNumber: order?.orderNumber,
-            status: order?.status,
-            paymentStatus: order?.paymentStatus,
+            id: orderForSync?.id,
+            orderNumber: orderForSync?.orderNumber,
+            status: orderForSync?.status,
+            paymentStatus: orderForSync?.paymentStatus,
             createIfMissing: syncDecision.createIfMissing,
-            itemsCount: order?.items?.length || 0,
-            hasItems: !!order?.items,
-            itemsDetails: order?.items?.map(item => ({
+            itemsCount: orderForSync?.items?.length || 0,
+            hasItems: !!orderForSync?.items,
+            itemsDetails: orderForSync?.items?.map(item => ({
               productType: item.productType,
               productName: item.productName,
               hasConfiguration: !!item.configuration,
@@ -497,9 +516,9 @@ export class OrderService {
             })) || []
           });
           
-          if (order) {
+          if (orderForSync) {
             console.log('🔄 OrderService: Starting Bitrix24 sync for updated order...');
-            await this.syncOrderToBitrix24(order, {
+            await this.syncOrderToBitrix24(orderForSync, {
               createIfMissing: syncDecision.createIfMissing,
             });
             console.log('✅ OrderService: Payment status synced to Bitrix24');
@@ -513,24 +532,6 @@ export class OrderService {
         console.log('⚠️ OrderService: Skipping Bitrix24 sync for payment status:', status);
       } else {
         console.log('⚠️ OrderService: Bitrix24 sync disabled or autoSyncOrders is false');
-      }
-
-      // Po udanej płatności zamknij powiązane porzucone koszyki (DB + Bitrix)
-      if (status === 'paid' && orderAfterUpdate) {
-        const customerEmail =
-          orderAfterUpdate.customer &&
-          typeof orderAfterUpdate.customer === 'object' &&
-          'email' in orderAfterUpdate.customer
-            ? String((orderAfterUpdate.customer as { email?: string }).email || '')
-            : ''
-
-        if (customerEmail) {
-          await convertAbandonedCartsOnPaid({
-            email: customerEmail,
-            orderId: orderAfterUpdate.id,
-            orderNumber: orderAfterUpdate.orderNumber,
-          })
-        }
       }
     } catch (error) {
       console.error('❌ OrderService: Błąd aktualizacji statusu płatności', error);

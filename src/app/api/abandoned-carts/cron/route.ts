@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/config/env';
 import { dealService } from '@/lib/integrations/bitrix24/services/DealService';
-import { findRecentBlockingOrder } from '@/lib/services/abandonedCartExportGuard';
+import { findRecentBlockingOrderForBitrixExport } from '@/lib/services/abandonedCartExportGuard';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -48,7 +48,7 @@ export async function POST(_request: NextRequest) {
         const contact = (cart.contact || {}) as { email?: string }
         if (contact.email) {
           try {
-            const blocking = await findRecentBlockingOrder({
+            const blocking = await findRecentBlockingOrderForBitrixExport({
               email: contact.email,
               totalAmount: Number(cart.total_amount) || 0,
               windowMs: 60 * 60 * 1000,

@@ -10,6 +10,7 @@ import {
   paynowWebhookNotificationSchema,
 } from '@/lib/types/paynow'
 import type { Order } from '@/lib/types/order-new'
+import { exportPendingAbandonedCartsForEmail } from '@/lib/services/AbandonedCartExportService'
 
 export type InitiatePaymentResult = {
   success: boolean
@@ -243,6 +244,13 @@ export class PaymentService {
       await this.orderService.updatePaymentStatus(payment.orderId, orderPaymentStatus, {
         error: internalStatus === 'failed' ? `Paynow status: ${notification.status}` : undefined,
       })
+    }
+
+    if (orderPaymentStatus === 'failed') {
+      const customer = order.customer as Order['customer']
+      if (customer?.email) {
+        await exportPendingAbandonedCartsForEmail(customer.email)
+      }
     }
 
     return { success: true }

@@ -13,31 +13,50 @@ const resolveAbandonedExportSkipReason = (paymentStatus) => {
   return 'order_in_payment'
 }
 
+const shouldBlockAbandonedCartHeartbeat = (paymentStatus) => paymentStatus === 'paid'
+const shouldBlockAbandonedCartBitrixExport = (paymentStatus) =>
+  paymentStatus === 'paid' || paymentStatus === 'pending'
+
 strictEqual(resolveAbandonedExportSkipReason('paid'), 'order_already_paid')
 strictEqual(resolveAbandonedExportSkipReason('pending'), 'order_in_payment')
+strictEqual(shouldBlockAbandonedCartHeartbeat('pending'), false)
+strictEqual(shouldBlockAbandonedCartBitrixExport('pending'), true)
 strictEqual(isAmountWithinTolerance(259, 259), true)
 strictEqual(isAmountWithinTolerance(100, 50), false)
 console.log('✓ guard policy helpers')
 
 const root = path.join(__dirname, '..', '..', '..')
-const files = [
+const heartbeatSrc = fs.readFileSync(
   path.join(root, 'app', 'api', 'abandoned-carts', 'route.ts'),
+  'utf8'
+)
+const webhookSrc = fs.readFileSync(
   path.join(root, 'app', 'api', 'abandoned-carts', 'webhook', 'route.ts'),
+  'utf8'
+)
+const cronSrc = fs.readFileSync(
   path.join(root, 'app', 'api', 'abandoned-carts', 'cron', 'route.ts'),
-]
+  'utf8'
+)
 
-for (const file of files) {
-  const src = fs.readFileSync(file, 'utf8')
-  strictEqual(src.includes('findRecentBlockingOrder'), true, file)
-  strictEqual(src.includes(".eq('payment_status', 'paid')"), false, file)
-}
-console.log('✓ heartbeat/webhook/cron use shared pending|paid guard')
+strictEqual(heartbeatSrc.includes('findRecentBlockingOrderForHeartbeat'), true)
+strictEqual(webhookSrc.includes('findRecentBlockingOrderForBitrixExport'), true)
+strictEqual(cronSrc.includes('findRecentBlockingOrderForBitrixExport'), true)
+console.log('✓ heartbeat/webhook/cron use split guards')
 
 const guardSrc = fs.readFileSync(
   path.join(__dirname, '..', 'abandonedCartExportGuard.ts'),
   'utf8'
 )
-strictEqual(guardSrc.includes(".in('payment_status', ['pending', 'paid'])"), true)
-console.log('✓ guard queries pending and paid')
+strictEqual(guardSrc.includes("paymentStatuses: ['paid']"), true)
+strictEqual(guardSrc.includes("paymentStatuses: ['pending', 'paid']"), true)
+console.log('✓ guard queries paid for heartbeat and pending|paid for export')
 
-console.log('\nOK change3 checks passed')
+const paymentSrc = fs.readFileSync(
+  path.join(__dirname, '..', 'PaymentService.ts'),
+  'utf8'
+)
+strictEqual(paymentSrc.includes('exportPendingAbandonedCartsForEmail'), true)
+console.log('✓ failed Paynow payment exports abandoned carts')
+
+console.log('\nOK abandoned export guard checks passed')

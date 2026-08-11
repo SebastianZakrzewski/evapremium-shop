@@ -16,3 +16,11 @@ export const resolveAbandonedExportSkipReason = (
   if (paymentStatus === 'paid') return 'order_already_paid'
   return 'order_in_payment'
 }
+
+export const shouldBlockAbandonedCartHeartbeat = (paymentStatus: string): boolean => {
+  return paymentStatus === 'paid'
+}
+
+export const shouldBlockAbandonedCartBitrixExport = (paymentStatus: string): boolean => {
+  return paymentStatus === 'paid' || paymentStatus === 'pending'
+}

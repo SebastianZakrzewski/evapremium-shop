@@ -217,75 +217,7 @@ export default function CheckoutSection() {
     }
   }, [items, total, trackInitiateCheckout, createInitiateCheckout]);
 
-  // Heartbeat na krokach 2 (adres) i 3 (płatność): 15 min okno, interwał 30s
   const cartHasItems = items.length > 0;
-  
-  // Get sessionId dynamically in buildPayload to ensure it's always current
-  useAbandonedCartHeartbeat((currentStep === 2 || currentStep === 3) && cartHasItems, () => {
-    const currentSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : '';
-    
-    if (!currentSessionId || currentSessionId.length < 8) {
-      console.warn('[CheckoutSection] Invalid sessionId for heartbeat', { sessionId: currentSessionId });
-    }
-    
-    // Get address data from form
-    const watchedValues = watch();
-    const addressData = {
-      street: watchedValues.street,
-      city: watchedValues.city,
-      postalCode: watchedValues.postalCode,
-      country: watchedValues.country,
-    };
-    
-    // Find first mat item to extract car and configuration
-    const firstMatItem = items.find(item => item.productType === 'mat');
-    const matConfig = isMatCartConfiguration(firstMatItem?.configuration)
-      ? firstMatItem.configuration
-      : undefined
-    const carData = matConfig?.carDetails ? {
-      make: matConfig.carDetails.brand,
-      model: matConfig.carDetails.model,
-      year: matConfig.carDetails.year,
-      bodyType: matConfig.carDetails.bodyType,
-    } : undefined;
-
-    const configurationData = matConfig ? {
-      variant: matConfig.setVariant,
-      setType: matConfig.setType,
-      cellShape: matConfig.cellType,
-      materialColor: matConfig.materialColor,
-      trimColor: matConfig.edgeColor,
-    } : undefined;
-    
-    return {
-      sessionId: currentSessionId,
-      stage: currentStep === 2 ? 'checkout_step2' : 'checkout_step3',
-      cartHasItems: items.length > 0,
-      contact: {
-        firstName: contactFirstName,
-        lastName: contactLastName,
-        email: contactEmail,
-        phone: contactPhone,
-        ...(contactNip && { taxId: contactNip }),
-      },
-      address: addressData.street || addressData.city ? addressData : undefined, // Only include if at least street or city is filled
-      car: carData,
-      configuration: configurationData,
-      items: items.map(i => ({ 
-        productId: i.productId, 
-        productName: i.productName,
-        productType: i.productType,
-        quantity: i.quantity, 
-        price: i.unitPrice, 
-        currency: 'PLN',
-        configuration: i.configuration, // Include full configuration for each item
-      })),
-      currency: 'PLN',
-      totalAmount: finalTotal,
-      metadata: { checkoutStep: currentStep },
-      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
-    };
-  }, { intervalMs: 30000 });
 
   const {
     register,
@@ -488,6 +420,71 @@ export default function CheckoutSection() {
       });
     }
   }, [items.length, calculatedSubtotal, cart.subtotal, cart.total, subtotal, finalTotal, discountApplied, discountAmount, discountCode]);
+
+  // Heartbeat na krokach 2 (adres) i 3 (płatność): 15 min okno, interwał 30s
+  useAbandonedCartHeartbeat((currentStep === 2 || currentStep === 3) && cartHasItems, () => {
+    const currentSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : '';
+
+    if (!currentSessionId || currentSessionId.length < 8) {
+      console.warn('[CheckoutSection] Invalid sessionId for heartbeat', { sessionId: currentSessionId });
+    }
+
+    const watchedValues = watch();
+    const addressData = {
+      street: watchedValues.street,
+      city: watchedValues.city,
+      postalCode: watchedValues.postalCode,
+      country: watchedValues.country,
+    };
+
+    const firstMatItem = items.find(item => item.productType === 'mat');
+    const matConfig = isMatCartConfiguration(firstMatItem?.configuration)
+      ? firstMatItem.configuration
+      : undefined
+    const carData = matConfig?.carDetails ? {
+      make: matConfig.carDetails.brand,
+      model: matConfig.carDetails.model,
+      year: matConfig.carDetails.year,
+      bodyType: matConfig.carDetails.bodyType,
+    } : undefined;
+
+    const configurationData = matConfig ? {
+      variant: matConfig.setVariant,
+      setType: matConfig.setType,
+      cellShape: matConfig.cellType,
+      materialColor: matConfig.materialColor,
+      trimColor: matConfig.edgeColor,
+    } : undefined;
+
+    return {
+      sessionId: currentSessionId,
+      stage: currentStep === 2 ? 'checkout_step2' : 'checkout_step3',
+      cartHasItems: items.length > 0,
+      contact: {
+        firstName: contactFirstName,
+        lastName: contactLastName,
+        email: contactEmail,
+        phone: contactPhone,
+        ...(contactNip && { taxId: contactNip }),
+      },
+      address: addressData.street || addressData.city ? addressData : undefined,
+      car: carData,
+      configuration: configurationData,
+      items: items.map(i => ({
+        productId: i.productId,
+        productName: i.productName,
+        productType: i.productType,
+        quantity: i.quantity,
+        price: i.unitPrice,
+        currency: 'PLN',
+        configuration: i.configuration,
+      })),
+      currency: 'PLN',
+      totalAmount: finalTotal,
+      metadata: { checkoutStep: currentStep },
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+    };
+  }, { intervalMs: 30000 });
 
   // Funkcja do zastosowania kodu rabatowego
   const applyDiscountCode = () => {

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { sanitizeAbandonedCartRawInput } from '@/lib/services/abandonedCartInputSanitizer';
 
 export const abandonedCartStatusSchema = z.enum(['pending', 'processing', 'exported', 'converted', 'discarded']);
 
@@ -42,7 +43,7 @@ export const abandonedCartAddressSchema = z.object({
   country: z.string().max(100).optional(),
 }).strict().partial();
 
-export const abandonedCartUpsertInputSchema = z.object({
+const abandonedCartUpsertInputObjectSchema = z.object({
   sessionId: z.string().min(8),
   stage: z.enum(['checkout_step2', 'checkout_step3']),
   cartHasItems: z.boolean(),
@@ -58,6 +59,11 @@ export const abandonedCartUpsertInputSchema = z.object({
   userAgent: z.string().optional(),
   metadata: z.record(z.unknown()).optional(),
 }).strict();
+
+export const abandonedCartUpsertInputSchema = z.preprocess(
+  sanitizeAbandonedCartRawInput,
+  abandonedCartUpsertInputObjectSchema
+);
 
 export const abandonedCartRecordSchema = z.object({
   id: z.string().uuid(),
