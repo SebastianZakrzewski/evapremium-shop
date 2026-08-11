@@ -158,7 +158,10 @@ const HeroPromoBanner = ({
           ) : null}
           <button
             type="button"
-            onClick={() => onScrollToSection(slide.ctaOverlay.scrollToSectionId)}
+            onClick={() => {
+              if (!slide.ctaOverlay) return
+              onScrollToSection(slide.ctaOverlay.scrollToSectionId)
+            }}
             data-testid={ctaTestId}
             className={cn(
               "pointer-events-auto absolute inset-x-0 bottom-0 z-30 cursor-pointer border-0 bg-transparent p-0",
