@@ -1,7 +1,14 @@
-import type { Metadata } from "next";
-import { Suspense } from "react";
-import ConfiguratorV2 from "@/components/configurator/configurator-v2/ConfiguratorV2";
-import { ConfiguratorLoader } from "@/components/configurator/configurator-simple/ConfiguratorLoader";
+import type { Metadata } from "next"
+import dynamic from "next/dynamic"
+import { Suspense } from "react"
+import { ConfiguratorLoader } from "@/components/configurator/configurator-simple/ConfiguratorLoader"
+
+const ConfiguratorV2 = dynamic(
+  () => import("@/components/configurator/configurator-v2/ConfiguratorV2"),
+  {
+    loading: () => <ConfiguratorLoader />,
+  },
+)
 
 export const metadata: Metadata = {
   title: "Konfigurator Dywaników | EvaPremium",
@@ -15,14 +22,12 @@ export const metadata: Metadata = {
     url: "https://evapremium.pl/konfigurator",
     type: "website",
   },
-};
+}
 
 export default function Page() {
   return (
     <Suspense fallback={<ConfiguratorLoader />}>
       <ConfiguratorV2 />
     </Suspense>
-  );
+  )
 }
-
-

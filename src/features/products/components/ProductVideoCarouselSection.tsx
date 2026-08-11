@@ -79,45 +79,18 @@ const swiperStyles = `
 type VideoCardProps = {
   video: ProductVideo
   isActive: boolean
+  shouldLoadMedia: boolean
   isSectionVisible: boolean
   prefersReducedMotion: boolean
   onExpand: () => void
 }
 
-const FIRST_FRAME_TIME = 0.05
-
 const CLICK_MOVE_THRESHOLD_PX = 8
-
-const seekToFirstFrame = (el: HTMLVideoElement) => {
-  try {
-    if (Number.isFinite(el.duration) && el.duration > 0) {
-      el.currentTime = Math.min(FIRST_FRAME_TIME, el.duration * 0.01)
-      return
-    }
-    el.currentTime = FIRST_FRAME_TIME
-  } catch {
-    // Ignore seek errors before metadata is ready
-  }
-}
-
-const captureFirstFrame = (el: HTMLVideoElement): string | null => {
-  try {
-    if (!el.videoWidth || !el.videoHeight) return null
-    const canvas = document.createElement("canvas")
-    canvas.width = el.videoWidth
-    canvas.height = el.videoHeight
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return null
-    ctx.drawImage(el, 0, 0, canvas.width, canvas.height)
-    return canvas.toDataURL("image/jpeg", 0.82)
-  } catch {
-    return null
-  }
-}
 
 const ProductVideoCard = ({
   video,
   isActive,
+  shouldLoadMedia,
   isSectionVisible,
   prefersReducedMotion,
   onExpand,
@@ -126,34 +99,14 @@ const ProductVideoCard = ({
   const pointerStartRef = useRef<{ x: number; y: number } | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [hasVideoError, setHasVideoError] = useState(false)
-  const [firstFrameSrc, setFirstFrameSrc] = useState<string | null>(null)
 
-  const handleCaptureFirstFrame = useCallback(() => {
-    const el = videoRef.current
-    if (!el || firstFrameSrc) return
-
-    const frame = captureFirstFrame(el)
-    if (frame) {
-      setFirstFrameSrc(frame)
-    }
-  }, [firstFrameSrc])
-
-  const handleLoadedData = () => {
-    const el = videoRef.current
-    if (!el) return
-
-    const onSeeked = () => {
-      handleCaptureFirstFrame()
-      el.removeEventListener("seeked", onSeeked)
-    }
-
-    el.addEventListener("seeked", onSeeked)
-    seekToFirstFrame(el)
-  }
+  useEffect(() => {
+    setHasVideoError(false)
+  }, [video.src])
 
   useEffect(() => {
     const el = videoRef.current
-    if (!el || hasVideoError) {
+    if (!el || hasVideoError || !shouldLoadMedia) {
       setIsPlaying(false)
       return
     }
@@ -162,7 +115,6 @@ const ProductVideoCard = ({
 
     if (!shouldPlay) {
       el.pause()
-      seekToFirstFrame(el)
       setIsPlaying(false)
       return
     }
@@ -173,7 +125,7 @@ const ProductVideoCard = ({
         .then(() => setIsPlaying(true))
         .catch(() => setIsPlaying(false))
     }
-  }, [isActive, isSectionVisible, hasVideoError, prefersReducedMotion])
+  }, [isActive, isSectionVisible, hasVideoError, prefersReducedMotion, shouldLoadMedia])
 
   const handlePointerDown = (event: React.PointerEvent<HTMLElement>) => {
     pointerStartRef.current = { x: event.clientX, y: event.clientY }
@@ -203,8 +155,6 @@ const ProductVideoCard = ({
     setIsPlaying(false)
   }
 
-  const showStaticFirstFrame = !isPlaying && (Boolean(firstFrameSrc) || hasVideoError)
-
   return (
     <article
       data-testid="product-video-card"
@@ -216,34 +166,29 @@ const ProductVideoCard = ({
       onKeyDown={handleKeyDown}
       className="relative w-full aspect-[9/16] rounded-xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50 bg-black cursor-pointer hover:border-red-500/40 transition-[border-color] duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-black"
     >
-      {!hasVideoError && (
+      {shouldLoadMedia && !hasVideoError ? (
         <video
           ref={videoRef}
           className={`absolute inset-0 h-full w-full object-cover pointer-events-none ${isPlaying ? "opacity-100" : "opacity-0"}`}
-          src={`${video.src}#t=${FIRST_FRAME_TIME}`}
           muted
           loop
           playsInline
-          preload="metadata"
+          preload={isActive ? "auto" : "metadata"}
+          poster={video.poster}
           aria-hidden="true"
-          onLoadedData={handleLoadedData}
           onError={handleVideoError}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
-        />
-      )}
+        >
+          <source src={video.src} type="video/mp4" />
+        </video>
+      ) : null}
 
-      {showStaticFirstFrame && (
-        <img
-          src={firstFrameSrc ?? video.poster}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover pointer-events-none"
-        />
-      )}
-
-      {!isPlaying && !firstFrameSrc && !hasVideoError && (
-        <div className="absolute inset-0 bg-black pointer-events-none" aria-hidden="true" />
-      )}
+      <img
+        src={video.poster}
+        alt=""
+        className={`absolute inset-0 h-full w-full object-cover pointer-events-none ${isPlaying ? "opacity-0" : "opacity-100"}`}
+      />
 
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12 rounded-full bg-black/60 border border-white/20 text-white pointer-events-none min-h-[44px] min-w-[44px]"
@@ -268,6 +213,7 @@ export default function ProductVideoCarouselSection() {
   const sectionRef = useRef<HTMLElement>(null)
 
   const isLightboxOpen = lightboxIndex !== null
+  const videoCount = productVideos.length
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -296,7 +242,7 @@ export default function ProductVideoCarouselSection() {
         }
         setIsSectionVisible(entry.isIntersecting)
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: "120px 0px" }
     )
 
     observer.observe(section)
@@ -314,6 +260,14 @@ export default function ProductVideoCarouselSection() {
   const handleCloseLightbox = useCallback(() => {
     setLightboxIndex(null)
   }, [])
+
+  const shouldLoadMediaAt = (index: number) => {
+    if (!isSectionVisible || isLightboxOpen || videoCount === 0) return false
+    if (index === activeIndex) return true
+    const prev = (activeIndex - 1 + videoCount) % videoCount
+    const next = (activeIndex + 1) % videoCount
+    return index === prev || index === next
+  }
 
   return (
     <section
@@ -366,6 +320,7 @@ export default function ProductVideoCarouselSection() {
               <ProductVideoCard
                 video={video}
                 isActive={productVideos[activeIndex]?.id === video.id}
+                shouldLoadMedia={shouldLoadMediaAt(index)}
                 isSectionVisible={isSectionVisible && !isLightboxOpen}
                 prefersReducedMotion={prefersReducedMotion}
                 onExpand={() => handleExpandVideo(index)}

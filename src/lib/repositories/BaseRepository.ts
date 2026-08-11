@@ -1,12 +1,15 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { env } from '@/config/env';
 
 export abstract class BaseRepository<T> {
+  private client: SupabaseClient | null = null
+
   protected get supabase() {
-    console.log('🔧 BaseRepository: SUPABASE_URL:', env.supabase.url);
-    console.log('🔧 BaseRepository: SUPABASE_KEY:', env.supabase.anonKey ? '***' : 'undefined');
-    
-    return createClient(env.supabase.url, env.supabase.anonKey);
+    if (!this.client) {
+      this.client = createClient(env.supabase.url, env.supabase.anonKey)
+    }
+
+    return this.client
   }
 
   protected abstract tableName: string;

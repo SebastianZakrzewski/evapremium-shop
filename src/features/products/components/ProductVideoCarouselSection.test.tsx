@@ -107,6 +107,15 @@ describe("ProductVideoCarouselSection", () => {
     expect(slides).toHaveLength(productVideos.length)
   })
 
+  it("keeps video sources unloaded until the section becomes visible", () => {
+    render(<ProductVideoCarouselSection />)
+
+    expect(document.querySelectorAll("video")).toHaveLength(0)
+    expect(
+      screen.getAllByTestId("product-video-card")[0].querySelector("img")
+    ).toHaveAttribute("src", productVideos[0].poster)
+  })
+
   it("links CTA to /dywaniki", () => {
     render(<ProductVideoCarouselSection />)
 

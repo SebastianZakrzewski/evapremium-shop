@@ -7,13 +7,13 @@ import Script from "next/script";
 import { SessionProvider } from "@/lib/contexts/session-context";
 import { TrackingProvider } from "@/components/tracking-provider";
 import { QueryProvider } from "@/lib/providers/query-provider";
-import Chatbot from "@/features/chatbot/components/Chatbot";
+import Chatbot from "@/features/chatbot/components/LazyChatbot";
 import { CookieConsentBanner } from "@/features/cookie-consent";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin", "latin-ext"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -32,12 +32,12 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://evapremium.pl'),
   icons: {
     icon: [
-      { url: '/icon.svg', type: 'image/svg+xml' },
-      { url: '/icon-48.png', sizes: '48x48', type: 'image/png' },
-      { url: '/icon-96.png', sizes: '96x96', type: 'image/png' },
       { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/icon-48.png', sizes: '48x48', type: 'image/png' },
       { url: '/icon.png', sizes: '512x512', type: 'image/png' },
-      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: '32x32' },
     ],
     apple: [
       { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
@@ -103,7 +103,13 @@ export default function RootLayout({
     "@type": "Organization",
     "name": "EvaPremium",
     "url": "https://evapremium.pl",
-    "logo": "https://evapremium.pl/icon.png",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://evapremium.pl/logo.png",
+      "width": 1024,
+      "height": 1024
+    },
+    "image": "https://evapremium.pl/logo.png",
     "description": "Profesjonalne dywaniki samochodowe EVA Premium",
     "address": {
       "@type": "PostalAddress",

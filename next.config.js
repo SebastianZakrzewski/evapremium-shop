@@ -1,14 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
-    // Ignoruj błędy TypeScript podczas builda (tylko warningi)
     ignoreBuildErrors: false,
+  },
+  experimental: {
+    turbopackUseSystemTlsCerts: true,
+    optimizePackageImports: ['lucide-react', 'framer-motion', 'swiper'],
   },
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [32, 48, 64, 96, 128, 256, 384, 512],
-    qualities: [75, 90, 100],
+    qualities: [75, 80, 90, 100],
     minimumCacheTTL: 3600,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
@@ -27,16 +30,14 @@ const nextConfig = {
   },
   webpack: (config, { dev, isServer }) => {
     if (dev && !isServer) {
-      // Dodaj polling dla lepszego hot reload w Docker
       config.watchOptions = {
         poll: 1000,
         aggregateTimeout: 300,
-      };
+      }
     }
-    return config;
+    return config
   },
-  // Next.js 16 uses Turbopack by default, add empty config to silence warning
   turbopack: {},
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

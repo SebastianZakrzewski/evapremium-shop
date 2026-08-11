@@ -1,15 +1,16 @@
-import type { CarModelApiResponse } from "@/lib/types/api"
+import { unstable_cache } from "next/cache"
 import {
   resolveBrandDisplayNameFromDbName,
   resolveBrandLogo,
 } from "@/shared/brands"
 import {
-  collectUniqueBrandsFromRows,
   extractSearchBrands,
   extractSearchModels,
   groupTemplatesToCarModels,
 } from "../domain/catalogGrouping"
+import type { CarModelApiResponse } from "@/lib/types/api"
 import {
+  getDistinctSellableBrandRows,
   getMatTemplates,
   resolveBrandKeyFromParam,
   searchMatTemplates,
@@ -46,19 +47,35 @@ export type CatalogSearchResult = {
   }>
 }
 
-export const getSellableBrands = async (): Promise<SellableBrand[]> => {
-  const rows = await getMatTemplates()
-
-  return collectUniqueBrandsFromRows(rows)
+const mapSellableBrands = (
+  rows: Array<{ brand_key: string; brand_name: string }>,
+): SellableBrand[] =>
+  rows
+    .map((row) => ({
+      key: row.brand_key,
+      name: resolveBrandDisplayNameFromDbName(row.brand_name),
+      logo: resolveBrandLogo(row.brand_name, null),
+      description: `Dywaniki samochodowe dla marki ${row.brand_name}`,
+    }))
     .sort((left, right) => left.name.localeCompare(right.name, "pl"))
     .map((brand, index) => ({
       id: index + 1,
-      key: brand.key,
-      name: resolveBrandDisplayNameFromDbName(brand.name),
-      logo: resolveBrandLogo(brand.name, null),
-      description: `Dywaniki samochodowe dla marki ${brand.name}`,
+      ...brand,
     }))
+
+const loadSellableBrands = async (): Promise<SellableBrand[]> => {
+  const rows = await getDistinctSellableBrandRows()
+  return mapSellableBrands(rows)
 }
+
+export const getSellableBrands = unstable_cache(
+  loadSellableBrands,
+  ["sellable-brands-v1"],
+  {
+    revalidate: 300,
+    tags: ["sellable-brands"],
+  },
+)
 
 export const getBrandModelsCatalog = async (
   brandParam: string,

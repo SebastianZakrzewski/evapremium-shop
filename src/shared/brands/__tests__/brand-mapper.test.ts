@@ -29,31 +29,31 @@ describe("resolveBrandLogo for updated brand photos", () => {
   })
 
   it("resolves Forthing logo from brand name", () => {
-    expect(resolveBrandLogo("Forthing", null)).toBe("/modele/forthing.png")
+    expect(resolveBrandLogo("Forthing", null)).toBe("/modele/forthing.webp")
   })
 
   it("resolves Morris Minor logo from brand name", () => {
-    expect(resolveBrandLogo("Morris Minor", null)).toBe("/modele/moris-minor.png")
+    expect(resolveBrandLogo("Morris Minor", null)).toBe("/modele/moris-minor.webp")
   })
 
   it("resolves Land rover logo from database name", () => {
-    expect(resolveBrandLogo("Land rover", null)).toBe("/modele/land_rover.png")
+    expect(resolveBrandLogo("Land rover", null)).toBe("/modele/land_rover.webp")
   })
 
   it("resolves new brand photos from MODELE_IMAGE_MAP", () => {
     expect(resolveBrandLogo("Aito", null)).toBe("/modele/Aito.jpg")
     expect(resolveBrandLogo("Caselani", null)).toBe("/modele/Caselani.jpg")
-    expect(resolveBrandLogo("Changan", null)).toBe("/modele/changan.jpg")
+    expect(resolveBrandLogo("Changan", null)).toBe("/modele/changan.webp")
     expect(resolveBrandLogo("Denza", null)).toBe("/modele/Denza.jpg")
-    expect(resolveBrandLogo("Dr", null)).toBe("/modele/Dr.png")
+    expect(resolveBrandLogo("Dr", null)).toBe("/modele/Dr.webp")
     expect(resolveBrandLogo("Futuri", null)).toBe("/modele/Futuri.jpg")
-    expect(resolveBrandLogo("Hongqi", null)).toBe("/modele/hONGHI.png")
+    expect(resolveBrandLogo("Hongqi", null)).toBe("/modele/hONGHI.webp")
     expect(resolveBrandLogo("Jetour", null)).toBe("/modele/Jetour.jpg")
     expect(resolveBrandLogo("Lada", null)).toBe("/modele/Lada.jpg")
     expect(resolveBrandLogo("Leapmotor", null)).toBe("/modele/Leapmotor.jpg")
-    expect(resolveBrandLogo("Maybach", null)).toBe("/modele/Maybach.jpg")
-    expect(resolveBrandLogo("Rover", null)).toBe("/modele/rover.jpg")
-    expect(resolveBrandLogo("Zaz-968", null)).toBe("/modele/zaz_968.jpg")
+    expect(resolveBrandLogo("Maybach", null)).toBe("/modele/Maybach.webp")
+    expect(resolveBrandLogo("Rover", null)).toBe("/modele/rover.webp")
+    expect(resolveBrandLogo("Zaz-968", null)).toBe("/modele/zaz_968.webp")
   })
 })
 

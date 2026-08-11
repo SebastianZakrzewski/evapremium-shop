@@ -251,14 +251,16 @@ export const ProductVideoLightbox = ({
                 className={`h-full w-full bg-black object-cover transition-opacity duration-150 md:object-contain ${
                   isMediaReady ? "opacity-100" : "opacity-0"
                 }`}
-                src={current.src}
                 controls
                 loop
                 playsInline
                 preload="auto"
+                poster={current.poster}
                 aria-label={current.alt}
                 onPlaying={() => setIsMediaReady(true)}
-              />
+              >
+                <source src={current.src} type="video/mp4" />
+              </video>
 
               {canNavigate && (
                 <div className="pointer-events-none absolute bottom-16 left-1/2 z-10 -translate-x-1/2 rounded-full border border-white/10 bg-black/70 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm md:bottom-3">

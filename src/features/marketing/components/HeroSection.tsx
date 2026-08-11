@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { Phone, ChevronRight, ShieldCheck, Droplets, Truck } from "lucide-react";
 import Image from "next/image";
@@ -22,6 +22,8 @@ type HeroSlide = {
   price: string;
   benefits: string[];
   video?: string;
+  videoWebm?: string;
+  videoPoster?: string;
   image?: string;
   /** Opcjonalny baner pionowy poniżej breakpointu md; bez tego używany jest tylko `image`. */
   imageMobile?: string;
@@ -36,12 +38,21 @@ type HeroSlide = {
   };
 };
 
-const heroSlides: HeroSlide[] = [
+const HERO_INTRO_VIDEO_MP4 = "/images/hero/0811.mp4"
+const HERO_INTRO_VIDEO_WEBM = "/images/hero/0811.webm"
+const HERO_INTRO_VIDEO_POSTER = "/images/hero/0811-poster.jpg"
+
+/** Tymczasowo wyłączone — ustaw `true`, aby przywrócić intro video w karuzeli. */
+const HERO_INTRO_VIDEO_ENABLED = false
+
+const allHeroSlides: HeroSlide[] = [
   {
     id: 1,
     title: "",
     subtitle: "",
-    video: "/images/hero/0811.mp4",
+    video: HERO_INTRO_VIDEO_MP4,
+    videoWebm: HERO_INTRO_VIDEO_WEBM,
+    videoPoster: HERO_INTRO_VIDEO_POSTER,
     cta: "",
     price: "",
     benefits: [],
@@ -65,11 +76,16 @@ const heroSlides: HeroSlide[] = [
   },
 ]
 
-const HERO_VIDEO_SLIDE_INDEX = 0
-const HERO_PROMO_SLIDE_INDEX = 1
+const heroSlides = HERO_INTRO_VIDEO_ENABLED
+  ? allHeroSlides
+  : allHeroSlides.filter((slide) => !slide.video)
+
+const HERO_VIDEO_SLIDE_INDEX = heroSlides.findIndex((slide) => Boolean(slide.video))
+const HERO_PROMO_SLIDE_INDEX = heroSlides.findIndex((slide) => slide.isImageSlide)
+const HERO_HAS_CAROUSEL_NAV = heroSlides.length > 1
 const HERO_MOBILE_MEDIA_QUERY = "(max-width: 767px)"
 
-const promoSlide = heroSlides[HERO_PROMO_SLIDE_INDEX]
+const promoSlide = heroSlides[HERO_PROMO_SLIDE_INDEX] ?? allHeroSlides.find((slide) => slide.isImageSlide)!
 
 const subscribeToMobileMediaQuery = (onStoreChange: () => void) => {
   const mediaQuery = window.matchMedia(HERO_MOBILE_MEDIA_QUERY)
@@ -179,11 +195,10 @@ const HeroPromoBanner = ({
   )
 }
 
-// Funkcja do wykrywania odpowiedniego formatu video
-const getVideoSource = (baseVideo: string) => baseVideo
-
 const playHeroVideo = (video: HTMLVideoElement) => {
   try {
+    // Natywne 1.0 — slow-mo jest w pliku; playbackRate < 1 powoduje szarpanie.
+    video.playbackRate = 1
     const playPromise = video.play()
 
     if (playPromise && typeof playPromise.catch === "function") {
@@ -205,6 +220,7 @@ const pauseHeroVideo = (video: HTMLVideoElement) => {
 export default function HeroSection() {
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const heroVideoRef = useRef<HTMLVideoElement | null>(null)
   const isMobileHero = useSyncExternalStore(
     subscribeToMobileMediaQuery,
     getIsMobileHero,
@@ -242,19 +258,17 @@ export default function HeroSection() {
       return
     }
 
-    const videoElements = document.querySelectorAll<HTMLVideoElement>("[data-hero-slide-video]")
+    const video = heroVideoRef.current
+    if (!video) {
+      return
+    }
 
-    videoElements.forEach((video) => {
-      const slideIndex = Number(video.dataset.heroSlideIndex)
-      const shouldPlay = slideIndex === currentSlide
+    if (currentSlide === HERO_VIDEO_SLIDE_INDEX) {
+      playHeroVideo(video)
+      return
+    }
 
-      if (shouldPlay) {
-        playHeroVideo(video)
-        return
-      }
-
-      pauseHeroVideo(video)
-    })
+    pauseHeroVideo(video)
   }, [currentSlide, isMobileHero])
 
   // Określ które slajdy renderować (tylko aktywny + następny dla lazy loading)
@@ -286,7 +300,7 @@ export default function HeroSection() {
     <section
       className="relative overflow-visible bg-black pt-[4.5rem] pb-14 max-sm:pb-10 md:overflow-hidden md:pt-0 md:pb-12"
       role="region"
-      aria-roledescription={isMobileHero ? undefined : "carousel"}
+      aria-roledescription={isMobileHero || !HERO_HAS_CAROUSEL_NAV ? undefined : "carousel"}
       aria-label="Sekcja promocyjna - dywaniki samochodowe"
     >
       {/* Phone number - Mobile only */}
@@ -331,7 +345,6 @@ export default function HeroSection() {
             const isVisible = visibleSlides.includes(index);
             const isActive = index === currentSlide;
             const isImageSlide = slide.isImageSlide ?? false;
-            const videoSource = slide.video ? getVideoSource(slide.video) : null;
 
             if (!isVisible) {
               return null
@@ -353,32 +366,36 @@ export default function HeroSection() {
                 ) : (
                   <>
                     <video
-                      src={videoSource ?? undefined}
-                      autoPlay
+                      ref={index === HERO_VIDEO_SLIDE_INDEX ? heroVideoRef : undefined}
+                      autoPlay={isActive}
                       muted
                       playsInline
-                      preload={isVisible ? "auto" : "none"}
+                      preload="auto"
+                      poster={slide.videoPoster}
+                      disablePictureInPicture
+                      controlsList="nodownload nofullscreen noremoteplayback"
                       data-hero-slide-video
                       data-hero-slide-index={index}
                       data-testid={`hero-video-${slide.id}`}
-                      className="absolute inset-0 h-full w-full object-cover object-center"
-                      style={{
-                        objectPosition: "center center",
-                        filter: "brightness(1.2) contrast(1.1)",
-                      }}
+                      className="absolute inset-0 h-full w-full object-cover object-center transform-gpu will-change-transform [backface-visibility:hidden]"
                       onEnded={index === HERO_VIDEO_SLIDE_INDEX ? handleVideoEnded : undefined}
-                      onLoadedData={(e) => {
-                        const videoEl = e.target as HTMLVideoElement
-                        videoEl.playbackRate = 0.8
+                      onCanPlay={(e) => {
+                        const videoEl = e.currentTarget
                         if (index === currentSlide) {
                           playHeroVideo(videoEl)
                         }
                       }}
                     >
+                      {slide.videoWebm ? (
+                        <source src={slide.videoWebm} type="video/webm" />
+                      ) : null}
+                      {slide.video ? (
+                        <source src={slide.video} type="video/mp4" />
+                      ) : null}
                       Your browser does not support the video tag.
                     </video>
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.2)_50%,rgba(0,0,0,0.5)_100%)]" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/15" />
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.12)_50%,rgba(0,0,0,0.35)_100%)]" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
                   </>
                 )}
 
@@ -474,54 +491,58 @@ export default function HeroSection() {
             )
           })}
 
-          <button
-            type="button"
-            onClick={goToPrev}
-            className="group absolute left-2 top-1/2 z-20 flex min-h-[44px] min-w-[44px] -translate-y-1/2 items-center justify-center rounded-full p-2.5 glass-button hover:bg-white/20 md:left-4 md:p-3"
-            aria-label="Poprzedni slajd"
-          >
-            <svg className="h-5 w-5 text-white transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            onClick={goToNext}
-            className="group absolute right-2 top-1/2 z-20 flex min-h-[44px] min-w-[44px] -translate-y-1/2 items-center justify-center rounded-full p-2.5 glass-button hover:bg-white/20 md:right-4 md:p-3"
-            aria-label="Następny slajd"
-          >
-            <svg className="h-5 w-5 text-white transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-
-          <div
-            className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 md:bottom-4"
-            role="tablist"
-            aria-label="Nawigacja slajdów"
-          >
-            {heroSlides.map((_, index) => (
+          {HERO_HAS_CAROUSEL_NAV ? (
+            <>
               <button
-                key={index}
                 type="button"
-                onClick={() => goToSlide(index)}
-                className="relative -m-3 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full p-3 hover:bg-white/5"
-                aria-label={`Przejdź do slajdu ${index + 1}`}
-                aria-selected={index === currentSlide}
-                role="tab"
+                onClick={goToPrev}
+                className="group absolute left-2 top-1/2 z-20 flex min-h-[44px] min-w-[44px] -translate-y-1/2 items-center justify-center rounded-full p-2.5 glass-button hover:bg-white/20 md:left-4 md:p-3"
+                aria-label="Poprzedni slajd"
               >
-                <span
-                  className={`block h-1.5 rounded-full transition-all duration-500 ${
-                    index === currentSlide ? "w-8 bg-white" : "w-2 bg-white/30 hover:bg-white/50"
-                  }`}
-                />
+                <svg className="h-5 w-5 text-white transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
               </button>
-            ))}
-            <span className="sr-only" aria-live="polite">
-              Slajd {currentSlide + 1} z {heroSlides.length}
-            </span>
-          </div>
+
+              <button
+                type="button"
+                onClick={goToNext}
+                className="group absolute right-2 top-1/2 z-20 flex min-h-[44px] min-w-[44px] -translate-y-1/2 items-center justify-center rounded-full p-2.5 glass-button hover:bg-white/20 md:right-4 md:p-3"
+                aria-label="Następny slajd"
+              >
+                <svg className="h-5 w-5 text-white transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              <div
+                className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 md:bottom-4"
+                role="tablist"
+                aria-label="Nawigacja slajdów"
+              >
+                {heroSlides.map((_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => goToSlide(index)}
+                    className="relative -m-3 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full p-3 hover:bg-white/5"
+                    aria-label={`Przejdź do slajdu ${index + 1}`}
+                    aria-selected={index === currentSlide}
+                    role="tab"
+                  >
+                    <span
+                      className={`block h-1.5 rounded-full transition-all duration-500 ${
+                        index === currentSlide ? "w-8 bg-white" : "w-2 bg-white/30 hover:bg-white/50"
+                      }`}
+                    />
+                  </button>
+                ))}
+                <span className="sr-only" aria-live="polite">
+                  Slajd {currentSlide + 1} z {heroSlides.length}
+                </span>
+              </div>
+            </>
+          ) : null}
         </div>
         )}
       </div>

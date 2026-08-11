@@ -77,8 +77,8 @@ export default function MatComparisonSection() {
           >
             <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl aspect-[4/5] md:aspect-square cursor-ew-resize">
               <ImageComparisonSlider
-                leftImage="/images/eva-mat-comparison.png"
-                rightImage="/images/gumowe-mat-comparison.png"
+                leftImage="/images/eva-mat-comparison.webp"
+                rightImage="/images/gumowe-mat-comparison.webp"
                 altLeft="Dywanik EVA — czarny z czerwonym obrzeżem, siatka heksagonalna"
                 altRight="Dywanik gumowy — z piaskiem i brudem w rowkach"
                 leftLabel="EVA Premium"

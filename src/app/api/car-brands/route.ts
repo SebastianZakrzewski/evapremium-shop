@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server"
 import { getSellableBrands } from "@/features/vehicle-catalog"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 300
 export const maxDuration = 30
+
+const CACHE_HEADERS = {
+  "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+}
 
 export const GET = async () => {
   try {
@@ -15,6 +19,7 @@ export const GET = async () => {
         description,
         key,
       })),
+      { headers: CACHE_HEADERS },
     )
   } catch (error) {
     console.error("Car brands request failed", error)

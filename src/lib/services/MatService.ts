@@ -132,9 +132,9 @@ export class MatService {
    * Pobierz wszystkie dostępne marki
    */
   async getAvailableBrands(): Promise<string[]> {
-    const mats = await this.repository.findMany({ isActive: true });
-    const brands = mats.map(mat => mat.carBrandSlug);
-    return [...new Set(brands)].sort();
+    const mats = await this.repository.findMany({ isActive: true })
+    const brands = mats.map(mat => mat.carBrandSlug)
+    return [...new Set(brands)].sort()
   }
 
   /**

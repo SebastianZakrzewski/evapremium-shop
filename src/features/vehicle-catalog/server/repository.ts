@@ -247,6 +247,30 @@ const lookupBrandByToken = async (trimmed: string): Promise<string | null> => {
   return pickBrandKeyFromRows(tokenMatches, trimmed)
 }
 
+export const getDistinctSellableBrandRows = async (): Promise<BrandLookupRow[]> => {
+  const rows: BrandLookupRow[] = []
+  let offset = 0
+
+  while (true) {
+    const { data, error } = await SELLABLE_BRAND_FILTER()
+      .order("brand_key")
+      .range(offset, offset + PAGE_SIZE - 1)
+
+    if (error) {
+      throw new Error(`Sellable brands query failed: ${error.message}`)
+    }
+
+    const page = (data ?? []) as BrandLookupRow[]
+    rows.push(...page)
+    if (page.length < PAGE_SIZE) break
+    offset += PAGE_SIZE
+  }
+
+  return [
+    ...new Map(rows.map((row) => [row.brand_key, row])).values(),
+  ]
+}
+
 export const resolveBrandKeyFromParam = async (
   brandParam: string,
   modelParam?: string | null,

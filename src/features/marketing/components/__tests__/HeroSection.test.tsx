@@ -56,17 +56,14 @@ describe("HeroSection", () => {
     vi.restoreAllMocks()
   })
 
-  it("renders the intro video as the first hero slide on desktop", () => {
+  it("renders the promo slide without intro video on desktop while video is disabled", () => {
     render(<HeroSection />)
 
     expect(screen.getByTestId("hero-desktop-carousel")).toBeInTheDocument()
     expect(screen.queryByTestId("hero-mobile-static")).not.toBeInTheDocument()
-
-    const video = screen.getByTestId("hero-video-1")
-
-    expect(video).toBeInTheDocument()
-    expect(video).toHaveAttribute("src", "/images/hero/0811.mp4")
-    expect(video).not.toHaveAttribute("loop")
+    expect(screen.queryByTestId("hero-video-1")).not.toBeInTheDocument()
+    expect(screen.getByTestId("hero-promo-cta-hit-area")).toBeInTheDocument()
+    expect(screen.queryByLabelText("Poprzedni slajd")).not.toBeInTheDocument()
   })
 
   it("renders only the static promo hero on mobile", () => {
@@ -81,18 +78,8 @@ describe("HeroSection", () => {
       "Letnia promocja dywaników samochodowych EVA Premium do -30%"
     )
 
-    expect(promotionImage).toHaveAttribute("src", "/hero4_mobile.png")
+    expect(promotionImage).toHaveAttribute("src", "/hero4_mobile.webp")
     expect(screen.getByTestId("hero-mobile-promo-cta-hit-area")).toBeInTheDocument()
-  })
-
-  it("switches to the promo slide when the intro video ends on desktop", () => {
-    render(<HeroSection />)
-
-    const video = screen.getByTestId("hero-video-1")
-    fireEvent.ended(video)
-
-    expect(screen.getByTestId("hero-promo-cta-hit-area")).toBeInTheDocument()
-    expect(screen.getByText("Slajd 2 z 2")).toBeInTheDocument()
   })
 
   it("scrolls to dywaniki section when promo CTA overlay is clicked", () => {
@@ -104,7 +91,6 @@ describe("HeroSection", () => {
 
     render(<HeroSection />)
 
-    fireEvent.ended(screen.getByTestId("hero-video-1"))
     fireEvent.click(screen.getByTestId("hero-promo-cta-hit-area"))
 
     expect(scrollIntoView).toHaveBeenCalledWith(
