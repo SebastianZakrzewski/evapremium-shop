@@ -10,6 +10,7 @@ import { dealService } from '../integrations/bitrix24/services/DealService';
 import { mapOrderToContact } from '../integrations/bitrix24/mappers/orderToContact';
 import { mapOrderToDeal, createDealProducts } from '../integrations/bitrix24/mappers/orderToDeal';
 import { stageMappingService } from '../integrations/bitrix24/services/StageMappingService';
+import { convertAbandonedCartsOnPaid } from './AbandonedCartConversionService';
 import { randomUUID } from 'crypto';
 import 'server-only';
 import { revalidateMatItemPrice } from '@/features/vehicle-catalog/server/matCartValidation';
@@ -512,6 +513,24 @@ export class OrderService {
         console.log('⚠️ OrderService: Skipping Bitrix24 sync for payment status:', status);
       } else {
         console.log('⚠️ OrderService: Bitrix24 sync disabled or autoSyncOrders is false');
+      }
+
+      // Po udanej płatności zamknij powiązane porzucone koszyki (DB + Bitrix)
+      if (status === 'paid' && orderAfterUpdate) {
+        const customerEmail =
+          orderAfterUpdate.customer &&
+          typeof orderAfterUpdate.customer === 'object' &&
+          'email' in orderAfterUpdate.customer
+            ? String((orderAfterUpdate.customer as { email?: string }).email || '')
+            : ''
+
+        if (customerEmail) {
+          await convertAbandonedCartsOnPaid({
+            email: customerEmail,
+            orderId: orderAfterUpdate.id,
+            orderNumber: orderAfterUpdate.orderNumber,
+          })
+        }
       }
     } catch (error) {
       console.error('❌ OrderService: Błąd aktualizacji statusu płatności', error);

@@ -22,7 +22,7 @@ export interface AbandonedCartPayload {
 }
 
 export interface AbandonedCartWebhookPayload extends AbandonedCartPayload {
-  event: 'pagehide';
+  event: 'pagehide' | 'payment_redirect';
 }
 
 /**

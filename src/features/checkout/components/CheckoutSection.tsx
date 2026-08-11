@@ -41,6 +41,7 @@ import { useTracking, createInitiateCheckoutData } from '@/lib/tracking';
 import { motion } from 'framer-motion';
 import { getColorInfo } from '@/lib/color-mapping';
 import { paymentsApi } from '@/lib/api';
+import { markPaymentRedirect } from '@/features/checkout/lib/paymentRedirectFlag';
 import {
   isPaynowCheckoutEnabled,
   getClientPaymentProviderLabel,
@@ -761,6 +762,7 @@ export default function CheckoutSection() {
 
           if (typeof window !== 'undefined') {
             sessionStorage.setItem('pending_order_id', order.id);
+            markPaymentRedirect(order.id);
           }
 
           clearCart();
@@ -796,6 +798,7 @@ export default function CheckoutSection() {
           // P24 może nie przekazać parametrów w URL, więc potrzebujemy fallback
           if (typeof window !== 'undefined') {
             sessionStorage.setItem('pending_order_id', order.id);
+            markPaymentRedirect(order.id);
             console.log('💾 Saved orderId to sessionStorage:', order.id);
           }
           

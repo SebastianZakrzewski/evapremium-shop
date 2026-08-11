@@ -4,14 +4,14 @@ import { z } from 'zod';
 import { env } from '@/config/env';
 import { abandonedCartUpsertInputSchema } from '@/lib/validators/abandonedCart';
 import type { AbandonedCartRecord } from '@/lib/types/abandonedCart';
+import { isAbandonedPaymentRedirectEvent } from '@/lib/services/abandonedCartPaymentRedirectPolicy'
+import { findRecentBlockingOrder } from '@/lib/services/abandonedCartExportGuard'
 import { dealService } from '@/lib/integrations/bitrix24/services/DealService';
-import { OrderRepository } from '@/lib/repositories/OrderRepository';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
-const orderRepository = new OrderRepository();
 
 const webhookInputSchema = abandonedCartUpsertInputSchema.extend({
-  event: z.enum(['pagehide', 'beforeunload', 'heartbeat']).optional(),
+  event: z.enum(['pagehide', 'beforeunload', 'heartbeat', 'payment_redirect']).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -55,46 +55,123 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Not eligible (stage/cart)' }, { status: 400 });
     }
 
-    // Sprawdź czy istnieje opłacone zamówienie dla tego klienta (zapobiega tworzeniu abandoned cart po opłaceniu)
+    // Skip Bitrix abandon export when customer has pending/paid order in progress
     if (input.contact?.email) {
       try {
-        const recentPaidOrders = await orderRepository.supabase
-          .from('orders')
-          .select('id, order_number, payment_status, total, created_at')
-          .eq('payment_status', 'paid')
-          .eq('customer->>email', input.contact.email)
-          .gte('created_at', new Date(Date.now() - 30 * 60 * 1000).toISOString()) // Ostatnie 30 minut
-          .order('created_at', { ascending: false })
-          .limit(1);
+        const blocking = await findRecentBlockingOrder({
+          email: input.contact.email,
+          totalAmount: input.totalAmount,
+          windowMs: 30 * 60 * 1000,
+        })
 
-        if (recentPaidOrders.data && recentPaidOrders.data.length > 0) {
-          const paidOrder = recentPaidOrders.data[0];
-          // Sprawdź czy kwota jest podobna (różnica mniejsza niż 10%)
-          const orderTotal = Number(paidOrder.total);
-          const cartTotal = input.totalAmount || 0;
-          const difference = Math.abs(orderTotal - cartTotal);
-          const tolerance = Math.max(orderTotal, cartTotal) * 0.1; // 10% tolerancji
-
-          if (difference <= tolerance) {
-            console.log('[AbandonedCart:Webhook] Found paid order for this customer, skipping abandoned cart', {
-              orderId: paidOrder.id,
-              orderNumber: paidOrder.order_number,
-              orderTotal,
-              cartTotal,
-              email: input.contact.email
-            });
-            return NextResponse.json({ 
-              success: true, 
-              skipped: true, 
-              reason: 'order_already_paid',
-              orderId: paidOrder.id 
-            }, { status: 200 });
-          }
+        if (blocking) {
+          console.log('[AbandonedCart:Webhook] Blocking order found, skipping abandoned cart', {
+            orderId: blocking.order.id,
+            orderNumber: blocking.order.order_number,
+            paymentStatus: blocking.order.payment_status,
+            reason: blocking.reason,
+            email: input.contact.email,
+          })
+          return NextResponse.json(
+            {
+              success: true,
+              skipped: true,
+              reason: blocking.reason,
+              orderId: blocking.order.id,
+            },
+            { status: 200 }
+          )
         }
       } catch (checkError) {
-        console.error('[AbandonedCart:Webhook] Error checking for paid orders', checkError);
+        console.error('[AbandonedCart:Webhook] Error checking for blocking orders', checkError);
         // Kontynuuj przetwarzanie - nie blokuj jeśli sprawdzenie się nie powiodło
       }
+    }
+
+    const isPaymentRedirect = isAbandonedPaymentRedirectEvent({
+      event: input.event,
+      metadata: input.metadata as Record<string, unknown> | undefined,
+    })
+
+    // Payment gateway redirect is not an abandon — keep DB pending, skip Bitrix deal
+    if (isPaymentRedirect) {
+      const nowPayment = new Date()
+      const expireAtPayment = new Date(nowPayment.getTime() + 15 * 60 * 1000).toISOString()
+
+      const { data: existingPaymentCarts } = await supabase
+        .from('abandoned_carts')
+        .select('id, metadata')
+        .eq('session_id', input.sessionId)
+        .in('status', ['pending', 'processing'])
+        .is('bitrix_deal_id', null)
+        .order('created_at', { ascending: false })
+        .limit(1)
+
+      const existingPaymentCart =
+        Array.isArray(existingPaymentCarts) && existingPaymentCarts.length > 0
+          ? existingPaymentCarts[0]
+          : null
+
+      if (existingPaymentCart) {
+        await supabase
+          .from('abandoned_carts')
+          .update({
+            utm: input.utm || {},
+            contact: input.contact || {},
+            car: input.car || {},
+            configuration: input.configuration || {},
+            items: input.items || [],
+            currency: input.currency || 'PLN',
+            total_amount: input.totalAmount ?? 0,
+            ip: input.ip,
+            user_agent: input.userAgent,
+            metadata: {
+              ...((existingPaymentCart.metadata as Record<string, unknown>) || {}),
+              ...(input.metadata || {}),
+              stage: input.stage,
+              event: input.event,
+              paymentRedirect: true,
+              address: input.address || {},
+            },
+            last_activity_at: nowPayment.toISOString(),
+            expire_at: expireAtPayment,
+            status: 'pending',
+          })
+          .eq('id', existingPaymentCart.id)
+      } else {
+        await supabase.from('abandoned_carts').insert({
+          session_id: input.sessionId,
+          status: 'pending',
+          utm: input.utm || {},
+          contact: input.contact || {},
+          car: input.car || {},
+          configuration: input.configuration || {},
+          items: input.items || [],
+          currency: input.currency || 'PLN',
+          total_amount: input.totalAmount ?? 0,
+          ip: input.ip,
+          user_agent: input.userAgent,
+          metadata: {
+            ...(input.metadata || {}),
+            stage: input.stage,
+            event: input.event,
+            paymentRedirect: true,
+            address: input.address || {},
+          },
+          last_activity_at: nowPayment.toISOString(),
+          expire_at: expireAtPayment,
+        })
+      }
+
+      console.log('[AbandonedCart:Webhook] Skipping Bitrix create for payment redirect', {
+        sessionId: input.sessionId?.substring(0, 8) + '...',
+        event: input.event,
+      })
+
+      return NextResponse.json(
+        { success: true, skipped: true, reason: 'payment_redirect' },
+        { status: 200 }
+      )
     }
 
     const now = new Date();
@@ -119,31 +196,21 @@ export async function POST(request: NextRequest) {
     // Sprawdź ponownie dla istniejącego rekordu (może być race condition)
     if (existing && input.contact?.email) {
       try {
-        const recentPaidOrders = await orderRepository.supabase
-          .from('orders')
-          .select('id, order_number, payment_status, total, created_at')
-          .eq('payment_status', 'paid')
-          .eq('customer->>email', input.contact.email)
-          .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString()) // Ostatnia godzina
-          .order('created_at', { ascending: false })
-          .limit(1);
+        const blocking = await findRecentBlockingOrder({
+          email: input.contact.email,
+          totalAmount: input.totalAmount,
+          windowMs: 60 * 60 * 1000,
+        })
 
-        if (recentPaidOrders.data && recentPaidOrders.data.length > 0) {
-          const paidOrder = recentPaidOrders.data[0];
-          const orderTotal = Number(paidOrder.total);
-          const cartTotal = input.totalAmount || 0;
-          const difference = Math.abs(orderTotal - cartTotal);
-          const tolerance = Math.max(orderTotal, cartTotal) * 0.1;
-
-          if (difference <= tolerance) {
+        if (blocking) {
+          if (blocking.reason === 'order_already_paid') {
             console.log('[AbandonedCart:Webhook] Found paid order for existing cart, marking as converted', {
               cartId: existing.id,
-              orderId: paidOrder.id,
-              orderNumber: paidOrder.order_number,
+              orderId: blocking.order.id,
+              orderNumber: blocking.order.order_number,
               email: input.contact.email
             });
             
-            // Oznacz jako converted (zamówienie zostało opłacone)
             const existingMetadata = (existing.metadata as Record<string, unknown>) || {};
             await supabase
               .from('abandoned_carts')
@@ -152,22 +219,22 @@ export async function POST(request: NextRequest) {
                 metadata: { 
                   ...existingMetadata, 
                   converted_reason: 'order_paid',
-                  converted_order_id: paidOrder.id,
+                  converted_order_id: blocking.order.id,
                   converted_at: new Date().toISOString()
                 }
               })
               .eq('id', existing.id);
-            
-            return NextResponse.json({ 
-              success: true, 
-              skipped: true, 
-              reason: 'order_already_paid',
-              orderId: paidOrder.id 
-            }, { status: 200 });
           }
+
+          return NextResponse.json({ 
+            success: true, 
+            skipped: true, 
+            reason: blocking.reason,
+            orderId: blocking.order.id 
+          }, { status: 200 });
         }
       } catch (checkError) {
-        console.error('[AbandonedCart:Webhook] Error checking for paid orders (existing cart)', checkError);
+        console.error('[AbandonedCart:Webhook] Error checking for blocking orders (existing cart)', checkError);
       }
     }
 
