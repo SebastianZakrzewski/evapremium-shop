@@ -13,7 +13,7 @@ export interface SliderImage {
 
 interface ImageAutoSliderProps {
   images: SliderImage[]
-  /** Animation duration in seconds — lower = faster scroll. Default: 40 */
+  /** Animation duration in seconds — lower = faster scroll. Default: 150 */
   speed?: number
   /** Aspect ratio class for each tile, e.g. "aspect-square". Default: fixed 256×256. */
   tileClassName?: string
@@ -69,7 +69,7 @@ const ImageTile = ({
 
 export const ImageAutoSlider = ({
   images,
-  speed = 40,
+  speed = 150,
   tileClassName,
   className,
 }: ImageAutoSliderProps) => {
@@ -106,8 +106,7 @@ export const ImageAutoSlider = ({
 
   const tileSize = tileClassName ?? "w-48 h-48 md:w-64 md:h-64 lg:w-72 lg:h-72"
   const eagerSlidesCount = isMobile ? 2 : 4
-  // Keep motion perceptible on desktop/Safari; still gentle.
-  const animationDuration = Math.max(24, Math.min(speed, 60))
+  const animationDuration = Math.max(1, speed)
 
   if (motionMode !== "animate") {
     return (

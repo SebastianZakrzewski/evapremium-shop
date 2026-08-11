@@ -47,13 +47,13 @@ describe("ImageAutoSlider", () => {
     mockMatchMedia(false)
   })
 
-  it("renders animated track with capped duration for visible motion", () => {
+  it("renders animated track with the requested duration", () => {
     render(<ImageAutoSlider images={images} speed={150} />)
 
     const track = screen.getByTestId("product-gallery-motion-track")
     expect(track).toHaveClass("animate-scroll-right-seamless")
     expect(track).toHaveAttribute("data-allow-motion", "true")
-    expect(track.style.animationDuration).toBe("60s")
+    expect(track.style.animationDuration).toBe("150s")
     expect(screen.getAllByRole("button")).toHaveLength(images.length * 2)
   })
 
