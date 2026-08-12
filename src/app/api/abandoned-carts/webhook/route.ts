@@ -90,17 +90,17 @@ export async function POST(request: NextRequest) {
       metadata: input.metadata as Record<string, unknown> | undefined,
     })
 
-    // Payment gateway redirect is not an abandon — keep DB pending, skip Bitrix deal
+    // Payment gateway redirect: keep abandoned snapshot and create Bitrix "Porzucone Koszyki"
+    // deal immediately. If the buyer later pays, convertAbandonedCartsOnPaid promotes it.
     if (isPaymentRedirect) {
       const nowPayment = new Date()
       const expireAtPayment = new Date(nowPayment.getTime() + 15 * 60 * 1000).toISOString()
 
       const { data: existingPaymentCarts } = await supabase
         .from('abandoned_carts')
-        .select('id, metadata')
+        .select('id, metadata, bitrix_deal_id, status')
         .eq('session_id', input.sessionId)
-        .in('status', ['pending', 'processing'])
-        .is('bitrix_deal_id', null)
+        .in('status', ['pending', 'processing', 'exported'])
         .order('created_at', { ascending: false })
         .limit(1)
 
@@ -109,8 +109,54 @@ export async function POST(request: NextRequest) {
           ? existingPaymentCarts[0]
           : null
 
-      if (existingPaymentCart) {
-        await supabase
+      if (existingPaymentCart?.bitrix_deal_id) {
+        console.log('[AbandonedCart:Webhook] Payment redirect cart already exported', {
+          cartId: existingPaymentCart.id,
+          dealId: existingPaymentCart.bitrix_deal_id,
+        })
+        return NextResponse.json(
+          {
+            success: true,
+            skipped: true,
+            reason: 'already_exported',
+            dealId: existingPaymentCart.bitrix_deal_id,
+            recordId: existingPaymentCart.id,
+          },
+          { status: 200 }
+        )
+      }
+
+      if (input.contact?.email) {
+        try {
+          const paidBlocking = await findRecentBlockingOrderForHeartbeat({
+            email: input.contact.email,
+            totalAmount: input.totalAmount,
+            windowMs: 30 * 60 * 1000,
+          })
+
+          if (paidBlocking) {
+            console.log('[AbandonedCart:Webhook] Skipping payment-redirect export — order already paid', {
+              orderId: paidBlocking.order.id,
+            })
+            return NextResponse.json(
+              {
+                success: true,
+                skipped: true,
+                reason: paidBlocking.reason,
+                orderId: paidBlocking.order.id,
+              },
+              { status: 200 }
+            )
+          }
+        } catch (checkError) {
+          console.error('[AbandonedCart:Webhook] Paid-order guard failed on payment redirect', checkError)
+        }
+      }
+
+      let paymentCartId: string | null = existingPaymentCart?.id ?? null
+
+      if (existingPaymentCart && existingPaymentCart.status !== 'exported') {
+        const { data: updatedPaymentCart, error: updatePaymentError } = await supabase
           .from('abandoned_carts')
           .update({
             utm: input.utm || {},
@@ -135,38 +181,142 @@ export async function POST(request: NextRequest) {
             status: 'pending',
           })
           .eq('id', existingPaymentCart.id)
+          .is('bitrix_deal_id', null)
+          .select()
+          .single()
+
+        if (updatePaymentError) {
+          console.error('[AbandonedCart:Webhook] Failed to update payment-redirect cart', updatePaymentError)
+          return NextResponse.json({ success: false, error: updatePaymentError.message }, { status: 500 })
+        }
+
+        paymentCartId = updatedPaymentCart?.id ?? existingPaymentCart.id
       } else {
-        await supabase.from('abandoned_carts').insert({
-          session_id: input.sessionId,
-          status: 'pending',
-          utm: input.utm || {},
-          contact: input.contact || {},
-          car: input.car || {},
-          configuration: input.configuration || {},
-          items: input.items || [],
-          currency: input.currency || 'PLN',
-          total_amount: input.totalAmount ?? 0,
-          ip: input.ip,
-          user_agent: input.userAgent,
-          metadata: {
-            ...(input.metadata || {}),
-            stage: input.stage,
-            event: input.event,
-            paymentRedirect: true,
-            address: input.address || {},
-          },
-          last_activity_at: nowPayment.toISOString(),
-          expire_at: expireAtPayment,
-        })
+        const { data: insertedPaymentCart, error: insertPaymentError } = await supabase
+          .from('abandoned_carts')
+          .insert({
+            session_id: input.sessionId,
+            status: 'pending',
+            utm: input.utm || {},
+            contact: input.contact || {},
+            car: input.car || {},
+            configuration: input.configuration || {},
+            items: input.items || [],
+            currency: input.currency || 'PLN',
+            total_amount: input.totalAmount ?? 0,
+            ip: input.ip,
+            user_agent: input.userAgent,
+            metadata: {
+              ...(input.metadata || {}),
+              stage: input.stage,
+              event: input.event,
+              paymentRedirect: true,
+              address: input.address || {},
+            },
+            last_activity_at: nowPayment.toISOString(),
+            expire_at: expireAtPayment,
+          })
+          .select()
+          .single()
+
+        if (insertPaymentError || !insertedPaymentCart) {
+          console.error('[AbandonedCart:Webhook] Failed to insert payment-redirect cart', insertPaymentError)
+          return NextResponse.json(
+            { success: false, error: insertPaymentError?.message || 'Insert failed' },
+            { status: 500 }
+          )
+        }
+
+        paymentCartId = insertedPaymentCart.id
       }
 
-      console.log('[AbandonedCart:Webhook] Skipping Bitrix create for payment redirect', {
-        sessionId: input.sessionId?.substring(0, 8) + '...',
-        event: input.event,
+      const { data: paymentCartRecord, error: loadPaymentCartError } = await supabase
+        .from('abandoned_carts')
+        .select('*')
+        .eq('id', paymentCartId)
+        .single()
+
+      if (loadPaymentCartError || !paymentCartRecord) {
+        console.error('[AbandonedCart:Webhook] Failed to load payment-redirect cart', loadPaymentCartError)
+        return NextResponse.json(
+          { success: false, error: loadPaymentCartError?.message || 'Cart not found' },
+          { status: 500 }
+        )
+      }
+
+      const { data: lockedPaymentCart, error: lockPaymentError } = await supabase
+        .from('abandoned_carts')
+        .update({ status: 'processing' })
+        .eq('id', paymentCartId)
+        .eq('status', 'pending')
+        .is('bitrix_deal_id', null)
+        .select()
+        .single()
+
+      if (lockPaymentError) {
+        console.error('[AbandonedCart:Webhook] Failed to lock payment-redirect cart', lockPaymentError)
+        return NextResponse.json({ success: false, error: lockPaymentError.message }, { status: 500 })
+      }
+
+      if (!lockedPaymentCart) {
+        return NextResponse.json(
+          { success: true, skipped: true, reason: 'already_processing', recordId: paymentCartId },
+          { status: 200 }
+        )
+      }
+
+      console.log('[AbandonedCart:Webhook] Creating Bitrix deal for payment-redirect cart', {
+        cartId: paymentCartId,
+      })
+
+      const createdPaymentDeal = await dealService.createDealForAbandonedCart(
+        paymentCartRecord as AbandonedCartRecord
+      )
+
+      if (!createdPaymentDeal.success || !createdPaymentDeal.id) {
+        await supabase.from('abandoned_carts').update({ status: 'pending' }).eq('id', paymentCartId)
+        console.error('[AbandonedCart:Webhook] Failed to create payment-redirect deal', {
+          cartId: paymentCartId,
+          error: createdPaymentDeal.error,
+        })
+        return NextResponse.json(
+          { success: false, error: createdPaymentDeal.error || 'Failed to create deal' },
+          { status: 500 }
+        )
+      }
+
+      const { error: exportPaymentError } = await supabase
+        .from('abandoned_carts')
+        .update({ bitrix_deal_id: createdPaymentDeal.id, status: 'exported' })
+        .eq('id', paymentCartId)
+        .eq('status', 'processing')
+        .is('bitrix_deal_id', null)
+
+      if (exportPaymentError) {
+        await supabase.from('abandoned_carts').update({ status: 'pending' }).eq('id', paymentCartId)
+        console.error('[AbandonedCart:Webhook] Failed to mark payment-redirect cart exported', exportPaymentError)
+        return NextResponse.json(
+          {
+            success: false,
+            error: exportPaymentError.message,
+            dealId: createdPaymentDeal.id,
+          },
+          { status: 500 }
+        )
+      }
+
+      console.log('[AbandonedCart:Webhook] Payment-redirect abandoned cart exported', {
+        cartId: paymentCartId,
+        dealId: createdPaymentDeal.id,
       })
 
       return NextResponse.json(
-        { success: true, skipped: true, reason: 'payment_redirect' },
+        {
+          success: true,
+          dealId: createdPaymentDeal.id,
+          recordId: paymentCartId,
+          reason: 'payment_redirect_exported',
+        },
         { status: 200 }
       )
     }

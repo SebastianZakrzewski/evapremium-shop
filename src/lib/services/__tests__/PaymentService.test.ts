@@ -10,10 +10,10 @@ const mapProviderStatusToOrderPaymentStatus = (
     case 'REJECTED':
     case 'ERROR':
     case 'EXPIRED':
+    case 'ABANDONED':
       return 'failed'
     case 'NEW':
     case 'PENDING':
-    case 'ABANDONED':
       return 'pending'
     default:
       return null
@@ -29,6 +29,7 @@ describe('Paynow status mapping', () => {
     expect(mapProviderStatusToOrderPaymentStatus('REJECTED')).toBe('failed')
     expect(mapProviderStatusToOrderPaymentStatus('ERROR')).toBe('failed')
     expect(mapProviderStatusToOrderPaymentStatus('EXPIRED')).toBe('failed')
+    expect(mapProviderStatusToOrderPaymentStatus('ABANDONED')).toBe('failed')
   })
 
   it('maps in-progress statuses to pending', () => {

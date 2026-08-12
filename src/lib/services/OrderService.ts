@@ -18,6 +18,7 @@ import { MatConfigurationSchema } from '@/features/vehicle-catalog/model/matConf
 
 type BitrixOrderSyncOptions = {
   createIfMissing?: boolean
+  preferredDealId?: string
 }
 
 export class OrderService {
@@ -480,6 +481,7 @@ export class OrderService {
       const orderForSync = await this.getOrderById(orderId);
 
       // Po udanej płatności promuj porzucone koszyki do etapu opłaconego PRZED sync zamówienia
+      let promotedDealId: string | undefined
       if (status === 'paid' && orderForSync) {
         const customerEmail =
           orderForSync.customer &&
@@ -489,12 +491,13 @@ export class OrderService {
             : ''
 
         if (customerEmail) {
-          await convertAbandonedCartsOnPaid({
+          const conversion = await convertAbandonedCartsOnPaid({
             email: customerEmail,
             orderId: orderForSync.id,
             orderNumber: orderForSync.orderNumber,
             order: orderForSync,
           })
+          promotedDealId = conversion.promotedDealIds[0]
         }
       }
 
@@ -506,6 +509,7 @@ export class OrderService {
             status: orderForSync?.status,
             paymentStatus: orderForSync?.paymentStatus,
             createIfMissing: syncDecision.createIfMissing,
+            preferredDealId: promotedDealId,
             itemsCount: orderForSync?.items?.length || 0,
             hasItems: !!orderForSync?.items,
             itemsDetails: orderForSync?.items?.map(item => ({
@@ -520,6 +524,7 @@ export class OrderService {
             console.log('🔄 OrderService: Starting Bitrix24 sync for updated order...');
             await this.syncOrderToBitrix24(orderForSync, {
               createIfMissing: syncDecision.createIfMissing,
+              preferredDealId: promotedDealId,
             });
             console.log('✅ OrderService: Payment status synced to Bitrix24');
           } else {
@@ -565,7 +570,19 @@ export class OrderService {
       });
 
       // Sprawdź czy deal już istnieje — przed kontaktem, żeby failed bez deala nic nie tworzył
-      const existingDeal = await dealService.findByOrderNumber(order.orderNumber);
+      let existingDeal = await dealService.findByOrderNumber(order.orderNumber);
+
+      // Prefer deal promoted from abandoned cart when ORIGIN_ID was not yet rewritten to order number
+      if (!existingDeal && options.preferredDealId) {
+        existingDeal = await dealService.getDeal(options.preferredDealId)
+        if (existingDeal) {
+          console.log('📋 OrderService: Using preferred deal from abandoned-cart promotion:', {
+            dealId: existingDeal.id,
+            orderNumber: order.orderNumber,
+          })
+        }
+      }
+
       if (!existingDeal && !createIfMissing) {
         console.log('⚠️ OrderService: Skipping Bitrix deal create for unpaid/failed order:', {
           orderNumber: order.orderNumber,

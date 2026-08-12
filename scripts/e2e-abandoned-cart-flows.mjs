@@ -5,8 +5,8 @@
  *  A) Heartbeat step2 with partial form → pending DB record
  *  B) Webhook pagehide step2 → Bitrix deal (exported)
  *  C) Webhook pagehide step3 → Bitrix deal (exported)
- *  D) payment_redirect → pending DB, no Bitrix deal
- *  E) pending after redirect + failed payment export path (direct export service via API webhook after expire-like force)
+ *  D) payment_redirect → Bitrix abandoned deal (Porzucone Koszyki)
+ *  E) payment_redirect idempotent when already exported
  *  F) convert on paid (API simulation helper via local convert endpoint if available)
  *
  * Usage: node scripts/e2e-abandoned-cart-flows.mjs
@@ -199,7 +199,7 @@ async function scenarioC_webhookStep3() {
 }
 
 async function scenarioD_paymentRedirect() {
-  log('D) payment_redirect → pending without Bitrix')
+  log('D) payment_redirect → Bitrix abandoned deal')
   const sessionId = makeSession('d-redirect')
   const email = makeEmail('d')
   const payload = {
@@ -209,33 +209,45 @@ async function scenarioD_paymentRedirect() {
   }
   const res = await postJson('/api/abandoned-carts/webhook', payload)
   log('Webhook response', res)
-  assert('D skipped payment_redirect', res.json?.skipped === true && res.json?.reason === 'payment_redirect', JSON.stringify(res.json))
+  assert(
+    'D payment_redirect exported',
+    res.json?.success === true && (!!res.json?.dealId || res.json?.reason === 'payment_redirect_exported'),
+    JSON.stringify(res.json)
+  )
+  await new Promise((r) => setTimeout(r, 2000))
   const carts = await findCartsBySession(sessionId)
   assert('D DB record exists', carts.length >= 1, `count=${carts.length}`)
   if (carts[0]) {
-    assert('D status pending', carts[0].status === 'pending', carts[0].status)
-    assert('D no bitrix deal', !carts[0].bitrix_deal_id, String(carts[0].bitrix_deal_id))
+    assert(
+      'D status exported with deal',
+      carts[0].status === 'exported' && !!carts[0].bitrix_deal_id,
+      `status=${carts[0].status} deal=${carts[0].bitrix_deal_id}`
+    )
   }
-  return { sessionId, email, cart: carts[0] }
+  return { sessionId, email, cart: carts[0], dealId: res.json?.dealId || carts[0]?.bitrix_deal_id }
 }
 
 async function scenarioE_forceExportAfterFailedPayment(dResult) {
-  log('E) After incomplete payment — force export of pending cart via webhook pagehide (simulates fail/abandon after paywall)')
-  // Simulate: user had payment_redirect pending, then never paid and later abandons / fail export path.
-  // Direct path: call webhook with pagehide on same session (no pending order blocking).
+  log('E) payment_redirect already exported — second webhook is idempotent')
   const payload = {
     ...basePayload({ sessionId: dResult.sessionId, stage: 'checkout_step3', email: dResult.email }),
-    event: 'pagehide',
+    event: 'payment_redirect',
+    metadata: { paymentRedirect: true, e2eRunId: RUN_ID },
   }
   const res = await postJson('/api/abandoned-carts/webhook', payload)
-  log('Export webhook response', res)
-  await new Promise((r) => setTimeout(r, 2000))
+  log('Idempotent webhook response', res)
+  await new Promise((r) => setTimeout(r, 1000))
   const carts = await findCartsBySession(dResult.sessionId)
   const cart = carts[0]
   assert(
-    'E pending cart exported after abandon',
+    'E still exported once',
     cart?.status === 'exported' && !!cart?.bitrix_deal_id,
     `status=${cart?.status} deal=${cart?.bitrix_deal_id} api=${JSON.stringify(res.json)}`
+  )
+  assert(
+    'E same deal reused or skipped',
+    res.json?.skipped === true || res.json?.dealId === cart?.bitrix_deal_id || res.json?.dealId === dResult.dealId,
+    JSON.stringify(res.json)
   )
   return { ...dResult, cart, dealId: res.json?.dealId || cart?.bitrix_deal_id }
 }

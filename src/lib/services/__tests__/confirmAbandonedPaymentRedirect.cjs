@@ -19,13 +19,11 @@ const webhookSrc = fs.readFileSync(
   path.join(__dirname, '..', '..', '..', 'app', 'api', 'abandoned-carts', 'webhook', 'route.ts'),
   'utf8'
 )
-strictEqual(webhookSrc.includes("reason: 'payment_redirect'"), true)
 strictEqual(webhookSrc.includes('isAbandonedPaymentRedirectEvent'), true)
-strictEqual(
-  /isPaymentRedirect[\s\S]*Skipping Bitrix create for payment redirect/.test(webhookSrc),
-  true
-)
-console.log('✓ webhook skips Bitrix on payment_redirect')
+strictEqual(webhookSrc.includes('payment_redirect_exported'), true)
+strictEqual(webhookSrc.includes('Creating Bitrix deal for payment-redirect cart'), true)
+strictEqual(webhookSrc.includes('Skipping Bitrix create for payment redirect'), false)
+console.log('✓ webhook exports Bitrix deal on payment_redirect')
 
 const checkoutSrc = fs.readFileSync(
   path.join(__dirname, '..', '..', '..', 'features', 'checkout', 'components', 'CheckoutSection.tsx'),
@@ -33,7 +31,17 @@ const checkoutSrc = fs.readFileSync(
 )
 strictEqual(checkoutSrc.includes('markPaymentRedirect'), true)
 strictEqual((checkoutSrc.match(/markPaymentRedirect\(order\.id\)/g) || []).length >= 2, true)
-console.log('✓ checkout marks payment redirect for Paynow and P24')
+strictEqual(checkoutSrc.includes('persistPaymentRedirectCartSnapshot'), true)
+strictEqual(checkoutSrc.includes('persistPaymentRedirectSnapshot'), true)
+console.log('✓ checkout marks payment redirect and persists snapshot before clearCart')
+
+const abandonedApiSrc = fs.readFileSync(
+  path.join(__dirname, '..', '..', '..', 'lib', 'api', 'abandonedCarts.ts'),
+  'utf8'
+)
+strictEqual(abandonedApiSrc.includes('persistPaymentRedirectSnapshot'), true)
+strictEqual(abandonedApiSrc.includes("event: 'payment_redirect'"), true)
+console.log('✓ abandoned carts API awaits payment_redirect snapshot')
 
 const heartbeatSrc = fs.readFileSync(
   path.join(

@@ -65,6 +65,7 @@ export {
   abandonedCartsApi,
   sendHeartbeat,
   sendWebhook,
+  persistPaymentRedirectSnapshot,
   type AbandonedCartPayload,
   type AbandonedCartWebhookPayload,
 } from './abandonedCarts';

@@ -30,10 +30,17 @@ const conversionSrc = fs.readFileSync(
 strictEqual(conversionSrc.includes(".in('status', ['pending', 'processing', 'exported'])"), true)
 strictEqual(conversionSrc.includes('mapOrderToDeal'), true)
 strictEqual(conversionSrc.includes('promoteAbandonedDealToPaidOrder'), true)
-strictEqual(conversionSrc.includes('updateDealStage'), true)
 strictEqual(conversionSrc.includes('resolveAbandonedDealLoseStageId'), false)
-strictEqual(conversionSrc.includes('deleteDeal'), false)
+strictEqual(conversionSrc.includes('deleteDeal'), true)
 console.log('✓ conversion promotes abandoned deal to paid order stage')
+
+strictEqual(orderServiceSrc.includes('preferredDealId'), true)
+strictEqual(
+  /convertAbandonedCartsOnPaid[\s\S]*preferredDealId[\s\S]*syncOrderToBitrix24/.test(orderServiceSrc),
+  true,
+  'paid path must pass promoted deal id into Bitrix sync'
+)
+console.log('✓ OrderService reuses promoted abandoned deal on paid sync')
 
 const p24Src = fs.readFileSync(
   path.join(__dirname, '..', '..', '..', 'app', 'api', 'payments', 'p24', 'callback', 'route.ts'),

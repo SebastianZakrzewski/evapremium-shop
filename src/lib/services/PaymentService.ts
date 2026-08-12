@@ -56,10 +56,11 @@ const mapProviderStatusToOrderPaymentStatus = (
     case 'REJECTED':
     case 'ERROR':
     case 'EXPIRED':
+    case 'ABANDONED':
+      // User left PayNow without paying — mark order failed so abandoned-cart Bitrix export can run
       return 'failed'
     case 'NEW':
     case 'PENDING':
-    case 'ABANDONED':
       return 'pending'
     default:
       return null

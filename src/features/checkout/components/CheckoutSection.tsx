@@ -40,7 +40,7 @@ import { HybridSessionManager } from '@/lib/utils/hybrid-session-manager';
 import { useTracking, createInitiateCheckoutData } from '@/lib/tracking';
 import { motion } from 'framer-motion';
 import { getColorInfo } from '@/lib/color-mapping';
-import { paymentsApi } from '@/lib/api';
+import { paymentsApi, abandonedCartsApi } from '@/lib/api';
 import { markPaymentRedirect } from '@/features/checkout/lib/paymentRedirectFlag';
 import {
   isPaynowCheckoutEnabled,
@@ -486,6 +486,71 @@ export default function CheckoutSection() {
     };
   }, { intervalMs: 30000 });
 
+  // Snapshot pending abandoned cart before clearCart kills heartbeat listeners
+  const persistPaymentRedirectCartSnapshot = async (
+    orderId: string,
+    formData: CheckoutFormData
+  ) => {
+    const sessionId =
+      typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : ''
+    if (!sessionId || sessionId.length < 8 || items.length === 0) return
+
+    const firstMatItem = items.find((item) => item.productType === 'mat')
+    const matConfig = isMatCartConfiguration(firstMatItem?.configuration)
+      ? firstMatItem.configuration
+      : undefined
+
+    await abandonedCartsApi.persistPaymentRedirectSnapshot({
+      sessionId,
+      stage: 'checkout_step3',
+      cartHasItems: true,
+      orderId,
+      contact: {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        ...(formData.nip && { taxId: formData.nip }),
+      },
+      address: {
+        street: formData.street,
+        city: formData.city,
+        postalCode: formData.postalCode,
+        country: formData.country,
+      },
+      car: matConfig?.carDetails
+        ? {
+            make: matConfig.carDetails.brand,
+            model: matConfig.carDetails.model,
+            year: matConfig.carDetails.year,
+            bodyType: matConfig.carDetails.bodyType,
+          }
+        : undefined,
+      configuration: matConfig
+        ? {
+            variant: matConfig.setVariant,
+            setType: matConfig.setType,
+            cellShape: matConfig.cellType,
+            materialColor: matConfig.materialColor,
+            trimColor: matConfig.edgeColor,
+          }
+        : undefined,
+      items: items.map((i) => ({
+        productId: i.productId,
+        productName: i.productName,
+        productType: i.productType,
+        quantity: i.quantity,
+        price: i.unitPrice,
+        currency: 'PLN',
+        configuration: i.configuration,
+      })),
+      currency: 'PLN',
+      totalAmount: finalTotal,
+      metadata: { checkoutStep: 3, orderId },
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+    })
+  }
+
   // Funkcja do zastosowania kodu rabatowego
   const applyDiscountCode = () => {
     if (!discountCode.trim()) {
@@ -762,6 +827,9 @@ export default function CheckoutSection() {
             markPaymentRedirect(order.id);
           }
 
+          // Keep pending abandoned-cart snapshot for PayNow ABANDONED → Bitrix export
+          await persistPaymentRedirectCartSnapshot(order.id, data);
+
           clearCart();
 
           if (result.paymentUrl) {
@@ -798,6 +866,8 @@ export default function CheckoutSection() {
             markPaymentRedirect(order.id);
             console.log('💾 Saved orderId to sessionStorage:', order.id);
           }
+
+          await persistPaymentRedirectCartSnapshot(order.id, data);
           
           // Wyczyść koszyk po udanej rejestracji
           clearCart();
