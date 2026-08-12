@@ -11,6 +11,7 @@ export interface AbandonedCartPayload {
   cartHasItems?: boolean;
   utm?: Record<string, unknown>;
   contact?: Record<string, unknown>;
+  address?: Record<string, unknown>;
   car?: Record<string, unknown>;
   configuration?: Record<string, unknown>;
   items?: Array<Record<string, unknown>>;
