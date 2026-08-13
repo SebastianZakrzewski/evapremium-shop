@@ -178,6 +178,7 @@ export class PricingService {
   } {
     const validCodes = {
       'LISTOPAD5': { type: 'percentage', value: 5, minAmount: 0 },
+      'PREMIUM5': { type: 'percentage', value: 5, minAmount: 0 },
       'WELCOME10': { type: 'percentage', value: 10, minAmount: 100 },
       'BLACK10': { type: 'percentage', value: 10, minAmount: 0 },
       'SAVE50': { type: 'fixed', value: 50, minAmount: 200 },
