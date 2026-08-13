@@ -201,6 +201,51 @@ describe("buildConfiguratorV2PreviewGallery", () => {
     expect(items[0]?.kind).toBe("model-template")
     expect(items[0]?.imageUrl).toBe("/mat/from-card.webp")
   })
+
+  it("prefers mat_model_previews over mat_product_images model template", () => {
+    const items = buildConfiguratorV2PreviewGallery({
+      dynamicPreviewPath: "/dywaniki/fallback.webp",
+      hasFullDynamicPreview: false,
+      isVehiclePreviewReady: true,
+      matProductImages: [templateImage, ...inCarImages],
+      modelPreviews: [
+        {
+          id: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+          mat_template_id: "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+          body_type_key: "suv",
+          image_url: "/dywaniki/previews/opel-mokka-1-gen.png",
+          alt_text: "Opel Mokka I",
+          caption: "Opel Mokka I",
+          sort_order: 0,
+          is_primary: true,
+          is_active: true,
+        },
+        {
+          id: "cccccccc-cccc-cccc-cccc-cccccccccccc",
+          mat_template_id: "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+          body_type_key: null,
+          image_url: "/dywaniki/previews/opel-mokka-1-gen-2.png",
+          alt_text: "Opel Mokka I side",
+          caption: null,
+          sort_order: 1,
+          is_primary: false,
+          is_active: true,
+        },
+      ],
+      productGalleryImages: [],
+      showProductGallery: false,
+      defaultAlt: "Podgląd",
+    })
+
+    expect(items.map((item) => item.kind)).toEqual([
+      "model-template",
+      "model-template",
+      "in-car-photo",
+      "in-car-photo",
+    ])
+    expect(items[0]?.imageUrl).toBe("/dywaniki/previews/opel-mokka-1-gen.png")
+    expect(items[1]?.imageUrl).toBe("/dywaniki/previews/opel-mokka-1-gen-2.png")
+  })
 })
 
 describe("resolveDefaultGalleryItemId", () => {

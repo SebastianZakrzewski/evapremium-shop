@@ -9,6 +9,7 @@ import { resolveConfiguratorBrandImage } from "@/features/car-configurator/utils
 import {
   shouldServeBrandImageUnoptimized,
 } from "@/shared/brands"
+import { useMatModelPreviews } from "@/features/mat-model-previews"
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
 import type { ProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import {
@@ -142,6 +143,31 @@ export const LockedCarContextStep = ({
       }),
     [brandKey, config.brand, config.brandKey, productEntry.brandParam],
   )
+
+  const { previews: modelPreviews } = useMatModelPreviews({
+    recordKey: config.recordKey || undefined,
+    brandKey: config.brandKey || brandKey || config.brand || undefined,
+    modelKey: config.modelKey || config.model || undefined,
+    bodyTypeKey: config.bodyTypeKey || config.bodyType || undefined,
+    enabled: Boolean(
+      config.recordKey ||
+        config.modelKey ||
+        ((config.brandKey || brandKey || config.brand) && config.model),
+    ),
+  })
+
+  const modelPreviewImage = useMemo(() => {
+    const entryPreview = productEntry.previewImageParam?.trim() || null
+    if (entryPreview) return entryPreview
+
+    if (modelPreviews.length === 0) return null
+    const primary =
+      modelPreviews.find((preview) => preview.is_primary) ?? modelPreviews[0]
+    return primary?.image_url ?? null
+  }, [modelPreviews, productEntry.previewImageParam])
+
+  const brandThumbnailSrc = modelPreviewImage || brandLogo
+  const usesModelPreviewPhoto = Boolean(modelPreviewImage)
 
   const generations = useMemo(() => {
     const items = templates.map((template) => ({
@@ -455,14 +481,25 @@ export const LockedCarContextStep = ({
       <div className="bg-black/30 border border-white/10 rounded-xl p-4 space-y-3">
         <div className="flex items-start gap-3">
           <div className="relative w-12 h-12 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
-            {brandLogo ? (
+            {brandThumbnailSrc ? (
               <Image
-                src={brandLogo}
-                alt={config.brand}
+                src={brandThumbnailSrc}
+                alt={
+                  usesModelPreviewPhoto
+                    ? `Podgląd dywaników ${config.brand} ${config.model}`
+                    : config.brand
+                }
                 fill
-                className="object-contain p-1.5"
+                className={
+                  usesModelPreviewPhoto
+                    ? "object-cover"
+                    : "object-contain p-1.5"
+                }
                 sizes="48px"
-                unoptimized={shouldServeBrandImageUnoptimized(brandLogo)}
+                unoptimized={
+                  usesModelPreviewPhoto ||
+                  shouldServeBrandImageUnoptimized(brandThumbnailSrc)
+                }
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-red-400">

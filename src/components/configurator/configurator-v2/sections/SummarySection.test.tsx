@@ -12,6 +12,14 @@ vi.mock("@/features/brands/hooks/useBrands", () => ({
   useBrands: () => ({ brands: [], isLoading: false }),
 }))
 
+vi.mock("@/features/mat-model-previews", () => ({
+  useMatModelPreviews: () => ({
+    previews: [],
+    isLoading: false,
+    error: null,
+  }),
+}))
+
 const baseConfig: ConfiguratorState = {
   brand: "BMW",
   brandKey: "bmw",

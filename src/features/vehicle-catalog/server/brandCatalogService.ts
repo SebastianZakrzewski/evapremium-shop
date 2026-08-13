@@ -9,12 +9,62 @@ import {
   groupTemplatesToCarModels,
 } from "../domain/catalogGrouping"
 import type { CarModelApiResponse } from "@/lib/types/api"
+import { getPrimaryModelPreviewsByTemplateIds } from "@/features/mat-model-previews/server/repository"
+import { resolvePrimaryPreviewImageUrl } from "@/features/mat-model-previews/lib/resolvePrimaryPreviewImageUrl"
 import {
   getDistinctSellableBrandRows,
   getMatTemplates,
   resolveBrandKeyFromParam,
   searchMatTemplates,
 } from "./repository"
+
+const attachModelPreviewImages = async (
+  models: CarModelApiResponse[],
+): Promise<CarModelApiResponse[]> => {
+  const templateIds = models.flatMap((model) =>
+    model.generations
+      .map((generation) => generation.matTemplateId)
+      .filter((id): id is string => Boolean(id)),
+  )
+
+  const primaryPreviews =
+    await getPrimaryModelPreviewsByTemplateIds(templateIds)
+
+  return models.map((model) => {
+    const generations = model.generations.map((generation) => {
+      const modelImage = resolvePrimaryPreviewImageUrl(
+        primaryPreviews,
+        generation.matTemplateId,
+        generation.bodyType,
+      )
+      return {
+        ...generation,
+        modelImage,
+      }
+    })
+
+    // Family-level image only when every generation shares the same URL.
+    // Never promote a body-type-specific preview onto other body types.
+    const distinctImages = [
+      ...new Set(
+        generations
+          .map((generation) => generation.modelImage)
+          .filter((url): url is string => Boolean(url)),
+      ),
+    ]
+    const modelImage =
+      distinctImages.length === 1 &&
+      generations.every((generation) => generation.modelImage === distinctImages[0])
+        ? distinctImages[0]
+        : null
+
+    return {
+      ...model,
+      generations,
+      modelImage,
+    }
+  })
+}
 
 export type SellableBrand = {
   id: number
@@ -84,10 +134,11 @@ export const getBrandModelsCatalog = async (
   if (!brandKey) return []
 
   const rows = await getMatTemplates({ brandKey })
-  return groupTemplatesToCarModels(rows).map((model) => ({
+  const models = groupTemplatesToCarModels(rows).map((model) => ({
     ...model,
     brand: resolveBrandDisplayNameFromDbName(model.brand),
   }))
+  return attachModelPreviewImages(models)
 }
 
 export const searchVehicleCatalog = async (

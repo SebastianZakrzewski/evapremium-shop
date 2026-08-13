@@ -11,6 +11,7 @@ import {
   isMatRealizationMatType,
   useMatRealizationPhotos,
 } from "@/features/mat-realization-photos"
+import { useMatModelPreviews } from "@/features/mat-model-previews"
 import { useConfiguratorState } from "@/features/car-configurator/hooks/useConfiguratorState"
 import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import { useResolvedPricing } from "@/features/vehicle-catalog/hooks/useResolvedPricing"
@@ -98,6 +99,20 @@ export default function ConfiguratorV2() {
     modelKey: config.modelKey || config.model || undefined,
     matType: realizationMatType,
     enabled: isRealizationPhotosReady,
+  })
+
+  const isModelPreviewsReady = !!(
+    config.modelKey ||
+    config.recordKey ||
+    (config.brand && config.model)
+  )
+
+  const { previews: modelPreviews } = useMatModelPreviews({
+    recordKey: config.recordKey || undefined,
+    brandKey: config.brandKey || config.brand || undefined,
+    modelKey: config.modelKey || config.model || undefined,
+    bodyTypeKey: config.bodyTypeKey || config.bodyType || undefined,
+    enabled: isModelPreviewsReady,
   })
 
   const pricingQuery = useResolvedPricing({
@@ -192,20 +207,32 @@ export default function ConfiguratorV2() {
     matProductImages,
     productEntry,
     realizationPhotos,
+    modelPreviews,
   )
 
   const entryPreviewImage = productEntry.previewImageParam
 
+  const primaryModelPreviewUrl = useMemo(() => {
+    if (modelPreviews.length === 0) return null
+    const primary =
+      modelPreviews.find((preview) => preview.is_primary) ?? modelPreviews[0]
+    return primary?.image_url ?? null
+  }, [modelPreviews])
+
+  const vehiclePreviewImage =
+    entryPreviewImage?.trim() || primaryModelPreviewUrl
+
   const matProductImagePaths = useMemo(() => {
     const paths = [
       ...matProductImages.map((image) => image.image_url),
+      ...modelPreviews.map((previewItem) => previewItem.image_url),
       ...realizationPhotos.map((photo) => photo.image_url),
     ]
     if (entryPreviewImage && !paths.includes(entryPreviewImage)) {
       paths.unshift(entryPreviewImage)
     }
     return paths
-  }, [entryPreviewImage, matProductImages, realizationPhotos])
+  }, [entryPreviewImage, matProductImages, modelPreviews, realizationPhotos])
 
   useMatPreviewPreload({
     matType: config.matType,
@@ -499,6 +526,7 @@ export default function ConfiguratorV2() {
               onAddToCart={handleAddToCart}
               isAddingToCart={isAddingToCart || cartLoading}
               cartActionError={cartActionError}
+              vehiclePreviewImage={vehiclePreviewImage}
             />
           )}
           {!showSummary && (

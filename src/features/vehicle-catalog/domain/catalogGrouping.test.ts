@@ -53,6 +53,7 @@ describe("groupTemplatesToCarModels", () => {
     expect(models[0]?.modelFamilyKey).toBe("ranger")
     expect(models[0]?.generations).toHaveLength(2)
     expect(models[0]?.generations[0]?.modelKey).toBe("ranger_6_gen")
+    expect(models[0]?.generations[0]?.matTemplateId).toBe("1")
     expect(models[0]?.years).toContain(2024)
     expect(models[0]?.years).toContain(2018)
   })

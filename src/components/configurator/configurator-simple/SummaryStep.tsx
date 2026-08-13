@@ -14,6 +14,7 @@ import type { ConfiguratorState } from "@/features/car-configurator/utils/config
 import { useAccessories } from "@/features/accessories/hooks/useAccessories";
 import { resolveConfiguratorBrandImage } from "@/features/car-configurator/utils/resolveConfiguratorBrandImage";
 import { shouldServeBrandImageUnoptimized } from "@/shared/brands";
+import { useMatModelPreviews } from "@/features/mat-model-previews";
 import { Plus, CheckCircle2, ShoppingCart } from "lucide-react";
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
 import {
@@ -39,6 +40,8 @@ interface SummaryStepProps {
   isAddingToCart: boolean;
   cartActionError?: string | null;
   stickyMobileActions?: boolean;
+  /** Primary model preview from listing / API (prefer over brand logo). */
+  vehiclePreviewImage?: string | null;
 }
 
 const structureNames: Record<string, string> = {
@@ -54,6 +57,7 @@ export function SummaryStep({
   isAddingToCart,
   cartActionError,
   stickyMobileActions = false,
+  vehiclePreviewImage = null,
 }: SummaryStepProps) {
   const { accessories } = useAccessories();
   
@@ -75,6 +79,31 @@ export function SummaryStep({
       }),
     [config.brand, config.brandKey],
   );
+
+  const { previews: modelPreviews } = useMatModelPreviews({
+    recordKey: config.recordKey || undefined,
+    brandKey: config.brandKey || config.brand || undefined,
+    modelKey: config.modelKey || config.model || undefined,
+    bodyTypeKey: config.bodyTypeKey || config.bodyType || undefined,
+    enabled: Boolean(
+      config.recordKey ||
+        config.modelKey ||
+        ((config.brandKey || config.brand) && config.model),
+    ),
+  });
+
+  const modelPreviewImage = useMemo(() => {
+    const fromProp = vehiclePreviewImage?.trim() || null;
+    if (fromProp) return fromProp;
+
+    if (modelPreviews.length === 0) return null;
+    const primary =
+      modelPreviews.find((preview) => preview.is_primary) ?? modelPreviews[0];
+    return primary?.image_url ?? null;
+  }, [modelPreviews, vehiclePreviewImage]);
+
+  const vehicleThumbnailSrc = modelPreviewImage || brandLogo;
+  const usesModelPreviewPhoto = Boolean(modelPreviewImage);
   
   // Generuj miniaturkę dywanika
   const matThumbnail = useMemo(() => {
@@ -230,14 +259,25 @@ export function SummaryStep({
             {/* Car Info */}
             <div className="p-3 border-b border-white/5 flex items-start gap-3">
               <div className="relative w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
-                {brandLogo ? (
+                {vehicleThumbnailSrc ? (
                   <Image
-                    src={brandLogo}
-                    alt={config.brand}
+                    src={vehicleThumbnailSrc}
+                    alt={
+                      usesModelPreviewPhoto
+                        ? `Podgląd dywaników ${config.brand} ${config.model}`
+                        : config.brand
+                    }
                     fill
-                    className="object-contain p-1.5"
+                    className={
+                      usesModelPreviewPhoto
+                        ? "object-cover"
+                        : "object-contain p-1.5"
+                    }
                     sizes="56px"
-                    unoptimized={shouldServeBrandImageUnoptimized(brandLogo)}
+                    unoptimized={
+                      usesModelPreviewPhoto ||
+                      shouldServeBrandImageUnoptimized(vehicleThumbnailSrc)
+                    }
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-red-400">

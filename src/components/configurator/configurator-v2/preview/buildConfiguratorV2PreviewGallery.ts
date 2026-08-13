@@ -1,4 +1,5 @@
 import type { MatProductImage } from "@/features/mat-product-images"
+import type { MatModelPreview } from "@/features/mat-model-previews"
 import type { MatRealizationPhoto } from "@/features/mat-realization-photos"
 import { partitionMatProductImages } from "./partitionMatProductImages"
 
@@ -21,6 +22,7 @@ type BuildConfiguratorV2PreviewGalleryParams = {
   hasFullDynamicPreview: boolean
   isVehiclePreviewReady: boolean
   matProductImages: MatProductImage[]
+  modelPreviews?: MatModelPreview[]
   realizationPhotos?: MatRealizationPhoto[]
   productGalleryImages: string[]
   showProductGallery: boolean
@@ -35,6 +37,7 @@ export const buildConfiguratorV2PreviewGallery = ({
   hasFullDynamicPreview,
   isVehiclePreviewReady,
   matProductImages,
+  modelPreviews = [],
   realizationPhotos = [],
   productGalleryImages,
   showProductGallery,
@@ -80,24 +83,66 @@ export const buildConfiguratorV2PreviewGallery = ({
     const { modelTemplate, inCarPhotos } =
       partitionMatProductImages(matProductImages)
     const entryImage = entryPreviewImage?.trim() ?? null
-    const templateUrl =
-      preferEntryPreviewImage && entryImage
-        ? entryImage
-        : modelTemplate?.image_url ?? entryImage
+    const seenTemplateUrls = new Set<string>()
 
-    if (templateUrl) {
+    const pushModelTemplate = (
+      id: string,
+      imageUrl: string,
+      altText: string,
+    ) => {
+      if (seenTemplateUrls.has(imageUrl)) return
+      seenTemplateUrls.add(imageUrl)
       items.push({
-        id: modelTemplate
-          ? `model-template-${modelTemplate.id}`
-          : "model-template-entry",
-        imageUrl: templateUrl,
-        altText: modelTemplate?.alt_text ?? defaultAlt,
+        id,
+        imageUrl,
+        altText,
         kind: "model-template",
       })
     }
 
+    if (modelPreviews.length > 0) {
+      const orderedPreviews = [...modelPreviews].sort((left, right) => {
+        if (left.is_primary !== right.is_primary) {
+          return left.is_primary ? -1 : 1
+        }
+        return left.sort_order - right.sort_order
+      })
+
+      orderedPreviews.forEach((preview) => {
+        pushModelTemplate(
+          `model-template-${preview.id}`,
+          preview.image_url,
+          preview.alt_text ?? defaultAlt,
+        )
+      })
+    } else {
+      const templateUrl =
+        preferEntryPreviewImage && entryImage
+          ? entryImage
+          : modelTemplate?.image_url ?? entryImage
+
+      if (templateUrl) {
+        pushModelTemplate(
+          modelTemplate
+            ? `model-template-${modelTemplate.id}`
+            : "model-template-entry",
+          templateUrl,
+          modelTemplate?.alt_text ?? defaultAlt,
+        )
+      }
+    }
+
+    if (
+      preferEntryPreviewImage &&
+      entryImage &&
+      !seenTemplateUrls.has(entryImage)
+    ) {
+      pushModelTemplate("model-template-entry", entryImage, defaultAlt)
+    }
+
+    const templateUrls = seenTemplateUrls
     const realizationItems = realizationPhotos
-      .filter((photo) => photo.image_url !== templateUrl)
+      .filter((photo) => !templateUrls.has(photo.image_url))
       .map((photo) => ({
         id: `in-car-photo-${photo.id}`,
         imageUrl: photo.image_url,
@@ -110,7 +155,7 @@ export const buildConfiguratorV2PreviewGallery = ({
       items.push(...realizationItems)
     } else {
       inCarPhotos
-        .filter((image) => image.image_url !== templateUrl)
+        .filter((image) => !templateUrls.has(image.image_url))
         .forEach((image) => {
           items.push({
             id: `in-car-photo-${image.id}`,

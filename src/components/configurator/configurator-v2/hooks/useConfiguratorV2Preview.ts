@@ -9,6 +9,7 @@ import {
 } from "@/components/configurator/configurator-simple/rugPreviewConfig"
 import type { ProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import type { MatProductImage } from "@/features/mat-product-images"
+import type { MatModelPreview } from "@/features/mat-model-previews"
 import type { MatRealizationPhoto } from "@/features/mat-realization-photos"
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
 import { brandNameToNavigationSlug, getBrandLogo } from "@/shared/brands"
@@ -50,6 +51,7 @@ export const useConfiguratorV2Preview = (
   matProductImages: MatProductImage[],
   productEntry: ProductEntryLock,
   realizationPhotos: MatRealizationPhoto[] = [],
+  modelPreviews: MatModelPreview[] = [],
 ): ConfiguratorV2PreviewState => {
   const classicProductImages = useMemo(
     () => [
@@ -134,13 +136,25 @@ export const useConfiguratorV2Preview = (
     [matProductImages],
   )
 
+  const primaryModelPreviewUrl = useMemo(() => {
+    if (modelPreviews.length === 0) return null
+    const primary =
+      modelPreviews.find((preview) => preview.is_primary) ?? modelPreviews[0]
+    return primary?.image_url ?? null
+  }, [modelPreviews])
+
   const modelTemplateUrl = useMemo(() => {
     const entryImage = entryPreviewImage?.trim() ?? null
     if (productEntry.isLocked && entryImage) {
       return entryImage
     }
-    return modelTemplate?.image_url ?? entryImage
-  }, [entryPreviewImage, modelTemplate, productEntry.isLocked])
+    return primaryModelPreviewUrl ?? modelTemplate?.image_url ?? entryImage
+  }, [
+    entryPreviewImage,
+    modelTemplate,
+    primaryModelPreviewUrl,
+    productEntry.isLocked,
+  ])
 
   const isVehicleContextComplete = !!(
     config.brand &&
@@ -181,6 +195,7 @@ export const useConfiguratorV2Preview = (
         hasFullDynamicPreview: hasDynamicMatPreview,
         isVehiclePreviewReady,
         matProductImages,
+        modelPreviews,
         realizationPhotos,
         productGalleryImages: orderedProductGalleryImages,
         showProductGallery,
@@ -194,6 +209,7 @@ export const useConfiguratorV2Preview = (
       hasDynamicMatPreview,
       isVehiclePreviewReady,
       matProductImages,
+      modelPreviews,
       realizationPhotos,
       orderedProductGalleryImages,
       showProductGallery,

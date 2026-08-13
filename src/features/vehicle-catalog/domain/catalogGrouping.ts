@@ -92,6 +92,7 @@ export const groupTemplatesToCarModels = (
         generationNumberDisplay: labels.generationNumberDisplay,
         modelDisplay: labels.modelDisplay,
         modelKey: row.model_key,
+        matTemplateId: row.id,
         bodyType: bodyTypeOption.key || bodyTypeLabel,
         bodyTypeDisplay:
           bodyTypeOption.displayLabel || labels.bodyTypeDisplay,

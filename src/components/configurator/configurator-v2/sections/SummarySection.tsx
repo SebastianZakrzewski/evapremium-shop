@@ -18,6 +18,7 @@ type SummarySectionProps = {
   cartActionError?: string | null
   onPrevious: () => void
   onAddToCart: () => void
+  vehiclePreviewImage?: string | null
 }
 
 export const SummarySection = ({
@@ -27,6 +28,7 @@ export const SummarySection = ({
   cartActionError,
   onPrevious,
   onAddToCart,
+  vehiclePreviewImage = null,
 }: SummarySectionProps) => (
   <ConfiguratorV2SectionShell
     id="section-summary"
@@ -42,6 +44,7 @@ export const SummarySection = ({
       isAddingToCart={isAddingToCart}
       cartActionError={cartActionError}
       stickyMobileActions
+      vehiclePreviewImage={vehiclePreviewImage}
     />
   </ConfiguratorV2SectionShell>
 )

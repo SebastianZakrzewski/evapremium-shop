@@ -111,7 +111,7 @@ describe("useConfiguratorV2Preview", () => {
       ),
     )
 
-    expect(result.current.imageSrc).toBe("/modele/bmw.png")
+    expect(result.current.imageSrc).toBe("/modele/bmw.webp")
     expect(result.current.galleryItems.map((item) => item.kind)).toEqual([
       "brand-placeholder",
     ])
@@ -311,6 +311,40 @@ describe("useConfiguratorV2Preview", () => {
 
     expect(result.current.imageSrc).toBe("/mat/from-card.webp")
     expect(result.current.galleryItems[0]?.kind).toBe("model-template")
+  })
+
+  it("prefers mat_model_previews in gallery over mat_product_images", () => {
+    const modelPreviews = [
+      {
+        id: "dddddddd-dddd-dddd-dddd-dddddddddddd",
+        mat_template_id: "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee",
+        body_type_key: null,
+        image_url: "/dywaniki/previews/opel-mokka-1-gen.png",
+        alt_text: "Opel Mokka I",
+        caption: "Opel Mokka I",
+        sort_order: 0,
+        is_primary: true,
+        is_active: true,
+      },
+    ]
+
+    const { result } = renderHook(() =>
+      useConfiguratorV2Preview(
+        baseConfig,
+        matImages,
+        unlockedEntry,
+        [],
+        modelPreviews,
+      ),
+    )
+
+    expect(result.current.galleryItems[0]?.kind).toBe("model-template")
+    expect(result.current.galleryItems[0]?.imageUrl).toBe(
+      "/dywaniki/previews/opel-mokka-1-gen.png",
+    )
+    expect(result.current.imageSrc).toBe(
+      "/dywaniki/previews/opel-mokka-1-gen.png",
+    )
   })
 
   it("does not show product-set gallery until variant is selected", () => {

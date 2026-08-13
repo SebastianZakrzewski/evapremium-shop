@@ -175,6 +175,8 @@ export default function CarModelsSection() {
       generationDisplay: string;
     }> = [];
 
+    const fallbackImage = brandLogo ?? '/images/products/audi.jpg';
+
     // Map do deduplikacji modeli - klucz: brand-name-bodyType-generation-yearFrom
     const uniqueModelsMap = new Map<string, typeof models[0]>();
 
@@ -210,7 +212,7 @@ export default function CarModelsSection() {
                 gen.bodyTypeDisplay || formatBodyTypeDisplayPl(gen.bodyType || ''),
               yearFrom: gen.yearFrom,
               yearTo: gen.yearTo,
-              imageSrc: brandLogo ?? '/images/products/audi.jpg',
+              imageSrc: gen.modelImage || fallbackImage,
               generation: gen.generation || '',
               generationDisplay:
                 gen.generationDisplay ||
@@ -239,7 +241,7 @@ export default function CarModelsSection() {
             ),
             yearFrom: model.yearFrom,
             yearTo: model.yearTo,
-            imageSrc: brandLogo ?? '/images/products/audi.jpg',
+            imageSrc: model.modelImage || fallbackImage,
             generation: model.generation || '',
             generationDisplay: formatYearRangeDisplay(
               model.yearFrom,
@@ -571,13 +573,19 @@ export default function CarModelsSection() {
                 {/* Model Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {filteredModels.map((model) => {
+                    const imageSrc = model.imageSrc || '/vercel.svg';
                     const configuratorUrl = buildConfiguratorEntryUrl({
                       brand: brandSlug,
                       model: model.modelFamilyKey ?? model.name.toLowerCase(),
                       generation: model.generation,
                       bodyType: model.bodyType,
+                      previewImage:
+                        imageSrc !== brandLogo &&
+                        imageSrc !== '/images/products/audi.jpg' &&
+                        imageSrc !== '/vercel.svg'
+                          ? imageSrc
+                          : null,
                     });
-                    const imageSrc = model.imageSrc || '/vercel.svg';
                     const brandLabel = brandDisplayName || model.brand || '';
                     const useBrandPhoto = isModeleBrandPhoto(imageSrc);
 

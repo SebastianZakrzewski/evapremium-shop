@@ -5,6 +5,7 @@ export type ConfiguratorEntryParams = {
   model?: string
   generation?: string | null
   bodyType?: string | null
+  previewImage?: string | null
 }
 
 /**
@@ -16,6 +17,7 @@ export const buildConfiguratorEntryUrl = ({
   model,
   generation,
   bodyType,
+  previewImage,
 }: ConfiguratorEntryParams): string => {
   const params = new URLSearchParams()
   const brandSlug = brandNameToNavigationSlug(brand) || brand.toLowerCase().trim()
@@ -29,6 +31,9 @@ export const buildConfiguratorEntryUrl = ({
   }
   if (bodyType?.trim()) {
     params.set("bodyType", bodyType.trim())
+  }
+  if (previewImage?.trim()) {
+    params.set("previewImage", previewImage.trim())
   }
 
   return `/konfigurator?${params.toString()}`
