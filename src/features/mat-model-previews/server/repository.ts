@@ -119,12 +119,6 @@ export const getMatModelPreviews = async (
   })
 }
 
-export type PrimaryModelPreviewRow = {
-  matTemplateId: string
-  bodyTypeKey: string | null
-  imageUrl: string
-}
-
 /**
  * Primary previews dla batcha katalogu (template + opcjonalny body_type_key).
  */
