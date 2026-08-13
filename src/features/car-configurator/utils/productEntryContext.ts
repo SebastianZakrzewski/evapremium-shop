@@ -8,10 +8,11 @@ export type ProductEntryLock = {
   yearParam: string | null
   bodyTypeParam: string | null
   generationParam: string | null
+  previewImageParam: string | null
 }
 
 export const getProductEntryLock = (
-  searchParams: URLSearchParams
+  searchParams: URLSearchParams,
 ): ProductEntryLock => {
   const brandParam = searchParams.get("brand")?.trim() || null
   const modelParam = searchParams.get("model")?.trim() || null
@@ -23,6 +24,7 @@ export const getProductEntryLock = (
     yearParam: searchParams.get("year")?.trim() || null,
     bodyTypeParam: searchParams.get("bodyType")?.trim() || null,
     generationParam: searchParams.get("generation")?.trim() || null,
+    previewImageParam: searchParams.get("previewImage")?.trim() || null,
   }
 }
 

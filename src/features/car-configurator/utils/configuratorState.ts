@@ -1,4 +1,5 @@
 import type { Brand } from "@/entities/car";
+import type { PodpietkaMounting } from "@/features/car-configurator/domain/podpietkaMounting";
 
 export interface ConfiguratorState {
   brand: string;
@@ -22,6 +23,7 @@ export interface ConfiguratorState {
   heelPad: boolean;
   selectedPodpietka?: string;
   podpietkaColor?: string;
+  podpietkaMounting?: PodpietkaMounting;
 }
 
 export type ConfiguratorUrlParams = {

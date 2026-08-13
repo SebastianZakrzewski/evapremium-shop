@@ -5,41 +5,72 @@ import { Button } from "@/components/ui/button"
 import type { KeyboardEvent, MouseEvent } from "react"
 import { ConfiguratorV2CrossfadeImage } from "./ui/ConfiguratorV2CrossfadeImage"
 import { getMatPreviewCanvasClass } from "./matPreviewCanvas"
+import { useHorizontalSwipe } from "./hooks/useHorizontalSwipe"
 
 type ConfiguratorV2PreviewPanelProps = {
   imageSrc: string
   alt: string
+  usesMatPreviewCanvas?: boolean
   onOpenZoom?: () => void
+  onSwipePrevious?: () => void
+  onSwipeNext?: () => void
+  canSwipeGallery?: boolean
 }
 
 export const ConfiguratorV2PreviewPanel = ({
   imageSrc,
   alt,
+  usesMatPreviewCanvas = false,
   onOpenZoom,
+  onSwipePrevious,
+  onSwipeNext,
+  canSwipeGallery = false,
 }: ConfiguratorV2PreviewPanelProps) => {
   const isInteractive = !!onOpenZoom
-  const canvasClass = getMatPreviewCanvasClass(imageSrc)
+  const canvasClass = usesMatPreviewCanvas
+    ? getMatPreviewCanvasClass("/dywaniki/preview.webp")
+    : getMatPreviewCanvasClass(imageSrc)
+
+  const swipeHandlers = useHorizontalSwipe({
+    enabled: canSwipeGallery,
+    onSwipeLeft: onSwipeNext,
+    onSwipeRight: onSwipePrevious,
+  })
+
+  const handleOpenZoom = () => {
+    if (swipeHandlers.consumeSuppressedClick()) return
+    onOpenZoom?.()
+  }
 
   const handleShellKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (!onOpenZoom) return
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault()
-      onOpenZoom()
+      handleOpenZoom()
     }
   }
 
   const handleZoom = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    onOpenZoom?.()
+    handleOpenZoom()
   }
 
   return (
     <div
-      className={`relative group transition-all duration-500 h-full w-full min-h-0 flex flex-col bg-[#111] rounded-xl border border-white/10 overflow-hidden ${
-        isInteractive ? "cursor-pointer" : ""
+      className={`relative group h-full w-full min-h-0 flex flex-col bg-[#111] rounded-xl border border-white/10 overflow-hidden ${
+        canSwipeGallery
+          ? "cursor-grab active:cursor-grabbing"
+          : isInteractive
+            ? "cursor-pointer"
+            : ""
       }`}
-      onClick={onOpenZoom}
+      onClick={handleOpenZoom}
       onKeyDown={handleShellKeyDown}
+      onPointerDown={swipeHandlers.onPointerDown}
+      onPointerMove={swipeHandlers.onPointerMove}
+      onPointerUp={swipeHandlers.onPointerUp}
+      onPointerCancel={swipeHandlers.onPointerCancel}
+      style={swipeHandlers.dragStyle}
       role={isInteractive ? "button" : undefined}
       tabIndex={isInteractive ? 0 : undefined}
       aria-label={isInteractive ? `Powiększ: ${alt}` : undefined}

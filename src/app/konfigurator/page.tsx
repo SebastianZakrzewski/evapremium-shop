@@ -1,11 +1,19 @@
-import type { Metadata } from "next";
-import { Suspense } from "react";
-import ConfiguratorSimple from "@/components/configurator/configurator-simple/ConfiguratorSimple";
-import { ConfiguratorLoader } from "@/components/configurator/configurator-simple/ConfiguratorLoader";
+import type { Metadata } from "next"
+import dynamic from "next/dynamic"
+import { Suspense } from "react"
+import { ConfiguratorLoader } from "@/components/configurator/configurator-simple/ConfiguratorLoader"
+
+const ConfiguratorV2 = dynamic(
+  () => import("@/components/configurator/configurator-v2/ConfiguratorV2"),
+  {
+    loading: () => <ConfiguratorLoader />,
+  },
+)
 
 export const metadata: Metadata = {
   title: "Konfigurator Dywaników | EvaPremium",
-  description: "Skonfiguruj swoje dywaniki samochodowe EVA Premium: kolor, obszycie, dodatki.",
+  description:
+    "Skonfiguruj dywaniki samochodowe EVA Premium: typ, wariant, kolor, obszycie i dodatki.",
   robots: { index: true, follow: true },
   alternates: { canonical: "/konfigurator" },
   openGraph: {
@@ -14,14 +22,12 @@ export const metadata: Metadata = {
     url: "https://evapremium.pl/konfigurator",
     type: "website",
   },
-};
+}
 
 export default function Page() {
   return (
     <Suspense fallback={<ConfiguratorLoader />}>
-      <ConfiguratorSimple />
+      <ConfiguratorV2 />
     </Suspense>
-  );
+  )
 }
-
-

@@ -10,6 +10,7 @@ import {
   inferBodyTypeKeyFromValue,
 } from "@/shared/vehicle/displayLabels"
 import type { MatTemplateDbRow } from "../server/repository"
+import { getBodyTypes } from "../server/catalogMappers"
 
 const currentYear = () => new Date().getFullYear()
 
@@ -59,33 +60,51 @@ export const groupTemplatesToCarModels = (
       isCurrentlyProduced: false,
     }
 
-    const primaryBodyType = row.body_type ?? collectBodyTypeLabels(row)[0] ?? ""
-    const labels = buildVehicleDisplayLabels({
-      brandName: row.brand_name,
-      modelFamilyName: row.model_family_name,
-      modelFamilyKey: row.model_family_key,
-      modelKey: row.model_key,
-      generation: row.generation,
-      yearFrom: row.year_from,
-      yearTo: row.year_to,
-      isOpenEnded: row.is_open_ended,
-      bodyType: primaryBodyType,
+    const bodyTypes = getBodyTypes(row)
+    const resolvedBodyTypes =
+      bodyTypes.length > 0
+        ? bodyTypes
+        : [
+            {
+              key: inferBodyTypeKeyFromValue(row.body_type ?? row.body_type_1 ?? ""),
+              label: row.body_type ?? row.body_type_1 ?? "",
+              displayLabel: formatBodyTypeDisplayPl(row.body_type ?? row.body_type_1 ?? ""),
+            },
+          ].filter((item) => item.key.length > 0 || item.label.length > 0)
+
+    resolvedBodyTypes.forEach((bodyTypeOption) => {
+      const bodyTypeLabel = bodyTypeOption.label || bodyTypeOption.key
+      const labels = buildVehicleDisplayLabels({
+        brandName: row.brand_name,
+        modelFamilyName: row.model_family_name,
+        modelFamilyKey: row.model_family_key,
+        modelKey: row.model_key,
+        generation: row.generation,
+        yearFrom: row.year_from,
+        yearTo: row.year_to,
+        isOpenEnded: row.is_open_ended,
+        bodyType: bodyTypeLabel,
+      })
+
+      existing.generations.push({
+        generation: row.generation,
+        generationDisplay: labels.yearRangeDisplay,
+        generationNumberDisplay: labels.generationNumberDisplay,
+        modelDisplay: labels.modelDisplay,
+        modelKey: row.model_key,
+        matTemplateId: row.id,
+        bodyType: bodyTypeOption.key || bodyTypeLabel,
+        bodyTypeDisplay:
+          bodyTypeOption.displayLabel || labels.bodyTypeDisplay,
+        yearFrom: row.year_from,
+        yearTo: row.year_to,
+        isCurrentlyProduced: isCurrentlyProduced(row),
+      })
+
+      const bodyTypeToken = bodyTypeOption.key || bodyTypeLabel
+      if (bodyTypeToken) existing.bodyTypes.add(bodyTypeToken)
     })
 
-    existing.generations.push({
-      generation: row.generation,
-      generationDisplay: labels.yearRangeDisplay,
-      generationNumberDisplay: labels.generationNumberDisplay,
-      modelDisplay: labels.modelDisplay,
-      modelKey: row.model_key,
-      bodyType: primaryBodyType,
-      bodyTypeDisplay: labels.bodyTypeDisplay,
-      yearFrom: row.year_from,
-      yearTo: row.year_to,
-      isCurrentlyProduced: isCurrentlyProduced(row),
-    })
-
-    collectBodyTypeLabels(row).forEach((label) => existing.bodyTypes.add(label))
     expandYears(row.year_from, row.year_to).forEach((year) => existing.years.add(year))
     if (isCurrentlyProduced(row)) existing.isCurrentlyProduced = true
 
@@ -106,13 +125,13 @@ export const groupTemplatesToCarModels = (
           representativeModelKey,
         ),
         bodyTypes: [...item.bodyTypes].sort(),
-      bodyTypesDisplay: [...item.bodyTypes]
-        .map((bodyType) => formatBodyTypeDisplayPl(bodyType))
-        .sort(),
-      years: [...item.years].sort((left, right) => right - left),
-      isCurrentlyProduced: item.isCurrentlyProduced,
-      generations: item.generations,
-    }
+        bodyTypesDisplay: [...item.bodyTypes]
+          .map((bodyType) => formatBodyTypeDisplayPl(bodyType))
+          .sort(),
+        years: [...item.years].sort((left, right) => right - left),
+        isCurrentlyProduced: item.isCurrentlyProduced,
+        generations: item.generations,
+      }
     })
     .sort((left, right) => left.model.localeCompare(right.model, "pl"))
 }

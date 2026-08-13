@@ -1,44 +1,94 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
-export const CROSSFADE_IMAGE_MS = 380
+export const CROSSFADE_IMAGE_MS = 520
 
-type LayerSlot = {
-  src: string
-  opacity: number
-}
+type SlotIndex = 0 | 1
 
-type DualLayerState = {
-  front: LayerSlot
-  back: LayerSlot
-}
+type SlotSources = [string, string]
 
-const createInitialState = (src: string): DualLayerState => ({
-  front: { src, opacity: 1 },
-  back: { src, opacity: 0 },
-})
+const createInitialSlots = (src: string): SlotSources => [src, src]
+
+const waitForNextPaint = () =>
+  new Promise<void>((resolve) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => resolve())
+    })
+  })
+
+const preloadImage = (src: string): Promise<void> =>
+  new Promise((resolve) => {
+    const img = new window.Image()
+    const finish = () => resolve()
+    img.onload = finish
+    img.onerror = finish
+    img.src = src
+    if (img.complete) {
+      if (img.decode) {
+        void img.decode().then(finish).catch(finish)
+        return
+      }
+      finish()
+    }
+  })
 
 export const useCrossfadeImageSrc = (
   targetSrc: string,
   durationMs = CROSSFADE_IMAGE_MS,
 ) => {
-  const [layers, setLayers] = useState<DualLayerState>(() =>
-    createInitialState(targetSrc),
+  const [slotSources, setSlotSources] = useState<SlotSources>(() =>
+    createInitialSlots(targetSrc),
   )
+  const [visibleSlot, setVisibleSlot] = useState<SlotIndex>(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+
   const displayedSrcRef = useRef(targetSrc)
+  const latestTargetRef = useRef(targetSrc)
+  const visibleSlotRef = useRef<SlotIndex>(0)
   const requestIdRef = useRef(0)
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const isAnimatingRef = useRef(false)
 
-  const commitTransition = useCallback(
-    (nextSrc: string, requestId: number) => {
+  useEffect(() => {
+    visibleSlotRef.current = visibleSlot
+  }, [visibleSlot])
+
+  useEffect(() => {
+    latestTargetRef.current = targetSrc
+
+    const scheduleNextTransition = () => {
+      if (latestTargetRef.current === displayedSrcRef.current) return
+      if (isAnimatingRef.current) return
+
+      const requestId = ++requestIdRef.current
+      void runTransition(latestTargetRef.current, requestId)
+    }
+
+    const runTransition = async (nextSrc: string, requestId: number) => {
+      if (requestId !== requestIdRef.current) return
+      if (nextSrc === displayedSrcRef.current) {
+        scheduleNextTransition()
+        return
+      }
+      if (isAnimatingRef.current) return
+
+      const hiddenSlot = (visibleSlotRef.current === 0 ? 1 : 0) as SlotIndex
+
+      await preloadImage(nextSrc)
       if (requestId !== requestIdRef.current) return
 
-      setLayers((prev) => ({
-        front: { ...prev.front, opacity: 0 },
-        back: { src: nextSrc, opacity: 1 },
-      }))
-      displayedSrcRef.current = nextSrc
+      setSlotSources((prev) => {
+        const next: SlotSources = [...prev]
+        next[hiddenSlot] = nextSrc
+        return next
+      })
+
+      await waitForNextPaint()
+      if (requestId !== requestIdRef.current) return
+
+      isAnimatingRef.current = true
+      setIsAnimating(true)
 
       if (transitionTimerRef.current) {
         clearTimeout(transitionTimerRef.current)
@@ -46,64 +96,53 @@ export const useCrossfadeImageSrc = (
 
       transitionTimerRef.current = setTimeout(() => {
         if (requestId !== requestIdRef.current) return
-        setLayers({
-          front: { src: nextSrc, opacity: 1 },
-          back: { src: nextSrc, opacity: 0 },
-        })
-      }, durationMs + 40)
-    },
-    [durationMs],
-  )
 
-  useEffect(() => {
-    if (targetSrc === displayedSrcRef.current) return
+        visibleSlotRef.current = hiddenSlot
+        displayedSrcRef.current = nextSrc
+        setVisibleSlot(hiddenSlot)
+        isAnimatingRef.current = false
+        setIsAnimating(false)
+        transitionTimerRef.current = null
 
-    const requestId = ++requestIdRef.current
-    const img = new window.Image()
-
-    let started = false
-    const startTransition = () => {
-      if (started || requestId !== requestIdRef.current) return
-      started = true
-
-      setLayers((prev) => ({
-        front: prev.front,
-        back: { src: targetSrc, opacity: 0 },
-      }))
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          commitTransition(targetSrc, requestId)
-        })
-      })
+        scheduleNextTransition()
+      }, durationMs + 32)
     }
 
-    img.onload = startTransition
-    img.onerror = startTransition
-    img.src = targetSrc
-
-    if (img.complete) {
-      startTransition()
-    }
-
-    return () => {
-      img.onload = null
-      img.onerror = null
-    }
-  }, [targetSrc, commitTransition])
+    scheduleNextTransition()
+  }, [durationMs, targetSrc])
 
   useEffect(
     () => () => {
       if (transitionTimerRef.current) {
         clearTimeout(transitionTimerRef.current)
       }
+      requestIdRef.current += 1
+      isAnimatingRef.current = false
     },
     [],
   )
 
+  const getSlotOpacity = (slot: SlotIndex): number => {
+    const isCurrentlyVisible = visibleSlot === slot
+    if (!isAnimating) {
+      return isCurrentlyVisible ? 1 : 0
+    }
+    return isCurrentlyVisible ? 0 : 1
+  }
+
   return {
-    front: layers.front,
-    back: layers.back,
+    layers: [
+      {
+        src: slotSources[0],
+        opacity: getSlotOpacity(0),
+        zIndex: 1,
+      },
+      {
+        src: slotSources[1],
+        opacity: getSlotOpacity(1),
+        zIndex: 2,
+      },
+    ] as const,
     durationMs,
   }
 }

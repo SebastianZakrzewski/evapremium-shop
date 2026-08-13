@@ -3,16 +3,23 @@ import { AccessoryService } from './AccessoryService';
 import { MatService } from './MatService';
 import { PricingService } from './PricingService';
 import { Order, CreateOrderDTO, OrderItem, OrderStatus } from '../types/order-new';
+import { resolveBitrixPaymentSyncDecision } from '../integrations/bitrix24/bitrixPaymentSyncPolicy';
 import { getBitrix24Config } from '../integrations/bitrix24/config';
 import { contactService } from '../integrations/bitrix24/services/ContactService';
 import { dealService } from '../integrations/bitrix24/services/DealService';
 import { mapOrderToContact } from '../integrations/bitrix24/mappers/orderToContact';
 import { mapOrderToDeal, createDealProducts } from '../integrations/bitrix24/mappers/orderToDeal';
 import { stageMappingService } from '../integrations/bitrix24/services/StageMappingService';
+import { convertAbandonedCartsOnPaid } from './AbandonedCartConversionService';
 import { randomUUID } from 'crypto';
 import 'server-only';
 import { revalidateMatItemPrice } from '@/features/vehicle-catalog/server/matCartValidation';
 import { MatConfigurationSchema } from '@/features/vehicle-catalog/model/matConfiguration';
+
+type BitrixOrderSyncOptions = {
+  createIfMissing?: boolean
+  preferredDealId?: string
+}
 
 export class OrderService {
   private repository: OrderRepository;
@@ -107,18 +114,7 @@ export class OrderService {
         await this.updateInventory(data.items);
         console.log('🛒 OrderService: Inventory updated');
 
-        // 8. Synchronizuj z Bitrix24 (jeśli włączone)
-        const bitrix24Config = getBitrix24Config();
-        if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders) {
-          console.log('🛒 OrderService: Syncing order to Bitrix24...');
-          try {
-            await this.syncOrderToBitrix24(order);
-            console.log('✅ OrderService: Order synced to Bitrix24 successfully');
-          } catch (error) {
-            console.error('❌ OrderService: Failed to sync order to Bitrix24:', error);
-            // Nie blokujemy procesu zamówienia w przypadku błędu integracji
-          }
-        }
+        // Bitrix deal is created only after successful payment (see updatePaymentStatus)
 
         return order;
       } catch (error) {
@@ -481,18 +477,42 @@ export class OrderService {
 
       // Synchronizuj zmiany z Bitrix24
       const bitrix24Config = getBitrix24Config();
-      if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders) {
+      const syncDecision = resolveBitrixPaymentSyncDecision(status);
+      const orderForSync = await this.getOrderById(orderId);
+
+      // Po udanej płatności promuj porzucone koszyki do etapu opłaconego PRZED sync zamówienia
+      let promotedDealId: string | undefined
+      if (status === 'paid' && orderForSync) {
+        const customerEmail =
+          orderForSync.customer &&
+          typeof orderForSync.customer === 'object' &&
+          'email' in orderForSync.customer
+            ? String((orderForSync.customer as { email?: string }).email || '')
+            : ''
+
+        if (customerEmail) {
+          const conversion = await convertAbandonedCartsOnPaid({
+            email: customerEmail,
+            orderId: orderForSync.id,
+            orderNumber: orderForSync.orderNumber,
+            order: orderForSync,
+          })
+          promotedDealId = conversion.promotedDealIds[0]
+        }
+      }
+
+      if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders && syncDecision.shouldSync) {
         try {
-          // Pobierz ŚWIEŻE dane zamówienia PO aktualizacji
-          const order = await this.getOrderById(orderId);
           console.log('🔍 OrderService: Order after update (before sync):', {
-            id: order?.id,
-            orderNumber: order?.orderNumber,
-            status: order?.status,
-            paymentStatus: order?.paymentStatus,
-            itemsCount: order?.items?.length || 0,
-            hasItems: !!order?.items,
-            itemsDetails: order?.items?.map(item => ({
+            id: orderForSync?.id,
+            orderNumber: orderForSync?.orderNumber,
+            status: orderForSync?.status,
+            paymentStatus: orderForSync?.paymentStatus,
+            createIfMissing: syncDecision.createIfMissing,
+            preferredDealId: promotedDealId,
+            itemsCount: orderForSync?.items?.length || 0,
+            hasItems: !!orderForSync?.items,
+            itemsDetails: orderForSync?.items?.map(item => ({
               productType: item.productType,
               productName: item.productName,
               hasConfiguration: !!item.configuration,
@@ -500,9 +520,12 @@ export class OrderService {
             })) || []
           });
           
-          if (order) {
+          if (orderForSync) {
             console.log('🔄 OrderService: Starting Bitrix24 sync for updated order...');
-            await this.syncOrderToBitrix24(order);
+            await this.syncOrderToBitrix24(orderForSync, {
+              createIfMissing: syncDecision.createIfMissing,
+              preferredDealId: promotedDealId,
+            });
             console.log('✅ OrderService: Payment status synced to Bitrix24');
           } else {
             console.error('❌ OrderService: Order not found after update, cannot sync');
@@ -510,6 +533,8 @@ export class OrderService {
         } catch (error) {
           console.error('❌ OrderService: Failed to sync payment status to Bitrix24:', error);
         }
+      } else if (!syncDecision.shouldSync) {
+        console.log('⚠️ OrderService: Skipping Bitrix24 sync for payment status:', status);
       } else {
         console.log('⚠️ OrderService: Bitrix24 sync disabled or autoSyncOrders is false');
       }
@@ -522,20 +547,50 @@ export class OrderService {
   /**
    * Synchronizuj zamówienie z Bitrix24
    */
-  private async syncOrderToBitrix24(order: Order): Promise<void> {
+  private async syncOrderToBitrix24(
+    order: Order,
+    options: BitrixOrderSyncOptions = {}
+  ): Promise<void> {
+    const createIfMissing = options.createIfMissing ?? true
+
     try {
       console.log('🔄 OrderService: Starting Bitrix24 sync for order:', {
         orderNumber: order.orderNumber,
         status: order.status,
         paymentStatus: order.paymentStatus,
+        createIfMissing,
         total: order.total
       });
 
       console.log('✅ OrderService: Proceeding with sync for order:', {
         orderNumber: order.orderNumber,
         paymentStatus: order.paymentStatus,
-        status: order.status
+        status: order.status,
+        createIfMissing,
       });
+
+      // Sprawdź czy deal już istnieje — przed kontaktem, żeby failed bez deala nic nie tworzył
+      let existingDeal = await dealService.findByOrderNumber(order.orderNumber);
+
+      // Prefer deal promoted from abandoned cart when ORIGIN_ID was not yet rewritten to order number
+      if (!existingDeal && options.preferredDealId) {
+        existingDeal = await dealService.getDeal(options.preferredDealId)
+        if (existingDeal) {
+          console.log('📋 OrderService: Using preferred deal from abandoned-cart promotion:', {
+            dealId: existingDeal.id,
+            orderNumber: order.orderNumber,
+          })
+        }
+      }
+
+      if (!existingDeal && !createIfMissing) {
+        console.log('⚠️ OrderService: Skipping Bitrix deal create for unpaid/failed order:', {
+          orderNumber: order.orderNumber,
+          paymentStatus: order.paymentStatus,
+          status: order.status,
+        })
+        return
+      }
 
       // 1. Próbuj utworzyć kontakt (opcjonalnie)
       let contactId: string | undefined;
@@ -569,8 +624,7 @@ export class OrderService {
         console.log('⚠️ OrderService: Contact creation failed, proceeding without contact:', contactError);
       }
 
-      // 2. Sprawdź czy deal już istnieje
-      const existingDeal = await dealService.findByOrderNumber(order.orderNumber);
+      // 2. Aktualizuj istniejący deal
       if (existingDeal) {
         console.log('📋 OrderService: Deal already exists, updating:', {
           dealId: existingDeal.id,

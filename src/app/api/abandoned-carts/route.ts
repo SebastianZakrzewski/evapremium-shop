@@ -4,10 +4,9 @@ import { env } from '@/config/env';
 
 export const maxDuration = 30
 import { abandonedCartUpsertInputSchema } from '@/lib/validators/abandonedCart';
-import { OrderRepository } from '@/lib/repositories/OrderRepository';
+import { findRecentBlockingOrderForHeartbeat } from '@/lib/services/abandonedCartExportGuard';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
-const orderRepository = new OrderRepository();
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,44 +30,35 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Not eligible (stage/cart)' }, { status: 400 });
     }
 
-    // Sprawdź czy istnieje opłacone zamówienie dla tego klienta (zapobiega tworzeniu abandoned cart po opłaceniu)
+    // Skip heartbeat only when customer already paid a matching order
     if (input.contact?.email) {
       try {
-        const recentPaidOrders = await orderRepository.supabase
-          .from('orders')
-          .select('id, order_number, payment_status, total, created_at')
-          .eq('payment_status', 'paid')
-          .eq('customer->>email', input.contact.email)
-          .gte('created_at', new Date(Date.now() - 30 * 60 * 1000).toISOString()) // Ostatnie 30 minut
-          .order('created_at', { ascending: false })
-          .limit(1);
+        const blocking = await findRecentBlockingOrderForHeartbeat({
+          email: input.contact.email,
+          totalAmount: input.totalAmount,
+          windowMs: 30 * 60 * 1000,
+        })
 
-        if (recentPaidOrders.data && recentPaidOrders.data.length > 0) {
-          const paidOrder = recentPaidOrders.data[0];
-          // Sprawdź czy kwota jest podobna (różnica mniejsza niż 10%)
-          const orderTotal = Number(paidOrder.total);
-          const cartTotal = input.totalAmount || 0;
-          const difference = Math.abs(orderTotal - cartTotal);
-          const tolerance = Math.max(orderTotal, cartTotal) * 0.1; // 10% tolerancji
-
-          if (difference <= tolerance) {
-            console.log('[AbandonedCart:Heartbeat] Found paid order for this customer, skipping abandoned cart', {
-              orderId: paidOrder.id,
-              orderNumber: paidOrder.order_number,
-              orderTotal,
-              cartTotal,
-              email: input.contact.email
-            });
-            return NextResponse.json({ 
-              success: true, 
-              skipped: true, 
-              reason: 'order_already_paid',
-              orderId: paidOrder.id 
-            }, { status: 200 });
-          }
+        if (blocking) {
+          console.log('[AbandonedCart:Heartbeat] Blocking order found, skipping abandoned cart', {
+            orderId: blocking.order.id,
+            orderNumber: blocking.order.order_number,
+            paymentStatus: blocking.order.payment_status,
+            reason: blocking.reason,
+            email: input.contact.email,
+          })
+          return NextResponse.json(
+            {
+              success: true,
+              skipped: true,
+              reason: blocking.reason,
+              orderId: blocking.order.id,
+            },
+            { status: 200 }
+          )
         }
       } catch (checkError) {
-        console.error('[AbandonedCart:Heartbeat] Error checking for paid orders', checkError);
+        console.error('[AbandonedCart:Heartbeat] Error checking for blocking orders', checkError);
         // Kontynuuj przetwarzanie - nie blokuj jeśli sprawdzenie się nie powiodło
       }
     }
@@ -94,34 +84,24 @@ export async function POST(request: NextRequest) {
     const existing = Array.isArray(existingList) && existingList.length > 0 ? existingList[0] : null;
 
     if (existing) {
-      // Sprawdź ponownie czy zamówienie zostało opłacone (dla istniejącego rekordu)
+      // Sprawdź ponownie czy zamówienie blokuje abandon (dla istniejącego rekordu)
       if (input.contact?.email) {
         try {
-          const recentPaidOrders = await orderRepository.supabase
-            .from('orders')
-            .select('id, order_number, payment_status, total, created_at')
-            .eq('payment_status', 'paid')
-            .eq('customer->>email', input.contact.email)
-            .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString()) // Ostatnia godzina (rozszerzone okno)
-            .order('created_at', { ascending: false })
-            .limit(1);
+          const blocking = await findRecentBlockingOrderForHeartbeat({
+            email: input.contact.email,
+            totalAmount: input.totalAmount,
+            windowMs: 60 * 60 * 1000,
+          })
 
-          if (recentPaidOrders.data && recentPaidOrders.data.length > 0) {
-            const paidOrder = recentPaidOrders.data[0];
-            const orderTotal = Number(paidOrder.total);
-            const cartTotal = input.totalAmount || 0;
-            const difference = Math.abs(orderTotal - cartTotal);
-            const tolerance = Math.max(orderTotal, cartTotal) * 0.1;
-
-            if (difference <= tolerance) {
+          if (blocking) {
+            if (blocking.reason === 'order_already_paid') {
               console.log('[AbandonedCart:Heartbeat] Found paid order for existing cart, marking as converted', {
                 cartId: existing.id,
-                orderId: paidOrder.id,
-                orderNumber: paidOrder.order_number,
+                orderId: blocking.order.id,
+                orderNumber: blocking.order.order_number,
                 email: input.contact.email
               });
               
-              // Oznacz abandoned cart jako converted (zamówienie zostało opłacone)
               const existingMetadata = (existing.metadata as Record<string, unknown>) || {};
               await supabase
                 .from('abandoned_carts')
@@ -130,22 +110,22 @@ export async function POST(request: NextRequest) {
                   metadata: { 
                     ...existingMetadata, 
                     converted_reason: 'order_paid',
-                    converted_order_id: paidOrder.id,
+                    converted_order_id: blocking.order.id,
                     converted_at: new Date().toISOString()
                   }
                 })
                 .eq('id', existing.id);
-              
-              return NextResponse.json({ 
-                success: true, 
-                skipped: true, 
-                reason: 'order_already_paid',
-                orderId: paidOrder.id 
-              }, { status: 200 });
             }
+
+            return NextResponse.json({ 
+              success: true, 
+              skipped: true, 
+              reason: blocking.reason,
+              orderId: blocking.order.id 
+            }, { status: 200 });
           }
         } catch (checkError) {
-          console.error('[AbandonedCart:Heartbeat] Error checking for paid orders (existing cart)', checkError);
+          console.error('[AbandonedCart:Heartbeat] Error checking for blocking orders (existing cart)', checkError);
         }
       }
 

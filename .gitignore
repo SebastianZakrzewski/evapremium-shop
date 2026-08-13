@@ -144,6 +144,19 @@ backups/
 *.mkv
 *.webm
 
+# Advertising carousel videos (allow local MOV assets)
+!public/video_carusela/
+!public/video_carusela/*.mov
+!public/video_carusela/*.MOV
+
+# Hero intro video (optimized web assets)
+!public/images/hero/*.webm
+!public/images/hero/*.mp4
+public/images/hero/*.source.mp4
+
+# local tooling
+.tmp-ffmpeg/
+
 # temporary files
 *.tmp
 *.temp

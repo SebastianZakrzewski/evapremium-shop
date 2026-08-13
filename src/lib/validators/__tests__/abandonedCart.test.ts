@@ -5,23 +5,30 @@ describe('abandonedCartUpsertInputSchema', () => {
   it('validates minimal valid payload', () => {
     const input = {
       sessionId: 'sess_1234567890',
+      stage: 'checkout_step2',
+      cartHasItems: true,
       totalAmount: 0,
     };
     const parsed = abandonedCartUpsertInputSchema.parse(input);
     expect(parsed.sessionId).toBe(input.sessionId);
   });
 
-  it('rejects invalid email', () => {
+  it('sanitizes invalid email instead of rejecting payload', () => {
     const input = {
       sessionId: 'sess_1234567890',
+      stage: 'checkout_step2',
+      cartHasItems: true,
       contact: { email: 'not-an-email' },
     };
-    expect(() => abandonedCartUpsertInputSchema.parse(input)).toThrow();
+    const parsed = abandonedCartUpsertInputSchema.parse(input);
+    expect(parsed.contact).toBeUndefined();
   });
 
   it('accepts full snapshot', () => {
     const input = {
       sessionId: 'sess_abcdefghi',
+      stage: 'checkout_step3',
+      cartHasItems: true,
       utm: { source: 'ads' },
       contact: { email: 'a@b.com', phone: '+48123456789' },
       car: { make: 'BMW', model: 'X5', year: 2020, bodyType: 'SUV' },
@@ -38,5 +45,3 @@ describe('abandonedCartUpsertInputSchema', () => {
     expect(parsed.items?.length).toBe(1);
   });
 });
-
-

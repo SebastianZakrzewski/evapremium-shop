@@ -5,7 +5,11 @@ import {
   getVehicleCatalog,
 } from "@/features/vehicle-catalog"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 300
+
+const CACHE_HEADERS = {
+  "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+}
 
 export const GET = async (request: NextRequest) => {
   try {
@@ -18,7 +22,12 @@ export const GET = async (request: NextRequest) => {
       year: searchParams.get("year") ?? undefined,
     })
 
-    return NextResponse.json(await getVehicleCatalog(query))
+    const payload = await getVehicleCatalog(query)
+    const isBrandList = payload.level === "brands"
+
+    return NextResponse.json(payload, {
+      headers: isBrandList ? CACHE_HEADERS : undefined,
+    })
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(

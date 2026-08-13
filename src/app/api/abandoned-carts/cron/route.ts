@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/config/env';
 import { dealService } from '@/lib/integrations/bitrix24/services/DealService';
+import { findRecentBlockingOrderForBitrixExport } from '@/lib/services/abandonedCartExportGuard';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -38,11 +39,53 @@ export async function POST(_request: NextRequest) {
       filtered: carts.length 
     });
 
-    const results: Array<{ id: string; bitrixDealId?: string; error?: string }> = [];
+    const results: Array<{ id: string; bitrixDealId?: string; error?: string; skipped?: string }> = [];
 
     for (const cart of carts || []) {
       try {
         console.log('[AbandonedCart:Cron] Processing cart', { cartId: cart.id });
+
+        const contact = (cart.contact || {}) as { email?: string }
+        if (contact.email) {
+          try {
+            const blocking = await findRecentBlockingOrderForBitrixExport({
+              email: contact.email,
+              totalAmount: Number(cart.total_amount) || 0,
+              windowMs: 60 * 60 * 1000,
+            })
+
+            if (blocking) {
+              console.log('[AbandonedCart:Cron] Skipping cart due to blocking order', {
+                cartId: cart.id,
+                orderId: blocking.order.id,
+                reason: blocking.reason,
+              })
+
+              if (blocking.reason === 'order_already_paid') {
+                await supabase
+                  .from('abandoned_carts')
+                  .update({
+                    status: 'converted',
+                    metadata: {
+                      ...((cart.metadata as Record<string, unknown>) || {}),
+                      converted_reason: 'order_paid',
+                      converted_order_id: blocking.order.id,
+                      converted_at: new Date().toISOString(),
+                    },
+                  })
+                  .eq('id', cart.id)
+              }
+
+              results.push({ id: cart.id, skipped: blocking.reason })
+              continue
+            }
+          } catch (guardError) {
+            console.error('[AbandonedCart:Cron] Blocking-order guard failed, continuing', {
+              cartId: cart.id,
+              error: guardError,
+            })
+          }
+        }
         
         // Atomic lock: set status to 'processing' to prevent concurrent processing
         const { data: lockedCart, error: lockError } = await supabase
@@ -117,7 +160,13 @@ export async function POST(_request: NextRequest) {
 
     const successCount = results.filter(r => r.bitrixDealId).length;
     const errorCount = results.filter(r => r.error).length;
-    console.log('[AbandonedCart:Cron] Completed', { total: results.length, success: successCount, errors: errorCount });
+    const skippedCount = results.filter(r => r.skipped).length;
+    console.log('[AbandonedCart:Cron] Completed', {
+      total: results.length,
+      success: successCount,
+      errors: errorCount,
+      skipped: skippedCount,
+    });
 
     return NextResponse.json({ success: true, count: results.length, results }, { status: 200 });
   } catch (error) {
@@ -125,5 +174,3 @@ export async function POST(_request: NextRequest) {
     return NextResponse.json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
   }
 }
-
-

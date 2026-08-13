@@ -40,6 +40,17 @@ declare global {
 
 export const COOKIEBOT_CONSENT_COOKIE = 'CookieConsent'
 
+/** Dispatched when the user accepts cookies — navbar logo listens to start its animation. */
+export const COOKIE_CONSENT_ACCEPTED_EVENT = 'evaCookieConsentAccepted'
+
+export const dispatchCookieConsentAccepted = (): void => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  window.dispatchEvent(new Event(COOKIE_CONSENT_ACCEPTED_EVENT))
+}
+
 export const getCookiebot = (): CookiebotApi | undefined => {
   if (typeof window === 'undefined') {
     return undefined

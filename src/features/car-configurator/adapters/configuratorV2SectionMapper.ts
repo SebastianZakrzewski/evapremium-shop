@@ -150,8 +150,13 @@ export const mapConfiguratorV2Sections = ({
     )
   }
 
+  const catalogVehicleComplete = !!(
+    config.recordKey?.trim() && config.bodyTypeKey?.trim()
+  )
+
   const isReadyForCart =
     vehicleComplete &&
+    catalogVehicleComplete &&
     matTypeComplete &&
     variantComplete &&
     structureComplete &&

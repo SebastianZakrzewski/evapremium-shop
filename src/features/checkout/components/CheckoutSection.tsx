@@ -40,7 +40,12 @@ import { HybridSessionManager } from '@/lib/utils/hybrid-session-manager';
 import { useTracking, createInitiateCheckoutData } from '@/lib/tracking';
 import { motion } from 'framer-motion';
 import { getColorInfo } from '@/lib/color-mapping';
-import { paymentsApi } from '@/lib/api';
+import { paymentsApi, abandonedCartsApi } from '@/lib/api';
+import { markPaymentRedirect } from '@/features/checkout/lib/paymentRedirectFlag';
+import {
+  isPaynowCheckoutEnabled,
+  getClientPaymentProviderLabel,
+} from '@/lib/config/payment-provider';
 import type { MatConfiguration } from '@/features/vehicle-catalog/model/matConfiguration';
 import {
   getMatConfigurationLabelContext,
@@ -82,8 +87,8 @@ const checkoutSchema = z.object({
       return cleaned && cleaned.length === 10 ? cleaned : undefined;
     }),
   
-  // Metoda płatności - tylko Przelewy24
-  paymentMethod: z.literal("p24", {
+  // Metoda płatności
+  paymentMethod: z.enum(['p24', 'paynow'], {
     required_error: "Wybierz metodę płatności"
   }),
   
@@ -112,6 +117,9 @@ type CheckoutFormData = z.infer<typeof checkoutSchema>;
  */
 export default function CheckoutSection() {
   const router = useRouter();
+  const paynowCheckoutEnabled = isPaynowCheckoutEnabled();
+  const checkoutPaymentMethod = paynowCheckoutEnabled ? 'paynow' : 'p24';
+  const checkoutPaymentLabel = getClientPaymentProviderLabel();
   const { items, cart, total, itemCount, clearCart, refreshCart } = useCart();
   const { createOrder, saveOrder, isLoading: orderLoading, error: orderError } = useOrder();
   const { trackInitiateCheckout, trackAddPaymentInfo, createInitiateCheckoutData: createInitiateCheckout } = useTracking();
@@ -209,75 +217,7 @@ export default function CheckoutSection() {
     }
   }, [items, total, trackInitiateCheckout, createInitiateCheckout]);
 
-  // Heartbeat na krokach 2 (adres) i 3 (płatność): 15 min okno, interwał 30s
   const cartHasItems = items.length > 0;
-  
-  // Get sessionId dynamically in buildPayload to ensure it's always current
-  useAbandonedCartHeartbeat((currentStep === 2 || currentStep === 3) && cartHasItems, () => {
-    const currentSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : '';
-    
-    if (!currentSessionId || currentSessionId.length < 8) {
-      console.warn('[CheckoutSection] Invalid sessionId for heartbeat', { sessionId: currentSessionId });
-    }
-    
-    // Get address data from form
-    const watchedValues = watch();
-    const addressData = {
-      street: watchedValues.street,
-      city: watchedValues.city,
-      postalCode: watchedValues.postalCode,
-      country: watchedValues.country,
-    };
-    
-    // Find first mat item to extract car and configuration
-    const firstMatItem = items.find(item => item.productType === 'mat');
-    const matConfig = isMatCartConfiguration(firstMatItem?.configuration)
-      ? firstMatItem.configuration
-      : undefined
-    const carData = matConfig?.carDetails ? {
-      make: matConfig.carDetails.brand,
-      model: matConfig.carDetails.model,
-      year: matConfig.carDetails.year,
-      bodyType: matConfig.carDetails.bodyType,
-    } : undefined;
-
-    const configurationData = matConfig ? {
-      variant: matConfig.setVariant,
-      setType: matConfig.setType,
-      cellShape: matConfig.cellType,
-      materialColor: matConfig.materialColor,
-      trimColor: matConfig.edgeColor,
-    } : undefined;
-    
-    return {
-      sessionId: currentSessionId,
-      stage: currentStep === 2 ? 'checkout_step2' : 'checkout_step3',
-      cartHasItems: items.length > 0,
-      contact: {
-        firstName: contactFirstName,
-        lastName: contactLastName,
-        email: contactEmail,
-        phone: contactPhone,
-        ...(contactNip && { taxId: contactNip }),
-      },
-      address: addressData.street || addressData.city ? addressData : undefined, // Only include if at least street or city is filled
-      car: carData,
-      configuration: configurationData,
-      items: items.map(i => ({ 
-        productId: i.productId, 
-        productName: i.productName,
-        productType: i.productType,
-        quantity: i.quantity, 
-        price: i.unitPrice, 
-        currency: 'PLN',
-        configuration: i.configuration, // Include full configuration for each item
-      })),
-      currency: 'PLN',
-      totalAmount: finalTotal,
-      metadata: { checkoutStep: currentStep },
-      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
-    };
-  }, { intervalMs: 30000 });
 
   const {
     register,
@@ -291,7 +231,7 @@ export default function CheckoutSection() {
     defaultValues: {
       country: "Polska",
       sameAsShipping: true,
-      paymentMethod: "p24",
+      paymentMethod: checkoutPaymentMethod,
       termsAccepted: false,
       marketingAccepted: false,
     }
@@ -480,6 +420,136 @@ export default function CheckoutSection() {
       });
     }
   }, [items.length, calculatedSubtotal, cart.subtotal, cart.total, subtotal, finalTotal, discountApplied, discountAmount, discountCode]);
+
+  // Heartbeat na krokach 2 (adres) i 3 (płatność): 15 min okno, interwał 30s
+  useAbandonedCartHeartbeat((currentStep === 2 || currentStep === 3) && cartHasItems, () => {
+    const currentSessionId = typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : '';
+
+    if (!currentSessionId || currentSessionId.length < 8) {
+      console.warn('[CheckoutSection] Invalid sessionId for heartbeat', { sessionId: currentSessionId });
+    }
+
+    const watchedValues = watch();
+    const addressData = {
+      street: watchedValues.street,
+      city: watchedValues.city,
+      postalCode: watchedValues.postalCode,
+      country: watchedValues.country,
+    };
+
+    const firstMatItem = items.find(item => item.productType === 'mat');
+    const matConfig = isMatCartConfiguration(firstMatItem?.configuration)
+      ? firstMatItem.configuration
+      : undefined
+    const carData = matConfig?.carDetails ? {
+      make: matConfig.carDetails.brand,
+      model: matConfig.carDetails.model,
+      year: matConfig.carDetails.year,
+      bodyType: matConfig.carDetails.bodyType,
+    } : undefined;
+
+    const configurationData = matConfig ? {
+      variant: matConfig.setVariant,
+      setType: matConfig.setType,
+      cellShape: matConfig.cellType,
+      materialColor: matConfig.materialColor,
+      trimColor: matConfig.edgeColor,
+    } : undefined;
+
+    return {
+      sessionId: currentSessionId,
+      stage: currentStep === 2 ? 'checkout_step2' : 'checkout_step3',
+      cartHasItems: items.length > 0,
+      contact: {
+        firstName: contactFirstName,
+        lastName: contactLastName,
+        email: contactEmail,
+        phone: contactPhone,
+        ...(contactNip && { taxId: contactNip }),
+      },
+      address: addressData.street || addressData.city ? addressData : undefined,
+      car: carData,
+      configuration: configurationData,
+      items: items.map(i => ({
+        productId: i.productId,
+        productName: i.productName,
+        productType: i.productType,
+        quantity: i.quantity,
+        price: i.unitPrice,
+        currency: 'PLN',
+        configuration: i.configuration,
+      })),
+      currency: 'PLN',
+      totalAmount: finalTotal,
+      metadata: { checkoutStep: currentStep },
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+    };
+  }, { intervalMs: 30000 });
+
+  // Snapshot pending abandoned cart before clearCart kills heartbeat listeners
+  const persistPaymentRedirectCartSnapshot = async (
+    orderId: string,
+    formData: CheckoutFormData
+  ) => {
+    const sessionId =
+      typeof window !== 'undefined' ? HybridSessionManager.getSessionId() : ''
+    if (!sessionId || sessionId.length < 8 || items.length === 0) return
+
+    const firstMatItem = items.find((item) => item.productType === 'mat')
+    const matConfig = isMatCartConfiguration(firstMatItem?.configuration)
+      ? firstMatItem.configuration
+      : undefined
+
+    await abandonedCartsApi.persistPaymentRedirectSnapshot({
+      sessionId,
+      stage: 'checkout_step3',
+      cartHasItems: true,
+      orderId,
+      contact: {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        ...(formData.nip && { taxId: formData.nip }),
+      },
+      address: {
+        street: formData.street,
+        city: formData.city,
+        postalCode: formData.postalCode,
+        country: formData.country,
+      },
+      car: matConfig?.carDetails
+        ? {
+            make: matConfig.carDetails.brand,
+            model: matConfig.carDetails.model,
+            year: matConfig.carDetails.year,
+            bodyType: matConfig.carDetails.bodyType,
+          }
+        : undefined,
+      configuration: matConfig
+        ? {
+            variant: matConfig.setVariant,
+            setType: matConfig.setType,
+            cellShape: matConfig.cellType,
+            materialColor: matConfig.materialColor,
+            trimColor: matConfig.edgeColor,
+          }
+        : undefined,
+      items: items.map((i) => ({
+        productId: i.productId,
+        productName: i.productName,
+        productType: i.productType,
+        quantity: i.quantity,
+        price: i.unitPrice,
+        currency: 'PLN',
+        configuration: i.configuration,
+      })),
+      currency: 'PLN',
+      totalAmount: finalTotal,
+      metadata: { checkoutStep: 3, orderId },
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+    })
+  }
 
   // Funkcja do zastosowania kodu rabatowego
   const applyDiscountCode = () => {
@@ -747,6 +817,34 @@ export default function CheckoutSection() {
       console.log('🔄 Order created successfully:', order.id);
 
       // Sprawdź metodę płatności
+      if (data.paymentMethod === 'paynow') {
+        try {
+          console.log('🔄 Starting Paynow payment registration via API endpoint...');
+          const result = await paymentsApi.registerPaynowPayment(order.id);
+
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem('pending_order_id', order.id);
+            markPaymentRedirect(order.id);
+          }
+
+          // Keep pending abandoned-cart snapshot for PayNow ABANDONED → Bitrix export
+          await persistPaymentRedirectCartSnapshot(order.id, data);
+
+          clearCart();
+
+          if (result.paymentUrl) {
+            window.location.href = result.paymentUrl;
+          } else {
+            throw new Error('Brak URL płatności w odpowiedzi');
+          }
+          return;
+        } catch (error) {
+          console.error('❌ Paynow payment error:', error);
+          setErrorMessage(`Błąd płatności: ${error instanceof Error ? error.message : 'Nieznany błąd'}`);
+          return;
+        }
+      }
+
       if (data.paymentMethod === 'p24') {
         try {
           console.log('🔄 Starting P24 payment registration via API endpoint...');
@@ -765,8 +863,11 @@ export default function CheckoutSection() {
           // P24 może nie przekazać parametrów w URL, więc potrzebujemy fallback
           if (typeof window !== 'undefined') {
             sessionStorage.setItem('pending_order_id', order.id);
+            markPaymentRedirect(order.id);
             console.log('💾 Saved orderId to sessionStorage:', order.id);
           }
+
+          await persistPaymentRedirectCartSnapshot(order.id, data);
           
           // Wyczyść koszyk po udanej rejestracji
           clearCart();
@@ -1197,53 +1298,55 @@ export default function CheckoutSection() {
                   </CardHeader>
                   <CardContent className="space-y-6 md:space-y-8 px-4 md:px-8 pb-6 md:pb-8">
                     <div className="space-y-4">
-                      <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 md:p-6 rounded-lg border transition-all duration-300 cursor-pointer border-red-500 bg-red-900/30`}
-                      onClick={() => setValue("paymentMethod", "p24")}>
-                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center border-red-500 bg-red-500 flex-shrink-0`}>
+                      <div
+                        className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 md:p-6 rounded-lg border transition-all duration-300 cursor-pointer border-red-500 bg-red-900/30"
+                        onClick={() => setValue("paymentMethod", checkoutPaymentMethod)}
+                      >
+                        <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center border-red-500 bg-red-500 flex-shrink-0">
                           <div className="w-2 h-2 bg-white rounded-full"></div>
                         </div>
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 flex-1 cursor-pointer w-full">
-                          <CreditCard className={`w-5 h-5 md:w-6 md:h-6 text-red-400 flex-shrink-0`} />
+                          <CreditCard className="w-5 h-5 md:w-6 md:h-6 text-red-400 flex-shrink-0" />
                           <div className="flex-1 min-w-0 w-full">
-                            <div className={`font-medium text-base text-white mb-1`}>
-                              Przelewy24
+                            <div className="font-medium text-base text-white mb-1">
+                              {checkoutPaymentLabel}
                             </div>
-                            <div className={`text-xs md:text-sm text-gray-400 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-2`}>
+                            <div className="text-xs md:text-sm text-gray-400 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-2">
                               <span className="whitespace-normal">Karty, BLIK, przelewy, Apple Pay, Google Pay</span>
                               <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                                <Image 
-                                  src="/formy_platnosci/visa.png" 
-                                  alt="Visa" 
-                                  width={32} 
-                                  height={20} 
+                                <Image
+                                  src="/formy_platnosci/visa.png"
+                                  alt="Visa"
+                                  width={32}
+                                  height={20}
                                   className="object-contain md:w-10 md:h-[26px]"
                                 />
-                                <Image 
-                                  src="/formy_platnosci/mastercard.png" 
-                                  alt="Mastercard" 
-                                  width={32} 
-                                  height={20} 
+                                <Image
+                                  src="/formy_platnosci/mastercard.png"
+                                  alt="Mastercard"
+                                  width={32}
+                                  height={20}
                                   className="object-contain md:w-10 md:h-[26px]"
                                 />
-                                <Image 
-                                  src="/formy_platnosci/blik.png" 
-                                  alt="BLIK" 
-                                  width={32} 
-                                  height={20} 
+                                <Image
+                                  src="/formy_platnosci/blik.png"
+                                  alt="BLIK"
+                                  width={32}
+                                  height={20}
                                   className="object-contain md:w-10 md:h-[26px]"
                                 />
-                                <Image 
-                                  src="/formy_platnosci/apple.jpg" 
-                                  alt="Apple Pay" 
-                                  width={32} 
-                                  height={20} 
+                                <Image
+                                  src="/formy_platnosci/apple.jpg"
+                                  alt="Apple Pay"
+                                  width={32}
+                                  height={20}
                                   className="object-contain md:w-10 md:h-[26px]"
                                 />
-                                <Image 
-                                  src="/formy_platnosci/google.png" 
-                                  alt="Google Pay" 
-                                  width={32} 
-                                  height={20} 
+                                <Image
+                                  src="/formy_platnosci/google.png"
+                                  alt="Google Pay"
+                                  width={32}
+                                  height={20}
                                   className="object-contain md:w-10 md:h-[26px]"
                                 />
                               </div>
@@ -1252,7 +1355,6 @@ export default function CheckoutSection() {
                           <Check className="w-5 h-5 text-red-400 flex-shrink-0 sm:ml-auto" />
                         </div>
                       </div>
-                      
                     </div>
 
                     {errors.paymentMethod && (

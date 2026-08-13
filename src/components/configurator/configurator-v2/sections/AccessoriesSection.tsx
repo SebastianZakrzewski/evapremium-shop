@@ -9,15 +9,19 @@ type AccessoriesSectionProps = {
   config: ConfiguratorState
   readiness: SectionReadiness
   onUpdate: (updates: Partial<ConfiguratorState>) => void
+  onNext: () => void
+  onPrevious: () => void
+  canProceedToSummary?: boolean
   onProductModalOpenChange?: (isOpen: boolean) => void
 }
-
-const noop = () => {}
 
 export const AccessoriesSection = ({
   config,
   readiness,
   onUpdate,
+  onNext,
+  onPrevious,
+  canProceedToSummary = true,
   onProductModalOpenChange,
 }: AccessoriesSectionProps) => (
   <ConfiguratorV2SectionShell
@@ -28,8 +32,10 @@ export const AccessoriesSection = ({
     <AccessoriesStep
       config={config}
       onUpdate={onUpdate}
-      onNext={noop}
-      onPrevious={noop}
+      onNext={onNext}
+      onPrevious={onPrevious}
+      canProceedToSummary={canProceedToSummary}
+      nextLabel="Podsumowanie zamówienia"
       onProductModalOpenChange={onProductModalOpenChange}
     />
   </ConfiguratorV2SectionShell>

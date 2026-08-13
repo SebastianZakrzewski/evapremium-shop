@@ -1,13 +1,41 @@
-import { HeroSection } from "@/features/marketing";
-import QuickSearchBar from "@/components/quick-search-bar";
-import { ProductGallerySection, ProductSelection } from "@/features/products";
-import CustomFitSection from "@/components/custom-fit-section";
-import InteractiveFeaturesSection from "@/components/interactive-features-section";
-import RoznorodnaKolorystykaSection from "@/components/roznorodna-kolorystyka-section";
-import GlebokaStrukturaKomorekSection from "@/components/gleboka-struktura-komorek-section";
-import CustomerReviews from "@/components/CustomerReviews";
-import FAQSection from "@/components/FAQSection";
-import MatComparisonSection from "@/components/mat-comparison-section";
+import dynamic from "next/dynamic"
+import { HeroSection } from "@/features/marketing"
+import QuickSearchBar from "@/components/quick-search-bar"
+import { ProductGallerySection, ProductSelection } from "@/features/products"
+
+const ProductVideoCarouselSection = dynamic(
+  () => import("@/features/products/components/ProductVideoCarouselSection"),
+  {
+    loading: () => (
+      <section
+        className="w-full bg-black py-10 md:py-14"
+        aria-label="Ładowanie sekcji Premium w akcji"
+      />
+    ),
+  },
+)
+
+const InteractiveFeaturesSection = dynamic(
+  () => import("@/components/interactive-features-section"),
+)
+
+const MatComparisonSection = dynamic(
+  () => import("@/components/mat-comparison-section"),
+)
+
+const CustomFitSection = dynamic(() => import("@/components/custom-fit-section"))
+
+const RoznorodnaKolorystykaSection = dynamic(
+  () => import("@/components/roznorodna-kolorystyka-section"),
+)
+
+const GlebokaStrukturaKomorekSection = dynamic(
+  () => import("@/components/gleboka-struktura-komorek-section"),
+)
+
+const CustomerReviews = dynamic(() => import("@/components/CustomerReviews"))
+
+const FAQSection = dynamic(() => import("@/components/FAQSection"))
 
 export default function Home() {
   return (
@@ -15,15 +43,15 @@ export default function Home() {
       <HeroSection />
       <QuickSearchBar />
       <ProductGallerySection />
+      <ProductVideoCarouselSection />
       <InteractiveFeaturesSection />
       <MatComparisonSection />
       <ProductSelection />
       <CustomFitSection />
       <RoznorodnaKolorystykaSection />
       <GlebokaStrukturaKomorekSection />
-      {/* PopularProductsSection — tymczasowo ukryte */}
       <CustomerReviews />
       <FAQSection />
     </div>
-  );
-} 
+  )
+}

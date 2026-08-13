@@ -5,7 +5,11 @@ import { buildVehicleDisplayLabels } from "@/shared/vehicle/displayLabels"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Car, CheckCircle2 } from "lucide-react"
-import { useBrands } from "@/features/brands/hooks/useBrands"
+import { resolveConfiguratorBrandImage } from "@/features/car-configurator/utils/resolveConfiguratorBrandImage"
+import {
+  shouldServeBrandImageUnoptimized,
+} from "@/shared/brands"
+import { useMatModelPreviews } from "@/features/mat-model-previews"
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
 import type { ProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import {
@@ -14,6 +18,13 @@ import {
   resolveModelFamiliesFromParam,
 } from "@/features/vehicle-catalog/domain/catalogKeys"
 import { useVehicleCatalog } from "@/features/vehicle-catalog/hooks/useVehicleCatalog"
+import {
+  computeLockedCarAvailableYears,
+  isCatalogResolving,
+  resolveLockedCarGeneration,
+} from "@/features/car-configurator/utils/lockedCarContextLogic"
+import { useConfiguratorV2InitialVehicleScroll } from "@/components/configurator/configurator-v2/hooks/useConfiguratorV2InitialVehicleScroll"
+import { resolveConfiguratorV2VehicleScrollTarget } from "@/components/configurator/configurator-v2/utils/resolveConfiguratorV2VehicleScrollTarget"
 
 type LockedCarContextStepProps = {
   config: Pick<
@@ -40,12 +51,6 @@ type LockedCarContextStepProps = {
 const selectClassName =
   "w-full px-4 py-3 min-h-[44px] bg-[#111] border border-white/10 rounded-lg text-white text-sm appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
 
-const yearsInRange = (from: number | null, to: number | null): number[] => {
-  if (from == null) return []
-  const end = Math.min(to ?? new Date().getFullYear() + 1, 2100)
-  return Array.from({ length: end - from + 1 }, (_, index) => from + index).reverse()
-}
-
 const normalizeToken = (value: string): string =>
   value.toLowerCase().replace(/[\s_-]+/g, "")
 
@@ -56,10 +61,9 @@ export const LockedCarContextStep = ({
   onNext,
   hideNextButton = false,
 }: LockedCarContextStepProps) => {
-  const { brands } = useBrands()
   const provisionalBrandKey =
     config.brandKey || productEntry.brandParam || ""
-  const { brands: catalogBrands, models, isLoading: isModelsLoading } =
+  const { brands: catalogBrands, models, isLoading: isModelsQueryLoading } =
     useVehicleCatalog(provisionalBrandKey, "", "", productEntry.modelParam ?? "")
   const brandKey = useMemo(
     () =>
@@ -84,12 +88,18 @@ export const LockedCarContextStep = ({
   const templateModelFamilyPrefix =
     modelResolution.mode === "prefix" ? modelResolution.prefix : ""
 
-  const { templates, isLoading: isTemplatesLoading } = useVehicleCatalog(
+  const { templates, isLoading: isTemplatesQueryLoading } = useVehicleCatalog(
     catalogBrandKey,
     templateModelFamilyKey,
     templateModelFamilyPrefix,
   )
-  const isLoading = isModelsLoading || isTemplatesLoading
+  const isLoading = isCatalogResolving({
+    isModelsQueryLoading,
+    modelsCount: models.length,
+    isTemplatesQueryLoading,
+    templatesCount: templates.length,
+    hasTemplateQuery: Boolean(templateModelFamilyKey || templateModelFamilyPrefix),
+  })
   const isModelCatalogResolved = modelResolution.mode !== "none"
 
   const onUpdateRef = useRef(onUpdate)
@@ -124,13 +134,40 @@ export const LockedCarContextStep = ({
     }
   }, [modelResolution, config.modelFamilyKey, config.model])
 
-  const brandLogo = useMemo(() => {
-    if (!config.brand || !brands.length) return null
-    const brand = brands.find(
-      (item) => item.name.toLowerCase() === config.brand.toLowerCase(),
-    )
-    return brand?.logo ?? null
-  }, [config.brand, brands])
+  const brandLogo = useMemo(
+    () =>
+      resolveConfiguratorBrandImage({
+        brand: config.brand,
+        brandKey: config.brandKey || brandKey,
+        brandParam: productEntry.brandParam,
+      }),
+    [brandKey, config.brand, config.brandKey, productEntry.brandParam],
+  )
+
+  const { previews: modelPreviews } = useMatModelPreviews({
+    recordKey: config.recordKey || undefined,
+    brandKey: config.brandKey || brandKey || config.brand || undefined,
+    modelKey: config.modelKey || config.model || undefined,
+    bodyTypeKey: config.bodyTypeKey || config.bodyType || undefined,
+    enabled: Boolean(
+      config.recordKey ||
+        config.modelKey ||
+        ((config.brandKey || brandKey || config.brand) && config.model),
+    ),
+  })
+
+  const modelPreviewImage = useMemo(() => {
+    const entryPreview = productEntry.previewImageParam?.trim() || null
+    if (entryPreview) return entryPreview
+
+    if (modelPreviews.length === 0) return null
+    const primary =
+      modelPreviews.find((preview) => preview.is_primary) ?? modelPreviews[0]
+    return primary?.image_url ?? null
+  }, [modelPreviews, productEntry.previewImageParam])
+
+  const brandThumbnailSrc = modelPreviewImage || brandLogo
+  const usesModelPreviewPhoto = Boolean(modelPreviewImage)
 
   const generations = useMemo(() => {
     const items = templates.map((template) => ({
@@ -163,19 +200,37 @@ export const LockedCarContextStep = ({
 
   const resolvedGeneration = useMemo(
     () =>
-      selectedGeneration ??
-      (generations.length === 1 ? generations[0] : null),
-    [selectedGeneration, generations],
+      resolveLockedCarGeneration({
+        generations,
+        selectedGeneration,
+        modelResolution,
+        modelParam: productEntry.modelParam,
+        generationParam: productEntry.generationParam,
+      }),
+    [
+      generations,
+      selectedGeneration,
+      modelResolution,
+      productEntry.modelParam,
+      productEntry.generationParam,
+    ],
   )
 
-  const availableYears = useMemo(() => {
-    if (productEntry.yearParam) {
-      const year = Number(productEntry.yearParam)
-      if (!Number.isNaN(year)) return [year]
-    }
-    if (!resolvedGeneration) return []
-    return yearsInRange(resolvedGeneration.yearFrom, resolvedGeneration.yearTo)
-  }, [resolvedGeneration, productEntry.yearParam])
+  const availableYears = useMemo(
+    () =>
+      computeLockedCarAvailableYears({
+        yearParam: productEntry.yearParam,
+        generationParam: productEntry.generationParam,
+        resolvedGeneration,
+        templates,
+      }),
+    [
+      resolvedGeneration,
+      productEntry.yearParam,
+      productEntry.generationParam,
+      templates,
+    ],
+  )
 
   const matchingTemplates = templates.filter((template) => {
     if (!config.year) return false
@@ -241,6 +296,14 @@ export const LockedCarContextStep = ({
     resolvedGeneration?.yearFrom,
     resolvedGeneration?.yearTo,
   ])
+
+  useEffect(() => {
+    if (isLoading || !resolvedGeneration || config.modelKey) return
+    onUpdateRef.current({
+      modelKey: resolvedGeneration.modelKey,
+      generation: resolvedGeneration.generation,
+    })
+  }, [isLoading, resolvedGeneration, config.modelKey])
 
   useEffect(() => {
     if (isLoading || generations.length !== 1 || config.modelKey) return
@@ -317,6 +380,36 @@ export const LockedCarContextStep = ({
   const needsManualBodyType =
     !isLoading && !!config.year && !config.bodyTypeKey && bodyOptions.length > 0
 
+  const initialScrollTargetId = useMemo(
+    () =>
+      resolveConfiguratorV2VehicleScrollTarget({
+        isLocked: true,
+        brandSelected: Boolean(config.brand),
+        modelSelected: Boolean(config.model),
+        year: config.year,
+        bodyTypeKey: config.bodyTypeKey,
+        modelKey: config.modelKey,
+        isLoading,
+        bodyOptionsCount: config.year ? bodyOptions.length : 0,
+        yearOptionsCount: availableYears.length,
+      }),
+    [
+      availableYears.length,
+      bodyOptions.length,
+      config.brand,
+      config.bodyTypeKey,
+      config.model,
+      config.modelKey,
+      config.year,
+      isLoading,
+    ],
+  )
+
+  useConfiguratorV2InitialVehicleScroll({
+    scrollTargetId: initialScrollTargetId,
+    isReady: !isLoading,
+  })
+
   const isStepComplete = Boolean(
     config.brand &&
       config.model &&
@@ -388,13 +481,25 @@ export const LockedCarContextStep = ({
       <div className="bg-black/30 border border-white/10 rounded-xl p-4 space-y-3">
         <div className="flex items-start gap-3">
           <div className="relative w-12 h-12 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
-            {brandLogo ? (
+            {brandThumbnailSrc ? (
               <Image
-                src={brandLogo}
-                alt={config.brand}
+                src={brandThumbnailSrc}
+                alt={
+                  usesModelPreviewPhoto
+                    ? `Podgląd dywaników ${config.brand} ${config.model}`
+                    : config.brand
+                }
                 fill
-                className="object-contain p-1.5"
+                className={
+                  usesModelPreviewPhoto
+                    ? "object-cover"
+                    : "object-contain p-1.5"
+                }
                 sizes="48px"
+                unoptimized={
+                  usesModelPreviewPhoto ||
+                  shouldServeBrandImageUnoptimized(brandThumbnailSrc)
+                }
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-red-400">
@@ -443,16 +548,16 @@ export const LockedCarContextStep = ({
       )}
 
       {showYearSelect && (
-        <div>
+        <div id="locked-car-year" className="scroll-mt-4">
           <label
-            htmlFor="locked-car-year"
+            htmlFor="locked-car-year-select"
             className="block text-sm font-medium text-gray-400 mb-2"
           >
             Rok produkcji *
           </label>
           <div className="relative">
             <select
-              id="locked-car-year"
+              id="locked-car-year-select"
               value={config.year}
               onChange={(event) => handleYearChange(event.target.value)}
               className={selectClassName}
@@ -473,16 +578,16 @@ export const LockedCarContextStep = ({
       )}
 
       {needsManualBodyType && (
-        <div>
+        <div id="locked-car-body-type" className="scroll-mt-4">
           <label
-            htmlFor="locked-car-body-type"
+            htmlFor="locked-car-body-type-select"
             className="block text-sm font-medium text-gray-400 mb-2"
           >
             Typ nadwozia *
           </label>
           <div className="relative">
             <select
-              id="locked-car-body-type"
+              id="locked-car-body-type-select"
               value={
                 config.recordKey && config.bodyTypeKey
                   ? `${config.recordKey}::${config.bodyTypeKey}`

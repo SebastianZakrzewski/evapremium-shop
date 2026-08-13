@@ -4,6 +4,12 @@ import { useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
 import { useVehicleCatalog } from "@/features/vehicle-catalog/hooks/useVehicleCatalog"
+import { useConfiguratorV2InitialVehicleScroll } from "@/components/configurator/configurator-v2/hooks/useConfiguratorV2InitialVehicleScroll"
+import { resolveConfiguratorV2VehicleScrollTarget } from "@/components/configurator/configurator-v2/utils/resolveConfiguratorV2VehicleScrollTarget"
+import {
+  VEHICLE_BODY_TYPE_FIELD_ID,
+  VEHICLE_YEAR_FIELD_ID,
+} from "@/components/configurator/configurator-v2/utils/configuratorV2VehicleFieldIds"
 
 type CarSelectionStepProps = {
   config: ConfiguratorState
@@ -112,6 +118,38 @@ export const CarSelectionStep = ({
       config.recordKey,
   )
 
+  const initialScrollTargetId = useMemo(
+    () =>
+      resolveConfiguratorV2VehicleScrollTarget({
+        isLocked: false,
+        brandSelected: Boolean(config.brandKey && config.brand),
+        modelSelected: Boolean(config.modelFamilyKey && config.model),
+        year: config.year,
+        bodyTypeKey: config.bodyTypeKey,
+        modelKey: config.modelKey,
+        isLoading,
+        bodyOptionsCount: bodyOptions.length,
+        yearOptionsCount: years.length,
+      }),
+    [
+      bodyOptions.length,
+      config.brand,
+      config.brandKey,
+      config.bodyTypeKey,
+      config.model,
+      config.modelFamilyKey,
+      config.modelKey,
+      config.year,
+      isLoading,
+      years.length,
+    ],
+  )
+
+  useConfiguratorV2InitialVehicleScroll({
+    scrollTargetId: initialScrollTargetId,
+    isReady: !isLoading,
+  })
+
   const handleBrandChange = (brandKey: string) => {
     const brand = brands.find((item) => item.key === brandKey)
     onUpdate({
@@ -177,6 +215,7 @@ export const CarSelectionStep = ({
 
   const fields = [
     {
+      id: undefined,
       label: "Marka",
       value: config.brandKey,
       disabled: isLoading,
@@ -188,6 +227,7 @@ export const CarSelectionStep = ({
       onChange: handleBrandChange,
     },
     {
+      id: undefined,
       label: "Model",
       value: config.modelFamilyKey,
       disabled: !config.brandKey,
@@ -199,6 +239,7 @@ export const CarSelectionStep = ({
       onChange: handleModelChange,
     },
     {
+      id: undefined,
       label: "Generacja",
       value: selectedGeneration?.value ?? "",
       disabled: !config.modelFamilyKey,
@@ -210,6 +251,7 @@ export const CarSelectionStep = ({
       onChange: handleGenerationChange,
     },
     {
+      id: VEHICLE_YEAR_FIELD_ID,
       label: "Rok produkcji",
       value: config.year,
       disabled: !config.modelKey,
@@ -227,6 +269,7 @@ export const CarSelectionStep = ({
         }),
     },
     {
+      id: VEHICLE_BODY_TYPE_FIELD_ID,
       label: "Typ nadwozia",
       value: selectedBodyValue,
       disabled: !config.year,
@@ -242,7 +285,7 @@ export const CarSelectionStep = ({
   return (
     <div className="space-y-5">
       {fields.map((field) => (
-        <label key={field.label} className="block text-sm text-gray-400">
+        <label key={field.label} id={field.id} className="block text-sm text-gray-400 scroll-mt-4">
           <span className="mb-2 block font-medium">{field.label} *</span>
           <select
             value={field.value}

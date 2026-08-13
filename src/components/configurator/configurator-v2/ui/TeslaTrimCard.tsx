@@ -37,7 +37,7 @@ export const TeslaTrimCard = ({
     </div>
     {(priceLabel || priceAfterDiscount !== undefined) && (
       <div className="shrink-0 text-right">
-        <p className="text-[15px] font-medium text-white whitespace-nowrap">
+        <p className="text-[15px] font-medium text-green-400 whitespace-nowrap">
           {priceLabel ??
             (priceAfterDiscount !== undefined ? formatPricePln(priceAfterDiscount) : "")}
         </p>

@@ -11,21 +11,28 @@ const baseBreakdown = {
 }
 
 describe("ConfiguratorV2StickyBar", () => {
-  it("shows price and enables cart when ready", () => {
+  it("shows summary CTA when configuration is complete", () => {
+    const onGoToSummary = vi.fn()
+
     render(
       <ConfiguratorV2StickyBar
         priceBreakdown={baseBreakdown}
-        isReadyForCart
-        isAddingToCart={false}
-        onAddToCart={vi.fn()}
+        isConfigComplete
+        showSummaryCta
+        onGoToSummary={onGoToSummary}
       />,
     )
 
     expect(screen.getByText(/549/)).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Dodaj do koszyka" })).toBeEnabled()
+    const summaryButton = screen.getByRole("button", {
+      name: "Podsumowanie zamówienia",
+    })
+    expect(summaryButton).toBeEnabled()
+    fireEvent.click(summaryButton)
+    expect(onGoToSummary).toHaveBeenCalledOnce()
   })
 
-  it("disables cart button when configuration incomplete", () => {
+  it("shows disabled summary CTA before configuration is complete", () => {
     render(
       <ConfiguratorV2StickyBar
         priceBreakdown={{
@@ -34,16 +41,18 @@ describe("ConfiguratorV2StickyBar", () => {
           priceAfterDiscount: 0,
           totalPrice: 0,
         }}
-        isReadyForCart={false}
-        isAddingToCart={false}
-        onAddToCart={vi.fn()}
+        isConfigComplete={false}
+        showSummaryCta
+        onGoToSummary={vi.fn()}
       />,
     )
 
     expect(
       screen.getByText("Wybierz wariant aby zobaczyć cenę"),
     ).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Dodaj do koszyka" })).toBeDisabled()
+    expect(
+      screen.getByRole("button", { name: "Podsumowanie zamówienia" }),
+    ).toBeDisabled()
   })
 
   it("calls onPriceClick when price area clicked", () => {
@@ -52,9 +61,9 @@ describe("ConfiguratorV2StickyBar", () => {
     render(
       <ConfiguratorV2StickyBar
         priceBreakdown={baseBreakdown}
-        isReadyForCart
-        isAddingToCart={false}
-        onAddToCart={vi.fn()}
+        isConfigComplete
+        showSummaryCta
+        onGoToSummary={vi.fn()}
         onPriceClick={onPriceClick}
       />,
     )
@@ -67,26 +76,29 @@ describe("ConfiguratorV2StickyBar", () => {
     render(
       <ConfiguratorV2StickyBar
         priceBreakdown={baseBreakdown}
-        isReadyForCart
-        isAddingToCart={false}
-        onAddToCart={vi.fn()}
+        isConfigComplete
+        showSummaryCta
+        onGoToSummary={vi.fn()}
       />,
     )
 
     expect(screen.getByText(/Rabat: -51,00 zł/)).toBeInTheDocument()
   })
 
-  it("uses relative positioning for column variant", () => {
+  it("uses column variant for desktop footer placement", () => {
     const { container } = render(
       <ConfiguratorV2StickyBar
         priceBreakdown={baseBreakdown}
-        isReadyForCart
-        isAddingToCart={false}
-        onAddToCart={vi.fn()}
+        isConfigComplete
+        showSummaryCta
+        onGoToSummary={vi.fn()}
         variant="column"
       />,
     )
 
-    expect(container.firstChild).toHaveAttribute("data-variant", "column")
+    const bar = container.firstChild as HTMLElement
+    expect(bar).toHaveAttribute("data-variant", "column")
+    expect(bar.className).toContain("relative")
+    expect(bar.className).not.toContain("fixed")
   })
 })

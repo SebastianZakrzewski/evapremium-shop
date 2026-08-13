@@ -290,10 +290,12 @@ export class DealService {
   /**
    * Normalize color value (Polish to English mapping)
    */
-  private normalizeColor(color: string | undefined): string | undefined {
-    if (!color) return undefined;
-    
-    const colorLower = color.toLowerCase().trim();
+  private normalizeColor(color: string | number | undefined): string | undefined {
+    if (color == null || color === '') return undefined;
+
+    const colorLower = String(color).toLowerCase().trim();
+    if (!colorLower) return undefined
+
     const polishToEnglish: Record<string, string> = {
       'niebieski': 'blue',
       'czarny': 'black',

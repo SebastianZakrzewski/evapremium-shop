@@ -101,7 +101,7 @@ export const CompareVariantsModal = ({
                     {presentation.name ?? variant.label}
                   </h3>
                   <p className="text-xs text-gray-400 mt-1">{presentation.description}</p>
-                  <p className="text-sm font-bold text-white mt-2">
+                  <p className="text-sm font-bold text-green-400 mt-2">
                     {formatPricePln(variant.priceAfterDiscount)}
                   </p>
                 </button>

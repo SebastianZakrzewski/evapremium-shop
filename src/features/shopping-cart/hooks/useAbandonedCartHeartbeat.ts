@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { abandonedCartsApi, type AbandonedCartPayload, type AbandonedCartWebhookPayload } from '@/lib/api';
+import { hasPaymentRedirectFlag } from '@/features/checkout/lib/paymentRedirectFlag';
 
 type BuildPayload = () => {
   sessionId: string;
@@ -76,12 +77,20 @@ export function useAbandonedCartHeartbeat(active: boolean, buildPayload: BuildPa
         // Mark as sent immediately to prevent duplicate calls
         webhookSentRef.current = true;
         
-        const webhookPayload: AbandonedCartWebhookPayload = { ...payload, event: 'pagehide' };
+        const webhookPayload: AbandonedCartWebhookPayload = {
+          ...payload,
+          event: hasPaymentRedirectFlag() ? 'payment_redirect' : 'pagehide',
+          metadata: {
+            ...(payload.metadata || {}),
+            ...(hasPaymentRedirectFlag() ? { paymentRedirect: true } : {}),
+          },
+        };
         console.log('[AbandonedCart:Heartbeat] Sending beacon on pagehide', { 
           sessionId: payload.sessionId?.substring(0, 8) + '...',
           stage: payload.stage,
           cartHasItems: payload.cartHasItems,
-          itemsCount: payload.items?.length || 0
+          itemsCount: payload.items?.length || 0,
+          event: webhookPayload.event,
         });
         
         // sendWebhook handles async internally and doesn't throw

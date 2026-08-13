@@ -11,6 +11,7 @@ export interface AbandonedCartPayload {
   cartHasItems?: boolean;
   utm?: Record<string, unknown>;
   contact?: Record<string, unknown>;
+  address?: Record<string, unknown>;
   car?: Record<string, unknown>;
   configuration?: Record<string, unknown>;
   items?: Array<Record<string, unknown>>;
@@ -22,7 +23,7 @@ export interface AbandonedCartPayload {
 }
 
 export interface AbandonedCartWebhookPayload extends AbandonedCartPayload {
-  event: 'pagehide';
+  event: 'pagehide' | 'payment_redirect';
 }
 
 /**
@@ -86,10 +87,45 @@ export async function sendWebhook(payload: AbandonedCartWebhookPayload): Promise
 }
 
 /**
+ * Persist a payment-redirect cart snapshot before clearCart + gateway redirect.
+ * Uses awaited fetch so the Supabase pending row exists for later PayNow ABANDONED export.
+ */
+export async function persistPaymentRedirectSnapshot(
+  payload: AbandonedCartPayload & { orderId?: string }
+): Promise<void> {
+  const webhookPayload: AbandonedCartWebhookPayload = {
+    ...payload,
+    cartHasItems: true,
+    event: 'payment_redirect',
+    metadata: {
+      ...(payload.metadata || {}),
+      paymentRedirect: true,
+      ...(payload.orderId ? { orderId: payload.orderId } : {}),
+    },
+  }
+
+  try {
+    const response = await fetch('/api/abandoned-carts/webhook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(webhookPayload),
+      keepalive: true,
+    })
+
+    if (!response.ok) {
+      console.warn('[AbandonedCart] Payment redirect snapshot failed:', response.status)
+    }
+  } catch (error) {
+    console.warn('[AbandonedCart] Payment redirect snapshot error:', error)
+  }
+}
+
+/**
  * Abandoned Carts API object with all methods
  */
 export const abandonedCartsApi = {
   sendHeartbeat,
   sendWebhook,
+  persistPaymentRedirectSnapshot,
 };
 

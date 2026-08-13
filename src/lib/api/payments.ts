@@ -17,6 +17,11 @@ export interface P24PaymentResponse {
   token: string;
 }
 
+export interface PaynowPaymentResponse {
+  paymentUrl: string;
+  paymentId: string;
+}
+
 /**
  * Register P24 payment
  * API zwraca: { success, paymentUrl, token } – nie { success, data: {...} }
@@ -55,9 +60,45 @@ export async function registerP24Payment(orderId: string): Promise<P24PaymentRes
 }
 
 /**
+ * Register Paynow payment
+ */
+export async function registerPaynowPayment(orderId: string): Promise<PaynowPaymentResponse> {
+  try {
+    const response = await apiPost<
+      ApiResponse<PaynowPaymentResponse> & { paymentUrl?: string; paymentId?: string }
+    >('/api/payments/paynow/register', { orderId })
+
+    if (!response.success) {
+      throw new ApiError(
+        response.error || 'Błąd rejestracji płatności Paynow',
+        400,
+        response
+      )
+    }
+
+    const paymentUrl = response.data?.paymentUrl ?? response.paymentUrl ?? ''
+    const paymentId = response.data?.paymentId ?? response.paymentId ?? ''
+    if (!paymentUrl) {
+      throw new ApiError('Brak URL płatności w odpowiedzi', 500, response)
+    }
+    return { paymentUrl, paymentId }
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error
+    }
+    throw new ApiError(
+      error instanceof Error ? error.message : 'Nieznany błąd',
+      500,
+      error
+    )
+  }
+}
+
+/**
  * Payments API object with all methods
  */
 export const paymentsApi = {
   registerP24Payment,
+  registerPaynowPayment,
 };
 

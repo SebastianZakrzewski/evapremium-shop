@@ -3,23 +3,32 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { useCart } from "@/features/shopping-cart/hooks/useCart"
+import { openCartModal } from "@/features/shopping-cart/utils/openCartModal"
 import { useAccessories } from "@/features/accessories/hooks/useAccessories"
 import { useBrands } from "@/features/brands/hooks/useBrands"
 import { useMatProductImages } from "@/features/mat-product-images"
+import {
+  isMatRealizationMatType,
+  useMatRealizationPhotos,
+} from "@/features/mat-realization-photos"
+import { useMatModelPreviews } from "@/features/mat-model-previews"
 import { useConfiguratorState } from "@/features/car-configurator/hooks/useConfiguratorState"
 import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import { useResolvedPricing } from "@/features/vehicle-catalog/hooks/useResolvedPricing"
 import { mapConfiguratorV2Sections } from "@/features/car-configurator/adapters/configuratorV2SectionMapper"
+import {
+  getPodpietkaMountingFee,
+  getPodpietkaTotalPrice,
+} from "@/features/car-configurator/domain/podpietkaMounting"
 import { resolvePersistedMatSetVariantLabel } from "@/shared/mat-set-labels"
 import { normalizeBrandName } from "@/shared/brands"
 import { getMatImagePath } from "@/lib/image-mapping"
 import { getMatTypeForDynamicPreview } from "@/components/configurator/configurator-simple/rugPreviewConfig"
 import { ConfiguratorLoader } from "@/components/configurator/configurator-simple/ConfiguratorLoader"
-import { GalleryLightbox } from "@/components/ui/gallery-lightbox"
 import { ConfiguratorV2Layout } from "./ConfiguratorV2Layout"
 import { ConfiguratorV2SpecsBar } from "./ConfiguratorV2SpecsBar"
-import { ConfiguratorV2PreviewPanel } from "./ConfiguratorV2PreviewPanel"
-import { ConfiguratorV2MobilePreview } from "./ConfiguratorV2MobilePreview"
+import { ConfiguratorV2PreviewWithGallery } from "./ConfiguratorV2PreviewWithGallery"
+import { ConfiguratorV2MatPreviewLightbox } from "./ConfiguratorV2MatPreviewLightbox"
 import { useConfiguratorV2Preview } from "./hooks/useConfiguratorV2Preview"
 import { useMatPreviewPreload } from "./hooks/useMatPreviewPreload"
 import { VehicleContextSection } from "./sections/VehicleContextSection"
@@ -29,6 +38,8 @@ import { StructureSection } from "./sections/StructureSection"
 import { ColorSection } from "./sections/ColorSection"
 import { EdgeColorSection } from "./sections/EdgeColorSection"
 import { AccessoriesSection } from "./sections/AccessoriesSection"
+import { SummarySection } from "./sections/SummarySection"
+import { scrollConfiguratorV2ToElementWhenReady } from "./utils/scrollConfiguratorV2ToElement"
 import { ConfiguratorV2StickyBar } from "./sticky/ConfiguratorV2StickyBar"
 import { PriceBreakdownModal } from "./sticky/PriceBreakdownModal"
 import { CompareMatTypesModal } from "./modals/CompareMatTypesModal"
@@ -69,10 +80,40 @@ export default function ConfiguratorV2() {
     enabled: !!(brandForImage && config.model && config.year && config.bodyType),
   })
 
-  const matProductImage = useMemo(
-    () => matProductImages?.[0]?.image_url ?? null,
-    [matProductImages],
+  const realizationMatType = isMatRealizationMatType(config.matType)
+    ? config.matType
+    : undefined
+
+  const isRealizationPhotosReady = !!(
+    config.brand &&
+    config.model &&
+    config.year &&
+    config.bodyType &&
+    (config.modelKey || config.recordKey) &&
+    realizationMatType
   )
+
+  const { photos: realizationPhotos } = useMatRealizationPhotos({
+    recordKey: config.recordKey || undefined,
+    brandKey: config.brandKey || config.brand || undefined,
+    modelKey: config.modelKey || config.model || undefined,
+    matType: realizationMatType,
+    enabled: isRealizationPhotosReady,
+  })
+
+  const isModelPreviewsReady = !!(
+    config.modelKey ||
+    config.recordKey ||
+    (config.brand && config.model)
+  )
+
+  const { previews: modelPreviews } = useMatModelPreviews({
+    recordKey: config.recordKey || undefined,
+    brandKey: config.brandKey || config.brand || undefined,
+    modelKey: config.modelKey || config.model || undefined,
+    bodyTypeKey: config.bodyTypeKey || config.bodyType || undefined,
+    enabled: isModelPreviewsReady,
+  })
 
   const pricingQuery = useResolvedPricing({
     recordKey: config.recordKey || undefined,
@@ -132,6 +173,19 @@ export default function ConfiguratorV2() {
     return accessories.find((acc) => acc.id === config.selectedPodpietka) ?? null
   }, [accessories, config.selectedPodpietka])
 
+  const accessoryPrice = useMemo(() => {
+    if (!selectedPodpietka) return 0
+    return getPodpietkaTotalPrice(
+      selectedPodpietka.price,
+      config.podpietkaMounting,
+    )
+  }, [selectedPodpietka, config.podpietkaMounting])
+
+  const accessoryMountingFee = useMemo(
+    () => getPodpietkaMountingFee(config.podpietkaMounting),
+    [config.podpietkaMounting],
+  )
+
   const mapperResult = useMemo(
     () =>
       mapConfiguratorV2Sections({
@@ -148,7 +202,37 @@ export default function ConfiguratorV2() {
     ],
   )
 
-  const preview = useConfiguratorV2Preview(config, matProductImage)
+  const preview = useConfiguratorV2Preview(
+    config,
+    matProductImages,
+    productEntry,
+    realizationPhotos,
+    modelPreviews,
+  )
+
+  const entryPreviewImage = productEntry.previewImageParam
+
+  const primaryModelPreviewUrl = useMemo(() => {
+    if (modelPreviews.length === 0) return null
+    const primary =
+      modelPreviews.find((preview) => preview.is_primary) ?? modelPreviews[0]
+    return primary?.image_url ?? null
+  }, [modelPreviews])
+
+  const vehiclePreviewImage =
+    entryPreviewImage?.trim() || primaryModelPreviewUrl
+
+  const matProductImagePaths = useMemo(() => {
+    const paths = [
+      ...matProductImages.map((image) => image.image_url),
+      ...modelPreviews.map((previewItem) => previewItem.image_url),
+      ...realizationPhotos.map((photo) => photo.image_url),
+    ]
+    if (entryPreviewImage && !paths.includes(entryPreviewImage)) {
+      paths.unshift(entryPreviewImage)
+    }
+    return paths
+  }, [entryPreviewImage, matProductImages, modelPreviews, realizationPhotos])
 
   useMatPreviewPreload({
     matType: config.matType,
@@ -157,7 +241,7 @@ export default function ConfiguratorV2() {
     color: config.color,
     edgeColor: config.edgeColor,
     variant: config.variant,
-    extraPaths: matProductImage ? [matProductImage] : [],
+    extraPaths: matProductImagePaths,
   })
 
   const [isAddingToCart, setIsAddingToCart] = useState(false)
@@ -166,9 +250,55 @@ export default function ConfiguratorV2() {
   const [isCompareVariantsOpen, setIsCompareVariantsOpen] = useState(false)
   const [isFeaturesModalOpen, setIsFeaturesModalOpen] = useState(false)
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false)
+  const [showSummary, setShowSummary] = useState(false)
+  const [cartActionError, setCartActionError] = useState<string | null>(null)
+
+  const summaryPriceBreakdown = useMemo(
+    () => ({
+      basePrice: priceBreakdown.basePrice,
+      discount: priceBreakdown.discount,
+      shippingCost: 0,
+      totalPrice: priceBreakdown.totalPrice,
+    }),
+    [priceBreakdown],
+  )
+
+  const scrollToSection = useCallback((sectionId: string) => {
+    scrollConfiguratorV2ToElementWhenReady(sectionId)
+  }, [])
+
+  const handleGoToSummary = useCallback(() => {
+    if (!mapperResult.isReadyForCart) return
+    setShowSummary(true)
+  }, [mapperResult.isReadyForCart])
+
+  useEffect(() => {
+    if (!showSummary) return
+    const cancelScroll = scrollConfiguratorV2ToElementWhenReady("summary-order-heading", {
+      alignToContentStart: true,
+      offset: 12,
+    })
+    return cancelScroll
+  }, [showSummary])
+
+  const handleBackFromSummary = useCallback(() => {
+    setShowSummary(false)
+    scrollToSection("section-accessories")
+  }, [scrollToSection])
+
+  const handleBackToEdgeColors = useCallback(() => {
+    scrollToSection("section-edgeColor")
+  }, [scrollToSection])
 
   const handleAddToCart = useCallback(async () => {
-    if (!mapperResult.isReadyForCart) return
+    if (!mapperResult.isReadyForCart) {
+      setCartActionError(
+        "Uzupełnij konfigurację pojazdu (rok i typ nadwozia), aby dodać produkt do koszyka.",
+      )
+      return
+    }
+
+    setCartActionError(null)
     setIsAddingToCart(true)
     try {
       const productId = crypto.randomUUID()
@@ -234,22 +364,42 @@ export default function ConfiguratorV2() {
           selectedPodpietka.images?.[0] ??
           selectedPodpietka.imageSrc ??
           ""
-        await addToCart({
-          productType: "accessory",
-          productId: selectedPodpietka.id,
-          quantity: 1,
-          unitPrice: selectedPodpietka.price,
-          productName: `${selectedPodpietka.name}${config.podpietkaColor ? ` - ${config.podpietkaColor}` : ""}`,
-          productSku: selectedPodpietka.sku,
-          productImage: podpietkaImage,
-          configuration: {
-            color: config.podpietkaColor || undefined,
-          },
-        })
+        try {
+          await addToCart({
+            productType: "accessory",
+            productId: selectedPodpietka.id,
+            quantity: 1,
+            unitPrice: getPodpietkaTotalPrice(
+              selectedPodpietka.price,
+              config.podpietkaMounting,
+            ),
+            productName: `${selectedPodpietka.name}${config.podpietkaColor ? ` - ${config.podpietkaColor}` : ""}`,
+            productSku: selectedPodpietka.sku,
+            productImage: podpietkaImage,
+            configuration: {
+              color: config.podpietkaColor || undefined,
+              mounting: config.podpietkaMounting,
+            },
+          })
+        } catch (accessoryError) {
+          console.error("Error adding accessory to cart:", accessoryError)
+          const accessoryMessage =
+            accessoryError instanceof Error
+              ? accessoryError.message
+              : "Nie udało się dodać akcesorium"
+          setCartActionError(
+            `Dywaniki dodano do koszyka, ale akcesorium nie zostało dodane: ${accessoryMessage}`,
+          )
+        }
       }
 
-      window.dispatchEvent(new CustomEvent("openCartModal"))
+      openCartModal()
     } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Nie udało się dodać produktu do koszyka"
+      setCartActionError(message)
       console.error("Error adding to cart:", error)
     } finally {
       setIsAddingToCart(false)
@@ -273,15 +423,17 @@ export default function ConfiguratorV2() {
 
   const stickyBarProps = {
     priceBreakdown,
-    accessoryPrice: selectedPodpietka?.price ?? 0,
-    isReadyForCart: mapperResult.isReadyForCart,
-    isAddingToCart: isAddingToCart || cartLoading,
-    onAddToCart: handleAddToCart,
+    accessoryPrice,
+    isConfigComplete: mapperResult.isReadyForCart,
+    showSummaryCta: !showSummary,
+    onGoToSummary: handleGoToSummary,
     onPriceClick: () => setIsPriceModalOpen(true),
   }
 
   return (
     <ConfiguratorV2Layout
+      mobilePreviewHasGallery={preview.showGallery}
+      hideMobileStickyBar={showSummary}
       specsBar={
         <ConfiguratorV2SpecsBar
           title={pageTitle}
@@ -290,17 +442,33 @@ export default function ConfiguratorV2() {
         />
       }
       mobilePreview={
-        <ConfiguratorV2MobilePreview
+        <ConfiguratorV2PreviewWithGallery
+          layout="mobile"
           imageSrc={preview.imageSrc}
           alt={preview.alt}
+          usesMatPreviewCanvas={preview.usesMatPreviewCanvas}
           onOpenZoom={() => setIsPreviewModalOpen(true)}
+          showGallery={preview.showGallery}
+          showEmptyInCarSlot={preview.showEmptyInCarSlot}
+          galleryItems={preview.galleryItems}
+          activeGalleryId={preview.activeGalleryId}
+          onSelectGalleryItem={preview.selectGalleryItem}
+          realizationCaption={preview.realizationCaption}
         />
       }
       previewPanel={
-        <ConfiguratorV2PreviewPanel
+        <ConfiguratorV2PreviewWithGallery
+          layout="desktop"
           imageSrc={preview.imageSrc}
           alt={preview.alt}
+          usesMatPreviewCanvas={preview.usesMatPreviewCanvas}
           onOpenZoom={() => setIsPreviewModalOpen(true)}
+          showGallery={preview.showGallery}
+          showEmptyInCarSlot={preview.showEmptyInCarSlot}
+          galleryItems={preview.galleryItems}
+          activeGalleryId={preview.activeGalleryId}
+          onSelectGalleryItem={preview.selectGalleryItem}
+          realizationCaption={preview.realizationCaption}
         />
       }
       optionPanel={
@@ -346,7 +514,22 @@ export default function ConfiguratorV2() {
             config={config}
             readiness={mapperResult.sections.accessories}
             onUpdate={updateConfig}
+            onNext={handleGoToSummary}
+            onPrevious={handleBackToEdgeColors}
+            canProceedToSummary={mapperResult.isReadyForCart}
           />
+          {showSummary && (
+            <SummarySection
+              config={config}
+              priceBreakdown={summaryPriceBreakdown}
+              onPrevious={handleBackFromSummary}
+              onAddToCart={handleAddToCart}
+              isAddingToCart={isAddingToCart || cartLoading}
+              cartActionError={cartActionError}
+              vehiclePreviewImage={vehiclePreviewImage}
+            />
+          )}
+          {!showSummary && (
           <div className="pt-2">
             <button
               type="button"
@@ -356,6 +539,7 @@ export default function ConfiguratorV2() {
               Dowiedz się więcej o dywanikach EVA
             </button>
           </div>
+          )}
         </>
       }
       stickyBarDesktop={
@@ -370,8 +554,9 @@ export default function ConfiguratorV2() {
             isOpen={isPriceModalOpen}
             onClose={() => setIsPriceModalOpen(false)}
             priceBreakdown={priceBreakdown}
-            accessoryPrice={selectedPodpietka?.price ?? 0}
+            accessoryPrice={accessoryPrice}
             accessoryName={selectedPodpietka?.name}
+            accessoryMountingFee={accessoryMountingFee}
           />
           <CompareMatTypesModal
             isOpen={isCompareMatTypesOpen}
@@ -390,12 +575,17 @@ export default function ConfiguratorV2() {
             isOpen={isFeaturesModalOpen}
             onClose={() => setIsFeaturesModalOpen(false)}
           />
-          <GalleryLightbox
+          <ConfiguratorV2MatPreviewLightbox
             isOpen={isPreviewModalOpen}
-            items={[{ src: preview.imageSrc, alt: preview.alt }]}
-            currentIndex={0}
-            onIndexChange={() => {}}
+            imageSrc={preview.imageSrc}
+            alt={preview.alt}
             onClose={() => setIsPreviewModalOpen(false)}
+            galleryImages={preview.lightboxImages}
+            initialIndex={preview.lightboxIndex}
+            onGalleryIndexChange={(index) => {
+              const item = preview.galleryItems[index]
+              if (item) preview.selectGalleryItem(item.id)
+            }}
           />
         </>
       }

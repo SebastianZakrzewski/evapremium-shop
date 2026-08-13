@@ -3,6 +3,10 @@ import { MatService } from './MatService';
 import { PricingService } from './PricingService';
 import { CartItem, Cart, AddToCartDTO, UpdateCartItemDTO } from '../types/cart-new';
 import { MatConfigurationSchema } from '@/features/vehicle-catalog/model/matConfiguration';
+import {
+  getPodpietkaTotalPrice,
+  isPodpietkaMounting,
+} from '@/features/car-configurator/domain/podpietkaMounting';
 
 export class CartService {
   private accessoryService: AccessoryService;
@@ -175,10 +179,16 @@ export class CartService {
         throw new Error('Accessory not found');
       }
       
-      productName = accessory.name;
-      productSku = accessory.sku;
-      productImage = accessory.imageSrc || '';
-      unitPrice = accessory.price;
+      productName = item.productName || accessory.name;
+      productSku = item.productSku || accessory.sku;
+      productImage = item.productImage || accessory.imageSrc || '';
+      const mounting =
+        item.configuration &&
+        'mounting' in item.configuration &&
+        isPodpietkaMounting(item.configuration.mounting)
+          ? item.configuration.mounting
+          : undefined;
+      unitPrice = getPodpietkaTotalPrice(accessory.price, mounting);
     } else if (item.productType === 'mat') {
       const config = item.configuration
       if (!config || !('carDetails' in config)) {

@@ -29,6 +29,7 @@ const baseConfig: ConfiguratorState = {
   heelPad: false,
   selectedPodpietka: undefined,
   podpietkaColor: undefined,
+  podpietkaMounting: undefined,
 };
 
 describe("resolveBrandFromParam", () => {

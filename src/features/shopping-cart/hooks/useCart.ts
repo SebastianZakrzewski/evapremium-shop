@@ -89,6 +89,11 @@ export function useCart(): UseCartReturn {
   
   // Ref do śledzenia czy to pierwszy mount
   const isFirstMountRef = useRef(true);
+  const cartRef = useRef(cart);
+
+  useEffect(() => {
+    cartRef.current = cart;
+  }, [cart]);
 
   /**
    * Refresh cart (useful after external changes)
@@ -193,8 +198,9 @@ export function useCart(): UseCartReturn {
     debugLog('useCart: Adding item to cart', item);
 
     try {
-      const updatedCart = await cartService.addToCart(cart, item);
+      const updatedCart = await cartService.addToCart(cartRef.current, item);
       setCart(updatedCart);
+      cartRef.current = updatedCart;
       
       // Dispatch event only after successful addToCart and setCart
       setTimeout(() => {
@@ -226,7 +232,7 @@ export function useCart(): UseCartReturn {
     } finally {
       setIsLoading(false);
     }
-  }, [cart, cartService]);
+  }, [cartService, createAddToCart, trackAddToCart]);
 
   /**
    * Remove item from cart
@@ -235,12 +241,13 @@ export function useCart(): UseCartReturn {
     setIsLoading(true);
     setError(null);
     console.log('🗑️ useCart: Removing item from cart', itemId);
-    console.log('🗑️ useCart: Current cart before removal:', cart);
+    console.log('🗑️ useCart: Current cart before removal:', cartRef.current);
 
     try {
-      const updatedCart = await cartService.removeFromCart(cart, itemId);
+      const updatedCart = await cartService.removeFromCart(cartRef.current, itemId);
       console.log('🗑️ useCart: Updated cart after removal:', updatedCart);
       setCart(updatedCart);
+      cartRef.current = updatedCart;
       
       // Dispatch event to notify other components
       setTimeout(() => {
@@ -256,7 +263,7 @@ export function useCart(): UseCartReturn {
     } finally {
       setIsLoading(false);
     }
-  }, [cart, cartService]);
+  }, [cartService]);
 
   /**
    * Update item quantity
@@ -267,8 +274,9 @@ export function useCart(): UseCartReturn {
     debugLog('useCart: Updating quantity', { itemId, quantity });
 
     try {
-      const updatedCart = await cartService.updateQuantity(cart, itemId, quantity);
+      const updatedCart = await cartService.updateQuantity(cartRef.current, itemId, quantity);
       setCart(updatedCart);
+      cartRef.current = updatedCart;
       debugLog('useCart: Quantity updated successfully', updatedCart);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Nie udało się zaktualizować ilości';
@@ -278,7 +286,7 @@ export function useCart(): UseCartReturn {
     } finally {
       setIsLoading(false);
     }
-  }, [cart, cartService]);
+  }, [cartService]);
 
   /**
    * Clear cart

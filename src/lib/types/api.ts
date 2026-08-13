@@ -7,6 +7,8 @@ export interface CarGenerationApiResponse {
   generationNumberDisplay?: string | null;
   modelDisplay?: string;
   modelKey?: string;
+  matTemplateId?: string | null;
+  modelImage?: string | null;
   bodyType: string;
   bodyTypeDisplay?: string;
   yearFrom?: number | null;

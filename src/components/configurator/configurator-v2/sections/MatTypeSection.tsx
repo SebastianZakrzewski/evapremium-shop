@@ -1,21 +1,9 @@
 "use client"
 
 import type { SectionReadiness } from "@/features/car-configurator/adapters/configuratorV2SectionMapper"
+import { matTypeOptions } from "../mat-type/matTypePresentation"
 import { TeslaTrimOption } from "../ui/TeslaTrimOption"
 import { ConfiguratorV2SectionShell } from "./ConfiguratorV2SectionShell"
-
-const matTypes = [
-  {
-    id: "3d-with-rims" as const,
-    name: "3D z rantami",
-    description: "Wysokie ranty chroniące przed brudem",
-  },
-  {
-    id: "classic" as const,
-    name: "3D bez rantów",
-    description: "Standardowe dywaniki bez wysokich rantów",
-  },
-]
 
 const compareLinkClass =
   "text-xs text-gray-400 hover:text-white underline-offset-2 hover:underline whitespace-nowrap transition-colors"
@@ -52,7 +40,7 @@ export const MatTypeSection = ({
     )
   }
 
-  const selectedType = matTypes.find((t) => t.id === config.matType)
+  const selectedType = matTypeOptions.find((t) => t.id === config.matType)
 
   return (
     <ConfiguratorV2SectionShell
@@ -69,12 +57,14 @@ export const MatTypeSection = ({
       }
     >
       <div className="space-y-2">
-        {matTypes.map((type) => (
+        {matTypeOptions.map((type) => (
           <TeslaTrimOption
             key={type.id}
             selected={config.matType === type.id}
             title={type.name}
             subtitle={type.description}
+            iconSrc={type.iconSrc}
+            iconAlt={type.iconAlt}
             onSelect={() => onUpdate({ matType: type.id, variant: "" })}
           />
         ))}

@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest"
 import { render, screen, fireEvent } from "@testing-library/react"
-import { describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import HeroSection from "../HeroSection"
 
 vi.mock("next/navigation", () => ({
@@ -30,18 +30,56 @@ vi.mock("next/image", () => ({
   },
 }))
 
+const mockMatchMedia = (isMobile: boolean) => {
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    writable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+      matches: query === "(max-width: 767px)" ? isMobile : false,
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  })
+}
+
 describe("HeroSection", () => {
-  it("renders the summer promotion image as the active hero media", () => {
+  beforeEach(() => {
+    mockMatchMedia(false)
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it("renders the promo slide without intro video on desktop while video is disabled", () => {
     render(<HeroSection />)
 
-    const promotionImages = screen.getAllByAltText(
+    expect(screen.getByTestId("hero-desktop-carousel")).toBeInTheDocument()
+    expect(screen.queryByTestId("hero-mobile-static")).not.toBeInTheDocument()
+    expect(screen.queryByTestId("hero-video-1")).not.toBeInTheDocument()
+    expect(screen.getByTestId("hero-promo-cta-hit-area")).toBeInTheDocument()
+    expect(screen.queryByLabelText("Poprzedni slajd")).not.toBeInTheDocument()
+  })
+
+  it("renders only the static promo hero on mobile", () => {
+    mockMatchMedia(true)
+    render(<HeroSection />)
+
+    expect(screen.getByTestId("hero-mobile-static")).toBeInTheDocument()
+    expect(screen.queryByTestId("hero-desktop-carousel")).not.toBeInTheDocument()
+    expect(screen.queryByTestId("hero-video-1")).not.toBeInTheDocument()
+
+    const promotionImage = screen.getByAltText(
       "Letnia promocja dywaników samochodowych EVA Premium do -30%"
     )
 
-    const srcs = promotionImages.map((img) => img.getAttribute("src"))
-
-    expect(srcs).toContain("/hero_letnia_promocja_1234x413.png")
-    expect(srcs).toContain("/hero4_mobile.png")
+    expect(promotionImage).toHaveAttribute("src", "/hero4_mobile.webp")
+    expect(screen.getByTestId("hero-mobile-promo-cta-hit-area")).toBeInTheDocument()
   })
 
   it("scrolls to dywaniki section when promo CTA overlay is clicked", () => {

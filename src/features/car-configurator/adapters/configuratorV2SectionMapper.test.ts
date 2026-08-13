@@ -52,6 +52,21 @@ describe("mapConfiguratorV2Sections", () => {
     expect(result.isReadyForCart).toBe(false)
   })
 
+  it("requires catalog keys before cart is ready", () => {
+    const result = mapConfiguratorV2Sections({
+      config: {
+        ...baseConfig,
+        variant: "premium",
+        recordKey: "",
+        bodyTypeKey: "",
+      },
+      skipMatTypeStep: false,
+      totalPrice: 549,
+    })
+
+    expect(result.isReadyForCart).toBe(false)
+  })
+
   it("marks cart ready when all required fields and price are set", () => {
     const result = mapConfiguratorV2Sections({
       config: { ...baseConfig, variant: "premium" },

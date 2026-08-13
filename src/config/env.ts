@@ -7,6 +7,8 @@ export const env = {
   // Feature flags
   features: {
     p24Enabled: process.env.P24_ENABLED === 'true',
+    paynowEnabled: process.env.PAYNOW_ENABLED === 'true',
+    paynowCheckoutEnabled: process.env.NEXT_PUBLIC_PAYNOW_ENABLED === 'true',
     matTemplatesCatalogEnabled:
       process.env.NEXT_PUBLIC_MAT_TEMPLATES_CATALOG_ENABLED !== 'false',
   },

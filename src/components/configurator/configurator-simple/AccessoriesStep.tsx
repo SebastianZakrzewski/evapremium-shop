@@ -7,8 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { useAccessories } from "@/features/accessories/hooks/useAccessories";
 import { Accessory } from "@/entities/product";
 import AccessoryDetailsSheet from "@/components/products/accessories/accessory-details-sheet";
-import { ShoppingCart, ExternalLink, Loader2 } from "lucide-react";
+import { PodpietkaMountingModal } from "@/components/configurator/configurator-v2/modals/PodpietkaMountingModal";
+import { ExternalLink, Loader2 } from "lucide-react";
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState";
+import {
+  getPodpietkaMountingLabel,
+  getPodpietkaTotalPrice,
+  type PodpietkaMounting,
+} from "@/features/car-configurator/domain/podpietkaMounting";
 import { formatPriceCurrency, formatPriceValue } from "@/lib/utils/formatPrice";
 
 interface AccessoriesStepProps {
@@ -16,13 +22,30 @@ interface AccessoriesStepProps {
   onUpdate: (updates: Partial<ConfiguratorState>) => void;
   onNext: () => void;
   onPrevious: () => void;
+  canProceedToSummary?: boolean;
+  nextLabel?: string;
   onProductModalOpenChange?: (isOpen: boolean) => void;
 }
 
-export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProductModalOpenChange }: AccessoriesStepProps) {
+type PendingPodpietka = {
+  accessory: Accessory;
+  color?: string;
+};
+
+export function AccessoriesStep({
+  config,
+  onUpdate,
+  onNext,
+  onPrevious,
+  canProceedToSummary = true,
+  nextLabel = "Dalej",
+  onProductModalOpenChange,
+}: AccessoriesStepProps) {
   const { accessories, isLoading } = useAccessories();
   const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [pendingPodpietka, setPendingPodpietka] = useState<PendingPodpietka | null>(null);
+  const [isMountingModalOpen, setIsMountingModalOpen] = useState(false);
 
   // Filtruj tylko podpiętki
   const podpietki = useMemo(() => {
@@ -35,34 +58,63 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
     return podpietki.find(p => p.id === config.selectedPodpietka) || null;
   }, [podpietki, config.selectedPodpietka]);
 
+  const selectedPodpietkaTotalPrice = selectedPodpietka
+    ? getPodpietkaTotalPrice(selectedPodpietka.price, config.podpietkaMounting)
+    : 0;
+
   const handlePodpietkaClick = (podpietka: Accessory) => {
     setSelectedAccessory(podpietka);
     setIsSheetOpen(true);
     onProductModalOpenChange?.(true);
   };
 
-  const handleAddPodpietka = (podpietka: Accessory, color?: string) => {
-    onUpdate({
-      selectedPodpietka: podpietka.id,
-      podpietkaColor: color || undefined
-    });
+  const handleCloseSheet = () => {
     setIsSheetOpen(false);
+    setSelectedAccessory(null);
+    onProductModalOpenChange?.(false);
+  };
+
+  const handleAddPodpietka = (podpietka: Accessory, color?: string) => {
+    setPendingPodpietka({ accessory: podpietka, color });
+    setIsSheetOpen(false);
+    setSelectedAccessory(null);
+    setIsMountingModalOpen(true);
+    onProductModalOpenChange?.(true);
+  };
+
+  const handleMountingSelect = (mounting: PodpietkaMounting) => {
+    if (!pendingPodpietka) return;
+
+    onUpdate({
+      selectedPodpietka: pendingPodpietka.accessory.id,
+      podpietkaColor: pendingPodpietka.color || undefined,
+      podpietkaMounting: mounting,
+    });
+    setPendingPodpietka(null);
+    setIsMountingModalOpen(false);
+    onProductModalOpenChange?.(false);
+  };
+
+  const handleMountingCancel = () => {
+    setPendingPodpietka(null);
+    setIsMountingModalOpen(false);
     onProductModalOpenChange?.(false);
   };
 
   const handleRemovePodpietka = () => {
     onUpdate({
       selectedPodpietka: undefined,
-      podpietkaColor: undefined
+      podpietkaColor: undefined,
+      podpietkaMounting: undefined,
     });
   };
 
   // Synchronizuj stan modala z rodzicem - zawsze aktualizuj gdy isSheetOpen się zmienia
   useEffect(() => {
     if (onProductModalOpenChange) {
-      onProductModalOpenChange(isSheetOpen);
+      onProductModalOpenChange(isSheetOpen || isMountingModalOpen);
     }
-  }, [isSheetOpen, onProductModalOpenChange]);
+  }, [isSheetOpen, isMountingModalOpen, onProductModalOpenChange]);
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
@@ -74,9 +126,10 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
             <span className="text-xs text-gray-400">Opcjonalne</span>
             <Button
               onClick={onNext}
+              disabled={!canProceedToSummary}
               variant="outline"
               size="sm"
-              className="border-white/10 hover:bg-white/5 hover:text-white text-gray-400 h-7 px-3 text-xs font-medium"
+              className="border-white/10 hover:bg-white/5 hover:text-white text-gray-400 h-7 px-3 text-xs font-medium disabled:opacity-50"
             >
               Pomiń
             </Button>
@@ -110,6 +163,15 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
                     }
                   `}
                   onClick={() => handlePodpietkaClick(podpietka)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault()
+                      handlePodpietkaClick(podpietka)
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Wybierz podpiętkę ${podpietka.name}`}
                 >
                   {/* Obraz */}
                   <div className="relative aspect-square bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] max-h-[120px]">
@@ -206,8 +268,13 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
                 {config.podpietkaColor && (
                   <p className="text-[10px] text-gray-400 mt-0.5">Kolor: {config.podpietkaColor}</p>
                 )}
+                {config.podpietkaMounting && (
+                  <p className="text-[10px] text-gray-400 mt-0.5">
+                    {getPodpietkaMountingLabel(config.podpietkaMounting)}
+                  </p>
+                )}
                 <p className="text-xs text-gray-400 mt-0.5">
-                  {formatPriceCurrency(selectedPodpietka.price)}
+                  {formatPriceCurrency(selectedPodpietkaTotalPrice)}
                 </p>
               </div>
               <Button
@@ -228,8 +295,12 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
         <Button onClick={onPrevious} variant="outline" className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-white/10 hover:bg-white/5 active:scale-95">
           Wstecz
         </Button>
-        <Button onClick={onNext} className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20 active:scale-95">
-          Dalej
+        <Button
+          onClick={onNext}
+          disabled={!canProceedToSummary}
+          className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20 active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
+        >
+          {nextLabel}
         </Button>
       </div>
 
@@ -238,17 +309,19 @@ export function AccessoriesStep({ config, onUpdate, onNext, onPrevious, onProduc
         <AccessoryDetailsSheet
           accessory={selectedAccessory}
           isOpen={isSheetOpen}
-          onClose={() => {
-            setIsSheetOpen(false);
-            setSelectedAccessory(null);
-            onProductModalOpenChange?.(false);
-          }}
+          onClose={handleCloseSheet}
           onAddToConfig={(accessory, color) => {
             handleAddPodpietka(accessory, color);
           }}
         />
       )}
+
+      <PodpietkaMountingModal
+        isOpen={isMountingModalOpen}
+        onClose={handleMountingCancel}
+        onSelect={handleMountingSelect}
+        accessoryName={pendingPodpietka?.accessory.name}
+      />
     </div>
   );
 }
-

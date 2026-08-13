@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { Phone, ChevronRight, ShieldCheck, Droplets, Truck } from "lucide-react";
 import Image from "next/image";
@@ -22,6 +22,8 @@ type HeroSlide = {
   price: string;
   benefits: string[];
   video?: string;
+  videoWebm?: string;
+  videoPoster?: string;
   image?: string;
   /** Opcjonalny baner pionowy poniżej breakpointu md; bez tego używany jest tylko `image`. */
   imageMobile?: string;
@@ -36,9 +38,27 @@ type HeroSlide = {
   };
 };
 
-const heroSlides: HeroSlide[] = [
+const HERO_INTRO_VIDEO_MP4 = "/images/hero/0811.mp4"
+const HERO_INTRO_VIDEO_WEBM = "/images/hero/0811.webm"
+const HERO_INTRO_VIDEO_POSTER = "/images/hero/0811-poster.jpg"
+
+/** Tymczasowo wyłączone — ustaw `true`, aby przywrócić intro video w karuzeli. */
+const HERO_INTRO_VIDEO_ENABLED = false
+
+const allHeroSlides: HeroSlide[] = [
   {
     id: 1,
+    title: "",
+    subtitle: "",
+    video: HERO_INTRO_VIDEO_MP4,
+    videoWebm: HERO_INTRO_VIDEO_WEBM,
+    videoPoster: HERO_INTRO_VIDEO_POSTER,
+    cta: "",
+    price: "",
+    benefits: [],
+  },
+  {
+    id: 2,
     title: "",
     subtitle: "",
     image: HERO_PROMO_IMAGE_SRC,
@@ -53,39 +73,159 @@ const heroSlides: HeroSlide[] = [
       scrollToSectionId: "products",
       embeddedInImage: true,
     },
-  }
+  },
 ]
 
-// Funkcja do wykrywania odpowiedniego formatu video
-const getVideoSource = (baseVideo: string, isMobile: boolean, isHighDpi: boolean) => {
-  if (isMobile) {
-    return baseVideo; // Mobile - użyj standardowego mp4
+const heroSlides = HERO_INTRO_VIDEO_ENABLED
+  ? allHeroSlides
+  : allHeroSlides.filter((slide) => !slide.video)
+
+const HERO_VIDEO_SLIDE_INDEX = heroSlides.findIndex((slide) => Boolean(slide.video))
+const HERO_PROMO_SLIDE_INDEX = heroSlides.findIndex((slide) => slide.isImageSlide)
+const HERO_HAS_CAROUSEL_NAV = heroSlides.length > 1
+const HERO_MOBILE_MEDIA_QUERY = "(max-width: 767px)"
+
+const promoSlide = heroSlides[HERO_PROMO_SLIDE_INDEX] ?? allHeroSlides.find((slide) => slide.isImageSlide)!
+
+const subscribeToMobileMediaQuery = (onStoreChange: () => void) => {
+  const mediaQuery = window.matchMedia(HERO_MOBILE_MEDIA_QUERY)
+  mediaQuery.addEventListener("change", onStoreChange)
+
+  return () => {
+    mediaQuery.removeEventListener("change", onStoreChange)
   }
-  if (isHighDpi && typeof window !== 'undefined' && window.innerWidth >= 1920) {
-    return baseVideo.replace('.mp4', '-4k.mp4'); // 4K dla dużych ekranów
+}
+
+const getIsMobileHero = () => window.matchMedia(HERO_MOBILE_MEDIA_QUERY).matches
+
+type HeroPromoBannerProps = {
+  slide: HeroSlide
+  onScrollToSection: (sectionId: string) => void
+  mobileOnly?: boolean
+  priority?: boolean
+  ctaTestId?: string
+}
+
+const HeroPromoBanner = ({
+  slide,
+  onScrollToSection,
+  mobileOnly = false,
+  priority = true,
+  ctaTestId = "hero-promo-cta-hit-area",
+}: HeroPromoBannerProps) => {
+  if (!slide.image) {
+    return null
   }
-  return baseVideo; // Standardowy format
-};
+
+  return (
+    <>
+      <div className="absolute inset-0 bg-neutral-100">
+        {slide.imageMobile ? (
+          <>
+            <Image
+              src={slide.imageMobile}
+              alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
+              fill
+              className="object-contain object-center md:hidden"
+              priority={priority}
+              sizes={HERO_PROMO_MOBILE_IMAGE_SIZES}
+              {...heroPromoImageProps}
+            />
+            {!mobileOnly ? (
+              <Image
+                src={slide.image}
+                alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
+                fill
+                className="hidden object-contain object-center md:block"
+                priority={priority}
+                sizes={HERO_PROMO_IMAGE_SIZES}
+                {...heroPromoImageProps}
+              />
+            ) : null}
+          </>
+        ) : (
+          <Image
+            src={slide.image}
+            alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
+            fill
+            className="object-contain object-center"
+            priority={priority}
+            sizes={HERO_PROMO_IMAGE_SIZES}
+            {...heroPromoImageProps}
+          />
+        )}
+      </div>
+      {slide.ctaOverlay?.embeddedInImage ? null : (
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.12)_50%,rgba(0,0,0,0.42)_100%)]" />
+      )}
+      {slide.ctaOverlay ? (
+        <div className="pointer-events-none absolute inset-0 z-30">
+          {!slide.imageMobile && !slide.ctaOverlay.embeddedInImage ? (
+            <button
+              type="button"
+              onClick={() => onScrollToSection(slide.ctaOverlay!.scrollToSectionId)}
+              data-testid="hero-promo-cta-button"
+              className="pointer-events-auto absolute bottom-[8%] left-1/2 flex min-h-11 w-[calc(100%-1rem)] max-w-none -translate-x-1/2 items-center gap-2 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-600 to-red-700 px-3.5 py-3 text-left text-xs font-bold leading-snug text-white shadow-xl shadow-red-900/40 transition-all duration-300 hover:scale-[1.02] hover:from-red-500 hover:to-red-600 hover:shadow-2xl hover:shadow-red-600/25 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black sm:bottom-[9%] sm:left-[2%] sm:w-auto sm:max-w-[min(92vw,23rem)] sm:min-h-0 sm:translate-x-0 sm:rounded-2xl sm:px-5 sm:py-4 sm:text-sm sm:leading-tight md:hidden"
+              aria-label={`${slide.ctaOverlay.label} — przewiń do wyboru dywaników`}
+            >
+              <span className="min-w-0 flex-1 leading-tight">{slide.ctaOverlay.label}</span>
+              <ChevronRight className="size-4 shrink-0 sm:size-5" aria-hidden="true" />
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => {
+              if (!slide.ctaOverlay) return
+              onScrollToSection(slide.ctaOverlay.scrollToSectionId)
+            }}
+            data-testid={ctaTestId}
+            className={cn(
+              "pointer-events-auto absolute inset-x-0 bottom-0 z-30 cursor-pointer border-0 bg-transparent p-0",
+              slide.ctaOverlay.embeddedInImage
+                ? "top-[72%] sm:top-[74%] md:top-[76%]"
+                : slide.imageMobile
+                  ? "top-[30%]"
+                  : "top-[42%] hidden md:block"
+            )}
+            aria-label={`${slide.ctaOverlay.label} — przewiń do wyboru dywaników`}
+          />
+        </div>
+      ) : null}
+    </>
+  )
+}
+
+const playHeroVideo = (video: HTMLVideoElement) => {
+  try {
+    // Natywne 1.0 — slow-mo jest w pliku; playbackRate < 1 powoduje szarpanie.
+    video.playbackRate = 1
+    const playPromise = video.play()
+
+    if (playPromise && typeof playPromise.catch === "function") {
+      void playPromise.catch(() => undefined)
+    }
+  } catch {
+    // Autoplay może być zablokowany przez przeglądarkę lub środowisko testowe.
+  }
+}
+
+const pauseHeroVideo = (video: HTMLVideoElement) => {
+  try {
+    video.pause()
+  } catch {
+    // jsdom nie implementuje pause() dla <video>.
+  }
+}
 
 export default function HeroSection() {
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isHighDpi, setIsHighDpi] = useState(false);
-  const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
-
-  // Wykrywanie typu urządzenia
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const checkDevice = () => {
-        setIsMobile(window.innerWidth < 768);
-        setIsHighDpi(window.devicePixelRatio > 1.5);
-      };
-      checkDevice();
-      window.addEventListener('resize', checkDevice);
-      return () => window.removeEventListener('resize', checkDevice);
-    }
-  }, []);
+  const heroVideoRef = useRef<HTMLVideoElement | null>(null)
+  const isMobileHero = useSyncExternalStore(
+    subscribeToMobileMediaQuery,
+    getIsMobileHero,
+    () => false
+  );
 
   const goToSlide = useCallback((index: number) => {
     setCurrentSlide(index);
@@ -113,12 +253,23 @@ export default function HeroSection() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [goToNext, goToPrev]);
 
-  // Autoplay z pauzą przy hover/focus
   useEffect(() => {
-    if (isAutoplayPaused) return
-    const interval = setInterval(goToNext, 6000)
-    return () => clearInterval(interval)
-  }, [currentSlide, isAutoplayPaused, goToNext])
+    if (isMobileHero) {
+      return
+    }
+
+    const video = heroVideoRef.current
+    if (!video) {
+      return
+    }
+
+    if (currentSlide === HERO_VIDEO_SLIDE_INDEX) {
+      playHeroVideo(video)
+      return
+    }
+
+    pauseHeroVideo(video)
+  }, [currentSlide, isMobileHero])
 
   // Określ które slajdy renderować (tylko aktywny + następny dla lazy loading)
   const visibleSlides = useMemo(() => {
@@ -130,14 +281,15 @@ export default function HeroSection() {
     return slides;
   }, [currentSlide]);
 
-  const handlePauseAutoplay = useCallback(() => setIsAutoplayPaused(true), [])
-  const handleResumeAutoplay = useCallback(() => setIsAutoplayPaused(false), [])
-
   const handleScrollToSection = useCallback((sectionId: string) => {
     const el = document.getElementById(sectionId)
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "start" })
     }
+  }, [])
+
+  const handleVideoEnded = useCallback(() => {
+    setCurrentSlide(HERO_PROMO_SLIDE_INDEX)
   }, [])
 
   const heroCarouselFrameClass = heroSlides.some((s) => s.imageMobile)
@@ -148,10 +300,8 @@ export default function HeroSection() {
     <section
       className="relative overflow-visible bg-black pt-[4.5rem] pb-14 max-sm:pb-10 md:overflow-hidden md:pt-0 md:pb-12"
       role="region"
-      aria-roledescription="carousel"
+      aria-roledescription={isMobileHero || !HERO_HAS_CAROUSEL_NAV ? undefined : "carousel"}
       aria-label="Sekcja promocyjna - dywaniki samochodowe"
-      onMouseEnter={handlePauseAutoplay}
-      onMouseLeave={handleResumeAutoplay}
     >
       {/* Phone number - Mobile only */}
       <div className="md:hidden absolute top-3 left-0 right-0 z-30 px-3">
@@ -166,17 +316,35 @@ export default function HeroSection() {
 
       {/* Carousel — wysokość = proporcja oryginalnej rozdzielczości banera */}
       <div className="container relative mx-auto px-2 py-6 sm:px-4 sm:py-8 md:py-8">
+        {isMobileHero ? (
+          <div
+            className={cn(
+              "relative mx-auto w-full max-w-[1234px] overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 sm:rounded-2xl",
+              heroCarouselFrameClass
+            )}
+            data-testid="hero-mobile-static"
+          >
+            <div className="relative h-full w-full">
+              <HeroPromoBanner
+                slide={promoSlide}
+                onScrollToSection={handleScrollToSection}
+                mobileOnly
+                ctaTestId="hero-mobile-promo-cta-hit-area"
+              />
+            </div>
+          </div>
+        ) : (
         <div
           className={cn(
             "relative mx-auto w-full max-w-[1234px] overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 sm:rounded-2xl md:rounded-3xl",
             heroCarouselFrameClass
           )}
+          data-testid="hero-desktop-carousel"
         >
           {heroSlides.map((slide, index) => {
             const isVisible = visibleSlides.includes(index);
             const isActive = index === currentSlide;
             const isImageSlide = slide.isImageSlide ?? false;
-            const videoSource = slide.video ? getVideoSource(slide.video, isMobile, isHighDpi) : null;
 
             if (!isVisible) {
               return null
@@ -190,108 +358,44 @@ export default function HeroSection() {
                 }`}
               >
                 {isImageSlide && slide.image ? (
-                  <>
-                    <div className="absolute inset-0 bg-neutral-100">
-                      {slide.imageMobile ? (
-                        <>
-                          <Image
-                            src={slide.imageMobile}
-                            alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
-                            fill
-                            className="object-contain object-center md:hidden"
-                            priority={index === 0}
-                            sizes={HERO_PROMO_MOBILE_IMAGE_SIZES}
-                            {...heroPromoImageProps}
-                          />
-                          <Image
-                            src={slide.image}
-                            alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
-                            fill
-                            className="hidden object-contain object-center md:block"
-                            priority={index === 0}
-                            sizes={HERO_PROMO_IMAGE_SIZES}
-                            {...heroPromoImageProps}
-                          />
-                        </>
-                      ) : (
-                        <Image
-                          src={slide.image}
-                          alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
-                          fill
-                          className="object-contain object-center"
-                          priority={index === 0}
-                          sizes={HERO_PROMO_IMAGE_SIZES}
-                          {...heroPromoImageProps}
-                        />
-                      )}
-                    </div>
-                    {slide.ctaOverlay?.embeddedInImage ? null : (
-                    <div
-                      className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.12)_50%,rgba(0,0,0,0.42)_100%)]"
-                    />
-                    )}
-                    {slide.ctaOverlay ? (
-                      <div className="pointer-events-none absolute inset-0 z-30">
-                        {!slide.imageMobile && !slide.ctaOverlay.embeddedInImage ? (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (!slide.ctaOverlay) return
-                              handleScrollToSection(slide.ctaOverlay.scrollToSectionId)
-                            }}
-                            data-testid="hero-promo-cta-button"
-                            className="pointer-events-auto absolute bottom-[8%] left-1/2 flex min-h-11 w-[calc(100%-1rem)] max-w-none -translate-x-1/2 items-center gap-2 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-600 to-red-700 px-3.5 py-3 text-left text-xs font-bold leading-snug text-white shadow-xl shadow-red-900/40 transition-all duration-300 hover:scale-[1.02] hover:from-red-500 hover:to-red-600 hover:shadow-2xl hover:shadow-red-600/25 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black sm:bottom-[9%] sm:left-[2%] sm:w-auto sm:max-w-[min(92vw,23rem)] sm:min-h-0 sm:translate-x-0 sm:rounded-2xl sm:px-5 sm:py-4 sm:text-sm sm:leading-tight md:hidden"
-                            aria-label={`${slide.ctaOverlay.label} — przewiń do wyboru dywaników`}
-                          >
-                            <span className="min-w-0 flex-1 leading-tight">{slide.ctaOverlay.label}</span>
-                            <ChevronRight className="size-4 shrink-0 sm:size-5" aria-hidden="true" />
-                          </button>
-                        ) : null}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (!slide.ctaOverlay) return
-                            handleScrollToSection(slide.ctaOverlay.scrollToSectionId)
-                          }}
-                          data-testid="hero-promo-cta-hit-area"
-                          className={cn(
-                            "pointer-events-auto absolute inset-x-0 bottom-0 z-30 cursor-pointer border-0 bg-transparent p-0",
-                            slide.ctaOverlay.embeddedInImage
-                              ? "top-[72%] sm:top-[74%] md:top-[76%]"
-                              : slide.imageMobile
-                                ? "top-[30%]"
-                                : "top-[42%] hidden md:block"
-                          )}
-                          aria-label={`${slide.ctaOverlay.label} — przewiń do wyboru dywaników`}
-                        />
-                      </div>
-                    ) : null}
-                  </>
+                  <HeroPromoBanner
+                    slide={slide}
+                    onScrollToSection={handleScrollToSection}
+                    priority={index === 0}
+                  />
                 ) : (
                   <>
                     <video
+                      ref={index === HERO_VIDEO_SLIDE_INDEX ? heroVideoRef : undefined}
                       autoPlay={isActive}
-                      loop
                       muted
                       playsInline
-                      preload={index === 0 ? "auto" : "metadata"}
-                      poster="/images/hero/video-poster.jpg"
-                      className="absolute inset-0 h-full w-full object-cover object-center"
-                      style={{
-                        objectPosition: "center center",
-                        filter: "brightness(1.2) contrast(1.1)",
-                      }}
-                      onLoadedData={(e) => {
-                        const videoEl = e.target as HTMLVideoElement
-                        videoEl.playbackRate = 0.8
+                      preload="auto"
+                      poster={slide.videoPoster}
+                      disablePictureInPicture
+                      controlsList="nodownload nofullscreen noremoteplayback"
+                      data-hero-slide-video
+                      data-hero-slide-index={index}
+                      data-testid={`hero-video-${slide.id}`}
+                      className="absolute inset-0 h-full w-full object-cover object-center transform-gpu will-change-transform [backface-visibility:hidden]"
+                      onEnded={index === HERO_VIDEO_SLIDE_INDEX ? handleVideoEnded : undefined}
+                      onCanPlay={(e) => {
+                        const videoEl = e.currentTarget
+                        if (index === currentSlide) {
+                          playHeroVideo(videoEl)
+                        }
                       }}
                     >
-                      {videoSource && <source src={videoSource} type="video/mp4" />}
-                      {!isMobile && slide.video && <source src="/images/hero/video.webm" type="video/webm" />}
+                      {slide.videoWebm ? (
+                        <source src={slide.videoWebm} type="video/webm" />
+                      ) : null}
+                      {slide.video ? (
+                        <source src={slide.video} type="video/mp4" />
+                      ) : null}
                       Your browser does not support the video tag.
                     </video>
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.2)_50%,rgba(0,0,0,0.5)_100%)]" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/15" />
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.12)_50%,rgba(0,0,0,0.35)_100%)]" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
                   </>
                 )}
 
@@ -387,55 +491,60 @@ export default function HeroSection() {
             )
           })}
 
-          <button
-            type="button"
-            onClick={goToPrev}
-            className="group absolute left-2 top-1/2 z-20 flex min-h-[44px] min-w-[44px] -translate-y-1/2 items-center justify-center rounded-full p-2.5 glass-button hover:bg-white/20 md:left-4 md:p-3"
-            aria-label="Poprzedni slajd"
-          >
-            <svg className="h-5 w-5 text-white transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            onClick={goToNext}
-            className="group absolute right-2 top-1/2 z-20 flex min-h-[44px] min-w-[44px] -translate-y-1/2 items-center justify-center rounded-full p-2.5 glass-button hover:bg-white/20 md:right-4 md:p-3"
-            aria-label="Następny slajd"
-          >
-            <svg className="h-5 w-5 text-white transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-
-          <div
-            className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 md:bottom-4"
-            role="tablist"
-            aria-label="Nawigacja slajdów"
-          >
-            {heroSlides.map((_, index) => (
+          {HERO_HAS_CAROUSEL_NAV ? (
+            <>
               <button
-                key={index}
                 type="button"
-                onClick={() => goToSlide(index)}
-                className="relative -m-3 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full p-3 hover:bg-white/5"
-                aria-label={`Przejdź do slajdu ${index + 1}`}
-                aria-selected={index === currentSlide}
-                role="tab"
+                onClick={goToPrev}
+                className="group absolute left-2 top-1/2 z-20 flex min-h-[44px] min-w-[44px] -translate-y-1/2 items-center justify-center rounded-full p-2.5 glass-button hover:bg-white/20 md:left-4 md:p-3"
+                aria-label="Poprzedni slajd"
               >
-                <span
-                  className={`block h-1.5 rounded-full transition-all duration-500 ${
-                    index === currentSlide ? "w-8 bg-white" : "w-2 bg-white/30 hover:bg-white/50"
-                  }`}
-                />
+                <svg className="h-5 w-5 text-white transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
               </button>
-            ))}
-            <span className="sr-only" aria-live="polite">
-              Slajd {currentSlide + 1} z {heroSlides.length}
-            </span>
-          </div>
+
+              <button
+                type="button"
+                onClick={goToNext}
+                className="group absolute right-2 top-1/2 z-20 flex min-h-[44px] min-w-[44px] -translate-y-1/2 items-center justify-center rounded-full p-2.5 glass-button hover:bg-white/20 md:right-4 md:p-3"
+                aria-label="Następny slajd"
+              >
+                <svg className="h-5 w-5 text-white transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              <div
+                className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 md:bottom-4"
+                role="tablist"
+                aria-label="Nawigacja slajdów"
+              >
+                {heroSlides.map((_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => goToSlide(index)}
+                    className="relative -m-3 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full p-3 hover:bg-white/5"
+                    aria-label={`Przejdź do slajdu ${index + 1}`}
+                    aria-selected={index === currentSlide}
+                    role="tab"
+                  >
+                    <span
+                      className={`block h-1.5 rounded-full transition-all duration-500 ${
+                        index === currentSlide ? "w-8 bg-white" : "w-2 bg-white/30 hover:bg-white/50"
+                      }`}
+                    />
+                  </button>
+                ))}
+                <span className="sr-only" aria-live="polite">
+                  Slajd {currentSlide + 1} z {heroSlides.length}
+                </span>
+              </div>
+            </>
+          ) : null}
         </div>
+        )}
       </div>
     </section>
   );

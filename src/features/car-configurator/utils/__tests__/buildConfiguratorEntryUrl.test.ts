@@ -20,4 +20,18 @@ describe("buildConfiguratorEntryUrl", () => {
   it("supports brand-only entry", () => {
     expect(buildConfiguratorEntryUrl({ brand: "Audi" })).toBe("/konfigurator?brand=audi")
   })
+
+  it("includes previewImage when provided", () => {
+    const url = buildConfiguratorEntryUrl({
+      brand: "Opel",
+      model: "mokka",
+      generation: "2012-2020",
+      bodyType: "suv",
+      previewImage: "/dywaniki/previews/opel-mokka-1-gen.png",
+    })
+
+    expect(url).toContain(
+      "previewImage=%2Fdywaniki%2Fpreviews%2Fopel-mokka-1-gen.png",
+    )
+  })
 })

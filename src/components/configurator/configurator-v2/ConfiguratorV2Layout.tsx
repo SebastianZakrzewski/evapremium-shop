@@ -1,7 +1,11 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { CONFIGURATOR_V2_MOBILE_CONTENT_PT } from "./configuratorV2MobileLayout"
+import {
+  CONFIGURATOR_V2_MOBILE_CONTENT_PT,
+  CONFIGURATOR_V2_MOBILE_CONTENT_PT_WITH_GALLERY,
+  CONFIGURATOR_V2_MOBILE_MAIN_PB,
+} from "./configuratorV2MobileLayout"
 
 type ConfiguratorV2LayoutProps = {
   specsBar: ReactNode
@@ -10,6 +14,8 @@ type ConfiguratorV2LayoutProps = {
   stickyBarDesktop: ReactNode
   stickyBarMobile: ReactNode
   mobilePreview?: ReactNode
+  mobilePreviewHasGallery?: boolean
+  hideMobileStickyBar?: boolean
   modals?: ReactNode
 }
 
@@ -24,11 +30,13 @@ export const ConfiguratorV2Layout = ({
   stickyBarDesktop,
   stickyBarMobile,
   mobilePreview,
+  mobilePreviewHasGallery = false,
+  hideMobileStickyBar = false,
   modals,
 }: ConfiguratorV2LayoutProps) => (
   <div
-    className="min-h-screen bg-black text-white flex flex-col
-      lg:h-[calc(100dvh-6rem)] lg:max-h-[calc(100dvh-6rem)] lg:overflow-hidden"
+    className="h-[100dvh] max-h-[100dvh] min-h-0 bg-black text-white flex flex-col overflow-hidden
+      lg:h-[calc(100dvh-6rem)] lg:max-h-[calc(100dvh-6rem)]"
   >
     {mobilePreview && (
       <div
@@ -54,22 +62,32 @@ export const ConfiguratorV2Layout = ({
 
         <main
           className={`flex-1 overflow-y-auto overscroll-contain
-            px-4 py-5 lg:px-6 xl:px-10 lg:py-6 pb-28 lg:pb-4
-            ${CONFIGURATOR_V2_MOBILE_CONTENT_PT} lg:pt-6`}
+            px-4 py-3 lg:px-6 xl:px-10 lg:py-6 ${CONFIGURATOR_V2_MOBILE_MAIN_PB} lg:pb-4
+            ${
+              mobilePreviewHasGallery
+                ? CONFIGURATOR_V2_MOBILE_CONTENT_PT_WITH_GALLERY
+                : CONFIGURATOR_V2_MOBILE_CONTENT_PT
+            } lg:pt-6`}
         >
-          <div className="lg:hidden mb-5 pb-4 border-b border-white/10">
+          <div className="lg:hidden mb-3 pb-3 border-b border-white/10">
             {specsBar}
           </div>
           {optionPanel}
         </main>
 
-        <div className="hidden lg:block shrink-0 border-t border-white/10 bg-black/95 backdrop-blur-md">
+        <div className="hidden lg:block shrink-0 sticky bottom-0 z-20 border-t border-white/10 bg-black/95 backdrop-blur-md">
           {stickyBarDesktop}
         </div>
       </div>
     </div>
 
-    <div className="lg:hidden">{stickyBarMobile}</div>
+    <div
+      className={`lg:hidden fixed bottom-0 left-0 right-0 z-40 pb-safe ${
+        hideMobileStickyBar ? "hidden" : ""
+      }`}
+    >
+      {stickyBarMobile}
+    </div>
 
     {modals}
   </div>

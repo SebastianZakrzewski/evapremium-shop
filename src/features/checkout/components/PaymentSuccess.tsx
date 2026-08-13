@@ -11,6 +11,8 @@ import Link from 'next/link';
 import { useTracking, createPurchaseData } from '@/lib/tracking';
 import { useOrder } from '@/features/orders/hooks/useOrder';
 import { formatPricePln, formatPriceValue } from '@/lib/utils/formatPrice';
+import { isPaynowCheckoutEnabled } from '@/lib/config/payment-provider';
+import { OrderItemConfigurationSummary } from './OrderItemConfigurationSummary';
 
 interface PaymentStatus {
   status: 'pending' | 'paid' | 'failed' | 'cancelled' | 'refunded';
@@ -64,6 +66,8 @@ export function PaymentSuccess() {
   const orderId = searchParams.get('orderId');
   const sessionId = searchParams.get('sessionId');
   const p24SessionId = searchParams.get('p24_session_id'); // Parametr z Przelewy24
+  const paynowPaymentId = searchParams.get('paymentId');
+  const paynowPaymentStatus = searchParams.get('paymentStatus');
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -91,7 +95,37 @@ export function PaymentSuccess() {
     }
 
     checkPaymentStatus(identifier);
-  }, [orderId, sessionId, p24SessionId]);
+  }, [orderId, sessionId, p24SessionId, paynowPaymentId, paynowPaymentStatus]);
+
+  const pollPaynowStatus = async (resolvedOrderId: string) => {
+    try {
+      const response = await fetch(`/api/payments/paynow/status?orderId=${resolvedOrderId}`);
+      if (!response.ok) {
+        return null;
+      }
+      const data = await response.json();
+      return data.payment as { status?: string; providerStatus?: string } | undefined;
+    } catch {
+      return null;
+    }
+  };
+
+  const refreshOrderPaymentStatus = async (resolvedOrderId: string) => {
+    const order = await getOrder(resolvedOrderId);
+    if (!order) {
+      return;
+    }
+
+    setPaymentStatus((prev) => ({
+      ...prev,
+      status: (order.paymentStatus as PaymentStatus['status']) || prev?.status || 'pending',
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      paymentMethod: order.paymentMethod,
+      orderStatus: order.status,
+      paymentStatus: order.paymentStatus,
+    }));
+  };
 
   const checkPaymentStatus = async (identifier: string) => {
     try {
@@ -162,6 +196,17 @@ export function PaymentSuccess() {
           items: order.items || []
         });
 
+        if (
+          isPaynowCheckoutEnabled() &&
+          order.paymentStatus === 'pending' &&
+          (order.paymentMethod === 'paynow' || paynowPaymentId || paynowPaymentStatus)
+        ) {
+          const paynowStatus = await pollPaynowStatus(order.id);
+          if (paynowStatus?.status === 'paid' || paynowStatus?.providerStatus === 'CONFIRMED') {
+            await refreshOrderPaymentStatus(order.id);
+          }
+        }
+
         // Track Purchase gdy płatność jest opłacona
         if (order.paymentStatus === 'paid' && order.items && order.items.length > 0) {
           try {
@@ -170,7 +215,7 @@ export function PaymentSuccess() {
             const cached = localStorage.getItem(cacheKey);
             
             if (!cached) {
-              const transactionId = order.p24OrderId || order.id;
+              const transactionId = order.p24OrderId || paynowPaymentId || order.id;
               const purchaseData = createPurchase(
                 order.items,
                 order.orderNumber,
@@ -205,6 +250,7 @@ export function PaymentSuccess() {
       'transfer': 'Przelew bankowy',
       'blik': 'BLIK',
       'przelewy24': 'Przelewy24',
+      'paynow': 'Paynow (mBank)',
       'cash': 'Gotówka',
     };
     return labels[method.toLowerCase()] || method;
@@ -468,7 +514,7 @@ export function PaymentSuccess() {
                       </p>
                       <Button 
                         onClick={() => {
-                          const identifier = orderId || sessionId || p24SessionId || (typeof window !== 'undefined' ? sessionStorage.getItem('pending_order_id') : null);
+                          const identifier = orderId || sessionId || p24SessionId || paynowPaymentId || (typeof window !== 'undefined' ? sessionStorage.getItem('pending_order_id') : null);
                           if (identifier) {
                             checkPaymentStatus(identifier);
                           }
@@ -708,12 +754,11 @@ export function PaymentSuccess() {
                         <div key={item.id || index} className="bg-white/5 rounded-lg p-3">
                           <div className="flex justify-between items-start mb-2">
                             <div className="flex-1">
-                              <span className="text-white font-medium">{item.productName || 'Produkt'}</span>
-                              {item.productType && (
-                                <span className="text-white/50 text-xs ml-2">
-                                  ({item.productType === 'mat' ? 'Dywanik' : 'Akcesoria'})
-                                </span>
-                              )}
+                              <span className="text-white font-medium">
+                                {item.productType === 'mat'
+                                  ? 'Dywaniki samochodowe'
+                                  : item.productName || 'Produkt'}
+                              </span>
                             </div>
                             <span className="text-white font-semibold ml-2">
                               {item.subtotal !== undefined 
@@ -731,12 +776,10 @@ export function PaymentSuccess() {
                               <span>Cena jednostkowa: {formatPricePln(item.unitPrice)}</span>
                             )}
                           </div>
-                          {item.configuration && Object.keys(item.configuration).length > 0 && (
-                            <div className="mt-2 pt-2 border-t border-white/10 text-xs text-white/60">
-                              <span className="font-medium">Konfiguracja: </span>
-                              <span>{JSON.stringify(item.configuration)}</span>
-                            </div>
-                          )}
+                          <OrderItemConfigurationSummary
+                            configuration={item.configuration}
+                            compact
+                          />
                         </div>
                       ))}
                     </div>

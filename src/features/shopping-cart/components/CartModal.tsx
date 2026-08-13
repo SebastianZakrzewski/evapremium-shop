@@ -222,14 +222,14 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
       {/* Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/70 z-50 transition-opacity duration-300"
+          className="fixed inset-0 bg-black/70 z-[100] transition-opacity duration-300"
           onClick={onClose}
         />
       )}
       
       {/* Modal */}
       <div 
-        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-black border-l border-white/5 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-black border-l border-white/5 shadow-2xl z-[100] transform transition-transform duration-300 ease-in-out flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

@@ -11,6 +11,7 @@ type PriceBreakdownModalProps = {
   priceBreakdown: PriceBreakdown
   accessoryPrice?: number
   accessoryName?: string
+  accessoryMountingFee?: number
 }
 
 export const PriceBreakdownModal = ({
@@ -19,6 +20,7 @@ export const PriceBreakdownModal = ({
   priceBreakdown,
   accessoryPrice = 0,
   accessoryName,
+  accessoryMountingFee = 0,
 }: PriceBreakdownModalProps) => {
   useEffect(() => {
     if (!isOpen) return
@@ -31,6 +33,7 @@ export const PriceBreakdownModal = ({
 
   if (!isOpen) return null
 
+  const accessoryBasePrice = Math.max(0, accessoryPrice - accessoryMountingFee)
   const total = priceBreakdown.totalPrice + accessoryPrice
 
   return (
@@ -62,7 +65,7 @@ export const PriceBreakdownModal = ({
         <dl className="space-y-3 text-sm">
           <div className="flex justify-between">
             <dt className="text-gray-400">Cena bazowa</dt>
-            <dd className="text-white">{formatPricePln(priceBreakdown.basePrice)}</dd>
+            <dd className="text-green-400">{formatPricePln(priceBreakdown.basePrice)}</dd>
           </div>
           {priceBreakdown.discount > 0 && (
             <div className="flex justify-between">
@@ -74,17 +77,23 @@ export const PriceBreakdownModal = ({
           )}
           <div className="flex justify-between">
             <dt className="text-gray-400">Dywaniki</dt>
-            <dd className="text-white">{formatPricePln(priceBreakdown.totalPrice)}</dd>
+            <dd className="text-green-400">{formatPricePln(priceBreakdown.totalPrice)}</dd>
           </div>
-          {accessoryPrice > 0 && (
+          {accessoryBasePrice > 0 && (
             <div className="flex justify-between">
               <dt className="text-gray-400">{accessoryName || "Akcesoria"}</dt>
-              <dd className="text-white">{formatPricePln(accessoryPrice)}</dd>
+              <dd className="text-green-400">{formatPricePln(accessoryBasePrice)}</dd>
+            </div>
+          )}
+          {accessoryMountingFee > 0 && (
+            <div className="flex justify-between">
+              <dt className="text-gray-400">Montaż podpiętki</dt>
+              <dd className="text-green-400">{formatPricePln(accessoryMountingFee)}</dd>
             </div>
           )}
           <div className="flex justify-between pt-3 border-t border-white/10 font-semibold">
             <dt className="text-white">Razem</dt>
-            <dd className="text-white text-lg">{formatPricePln(total)}</dd>
+            <dd className="text-green-400 text-lg">{formatPricePln(total)}</dd>
           </div>
         </dl>
       </div>
