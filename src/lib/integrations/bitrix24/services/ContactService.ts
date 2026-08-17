@@ -191,7 +191,7 @@ export class ContactService {
 
     } catch (error) {
       console.error('❌ Failed to find contact by email:', error);
-      return null;
+      throw error;
     }
   }
 
@@ -235,7 +235,7 @@ export class ContactService {
 
     } catch (error) {
       console.error('❌ Failed to find contact by phone:', error);
-      return null;
+      throw error;
     }
   }
 
@@ -410,7 +410,7 @@ export class ContactService {
 
     } catch (error) {
       console.error('❌ Failed to get contact:', error);
-      return null;
+      throw error;
     }
   }
 
