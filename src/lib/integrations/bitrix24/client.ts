@@ -142,7 +142,7 @@ export class Bitrix24Client {
         resultType: typeof data.result,
         result: data.result  // Pełna odpowiedź
       });
-      return data;
+      return data as Bitrix24ApiResponse<T>;
 
     } catch (error) {
       console.error(`❌ Bitrix24 API Error (attempt ${attempt}):`, error);
