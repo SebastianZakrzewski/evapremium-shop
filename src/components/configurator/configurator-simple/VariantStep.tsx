@@ -39,6 +39,7 @@ export const VariantStep = ({
           variant.key,
           pricingCategoryKey,
           bodyTypeKey,
+          { offeredVariantKeys: pricingVariants.map((item) => item.key) },
         )
         return (
           <VariantOptionCard

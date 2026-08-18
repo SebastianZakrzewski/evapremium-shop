@@ -35,10 +35,12 @@ export class Bitrix24Client {
   }
 
   /**
-   * Make a GET request to Bitrix24 API
+   * Call a Bitrix REST method.
+   * Always POST JSON — GET with JSON-stringified `filter`/`select` returns
+   * HTTP 400 "Parameter 'filter' must be array".
    */
   async get<T = any>(method: string, params: Record<string, any> = {}): Promise<Bitrix24ApiResponse<T>> {
-    return this.makeRequest('GET', method, params);
+    return this.makeRequest('POST', method, params);
   }
 
   /**
@@ -68,7 +70,7 @@ export class Bitrix24Client {
    * Make HTTP request with retry logic and rate limiting
    */
   private async makeRequest<T = any>(
-    method: 'GET' | 'POST',
+    _method: 'GET' | 'POST',
     apiMethod: string,
     data: Record<string, any> = {}
   ): Promise<Bitrix24ApiResponse<T>> {
@@ -83,30 +85,14 @@ export class Bitrix24Client {
     await this.enforceRateLimit();
 
     const requestOptions: RequestInit = {
-      method,
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'EVA-Website-Bitrix24-Integration/1.0',
       },
       signal: AbortSignal.timeout(this.options.timeout!),
+      body: JSON.stringify(data ?? {}),
     };
-
-    if (method === 'POST') {
-      requestOptions.body = JSON.stringify(data);
-    } else if (Object.keys(data).length > 0) {
-      const searchParams = new URLSearchParams();
-      Object.entries(data).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          // Serializuj obiekty i tablice jako JSON
-          const serializedValue = typeof value === 'object' 
-            ? JSON.stringify(value) 
-            : String(value);
-          searchParams.append(key, serializedValue);
-        }
-      });
-      const urlWithParams = `${url}?${searchParams.toString()}`;
-      return this.executeRequest<T>(urlWithParams, requestOptions);
-    }
 
     return this.executeRequest<T>(url, requestOptions);
   }
@@ -120,17 +106,33 @@ export class Bitrix24Client {
     attempt = 1
   ): Promise<Bitrix24ApiResponse<T>> {
     try {
-      console.log(`🔄 Bitrix24 API Request (attempt ${attempt}):`, { url, method: options.method });
+      console.log(`🔄 Bitrix24 API Request (attempt ${attempt}):`, {
+        apiPath: new URL(url).pathname.replace(/\/rest\/\d+\/[^/]+/, '/rest/***'),
+        method: options.method,
+      });
       
       const response = await fetch(url, options);
-      const data = await response.json();
+      const data = (await response.json().catch(() => ({}))) as {
+        result?: unknown
+        error?: string | { error?: string; error_description?: string }
+        error_description?: string
+      }
+      const errorDescription =
+        data.error_description ||
+        (typeof data.error === 'object' && data.error ? data.error.error_description : undefined)
+      const errorCode =
+        typeof data.error === 'string'
+          ? data.error
+          : data.error && typeof data.error === 'object'
+            ? data.error.error
+            : undefined
+
+      if (errorCode || errorDescription) {
+        throw new Error(`Bitrix24 API Error: ${errorDescription || errorCode}`)
+      }
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      if (data.error) {
-        throw new Error(`Bitrix24 API Error: ${data.error.error_description || data.error.error}`);
       }
 
       console.log(`✅ Bitrix24 API Response:`, { 
@@ -140,7 +142,7 @@ export class Bitrix24Client {
         resultType: typeof data.result,
         result: data.result  // Pełna odpowiedź
       });
-      return data;
+      return data as Bitrix24ApiResponse<T>;
 
     } catch (error) {
       console.error(`❌ Bitrix24 API Error (attempt ${attempt}):`, error);
@@ -172,14 +174,28 @@ export class Bitrix24Client {
       return true;
     }
 
-    // Retry on rate limit (429) or server errors (5xx)
-    if (error.message?.includes('429') || error.message?.includes('5')) {
+    const message = String(error.message || '');
+    if (message.includes('insufficient_scope')) {
+      return false;
+    }
+
+    const httpStatusMatch = message.match(/HTTP (\d{3})/);
+    const httpStatus = httpStatusMatch ? Number(httpStatusMatch[1]) : null;
+
+    // 403 is the production WAF/gateway block we saw on paid sync.
+    // 401 without insufficient_scope is often the same class of gateway rejection.
+    if (httpStatus === 429 || httpStatus === 403 || httpStatus === 401) {
       return true;
     }
 
-    // Retry on specific Bitrix24 errors
-    if (error.message?.includes('QUERY_LIMIT_EXCEEDED') || 
-        error.message?.includes('INTERNAL_SERVER_ERROR')) {
+    if (httpStatus !== null && httpStatus >= 500) {
+      return true;
+    }
+
+    if (
+      message.includes('QUERY_LIMIT_EXCEEDED') ||
+      message.includes('INTERNAL_SERVER_ERROR')
+    ) {
       return true;
     }
 
@@ -227,10 +243,14 @@ export class Bitrix24Client {
    */
   async testConnection(): Promise<{ success: boolean; error?: string; data?: any }> {
     try {
-      const response = await this.get('user.current');
+      // Incoming webhooks often lack `user` scope; CRM list is the real shop check.
+      const response = await this.post('crm.deal.list', {
+        select: ['ID'],
+        start: 0,
+      });
       return {
         success: true,
-        data: response.result
+        data: { dealsReturned: Array.isArray(response.result) ? response.result.length : 0 },
       };
     } catch (error) {
       return {

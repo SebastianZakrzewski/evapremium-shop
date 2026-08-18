@@ -17,6 +17,7 @@ type MatTypeVariantStepProps = {
   pricingCategoryKey?: string
   bodyTypeKey?: string
   skipMatTypeStep?: boolean
+  availableMatTypes?: Array<"3d-with-rims" | "classic" | "single">
   onUpdate: (updates: {
     matType?: "3d-with-rims" | "classic" | "single"
     variant?: string
@@ -49,11 +50,15 @@ export function MatTypeVariantStep({
   pricingCategoryKey,
   bodyTypeKey,
   skipMatTypeStep = false,
+  availableMatTypes,
   onUpdate,
   onNext,
   onPrevious,
   priceBreakdown,
 }: MatTypeVariantStepProps) {
+  const visibleMatTypes = matTypes.filter(
+    (type) => !availableMatTypes?.length || availableMatTypes.includes(type.id),
+  )
   const canProceed = Boolean(
     (skipMatTypeStep || config.matType) && config.variant,
   )
@@ -64,7 +69,7 @@ export function MatTypeVariantStep({
         <div>
           <h3 className="mb-1.5 text-sm font-semibold text-white">Typ dywaników</h3>
           <div className="grid grid-cols-1 items-stretch gap-2 md:grid-cols-2 md:gap-3">
-            {matTypes.map((type) => (
+            {visibleMatTypes.map((type) => (
               <Card
                 key={type.id}
                 onClick={() => onUpdate({ matType: type.id, variant: "" })}
@@ -103,6 +108,7 @@ export function MatTypeVariantStep({
                 variant.key,
                 pricingCategoryKey,
                 bodyTypeKey,
+                { offeredVariantKeys: pricingVariants.map((item) => item.key) },
               )
               return (
                 <VariantOptionCard

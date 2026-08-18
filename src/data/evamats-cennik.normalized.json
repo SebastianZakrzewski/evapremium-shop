@@ -373,8 +373,10 @@
             }
           },
           "rims_3d": {
-            "base_price_pln": null,
-            "after_discount": null
+            "base_price_pln": 350,
+            "after_discount": {
+              "price_after_discount_pln": 280
+            }
           }
         },
         {
@@ -1155,8 +1157,10 @@
             }
           },
           "rims_3d": {
-            "base_price_pln": null,
-            "after_discount": null
+            "base_price_pln": 690,
+            "after_discount": {
+              "price_after_discount_pln": 552
+            }
           }
         },
         {

@@ -5,11 +5,21 @@ export const CONFIGURATOR_DUAL_MAT_VARIANT_KEYS = [
   "complete",
 ] as const
 
+/** Osobowe dual: zestawy bazowe (faza C), bez 3. rzędu */
+export const CONFIGURATOR_PASSENGER_BASE_VARIANT_KEYS = [
+  "driver_mat",
+  "front",
+  "rear_only",
+  "basic",
+  "premium",
+  "complete",
+] as const
+
 /**
- * Extra set variants for MINIVAN body type priced on the passenger_car table
+ * Extra set variants when seat_rows = 3 on passenger_car pricing
  * (cennik osobowe: row_3, row_3_*_trunk_*, front_rear_two_trunks).
  */
-export const CONFIGURATOR_PASSENGER_PRICED_MINIVAN_VARIANT_KEYS = [
+export const CONFIGURATOR_PASSENGER_3_ROW_VARIANT_KEYS = [
   "row_3",
   "row_3_small_trunk_unfolded",
   "row_3_large_trunk_folded",
@@ -17,10 +27,18 @@ export const CONFIGURATOR_PASSENGER_PRICED_MINIVAN_VARIANT_KEYS = [
   "front_rear_two_trunks",
 ] as const
 
+/** @deprecated use CONFIGURATOR_PASSENGER_3_ROW_VARIANT_KEYS */
+export const CONFIGURATOR_PASSENGER_PRICED_MINIVAN_VARIANT_KEYS =
+  CONFIGURATOR_PASSENGER_3_ROW_VARIANT_KEYS
+
 export const CONFIGURATOR_PASSENGER_PRICED_MINIVAN_SET_VARIANT_KEYS = [
   ...CONFIGURATOR_DUAL_MAT_VARIANT_KEYS,
-  ...CONFIGURATOR_PASSENGER_PRICED_MINIVAN_VARIANT_KEYS,
+  ...CONFIGURATOR_PASSENGER_3_ROW_VARIANT_KEYS,
 ] as const
+
+export type SellableVariantOffer = {
+  seatRows?: number | null
+}
 
 export const isMinivanBodyTypeKey = (bodyTypeKey?: string): boolean =>
   !!bodyTypeKey && bodyTypeKey.toLowerCase().includes("minivan")
@@ -41,10 +59,24 @@ export const CONFIGURATOR_MINIVAN_VARIANT_KEYS = [
 /** evamats.pl bus / van product pages (e.g. Vito) */
 export const CONFIGURATOR_BUS_VARIANT_KEYS = [
   "driver_mat",
+  "row_1",
   "row_2",
   "row_3",
   "row_3_trunk",
+  "trunk_mat_large",
 ] as const
+
+const VARIANT_MIN_SEAT_ROWS: Record<string, number> = {
+  row_2: 2,
+  row_2_small_trunk_unfolded: 2,
+  row_2_large_trunk_folded: 2,
+  row_3: 3,
+  row_3_small_trunk_unfolded: 3,
+  row_3_large_trunk_folded: 3,
+  row_3_two_trunks: 3,
+  row_3_trunk: 3,
+  front_rear_two_trunks: 3,
+}
 
 export type ConfiguratorSetVariantKey =
   (typeof CONFIGURATOR_DUAL_MAT_VARIANT_KEYS)[number]
@@ -62,26 +94,48 @@ const filterByAllowlist = (
   return allowlist.filter((key) => available.has(key))
 }
 
+const filterBySeatRows = (
+  keys: string[],
+  seatRows?: number | null,
+): string[] => {
+  if (seatRows == null) return keys
+  return keys.filter((key) => {
+    const required = VARIANT_MIN_SEAT_ROWS[key]
+    if (required == null) return true
+    return seatRows >= required
+  })
+}
+
 export const filterSellableVariantKeys = (
   keys: string[],
   pricingModel: string,
   categorySlug?: string,
-  bodyTypeKey?: string,
+  _bodyTypeKey?: string,
+  offer?: SellableVariantOffer,
 ): string[] => {
   if (pricingModel === "dual_mat_type") {
-    if (isMinivanBodyTypeKey(bodyTypeKey)) {
-      return filterByAllowlist(
-        keys,
-        CONFIGURATOR_PASSENGER_PRICED_MINIVAN_SET_VARIANT_KEYS,
-      )
+    if (categorySlug === "pickup") {
+      return filterByAllowlist(keys, CONFIGURATOR_DUAL_MAT_VARIANT_KEYS)
     }
-    return filterByAllowlist(keys, CONFIGURATOR_DUAL_MAT_VARIANT_KEYS)
+
+    const base = filterByAllowlist(keys, CONFIGURATOR_PASSENGER_BASE_VARIANT_KEYS)
+    if (offer?.seatRows !== 3) return base
+    return [
+      ...base,
+      ...filterByAllowlist(keys, CONFIGURATOR_PASSENGER_3_ROW_VARIANT_KEYS),
+    ]
   }
   if (categorySlug === "minivan") {
-    return filterByAllowlist(keys, CONFIGURATOR_MINIVAN_VARIANT_KEYS)
+    return filterBySeatRows(
+      filterByAllowlist(keys, CONFIGURATOR_MINIVAN_VARIANT_KEYS),
+      offer?.seatRows,
+    )
   }
   if (categorySlug === "bus") {
-    return filterByAllowlist(keys, CONFIGURATOR_BUS_VARIANT_KEYS)
+    return filterBySeatRows(
+      filterByAllowlist(keys, CONFIGURATOR_BUS_VARIANT_KEYS),
+      offer?.seatRows,
+    )
   }
   return keys
 }

@@ -109,6 +109,7 @@ const TEMPLATE_SELECT = [
   "body_type_3_key",
   "body_type_variants",
   "dealer_pricing_category_key",
+  "seat_rows",
 ].join(",")
 
 const fetchTemplates = async (): Promise<MatTemplateDbRow[]> => {
@@ -552,6 +553,8 @@ const verifyPricingVariants = (
     variantKeys,
     bundle.category.pricing_model,
     bundle.category.slug,
+    undefined,
+    { seatRows: row.seat_rows },
   )
 
   const matrixVariantIds = new Set(bundle.matrices.map((entry) => entry.variant_id))

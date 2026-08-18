@@ -48,6 +48,7 @@ type TemplateRow = {
   body_type_2_key: string | null
   body_type_3_key: string | null
   dealer_pricing_category_key: string
+  seat_rows: number | null
 }
 
 type CatalogBrand = { key: string; name: string }
@@ -123,7 +124,7 @@ const fetchAllTemplates = async (): Promise<TemplateRow[]> => {
     const { data, error } = await supabase
       .from("mat_templates")
       .select(
-        "id,brand_name,brand_key,model_name,model_key,model_family_name,model_family_key,generation,year_from,year_to,record_key,body_type,body_type_1,body_type_1_key,body_type_2_key,body_type_3_key,dealer_pricing_category_key",
+        "id,brand_name,brand_key,model_name,model_key,model_family_name,model_family_key,generation,year_from,year_to,record_key,body_type,body_type_1,body_type_1_key,body_type_2_key,body_type_3_key,dealer_pricing_category_key,seat_rows",
       )
       .eq("is_active", true)
       .in("dealer_pricing_category_key", [...SELLABLE_PRICING_CATEGORIES])
@@ -559,6 +560,8 @@ const simulateTemplatePricing = (
     [...new Set([...categoryVariantKeys, ...overrideVariantKeys])],
     bundle.category.pricing_model,
     bundle.category.slug,
+    undefined,
+    { seatRows: template.seat_rows },
   )
 
   const allowlist =
@@ -927,6 +930,8 @@ const main = async () => {
               minivanBundle.variants.map((variant) => variant.variant_key),
               minivanBundle.category.pricing_model,
               "minivan",
+              undefined,
+              { seatRows: 3 },
             )
           : [],
         matrixRows: minivanBundle?.matrices.length ?? 0,
@@ -938,6 +943,8 @@ const main = async () => {
               busBundle.variants.map((variant) => variant.variant_key),
               busBundle.category.pricing_model,
               "bus",
+              undefined,
+              { seatRows: 3 },
             )
           : [],
         matrixRows: busBundle?.matrices.length ?? 0,

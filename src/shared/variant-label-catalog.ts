@@ -74,9 +74,9 @@ export const POLISH_VARIANT_LABEL_FALLBACKS: Record<string, string> = {
   home_mat: "Mata domowa",
   tunnel_mat: "Mata tunel",
   custom_order: "Wycena indywidualna",
-  basic: "Podstawowy",
-  premium: "Premium",
-  complete: "Bagażnik",
+  basic: "Przód + tył",
+  premium: "Przód + tył + bagażnik",
+  complete: "Mata do bagażnika",
 }
 
 export const isEnglishCatalogVariantLabel = (

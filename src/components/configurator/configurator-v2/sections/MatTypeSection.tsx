@@ -11,6 +11,7 @@ const compareLinkClass =
 type MatTypeSectionProps = {
   config: { matType: "3d-with-rims" | "classic" | "single" }
   skipMatTypeStep: boolean
+  availableMatTypes?: Array<"classic" | "3d-with-rims" | "single">
   readiness: SectionReadiness
   onUpdate: (updates: {
     matType?: "3d-with-rims" | "classic" | "single"
@@ -22,6 +23,7 @@ type MatTypeSectionProps = {
 export const MatTypeSection = ({
   config,
   skipMatTypeStep,
+  availableMatTypes,
   readiness,
   onUpdate,
   onCompareClick,
@@ -34,7 +36,7 @@ export const MatTypeSection = ({
         readiness={{ ...readiness, isDisabled: false }}
       >
         <p className="text-sm text-gray-400">
-          Komplet pojedynczy — przejdź do wyboru wariantu.
+          Dla tego pojazdu obowiązuje jeden typ kompletu — przejdź do wyboru wariantu.
         </p>
       </ConfiguratorV2SectionShell>
     )
@@ -57,7 +59,12 @@ export const MatTypeSection = ({
       }
     >
       <div className="space-y-2">
-        {matTypeOptions.map((type) => (
+        {matTypeOptions
+          .filter(
+            (type) =>
+              !availableMatTypes?.length || availableMatTypes.includes(type.id),
+          )
+          .map((type) => (
           <TeslaTrimOption
             key={type.id}
             selected={config.matType === type.id}

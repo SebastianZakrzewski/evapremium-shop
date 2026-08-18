@@ -31,8 +31,14 @@ export const VariantSection = ({
   onCompareClick,
 }: VariantSectionProps) => {
   const selectedVariant = pricingVariants.find((v) => v.key === config.variant)
+  const offeredVariantKeys = pricingVariants.map((item) => item.key)
   const selectedPresentation = selectedVariant
-    ? getVariantPresentation(selectedVariant.key, pricingCategoryKey, bodyTypeKey)
+    ? getVariantPresentation(
+        selectedVariant.key,
+        pricingCategoryKey,
+        bodyTypeKey,
+        { offeredVariantKeys },
+      )
     : null
   const showTunnelBonus = shouldShowVariantTunnelBonus(pricingCategoryKey)
 
@@ -61,6 +67,7 @@ export const VariantSection = ({
             variant.key,
             pricingCategoryKey,
             bodyTypeKey,
+            { offeredVariantKeys },
           )
           return (
             <ConfiguratorV2ImageOptionCard

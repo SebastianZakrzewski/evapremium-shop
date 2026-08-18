@@ -72,6 +72,7 @@ export const CompareVariantsModal = ({
                 variant.key,
                 pricingCategoryKey,
                 bodyTypeKey,
+                { offeredVariantKeys: pricingVariants.map((item) => item.key) },
               )
               const isSelected = selectedVariantKey === variant.key
               return (

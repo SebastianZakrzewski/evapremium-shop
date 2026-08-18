@@ -1061,7 +1061,7 @@ export class DealService {
 
     } catch (error) {
       console.error('❌ Failed to find deal by order number:', error);
-      return null;
+      throw error;
     }
   }
 
@@ -1116,7 +1116,7 @@ export class DealService {
 
     } catch (error) {
       console.error('❌ Failed to find deal by ORIGIN_ID:', error);
-      return null;
+      throw error;
     }
   }
 
@@ -1164,7 +1164,7 @@ export class DealService {
 
     } catch (error) {
       console.error('❌ Failed to get deal:', error);
-      return null;
+      throw error;
     }
   }
 

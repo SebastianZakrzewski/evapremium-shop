@@ -49,16 +49,7 @@ export async function GET(request: NextRequest) {
 
     console.log('✅ Connection test passed');
 
-    // 3. Test permissions by getting current user
-    let userInfo = null;
-    try {
-      userInfo = await bitrix24Client.getCurrentUser();
-      console.log('✅ User info retrieved successfully');
-    } catch (error) {
-      console.warn('⚠️ Failed to get user info:', error);
-    }
-
-    // 4. Test CRM permissions
+    // Incoming webhooks typically do not include `user` scope.
     const crmTests = await testCrmPermissions();
 
     const result = {
@@ -70,7 +61,6 @@ export async function GET(request: NextRequest) {
         permissions: crmTests.success,
       },
       details: {
-        user: userInfo,
         crmPermissions: crmTests.details,
         timestamp: new Date().toISOString(),
       }

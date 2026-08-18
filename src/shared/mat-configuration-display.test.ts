@@ -59,7 +59,9 @@ describe("mat-configuration-display", () => {
     const labels = rows.map((row) => row.label)
 
     expect(labels).toEqual(["Zestaw", "Typ", "Struktura", "Kolor"])
-    expect(rows.find((row) => row.label === "Zestaw")?.value).toBe("Premium")
+    expect(rows.find((row) => row.label === "Zestaw")?.value).toBe(
+      "Przód + tył + bagażnik",
+    )
     expect(rows.find((row) => row.label === "Typ")?.value).toBe("3D z rantami")
     expect(rows.find((row) => row.label === "Struktura")?.value).toBe("Romby")
     expect(rows.find((row) => row.label === "Kolor")?.value).toBe(

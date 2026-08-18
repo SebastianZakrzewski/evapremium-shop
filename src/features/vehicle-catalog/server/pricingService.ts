@@ -2,6 +2,14 @@ import {
   filterSellableVariantKeys,
   selectPricingOverride,
 } from "../domain/pricingRules"
+import { applyShopBasePrice } from "../domain/shopPrice"
+import {
+  copyTrunkMatPricesToBothDualTypes,
+  shopAvailableMatTypes,
+  shopPriceForMatType,
+  TRUNK_MAT_SET_KEY,
+  withRequiredTrunkMatKey,
+} from "../domain/shopTemplateOffer"
 import type { PricingResolveInput, PricingVariantOption } from "../model/schemas"
 import { getMatTemplateByRecordKey } from "./repository"
 import {
@@ -11,6 +19,7 @@ import {
   getPricingOverrides,
   getVariantsByKeys,
 } from "./pricingRepository"
+import { getShopTemplateOffer } from "./shopOfferRepository"
 
 type RawOverride = Awaited<ReturnType<typeof getPricingOverrides>>[number]
 type CategoryPricingRows = Awaited<ReturnType<typeof getCategoryPricingRows>>
@@ -102,17 +111,31 @@ export const resolveVehiclePricing = async (input: PricingResolveInput) => {
     matchingOverrides,
   )
 
+  const shopOfferRaw = getShopTemplateOffer(template.record_key)
+  const shopOffer = shopOfferRaw
+    ? copyTrunkMatPricesToBothDualTypes(shopOfferRaw)
+    : null
+  const shopMatTypes = shopOffer ? shopAvailableMatTypes(shopOffer) : null
+  const catalogDiscount = (basePrice: number) =>
+    calculateDiscountedPrice(basePrice, catalog)
+
   const categoryVariantKeys = categoryRows.variants.map(
     (variant) => variant.variant_key,
   )
   const overrideVariantKeys = matchingOverrides.map(
     (override) => override.variantKey,
   )
-  const allVariantKeys = filterSellableVariantKeys(
-    [...new Set([...categoryVariantKeys, ...overrideVariantKeys])],
+  const allVariantKeys = withRequiredTrunkMatKey(
+    shopOffer
+      ? shopOffer.sets.map((set) => set.key)
+      : filterSellableVariantKeys(
+          [...new Set([...categoryVariantKeys, ...overrideVariantKeys])],
+          category.pricing_model,
+          category.slug,
+          input.bodyTypeKey,
+          { seatRows: template.seat_rows },
+        ),
     category.pricing_model,
-    category.slug,
-    input.bodyTypeKey,
   )
   const missingVariantKeys = overrideVariantKeys.filter(
     (key) => !categoryVariantKeys.includes(key),
@@ -133,15 +156,70 @@ export const resolveVehiclePricing = async (input: PricingResolveInput) => {
     })
   }
 
-  const availableMatTypes =
-    category.pricing_model === "single_price"
+  const availableMatTypes = shopMatTypes
+    ? shopMatTypes
+    : category.pricing_model === "single_price"
       ? (["single"] as const)
       : (["3d-with-rims", "classic"] as const)
-  const effectiveMatType =
-    category.pricing_model === "single_price" ? "single" : input.matType
+  const effectiveMatType = shopMatTypes?.includes("single")
+    ? "single"
+    : shopMatTypes
+      ? input.matType
+      : category.pricing_model === "single_price"
+        ? "single"
+        : input.matType
+
+  const findMatrix = (
+    variantId: string | undefined,
+    matType: string,
+    rows: CategoryPricingRows,
+    variantKey: string,
+  ) => {
+    const exact = rows.matrices.find(
+      (row) => row.variant_id === variantId && row.mat_type === matType,
+    )
+    if (exact) return exact
+    if (matType !== "3d-with-rims" || variantKey !== TRUNK_MAT_SET_KEY) {
+      return undefined
+    }
+    return rows.matrices.find(
+      (row) => row.variant_id === variantId && row.mat_type === "classic",
+    )
+  }
 
   const variants: PricingVariantOption[] = effectiveMatType
     ? allVariantKeys.flatMap((variantKey) => {
+        if (shopOffer) {
+          if (!effectiveMatType) return []
+          const shopSet = shopOffer.sets.find((set) => set.key === variantKey)
+          const variant = variantDictionary.get(variantKey)
+          const matrix = findMatrix(
+            variant?.id,
+            effectiveMatType,
+            categoryRows,
+            variantKey,
+          )
+          const shopBase = shopSet
+            ? shopPriceForMatType(shopSet, effectiveMatType)
+            : undefined
+          const baseFromShopOrMatrix =
+            shopBase ??
+            (variantKey === TRUNK_MAT_SET_KEY && matrix
+              ? Number(matrix.base_price_pln)
+              : undefined)
+          if (baseFromShopOrMatrix == null) return []
+          const priced = applyShopBasePrice(
+            baseFromShopOrMatrix,
+            matrix,
+            catalogDiscount,
+          )
+          return [{
+            key: variantKey,
+            label: shopSet?.label || variant?.variant_label || "Mata do bagażnika",
+            ...priced,
+          }]
+        }
+
         const override = selectPricingOverride(matchingOverrides, {
           recordKey: template.record_key,
           brandKey: template.brand_key,
@@ -159,10 +237,11 @@ export const resolveVehiclePricing = async (input: PricingResolveInput) => {
           overridePricingRows?.pricing_model === "single_price"
             ? "single"
             : effectiveMatType
-        const matrix = pricingRows.matrices.find(
-          (row) =>
-            row.variant_id === variant?.id &&
-            row.mat_type === pricingMatType,
+        const matrix = findMatrix(
+          variant?.id,
+          pricingMatType,
+          pricingRows,
+          variantKey,
         )
         if (!variant || (!matrix && override?.fixed_base_price_pln == null)) {
           return []
