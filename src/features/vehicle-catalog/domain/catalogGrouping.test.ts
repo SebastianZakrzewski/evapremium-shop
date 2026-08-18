@@ -32,6 +32,7 @@ const baseRow = (
   body_type_3_key: null,
   body_type_variants: [],
   dealer_pricing_category_key: "pickup",
+  seat_rows: 2,
   ...overrides,
 })
 

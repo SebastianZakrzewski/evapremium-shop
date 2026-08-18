@@ -45,8 +45,8 @@ describe("CompareVariantsModal", () => {
     )
 
     expect(screen.getByText("Porównaj warianty zestawu")).toBeInTheDocument()
-    expect(screen.getByText("Starter")).toBeInTheDocument()
-    expect(screen.getByText("Premium")).toBeInTheDocument()
+    expect(screen.getByText("Przód")).toBeInTheDocument()
+    expect(screen.getByText("Przód + tył + bagażnik")).toBeInTheDocument()
   })
 
   it("does not render when closed", () => {

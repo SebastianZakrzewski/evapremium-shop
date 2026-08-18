@@ -9,6 +9,7 @@ interface MatTypeStepProps {
     matType: "3d-with-rims" | "classic" | "single"
   }
   skipMatTypeStep?: boolean
+  availableMatTypes?: Array<"3d-with-rims" | "classic" | "single">
   onUpdate: (updates: {
     matType?: "3d-with-rims" | "classic" | "single"
     variant?: string
@@ -33,10 +34,14 @@ const matTypes = [
 export function MatTypeStep({
   config,
   skipMatTypeStep = false,
+  availableMatTypes,
   onUpdate,
   onNext,
   onPrevious,
 }: MatTypeStepProps) {
+  const visibleMatTypes = matTypes.filter(
+    (type) => !availableMatTypes?.length || availableMatTypes.includes(type.id),
+  )
   if (skipMatTypeStep) {
     return (
       <div className="space-y-4">
@@ -59,7 +64,7 @@ export function MatTypeStep({
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 [&>*]:min-w-[150px]">
-        {matTypes.map((type) => (
+        {visibleMatTypes.map((type) => (
           <Card
             key={type.id}
             onClick={() => onUpdate({ matType: type.id, variant: "" })}

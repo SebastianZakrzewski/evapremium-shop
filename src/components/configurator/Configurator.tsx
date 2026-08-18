@@ -94,10 +94,10 @@ const cellTypes: CellType[] = [
 ];
 
 const setVariants: SetVariant[] = [
-  { id: "front", name: "Starter", description: "2 dywaniki (tylko przód)", priceModifier: 0 },
-  { id: "basic", name: "Podstawowy", description: "5 dywaników (przód + tył + ochrona na tunel środkowy)", priceModifier: 0 },
-  { id: "premium", name: "Premium", description: "5 dywaników (przód + tył + bagażnik)", priceModifier: 0 },
-  { id: "complete", name: "Bagażnik", description: "1 dywanik - Mata do Bagażnika", priceModifier: 0 },
+  { id: "front", name: "Przód", description: "2 dywaniki (tylko przód)", priceModifier: 0 },
+  { id: "basic", name: "Przód + tył", description: "5 dywaników (przód + tył + ochrona na tunel środkowy)", priceModifier: 0 },
+  { id: "premium", name: "Przód + tył + bagażnik", description: "5 dywaników (przód + tył + bagażnik)", priceModifier: 0 },
+  { id: "complete", name: "Mata do bagażnika", description: "1 dywanik - Mata do Bagażnika", priceModifier: 0 },
 ];
 
 const bodyTypes = [
@@ -1213,7 +1213,7 @@ export default function Configurator() {
                               {(v.id === "front" || v.id === "basic" || v.id === "premium" || v.id === "complete" || v.id === "test") && (
                                 <div className="flex items-center justify-center">
                                   <Image
-                                    src={v.id === "front" ? "/konfigurator/zestaw/przod.png" : v.id === "basic" ? "/konfigurator/zestaw/pt.png" : v.id === "premium" ? "/konfigurator/zestaw/ptb.png" : v.id === "complete" ? "/konfigurator/zestaw/mata.png" : "/konfigurator/zestaw/przod.png"}
+                                    src={v.id === "front" ? "/konfigurator/zestaw/2rzedy/przod.png" : v.id === "basic" ? "/konfigurator/zestaw/2rzedy/przod-tyl.png" : v.id === "premium" ? "/konfigurator/zestaw/2rzedy/przod-tyl-bagaznik.png" : v.id === "complete" ? "/konfigurator/zestaw/2rzedy/mata-bagaznika.png" : "/konfigurator/zestaw/2rzedy/przod.png"}
                                     alt={`Wizualizacja zestawu ${v.name}`}
                                     width={80}
                                     height={48}

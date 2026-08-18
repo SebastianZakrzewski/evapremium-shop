@@ -29,6 +29,7 @@ const row = (overrides: Partial<MatTemplateDbRow>): MatTemplateDbRow => ({
   body_type_3_key: null,
   body_type_variants: [],
   dealer_pricing_category_key: "passenger_car",
+  seat_rows: 2,
   ...overrides,
 })
 

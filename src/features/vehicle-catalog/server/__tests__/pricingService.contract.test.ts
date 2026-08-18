@@ -7,10 +7,15 @@ const getPricingCategory = vi.fn()
 const getCategoryPricingRows = vi.fn()
 const getPricingOverrides = vi.fn()
 const getVariantsByKeys = vi.fn()
+const getShopTemplateOffer = vi.fn()
 
 vi.mock("../repository", () => ({
   getMatTemplateByRecordKey: (...args: unknown[]) =>
     getMatTemplateByRecordKey(...args),
+}))
+
+vi.mock("../shopOfferRepository", () => ({
+  getShopTemplateOffer: (...args: unknown[]) => getShopTemplateOffer(...args),
 }))
 
 vi.mock("../pricingRepository", () => ({
@@ -118,10 +123,11 @@ const passengerCarRows = {
   variants: [
     variant("driver_mat", "Driver mat", "v-driver"),
     variant("passenger_mat", "Passenger mat", "v-passenger"),
-    variant("front", "Starter", "v-front"),
-    variant("basic", "Basic", "v-basic"),
-    variant("premium", "Premium", "v-premium"),
-    variant("complete", "Trunk mat", "v-complete"),
+    variant("front", "Przód", "v-front"),
+    variant("rear_only", "Tył", "v-rear"),
+    variant("basic", "Przód + tył", "v-basic"),
+    variant("premium", "Przód + tył + bagażnik", "v-premium"),
+    variant("complete", "Mata do bagażnika", "v-complete"),
     variant("row_3", "Row 3", "v-row-3"),
     variant("row_3_small_trunk_unfolded", "Row 3 small trunk", "v-r3-st"),
     variant("row_3_large_trunk_folded", "Row 3 large trunk", "v-r3-lt"),
@@ -132,8 +138,10 @@ const passengerCarRows = {
     matrix("v-driver", "3d-with-rims", 275, 220),
     matrix("v-passenger", "3d-with-rims", 275, 220),
     matrix("v-front", "3d-with-rims", 550, 440),
+    matrix("v-rear", "3d-with-rims", 550, 440),
     matrix("v-basic", "3d-with-rims", 910, 637),
     matrix("v-premium", "3d-with-rims", 1210, 847),
+    matrix("v-complete", "3d-with-rims", 350, 280),
     matrix("v-complete", "classic", 350, 280),
     matrix("v-row-3", "3d-with-rims", 1110, 777),
     matrix("v-r3-st", "3d-with-rims", 1310, 917),
@@ -141,8 +149,10 @@ const passengerCarRows = {
     matrix("v-r3-tt", "3d-with-rims", 1610, 1127),
     matrix("v-fr-tt", "3d-with-rims", 1410, 987),
     matrix("v-front", "classic", 290, 232),
+    matrix("v-rear", "classic", 290, 232),
     matrix("v-basic", "classic", 510, 408),
     matrix("v-premium", "classic", 710, 568),
+    matrix("v-driver", "classic", 150, 150),
     matrix("v-row-3", "classic", 710, 568),
     matrix("v-r3-st", "classic", 910, 637),
     matrix("v-r3-lt", "classic", 1010, 707),
@@ -158,6 +168,7 @@ describe("resolveVehiclePricing contract", () => {
     getActivePricingCatalog.mockResolvedValue(catalog)
     getPricingOverrides.mockResolvedValue([])
     getVariantsByKeys.mockResolvedValue([])
+    getShopTemplateOffer.mockReturnValue(null)
   })
 
   it("resolves Ford Ranger pickup basic 3D at 693 PLN", async () => {
@@ -167,6 +178,7 @@ describe("resolveVehiclePricing contract", () => {
       brand_key: "ford",
       model_family_key: "ranger",
       dealer_pricing_category_key: "pickup",
+      seat_rows: 2,
       year_from: 2022,
       year_to: 2028,
       body_type_1_key: "pickup",
@@ -297,6 +309,7 @@ describe("resolveVehiclePricing contract", () => {
       brand_key: "baic",
       model_family_key: "beijing_5",
       dealer_pricing_category_key: "passenger_car",
+      seat_rows: 2,
       year_from: 2022,
       year_to: 2028,
       body_type_1_key: "suv",
@@ -319,10 +332,19 @@ describe("resolveVehiclePricing contract", () => {
     })
 
     expect(result3d.variants.map((item) => item.key)).toEqual([
+      "driver_mat",
       "front",
+      "rear_only",
       "basic",
       "premium",
+      "complete",
     ])
+    expect(
+      result3d.variants.find((item) => item.key === "complete")?.basePrice,
+    ).toBe(350)
+    expect(
+      result3d.variants.find((item) => item.key === "complete")?.priceAfterDiscount,
+    ).toBe(280)
 
     const resultClassic = await resolveVehiclePricing({
       recordKey: "passenger_car|baic|beijing_5_1_gen|2022-2028|suv|203",
@@ -332,7 +354,9 @@ describe("resolveVehiclePricing contract", () => {
     })
 
     expect(resultClassic.variants.map((item) => item.key)).toEqual([
+      "driver_mat",
       "front",
+      "rear_only",
       "basic",
       "premium",
       "complete",
@@ -346,6 +370,7 @@ describe("resolveVehiclePricing contract", () => {
       brand_key: "volkswagen",
       model_family_key: "sharan",
       dealer_pricing_category_key: "passenger_car",
+      seat_rows: 3,
       year_from: 2010,
       year_to: 2022,
       body_type_1_key: "minivan",
@@ -369,7 +394,9 @@ describe("resolveVehiclePricing contract", () => {
     })
 
     expect(result.variants.map((item) => item.key)).toEqual([
+      "driver_mat",
       "front",
+      "rear_only",
       "basic",
       "premium",
       "row_3",
@@ -377,6 +404,7 @@ describe("resolveVehiclePricing contract", () => {
       "row_3_large_trunk_folded",
       "row_3_two_trunks",
       "front_rear_two_trunks",
+      "complete",
     ])
     expect(result.selectedVariant?.basePrice).toBe(1610)
     expect(result.selectedVariant?.priceAfterDiscount).toBe(1127)
@@ -389,6 +417,7 @@ describe("resolveVehiclePricing contract", () => {
       brand_key: "renault",
       model_family_key: "espace_4_gen",
       dealer_pricing_category_key: "minivan",
+      seat_rows: 3,
       year_from: 2002,
       year_to: 2014,
       body_type_1_key: "minivan",
@@ -430,6 +459,7 @@ describe("resolveVehiclePricing contract", () => {
       brand_key: "mercedes_benz",
       model_family_key: "vito",
       dealer_pricing_category_key: "bus",
+      seat_rows: 3,
       year_from: 2014,
       year_to: 2027,
       body_type_1_key: "bus",
@@ -453,9 +483,198 @@ describe("resolveVehiclePricing contract", () => {
 
     expect(result.variants.map((item) => item.key)).toEqual([
       "driver_mat",
+      "row_1",
       "row_2",
       "row_3",
       "row_3_trunk",
     ])
+  })
+
+  it("maps shop offer 1:1 for XC90 including large-trunk 2-row and shop prices", async () => {
+    getMatTemplateByRecordKey.mockResolvedValue({
+      id: "tpl-xc90",
+      record_key: "passenger_car|volvo|xc90_2_gen|2014-2027|suv|2757",
+      brand_key: "volvo",
+      model_family_key: "xc90",
+      dealer_pricing_category_key: "passenger_car",
+      seat_rows: 3,
+      year_from: 2014,
+      year_to: 2027,
+      body_type_1_key: "suv",
+      body_type_2_key: null,
+      body_type_3_key: null,
+    })
+    getPricingCategory.mockResolvedValue({
+      id: "cat-passenger",
+      slug: "passenger_car",
+      label: "Passenger car",
+      pricing_model: "dual_mat_type",
+    })
+    getCategoryPricingRows.mockResolvedValue(passengerCarRows)
+    getShopTemplateOffer.mockReturnValue({
+      shopHandle: "volvo-xc90",
+      axis: "dual",
+      sets: [
+        { key: "front", label: "Przód", prices: { classic: 290, "3d-with-rims": 550 } },
+        { key: "basic", label: "Przód + tył", prices: { classic: 510 } },
+        {
+          key: "front_rear_two_trunks",
+          label: "Przód + tył + Duży bagażnik",
+          prices: { classic: 710 },
+        },
+      ],
+    })
+
+    const result = await resolveVehiclePricing({
+      recordKey: "passenger_car|volvo|xc90_2_gen|2014-2027|suv|2757",
+      year: 2020,
+      bodyTypeKey: "suv",
+      matType: "classic",
+    })
+
+    expect(result.availableMatTypes).toEqual(["3d-with-rims", "classic"])
+    expect(result.variants.map((item) => item.key)).toEqual([
+      "front",
+      "basic",
+      "front_rear_two_trunks",
+    ])
+    expect(result.variants.find((item) => item.key === "premium")).toBeUndefined()
+    expect(
+      result.variants.find((item) => item.key === "front_rear_two_trunks"),
+    ).toMatchObject({
+      label: "Przód + tył + Duży bagażnik",
+      basePrice: 710,
+      priceAfterDiscount: 568,
+    })
+  })
+
+  it("keeps trunk mat on 3d-with-rims at classic shop price", async () => {
+    getMatTemplateByRecordKey.mockResolvedValue({
+      id: "tpl-golf",
+      record_key: "passenger_car|volkswagen|golf_8_gen|2019-2028|hatchback|1",
+      brand_key: "volkswagen",
+      model_family_key: "golf",
+      dealer_pricing_category_key: "passenger_car",
+      seat_rows: 2,
+      year_from: 2019,
+      year_to: 2028,
+      body_type_1_key: "hatchback",
+      body_type_2_key: null,
+      body_type_3_key: null,
+    })
+    getPricingCategory.mockResolvedValue({
+      id: "cat-passenger",
+      slug: "passenger_car",
+      label: "Passenger car",
+      pricing_model: "dual_mat_type",
+    })
+    getCategoryPricingRows.mockResolvedValue(passengerCarRows)
+    getShopTemplateOffer.mockReturnValue({
+      shopHandle: "vw-golf",
+      axis: "dual",
+      sets: [
+        { key: "front", label: "Przód", prices: { classic: 290, "3d-with-rims": 550 } },
+        { key: "complete", label: "Mata do bagażnika", prices: { classic: 350 } },
+      ],
+    })
+
+    const result = await resolveVehiclePricing({
+      recordKey: "passenger_car|volkswagen|golf_8_gen|2019-2028|hatchback|1",
+      year: 2022,
+      bodyTypeKey: "hatchback",
+      matType: "3d-with-rims",
+    })
+
+    expect(result.variants.map((item) => item.key)).toEqual(["front", "complete"])
+    expect(result.variants.find((item) => item.key === "complete")).toMatchObject({
+      label: "Mata do bagażnika",
+      basePrice: 350,
+      priceAfterDiscount: 280,
+    })
+  })
+
+  it("does not invent trunk mat when shop offer has no complete SET", async () => {
+    getMatTemplateByRecordKey.mockResolvedValue({
+      id: "tpl-a4",
+      record_key: "passenger_car|audi|a4_b9|2015-2024|sedan|1",
+      brand_key: "audi",
+      model_family_key: "a4",
+      dealer_pricing_category_key: "passenger_car",
+      seat_rows: 2,
+      year_from: 2015,
+      year_to: 2024,
+      body_type_1_key: "sedan",
+      body_type_2_key: null,
+      body_type_3_key: null,
+    })
+    getPricingCategory.mockResolvedValue({
+      id: "cat-passenger",
+      slug: "passenger_car",
+      label: "Passenger car",
+      pricing_model: "dual_mat_type",
+    })
+    getCategoryPricingRows.mockResolvedValue(passengerCarRows)
+    getShopTemplateOffer.mockReturnValue({
+      shopHandle: "audi-a4",
+      axis: "dual",
+      sets: [
+        { key: "front", label: "Przód", prices: { classic: 290, "3d-with-rims": 550 } },
+        { key: "basic", label: "Przód + tył", prices: { classic: 510, "3d-with-rims": 910 } },
+      ],
+    })
+
+    const result = await resolveVehiclePricing({
+      recordKey: "passenger_car|audi|a4_b9|2015-2024|sedan|1",
+      year: 2020,
+      bodyTypeKey: "sedan",
+      matType: "3d-with-rims",
+    })
+
+    expect(result.variants.map((item) => item.key)).toEqual([
+      "front",
+      "basic",
+    ])
+    expect(result.variants.find((item) => item.key === "complete")).toBeUndefined()
+  })
+
+  it("uses classic complete matrix when 3d-with-rims complete row is missing", async () => {
+    getMatTemplateByRecordKey.mockResolvedValue({
+      id: "tpl-a3",
+      record_key: "passenger_car|audi|a3_8y|2020-2028|hatchback|1",
+      brand_key: "audi",
+      model_family_key: "a3",
+      dealer_pricing_category_key: "passenger_car",
+      seat_rows: 2,
+      year_from: 2020,
+      year_to: 2028,
+      body_type_1_key: "hatchback",
+      body_type_2_key: null,
+      body_type_3_key: null,
+    })
+    getPricingCategory.mockResolvedValue({
+      id: "cat-passenger",
+      slug: "passenger_car",
+      label: "Passenger car",
+      pricing_model: "dual_mat_type",
+    })
+    getCategoryPricingRows.mockResolvedValue({
+      ...passengerCarRows,
+      matrices: passengerCarRows.matrices.filter(
+        (row) => !(row.variant_id === "v-complete" && row.mat_type === "3d-with-rims"),
+      ),
+    })
+    getShopTemplateOffer.mockReturnValue(null)
+
+    const result = await resolveVehiclePricing({
+      recordKey: "passenger_car|audi|a3_8y|2020-2028|hatchback|1",
+      year: 2022,
+      bodyTypeKey: "hatchback",
+      matType: "3d-with-rims",
+    })
+
+    expect(result.variants.find((item) => item.key === "complete")).toMatchObject({
+      basePrice: 350,
+      priceAfterDiscount: 280,
+    })
   })
 })

@@ -276,17 +276,28 @@ export default function ConfiguratorSimple() {
     variantKey: config.variant || undefined,
   });
   const pricingVariants = pricingQuery.data?.variants ?? [];
-  const skipMatTypeStep =
-    pricingQuery.data?.availableMatTypes?.length === 1 &&
-    pricingQuery.data.availableMatTypes[0] === "single";
+  const availableMatTypes = pricingQuery.data?.availableMatTypes ?? [];
+  const skipMatTypeStep = availableMatTypes.length === 1;
 
   useEffect(() => {
     const pricing = pricingQuery.data;
     if (!pricing) return;
 
     const updates: Partial<ConfiguratorState> = {};
-    if (pricing.matType === "single" && config.matType !== "single") {
-      updates.matType = "single";
+    const nextMatType = pricing.availableMatTypes?.[0];
+    if (
+      pricing.availableMatTypes?.length === 1 &&
+      nextMatType &&
+      config.matType !== nextMatType
+    ) {
+      updates.matType = nextMatType;
+    } else if (
+      config.matType &&
+      pricing.availableMatTypes?.length &&
+      !pricing.availableMatTypes.includes(config.matType)
+    ) {
+      updates.matType = nextMatType;
+      updates.variant = "";
     }
     if (config.pricingCategoryKey !== pricing.pricingCategoryKey) {
       updates.pricingCategoryKey = pricing.pricingCategoryKey;
@@ -1124,6 +1135,7 @@ export default function ConfiguratorSimple() {
                   pricingCategoryKey={config.pricingCategoryKey}
                   bodyTypeKey={config.bodyTypeKey}
                   skipMatTypeStep={skipMatTypeStep}
+                  availableMatTypes={availableMatTypes}
                   priceBreakdown={priceBreakdown}
                   onUpdate={updateConfig}
                   onNext={goToNextStep}
@@ -1290,6 +1302,7 @@ export default function ConfiguratorSimple() {
                     <MatTypeStep
                       config={{ matType: config.matType }}
                       skipMatTypeStep={skipMatTypeStep}
+                      availableMatTypes={availableMatTypes}
                       onUpdate={updateConfig}
                       onNext={goToNextStep}
                       onPrevious={goToPreviousStep}

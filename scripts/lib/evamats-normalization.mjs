@@ -208,7 +208,7 @@ export const normalizeShopProduct = (product) => {
   const isOutlet = tags.some((tag) => tag.toLowerCase().includes("outlet"))
   const fromHtml = parseProductBodyHtml(product.body_html)
   const fromTitle = parseProductTitle(product.title)
-  const parsed = fromHtml ?? fromTitle
+  const parsed = fromHtml?.brandDisplay ? fromHtml : fromTitle ?? fromHtml
 
   if (!parsed?.brandDisplay) {
     return {

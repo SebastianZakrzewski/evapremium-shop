@@ -124,16 +124,27 @@ export default function ConfiguratorV2() {
   })
 
   const pricingVariants = pricingQuery.data?.variants ?? []
-  const skipMatTypeStep =
-    pricingQuery.data?.availableMatTypes?.length === 1 &&
-    pricingQuery.data.availableMatTypes[0] === "single"
+  const availableMatTypes = pricingQuery.data?.availableMatTypes ?? []
+  const skipMatTypeStep = availableMatTypes.length === 1
 
   useEffect(() => {
     const pricing = pricingQuery.data
     if (!pricing) return
     const updates: Partial<ConfiguratorState> = {}
-    if (pricing.matType === "single" && config.matType !== "single") {
-      updates.matType = "single"
+    const nextMatType = pricing.availableMatTypes?.[0]
+    if (
+      pricing.availableMatTypes?.length === 1 &&
+      nextMatType &&
+      config.matType !== nextMatType
+    ) {
+      updates.matType = nextMatType
+    } else if (
+      config.matType &&
+      pricing.availableMatTypes?.length &&
+      !pricing.availableMatTypes.includes(config.matType)
+    ) {
+      updates.matType = nextMatType
+      updates.variant = ""
     }
     if (config.pricingCategoryKey !== pricing.pricingCategoryKey) {
       updates.pricingCategoryKey = pricing.pricingCategoryKey
@@ -482,6 +493,7 @@ export default function ConfiguratorV2() {
           <MatTypeSection
             config={config}
             skipMatTypeStep={skipMatTypeStep}
+            availableMatTypes={availableMatTypes}
             readiness={mapperResult.sections.matType}
             onUpdate={updateConfig}
             onCompareClick={() => setIsCompareMatTypesOpen(true)}

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest"
 import {
   CONFIGURATOR_BUS_VARIANT_KEYS,
-  CONFIGURATOR_DUAL_MAT_VARIANT_KEYS,
   CONFIGURATOR_MINIVAN_VARIANT_KEYS,
+  CONFIGURATOR_PASSENGER_BASE_VARIANT_KEYS,
   CONFIGURATOR_PASSENGER_PRICED_MINIVAN_VARIANT_KEYS,
 } from "@/features/vehicle-catalog/domain/pricingRules"
 import cennik from "@/data/evamats-cennik.normalized.json"
@@ -89,7 +89,7 @@ describe("mat-set-labels consistency across modules", () => {
     bodyTypeKey: "bus",
   }))
 
-  const passengerCases = CONFIGURATOR_DUAL_MAT_VARIANT_KEYS.map((variantKey) => ({
+  const passengerCases = CONFIGURATOR_PASSENGER_BASE_VARIANT_KEYS.map((variantKey) => ({
     setType: "3d-with-rims" as const,
     setVariant: variantKey,
     pricingCategoryKey: "passenger_car",

@@ -8,15 +8,21 @@ import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { normalizeShopProduct } from "./lib/evamats-normalization.mjs"
+import {
+  flattenCatalogRowsForCsv,
+  mapShopProductToCatalogRows,
+  nestCatalogByBrandAndModel,
+  toCsv,
+} from "./lib/evamats-shop-catalog-map.mjs"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(__dirname, "..")
 const outputDir = path.join(root, "output")
 
 const BASE_URL = "https://evamats.pl"
-const PAGE_LIMIT = Number.parseInt(process.env.SCRAPE_PAGE_LIMIT ?? "50", 10)
-const REQUEST_DELAY_MS = Number.parseInt(process.env.SCRAPE_DELAY_MS ?? "2000", 10)
-const INITIAL_COOLDOWN_MS = Number.parseInt(process.env.SCRAPE_COOLDOWN_MS ?? "120000", 10)
+const PAGE_LIMIT = Number.parseInt(process.env.SCRAPE_PAGE_LIMIT ?? "250", 10)
+const REQUEST_DELAY_MS = Number.parseInt(process.env.SCRAPE_DELAY_MS ?? "400", 10)
+const INITIAL_COOLDOWN_MS = Number.parseInt(process.env.SCRAPE_COOLDOWN_MS ?? "0", 10)
 const MAX_RETRIES = 10
 const PRODUCTS_ONLY = process.argv.includes("--products-only")
 const SKIP_COLLECTIONS = PRODUCTS_ONLY || process.argv.includes("--skip-collections")
@@ -210,10 +216,21 @@ const main = async () => {
   )
 
   const normalized = products.map(normalizeShopProduct)
+  const catalogRows = products.map(mapShopProductToCatalogRows)
   const parsedOk = normalized.filter((item) => item.parseStatus === "ok")
   const parsedFailed = normalized.filter((item) => item.parseStatus === "failed")
   const outlet = parsedOk.filter((item) => item.isOutlet)
   const catalog = parsedOk.filter((item) => !item.isOutlet)
+  const catalogRowsOk = catalogRows.filter(
+    (item) =>
+      item.parseStatus !== "failed" &&
+      !item.isOutlet &&
+      item.brandKey &&
+      !item.brandKey.startsWith("_wf") &&
+      /dywanik/i.test(item.shopTitle ?? ""),
+  )
+  const nestedCatalog = nestCatalogByBrandAndModel(catalogRowsOk)
+  const csvRows = flattenCatalogRowsForCsv(catalogRowsOk)
 
   const brandSet = new Set(catalog.map((item) => item.brandKey).filter(Boolean))
   const familySet = new Set(
@@ -233,6 +250,7 @@ const main = async () => {
       catalogProducts: catalog.length,
       uniqueBrands: brandSet.size,
       uniqueBrandFamilies: familySet.size,
+      catalogVariantRows: csvRows.length,
     },
     collections: classifiedCollections,
     products,
@@ -255,6 +273,26 @@ const main = async () => {
     path.join(outputDir, "evamats-shop-catalog.normalized.json"),
     JSON.stringify(normalizedOutput, null, 2),
   )
+  fs.writeFileSync(
+    path.join(outputDir, "evamats-brand-model-variants.json"),
+    JSON.stringify(
+      {
+        scrapedAt: rawOutput.scrapedAt,
+        stats: {
+          brands: nestedCatalog.length,
+          models: catalogRowsOk.length,
+          variants: csvRows.length,
+        },
+        brands: nestedCatalog,
+      },
+      null,
+      2,
+    ),
+  )
+  fs.writeFileSync(
+    path.join(outputDir, "evamats-brand-model-variants.csv"),
+    toCsv(csvRows),
+  )
 
   if (fs.existsSync(CHECKPOINT_FILE)) fs.unlinkSync(CHECKPOINT_FILE)
   if (fs.existsSync(path.join(outputDir, "products-partial.json"))) {
@@ -265,6 +303,8 @@ const main = async () => {
   console.log(JSON.stringify(rawOutput.stats, null, 2))
   console.log("Wrote output/evamats-shop-raw.json")
   console.log("Wrote output/evamats-shop-catalog.normalized.json")
+  console.log("Wrote output/evamats-brand-model-variants.json")
+  console.log("Wrote output/evamats-brand-model-variants.csv")
 }
 
 main().catch((error) => {

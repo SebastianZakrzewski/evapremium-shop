@@ -40,6 +40,7 @@ export type MatTemplateDbRow = {
   body_type_3_key: string | null
   body_type_variants: string[]
   dealer_pricing_category_key: string
+  seat_rows: number
 }
 
 const TEMPLATE_SELECT = [
@@ -65,6 +66,7 @@ const TEMPLATE_SELECT = [
   "body_type_3_key",
   "body_type_variants",
   "dealer_pricing_category_key",
+  "seat_rows",
 ].join(",")
 
 const PAGE_SIZE = 1000
