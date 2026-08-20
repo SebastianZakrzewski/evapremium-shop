@@ -97,14 +97,20 @@ export const Bitrix24ProductSchema = z.object({
   MEASURE_NAME: z.string().optional(),
 });
 
-export const Bitrix24DealProductSchema = z.object({
-  PRODUCT_ID: z.string().min(1, 'Product ID is required'),
-  QUANTITY: z.number().positive('Quantity must be positive'),
-  PRICE: z.number().positive('Price must be positive'),
-  DISCOUNT_TYPE_ID: z.number().optional(),
-  DISCOUNT_RATE: z.number().optional(),
-  DISCOUNT_SUM: z.number().optional(),
-});
+export const Bitrix24DealProductSchema = z
+  .object({
+    PRODUCT_ID: z.string().min(1, 'Product ID is required').optional(),
+    PRODUCT_NAME: z.string().min(1, 'Product name is required').optional(),
+    QUANTITY: z.number().positive('Quantity must be positive'),
+    PRICE: z.number().positive('Price must be positive'),
+    DISCOUNT_TYPE_ID: z.number().optional(),
+    DISCOUNT_RATE: z.number().optional(),
+    DISCOUNT_SUM: z.number().optional(),
+  })
+  .refine(
+    (product) => Boolean(product.PRODUCT_ID || product.PRODUCT_NAME),
+    'Either PRODUCT_ID or PRODUCT_NAME is required',
+  )
 
 // ===========================================
 // API RESPONSE VALIDATION

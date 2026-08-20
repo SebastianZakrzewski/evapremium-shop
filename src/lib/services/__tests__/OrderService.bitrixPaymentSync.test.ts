@@ -37,14 +37,18 @@ const mockCreateDeal = vi.fn()
 const mockUpdateDeal = vi.fn()
 const mockUpdateDealStage = vi.fn()
 const mockAddProductsToDeal = vi.fn()
+const mockLinkContact = vi.fn()
+const mockGetDeal = vi.fn()
 
 vi.mock('@/lib/integrations/bitrix24/services/DealService', () => ({
   dealService: {
     findByOrderNumber: (...args: unknown[]) => mockFindByOrderNumber(...args),
+    getDeal: (...args: unknown[]) => mockGetDeal(...args),
     createDeal: (...args: unknown[]) => mockCreateDeal(...args),
     updateDeal: (...args: unknown[]) => mockUpdateDeal(...args),
     updateDealStage: (...args: unknown[]) => mockUpdateDealStage(...args),
     addProductsToDeal: (...args: unknown[]) => mockAddProductsToDeal(...args),
+    linkContact: (...args: unknown[]) => mockLinkContact(...args),
   },
 }))
 
@@ -71,7 +75,17 @@ vi.mock('@/lib/integrations/bitrix24/mappers/orderToContact', () => ({
 
 vi.mock('@/lib/integrations/bitrix24/mappers/orderToDeal', () => ({
   mapOrderToDeal: vi.fn(() => ({ TITLE: 'Zamówienie TEST', STAGE_ID: 'UC_DMBNNJ' })),
-  createDealProducts: vi.fn(() => []),
+  mapOrderToDealProductRows: vi.fn(() => [
+    {
+      PRODUCT_NAME: 'Dywaniki testowe',
+      QUANTITY: 1,
+      PRICE: 637,
+    },
+  ]),
+}))
+
+vi.mock('@/lib/services/AbandonedCartConversionService', () => ({
+  convertAbandonedCartsOnPaid: vi.fn(async () => ({ promotedDealIds: [] })),
 }))
 
 import { OrderService } from '@/lib/services/OrderService'
@@ -123,9 +137,61 @@ describe('OrderService Bitrix sync on payment status', () => {
     mockUpdateDeal.mockResolvedValue({ success: true })
     mockUpdateDealStage.mockResolvedValue({ success: true })
     mockAddProductsToDeal.mockResolvedValue({ success: true })
+    mockLinkContact.mockResolvedValue({ success: true })
 
     service = new OrderService()
     vi.spyOn(service, 'getOrderById').mockImplementation(async () => mockGetOrderById())
+  })
+
+  it('paid with existing deal updates deal and syncs products', async () => {
+    const pending = buildOrder({ paymentStatus: 'pending' })
+    const paid = buildOrder({
+      status: 'confirmed',
+      paymentStatus: 'paid',
+      items: [
+        {
+          id: 'item-1',
+          orderId: 'order-1',
+          productType: 'mat',
+          productId: 'mat-1',
+          productName: 'Dywaniki testowe',
+          productSku: 'MAT-TEST',
+          productImage: '/img.webp',
+          quantity: 1,
+          unitPrice: 637,
+          subtotal: 637,
+          configuration: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+    })
+    mockGetOrderById
+      .mockResolvedValueOnce(pending)
+      .mockResolvedValueOnce(paid)
+      .mockResolvedValueOnce(paid)
+    mockFindByOrderNumber.mockResolvedValue({
+      id: 'deal-existing',
+      stageId: 'NEW',
+      title: 'Zamówienie ORD-2026-000999',
+    })
+
+    await service.updatePaymentStatus('order-1', 'paid')
+
+    expect(mockCreateDeal).not.toHaveBeenCalled()
+    expect(mockUpdateDeal).toHaveBeenCalledWith('deal-existing', expect.any(Object))
+    expect(mockUpdateDealStage).toHaveBeenCalledWith('deal-existing', {
+      stageId: 'UC_DMBNNJ',
+      comment: expect.stringContaining('paid'),
+    })
+    expect(mockLinkContact).toHaveBeenCalledWith('deal-existing', 'contact-1')
+    expect(mockAddProductsToDeal).toHaveBeenCalledWith('deal-existing', [
+      {
+        PRODUCT_NAME: 'Dywaniki testowe',
+        QUANTITY: 1,
+        PRICE: 637,
+      },
+    ])
   })
 
   it('paid without existing deal creates Bitrix deal', async () => {
@@ -142,6 +208,13 @@ describe('OrderService Bitrix sync on payment status', () => {
     expect(mockFindByOrderNumber).toHaveBeenCalledWith('ORD-2026-000999')
     expect(mockCreateDeal).toHaveBeenCalledTimes(1)
     expect(mockUpdateDeal).not.toHaveBeenCalled()
+    expect(mockAddProductsToDeal).toHaveBeenCalledWith('deal-new', [
+      {
+        PRODUCT_NAME: 'Dywaniki testowe',
+        QUANTITY: 1,
+        PRICE: 637,
+      },
+    ])
   })
 
   it('failed without existing deal does not create Bitrix deal', async () => {

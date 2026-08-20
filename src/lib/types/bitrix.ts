@@ -108,7 +108,8 @@ export interface Bitrix24Product {
 }
 
 export interface Bitrix24DealProduct {
-  PRODUCT_ID: string;
+  PRODUCT_ID?: string;
+  PRODUCT_NAME?: string;
   QUANTITY: number;
   PRICE: number;
   DISCOUNT_TYPE_ID?: number;

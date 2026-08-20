@@ -22,6 +22,7 @@ export interface DealSearchResult {
   orderNumber?: string;
   paymentStatus?: string;
   categoryId?: number;
+  comments?: string;
 }
 
 export interface CreateDealOptions {
@@ -855,7 +856,10 @@ export class DealService {
       };
 
       if (options.comment) {
-        updateFields.COMMENTS = options.comment;
+        const existingComments = currentDeal.comments?.trim()
+        updateFields.COMMENTS = existingComments
+          ? `${existingComments}\n\n${options.comment}`
+          : options.comment
       }
 
       console.log('📤 DealService: Sending update request to Bitrix24:', {
@@ -930,34 +934,15 @@ export class DealService {
     try {
       console.log('💼 Adding products to deal:', { id: dealId, productCount: products.length });
 
-      // Validate products
       const validatedProducts = products.map(product => validateBitrix24DealProduct(product));
 
-      // Use batch request to add all products
-      const commands: Record<string, { method: string; data: any }> = {};
-      
-      validatedProducts.forEach((product, index) => {
-        commands[`product_${index}`] = {
-          method: 'crm.deal.productrows.set',
-          data: {
-            id: dealId,
-            rows: [product],
-          },
-        };
-      });
-
-      const response = await this.client.batch(commands);
+      const response = await this.client.post('crm.deal.productrows.set', {
+        id: dealId,
+        rows: validatedProducts,
+      })
 
       if (response.error) {
         throw new Error(`Bitrix24 API Error: ${response.error.error_description || response.error.error}`);
-      }
-
-      // Check if any product addition failed
-      const results = response.result || {};
-      const failedProducts = Object.entries(results).filter(([_, result]: [string, any]) => result.error);
-
-      if (failedProducts.length > 0) {
-        console.warn('⚠️ Some products failed to add:', failedProducts);
       }
 
       console.log('✅ Products added to deal successfully:', { id: dealId, productCount: products.length });
@@ -1151,6 +1136,7 @@ export class DealService {
         orderNumber: deal.UF_CRM_ORDER_NUMBER,
         paymentStatus: deal.UF_CRM_PAYMENT_STATUS,
         categoryId: deal.CATEGORY_ID ? Number(deal.CATEGORY_ID) : undefined,
+        comments: deal.COMMENTS,
       };
 
       console.log('✅ Deal retrieved:', { 

@@ -1,7 +1,7 @@
 import 'server-only'
 import { supabaseAdmin } from '@/lib/database/supabase'
 import { mapOrderToContact } from '@/lib/integrations/bitrix24/mappers/orderToContact'
-import { createDealProducts, mapOrderToDeal } from '@/lib/integrations/bitrix24/mappers/orderToDeal'
+import { mapOrderToDeal, mapOrderToDealProductRows } from '@/lib/integrations/bitrix24/mappers/orderToDeal'
 import { contactService } from '@/lib/integrations/bitrix24/services/ContactService'
 import { dealService } from '@/lib/integrations/bitrix24/services/DealService'
 import { stageMappingService } from '@/lib/integrations/bitrix24/services/StageMappingService'
@@ -55,7 +55,6 @@ const promoteAbandonedDealToPaidOrder = async (
     ...dealData,
     CATEGORY_ID: paidCategoryId,
     STAGE_ID: stageId,
-    COMMENTS: `Porzucony koszyk przekształcony w opłacone zamówienie ${order.orderNumber}`,
   } as any)
 
   if (pipelineMove.success) {
@@ -69,14 +68,9 @@ const promoteAbandonedDealToPaidOrder = async (
         await dealService.linkContact(dealId, contactId)
       }
 
-      const products = createDealProducts(order)
+      const products = mapOrderToDealProductRows(order)
       if (products.length > 0) {
-        const dealProducts = products.map((product) => ({
-          PRODUCT_ID: product.PRODUCT_NAME,
-          QUANTITY: product.QUANTITY,
-          PRICE: product.PRICE,
-        }))
-        await dealService.addProductsToDeal(dealId, dealProducts)
+        await dealService.addProductsToDeal(dealId, products)
       }
 
       return dealId
@@ -118,14 +112,9 @@ const promoteAbandonedDealToPaidOrder = async (
     return null
   }
 
-  const products = createDealProducts(order)
+  const products = mapOrderToDealProductRows(order)
   if (products.length > 0) {
-    const dealProducts = products.map((product) => ({
-      PRODUCT_ID: product.PRODUCT_NAME,
-      QUANTITY: product.QUANTITY,
-      PRICE: product.PRICE,
-    }))
-    await dealService.addProductsToDeal(created.id, dealProducts)
+    await dealService.addProductsToDeal(created.id, products)
   }
 
   const deleted = await dealService.deleteDeal(dealId)

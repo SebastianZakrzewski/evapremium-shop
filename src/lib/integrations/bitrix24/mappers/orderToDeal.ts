@@ -4,7 +4,7 @@
  * Maps EVA Website Order data to Bitrix24 Deal format
  */
 
-import { Bitrix24Deal } from '@/lib/types/bitrix';
+import { Bitrix24Deal, Bitrix24DealProduct } from '@/lib/types/bitrix';
 import { Order } from '@/lib/types/order-new';
 import {
   resolveLegacySetTypeEnumId,
@@ -434,6 +434,18 @@ export function createDealProducts(order: Order): Array<{
     QUANTITY: item.quantity,
     CURRENCY_ID: 'PLN',
   }));
+}
+
+/**
+ * Map order items to Bitrix24 deal product rows.
+ * Uses PRODUCT_NAME for custom catalog rows (no Bitrix catalog ID required).
+ */
+export function mapOrderToDealProductRows(order: Order): Bitrix24DealProduct[] {
+  return createDealProducts(order).map((product) => ({
+    PRODUCT_NAME: product.PRODUCT_NAME,
+    QUANTITY: product.QUANTITY,
+    PRICE: product.PRICE,
+  }))
 }
 
 

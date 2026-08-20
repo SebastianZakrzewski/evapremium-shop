@@ -10,7 +10,7 @@ import { contactService } from '@/lib/integrations/bitrix24/services/ContactServ
 import { dealService } from '@/lib/integrations/bitrix24/services/DealService';
 import { leadService } from '@/lib/integrations/bitrix24/services/LeadService';
 import { mapOrderToContact } from '@/lib/integrations/bitrix24/mappers/orderToContact';
-import { mapOrderToDeal, createDealProducts } from '@/lib/integrations/bitrix24/mappers/orderToDeal';
+import { mapOrderToDeal, mapOrderToDealProductRows } from '@/lib/integrations/bitrix24/mappers/orderToDeal';
 import { mapFormToLead } from '@/lib/integrations/bitrix24/mappers/formToLead';
 import { bitrix24Config } from '@/lib/integrations/bitrix24/config';
 
@@ -411,6 +411,15 @@ async function syncOrderToBitrix24(order: any): Promise<void> {
         comment: `Zamówienie zaktualizowane: ${order.status} (płatność: ${order.paymentStatus})`
       });
 
+      await dealService.linkContact(existingDeal.id, contactResult.id)
+      const dealProducts = mapOrderToDealProductRows(order)
+      if (dealProducts.length > 0) {
+        const productResult = await dealService.addProductsToDeal(existingDeal.id, dealProducts)
+        if (!productResult.success) {
+          console.warn('⚠️ Failed to add products to deal:', productResult.error)
+        }
+      }
+
       console.log('✅ Deal updated successfully');
       return;
     }
@@ -428,19 +437,11 @@ async function syncOrderToBitrix24(order: any): Promise<void> {
       throw new Error(`Failed to create deal: ${dealResult.error}`);
     }
 
-    // 5. Add products to deal
-    const products = createDealProducts(order);
-    if (products.length > 0) {
-      // Convert products to Bitrix24DealProduct format
-      const dealProducts = products.map(product => ({
-        PRODUCT_ID: product.PRODUCT_NAME, // Use product name as ID for now
-        QUANTITY: product.QUANTITY,
-        PRICE: product.PRICE,
-      }));
-      
-      const productResult = await dealService.addProductsToDeal(dealResult.id, dealProducts);
+    const dealProducts = mapOrderToDealProductRows(order)
+    if (dealProducts.length > 0) {
+      const productResult = await dealService.addProductsToDeal(dealResult.id, dealProducts)
       if (!productResult.success) {
-        console.warn('⚠️ Failed to add products to deal:', productResult.error);
+        console.warn('⚠️ Failed to add products to deal:', productResult.error)
       }
     }
 
@@ -448,7 +449,7 @@ async function syncOrderToBitrix24(order: any): Promise<void> {
       orderNumber: order.orderNumber,
       contactId: contactResult.id,
       dealId: dealResult.id,
-      productsCount: products.length
+      productsCount: dealProducts.length
     });
 
   } catch (error) {
