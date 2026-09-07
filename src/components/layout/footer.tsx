@@ -139,7 +139,7 @@ export default function Footer() {
               <li>
                 <span className="block text-xs uppercase text-gray-400 mb-1 tracking-wide">Adres</span>
                 <span className="text-gray-400 block leading-snug">
-                  Klaudia Lewandowska<br />
+                  Klaudia Kłosińska<br />
                   ul. Tadeusza Kościuszki 34/1<br />
                   81-198 Pogórze
                 </span>
