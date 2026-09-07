@@ -76,7 +76,7 @@ export default function ReturnsAndExchangesPage() {
                 </p>
                 <div className="bg-[#111] border border-white/5 p-6 rounded-lg my-4">
                   <div className="text-gray-400 space-y-2">
-                    <p><strong>Klaudia Lewandowska</strong></p>
+                    <p><strong>Klaudia Kłosińska</strong></p>
                     <p>ul. Tadeusza Kościuszki 34/1</p>
                     <p>81-198 Pogórze</p>
                     <p>NIP: 5871715880</p>
@@ -158,7 +158,7 @@ export default function ReturnsAndExchangesPage() {
                     <li>pisemnie na adres:
                       <div className="bg-[#111] border border-white/5 p-4 rounded-lg my-2 ml-4">
                         <div className="text-gray-400 space-y-1">
-                          <p>Klaudia Lewandowska</p>
+                          <p>Klaudia Kłosińska</p>
                           <p>ul. Tadeusza Kościuszki 34/1</p>
                           <p>81-198 Pogórze</p>
                           <p>NIP: 5871715880</p>

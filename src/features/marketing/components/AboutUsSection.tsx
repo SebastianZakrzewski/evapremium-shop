@@ -21,9 +21,9 @@ import { cn } from '@/lib/utils';
 const stats = [
   {
     icon: Award,
-    value: "3+",
+    value: "8+",
     label: "Lat doświadczenia",
-    description: "Od 2023 roku na rynku"
+    description: "Od 2018 roku na rynku"
   },
   {
     icon: Users,

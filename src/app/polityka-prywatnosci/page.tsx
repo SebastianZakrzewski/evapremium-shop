@@ -25,7 +25,7 @@ export default function PrivacyPolicyPage() {
               <div className="text-gray-400 leading-relaxed space-y-4">
                 <p>
                   <strong>1.</strong> Administratorem danych osobowych zbieranych za pośrednictwem Sklepu internetowego 
-                  www.evapremium.pl jest <strong>Klaudia Lewandowska</strong>, miejsce wykonywania działalności oraz 
+                  www.evapremium.pl jest <strong>Klaudia Kłosińska</strong>, miejsce wykonywania działalności oraz 
                   adres do doręczeń: <strong>ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze</strong>, 
                   NIP: <strong>5871715880</strong>, REGON: <strong>380082236</strong>, 
                   adres poczty elektronicznej (e-mail): <strong>evapremium.kontakt@gmail.com</strong> 

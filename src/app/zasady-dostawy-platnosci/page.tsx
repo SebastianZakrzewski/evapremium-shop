@@ -112,7 +112,7 @@ export default function DeliveryAndPaymentTermsPage() {
                     <h3 className="text-xl font-semibold text-white mb-4">1.1. Przelew tradycyjny na rachunek bankowy Sprzedawcy:</h3>
                     <div className="bg-black border border-white/10 p-4 rounded-lg">
                       <div className="text-gray-400 space-y-2">
-                        <p><strong>Klaudia Lewandowska</strong></p>
+                        <p><strong>Klaudia Kłosińska</strong></p>
                         <p>ul. Tadeusza Kościuszki 34/1</p>
                         <p>81-198 Pogórze</p>
                         <p>NIP: 5871715880</p>

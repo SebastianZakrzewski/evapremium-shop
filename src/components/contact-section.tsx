@@ -116,7 +116,7 @@ export default function ContactSection() {
                 <h4 className="font-bold text-white">Dane Firmowe</h4>
               </div>
               <div className="space-y-2 text-sm text-gray-400">
-                <p>EvaPremium Klaudia Lewandowska</p>
+                <p>EvaPremium Klaudia Kłosińska</p>
                 <p>NIP: 5871715880</p>
                 <p>ul. Tadeusza Kościuszki 34/1</p>
                 <p>81-198 Pogórze</p>

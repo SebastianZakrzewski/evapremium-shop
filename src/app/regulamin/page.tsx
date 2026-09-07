@@ -67,7 +67,7 @@ export default function TermsOfServicePage() {
                 <p><strong>FORMULARZ ZAMÓWIENIA</strong> – formularz umożliwiający złożenie Zamówienia.</p>
                 <p><strong>SYSTEM OPINII</strong> – usługa umożliwiająca publikowanie opinii o produktach.</p>
                 <p><strong>NEWSLETTER</strong> – usługa umożliwiająca subskrypcję bezpłatnych informacji o produktach.</p>
-                <p><strong>SPRZEDAWCA / USŁUGODAWCA</strong> – Klaudia Lewandowska, prowadząca jednoosobową działalność gospodarczą, ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze, Gdynia, NIP: 5871715880, REGON: 380082236, e-mail: kontakt.evapremium@gmail.com, tel. +48 793 993 430.</p>
+                <p><strong>SPRZEDAWCA / USŁUGODAWCA</strong> – Klaudia Kłosińska, prowadząca jednoosobową działalność gospodarczą, ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze, Gdynia, NIP: 5871715880, REGON: 380082236, e-mail: kontakt.evapremium@gmail.com, tel. +48 793 993 430.</p>
                 <p><strong>USŁUGOBIORCA</strong> – osoba fizyczna, prawna lub jednostka organizacyjna korzystająca z Usług Elektronicznych.</p>
                 <p><strong>KLIENT</strong> – Usługobiorca, który zamierza zawrzeć lub zawarł Umowę Sprzedaży.</p>
                 <p><strong>KONSUMENT</strong> – osoba fizyczna dokonująca czynności niezwiązanej z działalnością gospodarczą lub zawodową.</p>
@@ -145,7 +145,7 @@ export default function TermsOfServicePage() {
                 </ul>
                 <p>W przypadku przelewu tradycyjnego, wpłat należy dokonywać na rachunek bankowy:<br />
                 47 1140 2004 0000 3702 7951 8739 (mBank S.A.)<br />
-                Właściciel rachunku: Klaudia Lewandowska, ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze, Polska.<br />
+                Właściciel rachunku: Klaudia Kłosińska, ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze, Polska.<br />
                 W tytule przelewu należy wpisać numer zamówienia, e-mail oraz markę i model samochodu.</p>
                 <p>Przy płatnościach elektronicznych realizacja zamówienia rozpoczyna się po potwierdzeniu autoryzacji płatności.</p>
                 <p>W przypadku płatności przy odbiorze wysyłka następuje po weryfikacji danych i przedpłacie.</p>
