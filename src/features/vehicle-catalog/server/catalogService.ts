@@ -3,6 +3,10 @@ import type {
   VehicleCatalogBrand,
   VehicleModelFamily,
 } from "../model/schemas"
+import {
+  canonicalizeModelDesignation,
+  resolveCatalogTemplateRows,
+} from "../domain/modelDesignationCorrections"
 import { getSellableBrands } from "./brandCatalogService"
 import { getMatTemplates, resolveBrandKeyFromParam } from "./repository"
 import { toModelFamily, toTemplateOption } from "./catalogMappers"
@@ -27,7 +31,13 @@ export const getVehicleCatalog = async (query: CatalogQuery) => {
     }
   }
 
-  const resolvedQuery = brandKey ? { ...query, brandKey } : query
+  const resolvedQuery = {
+    ...query,
+    ...(brandKey ? { brandKey } : {}),
+    ...(query.modelFamilyKey
+      ? { modelFamilyKey: canonicalizeModelDesignation(query.modelFamilyKey) }
+      : {}),
+  }
 
   if (!resolvedQuery.brandKey) {
     const sellable = await getSellableBrands()
@@ -39,7 +49,7 @@ export const getVehicleCatalog = async (query: CatalogQuery) => {
     return { level: "brands" as const, brands }
   }
 
-  const rows = await getMatTemplates(resolvedQuery)
+  const rows = resolveCatalogTemplateRows(await getMatTemplates(resolvedQuery))
 
   if (!resolvedQuery.modelFamilyKey && !resolvedQuery.modelFamilyPrefix) {
     const models: VehicleModelFamily[] = uniqueByKey(rows.map(toModelFamily))
@@ -51,10 +61,12 @@ export const getVehicleCatalog = async (query: CatalogQuery) => {
   }
 
   if (resolvedQuery.modelFamilyPrefix) {
-    const prefixRows = await getMatTemplates({
-      brandKey: resolvedQuery.brandKey,
-      modelFamilyPrefix: resolvedQuery.modelFamilyPrefix,
-    })
+    const prefixRows = resolveCatalogTemplateRows(
+      await getMatTemplates({
+        brandKey: resolvedQuery.brandKey,
+        modelFamilyPrefix: resolvedQuery.modelFamilyPrefix,
+      }),
+    )
 
     return {
       level: "templates" as const,

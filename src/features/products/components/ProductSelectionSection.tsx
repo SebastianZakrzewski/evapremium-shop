@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Car, SlidersHorizontal, ChevronRight } from "lucide-react";
 import { getBrandInfo, normalizeBrandName } from '@/shared/brands';
+import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels";
 import { formatBodyTypeLabel } from '@/shared';
 import { useProductSelectionFilters } from '@/features/products/hooks';
 import { fetchCarModels } from '@/lib/api/models';
@@ -82,7 +83,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
 
   // Jeśli nie ma mapowania, spróbuj użyć nazwy z URL jako fallback
   const currentBrand = brandInfo || {
-    displayName: brand.charAt(0).toUpperCase() + brand.slice(1),
+    displayName: formatBrandDisplayName(brand),
     logo: `/images/products/${brandSlug}.png`,
     apiName: brandApiName,
   };

@@ -5,6 +5,7 @@ import {
   getBrandMetaBySlug,
   getBrandMetaLookupLabels,
 } from "@/shared/brands/brandNormalizer"
+import { canonicalizeModelDesignation } from "../domain/modelDesignationCorrections"
 import {
   buildSearchIlikeOrClauses,
   matchesAllSearchTokens,
@@ -91,7 +92,10 @@ export const getMatTemplates = async (
 
     if (filters.brandKey) query = query.eq("brand_key", filters.brandKey)
     if (filters.modelFamilyKey) {
-      query = query.eq("model_family_key", filters.modelFamilyKey)
+      query = query.eq(
+        "model_family_key",
+        canonicalizeModelDesignation(filters.modelFamilyKey),
+      )
     }
     if (filters.modelFamilyPrefix) {
       query = query.ilike("model_family_key", `${filters.modelFamilyPrefix}%`)

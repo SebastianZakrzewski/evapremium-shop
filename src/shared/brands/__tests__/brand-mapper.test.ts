@@ -10,6 +10,16 @@ describe("resolveBrandDisplayNameFromDbName", () => {
     expect(resolveBrandDisplayNameFromDbName("Ssang Young")).toBe("SsangYong")
   })
 
+  it("maps Mercedes-Benz database name to Mercedes-Benz display name", () => {
+    expect(resolveBrandDisplayNameFromDbName("Mercedes-Benz")).toBe(
+      "Mercedes-Benz",
+    )
+  })
+
+  it("maps short Mercedes label to Mercedes-Benz", () => {
+    expect(resolveBrandDisplayNameFromDbName("Mercedes")).toBe("Mercedes-Benz")
+  })
+
   it("maps legacy SSANG YONG to SsangYong", () => {
     expect(resolveBrandDisplayNameFromDbName("SSANG YONG")).toBe("SsangYong")
   })

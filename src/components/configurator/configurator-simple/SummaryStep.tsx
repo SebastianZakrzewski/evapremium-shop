@@ -16,6 +16,7 @@ import { resolveConfiguratorBrandImage } from "@/features/car-configurator/utils
 import { shouldServeBrandImageUnoptimized } from "@/shared/brands";
 import { useMatModelPreviews } from "@/features/mat-model-previews";
 import { Plus, CheckCircle2, ShoppingCart } from "lucide-react";
+import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels";
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
 import {
   getPodpietkaMountingFee,
@@ -264,8 +265,8 @@ export function SummaryStep({
                     src={vehicleThumbnailSrc}
                     alt={
                       usesModelPreviewPhoto
-                        ? `Podgląd dywaników ${config.brand} ${config.model}`
-                        : config.brand
+                        ? `Podgląd dywaników ${formatBrandDisplayName(config.brand)} ${config.model}`
+                        : formatBrandDisplayName(config.brand)
                     }
                     fill
                     className={
@@ -287,7 +288,7 @@ export function SummaryStep({
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-xs text-gray-400 uppercase tracking-wider font-medium mb-0.5">Samochód</p>
-                <p className="text-white font-semibold text-sm md:text-base break-words">{config.brand} {config.model}</p>
+                <p className="text-white font-semibold text-sm md:text-base break-words">{formatBrandDisplayName(config.brand)} {config.model}</p>
                 <p className="text-xs md:text-sm text-gray-400">{config.year} • {config.bodyType}</p>
               </div>
             </div>

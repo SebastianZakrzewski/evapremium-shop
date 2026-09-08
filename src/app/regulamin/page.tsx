@@ -24,7 +24,7 @@ export default function TermsOfServicePage() {
               <h2 className="text-2xl font-semibold text-white mb-4">§1 POSTANOWIENIA OGÓLNE</h2>
               <div className="text-gray-400 leading-relaxed space-y-4">
                 <p>
-                  Sklep internetowy działający pod adresem www.evapremium.pl prowadzony jest przez Klaudię Lewandowską, 
+                  Sklep internetowy działający pod adresem www.evapremium.pl prowadzony jest przez Klaudię Kłosińską, 
                   prowadzącą działalność gospodarczą w formie jednoosobowej działalności gospodarczej, z siedzibą przy 
                   ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze, Gdynia, NIP: 5871715880, REGON: 380082236, 
                   adres e-mail: kontakt.evapremium@gmail.com, numer telefonu: +48 793 993 430.
@@ -349,7 +349,7 @@ export default function TermsOfServicePage() {
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">§15 WŁASNOŚĆ INTELEKTUALNA</h2>
               <div className="text-gray-400 leading-relaxed space-y-4">
-                <p>Wszystkie treści umieszczone na stronie www.evapremium.pl są chronione prawem autorskim i stanowią własność Klaudii Lewandowskiej, prowadzącej działalność gospodarczą przy ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze, Gdynia, NIP: 5871715880, REGON: 380082236, z zastrzeżeniem treści zamieszczanych przez użytkowników lub objętych licencją.</p>
+                <p>Wszystkie treści umieszczone na stronie www.evapremium.pl są chronione prawem autorskim i stanowią własność Klaudii Kłosińskiej, prowadzącej działalność gospodarczą przy ul. Tadeusza Kościuszki 34/1, 81-198 Pogórze, Gdynia, NIP: 5871715880, REGON: 380082236, z zastrzeżeniem treści zamieszczanych przez użytkowników lub objętych licencją.</p>
                 <p>Jakiekolwiek kopiowanie, modyfikowanie, wykorzystywanie lub rozpowszechnianie zawartości strony bez zgody Usługodawcy jest zabronione i podlega odpowiedzialności cywilnej oraz karnej.</p>
                 <p>Wszystkie znaki towarowe, nazwy handlowe i logotypy użyte w Sklepie należą do ich właścicieli i zostały użyte wyłącznie w celach informacyjnych.</p>
               </div>

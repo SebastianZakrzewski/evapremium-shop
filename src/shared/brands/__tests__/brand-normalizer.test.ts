@@ -35,8 +35,8 @@ describe("getBrandMetaBySlug", () => {
   it("returns consistent meta for canonical slug", () => {
     const meta = getBrandMetaBySlug("mercedes-benz");
     expect(meta).not.toBeNull();
-    expect(meta?.apiName).toBe("Mercedes-Benz");
-    expect(meta?.displayName).toMatch(/Mercedes/i);
+    expect(meta?.apiName).toBe("Mercedes-Benz")
+    expect(meta?.displayName).toBe("Mercedes-Benz")
   });
 
   it("handles aliases with underscores", () => {

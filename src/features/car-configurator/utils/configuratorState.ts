@@ -1,5 +1,10 @@
-import type { Brand } from "@/entities/car";
-import type { PodpietkaMounting } from "@/features/car-configurator/domain/podpietkaMounting";
+import type { Brand } from "@/entities/car"
+import type { PodpietkaMounting } from "@/features/car-configurator/domain/podpietkaMounting"
+import {
+  brandNameToNavigationSlug,
+  resolveBrandFromUrlParam,
+} from "@/shared/brands/brandParam"
+import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels"
 
 export interface ConfiguratorState {
   brand: string;
@@ -34,9 +39,6 @@ export type ConfiguratorUrlParams = {
   generationParam?: string | null;
 };
 
-const capitalize = (value: string): string =>
-  value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
-
 const isSameToken = (left: string, right: string): boolean =>
   left.trim().toLowerCase() === right.trim().toLowerCase();
 
@@ -44,15 +46,25 @@ export const isLockedProductEntry = (urlParams: ConfiguratorUrlParams): boolean 
   !!(urlParams.brandParam?.trim() && urlParams.modelParam?.trim());
 
 export const resolveBrandFromParam = (brandParam: string, brands: Brand[]): string => {
-  if (!brandParam) return "";
+  if (!brandParam) return ""
+
+  const fromUrl = resolveBrandFromUrlParam(brandParam)
+  if (fromUrl?.displayName) return fromUrl.displayName
+
   if (brands.length > 0) {
-    const matched = brands.find(
-      (brand) => brand.name.toLowerCase() === brandParam.toLowerCase()
-    );
-    if (matched) return matched.name;
+    const paramSlug = brandNameToNavigationSlug(brandParam)
+    const matched = brands.find((brand) => {
+      const name = brand.name.toLowerCase()
+      return (
+        name === brandParam.toLowerCase() ||
+        brandNameToNavigationSlug(brand.name) === paramSlug
+      )
+    })
+    if (matched) return formatBrandDisplayName(matched.name)
   }
-  return capitalize(brandParam);
-};
+
+  return formatBrandDisplayName(brandParam)
+}
 
 export const getConfigUpdatesFromUrl = ({
   previous,

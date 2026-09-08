@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, ChevronUp, ZoomIn } from "lucide-react";
 import Image from "next/image";
 import { getColorInfo } from "@/lib/color-mapping";
+import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels";
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
 
 interface StickyBottomCTAProps {
@@ -114,7 +115,7 @@ export function StickyBottomCTA({
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
                 <span className="text-sm font-semibold text-white truncate">
-                  {config.brand} {config.model}
+                  {formatBrandDisplayName(config.brand)} {config.model}
                 </span>
               </div>
               <div className="flex items-center gap-2 text-xs text-gray-400 mb-1">

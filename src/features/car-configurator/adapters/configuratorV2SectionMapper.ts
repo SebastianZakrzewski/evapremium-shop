@@ -1,6 +1,7 @@
 import type { ConfiguratorState } from "../utils/configuratorState"
 import { getMatSetVariantLabel, getMatTypeLabel } from "@/shared/mat-set-labels"
 import { formatPriceValue } from "@/lib/utils/formatPrice"
+import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels"
 
 export type ConfiguratorV2SectionId =
   | "vehicle"
@@ -124,7 +125,7 @@ export const mapConfiguratorV2Sections = ({
     {
       label: "Pojazd",
       value: vehicleComplete
-        ? `${config.brand} ${config.model}`
+        ? `${formatBrandDisplayName(config.brand)} ${config.model}`
         : "Wybierz auto",
     },
     {

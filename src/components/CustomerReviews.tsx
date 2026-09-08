@@ -36,7 +36,7 @@ export default function CustomerReviews() {
       location: "Kraków",
       rating: 5,
       review: "Zamówiłem dywaniki do Mercedesa i jestem pod ogromnym wrażeniem! Precyzyjne dopasowanie, szybka dostawa (2 dni!) i świetna jakość wykonania. Obsługa klienta na najwyższym poziomie.",
-      carModel: "Mercedes C-Class 2023",
+      carModel: "Mercedes-Benz C-Class 2023",
       purchaseDate: "Styczeń 2025",
       verified: true,
       helpful: 8

@@ -104,4 +104,14 @@ describe("mapConfiguratorV2Sections", () => {
     expect(result.contextLine).toContain("3D z rantami")
     expect(result.contextLine).toContain("Struktura: Romby")
   })
+
+  it("shows Mercedes-Benz instead of the short Mercedes label", () => {
+    const result = mapConfiguratorV2Sections({
+      config: { ...baseConfig, brand: "Mercedes", variant: "premium" },
+      skipMatTypeStep: false,
+      totalPrice: 549,
+    })
+
+    expect(result.metrics[0]?.value).toBe("Mercedes-Benz A4")
+  })
 })

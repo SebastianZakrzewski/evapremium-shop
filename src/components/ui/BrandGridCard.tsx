@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Brand } from "@/entities/car";
 import { brandNameToNavigationSlug } from "@/shared/brands/brandParam";
+import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels";
 import {
   BRAND_GRID_SIZES_STANDARD,
   isBrandPhotoFile,
@@ -47,6 +48,8 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
   const isBrandImage = isModeleBrandPhoto(brand.logo);
   const unoptimized = shouldServeBrandImageUnoptimized(brand.logo);
 
+  const brandLabel = formatBrandDisplayName(brand.name)
+
   return (
     <div
       onClick={handleClick}
@@ -72,7 +75,7 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
       }}
       role="button"
       tabIndex={0}
-      aria-label={`Wybierz markę ${brand.name}`}
+      aria-label={`Wybierz markę ${brandLabel}`}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -93,13 +96,13 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
         {imageError ? (
           <div className="w-full h-full flex items-center justify-center bg-white/5 rounded-2xl">
             <span className="text-4xl md:text-6xl font-bold text-white/20 select-none">
-              {brand.name.charAt(0)}
+              {brandLabel.charAt(0)}
             </span>
           </div>
         ) : isImage ? (
           <Image
             src={brand.logo}
-            alt={`${brand.name} logo`}
+            alt={`${brandLabel} logo`}
             fill
             className={`
               transition-all duration-700
@@ -119,7 +122,7 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
           <div className="w-24 h-24 sm:w-32 sm:h-32 flex items-center justify-center">
             <Image
               src={brand.logo}
-              alt={`${brand.name} logo`}
+              alt={`${brandLabel} logo`}
               width={128}
               height={128}
               className="object-contain transition-all duration-700 group-hover:scale-105 w-full h-full"
@@ -134,7 +137,7 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
       {/* Nazwa marki na dole */}
       <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
         <h3 className="text-white font-bold text-lg text-center drop-shadow-md transform transition-transform duration-300 group-hover:-translate-y-1">
-          {brand.name}
+          {brandLabel}
         </h3>
         {brand.description && (
           <p className="text-white text-xs text-center mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">

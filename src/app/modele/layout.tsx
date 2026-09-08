@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Modele Aut - Dywaniki Samochodowe | Eva',
-  description: 'Wybierz model swojego auta: Audi, BMW, Mercedes, Tesla, Porsche. Spersonalizowane dywaniki samochodowe dla każdego modelu. Darmowa dostawa.',
+  description: 'Wybierz model swojego auta: Audi, BMW, Mercedes-Benz, Tesla, Porsche. Spersonalizowane dywaniki samochodowe dla każdego modelu. Darmowa dostawa.',
   keywords: 'dywaniki samochodowe, modele aut, audi, bmw, mercedes, tesla, porsche, dywaniki do auta, dywaniki 2024',
   openGraph: {
     title: 'Modele Aut - Dywaniki Samochodowe | Eva',
