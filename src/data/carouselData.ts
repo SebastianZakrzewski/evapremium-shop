@@ -16,7 +16,7 @@ export const brands: Brand[] = [
   },
   {
     id: 3,
-    name: "Mercedes",
+    name: "Mercedes-Benz",
     logo: "/images/products/mercedes.jpg",
     description: "Niemiecka marka luksusowa"
   },

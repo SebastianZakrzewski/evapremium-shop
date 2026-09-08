@@ -7,6 +7,7 @@ import { useBrands } from "@/features/brands/hooks/useBrands";
 import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/buildConfiguratorEntryUrl";
 import { useQuickSearchCatalog } from "@/features/vehicle-catalog/hooks/useQuickSearchCatalog";
 import { enrichCarContextFromTemplates } from "@/features/vehicle-catalog/utils/enrichCarContextFromTemplates";
+import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels";
 
 export default function QuickSearchBar() {
   const router = useRouter();
@@ -97,7 +98,7 @@ export default function QuickSearchBar() {
                 <option value="" className="bg-[#111] text-gray-400">Wybierz...</option>
                 {brands.map((brand) => (
                   <option key={brand.id} value={brand.name} className="bg-[#111] text-white">
-                    {brand.name}
+                    {formatBrandDisplayName(brand.name)}
                   </option>
                 ))}
               </select>

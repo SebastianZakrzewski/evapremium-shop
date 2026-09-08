@@ -161,7 +161,7 @@ export const MODELE_IMAGE_MAP: Record<string, string> = {
 
 const BRAND_DEFINITIONS: BrandMeta[] = [
   { slug: "bmw", apiName: "Bmw", displayName: "BMW", dbName: "BMW", logo: `${MODELE_LOGO_BASE}/bmw.webp`, aliases: ["bmw"] },
-  { slug: "mercedes", apiName: "Mercedes-Benz", displayName: "Mercedes", catalogKey: "mercedes_benz", logo: `${MODELE_LOGO_BASE}/mercedes_benz.jpg`, aliases: ["mercedes", "mercedes-benz", "mercedes benz", "mercedes_benz"] },
+  { slug: "mercedes", apiName: "Mercedes-Benz", displayName: "Mercedes-Benz", catalogKey: "mercedes_benz", logo: `${MODELE_LOGO_BASE}/mercedes_benz.jpg`, aliases: ["mercedes", "mercedes-benz", "mercedes benz", "mercedes_benz"] },
   { slug: "audi", apiName: "Audi", displayName: "Audi", logo: `${MODELE_LOGO_BASE}/audi.avif`, aliases: ["audi"] },
   { slug: "porsche", apiName: "Porsche", displayName: "Porsche", logo: `${MODELE_LOGO_BASE}/porsche.jpg`, aliases: ["porsche"] },
   { slug: "tesla", apiName: "Tesla", displayName: "Tesla", logo: `${MODELE_LOGO_BASE}/tesla.avif`, aliases: ["tesla"] },

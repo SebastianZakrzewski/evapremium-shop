@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/buildConfiguratorEntryUrl";
 import { searchApi } from '@/lib/api';
 import { toComparableSearchQuery } from "@/shared/vehicle/searchQuery";
+import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels";
 
 interface SearchBrand {
   id: number;
@@ -369,7 +370,7 @@ function SearchDropdown() {
                               >
                                 <Car className="w-5 h-5 sm:w-4 sm:h-4 text-red-500 flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
-                                  <div className="font-medium truncate text-base sm:text-base">{brand.name}</div>
+                                  <div className="font-medium truncate text-base sm:text-base">{formatBrandDisplayName(brand.name)}</div>
                                   {brand.description && (
                                     <div className="text-sm sm:text-xs text-gray-400 truncate mt-0.5">{brand.description}</div>
                                   )}
@@ -406,7 +407,7 @@ function SearchDropdown() {
                                 <Car className="w-5 h-5 sm:w-4 sm:h-4 text-red-500 flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
                                   <div className="font-medium truncate text-base sm:text-base">
-                                    {model.displayLabel ?? `${model.brand} ${model.model}`}
+                                    {model.displayLabel ?? `${formatBrandDisplayName(model.brand)} ${model.model}`}
                                   </div>
                                 </div>
                               </button>

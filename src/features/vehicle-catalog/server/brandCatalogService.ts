@@ -120,7 +120,7 @@ const loadSellableBrands = async (): Promise<SellableBrand[]> => {
 
 export const getSellableBrands = unstable_cache(
   loadSellableBrands,
-  ["sellable-brands-v1"],
+  ["sellable-brands-v2"],
   {
     revalidate: 300,
     tags: ["sellable-brands"],

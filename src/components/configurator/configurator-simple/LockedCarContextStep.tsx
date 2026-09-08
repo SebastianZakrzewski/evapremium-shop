@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef } from "react"
-import { buildVehicleDisplayLabels } from "@/shared/vehicle/displayLabels"
+import { buildVehicleDisplayLabels, formatBrandDisplayName } from "@/shared/vehicle/displayLabels"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Car, CheckCircle2 } from "lucide-react"
@@ -486,8 +486,8 @@ export const LockedCarContextStep = ({
                 src={brandThumbnailSrc}
                 alt={
                   usesModelPreviewPhoto
-                    ? `Podgląd dywaników ${config.brand} ${config.model}`
-                    : config.brand
+                    ? `Podgląd dywaników ${formatBrandDisplayName(config.brand)} ${config.model}`
+                    : formatBrandDisplayName(config.brand)
                 }
                 fill
                 className={
@@ -511,7 +511,7 @@ export const LockedCarContextStep = ({
             <p className="text-xs text-gray-500 uppercase tracking-wider mb-0.5">
               Marka
             </p>
-            <p className="text-white font-semibold">{config.brand}</p>
+            <p className="text-white font-semibold">{formatBrandDisplayName(config.brand)}</p>
           </div>
         </div>
 

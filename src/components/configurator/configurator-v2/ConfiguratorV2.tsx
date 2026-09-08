@@ -21,6 +21,7 @@ import {
   getPodpietkaTotalPrice,
 } from "@/features/car-configurator/domain/podpietkaMounting"
 import { resolvePersistedMatSetVariantLabel } from "@/shared/mat-set-labels"
+import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels"
 import { normalizeBrandName } from "@/shared/brands"
 import { getMatImagePath } from "@/lib/image-mapping"
 import { getMatTypeForDynamicPreview } from "@/components/configurator/configurator-simple/rugPreviewConfig"
@@ -337,7 +338,7 @@ export default function ConfiguratorV2() {
         productId,
         quantity: 1,
         unitPrice: priceBreakdown.totalPrice,
-        productName: `Dywaniki ${config.brand} ${config.model}`,
+        productName: `Dywaniki ${formatBrandDisplayName(config.brand)} ${config.model}`,
         productSku: `MAT-${config.brand.toUpperCase()}-${config.model.toUpperCase()}`,
         productImage: productImagePath,
         configuration: {
@@ -425,7 +426,7 @@ export default function ConfiguratorV2() {
   ])
 
   const pageTitle = config.brand && config.model
-    ? `${config.brand} ${config.model}`
+    ? `${formatBrandDisplayName(config.brand)} ${config.model}`
     : "Zaprojektuj dywaniki"
 
   if (brandsLoading && !config.brand) {

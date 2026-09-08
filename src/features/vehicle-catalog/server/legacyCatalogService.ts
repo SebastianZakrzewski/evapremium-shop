@@ -1,5 +1,6 @@
 import "server-only"
 import type { MatTemplateDbRow } from "./repository"
+import { canonicalizeModelDesignation } from "../domain/modelDesignationCorrections"
 import {
   getMatTemplates,
   resolveBrandKeyFromParam,
@@ -29,14 +30,16 @@ const isCurrentlyProduced = (row: MatTemplateDbRow): boolean => {
 }
 
 const matchesModelParam = (row: MatTemplateDbRow, modelParam: string): boolean => {
-  const token = normalizeToken(modelParam)
+  const token = normalizeToken(canonicalizeModelDesignation(modelParam))
   return (
-    normalizeToken(row.model_family_name) === token ||
-    normalizeToken(row.model_family_key) === token ||
-    normalizeToken(row.model_name) === token ||
-    normalizeToken(row.model_key) === token ||
-    row.model_family_name.toLowerCase() === modelParam.toLowerCase() ||
-    row.model_name.toLowerCase() === modelParam.toLowerCase()
+    normalizeToken(canonicalizeModelDesignation(row.model_family_name)) === token ||
+    normalizeToken(canonicalizeModelDesignation(row.model_family_key)) === token ||
+    normalizeToken(canonicalizeModelDesignation(row.model_name)) === token ||
+    normalizeToken(canonicalizeModelDesignation(row.model_key)) === token ||
+    canonicalizeModelDesignation(row.model_family_name).toLowerCase() ===
+      canonicalizeModelDesignation(modelParam).toLowerCase() ||
+    canonicalizeModelDesignation(row.model_name).toLowerCase() ===
+      canonicalizeModelDesignation(modelParam).toLowerCase()
   )
 }
 

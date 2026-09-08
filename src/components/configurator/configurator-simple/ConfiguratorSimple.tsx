@@ -19,6 +19,7 @@ import { normalizeBrandName } from "@/shared/brands";
 import {
   resolvePersistedMatSetVariantLabel,
 } from "@/shared/mat-set-labels";
+import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels";
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
 import { StepProgress } from "./StepProgress";
 import { StepAccordion } from "./StepAccordion";
@@ -409,7 +410,7 @@ export default function ConfiguratorSimple() {
   );
 
   const carLabel = isCarComplete
-    ? `${config.brand} ${config.model} · ${config.year} · ${config.bodyType}`
+    ? `${formatBrandDisplayName(config.brand)} ${config.model} · ${config.year} · ${config.bodyType}`
     : null;
 
   useEffect(() => {
@@ -911,7 +912,7 @@ export default function ConfiguratorSimple() {
         productId: productId,
         quantity: 1,
         unitPrice: priceBreakdown.totalPrice,
-        productName: `Dywaniki ${config.brand} ${config.model}`,
+        productName: `Dywaniki ${formatBrandDisplayName(config.brand)} ${config.model}`,
         productSku: `MAT-${config.brand.toUpperCase()}-${config.model.toUpperCase()}`,
         productImage: productImagePath,
         configuration: {
@@ -1214,7 +1215,7 @@ export default function ConfiguratorSimple() {
                   <h2 className="text-xl font-semibold text-white">Podsumowanie</h2>
                 </div>
                 <MobileSummaryPreview
-                  carLabel={carLabel ?? `${config.brand} ${config.model}`}
+                  carLabel={carLabel ?? `${formatBrandDisplayName(config.brand)} ${config.model}`}
                   matProductImage={matProductImage}
                   dynamicPreviewPath={dynamicPreviewPath}
                   productPreviewPath={productPreviewPath}

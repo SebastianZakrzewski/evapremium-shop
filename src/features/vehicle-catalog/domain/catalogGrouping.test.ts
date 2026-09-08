@@ -59,6 +59,41 @@ describe("groupTemplatesToCarModels", () => {
     expect(models[0]?.years).toContain(2018)
   })
 
+  it("hides BMW X5 M G05 alias when F95 already exists", () => {
+    const models = groupTemplatesToCarModels([
+      baseRow({
+        id: "f95",
+        brand_name: "BMW",
+        brand_key: "BMW",
+        model_name: "X5 M (F95) 3 gen",
+        model_key: "X5 M (F95) 3 gen",
+        model_family_name: "X5 M (F95) 3 gen",
+        model_family_key: "X5 M (F95) 3 gen",
+        generation: "2019-2027",
+        year_from: 2019,
+        year_to: 2027,
+        record_key: "passenger_car|bmw|x5_m_f95_3_gen|2019-2027|suv|272",
+      }),
+      baseRow({
+        id: "g05",
+        brand_name: "BMW",
+        brand_key: "BMW",
+        model_name: "X5 M(G05) 4 gen",
+        model_key: "X5 M(G05) 4 gen",
+        model_family_name: "X5 M(G05) 4 gen",
+        model_family_key: "X5 M(G05) 4 gen",
+        generation: "2018-2028",
+        year_from: 2018,
+        year_to: 2028,
+        record_key: "passenger_car|bmw|x5_mg05_4_gen|2018-2028|suv|266",
+      }),
+    ])
+
+    expect(models).toHaveLength(1)
+    expect(models[0]?.model).toBe("X5 M (F95) 3 gen")
+    expect(models[0]?.generations.map((gen) => gen.matTemplateId)).toEqual(["f95"])
+  })
+
   it("emits separate generation entries for each body type on a template row", () => {
     const models = groupTemplatesToCarModels([
       baseRow({

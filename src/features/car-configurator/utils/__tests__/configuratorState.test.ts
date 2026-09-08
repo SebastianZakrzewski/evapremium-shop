@@ -45,6 +45,19 @@ describe("resolveBrandFromParam", () => {
   it("capitalizes when brand is not in list", () => {
     expect(resolveBrandFromParam("volvo", brands)).toBe("Volvo");
   });
+
+  it("maps mercedes slug to Mercedes-Benz", () => {
+    expect(resolveBrandFromParam("mercedes", brands)).toBe("Mercedes-Benz");
+  });
+
+  it("keeps Mercedes-Benz when the catalog already uses the full name", () => {
+    const mercedesBrands: Brand[] = [
+      { id: 3, name: "Mercedes-Benz", logo: "/mercedes.png" },
+    ];
+    expect(resolveBrandFromParam("mercedes", mercedesBrands)).toBe(
+      "Mercedes-Benz",
+    );
+  });
 });
 
 describe("getConfigUpdatesFromUrl", () => {

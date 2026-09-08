@@ -33,6 +33,7 @@ import { debugLog } from "@/lib/config/features";
 import { useTracking } from "@/lib/tracking";
 import { Brand, Model } from "@/entities/car";
 import { normalizeBrandName } from "@/shared/brands";
+import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels";
 import { LowestPrice30DaysNotice } from "@/components/configurator/configurator-simple/LowestPrice30DaysNotice";
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
 import { useConfiguratorCarData } from "@/features/car-configurator";
@@ -703,7 +704,7 @@ export default function Configurator() {
     
     if (selectedCarBrand) {
       // Formatuj nazwę marki (pierwsza litera wielka)
-      const formattedBrand = selectedCarBrand.charAt(0).toUpperCase() + selectedCarBrand.slice(1);
+      const formattedBrand = formatBrandDisplayName(selectedCarBrand);
       parts.push(`do ${formattedBrand}`);
       
       if (selectedCarModel) {
@@ -1005,14 +1006,7 @@ export default function Configurator() {
                         )}
                       </div>
                       <span className="text-lg font-semibold text-white">
-                        {(() => {
-                          const brandMappings: Record<string, string> = {
-                            "Mercedes": "Mercedes-Benz",
-                            "Aston martin": "Aston Martin",
-                            "Alfa romeo": "Alfa Romeo"
-                          };
-                          return brandMappings[selectedCarBrand] || selectedCarBrand;
-                        })()}
+                        {formatBrandDisplayName(selectedCarBrand)}
                       </span>
                     </div>
                     <p className="text-base text-gray-400 mt-2">
@@ -1368,15 +1362,7 @@ export default function Configurator() {
                       </div>
                       <div>
                         <div className="text-white font-semibold">
-                          {(() => {
-                            const brandName = selectedCarBrand.charAt(0).toUpperCase() + selectedCarBrand.slice(1);
-                            const brandMappings: Record<string, string> = {
-                              "Mercedes": "Mercedes-Benz",
-                              "Aston martin": "Aston Martin",
-                              "Alfa romeo": "Alfa Romeo"
-                            };
-                            return brandMappings[brandName] || brandName;
-                          })()} {selectedCarModel}
+                          {formatBrandDisplayName(selectedCarBrand)} {selectedCarModel}
                         </div>
                         <div className="text-base text-gray-400">
                           {selectedCarYear} • {bodyTypes.find(bt => bt.id === selectedBodyType)?.name || "Nie wybrano"}

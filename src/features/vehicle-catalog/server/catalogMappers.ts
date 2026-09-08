@@ -5,6 +5,7 @@ import {
   formatModelFamilyDisplayName,
   inferBodyTypeKeyFromValue,
 } from "@/shared/vehicle/displayLabels"
+import { canonicalizeModelDesignation } from "../domain/modelDesignationCorrections"
 import type { MatTemplateDbRow } from "./repository"
 
 const uniqueByKey = <T extends { key: string }>(items: T[]): T[] =>
@@ -81,12 +82,13 @@ export const toCatalogBrand = (row: MatTemplateDbRow) => ({
   displayName: formatBrandDisplayName(row.brand_name),
 })
 
-export const toModelFamily = (row: MatTemplateDbRow) => ({
-  key: row.model_family_key,
-  name: row.model_family_name,
-  displayName: formatModelFamilyDisplayName(
-    row.model_family_name,
-    row.model_family_key,
-    row.model_key,
-  ),
-})
+export const toModelFamily = (row: MatTemplateDbRow) => {
+  const name = canonicalizeModelDesignation(row.model_family_name)
+  const key = canonicalizeModelDesignation(row.model_family_key)
+  const modelKey = canonicalizeModelDesignation(row.model_key)
+  return {
+    key,
+    name,
+    displayName: formatModelFamilyDisplayName(name, key, modelKey),
+  }
+}

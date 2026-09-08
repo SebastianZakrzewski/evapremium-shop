@@ -11,6 +11,7 @@ import {
 } from "@/shared/vehicle/displayLabels"
 import type { MatTemplateDbRow } from "../server/repository"
 import { getBodyTypes } from "../server/catalogMappers"
+import { resolveCatalogTemplateRows } from "./modelDesignationCorrections"
 
 const currentYear = () => new Date().getFullYear()
 
@@ -35,6 +36,7 @@ const isCurrentlyProduced = (row: MatTemplateDbRow): boolean => {
 export const groupTemplatesToCarModels = (
   rows: MatTemplateDbRow[],
 ): CarModelApiResponse[] => {
+  const catalogRows = resolveCatalogTemplateRows(rows)
   const grouped = new Map<
     string,
     {
@@ -48,7 +50,7 @@ export const groupTemplatesToCarModels = (
     }
   >()
 
-  rows.forEach((row) => {
+  catalogRows.forEach((row) => {
     const key = `${row.brand_key}|${row.model_family_key}`
     const existing = grouped.get(key) ?? {
       brand: row.brand_name,
@@ -197,7 +199,7 @@ export const extractSearchModels = (
 ): CatalogSearchModel[] => {
   const variants = new Map<string, CatalogSearchModel>()
 
-  rows.forEach((row) => {
+  resolveCatalogTemplateRows(rows).forEach((row) => {
     const primaryBodyType =
       row.body_type_1 ??
       row.body_type ??

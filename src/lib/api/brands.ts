@@ -29,7 +29,7 @@ export async function fetchBrands(): Promise<Brand[]> {
 export function getFallbackBrands(): Brand[] {
   return [
     { id: 1, name: "BMW", logo: "/modele/bmw.png", description: "Niemiecka marka sportowa" },
-    { id: 2, name: "Mercedes", logo: "/modele/mercedes_benz.jpg", description: "Niemiecka marka luksusowa" },
+    { id: 2, name: "Mercedes-Benz", logo: "/modele/mercedes_benz.jpg", description: "Niemiecka marka luksusowa" },
     { id: 3, name: "Audi", logo: "/modele/audi.avif", description: "Niemiecka marka premium" },
     { id: 4, name: "Tesla", logo: "/modele/tesla.avif", description: "Amerykańska marka elektryczna" },
     { id: 5, name: "Porsche", logo: "/modele/porsche.jpg", description: "Niemiecka marka sportowa" }

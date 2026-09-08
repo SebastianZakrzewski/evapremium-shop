@@ -26,6 +26,7 @@ import {
 import { getDoorsCount } from "@/shared";
 import {
   formatBodyTypeDisplayPl,
+  formatBrandDisplayName,
   formatModelWithGenerationDisplay,
   formatYearRangeDisplay,
 } from "@/shared/vehicle/displayLabels";
@@ -126,6 +127,7 @@ export default function CarModelsSection() {
   const brandSlug = resolvedBrand?.slug ?? ''
   const brandInfo = brandSlug ? getBrandInfo(brandSlug) : null
   const brandDisplayName = resolvedBrand?.displayName ?? brandInfo?.displayName
+  const visibleBrandName = formatBrandDisplayName(brandDisplayName || brandParam || "")
   const brandApiName = resolvedBrand?.apiName ?? ''
 
   const brandLogo = useMemo(() => {
@@ -397,7 +399,7 @@ export default function CarModelsSection() {
             {brandParam && (
               <>
                 <span>/</span>
-                <span className="text-white">{brandDisplayName || brandParam}</span>
+                <span className="text-white">{visibleBrandName || brandParam}</span>
               </>
             )}
           </nav>
@@ -408,7 +410,7 @@ export default function CarModelsSection() {
                 <div className="w-20 h-20 relative p-2 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
                   <Image
                     src={brandLogo}
-                    alt={`${brandDisplayName || brandParam} logo`}
+                    alt={`${visibleBrandName || brandParam} logo`}
                     fill
                     className={`object-contain p-2 ${isModeleBrandPhoto(brandLogo) ? 'object-cover object-center' : ''}`}
                     unoptimized={shouldServeBrandImageUnoptimized(brandLogo)}
@@ -417,10 +419,10 @@ export default function CarModelsSection() {
               </div>
             )}
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              MODELE <span className="text-red-600">{(brandDisplayName || brandParam || '').toUpperCase()}</span>
+              MODELE <span className="text-red-600">{(visibleBrandName || brandParam || '').toUpperCase()}</span>
             </h1>
             <p className="text-lg text-gray-400 leading-relaxed">
-              Wybierz model {(brandDisplayName || brandParam)} i spersonalizuj dywaniki samochodowe EVA Premium. Najwyższa jakość materiałów, precyzyjne dopasowanie i trwałość na lata.
+              Wybierz model {(visibleBrandName || brandParam)} i spersonalizuj dywaniki samochodowe EVA Premium. Najwyższa jakość materiałów, precyzyjne dopasowanie i trwałość na lata.
             </p>
           </div>
         </div>
@@ -586,7 +588,7 @@ export default function CarModelsSection() {
                           ? imageSrc
                           : null,
                     });
-                    const brandLabel = brandDisplayName || model.brand || '';
+                    const brandLabel = visibleBrandName || model.brand || '';
                     const useBrandPhoto = isModeleBrandPhoto(imageSrc);
 
                     return (
@@ -663,7 +665,7 @@ export default function CarModelsSection() {
                     <h3 className="text-xl font-semibold text-white mb-2">Nie znaleziono modeli</h3>
                     <p className="text-gray-400 max-w-md mx-auto mb-6">
                       {displayModels.length === 0 
-                        ? `Nie znaleziono modeli dla marki ${brandDisplayName || resolvedBrand?.raw || brandParam}. Możliwe, że modele dla tej marki są w trakcie dodawania.`
+                        ? `Nie znaleziono modeli dla marki ${visibleBrandName || resolvedBrand?.raw || brandParam}. Możliwe, że modele dla tej marki są w trakcie dodawania.`
                         : 'Spróbuj zmienić kryteria wyszukiwania lub usuń filtry, aby zobaczyć więcej wyników.'
                       }
                     </p>

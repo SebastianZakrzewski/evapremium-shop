@@ -126,7 +126,7 @@ export default function AboutUsSection() {
                   Naszym celem jest dostarczenie produktu, który nie tylko chroni samochód, ale staje się jego integralną, estetyczną częścią. Wierzymy, że praktyczność nie musi oznaczać kompromisów w wyglądzie.
                 </p>
                 <ul className="space-y-4">
-                  {['Innowacja materiałowa', 'Lokalna produkcja', 'Ekologia'].map((item, i) => (
+                  {['Innowacja materiałowa', 'Sprzedaż z Polski', 'Ekologia'].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-white">
                       <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
                         <CheckCircle className="w-4 h-4 text-green-500" />
@@ -160,7 +160,7 @@ export default function AboutUsSection() {
                   <div>
                     <h4 className="text-xl font-bold text-white mb-2">Mistrzowska Jakość</h4>
                     <p className="text-gray-400 leading-relaxed">
-                      Każdy dywanik przechodzi rygorystyczną kontrolę jakości. Nie uznajemy dróg na skróty w procesie produkcji.
+                      Każdy komplet, który trafia do klienta, przechodzi kontrolę jakości. Nie uznajemy dróg na skróty przy doborze oferty.
                     </p>
                   </div>
                 </div>
