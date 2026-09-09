@@ -3,15 +3,11 @@
 import { useState, useEffect, useCallback, useMemo, useRef, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { Phone, ChevronRight, ShieldCheck, Droplets, Truck } from "lucide-react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import {
   HERO_PROMO_ASPECT_CLASS,
-  HERO_PROMO_IMAGE_SIZES,
   HERO_PROMO_IMAGE_SRC,
-  HERO_PROMO_MOBILE_IMAGE_SIZES,
   HERO_PROMO_MOBILE_IMAGE_SRC,
-  heroPromoImageProps,
 } from "@/features/marketing/lib/heroImage";
 
 type HeroSlide = {
@@ -63,7 +59,7 @@ const allHeroSlides: HeroSlide[] = [
     subtitle: "",
     image: HERO_PROMO_IMAGE_SRC,
     imageMobile: HERO_PROMO_MOBILE_IMAGE_SRC,
-    imageAlt: "Letnia promocja dywaników samochodowych EVA Premium do -30%",
+    imageAlt: "Jesienna promocja dywaników samochodowych EVA Premium do -30%",
     cta: "",
     price: "",
     benefits: [],
@@ -122,36 +118,30 @@ const HeroPromoBanner = ({
       <div className="absolute inset-0 bg-neutral-100">
         {slide.imageMobile ? (
           <>
-            <Image
+            <img
               src={slide.imageMobile}
               alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
-              fill
-              className="object-contain object-center md:hidden"
-              priority={priority}
-              sizes={HERO_PROMO_MOBILE_IMAGE_SIZES}
-              {...heroPromoImageProps}
+              className="h-full w-full object-contain object-center md:hidden"
+              decoding="sync"
+              fetchPriority={priority ? "high" : "auto"}
             />
             {!mobileOnly ? (
-              <Image
+              <img
                 src={slide.image}
                 alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
-                fill
-                className="hidden object-contain object-center md:block"
-                priority={priority}
-                sizes={HERO_PROMO_IMAGE_SIZES}
-                {...heroPromoImageProps}
+                className="hidden h-full w-full object-contain object-center md:block"
+                decoding="sync"
+                fetchPriority={priority ? "high" : "auto"}
               />
             ) : null}
           </>
         ) : (
-          <Image
+          <img
             src={slide.image}
             alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
-            fill
-            className="object-contain object-center"
-            priority={priority}
-            sizes={HERO_PROMO_IMAGE_SIZES}
-            {...heroPromoImageProps}
+            className="h-full w-full object-contain object-center"
+            decoding="sync"
+            fetchPriority={priority ? "high" : "auto"}
           />
         )}
       </div>
