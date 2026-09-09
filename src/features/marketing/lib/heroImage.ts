@@ -1,25 +1,30 @@
-/** Ścieżka banera hero desktop (public/hero_letnia_promocja_1234x413.webp). */
-export const HERO_PROMO_IMAGE_SRC = '/hero_letnia_promocja_1234x413.webp'
+/** Ścieżka banera hero desktop (public/jesien_hero.png) — oryginał PNG, bez kompresji. */
+export const HERO_PROMO_IMAGE_SRC = '/jesien_hero.png?v=2168'
 
-/** Ścieżka banera hero mobile (public/hero4_mobile.webp). */
-export const HERO_PROMO_MOBILE_IMAGE_SRC = '/hero4_mobile.webp'
+/** Ścieżka banera hero mobile (public/jesien_mobile_hero.png) — oryginał PNG, bez kompresji. */
+export const HERO_PROMO_MOBILE_IMAGE_SRC = '/jesien_mobile_hero.png?v=941'
 
 /** Natywna rozdzielczość banera hero desktop. */
-export const HERO_PROMO_NATIVE_WIDTH = 1234
+export const HERO_PROMO_NATIVE_WIDTH = 2168
 
-export const HERO_PROMO_NATIVE_HEIGHT = 413
+export const HERO_PROMO_NATIVE_HEIGHT = 725
 
 /** Natywna rozdzielczość banera hero mobile. */
 export const HERO_PROMO_MOBILE_NATIVE_WIDTH = 941
 
 export const HERO_PROMO_MOBILE_NATIVE_HEIGHT = 1672
 
-/** Maks. szerokość wyświetlania = natywna rozdzielczość desktop. */
-export const HERO_PROMO_DISPLAY_MAX_WIDTH = HERO_PROMO_NATIVE_WIDTH
+/** Maks. szerokość wyświetlania desktop (jak wcześniejszy baner 1234×413). */
+export const HERO_PROMO_DISPLAY_MAX_WIDTH = 1234
 
-/** Baner hero przez Next Image Optimizer (WebP źródłowy + adaptive quality). */
+/** Desktop: oryginalny PNG, bez Next Image Optimizer. */
+export const heroPromoDesktopImageProps = {
+  unoptimized: true as const,
+}
+
+/** Mobile: oryginalny PNG, bez Next Image Optimizer. */
 export const heroPromoImageProps = {
-  quality: 80 as const,
+  unoptimized: true as const,
 }
 
 export const HERO_PROMO_IMAGE_SIZES = `(max-width: ${HERO_PROMO_DISPLAY_MAX_WIDTH}px) 100vw, ${HERO_PROMO_DISPLAY_MAX_WIDTH}px`

@@ -16,6 +16,7 @@ vi.mock("next/image", () => ({
     fill: _fill,
     priority: _priority,
     quality: _quality,
+    unoptimized: _unoptimized,
     ...props
   }: {
     src: string | { src: string }
@@ -23,6 +24,7 @@ vi.mock("next/image", () => ({
     fill?: boolean
     priority?: boolean
     quality?: number
+    unoptimized?: boolean
   }) => {
     const imageSrc = typeof src === "string" ? src : src.src
 
@@ -64,6 +66,11 @@ describe("HeroSection", () => {
     expect(screen.queryByTestId("hero-video-1")).not.toBeInTheDocument()
     expect(screen.getByTestId("hero-promo-cta-hit-area")).toBeInTheDocument()
     expect(screen.queryByLabelText("Poprzedni slajd")).not.toBeInTheDocument()
+    expect(
+      screen.getAllByAltText(
+        "Jesienna promocja dywaników samochodowych EVA Premium do -30%"
+      ).find((image) => image.getAttribute("src") === "/jesien_hero.png?v=2168")
+    ).toBeDefined()
   })
 
   it("renders only the static promo hero on mobile", () => {
@@ -75,10 +82,10 @@ describe("HeroSection", () => {
     expect(screen.queryByTestId("hero-video-1")).not.toBeInTheDocument()
 
     const promotionImage = screen.getByAltText(
-      "Letnia promocja dywaników samochodowych EVA Premium do -30%"
+      "Jesienna promocja dywaników samochodowych EVA Premium do -30%"
     )
 
-    expect(promotionImage).toHaveAttribute("src", "/hero4_mobile.webp")
+    expect(promotionImage).toHaveAttribute("src", "/jesien_mobile_hero.png?v=941")
     expect(screen.getByTestId("hero-mobile-promo-cta-hit-area")).toBeInTheDocument()
   })
 
