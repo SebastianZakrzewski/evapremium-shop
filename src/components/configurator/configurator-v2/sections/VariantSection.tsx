@@ -7,12 +7,14 @@ import { ConfiguratorV2ImageOptionCard, CONFIGURATOR_V2_IMAGE_CARD_MIN_WIDTH } f
 import { ConfiguratorV2SectionShell } from "./ConfiguratorV2SectionShell"
 import { VariantTunnelBonusNotice } from "../variant/VariantTunnelBonusNotice"
 import { shouldShowVariantTunnelBonus } from "../variant/variantTunnelBonus"
+import { VariantTrunkMatRimNotice } from "../variant/VariantTrunkMatRimNotice"
+import { shouldShowVariantTrunkMatRimNotice } from "../variant/trunkMatRimNotice"
 
 const compareLinkClass =
   "text-xs text-gray-400 hover:text-white underline-offset-2 hover:underline whitespace-nowrap transition-colors"
 
 type VariantSectionProps = {
-  config: { variant: string }
+  config: { variant: string; matType?: string }
   pricingVariants: PricingVariantOption[]
   pricingCategoryKey?: string
   bodyTypeKey?: string
@@ -41,6 +43,10 @@ export const VariantSection = ({
       )
     : null
   const showTunnelBonus = shouldShowVariantTunnelBonus(pricingCategoryKey)
+  const showTrunkMatRimNotice = shouldShowVariantTrunkMatRimNotice({
+    matType: config.matType,
+    variantKey: config.variant,
+  })
 
   return (
     <ConfiguratorV2SectionShell
@@ -84,6 +90,7 @@ export const VariantSection = ({
           )
         })}
       </div>
+      {showTrunkMatRimNotice && <VariantTrunkMatRimNotice />}
       {showTunnelBonus && pricingVariants.length > 0 && (
         <VariantTunnelBonusNotice />
       )}
