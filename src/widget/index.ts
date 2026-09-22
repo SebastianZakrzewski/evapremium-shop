@@ -1,8 +1,0 @@
-export { ChatWindow } from './chat-window'
-export type { ChatWindowProps } from './chat-window'
-export { useShopChat } from './use-shop-chat'
-export type { UseShopChatOptions, ShopChatStatus } from './use-shop-chat'
-export { createShopClient, ShopApiError } from './shop-api'
-export type { ShopClient, ShopClientConfig } from './shop-api'
-export { parseSseBuffer } from './parse-sse'
-export { ensureVisitorId } from './visitor'
