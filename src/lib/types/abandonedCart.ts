@@ -13,6 +13,7 @@ export interface AbandonedCartSnapshotCar {
   model?: string;
   year?: string | number;
   bodyType?: string;
+  gearbox?: string;
 }
 
 export interface AbandonedCartSnapshotConfiguration {

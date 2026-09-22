@@ -71,6 +71,7 @@ const baseConfig: ConfiguratorState = {
   templateId: "",
   recordKey: "",
   year: "2020",
+  gearbox: "Automatyczna",
   bodyType: "Sedan",
   bodyTypeKey: "sedan",
   pricingCategoryKey: "passenger_car",

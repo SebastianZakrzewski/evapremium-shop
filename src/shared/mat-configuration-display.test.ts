@@ -3,6 +3,7 @@ import type { MatConfiguration } from "@/features/vehicle-catalog/model/matConfi
 import {
   formatMatCarBodyTypeLabel,
   formatMatCarDetailsTitle,
+  formatMatCarGearboxLabel,
   getMatConfigurationDisplayRows,
   getPolishCellTypeLabel,
   getPolishColorLabel,
@@ -22,6 +23,7 @@ const sampleConfiguration: MatConfiguration = {
   edgeColor: "black",
   carDetails: {
     year: "2009",
+    gearbox: "Automatyczna",
     brand: "Alfa-romeo",
     model: "Brera",
     bodyType: "shooting_brake",
@@ -46,6 +48,9 @@ describe("mat-configuration-display", () => {
     )
     expect(formatMatCarBodyTypeLabel(sampleConfiguration.carDetails)).toBe(
       "SHOOTING BRAKE",
+    )
+    expect(formatMatCarGearboxLabel(sampleConfiguration.carDetails)).toBe(
+      "Automatyczna",
     )
   })
 

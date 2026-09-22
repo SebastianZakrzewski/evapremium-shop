@@ -25,6 +25,10 @@ import {
 } from "@/features/car-configurator/utils/lockedCarContextLogic"
 import { useConfiguratorV2InitialVehicleScroll } from "@/components/configurator/configurator-v2/hooks/useConfiguratorV2InitialVehicleScroll"
 import { resolveConfiguratorV2VehicleScrollTarget } from "@/components/configurator/configurator-v2/utils/resolveConfiguratorV2VehicleScrollTarget"
+import {
+  GEARBOX_OPTIONS,
+  isGearbox,
+} from "@/features/car-configurator/domain/gearbox"
 
 type LockedCarContextStepProps = {
   config: Pick<
@@ -36,6 +40,7 @@ type LockedCarContextStepProps = {
     | "modelKey"
     | "generation"
     | "year"
+    | "gearbox"
     | "bodyType"
     | "bodyTypeKey"
     | "recordKey"
@@ -387,6 +392,7 @@ export const LockedCarContextStep = ({
         brandSelected: Boolean(config.brand),
         modelSelected: Boolean(config.model),
         year: config.year,
+        gearbox: config.gearbox,
         bodyTypeKey: config.bodyTypeKey,
         modelKey: config.modelKey,
         isLoading,
@@ -401,6 +407,7 @@ export const LockedCarContextStep = ({
       config.model,
       config.modelKey,
       config.year,
+      config.gearbox,
       isLoading,
     ],
   )
@@ -414,6 +421,7 @@ export const LockedCarContextStep = ({
     config.brand &&
       config.model &&
       config.year &&
+      config.gearbox &&
       config.bodyTypeKey &&
       config.recordKey,
   )
@@ -455,6 +463,9 @@ export const LockedCarContextStep = ({
       return vehicleDisplay.yearRangeDisplay
         ? `Wybierz rok produkcji z zakresu ${vehicleDisplay.yearRangeDisplay}`
         : "Wybierz rok produkcji z listy dostępnych roczników"
+    }
+    if (config.year && !config.gearbox) {
+      return "Wybierz skrzynię biegów"
     }
     if (bodyTypeParamMismatch) {
       return `Typ nadwozia „${productEntry.bodyTypeParam}” nie jest dostępny dla wybranego rocznika — wybierz z listy`
@@ -567,6 +578,39 @@ export const LockedCarContextStep = ({
               {availableYears.map((year) => (
                 <option key={year} value={String(year)}>
                   {year}
+                </option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <span className="text-gray-400">▼</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {config.year && (
+        <div id="locked-car-gearbox" className="scroll-mt-4">
+          <label
+            htmlFor="locked-car-gearbox-select"
+            className="block text-sm font-medium text-gray-400 mb-2"
+          >
+            Skrzynia biegów *
+          </label>
+          <div className="relative">
+            <select
+              id="locked-car-gearbox-select"
+              value={config.gearbox}
+              onChange={(event) => {
+                const value = event.target.value
+                onUpdate({ gearbox: isGearbox(value) ? value : "" })
+              }}
+              className={selectClassName}
+              aria-label="Wybierz skrzynię biegów"
+            >
+              <option value="">Wybierz skrzynię biegów</option>
+              {GEARBOX_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
                 </option>
               ))}
             </select>

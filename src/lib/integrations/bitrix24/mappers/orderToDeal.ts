@@ -18,6 +18,10 @@ import {
   isSinglePriceSetType,
 } from '@/shared/mat-set-labels'
 import { getPodpietkaMountingBitrixLabel } from '@/features/car-configurator/domain/podpietkaMounting';
+import {
+  getGearboxBitrixEnumId,
+  getGearboxLabel,
+} from '@/features/car-configurator/domain/gearbox';
 
 export interface OrderToDealMappingOptions {
   contactId?: string;
@@ -112,6 +116,8 @@ export function mapOrderToDeal(
     UF_CRM_1760788302371: carDetails.model,        // Model samochodu
     UF_CRM_1760788317619: carDetails.year ? Number(carDetails.year) : undefined, // Rok samochodu (double)
     UF_CRM_1760788343011: carDetails.body,         // Typ nadwozia
+    UF_CRM_1757178158864: carDetails.gearbox,      // Skrzynia biegów (tekst)
+    UF_CRM_1768256494433: getGearboxBitrixEnumId(carDetails.gearbox), // Skrzynia biegów (enum)
     
     // ✅ POLA PRODUKTU - działają poprawnie (wartości enum)
     UF_CRM_1757024835301: setType,           // Rodzaj kompletu (setType)
@@ -149,6 +155,7 @@ function extractCarDetails(order: Order): {
   model?: string;
   year?: string;
   body?: string;
+  gearbox?: string;
 } {
   console.log('🔍 extractCarDetails: Starting extraction for order:', order.orderNumber);
   
@@ -190,6 +197,7 @@ function extractCarDetails(order: Order): {
         model: config.carDetails.model,
         year: config.carDetails.year,
         body: config.carDetails.bodyType, // Naprawione: bodyType zamiast body
+        gearbox: getGearboxLabel(config.carDetails.gearbox || config.carDetails.trans),
       };
       console.log('🔍 extractCarDetails: Extracted car details:', carDetails);
       console.log('🔍 extractCarDetails: Car details validation:', {
@@ -337,7 +345,11 @@ function buildDealComments(order: Order): string {
         const config = item.configuration as any;
         if (config.carDetails) {
           const car = config.carDetails;
-          comments.push(`   Samochód: ${car.brand} ${car.model} ${car.year || ''} ${car.bodyType || ''}`);
+          comments.push(`   Samochód: ${car.brand} ${car.model} ${car.year || ''} ${car.bodyType || ''}`.trim());
+          const gearboxLabel = getGearboxLabel(car.gearbox || car.trans);
+          if (gearboxLabel) {
+            comments.push(`   Skrzynia biegów: ${gearboxLabel}`);
+          }
         }
         if (config.setVariant) {
           const matConfig = config as MatConfiguration

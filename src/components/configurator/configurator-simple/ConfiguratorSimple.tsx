@@ -406,11 +406,11 @@ export default function ConfiguratorSimple() {
   const hasFullPreview = !!(config.structure && config.color && config.edgeColor);
 
   const isCarComplete = !!(
-    config.brand && config.model && config.year && config.bodyType
+    config.brand && config.model && config.year && config.gearbox && config.bodyType
   );
 
   const carLabel = isCarComplete
-    ? `${formatBrandDisplayName(config.brand)} ${config.model} · ${config.year} · ${config.bodyType}`
+    ? `${formatBrandDisplayName(config.brand)} ${config.model} · ${config.year} · ${config.gearbox} · ${config.bodyType}`
     : null;
 
   useEffect(() => {
@@ -636,7 +636,7 @@ export default function ConfiguratorSimple() {
   // Walidacja kroku - desktop (7 kroków)
   const isStepValidDesktop = (step: number): boolean => {
     switch (step) {
-      case 1: return !!(config.brand && config.model && config.year && config.bodyType);
+      case 1: return !!(config.brand && config.model && config.year && config.gearbox && config.bodyType);
       case 2: return skipMatTypeStep ? true : !!config.matType;
       case 3: return !!config.variant;
       case 4: return !!config.structure;
@@ -650,7 +650,7 @@ export default function ConfiguratorSimple() {
   // Walidacja kroku - mobile (5 kroków)
   const isStepValidMobile = (step: number): boolean => {
     switch (step) {
-      case 1: return !!(config.brand && config.model && config.year && config.bodyType);
+      case 1: return !!(config.brand && config.model && config.year && config.gearbox && config.bodyType);
       case 2: return skipMatTypeStep
         ? !!config.variant
         : !!(config.matType && config.variant);
@@ -924,6 +924,7 @@ export default function ConfiguratorSimple() {
             modelKey: config.modelKey,
             generation: config.generation,
             year: config.year,
+            gearbox: config.gearbox,
             bodyType: config.bodyType,
             bodyTypeKey: config.bodyTypeKey,
             recordKey: config.recordKey,

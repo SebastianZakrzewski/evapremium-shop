@@ -446,6 +446,7 @@ export default function CheckoutSection() {
       model: matConfig.carDetails.model,
       year: matConfig.carDetails.year,
       bodyType: matConfig.carDetails.bodyType,
+      gearbox: matConfig.carDetails.gearbox,
     } : undefined;
 
     const configurationData = matConfig ? {
@@ -524,6 +525,7 @@ export default function CheckoutSection() {
             model: matConfig.carDetails.model,
             year: matConfig.carDetails.year,
             bodyType: matConfig.carDetails.bodyType,
+            gearbox: matConfig.carDetails.gearbox,
           }
         : undefined,
       configuration: matConfig

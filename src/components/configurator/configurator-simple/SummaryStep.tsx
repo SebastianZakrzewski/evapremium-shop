@@ -289,7 +289,9 @@ export function SummaryStep({
               <div className="min-w-0 flex-1">
                 <p className="text-xs text-gray-400 uppercase tracking-wider font-medium mb-0.5">Samochód</p>
                 <p className="text-white font-semibold text-sm md:text-base break-words">{formatBrandDisplayName(config.brand)} {config.model}</p>
-                <p className="text-xs md:text-sm text-gray-400">{config.year} • {config.bodyType}</p>
+                <p className="text-xs md:text-sm text-gray-400">
+                  {config.year} • {config.gearbox} • {config.bodyType}
+                </p>
               </div>
             </div>
 

@@ -1,4 +1,5 @@
 import type { Brand } from "@/entities/car"
+import type { Gearbox } from "@/features/car-configurator/domain/gearbox"
 import type { PodpietkaMounting } from "@/features/car-configurator/domain/podpietkaMounting"
 import {
   brandNameToNavigationSlug,
@@ -16,6 +17,7 @@ export interface ConfiguratorState {
   templateId: string;
   recordKey: string;
   year: string;
+  gearbox: Gearbox | "";
   bodyType: string;
   bodyTypeKey: string;
   pricingCategoryKey: string;

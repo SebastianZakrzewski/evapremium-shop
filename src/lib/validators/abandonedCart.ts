@@ -16,6 +16,7 @@ export const abandonedCartCarSchema = z.object({
   model: z.string().max(64).optional(),
   year: z.union([z.string(), z.number()]).optional(),
   bodyType: z.string().max(64).optional(),
+  gearbox: z.string().max(64).optional(),
 }).strict().partial();
 
 export const abandonedCartConfigurationSchema = z.object({

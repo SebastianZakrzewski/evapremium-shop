@@ -1,4 +1,5 @@
 import type { MatCarDetails, MatConfiguration } from "@/features/vehicle-catalog/model/matConfiguration"
+import { getGearboxLabel } from "@/features/car-configurator/domain/gearbox"
 import {
   formatBodyTypeDisplayPl,
   formatBrandDisplayName,
@@ -88,6 +89,9 @@ export const formatMatCarDetailsTitle = (carDetails: MatCarDetails): string => {
 
 export const formatMatCarBodyTypeLabel = (carDetails: MatCarDetails): string =>
   formatBodyTypeDisplayPl(carDetails.bodyTypeKey ?? carDetails.bodyType)
+
+export const formatMatCarGearboxLabel = (carDetails: MatCarDetails): string =>
+  getGearboxLabel(carDetails.gearbox)
 
 export const getMatConfigurationDisplayRows = (
   config: MatConfiguration,

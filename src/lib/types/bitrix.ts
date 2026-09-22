@@ -58,6 +58,8 @@ export interface Bitrix24Deal {
   UF_CRM_1760788302371?: string;        // Model samochodu
   UF_CRM_1760788317619?: number;        // Rok samochodu (double)
   UF_CRM_1760788343011?: string;        // Typ nadwozia
+  UF_CRM_1757178158864?: string;        // Skrzynia biegów (tekst)
+  UF_CRM_1768256494433?: number;        // Skrzynia biegów (enum)
   
   // ✅ POLA PRODUKTU - działają poprawnie (wartości enum)
   UF_CRM_1757024835301?: number;        // Wariant kompletu

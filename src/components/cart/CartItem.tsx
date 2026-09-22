@@ -152,6 +152,11 @@ function MatCartItem({
                   {carDetails.bodyType}
                 </p>
               )}
+              {carDetails.gearbox && (
+                <p className="text-xs text-neutral-400 mt-1">
+                  Skrzynia: {carDetails.gearbox}
+                </p>
+              )}
             </div>
           )}
         </div>

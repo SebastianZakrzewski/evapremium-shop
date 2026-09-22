@@ -350,6 +350,7 @@ export default function ConfiguratorV2() {
             modelKey: config.modelKey,
             generation: config.generation,
             year: config.year,
+            gearbox: config.gearbox,
             bodyType: config.bodyType,
             bodyTypeKey: config.bodyTypeKey,
             recordKey: config.recordKey,

@@ -3,11 +3,16 @@
 import { useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
+import {
+  GEARBOX_OPTIONS,
+  isGearbox,
+} from "@/features/car-configurator/domain/gearbox"
 import { useVehicleCatalog } from "@/features/vehicle-catalog/hooks/useVehicleCatalog"
 import { useConfiguratorV2InitialVehicleScroll } from "@/components/configurator/configurator-v2/hooks/useConfiguratorV2InitialVehicleScroll"
 import { resolveConfiguratorV2VehicleScrollTarget } from "@/components/configurator/configurator-v2/utils/resolveConfiguratorV2VehicleScrollTarget"
 import {
   VEHICLE_BODY_TYPE_FIELD_ID,
+  VEHICLE_GEARBOX_FIELD_ID,
   VEHICLE_YEAR_FIELD_ID,
 } from "@/components/configurator/configurator-v2/utils/configuratorV2VehicleFieldIds"
 
@@ -114,6 +119,7 @@ export const CarSelectionStep = ({
       config.modelFamilyKey &&
       config.modelKey &&
       config.year &&
+      config.gearbox &&
       config.bodyTypeKey &&
       config.recordKey,
   )
@@ -125,6 +131,7 @@ export const CarSelectionStep = ({
         brandSelected: Boolean(config.brandKey && config.brand),
         modelSelected: Boolean(config.modelFamilyKey && config.model),
         year: config.year,
+        gearbox: config.gearbox,
         bodyTypeKey: config.bodyTypeKey,
         modelKey: config.modelKey,
         isLoading,
@@ -140,6 +147,7 @@ export const CarSelectionStep = ({
       config.modelFamilyKey,
       config.modelKey,
       config.year,
+      config.gearbox,
       isLoading,
       years.length,
     ],
@@ -266,6 +274,21 @@ export const CarSelectionStep = ({
           templateId: "",
           pricingCategoryKey: "",
           variant: "",
+        }),
+    },
+    {
+      id: VEHICLE_GEARBOX_FIELD_ID,
+      label: "Skrzynia biegów",
+      value: config.gearbox,
+      disabled: !config.year,
+      placeholder: "Wybierz skrzynię biegów",
+      options: GEARBOX_OPTIONS.map((option) => ({
+        value: option.value,
+        label: option.label,
+      })),
+      onChange: (gearbox: string) =>
+        onUpdate({
+          gearbox: isGearbox(gearbox) ? gearbox : "",
         }),
     },
     {

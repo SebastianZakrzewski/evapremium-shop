@@ -44,6 +44,7 @@ const defaultState: ConfiguratorState = {
   templateId: "",
   recordKey: "",
   year: "",
+  gearbox: "",
   bodyType: "",
   bodyTypeKey: "",
   pricingCategoryKey: "",

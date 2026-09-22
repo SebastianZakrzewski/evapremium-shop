@@ -28,6 +28,7 @@ const baseConfig: ConfiguratorState = {
   modelKey: "seria-3",
   generation: "G20",
   year: "2020",
+  gearbox: "Automatyczna",
   bodyType: "Sedan",
   bodyTypeKey: "sedan",
   recordKey: "bmw-seria-3",

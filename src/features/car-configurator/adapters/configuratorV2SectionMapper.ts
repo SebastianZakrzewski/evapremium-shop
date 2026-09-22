@@ -38,7 +38,7 @@ export type ConfiguratorV2SectionMapperResult = {
 }
 
 const isVehicleComplete = (config: ConfiguratorState): boolean =>
-  !!(config.brand && config.model && config.year && config.bodyType)
+  !!(config.brand && config.model && config.year && config.gearbox && config.bodyType)
 
 const isMatTypeComplete = (
   config: ConfiguratorState,
