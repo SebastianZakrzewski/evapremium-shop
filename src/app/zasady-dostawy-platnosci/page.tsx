@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Zasady dostawy i płatności - EvaPremium',
-  description: 'Polityka wysyłki i płatności w sklepie EvaPremium - koszty, terminy dostawy, sposoby płatności',
+  description: 'Polityka wysyłki i płatności w sklepie EvaPremium. Dostawa wyłącznie na terenie Polski: koszty, terminy i sposoby płatności.',
 };
 
 export default function DeliveryAndPaymentTermsPage() {
@@ -24,8 +24,8 @@ export default function DeliveryAndPaymentTermsPage() {
               <h2 className="text-2xl font-semibold text-white mb-4">KOSZT, TERMIN I SPOSOBY DOSTAWY PRODUKTU</h2>
               <div className="text-gray-400 leading-relaxed space-y-4">
                 <p>
-                  Koszty dostawy Produktu ponoszone przez Klienta są określane w trakcie składania Zamówienia i zależą od wybranej metody płatności oraz sposobu dostawy. 
-                  Informacja o całkowitym koszcie (w tym koszcie dostawy) jest każdorazowo podawana przed ostatecznym potwierdzeniem Zamówienia.
+                  Sprzedawca realizuje dostawę wyłącznie na terenie Polski. Koszty dostawy Produktu ponoszone przez Klienta są określane w trakcie składania Zamówienia i zależą od wybranej metody płatności oraz sposobu dostawy.
+                  Cennik dostawy obowiązuje tylko na terenie Polski. Informacja o całkowitym koszcie (w tym koszcie dostawy) jest każdorazowo podawana przed ostatecznym potwierdzeniem Zamówienia.
                 </p>
                 
                 <p>
@@ -48,13 +48,13 @@ export default function DeliveryAndPaymentTermsPage() {
                 <div className="bg-[#111] border border-white/5 p-6 rounded-lg my-4">
                   <h3 className="text-lg font-semibold text-white mb-3">+ Czasu dostawy przez przewoźnika</h3>
                   <p className="text-gray-400">
-                    który wynosi zazwyczaj do 7 dni roboczych od momentu nadania przesyłki (dostawy realizowane są tylko w dni robocze, 
+                    który wynosi zazwyczaj do 7 dni roboczych od momentu nadania przesyłki na terenie Polski (dostawy realizowane są tylko w dni robocze,
                     z wyłączeniem sobót, niedziel i dni ustawowo wolnych od pracy).
                   </p>
                 </div>
 
                 <p>
-                  Zamówione Produkty dostarczane są za pośrednictwem firm kurierskich (m.in. DPD, DHL, InPost), Poczty Polskiej lub do paczkomatów InPost.
+                  Zamówione Produkty dostarczane są wyłącznie na terenie Polski, za pośrednictwem firm kurierskich (m.in. DPD, DHL, InPost), Poczty Polskiej lub do paczkomatów InPost.
                 </p>
 
                 <p>
@@ -77,7 +77,7 @@ export default function DeliveryAndPaymentTermsPage() {
                 </div>
 
                 <p>
-                  Usługi Ekspres i Premium są dodatkowo płatne, zgodnie z aktualnym cennikiem.
+                  Usługi Ekspres i Premium są dodatkowo płatne, zgodnie z aktualnym cennikiem obowiązującym wyłącznie na terenie Polski.
                 </p>
 
                 <p>
@@ -158,7 +158,7 @@ export default function DeliveryAndPaymentTermsPage() {
                   <h4 className="text-lg font-semibold text-blue-200 mb-2">Informacje o płatnościach:</h4>
                   <ul className="text-blue-200 space-y-2">
                     <li>• W przypadku płatności elektronicznych (pkt 1.2), Klient dokonuje zapłaty przed rozpoczęciem realizacji zamówienia.</li>
-                    <li>• W przypadku płatności za pobraniem (pkt 1.3), przesyłka zostanie wysłana po wpłacie przedpłaty przez Klienta i weryfikacji adresu dostawy. Pozostała kwota płatna jest u kuriera.</li>
+                    <li>• W przypadku płatności za pobraniem (pkt 1.3), przesyłka zostanie wysłana po wpłacie przedpłaty przez Klienta i weryfikacji adresu dostawy na terenie Polski. Pozostała kwota płatna jest u kuriera.</li>
                     <li>• Klient zobowiązany jest do dokonania zapłaty Ceny z tytułu Umowy Sprzedaży w terminie 5 dni roboczych od dnia jej zawarcia, chyba że Umowa Sprzedaży stanowi inaczej.</li>
                     <li>• Produkt zostanie przekazany do wysyłki dopiero po zaksięgowaniu środków (przelew, płatność online) lub po wpłacie przedpłaty (w przypadku płatności przy odbiorze).</li>
                   </ul>
