@@ -1,13 +1,11 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
+import { ShopChrome } from "@/components/layout/ShopChrome";
 import Script from "next/script";
 import { SessionProvider } from "@/lib/contexts/session-context";
 import { TrackingProvider } from "@/components/tracking-provider";
 import { QueryProvider } from "@/lib/providers/query-provider";
-import { CookieConsentBanner } from "@/features/cookie-consent";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -243,14 +241,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         />
       </head>
       <body className={`${montserrat.variable} bg-black min-h-screen`}>
-        <CookieConsentBanner />
-
         <QueryProvider>
           <SessionProvider>
             <TrackingProvider>
-              <Navbar />
-              <div className="pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden">{children}</div>
-              <Footer />
+              <ShopChrome>{children}</ShopChrome>
             </TrackingProvider>
           </SessionProvider>
         </QueryProvider>
