@@ -13,10 +13,6 @@ export default function DeliveryAndPaymentTermsPage() {
           <h1 className="text-4xl font-bold text-white mb-8 text-center">Zasady dostawy i płatności</h1>
           
           <div className="bg-black border border-white/5 rounded-lg shadow-lg p-8 space-y-8">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-white mb-4">POLITYKA WYSYŁKI I PŁATNOŚCI</h1>
-            </div>
-
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">KOSZT, TERMIN I SPOSOBY DOSTAWY PRODUKTU</h2>
               <div className="text-gray-400 leading-relaxed space-y-4">
