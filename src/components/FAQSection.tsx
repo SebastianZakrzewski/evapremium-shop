@@ -62,7 +62,7 @@ const faqData: FAQItem[] = [
   {
     id: 9,
     question: "Czy oferujecie darmową dostawę?",
-    answer: "Tak, oferujemy darmową dostawę na terenie całej Polski przy zamówieniach powyżej 600 zł. Dla zamówień poniżej tej kwoty koszt dostawy wynosi 27 zł. Dostawa realizowana jest przez firmę kurierską w ciągu 1-2 dni roboczych.",
+    answer: "Tak. W Polsce dostawa jest darmowa przy zamówieniach powyżej 600 zł. Poniżej tej kwoty kosztuje 27 zł. Ten cennik obowiązuje wyłącznie na terenie Polski. Przesyłkę dostarcza kurier, zwykle w ciągu 1–2 dni roboczych.",
     category: "Dostawa"
   },
   {
