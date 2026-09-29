@@ -15,9 +15,6 @@ export default function DeliveryAndPaymentTermsPage() {
           <div className="bg-black border border-white/5 rounded-lg shadow-lg p-8 space-y-8">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-white mb-4">POLITYKA WYSYŁKI I PŁATNOŚCI</h1>
-              <div className="text-sm text-gray-400">
-                <p>Ostatnia aktualizacja: {new Date().toLocaleDateString('pl-PL')}</p>
-              </div>
             </div>
 
             <section>
