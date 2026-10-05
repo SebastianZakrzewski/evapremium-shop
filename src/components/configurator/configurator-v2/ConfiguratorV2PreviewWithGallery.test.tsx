@@ -64,4 +64,24 @@ describe("ConfiguratorV2PreviewWithGallery", () => {
       "Są to realne zdjęcia realizacji dywaników 3D z rantami do Nissan Qashqai(J12) III gen 2021-2028",
     )
   })
+
+  it("fits product photos to the preview window width without stretching them", () => {
+    render(
+      <ConfiguratorV2PreviewWithGallery
+        layout="desktop"
+        imageSrc="/mat/1.webp"
+        alt="Podgląd"
+        showGallery
+        galleryItems={items}
+        activeGalleryId="model-template-1"
+        onSelectGalleryItem={vi.fn()}
+      />,
+    )
+
+    const preview = screen.getByAltText("Podgląd")
+    expect(preview).toHaveClass("h-auto", "w-full", "max-w-none")
+    expect(preview).not.toHaveClass("object-contain")
+    expect(preview).not.toHaveClass("h-full")
+    expect(preview.parentElement).toHaveClass("bg-white")
+  })
 })

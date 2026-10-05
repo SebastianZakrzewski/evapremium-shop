@@ -31,6 +31,7 @@ import {
   formatYearRangeDisplay,
 } from "@/shared/vehicle/displayLabels";
 import { useCarModelsFilters } from "@/features/brands/hooks";
+import { isPinnedModelCard, readModelCardQuery } from "@/features/brands/model/modelCardUrl";
 import { formatPriceCurrency } from "@/lib/utils/formatPrice";
 import { Car, Loader2, SlidersHorizontal, X, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
@@ -69,6 +70,8 @@ export default function CarModelsSection() {
   const router = useRouter();
   const pathname = usePathname();
   const brandParam = searchParams.get('brand');
+  const cardQuery = useMemo(() => readModelCardQuery(searchParams), [searchParams]);
+  const pinnedCard = isPinnedModelCard(cardQuery);
   
   // Określ bazową ścieżkę na podstawie aktualnej lokalizacji
   const basePath = useMemo(() => {
@@ -105,6 +108,7 @@ export default function CarModelsSection() {
     gcTime: 30 * 60 * 1000, // 30 minut cache
     retry: 2,
     retryDelay: 1000,
+    enabled: !pinnedCard,
   });
 
   // Handler kliknięcia marki
@@ -144,10 +148,21 @@ export default function CarModelsSection() {
 
   // Użyj React Query do cache'owania modeli
   const { data: apiModels = [], isLoading: loading, error: modelsError } = useQuery({
-    queryKey: ['car-models', brandApiName, 'v2'],
-    queryFn: () => {
+    queryKey: ['car-models', brandApiName, pinnedCard ? cardQuery : null, 'v3'],
+    queryFn: async () => {
       if (!brandApiName) {
-        return Promise.resolve([]);
+        return [];
+      }
+      if (!pinnedCard) {
+        return fetchCarModels(brandApiName);
+      }
+      const pinnedModels = await fetchCarModels(brandApiName, {
+        model: cardQuery.model,
+        generation: cardQuery.generation,
+        bodyType: cardQuery.bodyType,
+      });
+      if (pinnedModels.length > 0) {
+        return pinnedModels;
       }
       return fetchCarModels(brandApiName);
     },
@@ -271,6 +286,7 @@ export default function CarModelsSection() {
     modelsWithImages: displayModels,
     filters,
     selectedModel,
+    cardQuery,
   });
 
   // Handlery dla filtrów
@@ -381,8 +397,9 @@ export default function CarModelsSection() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pb-20">
+    <div className={pinnedCard ? "bg-[#111] text-white" : "min-h-screen bg-black text-white pb-20"}>
       {/* Hero Header */}
+      {pinnedCard ? null : (
       <div className="relative bg-black border-b border-white/5 py-16 md:py-24 overflow-hidden">
         {/* Gradient background – spójny z hero (H1 + opis) na Galeria / O nas */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-900/5 opacity-50"></div>
@@ -427,9 +444,10 @@ export default function CarModelsSection() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Model Navigation Bar */}
-      {uniqueModelNavItems.length > 0 && (
+      {!pinnedCard && uniqueModelNavItems.length > 0 && (
         <ModelNavigationBar
           models={uniqueModelNavItems}
           selectedModel={selectedModel}
@@ -437,10 +455,11 @@ export default function CarModelsSection() {
         />
       )}
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex flex-col lg:flex-row gap-10">
+      <div className={pinnedCard ? "flex flex-col" : "container mx-auto px-4 py-12"}>
+        <div className={pinnedCard ? "flex" : "flex flex-col lg:flex-row gap-10"}>
           
           {/* Mobile Filter Toggle */}
+          {pinnedCard ? null : (
           <div className="lg:hidden mb-6">
             <Button 
               onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
@@ -458,8 +477,10 @@ export default function CarModelsSection() {
               )}
             </Button>
           </div>
+          )}
 
           {/* Sidebar Filters */}
+          {pinnedCard ? null : (
           <aside className={`
             lg:w-72 shrink-0 space-y-8
             ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}
@@ -536,10 +557,12 @@ export default function CarModelsSection() {
               )}
             </div>
           </aside>
+          )}
 
           {/* Main Content */}
-          <main className="flex-1">
+          <main className={pinnedCard ? "w-full" : "flex-1"}>
             {/* Results Header */}
+            {pinnedCard ? null : (
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
               <p className="text-gray-400">
                 Znaleziono <span className="text-white font-semibold">{filteredModels.length}</span> modeli
@@ -555,13 +578,14 @@ export default function CarModelsSection() {
                 </Link>
               )}
             </div>
+            )}
 
             {/* Loading State */}
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {[...Array(10)].map((_, i) => (
-                  <div key={i} className="bg-white/5 rounded-xl animate-pulse overflow-hidden flex flex-col">
-                    <div className="w-full h-64 md:h-72 bg-white/10" />
+              <div className={pinnedCard ? "grid w-full grid-cols-1" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}>
+                {[...(pinnedCard ? [0] : Array(10))].map((_, i) => (
+                  <div key={i} className={pinnedCard ? "flex flex-col bg-white/5 animate-pulse overflow-hidden" : "bg-white/5 rounded-xl animate-pulse overflow-hidden flex flex-col"}>
+                    <div className={pinnedCard ? "aspect-[4/3] w-full bg-white/10" : "w-full h-64 md:h-72 bg-white/10"} />
                     <div className="p-4 md:p-5 flex-1 flex flex-col">
                       <div className="h-5 bg-white/10 rounded mb-2" />
                       <div className="h-4 bg-white/10 rounded mb-4 flex-1" />
@@ -573,7 +597,7 @@ export default function CarModelsSection() {
             ) : (
               <>
                 {/* Model Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className={pinnedCard ? "grid w-full grid-cols-1" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}>
                   {filteredModels.map((model) => {
                     const imageSrc = model.imageSrc || '/vercel.svg';
                     const configuratorUrl = buildConfiguratorEntryUrl({
@@ -591,56 +615,60 @@ export default function CarModelsSection() {
                     const brandLabel = visibleBrandName || model.brand || '';
                     const useBrandPhoto = isModeleBrandPhoto(imageSrc);
 
-                    return (
-                      <article
-                        key={model.id}
-                        className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black rounded-xl"
-                      >
-                        <div className="h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1">
-                          {/* Car Model Image */}
-                          <div className="relative aspect-square bg-gradient-to-br from-gray-900 to-black overflow-hidden">
-                            <Image
-                              src={imageSrc}
-                              alt={`Dywaniki do ${brandLabel} ${model.name} - Spersonalizowane dywaniki samochodowe`}
-                              fill
-                              className={`transition-transform duration-500 group-hover:scale-110 ${
-                                useBrandPhoto ? 'object-cover object-center' : 'object-cover'
-                              }`}
-                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                              priority={parseInt(String(model.id)) <= 6}
-                              quality={90}
-                              unoptimized={shouldServeBrandImageUnoptimized(imageSrc)}
-                            />
+                    const card = (
+                      <div className={pinnedCard
+                        ? "flex flex-col bg-[#111]"
+                        : "h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1"}>
+                        <div className={pinnedCard
+                          ? "w-full bg-[#111] leading-none"
+                          : "relative aspect-square bg-gradient-to-br from-gray-900 to-black overflow-hidden"}>
+                          <Image
+                            src={imageSrc}
+                            alt={`Dywaniki do ${brandLabel} ${model.name} - Spersonalizowane dywaniki samochodowe`}
+                            {...(pinnedCard ? { width: 960, height: 720 } : { fill: true })}
+                            className={pinnedCard
+                              ? "block h-auto w-full"
+                              : `transition-transform duration-500 group-hover:scale-110 ${useBrandPhoto ? 'object-cover object-center' : 'object-cover'}`}
+                            style={pinnedCard ? { width: '100%', height: 'auto' } : undefined}
+                            sizes={pinnedCard ? "420px" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"}
+                            priority={pinnedCard || parseInt(String(model.id)) <= 6}
+                            quality={pinnedCard ? 60 : 90}
+                            unoptimized={shouldServeBrandImageUnoptimized(imageSrc)}
+                          />
+                        </div>
+
+                        <div className={pinnedCard ? "flex shrink-0 flex-col px-3 pt-3" : "flex-1 flex flex-col p-5"}>
+                          <div className={pinnedCard ? "mb-1" : "mb-2"}>
+                            <h3 className="text-lg font-bold text-white leading-tight group-hover:text-red-500 transition-colors line-clamp-2">
+                              {brandLabel} {model.nameDisplay ?? model.name}
+                            </h3>
                           </div>
-                          
-                          {/* Car Model Info */}
-                          <div className="flex-1 flex flex-col p-5">
-                            <div className="mb-2">
-                              <h3 className="text-lg font-bold text-white leading-tight group-hover:text-red-500 transition-colors line-clamp-2">
-                                {brandLabel} {model.nameDisplay ?? model.name}
-                              </h3>
-                            </div>
-                            
-                            <div className="text-sm text-gray-400 mb-4 flex-1 space-y-1">
-                              {model.generationDisplay && (
-                                <span className="block">{model.generationDisplay}</span>
-                              )}
-                              {model.bodyTypeDisplay && (
-                                <span className="block uppercase tracking-wide text-xs text-gray-500">
-                                  {model.bodyTypeDisplay}
-                                </span>
-                              )}
+
+                          <div className={pinnedCard ? "mb-2 space-y-1 text-sm text-gray-400" : "text-sm text-gray-400 mb-4 flex-1 space-y-1"}>
+                            {model.generationDisplay && (
+                              <span className="block">{model.generationDisplay}</span>
+                            )}
+                            {model.bodyTypeDisplay && (
+                              <span className="block uppercase tracking-wide text-xs text-gray-500">
+                                {model.bodyTypeDisplay}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/5 py-3">
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-400">Cena od</span>
+                              <span className="text-xl font-bold text-white">
+                                {formatPriceCurrency(150)}
+                              </span>
                             </div>
 
-                            <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between gap-3">
-                              <div className="flex flex-col">
-                                <span className="text-xs text-gray-400">Cena od</span>
-                                <span className="text-xl font-bold text-white">
-                                  {formatPriceCurrency(150)}
-                                </span>
-                              </div>
-
-                              {/* Przycisk do konfiguratora */}
+                            {pinnedCard ? (
+                              <span className="inline-flex shrink-0 items-center gap-2 rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white">
+                                <ShoppingCart className="w-4 h-4" aria-hidden="true" />
+                                Skonfiguruj
+                              </span>
+                            ) : (
                               <Link href={configuratorUrl}>
                                 <Button
                                   className="shrink-0 gap-2 transition-all duration-300 bg-red-600 text-white hover:bg-red-700"
@@ -650,9 +678,32 @@ export default function CarModelsSection() {
                                   <span className="hidden sm:inline">Skonfiguruj</span>
                                 </Button>
                               </Link>
-                            </div>
+                            )}
                           </div>
                         </div>
+                      </div>
+                    );
+
+                    if (pinnedCard) {
+                      return (
+                        <a
+                          key={model.id}
+                          href={configuratorUrl}
+                          target="_top"
+                          data-pinned-model-card=""
+                          className="group block w-full text-inherit no-underline focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500"
+                        >
+                          {card}
+                        </a>
+                      );
+                    }
+
+                    return (
+                      <article
+                        key={model.id}
+                        className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black rounded-xl"
+                      >
+                        {card}
                       </article>
                     );
                   })}

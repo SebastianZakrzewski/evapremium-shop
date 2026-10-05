@@ -6,6 +6,7 @@ import { ConfiguratorV2PreviewPanel } from "./ConfiguratorV2PreviewPanel"
 import { ConfiguratorV2PreviewGalleryStrip } from "./ui/ConfiguratorV2PreviewGalleryStrip"
 import type { PreviewGalleryItem } from "./preview/buildConfiguratorV2PreviewGallery"
 import { getAdjacentGalleryItemId } from "./preview/getAdjacentGalleryItemId"
+import { isProductPhotoFramedToWindowWidth } from "./preview/productPhotoFrame"
 
 type ConfiguratorV2PreviewWithGalleryProps = {
   imageSrc: string
@@ -36,6 +37,10 @@ export const ConfiguratorV2PreviewWithGallery = ({
 }: ConfiguratorV2PreviewWithGalleryProps) => {
   const caption = realizationCaption?.trim() || null
   const canSwipeGallery = galleryItems.length > 1
+  const activeGalleryKind = galleryItems.find(
+    (item) => item.id === activeGalleryId,
+  )?.kind
+  const fitToWindowWidth = isProductPhotoFramedToWindowWidth(activeGalleryKind)
 
   const handleSwipePrevious = useCallback(() => {
     const previousId = getAdjacentGalleryItemId(
@@ -100,6 +105,7 @@ export const ConfiguratorV2PreviewWithGallery = ({
           onSwipePrevious={handleSwipePrevious}
           onSwipeNext={handleSwipeNext}
           canSwipeGallery={canSwipeGallery}
+          fitToWindowWidth={fitToWindowWidth}
         />
       </div>
       {caption && (

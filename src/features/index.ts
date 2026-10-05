@@ -7,6 +7,8 @@ export * from './marketing';
 // Cookie consent feature
 export * from './cookie-consent';
 
+export * from './eva-chat-widget';
+
 // Car Configurator feature
 export * from './car-configurator';
 

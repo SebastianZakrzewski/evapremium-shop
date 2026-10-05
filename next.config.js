@@ -1,3 +1,11 @@
+const modelCardFrameAncestors = [
+  'https://widget-xi-eight.vercel.app',
+  'https://www.evapremium.pl',
+  'https://evapremium.pl',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+].join(' ')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
@@ -38,6 +46,26 @@ const nextConfig = {
     return config
   },
   turbopack: {},
+  async headers() {
+    return [
+      {
+        source: '/:path((?!modele$).*)',
+        headers: [
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
+        ],
+      },
+      {
+        source: '/modele',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: `frame-ancestors ${modelCardFrameAncestors}`,
+          },
+        ],
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig

@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { ShopChrome } from "@/components/layout/ShopChrome";
+import { EvaChatWidget } from "@/features/eva-chat-widget";
 import Script from "next/script";
 import { SessionProvider } from "@/lib/contexts/session-context";
 import { TrackingProvider } from "@/components/tracking-provider";
@@ -245,6 +246,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <SessionProvider>
             <TrackingProvider>
               <ShopChrome>{children}</ShopChrome>
+              <EvaChatWidget />
             </TrackingProvider>
           </SessionProvider>
         </QueryProvider>

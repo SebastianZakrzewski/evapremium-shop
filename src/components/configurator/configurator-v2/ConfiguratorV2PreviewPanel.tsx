@@ -15,6 +15,7 @@ type ConfiguratorV2PreviewPanelProps = {
   onSwipePrevious?: () => void
   onSwipeNext?: () => void
   canSwipeGallery?: boolean
+  fitToWindowWidth?: boolean
 }
 
 export const ConfiguratorV2PreviewPanel = ({
@@ -25,11 +26,14 @@ export const ConfiguratorV2PreviewPanel = ({
   onSwipePrevious,
   onSwipeNext,
   canSwipeGallery = false,
+  fitToWindowWidth = false,
 }: ConfiguratorV2PreviewPanelProps) => {
   const isInteractive = !!onOpenZoom
-  const canvasClass = usesMatPreviewCanvas
-    ? getMatPreviewCanvasClass("/dywaniki/preview.webp")
-    : getMatPreviewCanvasClass(imageSrc)
+  const canvasClass = fitToWindowWidth
+    ? "bg-white"
+    : usesMatPreviewCanvas
+      ? getMatPreviewCanvasClass("/dywaniki/preview.webp")
+      : getMatPreviewCanvasClass(imageSrc)
 
   const swipeHandlers = useHorizontalSwipe({
     enabled: canSwipeGallery,
@@ -82,6 +86,7 @@ export const ConfiguratorV2PreviewPanel = ({
           imageSrc={imageSrc}
           alt={alt}
           canvasClassName={canvasClass}
+          fitToWindowWidth={fitToWindowWidth}
           priority
         />
 

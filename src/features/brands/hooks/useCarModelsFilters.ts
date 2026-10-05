@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { formatBodyTypeLabel, formatGenerationLabel, normalizeBodyTypeKey, getDoorsCount } from "@/shared";
+import { matchesModelCardQuery, type ModelCardQuery } from "../model/modelCardUrl";
 
 type CarModelItem = {
   id?: string | number;
@@ -34,12 +35,14 @@ export function useCarModelsFilters({
   modelsWithImages,
   filters,
   selectedModel,
+  cardQuery,
 }: {
   brandParam: string | null;
   displayModels: CarModelItem[];
   modelsWithImages: CarModelItem[];
   filters: CarModelsFilterState;
   selectedModel: string | null;
+  cardQuery?: ModelCardQuery;
 }) {
   const availableBodyTypes = useMemo<AvailableBodyType[]>(() => {
     if (brandParam && displayModels.length > 0) {
@@ -90,6 +93,10 @@ export function useCarModelsFilters({
         }
       }
 
+      if (cardQuery && !matchesModelCardQuery(model, cardQuery)) {
+        return false;
+      }
+
       if (filters.bodyTypes.length > 0) {
         if (!model.bodyType) return false;
         const normalizedModelType = normalizeBodyTypeKey(model.bodyType);
@@ -106,7 +113,7 @@ export function useCarModelsFilters({
 
       return true;
     });
-  }, [modelsWithImages, filters, brandParam, selectedModel]);
+  }, [modelsWithImages, filters, brandParam, selectedModel, cardQuery]);
 
   const activeFiltersCount = filters.bodyTypes.length + filters.generations.length + (selectedModel ? 1 : 0);
 

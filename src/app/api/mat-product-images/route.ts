@@ -6,6 +6,7 @@ import {
   queryMatProductImages,
   type MatProductImageRow,
 } from '@/features/mat-product-images/lib/queryMatProductImages'
+import { resolveLocalProductImage } from '@/features/local-product-catalog'
 
 export const maxDuration = 30
 
@@ -44,6 +45,37 @@ export async function GET(request: NextRequest) {
     console.log('🔍 API /api/mat-product-images: Fetching images with params:', queryParams)
 
     const validatedParams = QueryParamsSchema.parse(queryParams)
+
+    const localImageUrl =
+      validatedParams.brand && validatedParams.model
+        ? await resolveLocalProductImage({
+            brand: validatedParams.brand,
+            model: validatedParams.model,
+            generation: validatedParams.generation,
+            bodyType: validatedParams.bodyType,
+            year: validatedParams.year,
+          })
+        : null
+
+    if (localImageUrl) {
+      const localImage: MatProductImageRow = {
+        id: 0,
+        car_brand_slug: validatedParams.brand?.toLowerCase() ?? '',
+        car_model_slug: validatedParams.model?.toLowerCase() ?? '',
+        generation: validatedParams.generation ?? null,
+        year: validatedParams.year ?? null,
+        body_type: validatedParams.bodyType ?? null,
+        image_url: localImageUrl,
+        alt_text: `${validatedParams.brand} ${validatedParams.model}`,
+        sort_order: 0,
+        is_active: true,
+      }
+
+      return NextResponse.json({
+        images: [localImage],
+        count: 1,
+      })
+    }
 
     const images = await queryMatProductImages(supabase, {
       brand: validatedParams.brand,

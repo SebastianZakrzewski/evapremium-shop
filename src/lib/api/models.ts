@@ -14,14 +14,21 @@ import { resolveBrandDisplayNameFromDbName } from '@/shared/brands';
  * @param brandName - Brand API name (e.g., "Bmw", "Mercedes-Benz")
  * @returns Array of car models with generations
  */
-export async function fetchCarModels(brandName: string): Promise<CarModelApiResponse[]> {
+export async function fetchCarModels(
+  brandName: string,
+  pinned?: { model?: string; generation?: string; bodyType?: string },
+): Promise<CarModelApiResponse[]> {
   if (!brandName) {
     console.warn('fetchCarModels: brandName is required');
     return [];
   }
 
   try {
-    const models = await apiGet<CarModelApiResponse[]>(`/api/models?brand=${encodeURIComponent(brandName)}`);
+    const params = new URLSearchParams({ brand: brandName });
+    if (pinned?.model) params.set('model', pinned.model);
+    if (pinned?.generation) params.set('generation', pinned.generation);
+    if (pinned?.bodyType) params.set('bodyType', pinned.bodyType);
+    const models = await apiGet<CarModelApiResponse[]>(`/api/models?${params.toString()}`);
     if (!Array.isArray(models)) return [];
 
     return models.map((model) => ({
