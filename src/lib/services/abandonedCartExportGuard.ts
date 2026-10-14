@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/lib/database/supabase'
+import { shopDb } from '@/lib/database/supabase'
 import {
   isAmountWithinTolerance,
   resolveAbandonedExportSkipReason,
@@ -48,7 +48,7 @@ const findRecentMatchingOrder = async (
   const windowMs = input.windowMs ?? 30 * 60 * 1000
   const cartTotal = input.totalAmount ?? 0
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await shopDb()
     .from('orders')
     .select('id, order_number, payment_status, total, created_at')
     .eq('customer->>email', email)

@@ -1,13 +1,13 @@
 import { BaseRepository } from './BaseRepository';
-import { supabaseAdmin } from '@/lib/database/supabase';
+import { shopDb } from '@/lib/database/supabase';
 import { Order, OrderStatus, PaymentStatus } from '../types/order-new';
 
 export class OrderRepository extends BaseRepository<Order> {
   protected tableName = 'orders';
 
-  // Service role — omija RLS na orders/order_items (tylko server-side API)
+  // Service role w evapremium_shop — omija RLS na orders/order_items (tylko server-side API)
   get supabase() {
-    return supabaseAdmin;
+    return shopDb();
   }
 
   // Mapuj dane z bazy (snake_case) na camelCase dla order_item
