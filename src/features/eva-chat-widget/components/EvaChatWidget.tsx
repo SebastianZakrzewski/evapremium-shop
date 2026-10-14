@@ -1,11 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { EVA_CHAT_ICON_SRC } from '../lib/evaWidgetPlugin'
 import { EVA_CHAT_GREETING_TEXT, useEvaChatGreeting } from '../hooks/useEvaChatGreeting'
 import { usePrivacyWindowAccepted } from '../hooks/usePrivacyWindowAccepted'
-import { isProductionShopHost } from '../lib/isProductionShopHost'
 import { mountEvaChatWidget } from '../lib/mountEvaChatWidget'
 
 const launcherChromeClassName =
@@ -30,6 +29,7 @@ const openLauncherIconStyle = {
 } as const
 
 export const EvaChatWidget = () => {
+  const shellRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [hasOpened, setHasOpened] = useState(false)
   const [isReady, setIsReady] = useState(false)
@@ -43,6 +43,8 @@ export const EvaChatWidget = () => {
   useEffect(() => {
     setIsReady(true)
   }, [])
+
+  const embeddedInProductWindow = isReady && window.parent !== window
 
   useEffect(() => {
     if (!hasOpened) {
@@ -66,11 +68,52 @@ export const EvaChatWidget = () => {
       return undefined
     }
 
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const { body } = document
+    const shell = shellRef.current
+    const previous = {
+      overflow: body.style.overflow,
+      position: body.style.position,
+      top: body.style.top,
+      width: body.style.width,
+    }
+    const scrollY = window.scrollY
+    body.style.overflow = 'hidden'
+    body.style.position = 'fixed'
+    body.style.top = `-${scrollY}px`
+    body.style.width = '100%'
+
+    const viewport = window.visualViewport
+    const pinToVisibleScreen = () => {
+      if (!shell) {
+        return
+      }
+      shell.style.top = `${viewport?.offsetTop ?? 0}px`
+      shell.style.height = `${viewport?.height ?? window.innerHeight}px`
+      shell.style.bottom = 'auto'
+      shell.style.left = '0px'
+      shell.style.right = '0px'
+    }
+    pinToVisibleScreen()
+    viewport?.addEventListener('resize', pinToVisibleScreen)
+    viewport?.addEventListener('scroll', pinToVisibleScreen)
 
     return () => {
-      document.body.style.overflow = previousOverflow
+      viewport?.removeEventListener('resize', pinToVisibleScreen)
+      viewport?.removeEventListener('scroll', pinToVisibleScreen)
+      if (shell) {
+        shell.style.top = ''
+        shell.style.height = ''
+        shell.style.bottom = ''
+        shell.style.left = ''
+        shell.style.right = ''
+      }
+      body.style.overflow = previous.overflow
+      body.style.position = previous.position
+      body.style.top = previous.top
+      body.style.width = previous.width
+      if (scrollY !== 0) {
+        window.scrollTo(0, scrollY)
+      }
     }
   }, [isOpen])
 
@@ -84,7 +127,7 @@ export const EvaChatWidget = () => {
   }
 
   const shellClassName = isOpen
-    ? 'fixed inset-0 z-[80] flex h-dvh w-dvw flex-col max-md:bg-black md:inset-auto md:bottom-4 md:right-4 md:h-auto md:w-auto md:items-end md:gap-3 md:bg-transparent'
+    ? 'fixed inset-0 z-[80] flex h-dvh w-dvw flex-col overflow-hidden max-md:bg-black md:inset-auto md:bottom-4 md:right-4 md:h-auto md:w-auto md:items-end md:gap-3 md:overflow-visible md:bg-transparent'
     : 'fixed bottom-4 right-4 z-[80] flex flex-col items-end gap-3'
 
   const slotClassName = isOpen
@@ -93,12 +136,12 @@ export const EvaChatWidget = () => {
 
   const openLauncherClassName = `absolute top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-10 h-11 w-11 md:static md:h-16 md:w-16 ${launcherChromeClassName}`
 
-  if (!isReady || isProductionShopHost(window.location.hostname)) {
+  if (!isReady || embeddedInProductWindow) {
     return null
   }
 
   return createPortal(
-    <div className={shellClassName}>
+    <div ref={shellRef} className={shellClassName}>
       <div data-eva-chat-slot className={slotClassName} />
       {showBubble ? (
         <p

@@ -43,6 +43,7 @@ describe('EvaChatWidget', () => {
     document.body.innerHTML = ''
     delete window.widgetPlugin
     Reflect.deleteProperty(window, 'matchMedia')
+    Reflect.deleteProperty(window, 'visualViewport')
     clearPrivacyConsent()
     vi.useRealTimers()
   })
@@ -98,7 +99,24 @@ describe('EvaChatWidget', () => {
     expect(launcher.compareDocumentPosition(greeting) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(0)
   })
 
-  it('hides the launcher on the production shop', () => {
+  it('hides the launcher when the shop page is the product window', () => {
+    const parent = window.parent
+    Object.defineProperty(window, 'parent', {
+      configurable: true,
+      value: {},
+    })
+
+    render(<EvaChatWidget />)
+
+    expect(screen.queryByRole('button', { name: 'Otwórz czat EvaBot' })).not.toBeInTheDocument()
+
+    Object.defineProperty(window, 'parent', {
+      configurable: true,
+      value: parent,
+    })
+  })
+
+  it('shows the launcher on the production shop', () => {
     const originalLocation = window.location
     Object.defineProperty(window, 'location', {
       configurable: true,
@@ -107,7 +125,7 @@ describe('EvaChatWidget', () => {
 
     render(<EvaChatWidget />)
 
-    expect(screen.queryByRole('button', { name: 'Otwórz czat EvaBot' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Otwórz czat EvaBot' })).toBeInTheDocument()
 
     Object.defineProperty(window, 'location', {
       configurable: true,
@@ -158,5 +176,48 @@ describe('EvaChatWidget', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Zamknij czat EvaBot' }))
 
     expect(document.body.style.overflow).toBe('')
+    expect(document.body.style.position).toBe('')
+  })
+
+  it('keeps the open mobile chat over the page when the keyboard changes the visible screen', () => {
+    const listeners = new Map<string, Set<() => void>>()
+    const viewport = {
+      height: 800,
+      offsetTop: 0,
+      addEventListener: (type: string, listener: () => void) => {
+        const set = listeners.get(type) ?? new Set<() => void>()
+        set.add(listener)
+        listeners.set(type, set)
+      },
+      removeEventListener: (type: string, listener: () => void) => {
+        listeners.get(type)?.delete(listener)
+      },
+    }
+    Object.defineProperty(window, 'visualViewport', {
+      configurable: true,
+      value: viewport,
+    })
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: query === '(max-width: 767px)',
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    }))
+
+    render(<EvaChatWidget />)
+    fireEvent.click(screen.getByRole('button', { name: 'Otwórz czat EvaBot' }))
+
+    const shell = document.querySelector('[data-eva-chat-slot]')?.parentElement as HTMLElement
+    expect(shell.style.height).toBe('800px')
+    expect(shell.style.top).toBe('0px')
+    expect(document.body.style.position).toBe('fixed')
+
+    viewport.height = 430
+    viewport.offsetTop = 0
+    listeners.get('resize')?.forEach((listener) => listener())
+
+    expect(shell.style.height).toBe('430px')
+    expect(shell.style.top).toBe('0px')
+    expect(shell.style.bottom).toBe('auto')
   })
 })
