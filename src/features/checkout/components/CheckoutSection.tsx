@@ -18,7 +18,8 @@ import {
   Check,
   CreditCard as PaymentIcon,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Lock,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -103,6 +104,15 @@ const checkoutSchema = z.object({
 });
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
+
+const paymentMarks = [
+  { src: "/formy_platnosci/blik.png", alt: "BLIK" },
+  { src: "/formy_platnosci/visa.png", alt: "Visa" },
+  { src: "/formy_platnosci/mastercard.png", alt: "Mastercard" },
+  { src: "/formy_platnosci/apple.jpg", alt: "Apple Pay" },
+  { src: "/formy_platnosci/google.png", alt: "Google Pay" },
+  { src: "/formy_platnosci/american.svg", alt: "American Express" },
+] as const;
 
 /**
  * Checkout Section używający V2 backendu
@@ -1253,69 +1263,67 @@ export default function CheckoutSection() {
                 <Card className="rounded-2xl border border-white/[0.08] bg-[#1c1c1e] shadow-none">
                   <CardHeader className="border-0 px-5 pb-0 pt-7 md:px-8">
                     <CardTitle className="text-xl font-medium tracking-tight text-white">
-                      Metoda płatności
+                      Płatność
                     </CardTitle>
+                    <p className="mt-2 max-w-lg text-sm leading-relaxed text-white/50">
+                      Numer karty wpisujesz dopiero na stronie {checkoutPaymentLabel}. Sklep go nie widzi i nie zapisuje.
+                    </p>
                   </CardHeader>
                   <CardContent className="space-y-6 px-5 pb-8 pt-6 md:px-8">
-                    <div className="space-y-4">
-                      <div
-                        className="flex cursor-pointer flex-col items-start gap-4 rounded-2xl bg-[#2c2c2e] p-5 ring-1 ring-inset ring-red-500 sm:flex-row sm:items-center"
-                        onClick={() => setValue("paymentMethod", checkoutPaymentMethod)}
-                      >
-                        <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-red-600">
-                          <div className="h-2 w-2 rounded-full bg-white"></div>
-                        </div>
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 flex-1 cursor-pointer w-full">
-                          <CreditCard className="h-5 w-5 flex-shrink-0 text-white/70" />
-                          <div className="flex-1 min-w-0 w-full">
-                            <div className="font-medium text-base text-white mb-1">
-                              {checkoutPaymentLabel}
-                            </div>
-                            <div className="text-xs md:text-sm text-white/45 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-2">
-                              <span className="whitespace-normal">Karty, BLIK, przelewy, Apple Pay, Google Pay</span>
-                              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                                <Image
-                                  src="/formy_platnosci/visa.png"
-                                  alt="Visa"
-                                  width={32}
-                                  height={20}
-                                  className="object-contain md:w-10 md:h-[26px]"
-                                />
-                                <Image
-                                  src="/formy_platnosci/mastercard.png"
-                                  alt="Mastercard"
-                                  width={32}
-                                  height={20}
-                                  className="object-contain md:w-10 md:h-[26px]"
-                                />
-                                <Image
-                                  src="/formy_platnosci/blik.png"
-                                  alt="BLIK"
-                                  width={32}
-                                  height={20}
-                                  className="object-contain md:w-10 md:h-[26px]"
-                                />
-                                <Image
-                                  src="/formy_platnosci/apple.jpg"
-                                  alt="Apple Pay"
-                                  width={32}
-                                  height={20}
-                                  className="object-contain md:w-10 md:h-[26px]"
-                                />
-                                <Image
-                                  src="/formy_platnosci/google.png"
-                                  alt="Google Pay"
-                                  width={32}
-                                  height={20}
-                                  className="object-contain md:w-10 md:h-[26px]"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <Check className="h-4 w-4 flex-shrink-0 text-white/70 sm:ml-auto" />
-                        </div>
+                    <input type="hidden" {...register("paymentMethod")} />
+                    <div className="rounded-2xl bg-[#2c2c2e] p-5">
+                      <div>
+                        <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/40">
+                          Operator płatności
+                        </p>
+                        <p className="mt-1 text-lg font-medium tracking-tight text-white">
+                          {checkoutPaymentLabel}
+                        </p>
                       </div>
+                      <p className="mt-3 max-w-md text-sm leading-relaxed text-white/50">
+                        BLIK, karta, Apple Pay, Google Pay albo szybki przelew. Sposób wybierzesz na następnym ekranie.
+                      </p>
+                      <ul className="mt-5 flex flex-wrap gap-2">
+                        {paymentMarks.map((mark) => (
+                          <li
+                            key={mark.alt}
+                            className="flex h-10 w-[4.5rem] items-center justify-center rounded-lg bg-white px-2"
+                          >
+                            <Image
+                              src={mark.src}
+                              alt={mark.alt}
+                              width={56}
+                              height={28}
+                              className="h-6 w-auto object-contain"
+                            />
+                          </li>
+                        ))}
+                      </ul>
                     </div>
+
+                    <ul className="grid gap-5 border-t border-white/10 pt-6 sm:grid-cols-3">
+                      <li>
+                        <Lock className="mb-2 h-4 w-4 text-white/40" />
+                        <p className="text-sm font-medium text-white">Szyfrowane połączenie</p>
+                        <p className="mt-1 text-xs leading-relaxed text-white/45">
+                          Płatność idzie bezpośrednio do operatora.
+                        </p>
+                      </li>
+                      <li>
+                        <CreditCard className="mb-2 h-4 w-4 text-white/40" />
+                        <p className="text-sm font-medium text-white">Bez formularza karty</p>
+                        <p className="mt-1 text-xs leading-relaxed text-white/45">
+                          Na tej stronie nie prosimy o numer ani kod CVV.
+                        </p>
+                      </li>
+                      <li>
+                        <Check className="mb-2 h-4 w-4 text-white/40" />
+                        <p className="text-sm font-medium text-white">Potwierdzenie e-mail</p>
+                        <p className="mt-1 text-xs leading-relaxed text-white/45">
+                          Po opłaceniu wyślemy podsumowanie zamówienia.
+                        </p>
+                      </li>
+                    </ul>
 
                     {errors.paymentMethod && (
                       <p className="text-red-400 text-sm">
@@ -1435,7 +1443,7 @@ export default function CheckoutSection() {
                       ) : (
                         <>
                           <Check className="w-5 h-5 mr-3" />
-                          Zapłać teraz
+                          Przejdź do płatności
                         </>
                       )}
                     </Button>
@@ -1736,7 +1744,7 @@ export default function CheckoutSection() {
                     ) : (
                       <>
                         <Check className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 mr-2 sm:mr-3 lg:mr-3" />
-                        Zapłać teraz
+                        Przejdź do płatności
                       </>
                     )}
                   </Button>
