@@ -7,6 +7,7 @@ import { ConfiguratorV2PreviewGalleryStrip } from "./ui/ConfiguratorV2PreviewGal
 import type { PreviewGalleryItem } from "./preview/buildConfiguratorV2PreviewGallery"
 import { getAdjacentGalleryItemId } from "./preview/getAdjacentGalleryItemId"
 import { isProductPhotoFramedToWindowWidth } from "./preview/productPhotoFrame"
+import { useMobilePreviewDocked } from "./MobilePreviewDockContext"
 
 type ConfiguratorV2PreviewWithGalleryProps = {
   imageSrc: string
@@ -35,6 +36,7 @@ export const ConfiguratorV2PreviewWithGallery = ({
   realizationCaption = null,
   layout,
 }: ConfiguratorV2PreviewWithGalleryProps) => {
+  const previewDocked = useMobilePreviewDocked()
   const caption = realizationCaption?.trim() || null
   const canSwipeGallery = galleryItems.length > 1
   const activeGalleryKind = galleryItems.find(
@@ -72,7 +74,7 @@ export const ConfiguratorV2PreviewWithGallery = ({
           onSwipeNext={handleSwipeNext}
           canSwipeGallery={canSwipeGallery}
         />
-        {caption && (
+        {caption && !previewDocked && (
           <p
             className="px-3 py-2 text-center text-[11px] leading-snug text-white/70"
             role="note"
@@ -82,13 +84,27 @@ export const ConfiguratorV2PreviewWithGallery = ({
           </p>
         )}
         {showGallery && (
-          <ConfiguratorV2PreviewGalleryStrip
-            items={galleryItems}
-            activeId={activeGalleryId}
-            onSelect={onSelectGalleryItem}
-            variant="mobile"
-            showEmptyInCarSlot={showEmptyInCarSlot}
-          />
+          <div
+            className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ease-out ${
+              previewDocked ? "pointer-events-none mt-0" : "mt-3"
+            }`}
+            style={{
+              gridTemplateRows: previewDocked ? "0fr" : "1fr",
+              opacity: previewDocked ? 0 : 1,
+            }}
+            aria-hidden={previewDocked}
+            inert={previewDocked ? true : undefined}
+          >
+            <div className="min-h-0 overflow-hidden">
+              <ConfiguratorV2PreviewGalleryStrip
+                items={galleryItems}
+                activeId={activeGalleryId}
+                onSelect={onSelectGalleryItem}
+                variant="mobile"
+                showEmptyInCarSlot={showEmptyInCarSlot}
+              />
+            </div>
+          </div>
         )}
       </div>
     )

@@ -27,7 +27,16 @@ import { getMatImagePath } from "@/lib/image-mapping"
 import { getMatTypeForDynamicPreview } from "@/components/configurator/configurator-simple/rugPreviewConfig"
 import { ConfiguratorLoader } from "@/components/configurator/configurator-simple/ConfiguratorLoader"
 import { ConfiguratorV2Layout } from "./ConfiguratorV2Layout"
-import { ConfiguratorV2SpecsBar } from "./ConfiguratorV2SpecsBar"
+import {
+  ConfiguratorV2IntroCard,
+  ConfiguratorV2SpecsBar,
+} from "./ConfiguratorV2SpecsBar"
+import { ConfiguratorV2OptionSearch } from "./option-search/ConfiguratorV2OptionSearch"
+import {
+  CONFIGURATOR_V2_INITIALLY_OPEN_SECTION_IDS,
+  ConfiguratorV2OptionsProvider,
+} from "./option-search/ConfiguratorV2OptionsProvider"
+import { sectionHeaderMatchesQuery } from "./option-search/sectionHeaderMatchesQuery"
 import { ConfiguratorV2PreviewWithGallery } from "./ConfiguratorV2PreviewWithGallery"
 import { ConfiguratorV2MatPreviewLightbox } from "./ConfiguratorV2MatPreviewLightbox"
 import { useConfiguratorV2Preview } from "./hooks/useConfiguratorV2Preview"
@@ -264,6 +273,7 @@ export default function ConfiguratorV2() {
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false)
   const [showSummary, setShowSummary] = useState(false)
   const [cartActionError, setCartActionError] = useState<string | null>(null)
+  const [optionQuery, setOptionQuery] = useState("")
 
   const summaryPriceBreakdown = useMemo(
     () => ({
@@ -430,6 +440,28 @@ export default function ConfiguratorV2() {
     ? `${formatBrandDisplayName(config.brand)} ${config.model}`
     : "Zaprojektuj dywaniki"
 
+  const sectionTitles = useMemo(() => {
+    const titles = [
+      productEntry.isLocked ? "Twój samochód" : "Wybór samochodu",
+      "Typ dywanika",
+      "Wariant zestawu",
+      "Struktura komórek",
+      "Kolor materiału",
+      "Kolor obszycia",
+      "Akcesoria",
+    ]
+    if (showSummary) titles.push("Podsumowanie zamówienia")
+    return titles
+  }, [productEntry.isLocked, showSummary])
+
+  const optionMatchCount = useMemo(
+    () => sectionTitles.filter((title) => sectionHeaderMatchesQuery(title, optionQuery)).length,
+    [optionQuery, sectionTitles],
+  )
+
+  const setMetric = mapperResult.metrics.find((metric) => metric.label === "Zestaw")?.value
+  const productLabel = setMetric && setMetric !== "—" ? setMetric : pageTitle
+
   if (brandsLoading && !config.brand) {
     return <ConfiguratorLoader />
   }
@@ -441,18 +473,23 @@ export default function ConfiguratorV2() {
     showSummaryCta: !showSummary,
     onGoToSummary: handleGoToSummary,
     onPriceClick: () => setIsPriceModalOpen(true),
+    productLabel,
   }
 
   return (
     <ConfiguratorV2Layout
-      mobilePreviewHasGallery={preview.showGallery}
       hideMobileStickyBar={showSummary}
+      topBar={<ConfiguratorV2StickyBar {...stickyBarProps} variant="header" />}
       specsBar={
         <ConfiguratorV2SpecsBar
           title={pageTitle}
-          metrics={mapperResult.metrics}
+          year={config.year || undefined}
           contextLine={mapperResult.contextLine}
+          onLearnMore={() => setIsFeaturesModalOpen(true)}
         />
+      }
+      introCard={
+        <ConfiguratorV2IntroCard onLearnMore={() => setIsFeaturesModalOpen(true)} />
       }
       mobilePreview={
         <ConfiguratorV2PreviewWithGallery
@@ -486,6 +523,15 @@ export default function ConfiguratorV2() {
       }
       optionPanel={
         <>
+          <ConfiguratorV2OptionSearch
+            query={optionQuery}
+            matchCount={optionMatchCount}
+            onQueryChange={setOptionQuery}
+          />
+          <ConfiguratorV2OptionsProvider
+            query={optionQuery}
+            initiallyOpenSectionIds={CONFIGURATOR_V2_INITIALLY_OPEN_SECTION_IDS}
+          >
           <VehicleContextSection
             config={config}
             productEntry={productEntry}
@@ -543,21 +589,8 @@ export default function ConfiguratorV2() {
               vehiclePreviewImage={vehiclePreviewImage}
             />
           )}
-          {!showSummary && (
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={() => setIsFeaturesModalOpen(true)}
-              className="text-sm text-red-400 hover:text-red-300 underline-offset-2 hover:underline"
-            >
-              Dowiedz się więcej o dywanikach EVA
-            </button>
-          </div>
-          )}
+          </ConfiguratorV2OptionsProvider>
         </>
-      }
-      stickyBarDesktop={
-        <ConfiguratorV2StickyBar {...stickyBarProps} variant="column" />
       }
       stickyBarMobile={
         <ConfiguratorV2StickyBar {...stickyBarProps} variant="fixed" />

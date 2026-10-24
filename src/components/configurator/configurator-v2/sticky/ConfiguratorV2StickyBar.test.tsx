@@ -101,4 +101,26 @@ describe("ConfiguratorV2StickyBar", () => {
     expect(bar.className).toContain("relative")
     expect(bar.className).not.toContain("fixed")
   })
+
+  it("renders the desktop header with change-model and summary actions", () => {
+    render(
+      <ConfiguratorV2StickyBar
+        priceBreakdown={baseBreakdown}
+        isConfigComplete
+        showSummaryCta
+        onGoToSummary={vi.fn()}
+        productLabel="Komplet"
+        variant="header"
+      />,
+    )
+
+    expect(screen.getByRole("link", { name: "Zmień model" })).toHaveAttribute(
+      "href",
+      "/modele",
+    )
+    expect(screen.getByRole("button", { name: "Podsumowanie" })).toBeEnabled()
+    expect(
+      screen.getByRole("button", { name: "Podsumowanie zamówienia" }),
+    ).toBeEnabled()
+  })
 })

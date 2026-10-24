@@ -11,7 +11,7 @@ import { VariantTrunkMatRimNotice } from "../variant/VariantTrunkMatRimNotice"
 import { shouldShowVariantTrunkMatRimNotice } from "../variant/trunkMatRimNotice"
 
 const compareLinkClass =
-  "text-xs text-gray-400 hover:text-white underline-offset-2 hover:underline whitespace-nowrap transition-colors"
+  "text-sm text-white/70 underline underline-offset-2 hover:text-white whitespace-nowrap transition-colors"
 
 type VariantSectionProps = {
   config: { variant: string; matType?: string }
@@ -63,7 +63,7 @@ export const VariantSection = ({
       }
     >
       <div
-        className="grid gap-2 justify-items-center"
+        className="grid gap-3"
         style={{
           gridTemplateColumns: `repeat(auto-fill, minmax(${CONFIGURATOR_V2_IMAGE_CARD_MIN_WIDTH}, 1fr))`,
         }}

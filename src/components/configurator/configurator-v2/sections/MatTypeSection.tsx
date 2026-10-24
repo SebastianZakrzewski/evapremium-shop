@@ -6,7 +6,7 @@ import { TeslaTrimOption } from "../ui/TeslaTrimOption"
 import { ConfiguratorV2SectionShell } from "./ConfiguratorV2SectionShell"
 
 const compareLinkClass =
-  "text-xs text-gray-400 hover:text-white underline-offset-2 hover:underline whitespace-nowrap transition-colors"
+  "text-sm text-white/70 underline underline-offset-2 hover:text-white whitespace-nowrap transition-colors"
 
 type MatTypeSectionProps = {
   config: { matType: "3d-with-rims" | "classic" | "single" }

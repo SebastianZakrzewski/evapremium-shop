@@ -8,6 +8,11 @@ import { CookieConsentBanner } from '@/features/cookie-consent'
 import { readModelCardQuery, shouldPinShopChrome } from '@/features/brands/model/modelCardUrl'
 
 const pageOffsetClassName = 'pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden'
+const configuratorFrameClassName =
+  'box-border h-dvh overflow-hidden pt-16 md:pt-20 lg:pt-24 max-w-full'
+
+const isConfiguratorPath = (pathname: string | null) =>
+  pathname === '/konfigurator'
 
 const pinnedCardElement = () => {
   const card = document.querySelector('[data-pinned-model-card]')
@@ -30,6 +35,7 @@ const ShopChromeContent = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const pinnedCard = shouldPinShopChrome(pathname, readModelCardQuery(searchParams))
+  const configuratorRoute = isConfiguratorPath(pathname)
 
   useEffect(() => {
     if (!pinnedCard || window.parent === window) {
@@ -97,23 +103,33 @@ const ShopChromeContent = ({ children }: { children: ReactNode }) => {
     <>
       <CookieConsentBanner />
       <Navbar />
-      <div className={pageOffsetClassName}>{children}</div>
-      <Footer />
+      <div className={configuratorRoute ? configuratorFrameClassName : pageOffsetClassName}>
+        {children}
+      </div>
+      {!configuratorRoute && <Footer />}
     </>
   )
 }
 
-export const ShopChrome = ({ children }: { children: ReactNode }) => (
-  <Suspense
-    fallback={
-      <>
-        <CookieConsentBanner />
-        <Navbar />
-        <div className={pageOffsetClassName}>{children}</div>
-        <Footer />
-      </>
-    }
-  >
-    <ShopChromeContent>{children}</ShopChromeContent>
-  </Suspense>
-)
+export const ShopChrome = ({ children }: { children: ReactNode }) => {
+  const pathname = usePathname()
+  const configuratorRoute = isConfiguratorPath(pathname)
+  const frameClassName = configuratorRoute
+    ? configuratorFrameClassName
+    : pageOffsetClassName
+
+  return (
+    <Suspense
+      fallback={
+        <>
+          <CookieConsentBanner />
+          <Navbar />
+          <div className={frameClassName}>{children}</div>
+          {!configuratorRoute && <Footer />}
+        </>
+      }
+    >
+      <ShopChromeContent>{children}</ShopChromeContent>
+    </Suspense>
+  )
+}

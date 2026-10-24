@@ -35,15 +35,14 @@ export const ConfiguratorV2ImageOptionCard = ({
   imageFit = "contain",
   onSelect,
 }: ConfiguratorV2ImageOptionCardProps) => {
-  const showPrice =
-    priceAfterDiscount != null && priceAfterDiscount > 0
+  const showPrice = priceAfterDiscount != null && priceAfterDiscount > 0
 
   const imageClassName =
     imageFit === "cover"
-      ? "h-24 w-24 rounded-sm object-cover drop-shadow-[0_2px_8px_rgba(255,255,255,0.2)]"
-      : "h-24 w-auto max-w-[9rem] object-contain drop-shadow-[0_2px_8px_rgba(255,255,255,0.2)]"
+      ? "h-24 w-24 rounded-lg object-cover"
+      : "h-24 w-auto max-w-[9rem] object-contain"
 
-  const imageWidth = imageFit === "cover" ? 160 : 160
+  const imageWidth = 160
   const imageHeight = imageFit === "cover" ? 160 : 112
 
   return (
@@ -51,21 +50,15 @@ export const ConfiguratorV2ImageOptionCard = ({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`group flex w-fit max-w-[10rem] flex-col items-center rounded-lg border px-2 py-2 text-center transition-all duration-200 ${
-        inline ? "" : "mx-auto"
+      className={`flex flex-col rounded-xl border-2 px-2 py-2 text-left transition-colors ${
+        inline ? "w-[8.75rem]" : "w-full"
       } ${
         selected
-          ? "border-red-500/90 bg-red-500/[0.08] ring-1 ring-red-500/25 shadow-sm shadow-red-500/10"
-          : "border-white/10 bg-[#0c0c0c] hover:border-white/20 hover:bg-white/[0.03]"
+          ? "border-red-600 bg-red-600/10"
+          : "border-white/15 bg-transparent hover:border-white/40"
       }`}
     >
-      <div
-        className={`mb-1.5 inline-flex w-fit items-center justify-center rounded-md p-1 transition-colors ${
-          selected
-            ? "bg-white/[0.1] ring-1 ring-white/10"
-            : "bg-white/[0.07] group-hover:bg-white/[0.09]"
-        }`}
-      >
+      <span className="mb-2 flex h-24 items-center justify-center overflow-hidden rounded-lg bg-white/5">
         <Image
           src={imageSrc}
           alt={imageAlt || title}
@@ -74,31 +67,32 @@ export const ConfiguratorV2ImageOptionCard = ({
           unoptimized={imageUnoptimized}
           className={imageClassName}
         />
-      </div>
+      </span>
 
-      <p className="line-clamp-1 max-w-[9rem] text-[11px] font-semibold leading-tight text-white">
-        {title}
-      </p>
-      {description && (
-        <p className="mt-0.5 line-clamp-2 max-w-[9rem] text-[9px] leading-snug text-gray-400">
-          {description}
-        </p>
-      )}
-
-      {showPrice && (
-        <div className="mt-1.5 w-full min-w-[5.5rem] border-t border-white/5 pt-1">
-          <div className="flex flex-col items-center gap-0.5">
+      <span className="flex w-full items-start justify-between gap-2">
+        <span className="min-w-0">
+          <span className="line-clamp-2 block text-xs font-medium leading-tight text-white">
+            {title}
+          </span>
+          {description && (
+            <span className="mt-0.5 line-clamp-2 block text-[10px] leading-snug text-white/55">
+              {description}
+            </span>
+          )}
+        </span>
+        {showPrice && (
+          <span className="shrink-0 text-right">
             {discount > 0 && basePrice != null && (
-              <span className="text-[9px] text-gray-500 line-through tabular-nums leading-none">
+              <span className="block text-[10px] text-white/40 line-through tabular-nums">
                 {formatPricePln(basePrice)}
               </span>
             )}
-            <span className="text-[11px] font-semibold text-green-400 tabular-nums leading-none">
+            <span className="block text-xs font-semibold tabular-nums text-white">
               {formatPricePln(priceAfterDiscount)}
             </span>
-          </div>
-        </div>
-      )}
+          </span>
+        )}
+      </span>
     </button>
   )
 }

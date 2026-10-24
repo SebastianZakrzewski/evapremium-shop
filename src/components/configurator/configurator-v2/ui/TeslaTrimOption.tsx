@@ -26,39 +26,33 @@ export const TeslaTrimOption = ({
     type="button"
     onClick={onSelect}
     aria-pressed={selected}
-    className={`w-full rounded-lg border px-3 py-2.5 text-left transition-all duration-200 ${
+    className={`flex w-full items-center gap-3 rounded-xl border-2 px-3 py-3 text-left transition-colors ${
       selected
-        ? "border-red-500/90 bg-red-500/[0.08] ring-1 ring-red-500/25"
-        : "border-white/10 bg-[#0c0c0c] hover:border-white/20 hover:bg-white/[0.03]"
+        ? "border-red-600 bg-red-600/10"
+        : "border-white/15 bg-transparent hover:border-white/40"
     }`}
   >
-    <div className="flex items-start justify-between gap-4">
-      <div className="flex min-w-0 items-start gap-3">
-        {iconSrc && (
-          <MatTypeOptionIcon
-            src={iconSrc}
-            alt={iconAlt || title}
-            selected={selected}
-          />
-        )}
-        <span
-          className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border-2 transition-colors ${
-            selected ? "border-red-500 bg-red-500" : "border-white/40 bg-transparent"
-          }`}
-          aria-hidden
-        />
-        <div className="min-w-0">
-          <p className="text-sm font-medium text-white leading-snug">{title}</p>
-          {subtitle && (
-            <p className="mt-0.5 text-xs text-gray-400 leading-snug">{subtitle}</p>
-          )}
-        </div>
-      </div>
-      {priceAfterDiscount != null && priceAfterDiscount > 0 && (
-        <span className="shrink-0 text-sm font-semibold text-green-400 tabular-nums">
-          {formatPricePln(priceAfterDiscount)}
+    {iconSrc && (
+      <MatTypeOptionIcon
+        src={iconSrc}
+        alt={iconAlt || title}
+        selected={selected}
+      />
+    )}
+    <span className="min-w-0 flex-1">
+      <span className="block text-sm font-medium leading-snug text-white">
+        {title}
+      </span>
+      {subtitle && (
+        <span className="mt-0.5 block text-xs leading-snug text-white/60">
+          {subtitle}
         </span>
       )}
-    </div>
+    </span>
+    {priceAfterDiscount != null && priceAfterDiscount > 0 && (
+      <span className="shrink-0 text-sm font-semibold tabular-nums text-white">
+        {formatPricePln(priceAfterDiscount)}
+      </span>
+    )}
   </button>
 )
