@@ -11,7 +11,7 @@ import { VariantTrunkMatRimNotice } from "../variant/VariantTrunkMatRimNotice"
 import { shouldShowVariantTrunkMatRimNotice } from "../variant/trunkMatRimNotice"
 
 const compareLinkClass =
-  "text-sm text-white/70 underline underline-offset-2 hover:text-white whitespace-nowrap transition-colors"
+  "text-[13px] font-medium text-red-500 hover:text-red-400 whitespace-nowrap transition-colors"
 
 type VariantSectionProps = {
   config: { variant: string; matType?: string }

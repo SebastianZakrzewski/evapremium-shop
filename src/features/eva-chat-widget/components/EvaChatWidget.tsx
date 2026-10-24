@@ -45,6 +45,7 @@ export const EvaChatWidget = () => {
   }, [])
 
   const embeddedInProductWindow = isReady && window.parent !== window
+  const onConfigurator = isReady && window.location.pathname === '/konfigurator'
 
   useEffect(() => {
     if (!hasOpened) {
@@ -127,8 +128,12 @@ export const EvaChatWidget = () => {
   }
 
   const shellClassName = isOpen
-    ? 'fixed inset-0 z-[80] flex h-dvh w-dvw flex-col overflow-hidden max-md:bg-black md:inset-auto md:bottom-4 md:right-4 md:h-auto md:w-auto md:items-end md:gap-3 md:overflow-visible md:bg-transparent'
-    : 'fixed bottom-4 right-4 z-[80] flex flex-col items-end gap-3'
+    ? onConfigurator
+      ? 'fixed inset-0 z-[80] flex h-dvh w-dvw flex-col overflow-hidden max-md:bg-black md:inset-auto md:bottom-6 md:left-4 md:right-auto md:h-auto md:w-auto md:items-start md:gap-3 md:overflow-visible md:bg-transparent'
+      : 'fixed inset-0 z-[80] flex h-dvh w-dvw flex-col overflow-hidden max-md:bg-black md:inset-auto md:bottom-4 md:right-4 md:h-auto md:w-auto md:items-end md:gap-3 md:overflow-visible md:bg-transparent'
+    : onConfigurator
+      ? 'fixed bottom-24 left-4 z-[80] flex flex-col items-start gap-3 lg:bottom-6'
+      : 'fixed bottom-4 right-4 z-[80] flex flex-col items-end gap-3'
 
   const slotClassName = isOpen
     ? 'min-h-0 w-full flex-1 md:h-[min(640px,calc(100dvh-7rem))] md:w-[min(420px,calc(100vw-2rem))] md:flex-none'
@@ -169,7 +174,9 @@ export const EvaChatWidget = () => {
           )}
           <span
             aria-hidden="true"
-            className="absolute -bottom-1.5 right-8 h-3 w-3 rotate-45 border-b border-r border-[#e10600]/50 bg-[#141414]"
+            className={`absolute -bottom-1.5 h-3 w-3 rotate-45 border-b border-r border-[#e10600]/50 bg-[#141414] ${
+              onConfigurator ? 'left-8' : 'right-8'
+            }`}
           />
         </p>
       ) : null}

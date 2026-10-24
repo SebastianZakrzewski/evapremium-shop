@@ -87,7 +87,7 @@ export const ConfiguratorV2MobilePreview = ({
           priority
         />
       </div>
-      <span className="pointer-events-none absolute bottom-3 left-3 z-10 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/70 px-3 py-1.5 text-[11px] text-white backdrop-blur">
+      <span className="pointer-events-none absolute bottom-3 left-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-black/55 px-3 py-1.5 text-[11px] font-medium text-white backdrop-blur-md">
         <Maximize2 className="h-3.5 w-3.5" aria-hidden />
         Powiększ
       </span>

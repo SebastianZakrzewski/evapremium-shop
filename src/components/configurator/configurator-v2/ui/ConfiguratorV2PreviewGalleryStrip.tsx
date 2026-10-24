@@ -81,7 +81,7 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
               type="button"
               size="icon"
               variant="secondary"
-              className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full bg-black/80 border border-white/10 text-white ${
+              className={`absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-[#1c1c1e]/90 text-white ${
                 isMobile ? "h-7 w-7" : "h-8 w-8"
               }`}
               onClick={handlePrevious}
@@ -93,7 +93,7 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
               type="button"
               size="icon"
               variant="secondary"
-              className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full bg-black/80 border border-white/10 text-white ${
+              className={`absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-[#1c1c1e]/90 text-white ${
                 isMobile ? "h-7 w-7" : "h-8 w-8"
               }`}
               onClick={handleNext}
@@ -139,10 +139,10 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
                 type="button"
                 role="listitem"
                 onKeyDown={(event) => handleThumbKeyDown(event, item.id)}
-                className={`relative flex-shrink-0 snap-center overflow-hidden rounded-xl border-2 transition-colors ${thumbClassName} ${
+                className={`relative flex-shrink-0 snap-center overflow-hidden rounded-xl ring-1 transition-shadow ${thumbClassName} ${
                   isActive
-                    ? "border-white"
-                    : "border-white/20 opacity-80 hover:opacity-100"
+                    ? "ring-white"
+                    : "ring-white/15 opacity-70 hover:opacity-100"
                 }`}
                 aria-label={thumbLabel}
                 aria-current={isActive}
@@ -178,7 +178,7 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
               {Array.from({ length: EMPTY_IN_CAR_SLOT_COUNT }).map((_, index) => (
                 <div
                   key={`empty-in-car-${index}`}
-                  className={`relative flex-shrink-0 rounded-xl border border-dashed border-white/20 bg-white/5 ${thumbClassName}`}
+                  className={`relative flex-shrink-0 rounded-xl bg-[#1c1c1e] ring-1 ring-white/10 ${thumbClassName}`}
                   aria-hidden
                 >
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-white/25">

@@ -9,7 +9,7 @@ import {
 export const VariantTrunkMatRimNotice = () => (
   <div
     role="status"
-    className="mt-3 flex items-center gap-3 rounded-lg border border-amber-500/20 bg-amber-500/[0.06] px-3 py-2.5"
+    className="mt-3 flex items-center gap-3 rounded-2xl bg-[#1c1c1e] px-3 py-2.5"
   >
     <Image
       src={VARIANT_TRUNK_MAT_RIM_NOTICE_ICON_SRC}
@@ -19,10 +19,10 @@ export const VariantTrunkMatRimNotice = () => (
       className="h-14 w-16 shrink-0 rounded-md bg-white object-contain"
     />
     <div className="min-w-0">
-      <p className="text-sm font-semibold text-amber-400">
+      <p className="text-sm font-medium tracking-tight text-white">
         {VARIANT_TRUNK_MAT_RIM_NOTICE_LABEL}
       </p>
-      <p className="mt-0.5 text-xs leading-snug text-gray-400">
+      <p className="mt-0.5 text-xs leading-snug text-white/55">
         {VARIANT_TRUNK_MAT_RIM_NOTICE_BODY}
       </p>
     </div>

@@ -24,10 +24,10 @@ type ConfiguratorV2StickyBarProps = {
 }
 
 const summaryButtonClassName =
-  "inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-red-600 px-4 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-40"
+  "inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-red-600 px-4 text-[13px] font-medium text-white transition-colors hover:bg-red-500 disabled:opacity-40"
 
 const quietButtonClassName =
-  "inline-flex h-11 max-w-[11rem] shrink-0 items-center justify-center truncate rounded-full bg-white/10 px-4 text-sm font-medium text-white hover:bg-white/15 disabled:opacity-40"
+  "inline-flex h-10 max-w-[11rem] shrink-0 items-center justify-center truncate rounded-full bg-[#1c1c1e] px-4 text-[13px] font-medium text-white transition-colors hover:bg-[#2c2c2e] disabled:opacity-40"
 
 export const ConfiguratorV2StickyBar = ({
   priceBreakdown,
@@ -56,15 +56,15 @@ export const ConfiguratorV2StickyBar = ({
       {hasPrice ? (
         <>
           <span className="flex items-center gap-1.5">
-            <span className="text-lg font-semibold tabular-nums text-white lg:text-xl">
+            <span className="text-lg font-medium tabular-nums tracking-tight text-white lg:text-xl">
               {formatPricePln(totalWithAccessories)}
             </span>
             {onPriceClick && (
-              <ChevronDown className="h-4 w-4 shrink-0 text-white/50" aria-hidden />
+              <ChevronDown className="h-3.5 w-3.5 shrink-0 text-white/35" aria-hidden />
             )}
           </span>
           {priceBreakdown.discount > 0 && (
-            <span className="text-[11px] leading-tight text-white/60">
+            <span className="text-[11px] leading-tight text-white/45">
               Rabat: -{formatPriceValue(priceBreakdown.discount)} zł
             </span>
           )}
@@ -104,7 +104,7 @@ export const ConfiguratorV2StickyBar = ({
         <Link
           href="/modele"
           aria-label="Zmień model"
-          className="inline-flex items-center gap-2 text-sm text-white hover:text-white/80"
+          className="inline-flex items-center gap-2 text-[13px] font-medium text-white/80 transition-colors hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
           <span>Zmień model</span>
@@ -129,14 +129,14 @@ export const ConfiguratorV2StickyBar = ({
 
   return (
     <div
-      className="relative w-full border-t border-white/10 bg-black/95 backdrop-blur-xl"
+      className="relative w-full border-t border-white/[0.08] bg-black/80 backdrop-blur-2xl"
       data-variant={variant}
     >
       <div className="flex items-center justify-between gap-2.5 px-3 py-2.5 lg:gap-4 lg:px-6 lg:py-3">
         {priceBlock}
         <div className="flex min-w-0 items-center justify-end gap-2">
           {variant === "fixed" && productLabel && (
-            <span className="max-w-[34vw] truncate rounded-full bg-white/10 px-3 py-2 text-sm text-white sm:max-w-[11rem] sm:px-4">
+            <span className="max-w-[34vw] truncate rounded-full bg-[#1c1c1e] px-3 py-2 text-[13px] font-medium text-white/80 sm:max-w-[11rem] sm:px-4">
               {productLabel}
             </span>
           )}

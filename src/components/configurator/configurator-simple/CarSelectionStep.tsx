@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
+import { DarkSelect } from "@/components/configurator/configurator-v2/ui/DarkSelect"
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
 import {
   GEARBOX_OPTIONS,
@@ -22,9 +23,6 @@ type CarSelectionStepProps = {
   onNext: () => void
   hideNextButton?: boolean
 }
-
-const selectClassName =
-  "w-full px-4 py-3 min-h-[44px] bg-[#111] border border-white/10 rounded-lg text-white text-sm appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
 
 const yearsInRange = (from: number | null, to: number | null): number[] => {
   if (from == null) return []
@@ -308,23 +306,20 @@ export const CarSelectionStep = ({
   return (
     <div className="space-y-5">
       {fields.map((field) => (
-        <label key={field.label} id={field.id} className="block text-sm text-gray-400 scroll-mt-4">
-          <span className="mb-2 block font-medium">{field.label} *</span>
-          <select
+        <div key={field.label} id={field.id} className="block scroll-mt-4">
+          <span className="mb-2 block text-[13px] font-medium text-white/55">
+            {field.label} *
+          </span>
+          <DarkSelect
+            id={field.id ? `${field.id}-select` : field.label}
             value={field.value}
-            onChange={(event) => field.onChange(event.target.value)}
+            placeholder={field.placeholder}
+            ariaLabel={field.label}
+            options={field.options}
             disabled={field.disabled}
-            className={selectClassName}
-            aria-label={field.label}
-          >
-            <option value="">{field.placeholder}</option>
-            {field.options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
+            onChange={field.onChange}
+          />
+        </div>
       ))}
 
       {error && (

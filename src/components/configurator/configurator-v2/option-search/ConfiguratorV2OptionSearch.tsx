@@ -20,7 +20,7 @@ export const ConfiguratorV2OptionSearch = ({
       <label className="relative block">
         <span className="sr-only">Szukaj opcji</span>
         <Search
-          className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/45"
+          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40"
           aria-hidden
         />
         <input
@@ -28,11 +28,11 @@ export const ConfiguratorV2OptionSearch = ({
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Szukaj opcji"
-          className="h-12 w-full rounded-xl border border-white/15 bg-transparent pl-11 pr-4 text-sm text-white outline-none placeholder:text-white/40 focus:border-white/40"
+          className="h-11 w-full rounded-xl border-0 bg-[#1c1c1e] pl-10 pr-4 text-sm text-white outline-none ring-1 ring-transparent placeholder:text-white/35 transition-shadow focus:ring-red-500/70"
         />
       </label>
       {hasQuery && (
-        <p className="mt-2 text-xs text-white/50" aria-live="polite">
+        <p className="mt-2 text-xs text-white/40" aria-live="polite">
           Liczba trafień: {matchCount}
         </p>
       )}

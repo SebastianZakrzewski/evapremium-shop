@@ -80,7 +80,7 @@ export const ConfiguratorV2PreviewPanel = ({
             type="button"
             onClick={handleZoom}
             aria-label="Powiększ podgląd"
-            className="absolute bottom-4 left-4 z-20 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/70 px-3 py-2 text-xs text-white backdrop-blur"
+            className="absolute bottom-4 left-4 z-20 inline-flex items-center gap-1.5 rounded-full bg-black/55 px-3 py-1.5 text-[11px] font-medium text-white backdrop-blur-md"
           >
             <Maximize2 className="h-3.5 w-3.5" aria-hidden />
             Powiększ

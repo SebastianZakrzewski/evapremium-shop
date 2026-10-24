@@ -50,7 +50,7 @@ export const ConfiguratorV2Layout = ({
 
   return (
   <div className="flex h-full min-h-0 flex-col overflow-hidden bg-black text-white">
-    <div className="hidden shrink-0 border-b border-white/10 bg-black lg:block">
+    <div className="hidden shrink-0 border-b border-white/[0.08] bg-black lg:block">
       {topBar}
     </div>
 
@@ -58,7 +58,7 @@ export const ConfiguratorV2Layout = ({
       {mobilePreview && (
         <MobilePreviewDockProvider docked={previewDocked}>
           <div
-            className={`shrink-0 border-b border-white/10 bg-black transition-[padding] duration-300 ease-out lg:hidden ${
+            className={`shrink-0 border-b border-white/[0.08] bg-black transition-[padding] duration-300 ease-out lg:hidden ${
               previewDocked ? "px-0 pb-0 pt-0" : "px-4 pb-3 pt-3"
             }`}
             aria-label="Podgląd produktu"

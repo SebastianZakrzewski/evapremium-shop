@@ -50,15 +50,15 @@ export const ConfiguratorV2ImageOptionCard = ({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`flex flex-col rounded-xl border-2 px-2 py-2 text-left transition-colors ${
+      className={`flex flex-col rounded-2xl px-2 py-2 text-left transition-colors ${
         inline ? "w-[8.75rem]" : "w-full"
       } ${
         selected
-          ? "border-red-600 bg-red-600/10"
-          : "border-white/15 bg-transparent hover:border-white/40"
+          ? "bg-[#1c1c1e] ring-1 ring-inset ring-red-500"
+          : "bg-[#1c1c1e]/70 hover:bg-[#2c2c2e]"
       }`}
     >
-      <span className="mb-2 flex h-24 items-center justify-center overflow-hidden rounded-lg bg-white/5">
+      <span className="mb-2 flex h-24 items-center justify-center overflow-hidden rounded-xl bg-black/35">
         <Image
           src={imageSrc}
           alt={imageAlt || title}
@@ -71,11 +71,11 @@ export const ConfiguratorV2ImageOptionCard = ({
 
       <span className="flex w-full items-start justify-between gap-2">
         <span className="min-w-0">
-          <span className="line-clamp-2 block text-xs font-medium leading-tight text-white">
+          <span className="line-clamp-2 block text-xs font-medium leading-tight tracking-tight text-white">
             {title}
           </span>
           {description && (
-            <span className="mt-0.5 line-clamp-2 block text-[10px] leading-snug text-white/55">
+            <span className="mt-0.5 line-clamp-2 block text-[10px] leading-snug text-white/45">
               {description}
             </span>
           )}
@@ -83,11 +83,11 @@ export const ConfiguratorV2ImageOptionCard = ({
         {showPrice && (
           <span className="shrink-0 text-right">
             {discount > 0 && basePrice != null && (
-              <span className="block text-[10px] text-white/40 line-through tabular-nums">
+              <span className="block text-[10px] text-white/35 line-through tabular-nums">
                 {formatPricePln(basePrice)}
               </span>
             )}
-            <span className="block text-xs font-semibold tabular-nums text-white">
+            <span className="block text-xs font-medium tabular-nums text-white/80">
               {formatPricePln(priceAfterDiscount)}
             </span>
           </span>

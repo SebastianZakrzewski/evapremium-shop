@@ -26,10 +26,10 @@ export const TeslaTrimOption = ({
     type="button"
     onClick={onSelect}
     aria-pressed={selected}
-    className={`flex w-full items-center gap-3 rounded-xl border-2 px-3 py-3 text-left transition-colors ${
+    className={`flex w-full items-center gap-3 rounded-2xl px-3.5 py-3 text-left transition-colors ${
       selected
-        ? "border-red-600 bg-red-600/10"
-        : "border-white/15 bg-transparent hover:border-white/40"
+        ? "bg-[#1c1c1e] ring-1 ring-inset ring-red-500"
+        : "bg-[#1c1c1e]/70 hover:bg-[#2c2c2e]"
     }`}
   >
     {iconSrc && (
@@ -40,17 +40,17 @@ export const TeslaTrimOption = ({
       />
     )}
     <span className="min-w-0 flex-1">
-      <span className="block text-sm font-medium leading-snug text-white">
+      <span className="block text-sm font-medium leading-snug tracking-tight text-white">
         {title}
       </span>
       {subtitle && (
-        <span className="mt-0.5 block text-xs leading-snug text-white/60">
+        <span className="mt-0.5 block text-xs leading-snug text-white/55">
           {subtitle}
         </span>
       )}
     </span>
     {priceAfterDiscount != null && priceAfterDiscount > 0 && (
-      <span className="shrink-0 text-sm font-semibold tabular-nums text-white">
+      <span className="shrink-0 text-sm font-medium tabular-nums text-white/80">
         {formatPricePln(priceAfterDiscount)}
       </span>
     )}
