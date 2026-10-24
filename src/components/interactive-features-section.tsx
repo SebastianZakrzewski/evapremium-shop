@@ -10,7 +10,7 @@ const features = [
     title: "Doskonała ochrona",
     description: "Ranty 3D o wysokości do 8 cm skutecznie chronią przed wnikaniem brudu, wilgoci i zanieczyszczeń pod dywanik, zapewniając długotrwałą ochronę podłogi Twojego samochodu.",
     position: { top: "25%", left: "80%" },
-    image: "/7.webp"
+    image: "/images/zalety/ranty-do-7cm.jpg"
   },
   {
     id: "jezor",
