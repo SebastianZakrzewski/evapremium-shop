@@ -42,7 +42,7 @@ export default function MatComparisonSection() {
   return (
     <section
       id="mat-comparison-section"
-      className="py-14 md:py-20 bg-black relative overflow-hidden"
+      className="py-8 md:py-10 bg-black relative overflow-hidden"
       role="region"
       aria-label="Porównanie dywaników EVA z gumowymi"
     >
@@ -52,23 +52,23 @@ export default function MatComparisonSection() {
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div
-          className={`text-center mb-10 transition-all duration-1000 ease-out ${
+          className={`text-center mb-6 transition-all duration-1000 ease-out ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <p className="text-red-500 uppercase tracking-widest text-sm font-semibold mb-3">
+          <p className="text-red-500 uppercase tracking-[0.22em] text-[11px] font-medium mb-2">
             Porównanie
           </p>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-5">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-2">
             <span className="text-red-500">EVA</span> vs <span className="text-gray-400">Gumowe</span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-gray-400 text-sm max-w-xl mx-auto leading-relaxed">
             Przeciągnij suwak i przekonaj się na własne oczy, dlaczego dywaniki
             EVA to wybór nowej generacji kierowców.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center max-w-6xl mx-auto">
           {/* Slider */}
           <div
             className={`transition-all duration-1000 delay-200 ease-out ${

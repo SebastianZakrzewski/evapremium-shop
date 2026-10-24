@@ -118,18 +118,18 @@ export default function FAQSection() {
   return (
     <section 
       id="faq-section" 
-      className="py-10 md:py-14 bg-black text-white relative overflow-hidden"
+      className="py-7 md:py-9 bg-black text-white relative overflow-hidden"
       role="region"
       aria-label="Najczęściej zadawane pytania - FAQ"
     >
       {/* Gradient line top */}
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className={`text-center mb-8 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+        <div className={`text-center mb-5 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-2">
             Najczęściej zadawane <span className="text-red-500">pytania</span>
           </h2>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed">
             Znajdź odpowiedzi na najważniejsze pytania dotyczące naszych dywaników samochodowych.
           </p>
         </div>
@@ -171,10 +171,10 @@ export default function FAQSection() {
               >
                 <button
                   onClick={() => toggleItem(faq.id)}
-                  className="w-full px-6 py-5 text-left flex items-center justify-between group"
+                  className="w-full px-4 py-3.5 text-left flex items-center justify-between group"
                   aria-expanded={openItems.includes(faq.id)}
                 >
-                  <h3 className={`text-lg font-semibold pr-8 transition-colors duration-300 ${openItems.includes(faq.id) ? 'text-white' : 'text-gray-200 group-hover:text-white'}`}>
+                  <h3 className={`pr-8 transition-colors duration-300 ${openItems.includes(faq.id) ? 'text-white' : 'text-gray-200 group-hover:text-white'}`}>
                     {faq.question}
                   </h3>
                   <div className="flex items-center space-x-3 flex-shrink-0">
@@ -195,9 +195,9 @@ export default function FAQSection() {
                     ${openItems.includes(faq.id) ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
                   `}
                 >
-                  <div className="px-6 pb-6 pt-0">
+                  <div className="px-4 pb-4 pt-0">
                     <div className="border-t border-white/10 pt-4">
-                      <p className="text-gray-400 leading-relaxed text-sm md:text-base">
+                      <p className="text-gray-400 leading-relaxed text-sm">
                         {faq.answer}
                       </p>
                     </div>
@@ -209,19 +209,19 @@ export default function FAQSection() {
         </div>
 
         {/* Call to Action */}
-        <div className={`text-center mt-16 transition-all duration-1000 ease-out delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/10 max-w-3xl mx-auto">
-            <h3 className="text-2xl font-bold text-white mb-4">
+        <div className={`text-center mt-8 transition-all duration-1000 ease-out delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/10 max-w-xl mx-auto">
+            <h3 className="text-white mb-2">
               Nie znalazłeś odpowiedzi na swoje pytanie?
             </h3>
-            <p className="text-gray-400 mb-8">
+            <p className="text-sm text-gray-400 mb-5">
               Skontaktuj się z naszym zespołem - chętnie pomożemy!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-full font-bold transition-all duration-300 shadow-xl shadow-red-900/20 hover:scale-105 hover:shadow-red-900/40">
+              <button className="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 shadow-lg shadow-red-900/20">
                 Napisz do nas
               </button>
-              <button className="bg-transparent border border-white/20 text-white px-8 py-3 rounded-full font-bold transition-all duration-300 hover:bg-white/10 hover:border-white/40">
+              <button className="bg-transparent border border-white/20 text-white px-5 py-2.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-white/10 hover:border-white/40">
                 Zadzwoń: +48 793 993 430
               </button>
             </div>

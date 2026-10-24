@@ -156,7 +156,7 @@ export default function InteractiveFeaturesSection() {
   return (
     <section 
       id="interactive-features" 
-      className="py-10 md:py-14 bg-black relative overflow-hidden"
+      className="py-7 md:py-9 bg-black relative overflow-hidden"
     >
       {/* Gradient line top */}
       {/* Background Elements */}
@@ -164,16 +164,16 @@ export default function InteractiveFeaturesSection() {
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className={`text-center mb-8 md:mb-10 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+        <div className={`text-center mb-5 md:mb-6 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3 leading-tight">
             Poznaj <span className="text-red-500">innowacyjne cechy</span>
           </h2>
-          <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed">
             Kliknij na etykiety na zdjęciu, aby dowiedzieć się więcej o rozwiązaniach, które zastosowaliśmy w naszych dywanikach EVA.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-start max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 items-start max-w-6xl mx-auto">
           
           {/* Prawa strona: Zdjęcie szczegółowe + Opis */}
           <div ref={detailsRef} className={`order-2 lg:order-2 transition-all duration-1000 ease-out sticky top-24 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
@@ -218,14 +218,14 @@ export default function InteractiveFeaturesSection() {
               {/* Opis pod zdjęciem */}
               <div
                 className={cn(
-                  "mt-8 p-6 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 transition-all duration-150 ease-out",
+                  "mt-5 p-4 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 transition-all duration-150 ease-out",
                   isTextVisible ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
                 )}
               >
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 className="text-white mb-2">
                   {displayedTextFeature.title}
                 </h3>
-                <p className="text-gray-400 leading-relaxed">
+                <p className="text-sm text-gray-400 leading-relaxed">
                   {displayedTextFeature.description}
                 </p>
               </div>
@@ -234,7 +234,7 @@ export default function InteractiveFeaturesSection() {
 
           {/* Lewa strona: Interaktywny dywanik */}
           <div className={`order-1 lg:order-1 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-            <div className="relative w-full aspect-square max-w-[600px] mx-auto rounded-3xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-[#111]">
+            <div className="relative w-full aspect-square max-w-[480px] mx-auto rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-[#111]">
               <Image
                 src="/images/interactive-mat-clean.png"
                 alt="Dywaniki EVA - cechy"

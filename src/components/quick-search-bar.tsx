@@ -68,16 +68,16 @@ export default function QuickSearchBar() {
   return (
     <section
       id="quick-search"
-      className="w-full bg-black py-10 md:py-14 relative"
+      className="w-full bg-black py-7 md:py-9 relative"
       role="region"
       aria-label="Wyszukiwarka dywaników - wybierz markę i model samochodu"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-        <div className="text-center mb-6 md:mb-8">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 md:mb-6 leading-tight break-words px-2">
+        <div className="text-center mb-4 md:mb-5">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3 leading-tight break-words px-2">
             Dobierz dywaniki w <span className="text-red-500">15 sekund</span>
           </h2>
-          <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed px-2">
+          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed px-2">
             Wybierz markę i model, a my dopasujemy idealne dywaniki.
           </p>
         </div>

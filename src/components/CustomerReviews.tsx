@@ -98,29 +98,29 @@ export default function CustomerReviews() {
   return (
     <section 
       id="opinie" 
-      className="py-10 md:py-14 bg-black relative overflow-hidden"
+      className="py-7 md:py-9 bg-black relative overflow-hidden"
       role="region"
       aria-label="Opinie klientów o dywanikach EVA"
     >
       {/* Gradient line top */}
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+        <div className="text-center mb-5">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-2">
             Opinie naszych <span className="text-red-500">Klientów</span>
           </h2>
           
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed">
             Dołącz do ponad <span className="text-white font-semibold">2000+</span> zadowolonych kierowców, którzy wybrali komfort i jakość EVA Premium.
           </p>
         </div>
 
         {/* Reviews Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
           {reviews.map((review) => (
             <div
               key={review.id}
-              className="group relative bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 hover:border-red-500/30 transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/50"
+              className="group relative bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 hover:border-red-500/30 transition-all duration-500 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50"
             >
               {/* Shine Effect */}
               <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-3xl overflow-hidden">
@@ -128,8 +128,8 @@ export default function CustomerReviews() {
               </div>
 
               {/* User Info */}
-              <div className="relative z-10 flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-lg font-bold text-white">
+              <div className="relative z-10 flex items-center gap-3 mb-4">
+                <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-sm font-medium text-white">
                   {review.name.charAt(0)}
                 </div>
                 <div>

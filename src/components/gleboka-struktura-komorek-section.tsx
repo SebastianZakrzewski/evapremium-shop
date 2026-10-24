@@ -46,24 +46,24 @@ export default function GlebokaStrukturaKomorekSection() {
   return (
     <section 
       id="gleboka-struktura-komorek-section" 
-      className="py-10 md:py-14 bg-black relative overflow-hidden"
+      className="py-7 md:py-9 bg-black relative overflow-hidden"
       role="region"
       aria-label="Cechy materiału EVA - struktura komórkowa"
     >
       {/* Gradient line top */}
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className={`text-center mb-8 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+        <div className={`text-center mb-5 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-2">
             Nowoczesny materiał <span className="text-red-500">EVA</span>
           </h2>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed">
             Technologia polimerowa, która zmienia standardy ochrony wnętrza samochodu.
             Lekkość, wytrzymałość i funkcjonalność w jednym materiale.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center max-w-6xl mx-auto">
           {/* Obrazek */}
           <div className={`relative order-2 lg:order-1 transition-all duration-1000 delay-200 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
             <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-white/5 backdrop-blur-sm group">
@@ -102,10 +102,10 @@ export default function GlebokaStrukturaKomorekSection() {
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors duration-300">
+                    <h3 className="text-white mb-1 group-hover:text-red-400 transition-colors duration-300">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-400 leading-relaxed group-hover:text-gray-400 transition-colors duration-300">
+                    <p className="text-sm text-gray-400 leading-relaxed group-hover:text-gray-400 transition-colors duration-300">
                       {feature.description}
                     </p>
                   </div>

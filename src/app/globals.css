@@ -117,14 +117,38 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
   h5 { font-size: clamp(1.125rem, 2vw, 1.5rem); }
   h6 { font-size: clamp(1rem, 1.5vw, 1.25rem); }
 
-  /* Powiększenie głównych tytułów sekcji na stronie głównej */
+  /* Strona główna: mniejsza, ciaśniejsza skala — spokojny nagłówek, lżejszy krój. */
   .home-page h1 {
-    font-size: clamp(3rem, 7vw, 5rem) !important;
-    line-height: 1.1 !important;
+    font-size: clamp(1.75rem, 2.8vw, 2.5rem) !important;
+    line-height: 1.15 !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.03em !important;
   }
   .home-page h2 {
-    font-size: clamp(2.25rem, 5vw, 4rem) !important;
-    line-height: 1.2 !important;
+    font-size: clamp(1.375rem, 2vw, 1.875rem) !important;
+    line-height: 1.25 !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.025em !important;
+  }
+  .home-page h3 {
+    font-size: clamp(1.0625rem, 1.3vw, 1.25rem) !important;
+    line-height: 1.35 !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.015em !important;
+  }
+  .home-page h4 {
+    font-size: 0.9375rem !important;
+    line-height: 1.4 !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.01em !important;
+  }
+  .home-page :is(h1, h2, h3, h4) :is(span, strong, b) {
+    font-weight: inherit;
+    letter-spacing: inherit;
+  }
+  .home-page p {
+    font-weight: 500;
+    letter-spacing: 0;
   }
 
   p, li, span, a, label, input, select, textarea, button {

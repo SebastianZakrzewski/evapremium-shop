@@ -50,17 +50,17 @@ export default function ProductSelection() {
     return (
       <section
         id="products"
-        className="w-full bg-black py-10 md:py-14 flex items-center justify-center relative"
+        className="w-full bg-black py-7 md:py-9 flex items-center justify-center relative"
         role="region"
         aria-label="Popularne marki samochodów - ładowanie"
       >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
           <div className="flex flex-col items-center justify-center min-h-[300px]">
             <Loader2 className="w-12 h-12 text-red-500 animate-spin mb-4" />
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2">
               Popularne marki <span className="text-red-500">samochodów</span>
             </h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-400">
+            <p className="text-sm text-gray-400">
               Ładowanie dostępnych marek...
             </p>
           </div>
@@ -72,17 +72,17 @@ export default function ProductSelection() {
   return (
     <section
       id="products"
-      className="w-full bg-black py-20 md:py-24 relative"
+      className="w-full bg-black py-8 md:py-10 relative"
       role="region"
       aria-label="Popularne marki samochodów - wybierz markę i znajdź dywaniki"
     >
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Nagłówek sekcji - spójny z QuickSearchBar, ProductGallery, AdvantagesSection */}
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 md:mb-6 leading-tight break-words px-2">
+        <div className="text-center mb-6 md:mb-8">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3 leading-tight break-words px-2">
             Popularne marki <span className="text-red-500">samochodów</span>
           </h2>
-          <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed px-2">
+          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed px-2">
             Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
           </p>
           <div className="mt-6 text-xs md:text-sm text-gray-400 px-4">

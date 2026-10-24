@@ -9,13 +9,23 @@ import { useCart } from "@/features/shopping-cart/hooks/useCart";
 import { toast } from "react-hot-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { SlidersHorizontal, X } from "lucide-react";
+import { X } from "lucide-react";
 import AccessoryCard from "./accessory-card";
 import AccessoryDetailsSheet from "./accessory-details-sheet";
 import { formatPriceCurrency } from "@/lib/utils/formatPrice";
+
+const MAIN_CATEGORIES = ["Organizery do Bagażnika", "Podpiętki"];
+
+function productCountLabel(count: number) {
+  if (count === 1) return "1 produkt";
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
+    return `${count} produkty`;
+  }
+  return `${count} produktów`;
+}
 
 interface FilterState {
   categories: string[];
@@ -43,11 +53,7 @@ export default function AccessoriesSection() {
     inStock: false
   });
 
-  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null);
-
-  // Główne kategorie (Organizery vs Podpiętki)
-  const MAIN_CATEGORIES = ['Organizery do Bagażnika', 'Podpiętki'];
   
   // Sprawdź które główne kategorie są wybrane
   const selectedMainCategories = useMemo(() => {
@@ -112,14 +118,6 @@ export default function AccessoriesSection() {
             if (hasPodpietkaFilter && accessory.productType === 'podpietka') {
               return true;
             }
-            // Jeśli productType istnieje ale nie pasuje do żadnej wybranej głównej kategorii
-            // Debug: loguj niepasujące produkty
-            console.log('ProductType mismatch:', {
-              name: accessory.name,
-              productType: accessory.productType,
-              hasOrganizerFilter,
-              hasPodpietkaFilter
-            });
             return false;
           }
           // Fallback do sprawdzania nazwy kategorii (dla produktów bez productType)
@@ -229,6 +227,18 @@ export default function AccessoriesSection() {
 
   const currentAccessories = categoryParam ? categoryAccessories : filteredAccessories;
   const activeFiltersCount = filters.categories.length + (filters.inStock ? 1 : 0) + (filters.priceRange[1] < 5000 ? 1 : 0);
+  const collectionTitle = categoryParam
+    ? categoryParam.replace(/-/g, " ")
+    : "Akcesoria samochodowe";
+  const extraCategories =
+    selectedMainCategories.length > 0 ? [] : availableCategories;
+
+  const chipClass = (active: boolean) =>
+    `shrink-0 border-b-2 pb-2 text-sm transition-colors ${
+      active
+        ? "border-red-600 text-white"
+        : "border-transparent text-white/45 hover:text-white"
+    }`;
 
   if (error) {
     return (
@@ -245,270 +255,197 @@ export default function AccessoriesSection() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pb-20">
-      {/* Hero Header */}
-      <div className="relative bg-[#0a0a0a] border-b border-white/5 py-16 md:py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
-            <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            <span>/</span>
-            <span className="text-white">Akcesoria</span>
-          </nav>
-          
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              {categoryParam ? (
-                <>AKCESORIA <span className="text-red-600">{categoryParam.toUpperCase()}</span></>
-              ) : (
-                <>WYPOSAŻENIE <span className="text-red-600">PREMIUM</span></>
-              )}
+    <div className="bg-black pb-20 text-white">
+      <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 md:px-6 md:pt-12">
+        <nav className="flex items-center gap-2 text-xs tracking-wide text-white/40">
+          <Link href="/" className="transition-colors hover:text-white">
+            Home
+          </Link>
+          <span>/</span>
+          <span className="text-white/70">Akcesoria</span>
+        </nav>
+
+        <div className="mt-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl">
+            <p className="text-[11px] uppercase tracking-[0.28em] text-red-500">Kolekcja</p>
+            <h1 className="mt-3 text-3xl font-medium leading-tight tracking-tight text-white md:text-4xl">
+              {collectionTitle}
             </h1>
-            <p className="text-lg text-gray-400 leading-relaxed">
-              {categoryParam 
-                ? `Dedykowane akcesoria z kolekcji ${categoryParam}. Podkreśl styl swojego samochodu.`
-                : 'Odkryj naszą wyselekcjonowaną kolekcję akcesoriów samochodowych. Od kosmetyków po elektronikę – wszystko, czego potrzebuje Twój samochód.'
-              }
+            <p className="mt-3 max-w-xl text-sm font-normal leading-relaxed text-white/55 md:text-base">
+              {categoryParam
+                ? `Produkty z kolekcji ${collectionTitle}.`
+                : "Organizery do bagażnika i podpiętki. Dodatki, które chronią dywanik i utrzymują porządek we wnętrzu."}
             </p>
           </div>
+          {!isLoading && !loadingCategory && (
+            <p className="text-sm text-white/40">{productCountLabel(currentAccessories.length)}</p>
+          )}
         </div>
-      </div>
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex flex-col lg:flex-row gap-10">
-          
-          {/* Mobile Filter Toggle */}
-          <div className="lg:hidden mb-6">
-            <Button 
-              onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
-              variant="outline" 
-              className="w-full flex items-center justify-between border-white/20 bg-transparent text-white hover:bg-white/5"
-            >
-              <span className="flex items-center gap-2">
-                <SlidersHorizontal className="w-4 h-4" />
-                Filtry
-              </span>
-              {activeFiltersCount > 0 && (
-                <Badge variant="secondary" className="bg-red-600 text-white hover:bg-red-700 border-none">
-                  {activeFiltersCount}
-                </Badge>
-              )}
-            </Button>
-          </div>
+        {!categoryParam && (
+          <div className="mt-10 space-y-4 border-b border-white/10 pb-5">
+            <div className="flex gap-5 overflow-x-auto">
+              <button
+                type="button"
+                onClick={() =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    categories: [],
+                  }))
+                }
+                className={chipClass(filters.categories.length === 0)}
+              >
+                Wszystkie
+              </button>
+              {MAIN_CATEGORIES.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() =>
+                    handleCategoryChange(category, !filters.categories.includes(category))
+                  }
+                  className={chipClass(filters.categories.includes(category))}
+                >
+                  {category}
+                </button>
+              ))}
+              {extraCategories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() =>
+                    handleCategoryChange(category, !filters.categories.includes(category))
+                  }
+                  className={chipClass(filters.categories.includes(category))}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
 
-          {/* Sidebar Filters */}
-          <aside className={`
-            lg:w-72 shrink-0 space-y-8
-            ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}
-          `}>
-            <div className="sticky top-24 space-y-8">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Filtrowanie</h3>
-                {activeFiltersCount > 0 && (
-                  <button 
-                    onClick={clearFilters}
-                    className="text-xs text-red-400 hover:text-red-300 font-medium transition-colors"
+            {selectedMainCategories.length > 0 && availableCategories.length > 0 && (
+              <div className="flex gap-4 overflow-x-auto pl-1">
+                {availableCategories.map((category) => (
+                  <button
+                    key={category}
+                    type="button"
+                    onClick={() =>
+                      handleCategoryChange(category, !filters.categories.includes(category))
+                    }
+                    className={chipClass(filters.categories.includes(category))}
                   >
-                    WYCZYŚĆ
+                    {category}
                   </button>
-                )}
+                ))}
               </div>
+            )}
 
-              {/* Categories */}
-              <div className="space-y-4">
-                <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Kategorie</h4>
-                <div className="space-y-3">
-                  {/* Główne kategorie */}
-                  {categories
-                    .filter(cat => MAIN_CATEGORIES.includes(cat.name))
-                    .map((category) => (
-                      <div key={category.name} className="flex items-center space-x-3 group">
-                        <Checkbox
-                          id={`category-${category.name}`}
-                          checked={filters.categories.includes(category.name)}
-                          onCheckedChange={(checked) => 
-                            handleCategoryChange(category.name, checked as boolean)
-                          }
-                          className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
-                        />
-                        <Label 
-                          htmlFor={`category-${category.name}`}
-                          className="text-gray-400 group-hover:text-white cursor-pointer transition-colors font-medium"
-                        >
-                          {category.name}
-                        </Label>
-                      </div>
-                    ))}
-                  
-                  {/* Podkategorie - pokazuj tylko jeśli wybrano główną kategorię */}
-                  {selectedMainCategories.length > 0 && availableCategories.length > 0 && (
-                    <>
-                      <div className="pt-2 border-t border-white/10 mt-2">
-                        <div className="text-xs text-gray-400 uppercase tracking-wider mb-2 px-1">
-                          Podkategorie
-                        </div>
-                        <div className="space-y-2 pl-4">
-                          {availableCategories.map((category) => (
-                            <div key={category} className="flex items-center space-x-3 group">
-                              <Checkbox
-                                id={`subcategory-${category}`}
-                                checked={filters.categories.includes(category)}
-                                onCheckedChange={(checked) => 
-                                  handleCategoryChange(category, checked as boolean)
-                                }
-                                className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
-                              />
-                              <Label 
-                                htmlFor={`subcategory-${category}`}
-                                className="text-gray-400 group-hover:text-gray-400 cursor-pointer transition-colors text-sm"
-                              >
-                                {category}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                  
-                  {/* Jeśli nie wybrano głównej kategorii, pokaż inne kategorie */}
-                  {selectedMainCategories.length === 0 && availableCategories.length > 0 && (
-                    <>
-                      {availableCategories.map((category) => (
-                        <div key={category} className="flex items-center space-x-3 group">
-                          <Checkbox
-                            id={`category-${category}`}
-                            checked={filters.categories.includes(category)}
-                            onCheckedChange={(checked) => 
-                              handleCategoryChange(category, checked as boolean)
-                            }
-                            className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
-                          />
-                          <Label 
-                            htmlFor={`category-${category}`}
-                            className="text-gray-400 group-hover:text-white cursor-pointer transition-colors"
-                          >
-                            {category}
-                          </Label>
-                        </div>
-                      ))}
-                    </>
-                  )}
-                </div>
-              </div>
+            <div className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
+              <label className="flex min-w-0 flex-1 items-center gap-4 text-sm text-white/50 sm:max-w-sm">
+                <span className="shrink-0">
+                  Do {formatPriceCurrency(filters.priceRange[1])}
+                </span>
+                <input
+                  type="range"
+                  min="0"
+                  max="5000"
+                  step="50"
+                  value={filters.priceRange[1]}
+                  onChange={handlePriceRangeChange}
+                  aria-label="Maksymalna cena"
+                  className="h-1 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-red-600"
+                />
+              </label>
 
-              <Separator className="bg-white/10" />
-
-              {/* Price Range */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Cena</h4>
-                  <span className="text-sm font-mono text-white">
-                    do {formatPriceCurrency(filters.priceRange[1])}
-                  </span>
-                </div>
-                <div className="pt-2">
-                  <input
-                    type="range"
-                    min="0"
-                    max="5000"
-                    step="50"
-                    value={filters.priceRange[1]}
-                    onChange={handlePriceRangeChange}
-                    className="w-full h-1 bg-white/5 rounded-lg appearance-none cursor-pointer accent-red-600"
-                  />
-                  <div className="flex justify-between mt-2 text-xs text-gray-400">
-                    <span>0 PLN</span>
-                    <span>5000+ PLN</span>
-                  </div>
-                </div>
-              </div>
-
-              <Separator className="bg-white/10" />
-
-              {/* Availability */}
-              <div className="space-y-4">
-                <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Dostępność</h4>
-                <div className="flex items-center space-x-3 group">
+              <div className="flex items-center gap-5">
+                <div className="flex items-center gap-2">
                   <Checkbox
                     id="inStock"
                     checked={filters.inStock}
                     onCheckedChange={(checked) => handleInStockChange(checked as boolean)}
-                    className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                    className="border-white/20 data-[state=checked]:border-red-600 data-[state=checked]:bg-red-600"
                   />
-                  <Label 
-                    htmlFor="inStock"
-                    className="text-gray-400 group-hover:text-white cursor-pointer transition-colors"
-                  >
-                    Tylko dostępne produkty
+                  <Label htmlFor="inStock" className="cursor-pointer text-sm text-white/55">
+                    Tylko dostępne
                   </Label>
                 </div>
+                {activeFiltersCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="text-xs tracking-wide text-red-400 transition-colors hover:text-red-300"
+                  >
+                    Wyczyść
+                  </button>
+                )}
               </div>
             </div>
-          </aside>
+          </div>
+        )}
 
-          {/* Main Content */}
-          <main className="flex-1">
-            {/* Results Header */}
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
-              <p className="text-gray-400">
-                Znaleziono <span className="text-white font-semibold">{currentAccessories.length}</span> produktów
-              </p>
-              
-              {categoryParam && (
-                <Link 
-                  href="/akcesoria" 
-                  className="text-sm text-red-400 hover:text-red-300 flex items-center gap-1 transition-colors"
+        {categoryParam && (
+          <div className="mt-8">
+            <Link
+              href="/akcesoria"
+              className="inline-flex items-center gap-1 text-sm text-white/50 transition-colors hover:text-white"
+            >
+              <X className="h-4 w-4" />
+              Cała kolekcja
+            </Link>
+          </div>
+        )}
+
+        <div className="mt-10">
+          {isLoading || loadingCategory ? (
+            <div className="flex flex-wrap justify-center gap-8">
+              {[...Array(6)].map((_, index) => (
+                <div
+                  key={index}
+                  className="h-[24.5rem] w-80 max-w-full overflow-hidden rounded-2xl border border-white/10"
                 >
-                  <X className="w-4 h-4" />
-                  Wyczyść kategorię
-                </Link>
-              )}
+                  <div className="h-56 animate-pulse bg-white/10" />
+                  <div className="space-y-3 p-6">
+                    <div className="h-4 w-28 animate-pulse rounded bg-white/10" />
+                    <div className="h-12 w-4/5 animate-pulse rounded bg-white/10" />
+                    <div className="h-8 w-24 animate-pulse rounded bg-white/10" />
+                  </div>
+                </div>
+              ))}
             </div>
-
-            {/* Loading State */}
-            {(isLoading || loadingCategory) ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="h-[400px] bg-white/5 rounded-xl animate-pulse" />
+          ) : (
+            <>
+              <div className="flex flex-wrap justify-center gap-8">
+                {currentAccessories.map((accessory) => (
+                  <AccessoryCard
+                    key={accessory.id}
+                    accessory={accessory}
+                    onAddToCart={(event) => handleAddToCart(accessory, event)}
+                    onView={() => setSelectedAccessory(accessory)}
+                  />
                 ))}
               </div>
-            ) : (
-              <>
-                {/* Product Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {currentAccessories.map((accessory) => (
-                    <AccessoryCard 
-                      key={accessory.id} 
-                      accessory={accessory}
-                      onAddToCart={(e) => handleAddToCart(accessory, e)}
-                      onView={() => setSelectedAccessory(accessory)}
-                    />
-                  ))}
-                </div>
 
-                {/* Empty State */}
-                {currentAccessories.length === 0 && (
-                  <div className="py-20 text-center border border-dashed border-white/10 rounded-xl">
-                    <div className="text-4xl mb-4">🔍</div>
-                    <h3 className="text-xl font-semibold text-white mb-2">Nie znaleziono produktów</h3>
-                    <p className="text-gray-400 max-w-md mx-auto mb-6">
-                      Spróbuj zmienić kryteria wyszukiwania lub usuń filtry, aby zobaczyć więcej wyników.
-                    </p>
-                    <Button onClick={clearFilters} variant="secondary">
-                      Wyczyść wszystkie filtry
-                    </Button>
-                  </div>
-                )}
-              </>
-            )}
-          </main>
+              {currentAccessories.length === 0 && (
+                <div className="py-16 text-center">
+                  <h2 className="text-xl font-medium text-white">Brak produktów</h2>
+                  <p className="mx-auto mt-2 max-w-md text-sm text-white/50">
+                    Zmień kategorię albo wyczyść filtry, żeby zobaczyć resztę kolekcji.
+                  </p>
+                  <Button
+                    onClick={clearFilters}
+                    variant="outline"
+                    className="mt-6 border-white/20 bg-transparent text-white hover:bg-white/10"
+                  >
+                    Wyczyść filtry
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
 
-      <AccessoryDetailsSheet 
+      <AccessoryDetailsSheet
         accessory={selectedAccessory}
         isOpen={!!selectedAccessory}
         onClose={() => setSelectedAccessory(null)}

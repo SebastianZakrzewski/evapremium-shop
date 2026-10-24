@@ -288,7 +288,7 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative overflow-visible bg-black pt-[4.5rem] pb-14 max-sm:pb-10 md:overflow-hidden md:pt-0 md:pb-12"
+      className="relative overflow-visible bg-black pt-[4.5rem] pb-6 max-sm:pb-4 md:overflow-hidden md:pt-0 md:pb-4"
       role="region"
       aria-roledescription={isMobileHero || !HERO_HAS_CAROUSEL_NAV ? undefined : "carousel"}
       aria-label="Sekcja promocyjna - dywaniki samochodowe"
@@ -305,7 +305,7 @@ export default function HeroSection() {
       </div>
 
       {/* Carousel — wysokość = proporcja oryginalnej rozdzielczości banera */}
-      <div className="container relative mx-auto px-2 py-6 sm:px-4 sm:py-8 md:py-8">
+      <div className="container relative mx-auto px-2 py-3 sm:px-4 sm:py-4 md:py-4">
         {isMobileHero ? (
           <div
             className={cn(

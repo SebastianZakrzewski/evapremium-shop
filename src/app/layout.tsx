@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import { ShopChrome } from "@/components/layout/ShopChrome";
 import { EvaChatWidget } from "@/features/eva-chat-widget";
 import Script from "next/script";
@@ -10,6 +10,13 @@ import { QueryProvider } from "@/lib/providers/query-provider";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
@@ -241,7 +248,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
       </head>
-      <body className={`${montserrat.variable} bg-black min-h-screen`}>
+      <body className={`${montserrat.variable} ${inter.variable} bg-black min-h-screen`}>
         <QueryProvider>
           <SessionProvider>
             <TrackingProvider>

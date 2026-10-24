@@ -8,7 +8,7 @@ const ProductVideoCarouselSection = dynamic(
   {
     loading: () => (
       <section
-        className="w-full bg-black py-10 md:py-14"
+        className="w-full bg-black py-7 md:py-9"
         aria-label="Ładowanie sekcji Premium w akcji"
       />
     ),

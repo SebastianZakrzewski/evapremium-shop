@@ -172,7 +172,7 @@ export default function ProductGallerySection() {
     <section
       id="product-gallery"
       data-section="product-gallery"
-        className="w-full bg-black py-10 md:py-14 relative overflow-hidden"
+        className="w-full bg-black py-7 md:py-9 relative overflow-hidden"
       role="region"
       aria-label="Galeria produktów - zdjęcia dywaników samochodowych EVA Premium"
     >
@@ -186,18 +186,18 @@ export default function ProductGallerySection() {
       {/* Header */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
         <div
-          className={`text-center mb-12 md:mb-16 transition-all duration-1000 ease-out ${
+          className={`text-center mb-6 md:mb-8 transition-all duration-1000 ease-out ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
           <h2
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 md:mb-6 leading-tight"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3 leading-tight"
             style={{ transitionDelay: isVisible ? "200ms" : "0ms" }}
           >
             Nasza galeria <span className="text-red-500">produktów</span>
           </h2>
           <p
-            className="text-sm sm:text-base md:text-lg text-white font-medium max-w-2xl mx-auto leading-relaxed px-2"
+            className="text-sm text-white/70 font-medium max-w-xl mx-auto leading-relaxed px-2"
             style={{ transitionDelay: isVisible ? "400ms" : "0ms" }}
           >
             Odkryj jakość i precyzję wykonania naszych dywaników. Każdy detal ma znaczenie.
@@ -207,14 +207,18 @@ export default function ProductGallerySection() {
 
       {/* Auto-scrolling gallery */}
       <div className="relative z-10 w-full py-4">
-        <ImageAutoSlider images={productImages} speed={150} />
+        <ImageAutoSlider
+          images={productImages}
+          speed={150}
+          tileClassName="w-36 h-36 md:w-44 md:h-44 lg:w-48 lg:h-48"
+        />
       </div>
 
       {/* CTA */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 mt-12 text-center">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 mt-6 text-center">
         <Link
           href="/dywaniki"
-          className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 text-sm md:text-base font-bold text-white transition-all duration-300 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 rounded-full shadow-xl shadow-red-900/30 hover:scale-105 hover:shadow-2xl hover:shadow-red-600/20 active:scale-95 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-black min-h-[44px]"
+          className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium tracking-wide text-white transition-all duration-300 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 rounded-full shadow-lg shadow-red-900/25 hover:shadow-red-600/20 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-black min-h-[44px]"
           aria-label="Sprawdź dostępność dywaników dla Twojego auta"
         >
           Sprawdź Dostępność Dla Twojego Auta
