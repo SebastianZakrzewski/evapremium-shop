@@ -2,7 +2,6 @@ import type { ReactNode } from "react"
 import Link from "next/link"
 import {
   ArrowRight,
-  CheckCircle2,
   Clock3,
   Home,
   Mail,
@@ -28,46 +27,14 @@ import {
   getPaymentHeadline,
   getPaymentLead,
   getPaymentStatusLabel,
-  getPaymentTone,
   type DetailRow,
   type PaymentSuccessStatus,
-  type PaymentTone,
 } from "../lib/paymentSuccessPresentation"
 
 type PaymentSuccessViewProps = {
   paymentStatus: PaymentSuccessStatus
   isRefreshing: boolean
   onRecheck: () => void
-}
-
-const toneClasses: Record<PaymentTone, { icon: string; badge: string; ring: string }> = {
-  success: {
-    icon: "text-emerald-300",
-    badge: "bg-emerald-400/10 text-emerald-300 border-emerald-400/30",
-    ring: "bg-emerald-400/10 border-emerald-400/30",
-  },
-  pending: {
-    icon: "text-amber-300",
-    badge: "bg-amber-400/10 text-amber-200 border-amber-400/30",
-    ring: "bg-amber-400/10 border-amber-400/30",
-  },
-  danger: {
-    icon: "text-red-300",
-    badge: "bg-red-500/10 text-red-300 border-red-500/30",
-    ring: "bg-red-500/10 border-red-500/30",
-  },
-  neutral: {
-    icon: "text-white/70",
-    badge: "bg-white/5 text-white/70 border-white/10",
-    ring: "bg-white/5 border-white/10",
-  },
-}
-
-const StatusIcon = ({ status }: { status: string }) => {
-  const className = "h-7 w-7"
-  if (status === "paid") return <CheckCircle2 className={className} aria-hidden="true" />
-  if (status === "pending") return <Clock3 className={className} aria-hidden="true" />
-  return <XCircle className={className} aria-hidden="true" />
 }
 
 const DetailList = ({ rows }: { rows: DetailRow[] }) => (
@@ -83,16 +50,14 @@ const DetailList = ({ rows }: { rows: DetailRow[] }) => (
 
 const Panel = ({
   title,
-  icon,
   children,
 }: {
   title: string
-  icon: ReactNode
+  icon?: ReactNode
   children: ReactNode
 }) => (
-  <section className="rounded-2xl border border-white/10 bg-[#111] p-5 md:p-6">
-    <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-white/45">
-      <span className="text-red-500" aria-hidden="true">{icon}</span>
+  <section className="border-t border-white/10 py-6">
+    <h2 className="mb-4 text-xs font-medium uppercase tracking-[0.16em] text-white/40">
       {title}
     </h2>
     {children}
@@ -112,8 +77,6 @@ export const PaymentSuccessView = ({
   isRefreshing,
   onRecheck,
 }: PaymentSuccessViewProps) => {
-  const tone = getPaymentTone(paymentStatus.status)
-  const styles = toneClasses[tone]
   const metaRows = buildOrderMetaRows(paymentStatus)
   const customerRows = buildCustomerRows(paymentStatus.customer)
   const priceLines = buildPaymentPriceLines(paymentStatus)
@@ -123,38 +86,30 @@ export const PaymentSuccessView = ({
   const items = paymentStatus.items || []
 
   return (
-    <section className="relative overflow-hidden bg-black text-white" aria-labelledby="payment-success-title">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(ellipse_at_top,rgba(204,16,32,0.22),transparent_68%)]" />
-      <div className="relative mx-auto max-w-6xl px-4 py-10 md:py-14">
-        <header className="rounded-3xl border border-white/10 bg-[#111]/90 p-6 shadow-2xl shadow-black/40 md:p-8">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-4">
-              <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border ${styles.ring} ${styles.icon}`}>
-                <StatusIcon status={paymentStatus.status} />
-              </div>
-              <div>
-                <p className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${styles.badge}`}>
-                  {getPaymentStatusLabel(paymentStatus.status)}
-                </p>
-                <h1 id="payment-success-title" className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
-                  {getPaymentHeadline(paymentStatus.status)}
-                </h1>
-                <p className="mt-2 max-w-xl text-sm leading-6 text-white/65 md:text-base">
-                  {getPaymentLead(paymentStatus.status)}
-                </p>
-              </div>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 md:min-w-56 md:text-right">
-              <p className="text-xs uppercase tracking-[0.16em] text-white/40">Zamówienie</p>
-              <p className="mt-1 font-mono text-lg font-semibold text-white">
-                {paymentStatus.orderNumber || "—"}
+    <section className="bg-black text-white" aria-labelledby="payment-success-title">
+      <div className="mx-auto max-w-6xl px-5 py-12 md:px-8 md:py-16">
+        <header className="flex flex-col gap-8 border-b border-white/10 pb-10 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-white/40">
+              {getPaymentStatusLabel(paymentStatus.status)}
+            </p>
+            <h1 id="payment-success-title" className="text-4xl font-medium tracking-tight md:text-5xl">
+              {getPaymentHeadline(paymentStatus.status)}
+            </h1>
+            <p className="mt-3 max-w-xl text-base leading-relaxed text-white/50">
+              {getPaymentLead(paymentStatus.status)}
+            </p>
+          </div>
+          <div className="md:text-right">
+            <p className="text-xs uppercase tracking-[0.16em] text-white/40">Zamówienie</p>
+            <p className="mt-2 text-sm font-medium tracking-tight text-white">
+              {paymentStatus.orderNumber || "—"}
+            </p>
+            {paymentStatus.total !== undefined && (
+              <p className="mt-2 text-3xl font-medium tracking-tight text-white">
+                {priceLines.find((line) => line.tone === "total")?.value}
               </p>
-              {paymentStatus.total !== undefined && (
-                <p className="mt-2 text-2xl font-semibold text-red-500">
-                  {priceLines.find((line) => line.tone === "total")?.value}
-                </p>
-              )}
-            </div>
+            )}
           </div>
         </header>
 
@@ -165,7 +120,7 @@ export const PaymentSuccessView = ({
                 <ol className="space-y-3">
                   {PAID_NEXT_STEPS.map((step, index) => (
                     <li key={step} className="flex gap-3">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-600 text-xs font-semibold text-white">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center text-sm text-white/40">
                         {index + 1}
                       </span>
                       <span className="pt-0.5 text-sm leading-6 text-white/80">{step}</span>
@@ -185,7 +140,7 @@ export const PaymentSuccessView = ({
                   onClick={onRecheck}
                   disabled={isRefreshing}
                   variant="outline"
-                  className="mt-4 border-white/15 bg-white/5 text-white hover:bg-white/10"
+                  className="mt-4 h-10 rounded-full border-0 bg-[#2c2c2e] text-white shadow-none hover:bg-[#3a3a3c]"
                 >
                   <RotateCcw className="mr-2 h-4 w-4" aria-hidden="true" />
                   {isRefreshing ? "Sprawdzanie..." : "Sprawdź ponownie"}
@@ -199,7 +154,7 @@ export const PaymentSuccessView = ({
               ) : (
                 <ul className="space-y-3">
                   {items.map((item, index) => (
-                    <li key={item.id || `${getOrderItemTitle(item)}-${index}`} className="rounded-xl border border-white/10 bg-black/35 p-4">
+                    <li key={item.id || `${getOrderItemTitle(item)}-${index}`} className="border-b border-white/10 py-4 last:border-b-0">
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <p className="font-medium text-white">{getOrderItemTitle(item)}</p>
@@ -261,9 +216,9 @@ export const PaymentSuccessView = ({
                       <dd
                         className={
                           line.tone === "total"
-                            ? "text-lg font-semibold text-red-500"
+                            ? "text-lg font-medium tracking-tight text-white"
                             : line.tone === "discount"
-                              ? "text-sm font-medium text-emerald-300"
+                              ? "text-sm font-medium text-white/70"
                               : "text-sm font-medium text-white"
                         }
                       >
@@ -278,14 +233,14 @@ export const PaymentSuccessView = ({
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button asChild className="bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-500 hover:to-red-600">
+          <Button asChild className="h-12 rounded-full bg-red-600 px-8 text-white shadow-none hover:bg-red-500">
             <Link href="/">
               <Home className="mr-2 h-4 w-4" aria-hidden="true" />
               Wróć do strony głównej
             </Link>
           </Button>
           {paymentStatus.status === "paid" && (
-            <Button asChild variant="outline" className="border-white/15 bg-transparent text-white hover:bg-white/5">
+            <Button asChild variant="outline" className="h-12 rounded-full border-0 bg-[#1c1c1e] px-8 text-white shadow-none hover:bg-[#2c2c2e]">
               <Link href="/configurator">
                 Skonfiguruj kolejne
                 <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
@@ -293,7 +248,7 @@ export const PaymentSuccessView = ({
             </Button>
           )}
           {paymentStatus.status === "failed" && (
-            <Button asChild variant="outline" className="border-white/15 bg-transparent text-white hover:bg-white/5">
+            <Button asChild variant="outline" className="h-12 rounded-full border-0 bg-[#1c1c1e] px-8 text-white shadow-none hover:bg-[#2c2c2e]">
               <Link href="/checkout">
                 Spróbuj ponownie
                 <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
@@ -304,11 +259,11 @@ export const PaymentSuccessView = ({
 
         <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-white/55 sm:flex-row sm:items-center sm:gap-6">
           <p>Potrzebujesz pomocy?</p>
-          <a href="mailto:evapremium.kontakt@gmail.com" className="inline-flex items-center gap-2 text-red-400 hover:text-red-300">
+          <a href="mailto:evapremium.kontakt@gmail.com" className="inline-flex items-center gap-2 text-red-500 hover:text-red-400">
             <Mail className="h-4 w-4" aria-hidden="true" />
             evapremium.kontakt@gmail.com
           </a>
-          <a href="tel:+48793993430" className="inline-flex items-center gap-2 text-red-400 hover:text-red-300">
+          <a href="tel:+48793993430" className="inline-flex items-center gap-2 text-red-500 hover:text-red-400">
             <Phone className="h-4 w-4" aria-hidden="true" />
             +48 793 993 430
           </a>
@@ -325,11 +280,11 @@ type PaymentSuccessMessageProps = {
 
 export const PaymentSuccessMessage = ({ title, message }: PaymentSuccessMessageProps) => (
   <section className="bg-black px-4 py-16 text-white">
-    <div className="mx-auto max-w-lg rounded-3xl border border-white/10 bg-[#111] p-8 text-center">
-      <XCircle className="mx-auto h-12 w-12 text-red-500" aria-hidden="true" />
+    <div className="mx-auto max-w-lg py-8 text-center">
+      <XCircle className="mx-auto h-8 w-8 text-white/70" aria-hidden="true" />
       <h1 className="mt-4 text-2xl font-semibold">{title}</h1>
       <p className="mt-3 text-sm leading-6 text-white/65">{message}</p>
-      <Button asChild className="mt-6 bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-500 hover:to-red-600">
+      <Button asChild className="mt-6 h-12 rounded-full bg-red-600 px-8 text-white shadow-none hover:bg-red-500">
         <Link href="/">
           <Home className="mr-2 h-4 w-4" aria-hidden="true" />
           Wróć do strony głównej
@@ -341,8 +296,8 @@ export const PaymentSuccessMessage = ({ title, message }: PaymentSuccessMessageP
 
 export const PaymentSuccessPending = () => (
   <section className="bg-black px-4 py-20 text-white" aria-live="polite">
-    <div className="mx-auto max-w-md rounded-3xl border border-white/10 bg-[#111] p-8 text-center">
-      <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-red-500" />
+    <div className="mx-auto max-w-md py-8 text-center">
+      <div className="mx-auto h-8 w-8 animate-spin rounded-full border border-white/15 border-t-white" />
       <p className="mt-5 text-sm text-white/70">Sprawdzanie statusu płatności...</p>
     </div>
   </section>

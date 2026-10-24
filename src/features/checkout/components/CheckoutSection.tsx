@@ -14,7 +14,6 @@ import {
   ArrowRight,
   RotateCcw,
   Star,
-  Truck,
   CreditCard,
   Check,
   CreditCard as PaymentIcon,
@@ -909,135 +908,97 @@ export default function CheckoutSection() {
     }
   };
 
+  const stepLabels = ["Kontakt", "Dostawa", "Płatność"];
+
   // Strona sukcesu
   if (orderSuccess && orderNumber) {
     return (
-      <div className="min-h-screen bg-black py-12 relative overflow-hidden">
-        {/* Animowane tło z gradientem - ciemniejszy motyw */}
-        <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
-        
-        {/* Animowane cząsteczki - więcej czerwieni */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-20 left-10 w-2 h-2 bg-red-600 rounded-full animate-float-hover"></div>
-          <div className="absolute top-40 right-20 w-1 h-1 bg-red-500 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-          <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-700 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
-          <div className="absolute top-60 left-1/3 w-1 h-1 bg-red-500 rounded-full animate-float-hover" style={{animationDelay: '1.5s'}}></div>
-          <div className="absolute bottom-60 right-1/4 w-1.5 h-1.5 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.8s'}}></div>
-        </div>
-
-        <div className="max-w-2xl mx-auto px-4 relative z-10">
-          <Card className="text-center bg-[#111] backdrop-blur border-white/5 shadow-2xl">
-            <CardContent className="pt-8 pb-8">
-              <div className="w-16 h-16 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-red-500/30">
-                <Check className="w-8 h-8 text-red-500" />
-              </div>
-              
-              <h1 className="text-3xl font-bold text-white mb-4 drop-shadow-lg">
-                Zamówienie zostało złożone!
-              </h1>
-              
-              <p className="text-gray-400 mb-6">
-                Dziękujemy za zakup. Twoje zamówienie zostało przyjęte do realizacji.
-              </p>
-              
-              <div className="bg-white/5 border border-white/5 rounded-lg p-4 mb-6">
-                <p className="text-sm text-gray-400 mb-1">Numer zamówienia:</p>
-                <p className="text-xl font-bold text-red-400">{orderNumber}</p>
-              </div>
-              
-              <div className="space-y-3">
-                <Button asChild className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105">
-                  <Link href="/">
-                    Powrót do strony głównej
-                  </Link>
-                </Button>
-                
-                <Button variant="outline" asChild className="w-full bg-white/5 border-white/5 text-gray-400 hover:bg-white/10 hover:text-white">
-                  <Link href={`/order/${orderNumber}`}>
-                    Zobacz szczegóły zamówienia
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+      <div className="min-h-screen bg-black text-white">
+        <div className="mx-auto flex min-h-screen max-w-xl flex-col justify-center px-6 py-20">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-white/45">
+            EVA Premium
+          </p>
+          <h1 className="text-4xl font-medium tracking-tight text-white md:text-5xl">
+            Zamówienie przyjęte.
+          </h1>
+          <p className="mt-4 max-w-md text-base leading-relaxed text-white/55">
+            Dziękujemy. Zaczynamy realizację, a potwierdzenie wyślemy na podany adres e-mail.
+          </p>
+          <div className="mt-10 flex items-baseline justify-between border-y border-white/10 py-5">
+            <span className="text-sm text-white/45">Numer zamówienia</span>
+            <span className="text-sm font-medium tracking-tight text-white">{orderNumber}</span>
+          </div>
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <Button asChild className="h-12 rounded-full bg-red-600 px-8 text-white shadow-none hover:bg-red-500">
+              <Link href="/">Strona główna</Link>
+            </Button>
+            <Button variant="outline" asChild className="h-12 rounded-full border-0 bg-[#2c2c2e] px-8 text-white shadow-none hover:bg-[#3a3a3c]">
+              <Link href={`/order/${orderNumber}`}>Szczegóły zamówienia</Link>
+            </Button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black py-12 relative overflow-hidden pb-safe">
-      {/* Animowane tło z gradientem - ciemniejszy motyw */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-red-800/10"></div>
-      
-      {/* Animowane cząsteczki - więcej czerwieni */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-600 rounded-full animate-float-hover"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-red-500 rounded-full animate-float-hover" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-red-400 rounded-full animate-float-hover" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-1 h-1 bg-red-700 rounded-full animate-float-hover" style={{animationDelay: '0.5s'}}></div>
-        <div className="absolute top-60 left-1/3 w-1 h-1 bg-red-500 rounded-full animate-float-hover" style={{animationDelay: '1.5s'}}></div>
-        <div className="absolute bottom-60 right-1/4 w-1.5 h-1.5 bg-red-600 rounded-full animate-float-hover" style={{animationDelay: '0.8s'}}></div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Header z większym spacing */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-white mb-3 drop-shadow-lg">
-            Finalizacja zamówienia
-          </h1>
-          <p className="text-gray-400 text-lg">
-            Uzupełnij dane, aby dokończyć zakup
-          </p>
-          <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-red-500 to-transparent mx-auto mt-6"></div>
+    <div className="min-h-screen bg-black pb-safe text-white">
+      <div className="mx-auto max-w-6xl px-5 py-10 md:px-8 md:py-16">
+        <div className="mb-10 flex flex-col gap-8 md:mb-14 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-white/40">
+              Zamówienie
+            </p>
+            <h1 className="text-4xl font-medium tracking-tight text-white md:text-5xl">
+              Finalizacja.
+            </h1>
+            <p className="mt-3 max-w-md text-base leading-relaxed text-white/50">
+              Kilka danych i możesz opłacić zamówienie.
+            </p>
+          </div>
+          <ol className="flex items-center gap-3 text-sm">
+            {stepLabels.map((label, index) => {
+              const step = index + 1;
+              const active = currentStep === step;
+              const done = currentStep > step;
+              return (
+                <li key={label} className="flex items-center gap-3">
+                  <span className={active ? "font-medium text-red-500" : done ? "text-white/70" : "text-white/35"}>
+                    {label}
+                  </span>
+                  {step < 3 && <span className={`h-px w-6 ${done ? "bg-red-600" : "bg-white/15"}`} aria-hidden="true" />}
+                </li>
+              );
+            })}
+          </ol>
         </div>
 
-        {/* Progress Steps - Sticky on mobile - ciemniejszy motyw */}
-        <div className="sticky top-0 z-20 bg-black/95 backdrop-blur border-b border-red-900/30 mb-8 -mx-6 px-6 py-4 pt-safe">
-          <div className="flex items-center justify-center">
-          {[1, 2, 3].map((step) => (
-            <React.Fragment key={step}>
-              <div className={`flex items-center justify-center min-w-[48px] min-h-[48px] w-12 h-12 rounded-full border-2 transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation ${
-                currentStep >= step 
-                  ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-500/50' 
-                  : 'border-red-800/50 text-gray-400 bg-black/80 hover:border-red-600/70 hover:bg-red-900/20'
-              }`}>
-                {step}
-              </div>
-              {step < 3 && (
-                <div className={`w-16 h-0.5 mx-4 transition-all duration-300 ${
-                  currentStep > step ? 'bg-red-600' : 'bg-red-800/30'
-                }`} />
-              )}
-            </React.Fragment>
-          ))}
+        <div className="mb-10 rounded-2xl bg-[#1c1c1e] px-5 py-4">
+          <div className="flex items-baseline justify-between gap-6 text-sm">
+            <p className="max-w-2xl text-white/50">
+              {currentStep >= 2
+                ? "Opłać zamówienie w ciągu 15 minut, a trafi na początek kolejki produkcyjnej."
+                : "Priorytet produkcyjny włącza się na kroku dostawy i trwa 15 minut."}
+            </p>
+            <p className="shrink-0 tabular-nums text-white">
+              {currentStep >= 2 ? `${minutes}:${seconds}` : "15:00"}
+            </p>
           </div>
-          <div className="mt-4 max-w-3xl mx-auto">
-            <div className="flex items-center justify-between text-xs text-neutral-300 mb-2">
-              <span>
-                {currentStep >= 2
-                  ? 'Jeśli złożysz i opłacisz zamówienie w ciągu 15 minut, otrzymasz priorytet w kolejce produkcyjnej i szybszą realizację.'
-                  : 'Przejdź do kroku 2, aby włączyć 15‑minutowy priorytet produkcyjny i szybszą realizację.'}
-              </span>
-              <span>Pozostało: {currentStep >= 2 ? `${minutes}:${seconds}` : '15:00'}</span>
-            </div>
-            <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/10">
-              {currentStep >= 2 ? (
-                <motion.div
-                  initial={{ width: '100%' }}
-                  animate={{ width: `${progress * 100}%` }}
-                  transition={{ ease: 'linear', duration: 0.9 }}
-                  className="h-full bg-gradient-to-r from-green-500 via-yellow-400 to-red-500"
-                />
-              ) : (
-                <div className="h-full w-full bg-gradient-to-r from-green-500 via-yellow-400 to-red-500" />
-              )}
-            </div>
+          <div className="mt-3 h-px w-full bg-white/10">
+            {currentStep >= 2 ? (
+              <motion.div
+                initial={{ width: "100%" }}
+                animate={{ width: `${progress * 100}%` }}
+                transition={{ ease: "linear", duration: 0.9 }}
+                className="h-px bg-red-600"
+              />
+            ) : (
+              <div className="h-px w-full bg-white/25" />
+            )}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 xl:grid-cols-3 gap-8 xl:gap-12">
+        <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-5 xl:grid-cols-3 xl:gap-16">
           {/* Form */}
           <div className="lg:col-span-3 xl:col-span-2">
             <form 
@@ -1056,21 +1017,20 @@ export default function CheckoutSection() {
             >
               {/* Step 1: Dane kontaktowe */}
               {currentStep === 1 && (
-                <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-white/10 shadow-2xl hover:shadow-xl transition-all duration-300">
-                  <CardHeader className="border-l-4 border-red-500 px-4 md:px-8 py-4 md:py-6">
-                    <CardTitle className="flex items-center text-white text-lg md:text-xl">
-                      <CreditCard className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-red-500" />
+                <Card className="rounded-2xl border border-white/[0.08] bg-[#1c1c1e] shadow-none">
+                  <CardHeader className="border-0 px-5 pb-0 pt-7 md:px-8">
+                    <CardTitle className="text-xl font-medium tracking-tight text-white">
                       Dane kontaktowe
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4 md:space-y-6 px-4 md:px-8 pb-6 md:pb-8">
+                  <CardContent className="space-y-5 px-5 pb-8 pt-6 md:px-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="firstName" className="text-neutral-200 font-medium text-base">Imię *</Label>
+                        <Label htmlFor="firstName" className="text-sm font-medium text-white/55">Imię *</Label>
                         <Input
                           id="firstName"
                           {...register("firstName")}
-                          className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`h-12 min-h-12 rounded-xl border-0 bg-black/40 text-[15px] text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
                             errors.firstName ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -1082,11 +1042,11 @@ export default function CheckoutSection() {
                       </div>
                       
                       <div className="space-y-2">
-                        <Label htmlFor="lastName" className="text-neutral-200 font-medium text-base">Nazwisko *</Label>
+                        <Label htmlFor="lastName" className="text-sm font-medium text-white/55">Nazwisko *</Label>
                         <Input
                           id="lastName"
                           {...register("lastName")}
-                          className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`h-12 min-h-12 rounded-xl border-0 bg-black/40 text-[15px] text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
                             errors.lastName ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -1099,12 +1059,12 @@ export default function CheckoutSection() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-neutral-200 font-medium text-base">Email *</Label>
+                      <Label htmlFor="email" className="text-sm font-medium text-white/55">Email *</Label>
                       <Input
                         id="email"
                         type="email"
                         {...register("email")}
-                        className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`h-12 min-h-12 rounded-xl border-0 bg-black/40 text-[15px] text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
                           errors.email ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -1116,11 +1076,11 @@ export default function CheckoutSection() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-neutral-200 font-medium text-base">Telefon *</Label>
+                      <Label htmlFor="phone" className="text-sm font-medium text-white/55">Telefon *</Label>
                       <Input
                         id="phone"
                         {...register("phone")}
-                        className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`h-12 min-h-12 rounded-xl border-0 bg-black/40 text-[15px] text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
                           errors.phone ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -1136,20 +1096,19 @@ export default function CheckoutSection() {
 
               {/* Step 2: Adres */}
               {currentStep === 2 && (
-                <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-white/10 shadow-2xl hover:shadow-xl transition-all duration-300">
-                  <CardHeader className="border-l-4 border-red-500 px-4 md:px-8 py-4 md:py-6">
-                    <CardTitle className="flex items-center text-white text-lg md:text-xl">
-                      <Truck className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-red-500" />
+                <Card className="rounded-2xl border border-white/[0.08] bg-[#1c1c1e] shadow-none">
+                  <CardHeader className="border-0 px-5 pb-0 pt-7 md:px-8">
+                    <CardTitle className="text-xl font-medium tracking-tight text-white">
                       Adres wysyłkowy
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4 md:space-y-6 px-4 md:px-8 pb-6 md:pb-8">
+                  <CardContent className="space-y-5 px-5 pb-8 pt-6 md:px-8">
                     <div className="space-y-2">
-                      <Label htmlFor="street" className="text-neutral-200 font-medium text-base">Ulica i numer *</Label>
+                      <Label htmlFor="street" className="text-sm font-medium text-white/55">Ulica i numer *</Label>
                       <Input
                         id="street"
                         {...register("street")}
-                        className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`h-12 min-h-12 rounded-xl border-0 bg-black/40 text-[15px] text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
                           errors.street ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -1162,11 +1121,11 @@ export default function CheckoutSection() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="postalCode" className="text-neutral-200 font-medium text-base">Kod pocztowy *</Label>
+                        <Label htmlFor="postalCode" className="text-sm font-medium text-white/55">Kod pocztowy *</Label>
                         <Input
                           id="postalCode"
                           {...register("postalCode")}
-                          className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`h-12 min-h-12 rounded-xl border-0 bg-black/40 text-[15px] text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
                             errors.postalCode ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -1178,11 +1137,11 @@ export default function CheckoutSection() {
                       </div>
                       
                       <div className="md:col-span-2 space-y-2">
-                        <Label htmlFor="city" className="text-neutral-200 font-medium text-base">Miasto *</Label>
+                        <Label htmlFor="city" className="text-sm font-medium text-white/55">Miasto *</Label>
                         <Input
                           id="city"
                           {...register("city")}
-                          className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                          className={`h-12 min-h-12 rounded-xl border-0 bg-black/40 text-[15px] text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
                             errors.city ? "border-red-500 bg-red-900/20" : ""
                           }`}
                         />
@@ -1195,11 +1154,11 @@ export default function CheckoutSection() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="country" className="text-neutral-200 font-medium text-base">Kraj *</Label>
+                      <Label htmlFor="country" className="text-sm font-medium text-white/55">Kraj *</Label>
                       <Input
                         id="country"
                         {...register("country")}
-                        className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                        className={`h-12 min-h-12 rounded-xl border-0 bg-black/40 text-[15px] text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
                           errors.country ? "border-red-500 bg-red-900/20" : ""
                         }`}
                       />
@@ -1214,7 +1173,7 @@ export default function CheckoutSection() {
                     <div className="pt-4 border-t">
                       <div className="space-y-4 mb-4">
                         <div className="space-y-2">
-                          <Label htmlFor="nip" className="text-neutral-200 font-medium text-base">
+                          <Label htmlFor="nip" className="text-sm font-medium text-white/55">
                             NIP na fakturę (opcjonalnie)
                           </Label>
                           <Input
@@ -1222,7 +1181,7 @@ export default function CheckoutSection() {
                             {...register("nip")}
                             placeholder="np. 1234567890"
                             maxLength={13}
-                            className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                            className={`h-12 min-h-12 rounded-xl border-0 bg-black/40 text-[15px] text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
                               errors.nip ? "border-red-500 bg-red-900/20" : ""
                             }`}
                           />
@@ -1231,7 +1190,7 @@ export default function CheckoutSection() {
                               {errors.nip.message}
                             </p>
                           )}
-                          <p className="text-neutral-400 text-xs">
+                          <p className="text-white/40 text-xs">
                             Wpisz NIP, jeśli potrzebujesz faktury VAT na firmę
                           </p>
                         </div>
@@ -1242,41 +1201,41 @@ export default function CheckoutSection() {
                           checked={sameAsShipping}
                           onCheckedChange={(checked) => setValue("sameAsShipping", !!checked)}
                         />
-                        <Label htmlFor="sameAsShipping" className="text-neutral-200">
+                        <Label htmlFor="sameAsShipping" className="text-white/70">
                           Adres do faktury taki sam jak adres wysyłkowy
                         </Label>
                       </div>
 
                       {!sameAsShipping && (
                         <div className="space-y-4">
-                          <h4 className="font-medium text-neutral-200">Adres do faktury</h4>
+                          <h4 className="font-medium text-white/70">Adres do faktury</h4>
                           <div>
-                            <Label htmlFor="billingStreet" className="text-neutral-200">Ulica i numer *</Label>
+                            <Label htmlFor="billingStreet" className="text-white/70">Ulica i numer *</Label>
                             <Input
                               id="billingStreet"
                               {...register("billingStreet")}
-                              className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                              className={`h-12 min-h-12 rounded-xl border-0 bg-black/40 text-[15px] text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
                                 errors.billingStreet ? "border-red-500 bg-red-900/20" : ""
                               }`}
                             />
                           </div>
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                              <Label htmlFor="billingPostalCode" className="text-neutral-200">Kod pocztowy *</Label>
+                              <Label htmlFor="billingPostalCode" className="text-white/70">Kod pocztowy *</Label>
                               <Input
                                 id="billingPostalCode"
                                 {...register("billingPostalCode")}
-                                className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                                className={`h-12 min-h-12 rounded-xl border-0 bg-black/40 text-[15px] text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
                                   errors.billingPostalCode ? "border-red-500 bg-red-900/20" : ""
                                 }`}
                               />
                             </div>
                             <div className="md:col-span-2">
-                              <Label htmlFor="billingCity" className="text-neutral-200">Miasto *</Label>
+                              <Label htmlFor="billingCity" className="text-white/70">Miasto *</Label>
                               <Input
                                 id="billingCity"
                                 {...register("billingCity")}
-                                className={`min-h-[48px] h-12 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 text-base ${
+                                className={`h-12 min-h-12 rounded-xl border-0 bg-black/40 text-[15px] text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
                                   errors.billingCity ? "border-red-500 bg-red-900/20" : ""
                                 }`}
                               />
@@ -1291,29 +1250,28 @@ export default function CheckoutSection() {
 
               {/* Step 3: Płatność */}
               {currentStep === 3 && (
-                <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-white/10 shadow-2xl hover:shadow-xl transition-all duration-300">
-                  <CardHeader className="border-l-4 border-red-500 px-4 md:px-8 py-4 md:py-6">
-                    <CardTitle className="flex items-center text-white text-lg md:text-xl">
-                      <CreditCard className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-red-500" />
+                <Card className="rounded-2xl border border-white/[0.08] bg-[#1c1c1e] shadow-none">
+                  <CardHeader className="border-0 px-5 pb-0 pt-7 md:px-8">
+                    <CardTitle className="text-xl font-medium tracking-tight text-white">
                       Metoda płatności
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-6 md:space-y-8 px-4 md:px-8 pb-6 md:pb-8">
+                  <CardContent className="space-y-6 px-5 pb-8 pt-6 md:px-8">
                     <div className="space-y-4">
                       <div
-                        className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 md:p-6 rounded-lg border transition-all duration-300 cursor-pointer border-red-500 bg-red-900/30"
+                        className="flex cursor-pointer flex-col items-start gap-4 rounded-2xl bg-[#2c2c2e] p-5 ring-1 ring-inset ring-red-500 sm:flex-row sm:items-center"
                         onClick={() => setValue("paymentMethod", checkoutPaymentMethod)}
                       >
-                        <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center border-red-500 bg-red-500 flex-shrink-0">
-                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-red-600">
+                          <div className="h-2 w-2 rounded-full bg-white"></div>
                         </div>
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 flex-1 cursor-pointer w-full">
-                          <CreditCard className="w-5 h-5 md:w-6 md:h-6 text-red-400 flex-shrink-0" />
+                          <CreditCard className="h-5 w-5 flex-shrink-0 text-white/70" />
                           <div className="flex-1 min-w-0 w-full">
                             <div className="font-medium text-base text-white mb-1">
                               {checkoutPaymentLabel}
                             </div>
-                            <div className="text-xs md:text-sm text-gray-400 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-2">
+                            <div className="text-xs md:text-sm text-white/45 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-2">
                               <span className="whitespace-normal">Karty, BLIK, przelewy, Apple Pay, Google Pay</span>
                               <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                                 <Image
@@ -1354,7 +1312,7 @@ export default function CheckoutSection() {
                               </div>
                             </div>
                           </div>
-                          <Check className="w-5 h-5 text-red-400 flex-shrink-0 sm:ml-auto" />
+                          <Check className="h-4 w-4 flex-shrink-0 text-white/70 sm:ml-auto" />
                         </div>
                       </div>
                     </div>
@@ -1366,20 +1324,20 @@ export default function CheckoutSection() {
                     )}
 
                     {errorMessage && (
-                      <div className="mt-4 p-4 bg-red-900/20 border border-red-500/50 rounded-lg">
+                      <div className="mt-4 rounded-2xl border border-white/15 p-4">
                         <div className="flex items-center space-x-2">
-                          <AlertCircle className="w-5 h-5 text-red-400" />
-                          <p className="text-red-400 text-sm">{errorMessage}</p>
+                          <AlertCircle className="h-4 w-4 text-white/70" />
+                          <p className="text-sm text-white/80">{errorMessage}</p>
                         </div>
                       </div>
                     )}
 
                     <div>
-                      <Label htmlFor="notes" className="text-neutral-300 font-medium">Notatki (opcjonalnie)</Label>
+                      <Label htmlFor="notes" className="text-white/55 font-medium">Notatki (opcjonalnie)</Label>
                       <textarea
                         id="notes"
                         {...register("notes")}
-                        className="w-full p-3 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 rounded-lg resize-none"
+                        className="w-full resize-none rounded-xl border-0 bg-black/40 p-3 text-[15px] text-white placeholder:text-white/35 outline-none ring-1 ring-transparent focus:ring-red-500/70"
                         rows={3}
                         placeholder="Dodatkowe informacje do zamówienia..."
                       />
@@ -1395,12 +1353,12 @@ export default function CheckoutSection() {
                               id="termsAccepted"
                               checked={field.value}
                               onCheckedChange={field.onChange}
-                              className="border-white/10 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                              className="border-white/20 data-[state=checked]:border-red-600 data-[state=checked]:bg-red-600 data-[state=checked]:text-white"
                             />
                           )}
                         />
-                        <Label htmlFor="termsAccepted" className="text-sm text-neutral-300 leading-relaxed">
-                          Akceptuję <Link href="/regulamin" className="text-red-400 hover:text-red-300 hover:underline">regulamin</Link> *
+                        <Label htmlFor="termsAccepted" className="text-sm text-white/55 leading-relaxed">
+                          Akceptuję <Link href="/regulamin" className="text-red-500 hover:text-red-400">regulamin</Link> *
                         </Label>
                       </div>
                       {errors.termsAccepted && (
@@ -1413,9 +1371,9 @@ export default function CheckoutSection() {
                         <Checkbox
                           id="marketingAccepted"
                           {...register("marketingAccepted")}
-                          className="border-white/10 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                          className="border-white/20 data-[state=checked]:border-red-600 data-[state=checked]:bg-red-600 data-[state=checked]:text-white"
                         />
-                        <Label htmlFor="marketingAccepted" className="text-sm text-neutral-300 leading-relaxed">
+                        <Label htmlFor="marketingAccepted" className="text-sm text-white/55 leading-relaxed">
                           Chcę otrzymywać informacje o nowościach i promocjach
                         </Label>
                       </div>
@@ -1425,8 +1383,8 @@ export default function CheckoutSection() {
               )}
 
               {orderError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <p className="text-red-800">
+                <div className="rounded-2xl border border-white/15 p-4">
+                  <p className="text-sm text-white/80">
                     Błąd: {orderError}
                   </p>
                 </div>
@@ -1440,7 +1398,7 @@ export default function CheckoutSection() {
                     variant="outline"
                     onClick={prevStep}
                     disabled={currentStep === 1}
-                    className="bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-8 py-4 text-base"
+                    className="h-12 rounded-full border-0 bg-[#2c2c2e] px-8 text-[15px] font-medium text-white shadow-none hover:bg-[#3a3a3c] disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <ArrowLeft className="w-5 h-5 mr-3" />
                     Wstecz
@@ -1451,7 +1409,7 @@ export default function CheckoutSection() {
                       type="button"
                       onClick={nextStep}
                       disabled={!isCurrentStepValid()}
-                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-10 py-4 text-base"
+                      className="rounded-full bg-red-600 text-white shadow-none hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40 px-10 py-4 text-base"
                     >
                       Dalej
                       <ArrowRight className="w-5 h-5 ml-3" />
@@ -1461,7 +1419,7 @@ export default function CheckoutSection() {
                       type="submit"
                       form="checkout-form"
                       disabled={isSubmitting || orderLoading}
-                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-10 py-4 text-base"
+                      className="rounded-full bg-red-600 text-white shadow-none hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40 px-10 py-4 text-base"
                       onClick={() => {
                         console.log('🛒 CheckoutSection: Submit button clicked (desktop)');
                         console.log('🛒 CheckoutSection: isSubmitting:', isSubmitting);
@@ -1488,15 +1446,12 @@ export default function CheckoutSection() {
           </div>
 
           {/* Order Summary */}
-          <div className="lg:col-span-2 xl:col-span-1 flex flex-col">
-            <Card className="bg-gradient-to-br from-neutral-900 to-neutral-800 backdrop-blur border-white/10 shadow-2xl hover:shadow-xl transition-all duration-300">
-              <CardHeader className="border-b border-white/10 px-4 md:px-6 py-3 md:py-4">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-base md:text-lg text-white">Podsumowanie zamówienia</CardTitle>
-                  <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-red-500 rounded-full animate-pulse"></div>
-                </div>
+          <div className="flex flex-col lg:sticky lg:top-8 lg:col-span-2 xl:col-span-1">
+            <Card className="rounded-2xl border border-white/[0.08] bg-[#1c1c1e] shadow-none">
+              <CardHeader className="border-0 px-5 pb-0 pt-7 md:px-7">
+                <CardTitle className="text-xl font-medium tracking-tight text-white">Podsumowanie</CardTitle>
               </CardHeader>
-              <CardContent className="p-3 md:p-4">
+              <CardContent className="px-5 pb-7 pt-5 md:px-7">
                 <div className="space-y-3 md:space-y-4">
                   {/* Items */}
                   <div className="space-y-2 md:space-y-3">
@@ -1505,24 +1460,24 @@ export default function CheckoutSection() {
                         ? item.configuration
                         : null
                       return (
-                      <div key={item.id} className="bg-gradient-to-br from-neutral-900 to-neutral-800 border border-white/10 rounded-lg p-3 md:p-4 shadow-lg hover:shadow-xl transition-all duration-300">
+                      <div key={item.id} className="border-b border-white/10 pb-5 last:border-b-0">
                         {/* Header z nazwą produktu */}
                         <div className="flex items-start justify-between mb-2 md:mb-3">
                           <div className="flex-1">
-                            <h3 className="text-base md:text-lg font-bold text-white mb-1">
+                            <h3 className="mb-1 text-[15px] font-medium tracking-tight text-white">
                               {item.productType === 'mat' ? 'Dywaniki samochodowe' : item.productName}
                             </h3>
                             
                             {/* Szczegóły samochodu */}
                             {matConfig?.carDetails && (
-                              <div className="text-xs md:text-sm text-neutral-300">
+                              <div className="text-xs md:text-sm text-white/55">
                                 <p className="font-medium">
                                   {matConfig.carDetails.brand} {matConfig.carDetails.model}
                                   {matConfig.carDetails.generation && ` ${matConfig.carDetails.generation}`}
                                   {matConfig.carDetails.year && ` (${matConfig.carDetails.year})`}
                                 </p>
                                 {matConfig.carDetails.bodyType && (
-                                  <p className="text-xs text-neutral-400 capitalize mt-0.5">
+                                  <p className="text-xs text-white/40 capitalize mt-0.5">
                                     {matConfig.carDetails.bodyType}
                                   </p>
                                 )}
@@ -1532,7 +1487,7 @@ export default function CheckoutSection() {
 
                           {/* Obraz produktu */}
                           <div className="ml-2 md:ml-3 flex-shrink-0">
-                            <div className="w-10 h-10 md:w-14 md:h-14 bg-white/10 rounded-lg flex items-center justify-center overflow-hidden">
+                            <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl bg-black/35">
                               {item.productImage ? (
                                 <img 
                                   src={item.productImage} 
@@ -1540,7 +1495,7 @@ export default function CheckoutSection() {
                                   className="w-full h-full object-cover rounded-lg"
                                 />
                               ) : (
-                                <div className="text-neutral-400 text-xs text-center">
+                                <div className="text-white/40 text-xs text-center">
                                   {item.productType === 'mat' ? '🚗' : '📦'}
                                 </div>
                               )}
@@ -1553,8 +1508,8 @@ export default function CheckoutSection() {
                           <div className="mb-2 md:mb-3">
                             <div className="grid grid-cols-1 gap-2">
                               {matConfig.setVariant && (
-                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
-                                  <span className="text-xs md:text-sm text-neutral-300">Zestaw:</span>
+                                <div className="flex items-center justify-between border-b border-white/10 py-2.5">
+                                  <span className="text-xs md:text-sm text-white/55">Zestaw:</span>
                                   <span className="text-xs md:text-sm font-medium text-white text-right">
                                     {getMatSetVariantLabel(
                                       getMatConfigurationLabelContext(
@@ -1562,7 +1517,7 @@ export default function CheckoutSection() {
                                       ),
                                     )}
                                     {isSinglePriceSetType(matConfig.setType) && (
-                                      <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">
+                                      <span className="block text-[10px] md:text-xs text-white/40 mt-0.5">
                                         {getMatProductSubtitleLabel(
                                           getMatConfigurationLabelContext(
                                             matConfig as MatConfiguration,
@@ -1572,23 +1527,23 @@ export default function CheckoutSection() {
                                     )}
                                     {!isSinglePriceSetType(matConfig.setType) &&
                                       matConfig.setVariant === 'front' && (
-                                      <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">(przód)</span>
+                                      <span className="block text-[10px] md:text-xs text-white/40 mt-0.5">(przód)</span>
                                     )}
                                     {!isSinglePriceSetType(matConfig.setType) &&
                                       matConfig.setVariant === 'basic' && (
-                                      <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">(przód + tył)</span>
+                                      <span className="block text-[10px] md:text-xs text-white/40 mt-0.5">(przód + tył)</span>
                                     )}
                                     {!isSinglePriceSetType(matConfig.setType) &&
                                       matConfig.setVariant === 'premium' && (
-                                      <span className="block text-[10px] md:text-xs text-neutral-400 mt-0.5">(przód + tył + bagażnik)</span>
+                                      <span className="block text-[10px] md:text-xs text-white/40 mt-0.5">(przód + tył + bagażnik)</span>
                                     )}
                                   </span>
                                 </div>
                               )}
 
                               {matConfig.setType && !isSinglePriceSetType(matConfig.setType) && (
-                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
-                                  <span className="text-xs md:text-sm text-neutral-300">Typ:</span>
+                                <div className="flex items-center justify-between border-b border-white/10 py-2.5">
+                                  <span className="text-xs md:text-sm text-white/55">Typ:</span>
                                   <span className="text-xs md:text-sm font-medium text-white">
                                     {getMatTypeLabel(matConfig.setType)}
                                   </span>
@@ -1596,8 +1551,8 @@ export default function CheckoutSection() {
                               )}
 
                               {matConfig.cellType && (
-                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
-                                  <span className="text-xs md:text-sm text-neutral-300">Struktura:</span>
+                                <div className="flex items-center justify-between border-b border-white/10 py-2.5">
+                                  <span className="text-xs md:text-sm text-white/55">Struktura:</span>
                                   <span className="text-xs md:text-sm font-medium text-white">
                                     {matConfig.cellType === 'diamonds' ? 'Romby' :
                                      matConfig.cellType === 'honey' ? 'Plaster miodu' :
@@ -1607,8 +1562,8 @@ export default function CheckoutSection() {
                               )}
 
                               {(matConfig.materialColor || matConfig.edgeColor) && (
-                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-white/5 rounded-lg">
-                                  <span className="text-xs md:text-sm text-neutral-300">Kolor:</span>
+                                <div className="flex items-center justify-between border-b border-white/10 py-2.5">
+                                  <span className="text-xs md:text-sm text-white/55">Kolor:</span>
                                   <span className="text-xs md:text-sm font-medium text-white text-right">
                                     {matConfig.materialColor && (
                                       <span>{getColorInfo(matConfig.materialColor).name}</span>
@@ -1617,16 +1572,16 @@ export default function CheckoutSection() {
                                       <span className="mx-1">+</span>
                                     )}
                                     {matConfig.edgeColor && (
-                                      <span className="text-neutral-400">{getColorInfo(matConfig.edgeColor).name} obszycie</span>
+                                      <span className="text-white/40">{getColorInfo(matConfig.edgeColor).name} obszycie</span>
                                     )}
                                   </span>
                                 </div>
                               )}
 
                               {matConfig.heelPad === 'yes' && (
-                                <div className="flex items-center justify-between py-1.5 px-2.5 bg-orange-900/20 border border-orange-700/30 rounded-lg">
-                                  <span className="text-xs md:text-sm text-orange-300">Dodatki:</span>
-                                  <span className="text-xs md:text-sm font-medium text-orange-200">
+                                <div className="flex items-center justify-between border-b border-white/10 py-2.5">
+                                  <span className="text-xs text-white/45 md:text-sm">Dodatki:</span>
+                                  <span className="text-xs font-medium text-white md:text-sm">
                                     Ochraniacze pod piętę
                                   </span>
                                 </div>
@@ -1638,17 +1593,17 @@ export default function CheckoutSection() {
                         {/* Footer z ilością i ceną */}
                         <div className="flex items-center justify-between pt-3 border-t border-white/10">
                           <div className="flex items-center space-x-2">
-                            <span className="text-neutral-300 text-xs md:text-sm">Ilość:</span>
-                            <span className="w-7 text-center font-semibold text-white text-base md:text-lg bg-white/5 rounded px-1.5 py-0.5">
+                            <span className="text-white/55 text-xs md:text-sm">Ilość:</span>
+                            <span className="rounded-full bg-black/40 px-2.5 py-0.5 text-center text-sm font-medium text-white">
                               {item.quantity}
                             </span>
                           </div>
 
                           <div className="text-right">
-                            <p className="text-lg md:text-xl font-bold text-white">
+                            <p className="text-base font-medium tracking-tight text-white">
                               {PricingService.formatPrice(item.subtotal)}
                             </p>
-                            <p className="text-xs md:text-sm text-neutral-400">
+                            <p className="text-xs md:text-sm text-white/40">
                               {PricingService.formatPrice(item.unitPrice)} × {item.quantity}
                             </p>
                           </div>
@@ -1667,8 +1622,8 @@ export default function CheckoutSection() {
                         value={discountCode}
                         onChange={(e) => handleDiscountCodeChange(e.target.value)}
                         placeholder=""
-                        className={`min-h-[40px] h-10 md:h-11 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm md:text-base ${
-                          discountError ? 'border-red-500' : discountApplied ? 'border-green-500' : ''
+                        className={`h-11 min-h-11 rounded-xl border-0 bg-black/40 text-sm text-white shadow-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-red-500/70 focus-visible:ring-offset-0 ${
+                          discountError ? "border-white/70" : discountApplied ? "border-white/50" : ""
                         }`}
                         disabled={discountApplied || isDiscountFromCart}
                       />
@@ -1676,7 +1631,7 @@ export default function CheckoutSection() {
                         type="button"
                         onClick={applyDiscountCode}
                         disabled={discountApplied || !discountCode.trim() || isDiscountFromCart}
-                        className="h-10 md:h-11 bg-red-600 border-red-500 text-white hover:bg-red-700 rounded-lg px-4 md:px-5 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="h-11 rounded-full bg-red-600 px-5 text-sm font-medium text-white shadow-none hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         {discountApplied ? '✓' : 'Zastosuj'}
                       </Button>
@@ -1685,52 +1640,48 @@ export default function CheckoutSection() {
                       <p className="text-red-400 text-xs md:text-sm">{discountError}</p>
                     )}
                     {isDiscountFromCart && (
-                      <div className="bg-blue-900/20 border border-blue-500/50 rounded-lg p-2 md:p-2.5">
-                        <p className="text-blue-400 text-xs md:text-sm font-medium">
-                          Kod rabatowy został wprowadzony w koszyku
-                        </p>
-                      </div>
+                      <p className="text-sm text-white/50">
+                        Kod rabatowy został wprowadzony w koszyku.
+                      </p>
                     )}
                     {discountApplied && !isDiscountFromCart && (
-                      <div className="bg-green-900/20 border border-green-500/50 rounded-lg p-2 md:p-2.5">
-                        <p className="text-green-400 text-xs md:text-sm font-medium">
-                          ✓ Kod zastosowany! Zniżka: -{PricingService.formatPrice(discountAmount)}
-                        </p>
-                      </div>
+                      <p className="text-sm text-white/70">
+                        Zniżka {PricingService.formatPrice(discountAmount)}
+                      </p>
                     )}
                   </div>
 
                   {/* Totals */}
                   <div className="space-y-2 md:space-y-3 pt-2 md:pt-3">
-                    <div className="pt-2 md:pt-3 border-t border-white/10 bg-white/5 p-3 md:p-4 rounded-lg space-y-1.5 md:space-y-2">
-                      <div className="flex justify-between items-center text-neutral-300">
+                    <div className="space-y-3 border-t border-white/10 pt-5">
+                      <div className="flex justify-between items-center text-white/55">
                         <span className="text-sm md:text-base">Wartość produktów:</span>
                         <span className="text-sm md:text-base">
                           {PricingService.formatPrice(subtotal || cart.subtotal || 0)}
                         </span>
                       </div>
                       {discountApplied && (
-                        <div className="flex justify-between items-center text-green-400">
+                        <div className="flex items-center justify-between text-white">
                           <span className="text-sm md:text-base">Zniżka ({discountCode}):</span>
                           <span className="text-sm md:text-base font-semibold">-{PricingService.formatPrice(discountAmount)}</span>
                         </div>
                       )}
                       <div className="flex justify-between items-center pt-2 border-t border-white/10">
-                        <span className="text-neutral-300 text-xs md:text-sm">Razem do zapłaty</span>
+                        <span className="text-white/55 text-xs md:text-sm">Razem do zapłaty</span>
                         <div className="text-right">
-                          <span className="text-white font-bold text-2xl md:text-3xl">
+                          <span className="text-3xl font-medium tracking-tight text-white">
                             {PricingService.formatPrice(
                               discountApplied && discountAmount > 0 
                                 ? Math.max(0, subtotal - discountAmount)
                                 : (finalTotal > 0 ? finalTotal : (subtotal > 0 ? subtotal : 0))
                             )}
                             {' '}
-                            <span className="text-neutral-300 text-xs md:text-sm font-normal">PLN</span>
+                            <span className="text-white/55 text-xs md:text-sm font-normal">PLN</span>
                           </span>
                         </div>
                       </div>
                       {discountApplied && (
-                        <p className="text-green-400 text-xs md:text-sm mt-2 mb-2 px-2 py-1.5">
+                        <p className="text-sm text-white/50">
                           Oszczędzasz {PricingService.formatPrice(discountAmount)}!
                         </p>
                       )}
@@ -1748,7 +1699,7 @@ export default function CheckoutSection() {
                   variant="outline"
                   onClick={prevStep}
                   disabled={currentStep === 1}
-                  className="bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 px-4 sm:px-8 lg:px-8 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
+                  className="h-12 w-full rounded-full border-0 bg-[#2c2c2e] px-6 text-[15px] font-medium text-white shadow-none hover:bg-[#3a3a3c] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
                 >
                   <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 mr-2 sm:mr-3 lg:mr-3" />
                   Wstecz
@@ -1759,7 +1710,7 @@ export default function CheckoutSection() {
                     type="button"
                     onClick={nextStep}
                     disabled={!isCurrentStepValid()}
-                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-6 sm:px-10 lg:px-10 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
+                    className="rounded-full bg-red-600 text-white shadow-none hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40 px-6 sm:px-10 lg:px-10 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
                   >
                     Dalej
                     <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 ml-2 sm:ml-3 lg:ml-3" />
@@ -1769,7 +1720,7 @@ export default function CheckoutSection() {
                     type="submit"
                     form="checkout-form"
                     disabled={isSubmitting || orderLoading}
-                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none px-6 sm:px-10 lg:px-10 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
+                    className="rounded-full bg-red-600 text-white shadow-none hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40 px-6 sm:px-10 lg:px-10 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
                     onClick={() => {
                       console.log('🛒 CheckoutSection: Submit button clicked');
                       console.log('🛒 CheckoutSection: isSubmitting:', isSubmitting);
