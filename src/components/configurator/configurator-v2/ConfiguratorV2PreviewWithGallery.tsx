@@ -84,26 +84,14 @@ export const ConfiguratorV2PreviewWithGallery = ({
           </p>
         )}
         {showGallery && (
-          <div
-            className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ease-out ${
-              previewDocked ? "pointer-events-none mt-0" : "mt-3"
-            }`}
-            style={{
-              gridTemplateRows: previewDocked ? "0fr" : "1fr",
-              opacity: previewDocked ? 0 : 1,
-            }}
-            aria-hidden={previewDocked}
-            inert={previewDocked ? true : undefined}
-          >
-            <div className="min-h-0 overflow-hidden">
-              <ConfiguratorV2PreviewGalleryStrip
-                items={galleryItems}
-                activeId={activeGalleryId}
-                onSelect={onSelectGalleryItem}
-                variant="mobile"
-                showEmptyInCarSlot={showEmptyInCarSlot}
-              />
-            </div>
+          <div className="mt-3">
+            <ConfiguratorV2PreviewGalleryStrip
+              items={galleryItems}
+              activeId={activeGalleryId}
+              onSelect={onSelectGalleryItem}
+              variant="mobile"
+              showEmptyInCarSlot={showEmptyInCarSlot}
+            />
           </div>
         )}
       </div>

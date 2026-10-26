@@ -46,6 +46,10 @@ export const EvaChatWidget = () => {
 
   const embeddedInProductWindow = isReady && window.parent !== window
   const onConfigurator = isReady && window.location.pathname === '/konfigurator'
+  const hideLauncherOnMobileConfigurator =
+    onConfigurator &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(max-width: 1023px)').matches
 
   useEffect(() => {
     if (!hasOpened) {
@@ -141,7 +145,7 @@ export const EvaChatWidget = () => {
 
   const openLauncherClassName = `absolute top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-10 h-11 w-11 md:static md:h-16 md:w-16 ${launcherChromeClassName}`
 
-  if (!isReady || embeddedInProductWindow) {
+  if (!isReady || embeddedInProductWindow || hideLauncherOnMobileConfigurator) {
     return null
   }
 

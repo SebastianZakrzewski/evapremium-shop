@@ -39,6 +39,7 @@
     "node_modules",
     "scripts/**/*",
     "output/**/*",
+    "**/*.snippet.tsx",
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/__tests__/**/*"

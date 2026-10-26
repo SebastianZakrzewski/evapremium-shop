@@ -116,6 +116,29 @@ describe('EvaChatWidget', () => {
     })
   })
 
+  it('hides the launcher in the mobile configurator', () => {
+    const originalLocation = window.location
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: { ...originalLocation, pathname: '/konfigurator' },
+    })
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: query === '(max-width: 1023px)',
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    }))
+
+    render(<EvaChatWidget />)
+
+    expect(screen.queryByRole('button', { name: 'Otwórz czat EvaBot' })).not.toBeInTheDocument()
+
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: originalLocation,
+    })
+  })
+
   it('shows the launcher on the production shop', () => {
     const originalLocation = window.location
     Object.defineProperty(window, 'location', {
