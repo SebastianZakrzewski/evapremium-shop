@@ -142,7 +142,7 @@ describe('EvaChatWidget', () => {
     expect(document.querySelector('iframe[title="EVA Premium czat"]')).toBeNull()
     expect(screen.getByRole('button', { name: 'Otwórz czat EvaBot' }).querySelector('img')).toHaveAttribute(
       'src',
-      '/evabot-icon.jpg'
+      '/evabot.jpg'
     )
 
     const slot = document.querySelector('[data-eva-chat-slot]')

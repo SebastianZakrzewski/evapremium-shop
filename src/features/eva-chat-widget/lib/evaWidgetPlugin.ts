@@ -80,4 +80,4 @@ export const buildEvaWidgetFrameSrc = (
   return page.toString()
 }
 
-export const EVA_CHAT_ICON_SRC = '/evabot-icon.jpg'
+export const EVA_CHAT_ICON_SRC = '/evabot.jpg'
