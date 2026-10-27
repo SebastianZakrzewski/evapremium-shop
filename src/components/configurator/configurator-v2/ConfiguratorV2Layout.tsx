@@ -58,9 +58,7 @@ export const ConfiguratorV2Layout = ({
       {mobilePreview && (
         <MobilePreviewDockProvider docked={previewDocked}>
           <div
-            className={`shrink-0 border-b border-white/[0.08] bg-black transition-[padding] duration-300 ease-out lg:hidden ${
-              previewDocked ? "px-0 pb-0 pt-0" : "px-4 pb-3 pt-3"
-            }`}
+            className="shrink-0 border-b border-white/[0.08] bg-black px-4 pb-3 pt-3 lg:hidden"
             aria-label="Podgląd produktu"
           >
             {mobilePreview}
