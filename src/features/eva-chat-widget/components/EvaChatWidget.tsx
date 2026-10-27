@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { createPortal } from 'react-dom'
 import { EVA_CHAT_ICON_SRC } from '../lib/evaWidgetPlugin'
 import { EVA_CHAT_GREETING_TEXT, useEvaChatGreeting } from '../hooks/useEvaChatGreeting'
@@ -28,11 +29,15 @@ const openLauncherIconStyle = {
   objectFit: 'cover',
 } as const
 
+const configuratorMobileQuery = '(max-width: 1023px)'
+
 export const EvaChatWidget = () => {
+  const pathname = usePathname()
   const shellRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [hasOpened, setHasOpened] = useState(false)
   const [isReady, setIsReady] = useState(false)
+  const [isConfiguratorMobile, setIsConfiguratorMobile] = useState(false)
   const showGreeting = !isOpen && !hasOpened
   const privacyAccepted = usePrivacyWindowAccepted()
   const greeting = useEvaChatGreeting(showGreeting && isReady && privacyAccepted)
@@ -42,14 +47,22 @@ export const EvaChatWidget = () => {
 
   useEffect(() => {
     setIsReady(true)
+
+    if (typeof window.matchMedia !== 'function') {
+      return undefined
+    }
+
+    const mobile = window.matchMedia(configuratorMobileQuery)
+    const sync = () => setIsConfiguratorMobile(mobile.matches)
+    sync()
+    mobile.addEventListener('change', sync)
+
+    return () => mobile.removeEventListener('change', sync)
   }, [])
 
   const embeddedInProductWindow = isReady && window.parent !== window
-  const onConfigurator = isReady && window.location.pathname === '/konfigurator'
-  const hideLauncherOnMobileConfigurator =
-    onConfigurator &&
-    typeof window.matchMedia === 'function' &&
-    window.matchMedia('(max-width: 1023px)').matches
+  const onConfigurator = pathname === '/konfigurator'
+  const hideLauncherOnMobileConfigurator = onConfigurator && isConfiguratorMobile
 
   useEffect(() => {
     if (!hasOpened) {

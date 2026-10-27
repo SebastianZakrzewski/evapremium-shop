@@ -15,6 +15,14 @@ import {
 } from '../../lib/evaWidgetPlugin'
 import { EvaChatWidget } from '../EvaChatWidget'
 
+const navigationState = vi.hoisted(() => ({
+  pathname: '/',
+}))
+
+vi.mock('next/navigation', () => ({
+  usePathname: () => navigationState.pathname,
+}))
+
 const grantPrivacyConsent = () => {
   document.cookie = 'CookieConsent=necessary:true,preferences:true,statistics:true,marketing:true'
 }
@@ -45,6 +53,7 @@ describe('EvaChatWidget', () => {
     Reflect.deleteProperty(window, 'matchMedia')
     Reflect.deleteProperty(window, 'visualViewport')
     clearPrivacyConsent()
+    navigationState.pathname = '/'
     vi.useRealTimers()
   })
 
@@ -117,11 +126,7 @@ describe('EvaChatWidget', () => {
   })
 
   it('hides the launcher in the mobile configurator', () => {
-    const originalLocation = window.location
-    Object.defineProperty(window, 'location', {
-      configurable: true,
-      value: { ...originalLocation, pathname: '/konfigurator' },
-    })
+    navigationState.pathname = '/konfigurator'
     window.matchMedia = vi.fn().mockImplementation((query: string) => ({
       matches: query === '(max-width: 1023px)',
       media: query,
@@ -132,11 +137,6 @@ describe('EvaChatWidget', () => {
     render(<EvaChatWidget />)
 
     expect(screen.queryByRole('button', { name: 'Otwórz czat EvaBot' })).not.toBeInTheDocument()
-
-    Object.defineProperty(window, 'location', {
-      configurable: true,
-      value: originalLocation,
-    })
   })
 
   it('shows the launcher on the production shop', () => {
