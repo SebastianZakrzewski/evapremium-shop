@@ -73,6 +73,7 @@ export const ConfiguratorV2PreviewWithGallery = ({
           onSwipePrevious={handleSwipePrevious}
           onSwipeNext={handleSwipeNext}
           canSwipeGallery={canSwipeGallery}
+          fitToWindowWidth={fitToWindowWidth}
         />
         {caption && !previewDocked && (
           <p

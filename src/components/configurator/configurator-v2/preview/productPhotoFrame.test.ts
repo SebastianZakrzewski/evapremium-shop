@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 import { isProductPhotoFramedToWindowWidth } from "./productPhotoFrame"
 
 describe("isProductPhotoFramedToWindowWidth", () => {
-  it("fits model and product-set photos to the preview window width", () => {
+  it("frames model and product-set photos inside the preview window", () => {
     expect(isProductPhotoFramedToWindowWidth("model-template")).toBe(true)
     expect(isProductPhotoFramedToWindowWidth("product-set")).toBe(true)
   })

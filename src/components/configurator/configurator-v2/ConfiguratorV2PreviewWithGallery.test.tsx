@@ -2,6 +2,7 @@ import "@testing-library/jest-dom/vitest"
 import { describe, expect, it, vi } from "vitest"
 import { render, screen } from "@testing-library/react"
 import { ConfiguratorV2PreviewWithGallery } from "./ConfiguratorV2PreviewWithGallery"
+import { MobilePreviewDockProvider } from "./MobilePreviewDockContext"
 
 const items = [
   {
@@ -65,7 +66,7 @@ describe("ConfiguratorV2PreviewWithGallery", () => {
     )
   })
 
-  it("fits product photos to the preview window width without stretching them", () => {
+  it("fits the whole product photo inside the preview without stretching it", () => {
     render(
       <ConfiguratorV2PreviewWithGallery
         layout="desktop"
@@ -79,9 +80,33 @@ describe("ConfiguratorV2PreviewWithGallery", () => {
     )
 
     const preview = screen.getByAltText("Podgląd")
-    expect(preview).toHaveClass("h-auto", "w-full", "max-w-none")
-    expect(preview).not.toHaveClass("object-contain")
-    expect(preview).not.toHaveClass("h-full")
+    expect(preview).toHaveClass("object-contain", "h-full", "w-full")
+    expect(preview).not.toHaveClass("h-auto")
+    expect(preview).not.toHaveClass("object-cover")
     expect(preview.parentElement).toHaveClass("bg-white")
+  })
+
+  it("keeps a docked mobile product photo fully visible", () => {
+    render(
+      <MobilePreviewDockProvider docked>
+        <ConfiguratorV2PreviewWithGallery
+          layout="mobile"
+          imageSrc="/mat/1.webp"
+          alt="Podgląd"
+          showGallery
+          galleryItems={items}
+          activeGalleryId="model-template-1"
+          onSelectGalleryItem={vi.fn()}
+        />
+      </MobilePreviewDockProvider>,
+    )
+
+    const preview = screen.getByAltText("Podgląd")
+    const frame = screen.getByRole("button", { name: "Powiększ: Podgląd" })
+    expect(preview).toHaveClass("object-contain")
+    expect(preview.parentElement?.parentElement).toHaveClass("scale-100")
+    expect(preview.parentElement?.parentElement).not.toHaveClass("scale-110")
+    expect(frame).toHaveClass("h-[52vw]", "max-h-[320px]")
+    expect(frame).not.toHaveClass("h-[38vh]")
   })
 })

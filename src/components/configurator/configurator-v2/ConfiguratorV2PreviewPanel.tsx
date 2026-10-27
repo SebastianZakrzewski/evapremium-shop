@@ -71,7 +71,6 @@ export const ConfiguratorV2PreviewPanel = ({
           imageSrc={imageSrc}
           alt={alt}
           canvasClassName={canvasClass}
-          fitToWindowWidth={fitToWindowWidth}
           priority
         />
 

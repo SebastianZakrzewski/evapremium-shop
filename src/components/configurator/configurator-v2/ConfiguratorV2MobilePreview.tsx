@@ -9,7 +9,6 @@ import {
 import { getMatPreviewCanvasClass } from "./matPreviewCanvas"
 import { ConfiguratorV2CrossfadeImage } from "./ui/ConfiguratorV2CrossfadeImage"
 import { useHorizontalSwipe } from "./hooks/useHorizontalSwipe"
-import { useMobilePreviewDocked } from "./MobilePreviewDockContext"
 
 type ConfiguratorV2MobilePreviewProps = {
   imageSrc: string
@@ -19,6 +18,7 @@ type ConfiguratorV2MobilePreviewProps = {
   onSwipePrevious?: () => void
   onSwipeNext?: () => void
   canSwipeGallery?: boolean
+  fitToWindowWidth?: boolean
 }
 
 export const ConfiguratorV2MobilePreview = ({
@@ -29,16 +29,18 @@ export const ConfiguratorV2MobilePreview = ({
   onSwipePrevious,
   onSwipeNext,
   canSwipeGallery = false,
+  fitToWindowWidth = false,
 }: ConfiguratorV2MobilePreviewProps) => {
-  const docked = useMobilePreviewDocked()
-  const canvasClass = usesMatPreviewCanvas
-    ? getMatPreviewCanvasClass("/dywaniki/preview.webp")
-    : getMatPreviewCanvasClass(imageSrc)
+  const canvasClass = fitToWindowWidth
+    ? "bg-white"
+    : usesMatPreviewCanvas
+      ? getMatPreviewCanvasClass("/dywaniki/preview.webp")
+      : getMatPreviewCanvasClass(imageSrc)
   const restingScaleClass =
     usesMatPreviewCanvas || imageSrc.startsWith("/dywaniki/")
       ? CONFIGURATOR_V2_MOBILE_MAT_IMAGE_SCALE
       : "scale-100"
-  const scaleClass = docked ? "scale-110" : restingScaleClass
+  const scaleClass = fitToWindowWidth ? "scale-100" : restingScaleClass
 
   const swipeHandlers = useHorizontalSwipe({
     enabled: canSwipeGallery,
@@ -68,11 +70,7 @@ export const ConfiguratorV2MobilePreview = ({
       onPointerUp={swipeHandlers.onPointerUp}
       onPointerCancel={swipeHandlers.onPointerCancel}
       style={swipeHandlers.dragStyle}
-      className={`relative block w-full overflow-hidden transition-[height,border-radius] duration-300 ease-out ${canvasClass} ${
-        docked
-          ? "h-[38vh] min-h-[240px] max-h-[420px] rounded-none"
-          : `${CONFIGURATOR_V2_MOBILE_PREVIEW_HEIGHT} rounded-2xl`
-      } ${
+      className={`relative block w-full overflow-hidden ${canvasClass} ${CONFIGURATOR_V2_MOBILE_PREVIEW_HEIGHT} rounded-2xl ${
         canSwipeGallery ? "touch-none cursor-grab active:cursor-grabbing" : "touch-pan-y"
       }`}
       aria-label={`Powiększ: ${alt}`}

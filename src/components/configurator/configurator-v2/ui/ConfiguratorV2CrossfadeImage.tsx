@@ -1,10 +1,7 @@
 "use client"
 
 import { useCrossfadeImageSrc } from "../hooks/useCrossfadeImageSrc"
-import {
-  CONTAINED_PREVIEW_IMAGE_CLASS,
-  WINDOW_WIDTH_PREVIEW_IMAGE_CLASS,
-} from "../preview/productPhotoFrame"
+import { CONTAINED_PREVIEW_IMAGE_CLASS } from "../preview/productPhotoFrame"
 
 type ConfiguratorV2CrossfadeImageProps = {
   imageSrc: string
@@ -12,7 +9,6 @@ type ConfiguratorV2CrossfadeImageProps = {
   className?: string
   canvasClassName?: string
   priority?: boolean
-  fitToWindowWidth?: boolean
 }
 
 export const ConfiguratorV2CrossfadeImage = ({
@@ -20,13 +16,10 @@ export const ConfiguratorV2CrossfadeImage = ({
   alt,
   canvasClassName = "bg-[#111]",
   priority = false,
-  fitToWindowWidth = false,
 }: ConfiguratorV2CrossfadeImageProps) => {
   const { layers, durationMs } = useCrossfadeImageSrc(imageSrc)
   const [baseLayer, topLayer] = layers
-  const imageClassName = fitToWindowWidth
-    ? WINDOW_WIDTH_PREVIEW_IMAGE_CLASS
-    : CONTAINED_PREVIEW_IMAGE_CLASS
+  const imageClassName = CONTAINED_PREVIEW_IMAGE_CLASS
 
   const transitionStyle = {
     transitionProperty: "opacity",
