@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import ShopSectionHeading from "@/components/ui/shop-section-heading";
 
 interface FAQItem {
   id: number;
@@ -125,14 +126,12 @@ export default function FAQSection() {
       {/* Gradient line top */}
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className={`text-center mb-5 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-2">
-            Najczęściej zadawane <span className="text-red-500">pytania</span>
-          </h2>
-          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed">
-            Znajdź odpowiedzi na najważniejsze pytania dotyczące naszych dywaników samochodowych.
-          </p>
-        </div>
+        <ShopSectionHeading
+          className={`mb-5 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+          kicker="Pytania"
+          title="Najczęściej zadawane pytania"
+          description="Znajdź odpowiedzi na najważniejsze pytania dotyczące naszych dywaników samochodowych."
+        />
 
         {/* Filtry kategorii */}
         <div className={`flex flex-wrap justify-center gap-3 mb-6 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>

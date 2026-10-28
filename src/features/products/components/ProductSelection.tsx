@@ -7,6 +7,7 @@ import { Brand } from "@/entities/car"
 import { Loader2, Search } from "lucide-react"
 import { useBrands } from "@/features/brands/hooks/useBrands"
 import { sortBrandsByPopularity } from "@/shared/brands/brandPopularity"
+import ShopSectionHeading from "@/components/ui/shop-section-heading"
 
 export default function ProductSelection() {
   const router = useRouter()
@@ -57,12 +58,11 @@ export default function ProductSelection() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
           <div className="flex flex-col items-center justify-center min-h-[300px]">
             <Loader2 className="w-12 h-12 text-red-500 animate-spin mb-4" />
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2">
-              Popularne marki <span className="text-red-500">samochodów</span>
-            </h2>
-            <p className="text-sm text-gray-400">
-              Ładowanie dostępnych marek...
-            </p>
+            <ShopSectionHeading
+              kicker="Marki"
+              title="Popularne marki samochodów"
+              description="Ładowanie dostępnych marek..."
+            />
           </div>
         </div>
       </section>
@@ -77,14 +77,13 @@ export default function ProductSelection() {
       aria-label="Popularne marki samochodów - wybierz markę i znajdź dywaniki"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Nagłówek sekcji - spójny z QuickSearchBar, ProductGallery, AdvantagesSection */}
+        <ShopSectionHeading
+          className="mb-6 md:mb-8"
+          kicker="Marki"
+          title="Popularne marki samochodów"
+          description="Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium"
+        />
         <div className="text-center mb-6 md:mb-8">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3 leading-tight break-words px-2">
-            Popularne marki <span className="text-red-500">samochodów</span>
-          </h2>
-          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed px-2">
-            Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
-          </p>
           <div className="mt-6 text-xs md:text-sm text-gray-400 px-4">
             <span className="bg-white/5 backdrop-blur-md border border-white/10 px-3 py-2 md:px-4 md:py-2 rounded-full inline-block max-w-full md:max-w-none whitespace-normal break-words text-center leading-relaxed">
               Dostępne marki: {brands.length} producentów samochodów

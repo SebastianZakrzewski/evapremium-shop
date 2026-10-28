@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import ShopSectionHeading from "@/components/ui/shop-section-heading";
 
 const features = [
   {
@@ -164,14 +165,12 @@ export default function InteractiveFeaturesSection() {
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className={`text-center mb-5 md:mb-6 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3 leading-tight">
-            Poznaj <span className="text-red-500">innowacyjne cechy</span>
-          </h2>
-          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed">
-            Kliknij na etykiety na zdjęciu, aby dowiedzieć się więcej o rozwiązaniach, które zastosowaliśmy w naszych dywanikach EVA.
-          </p>
-        </div>
+        <ShopSectionHeading
+          className={`mb-5 md:mb-6 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+          kicker="Cechy"
+          title="Poznaj innowacyjne cechy"
+          description="Kliknij na etykiety na zdjęciu, aby dowiedzieć się więcej o rozwiązaniach, które zastosowaliśmy w naszych dywanikach EVA."
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 items-start max-w-6xl mx-auto">
           

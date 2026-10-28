@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { ImageComparisonSlider } from "@/components/ui/image-comparison-slider-horizontal"
+import ShopSectionHeading from "@/components/ui/shop-section-heading"
 
 const advantages = [
   {
@@ -51,22 +52,14 @@ export default function MatComparisonSection() {
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div
-          className={`text-center mb-6 transition-all duration-1000 ease-out ${
+        <ShopSectionHeading
+          className={`mb-6 transition-all duration-1000 ease-out ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
-        >
-          <p className="text-red-500 uppercase tracking-[0.22em] text-[11px] font-medium mb-2">
-            Porównanie
-          </p>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-2">
-            <span className="text-red-500">EVA</span> vs <span className="text-gray-400">Gumowe</span>
-          </h2>
-          <p className="text-gray-400 text-sm max-w-xl mx-auto leading-relaxed">
-            Przeciągnij suwak i przekonaj się na własne oczy, dlaczego dywaniki
-            EVA to wybór nowej generacji kierowców.
-          </p>
-        </div>
+          kicker="Porównanie"
+          title="EVA vs gumowe"
+          description="Przeciągnij suwak i przekonaj się na własne oczy, dlaczego dywaniki EVA to wybór nowej generacji kierowców."
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center max-w-6xl mx-auto">
           {/* Slider */}
@@ -99,17 +92,22 @@ export default function MatComparisonSection() {
               isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
             }`}
           >
-            <div className="space-y-4 mb-8">
+            <div className="grid grid-cols-2 gap-3 mb-3">
+              <p className="text-center text-[11px] font-bold text-red-500 uppercase tracking-[0.16em] pb-2 border-b border-red-500/40">
+                EVA Premium
+              </p>
+              <p className="text-center text-[11px] font-semibold text-gray-400 uppercase tracking-[0.16em] pb-2 border-b border-white/15">
+                Gumowy
+              </p>
+            </div>
+
+            <div className="space-y-2.5 mb-8">
               {advantages.map((item, i) => (
-                <div
-                  key={i}
-                  className="grid grid-cols-2 gap-3 text-sm"
-                >
-                  {/* EVA side */}
-                  <div className="flex items-start gap-2 p-3 rounded-xl bg-red-600/10 border border-red-600/20">
-                    <span className="mt-0.5 flex-shrink-0 h-4 w-4 rounded-full bg-red-600 flex items-center justify-center">
+                <div key={i} className="grid grid-cols-2 gap-3 items-stretch">
+                  <div className="flex items-center gap-2.5 min-h-[4.25rem] px-3.5 py-3 rounded-2xl bg-red-600/10 border border-red-500/30">
+                    <span className="flex-shrink-0 h-5 w-5 rounded-full bg-red-600 flex items-center justify-center">
                       <svg
-                        className="h-2.5 w-2.5 text-white"
+                        className="h-3 w-3 text-white"
                         fill="none"
                         viewBox="0 0 12 12"
                         aria-hidden="true"
@@ -123,14 +121,15 @@ export default function MatComparisonSection() {
                         />
                       </svg>
                     </span>
-                    <span className="text-white font-medium">{item.eva}</span>
+                    <span className="text-white text-[13px] sm:text-sm font-medium leading-snug text-balance">
+                      {item.eva}
+                    </span>
                   </div>
 
-                  {/* Rubber side */}
-                  <div className="flex items-start gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
-                    <span className="mt-0.5 flex-shrink-0 h-4 w-4 rounded-full bg-gray-700 flex items-center justify-center">
+                  <div className="flex items-center gap-2.5 min-h-[4.25rem] px-3.5 py-3 rounded-2xl bg-white/[0.04] border border-white/10">
+                    <span className="flex-shrink-0 h-5 w-5 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center">
                       <svg
-                        className="h-2.5 w-2.5 text-gray-400"
+                        className="h-3 w-3 text-gray-300"
                         fill="none"
                         viewBox="0 0 12 12"
                         aria-hidden="true"
@@ -143,20 +142,12 @@ export default function MatComparisonSection() {
                         />
                       </svg>
                     </span>
-                    <span className="text-gray-500">{item.rubber}</span>
+                    <span className="text-gray-300 text-[13px] sm:text-sm leading-snug text-balance">
+                      {item.rubber}
+                    </span>
                   </div>
                 </div>
               ))}
-            </div>
-
-            {/* Column labels */}
-            <div className="grid grid-cols-2 gap-3 mb-2">
-              <p className="text-center text-xs font-bold text-red-500 uppercase tracking-widest">
-                EVA Premium
-              </p>
-              <p className="text-center text-xs font-semibold text-gray-600 uppercase tracking-widest">
-                Gumowy
-              </p>
             </div>
 
             {/* CTA */}

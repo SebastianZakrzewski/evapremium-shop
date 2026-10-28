@@ -60,4 +60,42 @@ describe("ConfiguratorV2SectionShell", () => {
     )
     expect(screen.getByText("Próbki koloru")).toBeInTheDocument()
   })
+
+  it("opens collapsed sections on a phone without a click", () => {
+    const originalMatchMedia = window.matchMedia
+    window.matchMedia = ((query: string) => ({
+      matches: query === "(max-width: 1023px)",
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    })) as typeof window.matchMedia
+
+    render(
+      <ConfiguratorV2OptionsProvider
+        query=""
+        initiallyOpenSectionIds={CONFIGURATOR_V2_INITIALLY_OPEN_SECTION_IDS}
+      >
+        <ConfiguratorV2SectionShell
+          id="section-matType"
+          title="Typ dywanika"
+          readiness={readiness}
+        >
+          <p>Warianty dywanika</p>
+        </ConfiguratorV2SectionShell>
+      </ConfiguratorV2OptionsProvider>,
+    )
+
+    expect(screen.getByRole("button", { name: "Typ dywanika" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    )
+    expect(screen.getByText("Warianty dywanika")).toBeVisible()
+    expect(document.getElementById("section-matType-panel")).not.toHaveAttribute("hidden")
+
+    window.matchMedia = originalMatchMedia
+  })
 })

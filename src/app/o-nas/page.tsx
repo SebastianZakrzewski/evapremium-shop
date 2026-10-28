@@ -18,10 +18,10 @@ export default function AboutUsPage() {
   return (
     <>
       <PageHeroBanner
-        breadcrumb="O Nas"
-        title="O NAS"
-        highlight="EVAPREMIUM"
-        description="EvaPremium to polska firma, która zajmuje się sprzedażą innowacyjnych dywaników samochodowych. Od 2018 roku pomagamy dobrać precyzyjnie spasowane komplety EVA — z dbałością o materiał, dopasowanie i wygląd wnętrza."
+        breadcrumb="O nas"
+        kicker="Firma"
+        title="O nas"
+        description="Polska firma, która od 2018 roku dobiera dywaniki EVA do konkretnego auta."
       />
       <AboutUsSection />
     </>

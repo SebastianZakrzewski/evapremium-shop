@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { ImageAutoSlider, type SliderImage } from "@/components/ui/image-auto-slider"
+import ShopSectionHeading from "@/components/ui/shop-section-heading"
 
 const productImages: SliderImage[] = [
   {
@@ -185,24 +186,14 @@ export default function ProductGallerySection() {
 
       {/* Header */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-        <div
-          className={`text-center mb-6 md:mb-8 transition-all duration-1000 ease-out ${
+        <ShopSectionHeading
+          className={`mb-6 md:mb-8 transition-all duration-1000 ease-out ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
-        >
-          <h2
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3 leading-tight"
-            style={{ transitionDelay: isVisible ? "200ms" : "0ms" }}
-          >
-            Nasza galeria <span className="text-red-500">produktów</span>
-          </h2>
-          <p
-            className="text-sm text-white/70 font-medium max-w-xl mx-auto leading-relaxed px-2"
-            style={{ transitionDelay: isVisible ? "400ms" : "0ms" }}
-          >
-            Odkryj jakość i precyzję wykonania naszych dywaników. Każdy detal ma znaczenie.
-          </p>
-        </div>
+          kicker="Galeria"
+          title="Nasza galeria produktów"
+          description="Odkryj jakość i precyzję wykonania naszych dywaników. Każdy detal ma znaczenie."
+        />
       </div>
 
       {/* Auto-scrolling gallery */}

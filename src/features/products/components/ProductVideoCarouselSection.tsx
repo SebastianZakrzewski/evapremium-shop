@@ -11,6 +11,7 @@ import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 
+import ShopSectionHeading from "@/components/ui/shop-section-heading"
 import { productVideos, type ProductVideo } from "../data/productVideos"
 import { ProductVideoLightbox } from "./ProductVideoLightbox"
 
@@ -286,18 +287,14 @@ export default function ProductVideoCarouselSection() {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-        <div
-          className={`text-center mb-6 md:mb-8 transition-all duration-1000 ease-out ${
+        <ShopSectionHeading
+          className={`mb-6 md:mb-8 transition-all duration-1000 ease-out ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
-        >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3 leading-tight">
-            Premium w <span className="text-red-500">akcji</span>
-          </h2>
-          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed px-2">
-            Krótkie reklamy EVA Premium — zobacz jakość, która buduje zaufanie i zachęca do zakupu.
-          </p>
-        </div>
+          kicker="Wideo"
+          title="Premium w akcji"
+          description="Krótkie reklamy EVA Premium — zobacz jakość, która buduje zaufanie i zachęca do zakupu."
+        />
       </div>
 
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6">

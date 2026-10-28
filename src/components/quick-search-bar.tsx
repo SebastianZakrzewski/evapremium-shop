@@ -8,6 +8,7 @@ import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/bui
 import { useQuickSearchCatalog } from "@/features/vehicle-catalog/hooks/useQuickSearchCatalog";
 import { enrichCarContextFromTemplates } from "@/features/vehicle-catalog/utils/enrichCarContextFromTemplates";
 import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels";
+import ShopSectionHeading from "@/components/ui/shop-section-heading";
 
 export default function QuickSearchBar() {
   const router = useRouter();
@@ -73,14 +74,12 @@ export default function QuickSearchBar() {
       aria-label="Wyszukiwarka dywaników - wybierz markę i model samochodu"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-        <div className="text-center mb-4 md:mb-5">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3 leading-tight break-words px-2">
-            Dobierz dywaniki w <span className="text-red-500">15 sekund</span>
-          </h2>
-          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed px-2">
-            Wybierz markę i model, a my dopasujemy idealne dywaniki.
-          </p>
-        </div>
+        <ShopSectionHeading
+          className="mb-4 md:mb-5"
+          kicker="Dobór"
+          title="Dobierz dywaniki w 15 sekund"
+          description="Wybierz markę i model, a my dopasujemy idealne dywaniki."
+        />
 
         <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl md:rounded-3xl p-3 md:p-4 shadow-xl shadow-red-900/30">
           <div className="flex flex-col md:flex-row gap-3 md:gap-2">

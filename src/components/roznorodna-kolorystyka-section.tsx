@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import ShopSectionHeading from "@/components/ui/shop-section-heading";
 import { ArrowRight, Palette } from "lucide-react";
 import Link from "next/link";
 
@@ -62,14 +63,12 @@ export default function RoznorodnaKolorystykaSection() {
       {/* Gradient line top */}
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className={`text-center mb-5 md:mb-7 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3 leading-tight break-words px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '400ms' : '0ms'}}>
-            Kolorystyka <span className="text-red-500">Premium</span>
-          </h2>
-          <p className={`text-sm text-gray-400 max-w-xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: isVisible ? '600ms' : '0ms'}}>
-            Dopasuj kolor dywaników do wnętrza swojego samochodu lub stwórz kontrastowy akcent. Oferujemy szeroką paletę barw, od klasycznej elegancji po żywe, sportowe odcienie.
-          </p>
-        </div>
+        <ShopSectionHeading
+          className={`mb-5 md:mb-7 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+          kicker="Kolory"
+          title="Kolorystyka premium"
+          description="Dopasuj kolor dywaników do wnętrza swojego samochodu lub stwórz kontrastowy akcent. Oferujemy szeroką paletę barw, od klasycznej elegancji po żywe, sportowe odcienie."
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 items-center">
           {/* Left Column: Image Preview */}

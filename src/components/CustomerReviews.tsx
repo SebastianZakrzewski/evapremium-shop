@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Star, ThumbsUp, Quote, CheckCircle } from "lucide-react";
+import ShopSectionHeading from "@/components/ui/shop-section-heading";
 
 interface Review {
   id: number;
@@ -105,15 +106,16 @@ export default function CustomerReviews() {
       {/* Gradient line top */}
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="text-center mb-5">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-2">
-            Opinie naszych <span className="text-red-500">Klientów</span>
-          </h2>
-          
-          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed">
-            Dołącz do ponad <span className="text-white font-semibold">2000+</span> zadowolonych kierowców, którzy wybrali komfort i jakość EVA Premium.
-          </p>
-        </div>
+        <ShopSectionHeading
+          className="mb-5"
+          kicker="Opinie"
+          title="Opinie naszych klientów"
+          description={
+            <>
+              Dołącz do ponad <span className="font-medium text-white">2000+</span> zadowolonych kierowców, którzy wybrali komfort i jakość EVA Premium.
+            </>
+          }
+        />
 
         {/* Reviews Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">

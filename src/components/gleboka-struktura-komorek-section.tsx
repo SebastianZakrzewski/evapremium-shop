@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import ShopSectionHeading from "@/components/ui/shop-section-heading";
 
 export default function GlebokaStrukturaKomorekSection() {
   const [isVisible, setIsVisible] = useState(false);
@@ -53,15 +54,12 @@ export default function GlebokaStrukturaKomorekSection() {
       {/* Gradient line top */}
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className={`text-center mb-5 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-2">
-            Nowoczesny materiał <span className="text-red-500">EVA</span>
-          </h2>
-          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed">
-            Technologia polimerowa, która zmienia standardy ochrony wnętrza samochodu.
-            Lekkość, wytrzymałość i funkcjonalność w jednym materiale.
-          </p>
-        </div>
+        <ShopSectionHeading
+          className={`mb-5 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+          kicker="Materiał"
+          title="Nowoczesny materiał EVA"
+          description="Technologia polimerowa, która zmienia standardy ochrony wnętrza samochodu. Lekkość, wytrzymałość i funkcjonalność w jednym materiale."
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center max-w-6xl mx-auto">
           {/* Obrazek */}

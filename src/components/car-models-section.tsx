@@ -46,6 +46,16 @@ interface FilterState {
 /**
  * Formatuje typ silnika na podstawie nazwy modelu lub zwraca pusty string jeśli nie można określić
  */
+function modelCountLabel(count: number) {
+  if (count === 1) return "1 model";
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
+    return `${count} modele`;
+  }
+  return `${count} modeli`;
+}
+
 function getEngineType(modelName: string, brand: string): string {
   const nameLower = modelName.toLowerCase();
   const brandLower = brand.toLowerCase();
@@ -350,19 +360,19 @@ export default function CarModelsSection() {
             </ol>
           </nav>
 
-          {/* Header */}
-          <div className="text-center mb-8 md:mb-12">
-            <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
-              WYBIERZ MARKĘ SAMOCHODU
-            </h1>
-            <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
-              Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
-            </p>
-            <div className="mt-6 text-xs md:text-sm text-gray-400 px-4">
-              <span className="bg-white/5 px-3 py-2 md:px-4 md:py-2 rounded-full border border-white/10 inline-block backdrop-blur-sm">
-                🚗 Dostępne marki: {availableBrands.length} producentów samochodów
-              </span>
+          <div className="mb-8 mt-8 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-2xl text-left">
+              <p className="text-[11px] uppercase tracking-[0.28em] text-red-500">Kolekcja</p>
+              <h1 className="mt-3 text-3xl font-medium leading-tight tracking-tight text-white md:text-4xl">
+                Wybierz markę samochodu
+              </h1>
+              <p className="mt-3 max-w-xl text-sm font-normal leading-relaxed text-white/55 md:text-base">
+                Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
+              </p>
             </div>
+            {!loadingBrands && (
+              <p className="text-sm text-white/40">{availableBrands.length} marek</p>
+            )}
           </div>
 
           {/* Grid z markami */}
@@ -400,47 +410,33 @@ export default function CarModelsSection() {
     <div className={pinnedCard ? "bg-[#111] text-white" : "min-h-screen bg-black text-white pb-20"}>
       {/* Hero Header */}
       {pinnedCard ? null : (
-      <div className="relative bg-black border-b border-white/5 py-16 md:py-24 overflow-hidden">
-        {/* Gradient background – spójny z hero (H1 + opis) na Galeria / O nas */}
-        <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-900/5 opacity-50"></div>
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
-            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+      <div className="bg-black text-white">
+        <div className="container mx-auto px-4 pb-10 pt-8 md:pb-12 md:pt-12">
+          <nav className="flex items-center gap-2 text-xs tracking-wide text-white/40">
+            <Link href="/" className="transition-colors hover:text-white">Home</Link>
             <span>/</span>
-            <Link href={basePath} className="hover:text-white transition-colors">
+            <Link href={basePath} className="transition-colors hover:text-white">
               {basePath === '/dywaniki' ? 'Dywaniki' : 'Modele aut'}
             </Link>
             {brandParam && (
               <>
                 <span>/</span>
-                <span className="text-white">{visibleBrandName || brandParam}</span>
+                <span className="text-white/70">{visibleBrandName || brandParam}</span>
               </>
             )}
           </nav>
-          
-          <div className="max-w-3xl">
-            {brandLogo && (
-              <div className="flex items-center gap-6 mb-6">
-                <div className="w-20 h-20 relative p-2 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
-                  <Image
-                    src={brandLogo}
-                    alt={`${visibleBrandName || brandParam} logo`}
-                    fill
-                    className={`object-contain p-2 ${isModeleBrandPhoto(brandLogo) ? 'object-cover object-center' : ''}`}
-                    unoptimized={shouldServeBrandImageUnoptimized(brandLogo)}
-                  />
-                </div>
-              </div>
-            )}
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              MODELE <span className="text-red-600">{(visibleBrandName || brandParam || '').toUpperCase()}</span>
-            </h1>
-            <p className="text-lg text-gray-400 leading-relaxed">
-              Wybierz model {(visibleBrandName || brandParam)} i spersonalizuj dywaniki samochodowe EVA Premium. Najwyższa jakość materiałów, precyzyjne dopasowanie i trwałość na lata.
-            </p>
+
+          <div className="mt-8 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-[11px] uppercase tracking-[0.28em] text-red-500">Kolekcja</p>
+              <h1 className="mt-3 text-3xl font-medium leading-tight tracking-tight text-white md:text-4xl">
+                {visibleBrandName || brandParam}
+              </h1>
+              <p className="mt-3 max-w-xl text-sm font-normal leading-relaxed text-white/55 md:text-base">
+                Wybierz model {visibleBrandName || brandParam} i dopasuj dywaniki EVA do swojego auta.
+              </p>
+            </div>
+            <p className="shrink-0 text-sm text-white/40 md:pt-8">{modelCountLabel(filteredModels.length)}</p>
           </div>
         </div>
       </div>

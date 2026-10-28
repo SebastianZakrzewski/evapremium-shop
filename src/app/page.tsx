@@ -23,8 +23,6 @@ const MatComparisonSection = dynamic(
   () => import("@/components/mat-comparison-section"),
 )
 
-const CustomFitSection = dynamic(() => import("@/components/custom-fit-section"))
-
 const RoznorodnaKolorystykaSection = dynamic(
   () => import("@/components/roznorodna-kolorystyka-section"),
 )
@@ -47,7 +45,6 @@ export default function Home() {
       <InteractiveFeaturesSection />
       <MatComparisonSection />
       <ProductSelection />
-      <CustomFitSection />
       <RoznorodnaKolorystykaSection />
       <GlebokaStrukturaKomorekSection />
       <CustomerReviews />

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, type ReactNode } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 import { ChevronDown, ChevronUp } from "lucide-react"
 import type { SectionReadiness } from "@/features/car-configurator/adapters/configuratorV2SectionMapper"
 import { sectionHeaderMatchesQuery } from "../option-search/sectionHeaderMatchesQuery"
@@ -8,6 +8,12 @@ import {
   useConfiguratorV2InitiallyOpenSectionIds,
   useConfiguratorV2OptionQuery,
 } from "../option-search/ConfiguratorV2OptionsProvider"
+
+const MOBILE_LAYOUT_QUERY = "(max-width: 1023px)"
+
+const isMobileLayout = () =>
+  typeof window.matchMedia === "function" &&
+  window.matchMedia(MOBILE_LAYOUT_QUERY).matches
 
 type ConfiguratorV2SectionShellProps = {
   id: string
@@ -41,6 +47,15 @@ export const ConfiguratorV2SectionShell = ({
     if (initiallyOpenSectionIds) return initiallyOpenSectionIds.has(id)
     return defaultOpen
   })
+  const [hasMounted, setHasMounted] = useState(false)
+  const didApplyMobileOpen = useRef(false)
+
+  useEffect(() => {
+    setHasMounted(true)
+    if (didApplyMobileOpen.current || readiness.isDisabled) return
+    didApplyMobileOpen.current = true
+    if (isMobileLayout()) setIsOpen(true)
+  }, [readiness.isDisabled])
 
   useEffect(() => {
     if (!optionQuery.trim() || !matchesQuery || readiness.isDisabled) return
@@ -48,6 +63,8 @@ export const ConfiguratorV2SectionShell = ({
   }, [matchesQuery, optionQuery, readiness.isDisabled])
 
   const expanded = isOpen && !readiness.isDisabled
+  const showOnMobileBeforeMount = !hasMounted && !readiness.isDisabled
+  const panelVisible = expanded || showOnMobileBeforeMount
   const visible = matchesQuery
 
   return (
@@ -63,7 +80,7 @@ export const ConfiguratorV2SectionShell = ({
         <button
           type="button"
           className="flex w-full items-center justify-between gap-3 rounded-2xl px-3 py-3 text-left hover:bg-white/[0.04] disabled:cursor-not-allowed disabled:hover:bg-transparent"
-          aria-expanded={expanded}
+          aria-expanded={panelVisible}
           aria-controls={`${id}-panel`}
           disabled={readiness.isDisabled}
           onClick={() => setIsOpen((open) => !open)}
@@ -71,6 +88,11 @@ export const ConfiguratorV2SectionShell = ({
           <span>{title}</span>
           {expanded ? (
             <ChevronUp className="h-4 w-4 shrink-0 text-white/35" aria-hidden />
+          ) : showOnMobileBeforeMount ? (
+            <>
+              <ChevronUp className="h-4 w-4 shrink-0 text-white/35 lg:hidden" aria-hidden />
+              <ChevronDown className="hidden h-4 w-4 shrink-0 text-white/35 lg:block" aria-hidden />
+            </>
           ) : (
             <ChevronDown className="h-4 w-4 shrink-0 text-white/35" aria-hidden />
           )}
@@ -90,7 +112,11 @@ export const ConfiguratorV2SectionShell = ({
         </div>
       )}
 
-      <div id={`${id}-panel`} hidden={!expanded} className="px-3 pb-4">
+      <div
+        id={`${id}-panel`}
+        hidden={panelVisible ? undefined : true}
+        className={`px-3 pb-4 ${showOnMobileBeforeMount && !expanded ? "max-lg:!block lg:hidden" : ""}`}
+      >
         {included && (
           <p className="mb-2 text-[11px] font-medium tracking-wide text-white/40">W zestawie</p>
         )}
