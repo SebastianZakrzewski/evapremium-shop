@@ -17,6 +17,7 @@ import { formatPriceCurrency, formatPriceValue } from "@/lib/utils/formatPrice";
 import { Separator } from "@/components/ui/separator";
 import { ShoppingCart, Check, X as XIcon, Loader2, Minus, Plus } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { trackGaViewItem } from "@/lib/tracking/ga4/events";
 
 interface AccessoryDetailsSheetProps {
   accessory: Accessory | null;
@@ -62,6 +63,30 @@ export default function AccessoryDetailsSheet({
     
     return [];
   }, [accessory, selectedColor]);
+
+  useEffect(() => {
+    if (!isOpen || !accessory) {
+      return;
+    }
+
+    trackGaViewItem({
+      item_id: accessory.id,
+      item_name: accessory.name,
+      price: accessory.price,
+      quantity: 1,
+      item_brand: "EvaPremium",
+      item_category: accessory.category?.name ?? accessory.categorySlug ?? "accessories",
+      item_variant: accessory.sku,
+    });
+  }, [
+    isOpen,
+    accessory?.id,
+    accessory?.name,
+    accessory?.price,
+    accessory?.sku,
+    accessory?.category?.name,
+    accessory?.categorySlug,
+  ]);
 
   // Ustaw domyślny kolor przy otwarciu
   useEffect(() => {

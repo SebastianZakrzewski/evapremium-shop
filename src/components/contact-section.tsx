@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { trackGaGenerateLead } from '@/lib/tracking/ga4/events';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -50,6 +51,16 @@ const contactInfo = [
 
 export default function ContactSection() {
   const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const leadTrackedRef = useRef(false);
+
+  useEffect(() => {
+    if (formState !== 'success' || leadTrackedRef.current) {
+      return;
+    }
+
+    leadTrackedRef.current = true;
+    trackGaGenerateLead('contact_form');
+  }, [formState]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
