@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { trackGaGenerateLead } from '@/lib/tracking/ga4/events';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -49,24 +49,63 @@ const contactInfo = [
   }
 ];
 
-export default function ContactSection() {
-  const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
-  const leadTrackedRef = useRef(false);
+type ContactFormState = 'idle' | 'submitting' | 'success' | 'error';
 
-  useEffect(() => {
-    if (formState !== 'success' || leadTrackedRef.current) {
+type ContactResponse = {
+  ok?: boolean;
+  delivered?: boolean;
+  error?: string;
+};
+
+export default function ContactSection() {
+  const [formState, setFormState] = useState<ContactFormState>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [companyWebsite, setCompanyWebsite] = useState('');
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (formState === 'submitting' || formState === 'success') {
       return;
     }
 
-    leadTrackedRef.current = true;
-    trackGaGenerateLead('contact_form');
-  }, [formState]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
     setFormState('submitting');
-    // Simulate API call
-    setTimeout(() => setFormState('success'), 1500);
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName,
+          email,
+          subject,
+          message,
+          pageUrl: window.location.href,
+          companyWebsite,
+        }),
+      });
+      const data = (await response.json().catch(() => null)) as ContactResponse | null;
+
+      if (!response.ok || !data?.ok) {
+        setErrorMessage(data?.error || 'Nie udało się wysłać wiadomości. Spróbuj ponownie.');
+        setFormState('error');
+        return;
+      }
+
+      if (data.delivered) {
+        trackGaGenerateLead('contact_form');
+      }
+
+      setFormState('success');
+    } catch {
+      setErrorMessage('Nie udało się wysłać wiadomości. Sprawdź połączenie i spróbuj ponownie.');
+      setFormState('error');
+    }
   };
 
   return (
@@ -140,24 +179,46 @@ export default function ContactSection() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+                  <label htmlFor="companyWebsite">Strona firmy</label>
+                  <input
+                    id="companyWebsite"
+                    name="companyWebsite"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={companyWebsite}
+                    onChange={(event) => setCompanyWebsite(event.target.value)}
+                  />
+                </div>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="firstName" className="text-gray-400">Imię</Label>
                     <Input
                       id="firstName"
+                      name="firstName"
+                      value={firstName}
+                      onChange={(event) => setFirstName(event.target.value)}
                       placeholder="Wpisz imię"
                       className="bg-black/50 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 h-12"
                       required
+                      disabled={formState === 'submitting' || formState === 'success'}
+                      aria-invalid={formState === 'error'}
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-gray-400">Email</Label>
                     <Input
                       id="email"
+                      name="email"
                       type="email"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
                       placeholder="twoj@email.com"
                       className="bg-black/50 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 h-12"
                       required
+                      disabled={formState === 'submitting' || formState === 'success'}
+                      aria-invalid={formState === 'error'}
                     />
                   </div>
                 </div>
@@ -166,9 +227,14 @@ export default function ContactSection() {
                   <Label htmlFor="subject" className="text-gray-400">Temat</Label>
                   <Input
                     id="subject"
+                    name="subject"
+                    value={subject}
+                    onChange={(event) => setSubject(event.target.value)}
                     placeholder="Czego dotyczy wiadomość?"
                     className="bg-black/50 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 h-12"
                     required
+                    disabled={formState === 'submitting' || formState === 'success'}
+                    aria-invalid={formState === 'error'}
                   />
                 </div>
 
@@ -176,16 +242,28 @@ export default function ContactSection() {
                   <Label htmlFor="message" className="text-gray-400">Wiadomość</Label>
                   <Textarea
                     id="message"
+                    name="message"
+                    value={message}
+                    onChange={(event) => setMessage(event.target.value)}
                     placeholder="Treść wiadomości..."
                     rows={6}
                     className="bg-black/50 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/20 resize-none"
                     required
+                    disabled={formState === 'submitting' || formState === 'success'}
+                    aria-invalid={formState === 'error'}
                   />
                 </div>
 
+                {formState === 'error' && errorMessage ? (
+                  <p role="alert" className="text-sm text-red-400">
+                    {errorMessage}
+                  </p>
+                ) : null}
+
                 <Button 
                   type="submit" 
-                  disabled={formState !== 'idle'}
+                  disabled={formState === 'submitting' || formState === 'success'}
+                  aria-busy={formState === 'submitting'}
                   className={cn(
                     "w-full h-14 text-base font-bold transition-all duration-300",
                     formState === 'success' 
@@ -193,17 +271,17 @@ export default function ContactSection() {
                       : "bg-red-600 text-white hover:bg-red-700"
                   )}
                 >
-                  {formState === 'idle' && (
-                    <>
-                      Wyślij Wiadomość
-                      <Send className="ml-2 w-4 h-4" />
-                    </>
-                  )}
                   {formState === 'submitting' && "Wysyłanie..."}
                   {formState === 'success' && (
                     <>
                       Wysłano Pomyślnie
                       <CheckCircle className="ml-2 w-5 h-5" />
+                    </>
+                  )}
+                  {formState !== 'submitting' && formState !== 'success' && (
+                    <>
+                      Wyślij Wiadomość
+                      <Send className="ml-2 w-4 h-4" />
                     </>
                   )}
                 </Button>
