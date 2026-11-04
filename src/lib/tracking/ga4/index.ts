@@ -1,6 +1,6 @@
 export { getGaMeasurementId, DEFAULT_GA_MEASUREMENT_ID } from './measurementId'
 export { GA_CONSENT_DEFAULT_SCRIPT, buildGa4InitScript } from './consentScript'
-export { readGoogleConsent, mapGoogleConsent, DENIED_GOOGLE_CONSENT } from './consent'
+export { readGoogleConsent, mapGoogleConsent, applyStoredConsentToGtag, DENIED_GOOGLE_CONSENT } from './consent'
 export type { GoogleConsentUpdate } from './consent'
 export { pushGtag } from './gtag'
 export {

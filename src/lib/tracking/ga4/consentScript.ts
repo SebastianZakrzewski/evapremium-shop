@@ -1,7 +1,8 @@
 /**
  * Consent Mode v2 default. Must run before GTM and gtag config.
  * Reuses dataLayer when it already exists so the GTM snippet is not wiped.
- * A stored Cookiebot cookie is applied immediately for returning visitors.
+ * A stored CookieConsent cookie is applied immediately so the first page_view
+ * on a return visit is not sent with storage denied.
  */
 export const GA_CONSENT_DEFAULT_SCRIPT = `(function () {
   window.dataLayer = window.dataLayer || [];

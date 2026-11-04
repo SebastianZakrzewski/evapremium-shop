@@ -1,4 +1,5 @@
-import { getConsentCookieValue, getCookiebot } from '@/features/cookie-consent'
+import { getConsentCookieValue } from '@/features/cookie-consent/lib/consentStorage'
+import { pushGtag } from './gtag'
 
 export type GoogleConsentState = 'granted' | 'denied'
 
@@ -48,25 +49,19 @@ const readFlagsFromCookie = (value: string): ConsentFlags => ({
 })
 
 /**
- * Cookiebot is the CMP. Prefer a settled Cookiebot response, otherwise the
- * CookieConsent cookie (same flags as the inline default script).
+ * The first-party CookieConsent cookie is the source of truth.
+ * Cookiebot, when GTM injects it, must not override a stored choice.
  */
 export const readGoogleConsent = (): GoogleConsentUpdate => {
-  const cookiebot = getCookiebot()
-
-  if (cookiebot?.hasResponse && cookiebot.consent) {
-    return mapGoogleConsent({
-      statistics: cookiebot.consent.statistics,
-      marketing: cookiebot.consent.marketing,
-      preferences: cookiebot.consent.preferences,
-    })
-  }
-
   const cookieValue = getConsentCookieValue()
 
-  if (!cookieValue) {
+  if (!cookieValue || !cookieValue.includes('necessary:true')) {
     return DENIED_GOOGLE_CONSENT
   }
 
   return mapGoogleConsent(readFlagsFromCookie(cookieValue))
+}
+
+export const applyStoredConsentToGtag = (): void => {
+  pushGtag('consent', 'update', readGoogleConsent())
 }

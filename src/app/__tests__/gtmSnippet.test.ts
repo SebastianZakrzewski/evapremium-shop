@@ -22,5 +22,7 @@ describe('GTM container', () => {
     expect(consentIndex).toBeLessThan(gtmIndex)
     expect(layoutSource).toContain('data-cookieconsent="ignore"')
     expect(layoutSource).toContain("id=\"gtm\"")
+    expect(layoutSource).not.toContain('consent.cookiebot.com/uc.js')
+    expect(layoutSource).toContain('CybotCookiebotDialogBodyUnderlay')
   })
 })
