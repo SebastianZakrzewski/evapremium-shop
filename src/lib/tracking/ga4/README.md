@@ -2,7 +2,7 @@
 
 Loads measurement id `G-SGHPWGL4P4` on every page. Override with `NEXT_PUBLIC_GA_ID`.
 
-Consent Mode v2 follows Cookiebot (`statistics` → `analytics_storage`, `marketing` → ad signals). The third-party GTM container `GTM-TD2WDGKV` is unchanged. Both tags share `dataLayer` without resetting it.
+Consent Mode v2 follows the first-party `CookieConsent` cookie (`statistics` → `analytics_storage`, `marketing` → ad signals). The shop banner is the only consent UI. It persists accept, reject, or a split choice for 12 months and updates gtag immediately. A stored choice is applied in the default script, before `gtag('config')`, so a return visit does not lose the first `page_view`. GTM `GTM-TD2WDGKV` still loads Cookiebot; that dialog is hidden and its consent state is mirrored from our cookie so it cannot leave storage denied. Both tags share `dataLayer` without resetting it.
 
 Ecommerce events are sent from the existing tracking helpers: `view_item`, `add_to_cart`, `begin_checkout`, `purchase`. `generate_lead` fires when the contact form reports success. `purchase` is stored under `ga4_purchase_<transaction_id>` so a refresh does not send it again.
 

@@ -1,5 +1,5 @@
 /**
- * TrackingProvider - inicjalizuje tracking dopiero po uzyskaniu zgody Cookiebot
+ * TrackingProvider - inicjalizuje piksele marketingowe po zgodzie z banera.
  */
 
 'use client'
@@ -8,11 +8,12 @@ import { useCallback, useEffect, useRef } from 'react'
 import { usePageView } from '@/lib/tracking/hooks/usePageView'
 import { getTrackingConfigInstance } from '@/lib/config/tracking'
 import { FacebookPixelProvider } from '@/lib/tracking/providers/FacebookPixelProvider'
-import { hasConsentForCategory } from '@/features/cookie-consent'
+import { COOKIE_CONSENT_CHANGED_EVENT, hasConsentForCategory } from '@/features/cookie-consent'
 import { loadMicrosoftClarity } from '@/lib/tracking/consent/loadMicrosoftClarity'
 import { GoogleConsentMode } from '@/components/analytics/GoogleConsentMode'
 
 const CONSENT_EVENTS = [
+  COOKIE_CONSENT_CHANGED_EVENT,
   'CookiebotOnAccept',
   'CookiebotOnDecline',
   'CookiebotOnConsentReady',

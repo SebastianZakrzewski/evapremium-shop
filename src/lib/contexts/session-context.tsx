@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { COOKIE_CONSENT_CHANGED_EVENT } from '@/features/cookie-consent';
 import { HybridSessionManager } from '@/lib/utils/hybrid-session-manager';
 
 interface CartItem {
@@ -103,11 +104,13 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       HybridSessionManager.persistSessionCookie();
     };
 
+    window.addEventListener(COOKIE_CONSENT_CHANGED_EVENT, handleConsentChange);
     window.addEventListener('CookiebotOnAccept', handleConsentChange);
     window.addEventListener('CookiebotOnDecline', handleConsentChange);
     window.addEventListener('CookiebotOnConsentReady', handleConsentChange);
 
     return () => {
+      window.removeEventListener(COOKIE_CONSENT_CHANGED_EVENT, handleConsentChange);
       window.removeEventListener('CookiebotOnAccept', handleConsentChange);
       window.removeEventListener('CookiebotOnDecline', handleConsentChange);
       window.removeEventListener('CookiebotOnConsentReady', handleConsentChange);

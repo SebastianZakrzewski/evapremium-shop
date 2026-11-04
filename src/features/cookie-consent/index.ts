@@ -1,20 +1,22 @@
 export { CookieConsentBanner } from './components/CookieConsentBanner'
 export { useCookieConsent } from './hooks/useCookieConsent'
 export {
-  acceptAllCookieConsent,
-  closeCookiebotPreferencesPanel,
   COOKIE_CONSENT_ACCEPTED_EVENT,
+  COOKIE_CONSENT_CHANGED_EVENT,
+  COOKIE_CONSENT_COOKIE,
+  CONSENT_MAX_AGE_SECONDS,
+  acceptAllCookieConsent,
   dispatchCookieConsentAccepted,
-  getCookiebot,
   getConsentCookieValue,
   hasConsentForCategory,
   hasOptionalConsentGranted,
-  hasStoredCookieConsent,
-  hideCookiebotWidget,
-  hideDefaultCookiebotDialog,
+  hasStoredConsentDecision,
   isFullCookieConsentGranted,
-  openCookiebotPreferences,
+  persistConsentChoice,
+  readStoredConsentChoice,
+  rejectAllCookieConsent,
+  saveCookieConsentPreferences,
   shouldShowCustomBanner,
-  suppressDefaultCookiebotUi,
-} from './lib/cookiebot'
-export type { CookieConsentCategory } from './lib/cookiebot'
+  syncCookiebotWithStoredChoice,
+} from './lib/consentStorage'
+export type { ConsentChoice, CookieConsentCategory } from './lib/consentStorage'

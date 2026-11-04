@@ -1,21 +1,35 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { GA_CONSENT_DEFAULT_SCRIPT, buildGa4InitScript } from '../consentScript'
 import { readGoogleConsent } from '../consent'
-import type { CookiebotApi } from '@/features/cookie-consent/lib/cookiebot'
+import { acceptAllCookieConsent, rejectAllCookieConsent } from '@/features/cookie-consent/lib/consentStorage'
 
-const setCookiebot = (cookiebot: Partial<CookiebotApi> | undefined) => {
-  if (!cookiebot) {
-    delete window.Cookiebot
-    return
-  }
-
-  window.Cookiebot = cookiebot as CookiebotApi
+type GtagCall = {
+  0: string
+  1: string
+  2?: { analytics_storage?: string; ad_storage?: string }
 }
+
+const clearConsentCookie = () => {
+  document.cookie = 'CookieConsent=; Max-Age=0; Path=/'
+}
+
+const runConsentDefaultScript = () => {
+  window.dataLayer = []
+  delete window.gtag
+  new Function(GA_CONSENT_DEFAULT_SCRIPT)()
+}
+
+const consentUpdates = (): GtagCall[] =>
+  ((window.dataLayer ?? []) as unknown as GtagCall[]).filter(
+    (call) => call[0] === 'consent' && call[1] === 'update'
+  )
 
 describe('GA4 consent', () => {
   afterEach(() => {
-    document.cookie = 'CookieConsent=; Max-Age=0'
+    clearConsentCookie()
     delete window.Cookiebot
+    window.dataLayer = []
+    delete window.gtag
   })
 
   it('keeps the shared dataLayer and denies storage by default', () => {
@@ -35,45 +49,50 @@ describe('GA4 consent', () => {
     expect(script).not.toContain('send_page_view')
   })
 
-  it('reads a stored Cookiebot cookie before Cookiebot has responded', () => {
-    document.cookie = 'CookieConsent=' + encodeURIComponent('statistics:true,marketing:false,preferences:true')
-    setCookiebot({
-      hasResponse: false,
-      consent: {
-        necessary: true,
-        preferences: false,
-        statistics: false,
-        marketing: false,
-        method: null,
-      },
-    })
+  it('grants storage from the stored cookie before gtag config runs', () => {
+    acceptAllCookieConsent()
+    runConsentDefaultScript()
 
-    expect(readGoogleConsent()).toMatchObject({
+    expect(consentUpdates()[0]?.[2]).toMatchObject({
       analytics_storage: 'granted',
-      ad_storage: 'denied',
-      functionality_storage: 'granted',
-      security_storage: 'granted',
+      ad_storage: 'granted',
     })
-  })
-
-  it('uses a settled Cookiebot response over the cookie', () => {
-    document.cookie = 'CookieConsent=' + encodeURIComponent('statistics:false,marketing:false,preferences:false')
-    setCookiebot({
-      hasResponse: true,
-      consent: {
-        necessary: true,
-        preferences: false,
-        statistics: true,
-        marketing: true,
-        method: 'explicit',
-      },
-    })
-
     expect(readGoogleConsent()).toMatchObject({
       analytics_storage: 'granted',
       ad_storage: 'granted',
       ad_user_data: 'granted',
       ad_personalization: 'granted',
+      security_storage: 'granted',
+    })
+  })
+
+  it('keeps storage denied when the stored choice is reject-all', () => {
+    rejectAllCookieConsent()
+    runConsentDefaultScript()
+
+    expect(consentUpdates()[0]?.[2]).toMatchObject({
+      analytics_storage: 'denied',
+      ad_storage: 'denied',
+    })
+    expect(readGoogleConsent().analytics_storage).toBe('denied')
+  })
+
+  it('ignores a Cookiebot memory grant when the cookie says denied', () => {
+    rejectAllCookieConsent()
+    window.Cookiebot = {
+      hasResponse: true,
+      consent: {
+        necessary: true,
+        preferences: true,
+        statistics: true,
+        marketing: true,
+        method: 'explicit',
+      },
+    }
+
+    expect(readGoogleConsent()).toMatchObject({
+      analytics_storage: 'denied',
+      ad_storage: 'denied',
     })
   })
 })

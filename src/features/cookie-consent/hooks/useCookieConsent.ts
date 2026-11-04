@@ -1,109 +1,127 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { applyStoredConsentToGtag } from '@/lib/tracking/ga4/consent'
 import {
   acceptAllCookieConsent,
-  closeCookiebotPreferencesPanel,
-  dispatchCookieConsentAccepted,
-  getCookiebot,
-  openCookiebotPreferences,
+  readStoredConsentChoice,
+  rejectAllCookieConsent,
+  saveCookieConsentPreferences,
   shouldShowCustomBanner,
-  suppressDefaultCookiebotUi,
-} from '../lib/cookiebot'
+  syncCookiebotWithStoredChoice,
+} from '../lib/consentStorage'
 
 type UseCookieConsentReturn = {
   isBannerVisible: boolean
+  isPreferencesOpen: boolean
+  statisticsEnabled: boolean
+  marketingEnabled: boolean
   handleAcceptAll: () => void
+  handleRejectAll: () => void
   handleManagePreferences: () => void
+  handleClosePreferences: () => void
+  handleStatisticsChange: (enabled: boolean) => void
+  handleMarketingChange: (enabled: boolean) => void
+  handleSavePreferences: () => void
 }
 
 export const useCookieConsent = (): UseCookieConsentReturn => {
   const [isBannerVisible, setIsBannerVisible] = useState(false)
-  const isManagingPreferencesRef = useRef(false)
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false)
+  const [statisticsEnabled, setStatisticsEnabled] = useState(false)
+  const [marketingEnabled, setMarketingEnabled] = useState(false)
 
-  const syncBannerVisibility = useCallback(() => {
-    suppressDefaultCookiebotUi()
-
-    if (!shouldShowCustomBanner()) {
-      setIsBannerVisible(false)
-      isManagingPreferencesRef.current = false
-      closeCookiebotPreferencesPanel()
-      return
-    }
-
-    if (isManagingPreferencesRef.current) {
-      setIsBannerVisible(false)
-      return
-    }
-
-    setIsBannerVisible(true)
+  const hideBanner = useCallback(() => {
+    setIsBannerVisible(false)
+    setIsPreferencesOpen(false)
   }, [])
 
-  const handleConsentSettled = useCallback(() => {
-    isManagingPreferencesRef.current = false
-    closeCookiebotPreferencesPanel()
-    syncBannerVisibility()
-  }, [syncBannerVisibility])
-
-  const handleDialogInit = useCallback(() => {
-    if (isManagingPreferencesRef.current) {
-      return
-    }
-
-    suppressDefaultCookiebotUi()
-    syncBannerVisibility()
-  }, [syncBannerVisibility])
+  const publishChoice = useCallback(
+    (save: () => void) => {
+      save()
+      applyStoredConsentToGtag()
+      hideBanner()
+    },
+    [hideBanner]
+  )
 
   useEffect(() => {
-    if (shouldShowCustomBanner()) {
-      setIsBannerVisible(true)
+    setIsBannerVisible(shouldShowCustomBanner())
+
+    const choice = readStoredConsentChoice()
+    if (choice) {
+      setStatisticsEnabled(choice.statistics)
+      setMarketingEnabled(choice.marketing)
+      applyStoredConsentToGtag()
+    }
+  }, [])
+
+  useEffect(() => {
+    const syncCookiebot = () => {
+      syncCookiebotWithStoredChoice()
     }
 
-    suppressDefaultCookiebotUi()
-    syncBannerVisibility()
+    syncCookiebot()
+    const intervalId = window.setInterval(syncCookiebot, 400)
+    window.addEventListener('CookiebotOnLoad', syncCookiebot)
+    window.addEventListener('CookiebotOnConsentReady', syncCookiebot)
+    window.addEventListener('CookiebotOnDialogInit', syncCookiebot)
 
-    const pollInterval = window.setInterval(() => {
-      suppressDefaultCookiebotUi()
-
-      if (getCookiebot()) {
-        syncBannerVisibility()
-      }
-    }, 100)
-
-    window.addEventListener('CookiebotOnConsentReady', syncBannerVisibility)
-    window.addEventListener('CookiebotOnDialogInit', handleDialogInit)
-    window.addEventListener('CookiebotOnLoad', syncBannerVisibility)
-    window.addEventListener('CookiebotOnAccept', handleConsentSettled)
-    window.addEventListener('CookiebotOnDecline', handleConsentSettled)
+    const timeoutId = window.setTimeout(() => {
+      window.clearInterval(intervalId)
+    }, 8000)
 
     return () => {
-      window.clearInterval(pollInterval)
-      window.removeEventListener('CookiebotOnConsentReady', syncBannerVisibility)
-      window.removeEventListener('CookiebotOnDialogInit', handleDialogInit)
-      window.removeEventListener('CookiebotOnLoad', syncBannerVisibility)
-      window.removeEventListener('CookiebotOnAccept', handleConsentSettled)
-      window.removeEventListener('CookiebotOnDecline', handleConsentSettled)
+      window.clearInterval(intervalId)
+      window.clearTimeout(timeoutId)
+      window.removeEventListener('CookiebotOnLoad', syncCookiebot)
+      window.removeEventListener('CookiebotOnConsentReady', syncCookiebot)
+      window.removeEventListener('CookiebotOnDialogInit', syncCookiebot)
     }
-  }, [handleConsentSettled, handleDialogInit, syncBannerVisibility])
+  }, [])
 
   const handleAcceptAll = useCallback(() => {
-    acceptAllCookieConsent(() => {
-      isManagingPreferencesRef.current = false
-      closeCookiebotPreferencesPanel()
-      setIsBannerVisible(false)
-      dispatchCookieConsentAccepted()
-    })
-  }, [])
+    publishChoice(acceptAllCookieConsent)
+  }, [publishChoice])
+
+  const handleRejectAll = useCallback(() => {
+    publishChoice(rejectAllCookieConsent)
+  }, [publishChoice])
 
   const handleManagePreferences = useCallback(() => {
-    isManagingPreferencesRef.current = true
-    setIsBannerVisible(false)
-    openCookiebotPreferences()
+    const choice = readStoredConsentChoice()
+    setStatisticsEnabled(choice?.statistics ?? false)
+    setMarketingEnabled(choice?.marketing ?? false)
+    setIsPreferencesOpen(true)
   }, [])
+
+  const handleClosePreferences = useCallback(() => {
+    setIsPreferencesOpen(false)
+  }, [])
+
+  const handleStatisticsChange = useCallback((enabled: boolean) => {
+    setStatisticsEnabled(enabled)
+  }, [])
+
+  const handleMarketingChange = useCallback((enabled: boolean) => {
+    setMarketingEnabled(enabled)
+  }, [])
+
+  const handleSavePreferences = useCallback(() => {
+    publishChoice(() => saveCookieConsentPreferences(statisticsEnabled, marketingEnabled))
+  }, [marketingEnabled, publishChoice, statisticsEnabled])
 
   return {
     isBannerVisible,
+    isPreferencesOpen,
+    statisticsEnabled,
+    marketingEnabled,
     handleAcceptAll,
+    handleRejectAll,
     handleManagePreferences,
+    handleClosePreferences,
+    handleStatisticsChange,
+    handleMarketingChange,
+    handleSavePreferences,
   }
 }
