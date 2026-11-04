@@ -10,6 +10,7 @@ import { getTrackingConfigInstance } from '@/lib/config/tracking'
 import { FacebookPixelProvider } from '@/lib/tracking/providers/FacebookPixelProvider'
 import { hasConsentForCategory } from '@/features/cookie-consent'
 import { loadMicrosoftClarity } from '@/lib/tracking/consent/loadMicrosoftClarity'
+import { GoogleConsentMode } from '@/components/analytics/GoogleConsentMode'
 
 const CONSENT_EVENTS = [
   'CookiebotOnAccept',
@@ -86,5 +87,10 @@ export function TrackingProvider({ children }: { children: React.ReactNode }) {
 
   usePageView()
 
-  return <>{children}</>
+  return (
+    <>
+      <GoogleConsentMode />
+      {children}
+    </>
+  )
 }

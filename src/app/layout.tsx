@@ -6,6 +6,8 @@ import { EvaChatWidget } from "@/features/eva-chat-widget";
 import Script from "next/script";
 import { SessionProvider } from "@/lib/contexts/session-context";
 import { TrackingProvider } from "@/components/tracking-provider";
+import { GoogleAnalyticsScript } from "@/components/analytics/GoogleAnalyticsScript";
+import { GoogleConsentDefaultScript } from "@/components/analytics/GoogleConsentDefaultScript";
 import { QueryProvider } from "@/lib/providers/query-provider";
 
 const montserrat = Montserrat({
@@ -216,6 +218,8 @@ export default function RootLayout({
           }}
         />
 
+        <GoogleConsentDefaultScript />
+
         {/* Google Tag Manager — zgody obsługuje samo GTM, Cookiebot nie blokuje tego skryptu */}
         <Script
           id="gtm"
@@ -230,6 +234,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
         {/* End Google Tag Manager */}
+
+        <GoogleAnalyticsScript />
         
         {/* Schema.org */}
         <Script
