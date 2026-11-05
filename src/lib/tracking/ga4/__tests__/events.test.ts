@@ -144,6 +144,21 @@ describe('GA4 ecommerce events', () => {
 
     expect(readQueue().filter((entry) => entry[1] === 'purchase')).toHaveLength(1)
     expect(readNamedEvents('purchase')).toHaveLength(1)
+    expect(readQueue().filter((entry) => entry[1] === 'conversion')).toHaveLength(1)
+  })
+
+  it('sends one Google Ads Zakup conversion with the purchase value and transaction id', () => {
+    trackGaPurchase(purchase())
+    trackGaPurchase(purchase())
+
+    const conversions = readQueue().filter((entry) => entry[1] === 'conversion')
+    expect(conversions).toHaveLength(1)
+    expect(conversions[0]?.[2]).toEqual({
+      send_to: 'AW-18303682173/GGzWCPqk_MscEP2M8JdE',
+      value: 998,
+      currency: 'PLN',
+      transaction_id: 'txn-1',
+    })
   })
 
   it('does not push purchase when the transaction id is blank', () => {
@@ -151,6 +166,7 @@ describe('GA4 ecommerce events', () => {
 
     expect(readQueue().filter((entry) => entry[1] === 'purchase')).toHaveLength(0)
     expect(readNamedEvents('purchase')).toHaveLength(0)
+    expect(readQueue().filter((entry) => entry[1] === 'conversion')).toHaveLength(0)
   })
 
   it('sends generate_lead', () => {

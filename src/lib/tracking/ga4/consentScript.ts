@@ -1,3 +1,7 @@
+export const GOOGLE_ADS_ID = 'AW-18303682173'
+
+export const GOOGLE_ADS_PURCHASE_SEND_TO = 'AW-18303682173/GGzWCPqk_MscEP2M8JdE'
+
 /**
  * Consent Mode v2 default. Must run before GTM and gtag config.
  * Reuses dataLayer when it already exists so the GTM snippet is not wiped.
@@ -51,5 +55,6 @@ export const buildGa4InitScript = (measurementId: string): string => {
   return `window.dataLayer = window.dataLayer || [];
 window.gtag = window.gtag || function gtag(){window.dataLayer.push(arguments);};
 window.gtag('js', new Date());
-window.gtag('config', '${measurementId}');`
+window.gtag('config', '${measurementId}');
+window.gtag('config', '${GOOGLE_ADS_ID}');`
 }

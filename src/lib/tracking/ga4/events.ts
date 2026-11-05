@@ -5,6 +5,7 @@ import type {
   PurchaseData,
   ViewContentData,
 } from '../types'
+import { GOOGLE_ADS_PURCHASE_SEND_TO } from './consentScript'
 import { pushGtag } from './gtag'
 
 export type Ga4Item = {
@@ -140,6 +141,12 @@ export const trackGaPurchase = (data: PurchaseData): void => {
   sentPurchaseIds.add(transactionId)
   pushGtag('event', 'purchase', payload)
   pushNamedPurchase(payload)
+  pushGtag('event', 'conversion', {
+    send_to: GOOGLE_ADS_PURCHASE_SEND_TO,
+    value: payload.value,
+    currency: payload.currency,
+    transaction_id: payload.transaction_id,
+  })
   rememberPurchase(transactionId)
 }
 

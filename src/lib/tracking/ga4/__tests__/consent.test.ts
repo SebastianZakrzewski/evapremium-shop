@@ -45,6 +45,7 @@ describe('GA4 consent', () => {
     const script = buildGa4InitScript('G-SGHPWGL4P4')
 
     expect(script).toContain("gtag('config', 'G-SGHPWGL4P4')")
+    expect(script).toContain("gtag('config', 'AW-18303682173')")
     expect(script).toContain('window.dataLayer = window.dataLayer || []')
     expect(script).not.toContain('send_page_view')
   })
