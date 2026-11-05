@@ -12,6 +12,15 @@ import {
 const readQueue = (): unknown[][] =>
   (window.dataLayer ?? []).map((entry) => Array.from(entry as ArrayLike<unknown>))
 
+const readNamedEvents = (eventName: string): Record<string, unknown>[] =>
+  (window.dataLayer ?? []).filter(
+    (entry): entry is Record<string, unknown> =>
+      typeof entry === 'object' &&
+      entry !== null &&
+      !('length' in entry) &&
+      (entry as { event?: unknown }).event === eventName
+  )
+
 const viewContent = (): ViewContentData => ({
   content_name: 'Dywaniki',
   content_ids: ['mat-1'],
@@ -109,11 +118,39 @@ describe('GA4 ecommerce events', () => {
       value: 998,
     })
 
+    const namedPurchases = readNamedEvents('purchase')
+    expect(namedPurchases).toHaveLength(1)
+    expect(namedPurchases[0]).toEqual({
+      event: 'purchase',
+      transaction_id: 'txn-1',
+      currency: 'PLN',
+      value: 998,
+      items: [
+        {
+          item_id: 'mat-1',
+          item_name: 'Dywaniki EVA',
+          price: 499,
+          quantity: 2,
+          item_brand: 'Audi',
+          item_category: 'car_mats',
+          item_variant: 'EVA-1',
+        },
+      ],
+    })
+
     resetGa4StateForTests()
     delete window.gtag
     trackGaPurchase(purchase())
 
     expect(readQueue().filter((entry) => entry[1] === 'purchase')).toHaveLength(1)
+    expect(readNamedEvents('purchase')).toHaveLength(1)
+  })
+
+  it('does not push purchase when the transaction id is blank', () => {
+    trackGaPurchase({ ...purchase(), transaction_id: '   ' })
+
+    expect(readQueue().filter((entry) => entry[1] === 'purchase')).toHaveLength(0)
+    expect(readNamedEvents('purchase')).toHaveLength(0)
   })
 
   it('sends generate_lead', () => {

@@ -98,6 +98,28 @@ export const trackGaBeginCheckout = (data: InitiateCheckoutData): void => {
   })
 }
 
+type Ga4PurchasePayload = {
+  transaction_id: string
+  currency: 'PLN'
+  value: number
+  items: Ga4Item[]
+}
+
+const pushNamedPurchase = (payload: Ga4PurchasePayload): void => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  window.dataLayer = window.dataLayer || []
+  window.dataLayer.push({
+    event: 'purchase',
+    transaction_id: payload.transaction_id,
+    currency: payload.currency,
+    value: payload.value,
+    items: payload.items,
+  })
+}
+
 export const trackGaPurchase = (data: PurchaseData): void => {
   const transactionId = data.transaction_id.trim()
 
@@ -108,13 +130,16 @@ export const trackGaPurchase = (data: PurchaseData): void => {
     return
   }
 
-  sentPurchaseIds.add(transactionId)
-  pushGtag('event', 'purchase', {
+  const payload: Ga4PurchasePayload = {
     transaction_id: transactionId,
     currency: 'PLN',
     value: data.value,
     items: data.contents.map(toGa4Item),
-  })
+  }
+
+  sentPurchaseIds.add(transactionId)
+  pushGtag('event', 'purchase', payload)
+  pushNamedPurchase(payload)
   rememberPurchase(transactionId)
 }
 
