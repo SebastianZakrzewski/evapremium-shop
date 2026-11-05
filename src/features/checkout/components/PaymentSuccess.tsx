@@ -38,7 +38,7 @@ export function PaymentSuccess() {
 
   const refreshOrderPaymentStatus = async (resolvedOrderId: string) => {
     const order = await getOrder(resolvedOrderId)
-    if (!order) return
+    if (!order) return null
 
     setPaymentStatus((prev) => ({
       ...prev,
@@ -49,6 +49,8 @@ export function PaymentSuccess() {
       orderStatus: order.status,
       paymentStatus: order.paymentStatus,
     }))
+
+    return order
   }
 
   const checkPaymentStatus = async (identifier: string) => {
@@ -103,6 +105,8 @@ export function PaymentSuccess() {
         items: order.items || [],
       })
 
+      let orderForTracking = order
+
       if (
         isPaynowCheckoutEnabled() &&
         order.paymentStatus === "pending" &&
@@ -110,25 +114,28 @@ export function PaymentSuccess() {
       ) {
         const paynowStatus = await pollPaynowStatus(order.id)
         if (paynowStatus?.status === "paid" || paynowStatus?.providerStatus === "CONFIRMED") {
-          await refreshOrderPaymentStatus(order.id)
+          const refreshedOrder = await refreshOrderPaymentStatus(order.id)
+          if (refreshedOrder) {
+            orderForTracking = refreshedOrder
+          }
         }
       }
 
-      if (order.paymentStatus === "paid" && order.items && order.items.length > 0) {
+      if (orderForTracking.paymentStatus === "paid" && orderForTracking.items && orderForTracking.items.length > 0) {
         try {
-          const cacheKey = `purchase_${order.orderNumber}`
+          const cacheKey = `purchase_${orderForTracking.orderNumber}`
           const cached = localStorage.getItem(cacheKey)
 
           if (!cached) {
-            const transactionId = order.p24OrderId || paynowPaymentId || order.id
+            const transactionId = orderForTracking.p24OrderId || paynowPaymentId || orderForTracking.id
             const purchaseData = createPurchase(
-              order.items,
-              order.orderNumber,
-              Number(order.total || 0),
+              orderForTracking.items,
+              orderForTracking.orderNumber,
+              Number(orderForTracking.total || 0),
               transactionId,
-              order.paymentMethod,
-              order.customer?.email,
-              order.customer?.phone
+              orderForTracking.paymentMethod,
+              orderForTracking.customer?.email,
+              orderForTracking.customer?.phone
             )
             trackPurchase(purchaseData)
             localStorage.setItem(cacheKey, Date.now().toString())
