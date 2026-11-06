@@ -68,20 +68,15 @@ export class CartService {
     // Waliduj dostępność - tymczasowo wyłączone
     if (item.productType === 'accessory') {
       console.log('CartService: Skipping accessory availability validation in updateQuantity');
-      // const available = await this.accessoryService.checkAvailability(
-      //   item.productId,
-      //   quantity
-      // );
-      
-      // if (!available) {
-      //   throw new Error('Product not available in requested quantity');
-      // }
     }
-    
-    item.quantity = quantity;
-    item.subtotal = item.quantity * item.unitPrice;
-    
-    return this.recalculateCart(cart);
+
+    const items = cart.items.map((entry) =>
+      entry.id === itemId
+        ? { ...entry, quantity, subtotal: quantity * entry.unitPrice }
+        : { ...entry },
+    )
+
+    return this.recalculateCart({ ...cart, items })
   }
 
   /**

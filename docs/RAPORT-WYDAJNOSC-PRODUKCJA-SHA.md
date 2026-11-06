@@ -62,20 +62,55 @@ Wygląd baneru jesiennego, nawigacji i banera zgody na zrzutach 1280 px jest ten
 
 ## Testy
 
-- `tsc --noEmit`: sukces.
-- `next build --webpack`: sukces.
-- Vitest: hero, slider, próbki, ikona typu — sukces. `ProductVideoCarouselSection` ma 1 wcześniejszy fail (`heading.querySelector(".text-red-500")` jest puste; nagłówek idzie przez `ShopSectionHeading`). Plakat w tym teście przechodzi na ścieżce `display`.
-- Chromium: brak poziomego overflow przy 320 px. Hyundai „3 modele”. BMW pokazuje X5. Konfigurator pokazuje „Hyundai Tucson”, typy 3D i struktury. Submit checkout nie wywołał zapisu (0 żądań). Firefox i WebKit niedostępne.
+- `tsc --noEmit`: sukces, po poprawce koszyka też.
+- `next build --webpack`: sukces, także po poprawce koszyka.
+- Vitest: hero, slider, próbki, ikona typu, `CartService.updateQuantity` — sukces. `ProductVideoCarouselSection`: 5 z 6; fail `heading.querySelector(".text-red-500")` jest wcześniejszy (nagłówek idzie przez `ShopSectionHeading`). Plakat w tym teście oczekuje ścieżki `display`.
+- ESLint na ruszanych plikach: 0 błędów, 7 ostrzeżeń wcześniejszych (`no-img-element` na plakacie filmu, `any` i nieużywane importy w koszyku).
+- Chromium: brak poziomego overflow przy 320 px. Hyundai „3 modele”. BMW pokazuje X5. Firefox i WebKit niedostępne. `pageerror` w ścieżce zakupu: 0.
 
-Pełna ścieżka rok → zmiana ceny 319/559 → dodanie do koszyka → reload → ilość → checkout z walidacją nie została domknięta. Kontrolka roku nie jest natywnym `select`, a atrapa katalogu nie wstawiła w UI wariantów „Przód” / „Komplet”. `POST /api/pricing/resolve` na proxy zwraca 319 i 559, ale ekran przy tym URL zostaje przy „Wybierz wariant aby zobaczyć cenę”.
+## Ścieżka zakupu (Chromium, atrapa)
+
+Kontrolka roku to `DarkSelect`: przycisk `aria-label="Rok produkcji"`, opcje `role="option"`. To nie jest natywny `select`. Ścieżka odblokowana na `/konfigurator` bez założenia, że URL sam ustawia rekord.
+
+Kolejność z tego kodu: Marka Hyundai → Model Tucson → Generacja `2020–2026` → Rok `2024` → Skrzynia `Automatyczna` → Nadwozie `SUV` → `3D z rantami` → wariant. Klucze cen z prezentacji pasażerskiej: `front` („Przód”, w atrapie 399,00 / 319,00 zł) i `basic` („Przód + tył”, 699,00 / 559,00 zł). To ceny atrapy, nie cennik z bazy. Potem struktura „Romby”, kolor i obszycie, „Podsumowanie zamówienia”, „Przejdź do koszyka”.
+
+Wynik przebiegu (`/tmp/prod-perf/e2e.log`, skopiowany do ZIP):
+
+- cena przodu zawiera `319,00`, po zmianie wariantu `559,00`
+- koszyk `cart-v2`: ilość 1, cena jednostkowa 559, po reload nadal Tucson
+- „Zwiększ ilość” daje ilość 2 i ta ilość zostaje po reload
+- checkout: „Dalej” zablokowane bez imienia, nazwiska, e-maila i telefonu; po danych wchodzi adres; „Dalej” zablokowane bez ulicy, kodu i miasta; krok płatności nie schodzi ze strony bez regulaminu
+- „Usuń z koszyka” kasuje pozycję i po reload jej nie ma
+- `pageerror`: 0
+- zapisy zablokowane przez proxy: dwa `POST /api/abandoned-carts` i `/api/abandoned-carts/webhook` dostały 403. Nie było `POST /api/orders` ani Paynow
+
+Ilość wcześniej nie zostawała, bo `CartService.updateQuantity` mutował ten sam obiekt koszyka. `setCart` tej samej referencji nie uruchamiał zapisu. To był błąd tego SHA, obecny też przed optymalizacją obrazów. Poprawka zwraca nowy obiekt i wysyła `cartUpdated`, jak przy usuwaniu. Test: `CartService.updateQuantity.test.ts`.
+
+## Checklista
+
+- Uczciwy baseline i HEAD na tym samym proxy i tym samym banerze zgody: tak
+- Hero i plakaty karuzeli mniejsze, wygląd baneru ten sam na zrzucie 1280: tak
+- Konfigurator lżejszy przy tym samym URL i widocznych typach: tak
+- Pełna ścieżka do walidacji checkoutu bez zamówienia: tak
+- CLS listy Hyundai 0,057: bez zmian
+- Symulowany LCP strony głównej około 7 s: zostaje przez resztę obrazów (ok. 1,7 MB)
+- Prawdziwy cennik, WebP z bazy, iOS, Firefox: nie
 
 ## Artefakty
 
-- Zrzuty przed: `/opt/cursor/artifacts/prod-perf/shots/before/` (`home-320`, `home-360`, `home-390`, `home-1280`, `home-1440`, `dywaniki-390`, `dywaniki-1280`, `konf-390`, `konf-1440`)
-- Zrzuty po: `/opt/cursor/artifacts/prod-perf/shots/after/` (te same nazwy plus `checkout-390`)
-- JSON Lighthouse: `/opt/cursor/artifacts/prod-perf/lighthouse/before/` i `after/`
-- Paczka: `/opt/cursor/artifacts/prod-perf/perf-paynow-67f71be.patch`
-- Stara paczka `cursor/perf-smoothness-017b` zostaje, ale do tego SHA jej nie stosować.
+Jeden plik do skopiowania: `/opt/cursor/artifacts/prod-perf-evidence.zip`.
+
+W środku:
+
+- `shots/before/home-320.png`, `home-360.png`, `home-390.png`, `home-1280.png`, `home-1440.png`, `dywaniki-390.png`, `dywaniki-1280.png`, `konf-390.png`, `konf-1440.png`
+- `shots/after/` z tymi samymi nazwami oraz `checkout-390.png`
+- `lighthouse/before/*.json` i `lighthouse/after/*.json` (po 3 przebiegi)
+- `medians.json`, `e2e.log`, `RAPORT-WYDAJNOSC-PRODUKCJA-SHA.md`
+- `perf-paynow-67f71be.patch`
+
+Stara paczka `cursor/perf-smoothness-017b` zostaje, ale do SHA `67f71be` jej nie stosować.
+
+Dalsze ścinanie LCP strony głównej da się zrobić `srcset` na plakatach filmów (kafel ok. 180–240 px, plik display ma 640 px, łącznie ok. 766 KB). Wygląd kafelka się nie zmieni. Nie robiłem kolejnej rundy pomiarów pod sam wynik: symulowane 7 s i tak zostaje przez resztę obrazów, a hero LCP jest już jednym AVIF 159 KB.
 
 ## Uruchomienie
 
