@@ -175,7 +175,9 @@ const ProductVideoCard = ({
           loop
           playsInline
           preload={isActive ? "auto" : "metadata"}
-          poster={video.poster}
+          poster={video.poster
+            .replace(/^\/galeria\//, "/galeria/display/")
+            .replace(/\.(png|jpe?g)$/i, ".webp")}
           aria-hidden="true"
           onError={handleVideoError}
           onPlay={() => setIsPlaying(true)}
@@ -186,8 +188,12 @@ const ProductVideoCard = ({
       ) : null}
 
       <img
-        src={video.poster}
+        src={video.poster
+          .replace(/^\/galeria\//, "/galeria/display/")
+          .replace(/\.(png|jpe?g)$/i, ".webp")}
         alt=""
+        loading={isActive ? "eager" : "lazy"}
+        decoding="async"
         className={`absolute inset-0 h-full w-full object-cover pointer-events-none ${isPlaying ? "opacity-0" : "opacity-100"}`}
       />
 

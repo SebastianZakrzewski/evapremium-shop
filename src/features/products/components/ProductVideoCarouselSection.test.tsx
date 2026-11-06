@@ -113,7 +113,10 @@ describe("ProductVideoCarouselSection", () => {
     expect(document.querySelectorAll("video")).toHaveLength(0)
     expect(
       screen.getAllByTestId("product-video-card")[0].querySelector("img")
-    ).toHaveAttribute("src", productVideos[0].poster)
+    ).toHaveAttribute(
+      "src",
+      productVideos[0].poster.replace(/^\/galeria\//, "/galeria/display/"),
+    )
   })
 
   it("links CTA to /dywaniki", () => {

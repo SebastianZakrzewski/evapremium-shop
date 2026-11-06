@@ -58,35 +58,31 @@ describe("HeroSection", () => {
     vi.restoreAllMocks()
   })
 
-  it("renders the promo slide without intro video on desktop while video is disabled", () => {
+  it("renders one responsive promo image without intro video", () => {
     render(<HeroSection />)
 
-    expect(screen.getByTestId("hero-desktop-carousel")).toBeInTheDocument()
+    expect(screen.getByTestId("hero-promo")).toBeInTheDocument()
+    expect(screen.queryByTestId("hero-desktop-carousel")).not.toBeInTheDocument()
     expect(screen.queryByTestId("hero-mobile-static")).not.toBeInTheDocument()
     expect(screen.queryByTestId("hero-video-1")).not.toBeInTheDocument()
     expect(screen.getByTestId("hero-promo-cta-hit-area")).toBeInTheDocument()
-    expect(screen.queryByLabelText("Poprzedni slajd")).not.toBeInTheDocument()
-    expect(
-      screen.getAllByAltText(
-        "Jesienna promocja dywaników samochodowych EVA Premium do -30%"
-      ).find((image) => image.getAttribute("src") === "/jesien_hero.png?v=2168")
-    ).toBeDefined()
+    const image = screen.getByAltText(
+      "Jesienna promocja dywaników samochodowych EVA Premium do -30%"
+    )
+    expect(image).toHaveAttribute("src", "/jesien_hero.png?v=2168")
+    expect(document.querySelector('source[media="(max-width: 767px)"]')).toHaveAttribute(
+      "srcset",
+      expect.stringContaining("jesien-mobile-768.avif"),
+    )
   })
 
-  it("renders only the static promo hero on mobile", () => {
+  it("keeps the same promo markup on a mobile viewport", () => {
     mockMatchMedia(true)
     render(<HeroSection />)
 
-    expect(screen.getByTestId("hero-mobile-static")).toBeInTheDocument()
-    expect(screen.queryByTestId("hero-desktop-carousel")).not.toBeInTheDocument()
+    expect(screen.getByTestId("hero-promo")).toBeInTheDocument()
     expect(screen.queryByTestId("hero-video-1")).not.toBeInTheDocument()
-
-    const promotionImage = screen.getByAltText(
-      "Jesienna promocja dywaników samochodowych EVA Premium do -30%"
-    )
-
-    expect(promotionImage).toHaveAttribute("src", "/jesien_mobile_hero.png?v=941")
-    expect(screen.getByTestId("hero-mobile-promo-cta-hit-area")).toBeInTheDocument()
+    expect(screen.getByTestId("hero-promo-cta-hit-area")).toBeInTheDocument()
   })
 
   it("scrolls to dywaniki section when promo CTA overlay is clicked", () => {

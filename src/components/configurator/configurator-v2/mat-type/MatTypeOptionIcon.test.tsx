@@ -32,7 +32,7 @@ vi.mock("next/image", () => ({
 }))
 
 describe("MatTypeOptionIcon", () => {
-  it("renders unoptimized high-resolution source for crisp display", () => {
+  it("requests the crisp icon size through the image optimizer", () => {
     render(
       <MatTypeOptionIcon
         src="/konfigurator/typ-dywanika/3d-z-rantami.png"
@@ -41,7 +41,7 @@ describe("MatTypeOptionIcon", () => {
     )
 
     const icon = screen.getByRole("img", { name: "Dywanik 3D z rantami" })
-    expect(icon).toHaveAttribute("data-unoptimized", "true")
+    expect(icon).toHaveAttribute("data-unoptimized", "false")
     expect(icon).toHaveAttribute("width", String(MAT_TYPE_OPTION_ICON_SRC_SIZE))
     expect(icon).toHaveAttribute("height", String(MAT_TYPE_OPTION_ICON_SRC_SIZE))
     expect(icon).toHaveClass("object-contain")

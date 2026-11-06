@@ -199,7 +199,13 @@ export default function ProductGallerySection() {
       {/* Auto-scrolling gallery */}
       <div className="relative z-10 w-full py-4">
         <ImageAutoSlider
-          images={productImages}
+          images={productImages.map((image) => ({
+            ...image,
+            fullSrc: image.src,
+            src: image.src
+              .replace(/^\/galeria\//, "/galeria/display/")
+              .replace(/\.(png|jpe?g)$/i, ".webp"),
+          }))}
           speed={150}
           tileClassName="w-36 h-36 md:w-44 md:h-44 lg:w-48 lg:h-48"
         />

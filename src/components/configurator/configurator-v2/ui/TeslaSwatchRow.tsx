@@ -45,14 +45,17 @@ export const TeslaSwatchRow = ({
         >
           {item.imageSrc && (
             <Image
-              src={item.imageSrc}
+              src={item.imageSrc.replace(/\.(png|jpe?g|webp)$/i, ".webp").replace(
+                /(\/kolor-materialu\/|\/kolor-obszycia\/|\/struktura-komorek\/)/,
+                "$1display/",
+              )}
               alt=""
               aria-hidden
               width={MATERIAL_COLOR_SWATCH_SIZE}
               height={MATERIAL_COLOR_SWATCH_SIZE}
-              quality={100}
-              unoptimized
+              quality={75}
               sizes="44px"
+              loading="lazy"
               className="h-full w-full object-cover"
               draggable={false}
             />

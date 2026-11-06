@@ -561,7 +561,9 @@ export default function CarModelsSection() {
             {pinnedCard ? null : (
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
               <p className="text-gray-400">
-                Znaleziono <span className="text-white font-semibold">{filteredModels.length}</span> modeli
+                {loading
+                  ? "Ładowanie modeli…"
+                  : <>Znaleziono <span className="text-white font-semibold">{filteredModels.length}</span> modeli</>}
               </p>
               
               {brandParam && (
@@ -594,7 +596,7 @@ export default function CarModelsSection() {
               <>
                 {/* Model Grid */}
                 <div className={pinnedCard ? "grid w-full grid-cols-1" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}>
-                  {filteredModels.map((model) => {
+                  {filteredModels.map((model, index) => {
                     const imageSrc = model.imageSrc || '/vercel.svg';
                     const configuratorUrl = buildConfiguratorEntryUrl({
                       brand: brandSlug,
@@ -627,8 +629,8 @@ export default function CarModelsSection() {
                               : `transition-transform duration-500 group-hover:scale-110 ${useBrandPhoto ? 'object-cover object-center' : 'object-cover'}`}
                             style={pinnedCard ? { width: '100%', height: 'auto' } : undefined}
                             sizes={pinnedCard ? "420px" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"}
-                            priority={pinnedCard || parseInt(String(model.id)) <= 6}
-                            quality={pinnedCard ? 60 : 90}
+                            priority={pinnedCard || index < 2}
+                            quality={pinnedCard ? 60 : 75}
                             unoptimized={shouldServeBrandImageUnoptimized(imageSrc)}
                           />
                         </div>
