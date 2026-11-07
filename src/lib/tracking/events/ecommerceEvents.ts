@@ -6,6 +6,12 @@
 import { FacebookPixelProvider } from '../providers/FacebookPixelProvider';
 import { getTrackingConfigInstance } from '@/lib/config/tracking';
 import { isMarketingTrackingAllowed } from '../consent/isMarketingTrackingAllowed';
+import {
+  trackGaAddToCart,
+  trackGaBeginCheckout,
+  trackGaPurchase,
+  trackGaViewContent,
+} from '../ga4/events';
 import type {
   PageViewData,
   ViewContentData,
@@ -120,6 +126,7 @@ export function trackPageView(data: PageViewData): void {
  */
 export function trackViewContent(data: ViewContentData): void {
   try {
+    trackGaViewContent(data);
     const provider = getProvider();
     if (!provider) {
       return;
@@ -135,6 +142,7 @@ export function trackViewContent(data: ViewContentData): void {
  */
 export function trackAddToCart(data: AddToCartData): void {
   try {
+    trackGaAddToCart(data);
     const provider = getProvider();
     if (!provider) {
       return;
@@ -165,6 +173,7 @@ export function trackRemoveFromCart(data: AddToCartData): void {
  */
 export function trackInitiateCheckout(data: InitiateCheckoutData): void {
   try {
+    trackGaBeginCheckout(data);
     const provider = getProvider();
     if (!provider) {
       return;
@@ -195,6 +204,7 @@ export function trackAddPaymentInfo(data: AddPaymentInfoData): void {
  */
 export function trackPurchase(data: PurchaseData): void {
   try {
+    trackGaPurchase(data);
     const provider = getProvider();
     if (!provider) {
       return;

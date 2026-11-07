@@ -1,15 +1,26 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { NextRequest } from 'next/server'
 
-vi.mock('@/config/env', () => ({ env: { features: { p24Enabled: false } } }))
+vi.mock('@/config/env', () => ({
+  env: {
+    features: { p24Enabled: false },
+    supabase: {
+      url: 'https://local-fixture.invalid',
+      anonKey: 'local-anon',
+      serviceRoleKey: 'local-service',
+    },
+  },
+}))
 
 vi.mock('@/lib/services/OrderService', () => {
   return {
-    OrderService: vi.fn().mockImplementation(() => ({
-      getOrderBySessionId: vi.fn(),
-      updatePaymentStatus: vi.fn(),
-      repository: { supabase: {}, mapOrderFromDB: vi.fn() },
-    })),
+    OrderService: vi.fn().mockImplementation(function () {
+      return {
+        getOrderBySessionId: vi.fn(),
+        updatePaymentStatus: vi.fn(),
+        repository: { supabase: {}, mapOrderFromDB: vi.fn() },
+      }
+    }),
   }
 })
 

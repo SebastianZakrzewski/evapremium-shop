@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import ShopSectionHeading from "@/components/ui/shop-section-heading";
 
 const features = [
   {
@@ -10,7 +11,7 @@ const features = [
     title: "Doskonała ochrona",
     description: "Ranty 3D o wysokości do 8 cm skutecznie chronią przed wnikaniem brudu, wilgoci i zanieczyszczeń pod dywanik, zapewniając długotrwałą ochronę podłogi Twojego samochodu.",
     position: { top: "25%", left: "80%" },
-    image: "/7.webp"
+    image: "/images/zalety/ranty-do-7cm.jpg"
   },
   {
     id: "jezor",
@@ -156,7 +157,7 @@ export default function InteractiveFeaturesSection() {
   return (
     <section 
       id="interactive-features" 
-      className="py-10 md:py-14 bg-black relative overflow-hidden"
+      className="py-7 md:py-9 bg-black relative overflow-hidden"
     >
       {/* Gradient line top */}
       {/* Background Elements */}
@@ -164,16 +165,14 @@ export default function InteractiveFeaturesSection() {
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className={`text-center mb-8 md:mb-10 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-            Poznaj <span className="text-red-500">innowacyjne cechy</span>
-          </h2>
-          <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Kliknij na etykiety na zdjęciu, aby dowiedzieć się więcej o rozwiązaniach, które zastosowaliśmy w naszych dywanikach EVA.
-          </p>
-        </div>
+        <ShopSectionHeading
+          className={`mb-5 md:mb-6 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+          kicker="Cechy"
+          title="Poznaj innowacyjne cechy"
+          description="Kliknij na etykiety na zdjęciu, aby dowiedzieć się więcej o rozwiązaniach, które zastosowaliśmy w naszych dywanikach EVA."
+        />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-start max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 items-start max-w-6xl mx-auto">
           
           {/* Prawa strona: Zdjęcie szczegółowe + Opis */}
           <div ref={detailsRef} className={`order-2 lg:order-2 transition-all duration-1000 ease-out sticky top-24 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
@@ -218,14 +217,14 @@ export default function InteractiveFeaturesSection() {
               {/* Opis pod zdjęciem */}
               <div
                 className={cn(
-                  "mt-8 p-6 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 transition-all duration-150 ease-out",
+                  "mt-5 p-4 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 transition-all duration-150 ease-out",
                   isTextVisible ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
                 )}
               >
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 className="text-white mb-2">
                   {displayedTextFeature.title}
                 </h3>
-                <p className="text-gray-400 leading-relaxed">
+                <p className="text-sm text-gray-400 leading-relaxed">
                   {displayedTextFeature.description}
                 </p>
               </div>
@@ -234,7 +233,7 @@ export default function InteractiveFeaturesSection() {
 
           {/* Lewa strona: Interaktywny dywanik */}
           <div className={`order-1 lg:order-1 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-            <div className="relative w-full aspect-square max-w-[600px] mx-auto rounded-3xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-[#111]">
+            <div className="relative w-full aspect-square max-w-[480px] mx-auto rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-[#111]">
               <Image
                 src="/images/interactive-mat-clean.png"
                 alt="Dywaniki EVA - cechy"

@@ -1,8 +1,9 @@
 "use client"
 
-import { ChevronDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { ArrowLeft, ChevronDown } from "lucide-react"
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice"
+import { configuratorProgressLabel } from "../steps/configuratorStages"
 
 export type PriceBreakdown = {
   basePrice: number
@@ -15,85 +16,184 @@ type ConfiguratorV2StickyBarProps = {
   priceBreakdown: PriceBreakdown
   accessoryPrice?: number
   isConfigComplete: boolean
-  showSummaryCta: boolean
-  onGoToSummary: () => void
+  showBack: boolean
+  onBack: () => void
+  showForward: boolean
+  forwardDisabled: boolean
+  forwardDisabledReason?: string | null
+  onForward: () => void
   onPriceClick?: () => void
-  /** desktop: w kolumnie opcji; mobile: fixed na dole ekranu */
-  variant?: "column" | "fixed"
+  currentStage?: number
+  stageCount?: number
+  /** header: pasek górny desktopu; fixed: dół mobile; column: zgodność testów */
+  variant?: "column" | "fixed" | "header"
 }
+
+const forwardButtonClassName =
+  "inline-flex min-h-11 min-w-11 flex-1 items-center justify-center rounded-full bg-red-600 px-4 text-[13px] font-medium text-white transition-colors hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40 lg:flex-none"
+
+const backButtonClassName =
+  "inline-flex min-h-11 min-w-11 flex-1 items-center justify-center rounded-full border border-white/15 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:bg-white/10 lg:flex-none"
 
 export const ConfiguratorV2StickyBar = ({
   priceBreakdown,
   accessoryPrice = 0,
   isConfigComplete,
-  showSummaryCta,
-  onGoToSummary,
+  showBack,
+  onBack,
+  showForward,
+  forwardDisabled,
+  forwardDisabledReason = null,
+  onForward,
   onPriceClick,
+  currentStage = 1,
+  stageCount = 4,
   variant = "fixed",
 }: ConfiguratorV2StickyBarProps) => {
   const totalWithAccessories = priceBreakdown.totalPrice + accessoryPrice
   const hasPrice = priceBreakdown.totalPrice > 0
+  const isHeader = variant === "header"
+  const reasonId = `configurator-forward-hint-${variant}`
+  const reason = showForward && forwardDisabled ? forwardDisabledReason : null
+  const progressLabel = configuratorProgressLabel(currentStage, stageCount)
 
-  const positionClass =
-    variant === "column"
-      ? "relative w-full"
-      : "relative w-full"
+  const progress = (
+    <div
+      role="progressbar"
+      aria-valuemin={1}
+      aria-valuemax={stageCount}
+      aria-valuenow={currentStage}
+      aria-label={progressLabel}
+      className="flex min-w-0 items-center gap-2"
+    >
+      <span className="shrink-0 text-[11px] font-medium leading-none text-white/80" aria-hidden>
+        {progressLabel}
+      </span>
+      <span className="flex min-w-0 flex-1 gap-1" aria-hidden>
+        {Array.from({ length: stageCount }, (_, index) => {
+          const step = index + 1
+          const reached = step <= currentStage
+          return (
+            <span
+              key={step}
+              data-progress-segment={step}
+              data-reached={reached ? "true" : "false"}
+              className={`h-1 min-w-[1.25rem] flex-1 rounded-full ${
+                reached ? "bg-white" : "bg-white/25"
+              }`}
+            />
+          )
+        })}
+      </span>
+    </div>
+  )
+
+  const priceBlock = (
+    <button
+      type="button"
+      onClick={onPriceClick}
+      disabled={!hasPrice}
+      className={`flex min-w-0 flex-col text-left disabled:opacity-50 ${
+        isHeader ? "items-end" : "items-start"
+      }`}
+      aria-label="Rozbij cenę"
+    >
+      {hasPrice ? (
+        <>
+          <span className="flex items-center gap-1.5">
+            <span className="text-lg font-medium tabular-nums tracking-tight text-white lg:text-xl">
+              {formatPricePln(totalWithAccessories)}
+            </span>
+            {onPriceClick && (
+              <ChevronDown className="h-3.5 w-3.5 shrink-0 text-white/35" aria-hidden />
+            )}
+          </span>
+          {priceBreakdown.discount > 0 && (
+            <span className="text-[11px] leading-tight text-white/45">
+              Rabat: -{formatPriceValue(priceBreakdown.discount)} zł
+            </span>
+          )}
+          {!isConfigComplete && (
+            <span className="mt-0.5 hidden text-[10px] leading-tight text-white/45 sm:block">
+              Uzupełnij konfigurację
+            </span>
+          )}
+        </>
+      ) : (
+        <span className="text-xs leading-tight text-white/50 lg:text-sm">
+          Wybierz wariant aby zobaczyć cenę
+        </span>
+      )}
+    </button>
+  )
+
+  const navigation = (
+    <div className={`flex min-w-0 items-center gap-2 ${isHeader ? "" : "w-full"}`}>
+      {showBack && (
+        <button type="button" onClick={onBack} className={backButtonClassName}>
+          Wstecz
+        </button>
+      )}
+      {showForward && (
+        <button
+          type="button"
+          onClick={onForward}
+          disabled={forwardDisabled}
+          className={forwardButtonClassName}
+          aria-describedby={reason ? reasonId : undefined}
+        >
+          Dalej
+        </button>
+      )}
+    </div>
+  )
+
+  if (isHeader) {
+    return (
+      <div
+        className="relative flex w-full flex-col gap-2 bg-black px-4 py-3 xl:px-6"
+        data-variant={variant}
+      >
+        {progress}
+        <div className="flex w-full items-center justify-between gap-4">
+          <Link
+            href="/modele"
+            aria-label="Zmień model"
+            className="inline-flex min-h-11 items-center gap-2 text-[13px] font-medium text-white/80 transition-colors hover:text-white"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden />
+            <span>Zmień model</span>
+          </Link>
+          <div className="flex min-w-0 flex-col items-end gap-1">
+            <div className="flex min-w-0 items-center justify-end gap-3">
+              {priceBlock}
+              {navigation}
+            </div>
+            {reason && (
+              <p id={reasonId} className="max-w-sm text-right text-[12px] leading-snug text-white/80">
+                {reason}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
-      className={`${positionClass} border-t border-white/10 bg-black/95 backdrop-blur-xl`}
+      className="relative w-full border-t border-white/[0.08] bg-black/80 backdrop-blur-2xl"
       data-variant={variant}
     >
-      <div className="px-3 lg:px-6 xl:px-10 py-2 lg:py-3 flex items-center justify-between gap-2.5 lg:gap-4">
-        <button
-          type="button"
-          onClick={onPriceClick}
-          disabled={!hasPrice}
-          className="flex flex-col items-start text-left disabled:opacity-50 min-w-0"
-          aria-label="Rozbij cenę"
-        >
-          {hasPrice ? (
-            <>
-              <div className="flex items-baseline gap-1.5 lg:gap-2">
-                <span className="text-lg lg:text-2xl font-bold text-green-400 tabular-nums">
-                  {formatPricePln(totalWithAccessories)}
-                </span>
-                {onPriceClick && (
-                  <ChevronDown className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-gray-400 shrink-0" />
-                )}
-              </div>
-              {priceBreakdown.discount > 0 && (
-                <span className="text-[11px] lg:text-xs text-green-400 leading-tight">
-                  Rabat: -{formatPriceValue(priceBreakdown.discount)} zł
-                </span>
-              )}
-              {!isConfigComplete && (
-                <span className="hidden sm:block text-[10px] text-gray-400 mt-0.5">
-                  Uzupełnij konfigurację
-                </span>
-              )}
-            </>
-          ) : (
-            <span className="text-xs lg:text-sm text-gray-400 leading-tight">
-              Wybierz wariant aby zobaczyć cenę
-            </span>
-          )}
-        </button>
-
-        {showSummaryCta && (
-          <Button
-            type="button"
-            onClick={onGoToSummary}
-            disabled={!isConfigComplete}
-            className="min-h-[40px] lg:min-h-[48px] min-w-[7.5rem] lg:min-w-[180px] px-3 lg:px-4 bg-red-600 hover:bg-red-700 text-white font-semibold shrink-0 rounded-md disabled:opacity-50"
-            aria-label="Podsumowanie zamówienia"
-          >
-            <span className="text-xs lg:text-sm">
-              <span className="lg:hidden">Podsumowanie</span>
-              <span className="hidden lg:inline">Podsumowanie zamówienia</span>
-            </span>
-          </Button>
+      <div className="flex flex-col gap-1 px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] lg:px-6">
+        {priceBlock}
+        {reason && (
+          <p id={reasonId} className="text-[12px] leading-snug text-white/80">
+            {reason}
+          </p>
         )}
+        {progress}
+        {(showBack || showForward) && navigation}
       </div>
     </div>
   )

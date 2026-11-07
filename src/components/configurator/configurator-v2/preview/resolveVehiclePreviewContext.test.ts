@@ -12,6 +12,7 @@ const baseConfig: ConfiguratorState = {
   templateId: "",
   recordKey: "",
   year: "",
+  gearbox: "",
   bodyType: "",
   bodyTypeKey: "",
   pricingCategoryKey: "",

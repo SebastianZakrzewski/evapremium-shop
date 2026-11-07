@@ -8,7 +8,7 @@ const ProductVideoCarouselSection = dynamic(
   {
     loading: () => (
       <section
-        className="w-full bg-black py-10 md:py-14"
+        className="w-full bg-black py-7 md:py-9"
         aria-label="Ładowanie sekcji Premium w akcji"
       />
     ),
@@ -22,8 +22,6 @@ const InteractiveFeaturesSection = dynamic(
 const MatComparisonSection = dynamic(
   () => import("@/components/mat-comparison-section"),
 )
-
-const CustomFitSection = dynamic(() => import("@/components/custom-fit-section"))
 
 const RoznorodnaKolorystykaSection = dynamic(
   () => import("@/components/roznorodna-kolorystyka-section"),
@@ -47,7 +45,6 @@ export default function Home() {
       <InteractiveFeaturesSection />
       <MatComparisonSection />
       <ProductSelection />
-      <CustomFitSection />
       <RoznorodnaKolorystykaSection />
       <GlebokaStrukturaKomorekSection />
       <CustomerReviews />

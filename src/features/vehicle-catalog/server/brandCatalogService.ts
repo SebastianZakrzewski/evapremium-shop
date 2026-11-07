@@ -12,10 +12,15 @@ import type { CarModelApiResponse } from "@/lib/types/api"
 import { getPrimaryModelPreviewsByTemplateIds } from "@/features/mat-model-previews/server/repository"
 import { resolvePrimaryPreviewImageUrl } from "@/features/mat-model-previews/lib/resolvePrimaryPreviewImageUrl"
 import {
+  loadLocalBrandCatalog,
+  matchLocalProductImage,
+} from "@/features/local-product-catalog"
+import {
   getDistinctSellableBrandRows,
   getMatTemplates,
   resolveBrandKeyFromParam,
   searchMatTemplates,
+  type PinnedTemplateFilters,
 } from "./repository"
 
 const attachModelPreviewImages = async (
@@ -30,13 +35,30 @@ const attachModelPreviewImages = async (
   const primaryPreviews =
     await getPrimaryModelPreviewsByTemplateIds(templateIds)
 
+  const localCatalog = models[0]
+    ? await loadLocalBrandCatalog(
+        models[0].brand.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""),
+      )
+    : []
+
   return models.map((model) => {
     const generations = model.generations.map((generation) => {
-      const modelImage = resolvePrimaryPreviewImageUrl(
-        primaryPreviews,
-        generation.matTemplateId,
-        generation.bodyType,
-      )
+      const localImage = matchLocalProductImage(localCatalog, {
+        brand: model.brand,
+        model: model.model,
+        modelKey: generation.modelKey,
+        generation: generation.generation,
+        bodyType: generation.bodyType,
+        yearFrom: generation.yearFrom,
+        yearTo: generation.yearTo,
+      })
+      const modelImage =
+        localImage?.publicPath ??
+        resolvePrimaryPreviewImageUrl(
+          primaryPreviews,
+          generation.matTemplateId,
+          generation.bodyType,
+        )
       return {
         ...generation,
         modelImage,
@@ -129,11 +151,12 @@ export const getSellableBrands = unstable_cache(
 
 export const getBrandModelsCatalog = async (
   brandParam: string,
+  pinned?: PinnedTemplateFilters,
 ): Promise<CarModelApiResponse[]> => {
   const brandKey = await resolveBrandKeyFromParam(brandParam)
   if (!brandKey) return []
 
-  const rows = await getMatTemplates({ brandKey })
+  const rows = await getMatTemplates({ brandKey, pinned })
   const models = groupTemplatesToCarModels(rows).map((model) => ({
     ...model,
     brand: resolveBrandDisplayNameFromDbName(model.brand),

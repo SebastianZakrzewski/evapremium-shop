@@ -12,6 +12,7 @@ const baseConfig: ConfiguratorState = {
   modelKey: "3-e36-compact",
   generation: "3 gen",
   year: "1994",
+  gearbox: "Manualna",
   bodyType: "Hatchback",
   bodyTypeKey: "hatchback",
   recordKey: "bmw-3-compact",

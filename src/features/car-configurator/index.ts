@@ -24,6 +24,7 @@ export type { UseConfiguratorCarDataReturn, UseConfiguratorCarDataParams } from 
 
 // Domain
 export * from "./domain/pricing";
+export * from "./domain/gearbox";
 
 // V2 adapters
 export { mapConfiguratorV2Sections } from "./adapters/configuratorV2SectionMapper";

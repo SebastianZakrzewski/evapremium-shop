@@ -5,6 +5,7 @@
  * Automatycznie używa fallback brands w przypadku błędu
  */
 
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchBrands, getFallbackBrands } from '@/lib/api/brands';
 import { Brand } from '@/entities/car';
@@ -37,8 +38,13 @@ export function useBrands(options?: {
     enabled: options?.enabled ?? true,
   });
 
+  const brands = useMemo(
+    () => (data ?? getFallbackBrands()).map(normalizeBrandForClient),
+    [data],
+  );
+
   return {
-    brands: (data ?? getFallbackBrands()).map(normalizeBrandForClient),
+    brands,
     isLoading,
     error: error as Error | null,
   };

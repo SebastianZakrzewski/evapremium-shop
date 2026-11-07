@@ -119,7 +119,7 @@ export const modelsByBrand: Record<string, Model[]> = {
       name: "X5",
       brand: "BMW",
       year: 2024,
-      imageSrc: "/images/products/bmw.png",
+      imageSrc: "/images/products/bmw/BMW_X5_G05_4_gen_2018-2025_rok_SUV.png",
       price: "320,000 PLN",
       description: "Luksusowy SUV"
     },
@@ -128,7 +128,7 @@ export const modelsByBrand: Record<string, Model[]> = {
       name: "X3",
       brand: "BMW",
       year: 2024,
-      imageSrc: "/images/products/bmw.png",
+      imageSrc: "/images/products/bmw/BMWX3_G01_3gen.2017-2023rokSUV.png",
       price: "280,000 PLN",
       description: "Kompaktowy SUV"
     },
@@ -137,7 +137,7 @@ export const modelsByBrand: Record<string, Model[]> = {
       name: "3 Series",
       brand: "BMW",
       year: 2024,
-      imageSrc: "/images/products/bmw.png",
+      imageSrc: "/images/products/bmw/BMW_3_G20_7_gen.2018-2023_rok_Sedan.png",
       price: "200,000 PLN",
       description: "Sportowy sedan"
     }

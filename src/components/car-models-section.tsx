@@ -31,6 +31,7 @@ import {
   formatYearRangeDisplay,
 } from "@/shared/vehicle/displayLabels";
 import { useCarModelsFilters } from "@/features/brands/hooks";
+import { isPinnedModelCard, readModelCardQuery } from "@/features/brands/model/modelCardUrl";
 import { formatPriceCurrency } from "@/lib/utils/formatPrice";
 import { Car, Loader2, SlidersHorizontal, X, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
@@ -45,6 +46,16 @@ interface FilterState {
 /**
  * Formatuje typ silnika na podstawie nazwy modelu lub zwraca pusty string jeśli nie można określić
  */
+function modelCountLabel(count: number) {
+  if (count === 1) return "1 model";
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
+    return `${count} modele`;
+  }
+  return `${count} modeli`;
+}
+
 function getEngineType(modelName: string, brand: string): string {
   const nameLower = modelName.toLowerCase();
   const brandLower = brand.toLowerCase();
@@ -69,6 +80,8 @@ export default function CarModelsSection() {
   const router = useRouter();
   const pathname = usePathname();
   const brandParam = searchParams.get('brand');
+  const cardQuery = useMemo(() => readModelCardQuery(searchParams), [searchParams]);
+  const pinnedCard = isPinnedModelCard(cardQuery);
   
   // Określ bazową ścieżkę na podstawie aktualnej lokalizacji
   const basePath = useMemo(() => {
@@ -105,6 +118,7 @@ export default function CarModelsSection() {
     gcTime: 30 * 60 * 1000, // 30 minut cache
     retry: 2,
     retryDelay: 1000,
+    enabled: !pinnedCard,
   });
 
   // Handler kliknięcia marki
@@ -144,10 +158,21 @@ export default function CarModelsSection() {
 
   // Użyj React Query do cache'owania modeli
   const { data: apiModels = [], isLoading: loading, error: modelsError } = useQuery({
-    queryKey: ['car-models', brandApiName, 'v2'],
-    queryFn: () => {
+    queryKey: ['car-models', brandApiName, pinnedCard ? cardQuery : null, 'v3'],
+    queryFn: async () => {
       if (!brandApiName) {
-        return Promise.resolve([]);
+        return [];
+      }
+      if (!pinnedCard) {
+        return fetchCarModels(brandApiName);
+      }
+      const pinnedModels = await fetchCarModels(brandApiName, {
+        model: cardQuery.model,
+        generation: cardQuery.generation,
+        bodyType: cardQuery.bodyType,
+      });
+      if (pinnedModels.length > 0) {
+        return pinnedModels;
       }
       return fetchCarModels(brandApiName);
     },
@@ -271,6 +296,7 @@ export default function CarModelsSection() {
     modelsWithImages: displayModels,
     filters,
     selectedModel,
+    cardQuery,
   });
 
   // Handlery dla filtrów
@@ -334,19 +360,19 @@ export default function CarModelsSection() {
             </ol>
           </nav>
 
-          {/* Header */}
-          <div className="text-center mb-8 md:mb-12">
-            <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
-              WYBIERZ MARKĘ SAMOCHODU
-            </h1>
-            <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
-              Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
-            </p>
-            <div className="mt-6 text-xs md:text-sm text-gray-400 px-4">
-              <span className="bg-white/5 px-3 py-2 md:px-4 md:py-2 rounded-full border border-white/10 inline-block backdrop-blur-sm">
-                🚗 Dostępne marki: {availableBrands.length} producentów samochodów
-              </span>
+          <div className="mb-8 mt-8 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-2xl text-left">
+              <p className="text-[11px] uppercase tracking-[0.28em] text-red-500">Kolekcja</p>
+              <h1 className="mt-3 text-3xl font-medium leading-tight tracking-tight text-white md:text-4xl">
+                Wybierz markę samochodu
+              </h1>
+              <p className="mt-3 max-w-xl text-sm font-normal leading-relaxed text-white/55 md:text-base">
+                Wybierz markę swojego auta i znajdź precyzyjnie dopasowane dywaniki samochodowe EVA Premium
+              </p>
             </div>
+            {!loadingBrands && (
+              <p className="text-sm text-white/40">{availableBrands.length} marek</p>
+            )}
           </div>
 
           {/* Grid z markami */}
@@ -381,55 +407,43 @@ export default function CarModelsSection() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pb-20">
+    <div className={pinnedCard ? "bg-[#111] text-white" : "min-h-screen bg-black text-white pb-20"}>
       {/* Hero Header */}
-      <div className="relative bg-black border-b border-white/5 py-16 md:py-24 overflow-hidden">
-        {/* Gradient background – spójny z hero (H1 + opis) na Galeria / O nas */}
-        <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-900/5 opacity-50"></div>
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
-            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+      {pinnedCard ? null : (
+      <div className="bg-black text-white">
+        <div className="container mx-auto px-4 pb-10 pt-8 md:pb-12 md:pt-12">
+          <nav className="flex items-center gap-2 text-xs tracking-wide text-white/40">
+            <Link href="/" className="transition-colors hover:text-white">Home</Link>
             <span>/</span>
-            <Link href={basePath} className="hover:text-white transition-colors">
+            <Link href={basePath} className="transition-colors hover:text-white">
               {basePath === '/dywaniki' ? 'Dywaniki' : 'Modele aut'}
             </Link>
             {brandParam && (
               <>
                 <span>/</span>
-                <span className="text-white">{visibleBrandName || brandParam}</span>
+                <span className="text-white/70">{visibleBrandName || brandParam}</span>
               </>
             )}
           </nav>
-          
-          <div className="max-w-3xl">
-            {brandLogo && (
-              <div className="flex items-center gap-6 mb-6">
-                <div className="w-20 h-20 relative p-2 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
-                  <Image
-                    src={brandLogo}
-                    alt={`${visibleBrandName || brandParam} logo`}
-                    fill
-                    className={`object-contain p-2 ${isModeleBrandPhoto(brandLogo) ? 'object-cover object-center' : ''}`}
-                    unoptimized={shouldServeBrandImageUnoptimized(brandLogo)}
-                  />
-                </div>
-              </div>
-            )}
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              MODELE <span className="text-red-600">{(visibleBrandName || brandParam || '').toUpperCase()}</span>
-            </h1>
-            <p className="text-lg text-gray-400 leading-relaxed">
-              Wybierz model {(visibleBrandName || brandParam)} i spersonalizuj dywaniki samochodowe EVA Premium. Najwyższa jakość materiałów, precyzyjne dopasowanie i trwałość na lata.
-            </p>
+
+          <div className="mt-8 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-[11px] uppercase tracking-[0.28em] text-red-500">Kolekcja</p>
+              <h1 className="mt-3 text-3xl font-medium leading-tight tracking-tight text-white md:text-4xl">
+                {visibleBrandName || brandParam}
+              </h1>
+              <p className="mt-3 max-w-xl text-sm font-normal leading-relaxed text-white/55 md:text-base">
+                Wybierz model {visibleBrandName || brandParam} i dopasuj dywaniki EVA do swojego auta.
+              </p>
+            </div>
+            <p className="shrink-0 text-sm text-white/40 md:pt-8">{modelCountLabel(filteredModels.length)}</p>
           </div>
         </div>
       </div>
+      )}
 
       {/* Model Navigation Bar */}
-      {uniqueModelNavItems.length > 0 && (
+      {!pinnedCard && uniqueModelNavItems.length > 0 && (
         <ModelNavigationBar
           models={uniqueModelNavItems}
           selectedModel={selectedModel}
@@ -437,10 +451,11 @@ export default function CarModelsSection() {
         />
       )}
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex flex-col lg:flex-row gap-10">
+      <div className={pinnedCard ? "flex flex-col" : "container mx-auto px-4 py-12"}>
+        <div className={pinnedCard ? "flex" : "flex flex-col lg:flex-row gap-10"}>
           
           {/* Mobile Filter Toggle */}
+          {pinnedCard ? null : (
           <div className="lg:hidden mb-6">
             <Button 
               onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
@@ -458,8 +473,10 @@ export default function CarModelsSection() {
               )}
             </Button>
           </div>
+          )}
 
           {/* Sidebar Filters */}
+          {pinnedCard ? null : (
           <aside className={`
             lg:w-72 shrink-0 space-y-8
             ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}
@@ -536,13 +553,17 @@ export default function CarModelsSection() {
               )}
             </div>
           </aside>
+          )}
 
           {/* Main Content */}
-          <main className="flex-1">
+          <main className={pinnedCard ? "w-full" : "flex-1"}>
             {/* Results Header */}
+            {pinnedCard ? null : (
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
               <p className="text-gray-400">
-                Znaleziono <span className="text-white font-semibold">{filteredModels.length}</span> modeli
+                {loading
+                  ? "Ładowanie modeli…"
+                  : <>Znaleziono <span className="text-white font-semibold">{filteredModels.length}</span> modeli</>}
               </p>
               
               {brandParam && (
@@ -555,13 +576,14 @@ export default function CarModelsSection() {
                 </Link>
               )}
             </div>
+            )}
 
             {/* Loading State */}
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {[...Array(10)].map((_, i) => (
-                  <div key={i} className="bg-white/5 rounded-xl animate-pulse overflow-hidden flex flex-col">
-                    <div className="w-full h-64 md:h-72 bg-white/10" />
+              <div className={pinnedCard ? "grid w-full grid-cols-1" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}>
+                {[...(pinnedCard ? [0] : Array(10))].map((_, i) => (
+                  <div key={i} className={pinnedCard ? "flex flex-col bg-white/5 animate-pulse overflow-hidden" : "bg-white/5 rounded-xl animate-pulse overflow-hidden flex flex-col"}>
+                    <div className={pinnedCard ? "aspect-[4/3] w-full bg-white/10" : "w-full h-64 md:h-72 bg-white/10"} />
                     <div className="p-4 md:p-5 flex-1 flex flex-col">
                       <div className="h-5 bg-white/10 rounded mb-2" />
                       <div className="h-4 bg-white/10 rounded mb-4 flex-1" />
@@ -573,8 +595,8 @@ export default function CarModelsSection() {
             ) : (
               <>
                 {/* Model Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {filteredModels.map((model) => {
+                <div className={pinnedCard ? "grid w-full grid-cols-1" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}>
+                  {filteredModels.map((model, index) => {
                     const imageSrc = model.imageSrc || '/vercel.svg';
                     const configuratorUrl = buildConfiguratorEntryUrl({
                       brand: brandSlug,
@@ -591,56 +613,60 @@ export default function CarModelsSection() {
                     const brandLabel = visibleBrandName || model.brand || '';
                     const useBrandPhoto = isModeleBrandPhoto(imageSrc);
 
-                    return (
-                      <article
-                        key={model.id}
-                        className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black rounded-xl"
-                      >
-                        <div className="h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1">
-                          {/* Car Model Image */}
-                          <div className="relative aspect-square bg-gradient-to-br from-gray-900 to-black overflow-hidden">
-                            <Image
-                              src={imageSrc}
-                              alt={`Dywaniki do ${brandLabel} ${model.name} - Spersonalizowane dywaniki samochodowe`}
-                              fill
-                              className={`transition-transform duration-500 group-hover:scale-110 ${
-                                useBrandPhoto ? 'object-cover object-center' : 'object-cover'
-                              }`}
-                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                              priority={parseInt(String(model.id)) <= 6}
-                              quality={90}
-                              unoptimized={shouldServeBrandImageUnoptimized(imageSrc)}
-                            />
+                    const card = (
+                      <div className={pinnedCard
+                        ? "flex flex-col bg-[#111]"
+                        : "h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1"}>
+                        <div className={pinnedCard
+                          ? "w-full bg-[#111] leading-none"
+                          : "relative aspect-square bg-gradient-to-br from-gray-900 to-black overflow-hidden"}>
+                          <Image
+                            src={imageSrc}
+                            alt={`Dywaniki do ${brandLabel} ${model.name} - Spersonalizowane dywaniki samochodowe`}
+                            {...(pinnedCard ? { width: 960, height: 720 } : { fill: true })}
+                            className={pinnedCard
+                              ? "block h-auto w-full"
+                              : `transition-transform duration-500 group-hover:scale-110 ${useBrandPhoto ? 'object-cover object-center' : 'object-cover'}`}
+                            style={pinnedCard ? { width: '100%', height: 'auto' } : undefined}
+                            sizes={pinnedCard ? "420px" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"}
+                            priority={pinnedCard || index < 2}
+                            quality={pinnedCard ? 60 : 75}
+                            unoptimized={shouldServeBrandImageUnoptimized(imageSrc)}
+                          />
+                        </div>
+
+                        <div className={pinnedCard ? "flex shrink-0 flex-col px-3 pt-3" : "flex-1 flex flex-col p-5"}>
+                          <div className={pinnedCard ? "mb-1" : "mb-2"}>
+                            <h3 className="text-lg font-bold text-white leading-tight group-hover:text-red-500 transition-colors line-clamp-2">
+                              {brandLabel} {model.nameDisplay ?? model.name}
+                            </h3>
                           </div>
-                          
-                          {/* Car Model Info */}
-                          <div className="flex-1 flex flex-col p-5">
-                            <div className="mb-2">
-                              <h3 className="text-lg font-bold text-white leading-tight group-hover:text-red-500 transition-colors line-clamp-2">
-                                {brandLabel} {model.nameDisplay ?? model.name}
-                              </h3>
-                            </div>
-                            
-                            <div className="text-sm text-gray-400 mb-4 flex-1 space-y-1">
-                              {model.generationDisplay && (
-                                <span className="block">{model.generationDisplay}</span>
-                              )}
-                              {model.bodyTypeDisplay && (
-                                <span className="block uppercase tracking-wide text-xs text-gray-500">
-                                  {model.bodyTypeDisplay}
-                                </span>
-                              )}
+
+                          <div className={pinnedCard ? "mb-2 space-y-1 text-sm text-gray-400" : "text-sm text-gray-400 mb-4 flex-1 space-y-1"}>
+                            {model.generationDisplay && (
+                              <span className="block">{model.generationDisplay}</span>
+                            )}
+                            {model.bodyTypeDisplay && (
+                              <span className="block uppercase tracking-wide text-xs text-gray-500">
+                                {model.bodyTypeDisplay}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/5 py-3">
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-400">Cena od</span>
+                              <span className="text-xl font-bold text-white">
+                                {formatPriceCurrency(150)}
+                              </span>
                             </div>
 
-                            <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between gap-3">
-                              <div className="flex flex-col">
-                                <span className="text-xs text-gray-400">Cena od</span>
-                                <span className="text-xl font-bold text-white">
-                                  {formatPriceCurrency(150)}
-                                </span>
-                              </div>
-
-                              {/* Przycisk do konfiguratora */}
+                            {pinnedCard ? (
+                              <span className="inline-flex shrink-0 items-center gap-2 rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white">
+                                <ShoppingCart className="w-4 h-4" aria-hidden="true" />
+                                Skonfiguruj
+                              </span>
+                            ) : (
                               <Link href={configuratorUrl}>
                                 <Button
                                   className="shrink-0 gap-2 transition-all duration-300 bg-red-600 text-white hover:bg-red-700"
@@ -650,9 +676,32 @@ export default function CarModelsSection() {
                                   <span className="hidden sm:inline">Skonfiguruj</span>
                                 </Button>
                               </Link>
-                            </div>
+                            )}
                           </div>
                         </div>
+                      </div>
+                    );
+
+                    if (pinnedCard) {
+                      return (
+                        <a
+                          key={model.id}
+                          href={configuratorUrl}
+                          target="_top"
+                          data-pinned-model-card=""
+                          className="group block w-full text-inherit no-underline focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500"
+                        >
+                          {card}
+                        </a>
+                      );
+                    }
+
+                    return (
+                      <article
+                        key={model.id}
+                        className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black rounded-xl"
+                      >
+                        {card}
                       </article>
                     );
                   })}

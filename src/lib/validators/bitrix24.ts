@@ -55,6 +55,8 @@ export const Bitrix24DealSchema = z.object({
   UF_CRM_1760788302371: z.string().optional(),        // Model samochodu
   UF_CRM_1760788317619: z.number().optional(),        // Rok samochodu
   UF_CRM_1760788343011: z.string().optional(),        // Typ nadwozia
+  UF_CRM_1757178158864: z.string().optional(),        // Skrzynia biegów (tekst)
+  UF_CRM_1768256494433: z.number().optional(),        // Skrzynia biegów (enum)
   
   // ✅ POLA PRODUKTU
   UF_CRM_1757024835301: z.number().optional(),        // Wariant kompletu
@@ -138,8 +140,8 @@ export const Bitrix24ApiResponseSchema = z.object({
 export const Bitrix24WebhookEventSchema = z.object({
   event: z.string(),
   data: z.object({
-    FIELDS: z.record(z.any()),
-  }).and(z.record(z.any())),
+    FIELDS: z.record(z.string(), z.any()),
+  }).and(z.record(z.string(), z.any())),
   ts: z.number(),
   auth: z.object({
     domain: z.string(),

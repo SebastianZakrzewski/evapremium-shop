@@ -19,6 +19,7 @@ type SummarySectionProps = {
   onPrevious: () => void
   onAddToCart: () => void
   vehiclePreviewImage?: string | null
+  stickyMobileActions?: boolean
 }
 
 export const SummarySection = ({
@@ -29,6 +30,7 @@ export const SummarySection = ({
   onPrevious,
   onAddToCart,
   vehiclePreviewImage = null,
+  stickyMobileActions = true,
 }: SummarySectionProps) => (
   <ConfiguratorV2SectionShell
     id="section-summary"
@@ -36,6 +38,7 @@ export const SummarySection = ({
     title="Podsumowanie zamówienia"
     readiness={{ isComplete: true, isDisabled: false }}
   >
+    <div className="rounded-2xl bg-black p-3 text-white">
     <SummaryStep
       config={config}
       priceBreakdown={priceBreakdown}
@@ -43,8 +46,9 @@ export const SummarySection = ({
       onAddToCart={onAddToCart}
       isAddingToCart={isAddingToCart}
       cartActionError={cartActionError}
-      stickyMobileActions
+      stickyMobileActions={stickyMobileActions}
       vehiclePreviewImage={vehiclePreviewImage}
     />
+    </div>
   </ConfiguratorV2SectionShell>
 )

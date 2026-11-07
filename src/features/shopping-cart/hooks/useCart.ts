@@ -277,6 +277,9 @@ export function useCart(): UseCartReturn {
       const updatedCart = await cartService.updateQuantity(cartRef.current, itemId, quantity);
       setCart(updatedCart);
       cartRef.current = updatedCart;
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('cartUpdated', { detail: updatedCart }));
+      }, 0);
       debugLog('useCart: Quantity updated successfully', updatedCart);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Nie udało się zaktualizować ilości';

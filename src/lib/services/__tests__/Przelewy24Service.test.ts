@@ -459,7 +459,8 @@ describe('Przelewy24Service - generateSign', () => {
 
         global.fetch = vi.fn().mockResolvedValue({
           ok: true,
-          json: () => Promise.resolve(mockResponse)
+          status: 200,
+          text: () => Promise.resolve(JSON.stringify(mockResponse))
         })
 
         const result = await service.registerTransaction(transactionData)
@@ -489,7 +490,8 @@ describe('Przelewy24Service - generateSign', () => {
 
         global.fetch = vi.fn().mockResolvedValue({
           ok: true,
-          json: () => Promise.resolve(mockResponse)
+          status: 200,
+          text: () => Promise.resolve(JSON.stringify(mockResponse))
         })
 
         const result = await service.registerTransaction(transactionData)
@@ -519,7 +521,8 @@ describe('Przelewy24Service - generateSign', () => {
 
         global.fetch = vi.fn().mockResolvedValue({
           ok: true,
-          json: () => Promise.resolve(mockResponse)
+          status: 200,
+          text: () => Promise.resolve(JSON.stringify(mockResponse))
         })
 
         const result = await service.registerTransaction(transactionData)
@@ -545,7 +548,8 @@ describe('Przelewy24Service - generateSign', () => {
 
         global.fetch = vi.fn().mockResolvedValue({
           ok: true,
-          json: () => Promise.resolve(mockResponse)
+          status: 200,
+          text: () => Promise.resolve(JSON.stringify(mockResponse))
         })
 
         const result = await service.registerTransaction(transactionData)
@@ -571,7 +575,8 @@ describe('Przelewy24Service - generateSign', () => {
 
         global.fetch = vi.fn().mockResolvedValue({
           ok: true,
-          json: () => Promise.resolve(mockResponse)
+          status: 200,
+          text: () => Promise.resolve(JSON.stringify(mockResponse))
         })
 
         const result = await service.registerTransaction(transactionData)
@@ -641,10 +646,10 @@ describe('Przelewy24Service - generateSign', () => {
         global.fetch = vi.fn().mockResolvedValue({
           ok: false,
           status: 400,
-          json: () => Promise.resolve({
+          text: () => Promise.resolve(JSON.stringify({
             error: 'Invalid request',
             responseCode: 1
-          })
+          }))
         })
 
         const result = await service.registerTransaction(transactionData)
@@ -685,7 +690,8 @@ describe('Przelewy24Service - generateSign', () => {
 
         global.fetch = vi.fn().mockResolvedValue({
           ok: true,
-          json: () => Promise.resolve({ data: { token: 'test-token' }, responseCode: 0 })
+          status: 200,
+          text: () => Promise.resolve(JSON.stringify({ data: { token: 'test-token' }, responseCode: 0 }))
         })
 
         await service.registerTransaction(transactionData)
@@ -714,7 +720,8 @@ describe('Przelewy24Service - generateSign', () => {
 
         global.fetch = vi.fn().mockResolvedValue({
           ok: true,
-          json: () => Promise.resolve({ data: { token: 'test-token' }, responseCode: 0 })
+          status: 200,
+          text: () => Promise.resolve(JSON.stringify({ data: { token: 'test-token' }, responseCode: 0 }))
         })
 
         await service.registerTransaction(transactionData)
@@ -854,7 +861,8 @@ describe('Przelewy24Service - generateSign', () => {
 
         global.fetch = vi.fn().mockResolvedValue({
           ok: true,
-          json: () => Promise.resolve(mockResponse)
+          status: 200,
+          text: () => Promise.resolve(JSON.stringify(mockResponse))
         })
 
         const result = await service.registerTransaction(transactionData)
@@ -881,7 +889,8 @@ describe('Przelewy24Service - generateSign', () => {
 
         global.fetch = vi.fn().mockResolvedValue({
           ok: true,
-          json: () => Promise.resolve(mockResponse)
+          status: 200,
+          text: () => Promise.resolve(JSON.stringify(mockResponse))
         })
 
         const result = await service.registerTransaction(transactionData)
@@ -910,7 +919,8 @@ describe('Przelewy24Service - generateSign', () => {
 
           global.fetch = vi.fn().mockResolvedValue({
             ok: true,
-            json: () => Promise.resolve(mockResponse)
+            status: 200,
+          text: () => Promise.resolve(JSON.stringify(mockResponse))
           })
 
           const result = await service.registerTransaction(transactionData)
@@ -945,7 +955,8 @@ describe('Przelewy24Service - generateSign', () => {
 
           global.fetch = vi.fn().mockResolvedValue({
             ok: true,
-            json: () => Promise.resolve(mockResponse)
+            status: 200,
+          text: () => Promise.resolve(JSON.stringify(mockResponse))
           })
 
           const result = await service.registerTransaction(transactionData)

@@ -27,7 +27,7 @@ export const StructureSection = ({
       readiness={readiness}
     >
       <div
-        className="inline-flex max-w-full flex-wrap items-stretch gap-2 rounded-xl border border-white/8 bg-white/[0.02] p-2"
+        className="flex max-w-full flex-wrap items-stretch gap-3"
         role="group"
         aria-label="Wybór struktury komórek"
       >

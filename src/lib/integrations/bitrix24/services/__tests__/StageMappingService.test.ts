@@ -36,10 +36,16 @@ describe('StageMappingService', () => {
     expect(res.stageId).toBe('C2:UC_SNZYJF');
   });
 
-  it('order: maps paid + delivered -> WON', () => {
+  it('order: payment status wins, so paid + delivered stays in progress', () => {
     const svc = new StageMappingService(makeClientMock());
     const res = svc['resolveOrderStage']('delivered', 'paid');
-    expect(res.stageId).toBe('WON');
+    expect(res.stageId).toBe('UC_DMBNNJ');
+  });
+
+  it('order: maps delivered without a paid/failed payment -> WON', () => {
+    const svc = new StageMappingService(makeClientMock());
+    expect(svc['resolveOrderStage']('delivered', 'pending').stageId).toBe('WON');
+    expect(svc['resolveOrderStage']('delivered').stageId).toBe('WON');
   });
 
   it('order: maps paid + pending -> UC_DMBNNJ', () => {

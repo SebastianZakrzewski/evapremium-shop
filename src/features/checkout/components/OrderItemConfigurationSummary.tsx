@@ -6,6 +6,7 @@ import {
 import {
   formatMatCarBodyTypeLabel,
   formatMatCarDetailsTitle,
+  formatMatCarGearboxLabel,
   getMatConfigurationDisplayRows,
 } from "@/shared/mat-configuration-display"
 
@@ -26,14 +27,15 @@ export const OrderItemConfigurationSummary = ({
   const matConfig = cartConfiguration as MatConfiguration
   const carDetails = matConfig.carDetails
   const rows = getMatConfigurationDisplayRows(matConfig)
+  const gearboxLabel = carDetails ? formatMatCarGearboxLabel(carDetails) : ""
 
   if (!carDetails && rows.length === 0) {
     return null
   }
 
   const rowClassName = compact
-    ? "flex items-center justify-between gap-3 py-1.5 px-2.5 bg-white/5 rounded-lg"
-    : "flex items-center justify-between gap-3 py-2 px-3 bg-white/5 rounded-lg"
+    ? "flex items-center justify-between gap-3 rounded-xl bg-black/35 px-2.5 py-1.5"
+    : "flex items-center justify-between gap-3 rounded-xl bg-black/35 px-3 py-2"
   const labelClassName = compact
     ? "text-xs text-white/60 shrink-0"
     : "text-sm text-white/70 shrink-0"
@@ -51,6 +53,11 @@ export const OrderItemConfigurationSummary = ({
           {carDetails.bodyType && (
             <p className="mt-0.5 text-white/60">
               {formatMatCarBodyTypeLabel(carDetails)}
+            </p>
+          )}
+          {gearboxLabel && (
+            <p className="mt-0.5 text-white/60">
+              Skrzynia: {gearboxLabel}
             </p>
           )}
         </div>

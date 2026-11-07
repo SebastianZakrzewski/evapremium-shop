@@ -2,12 +2,18 @@
 
 import { useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
+import { DarkSelect } from "@/components/configurator/configurator-v2/ui/DarkSelect"
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
+import {
+  GEARBOX_OPTIONS,
+  isGearbox,
+} from "@/features/car-configurator/domain/gearbox"
 import { useVehicleCatalog } from "@/features/vehicle-catalog/hooks/useVehicleCatalog"
 import { useConfiguratorV2InitialVehicleScroll } from "@/components/configurator/configurator-v2/hooks/useConfiguratorV2InitialVehicleScroll"
 import { resolveConfiguratorV2VehicleScrollTarget } from "@/components/configurator/configurator-v2/utils/resolveConfiguratorV2VehicleScrollTarget"
 import {
   VEHICLE_BODY_TYPE_FIELD_ID,
+  VEHICLE_GEARBOX_FIELD_ID,
   VEHICLE_YEAR_FIELD_ID,
 } from "@/components/configurator/configurator-v2/utils/configuratorV2VehicleFieldIds"
 
@@ -16,10 +22,8 @@ type CarSelectionStepProps = {
   onUpdate: (updates: Partial<ConfiguratorState>) => void
   onNext: () => void
   hideNextButton?: boolean
+  surface?: "dark" | "light"
 }
-
-const selectClassName =
-  "w-full px-4 py-3 min-h-[44px] bg-[#111] border border-white/10 rounded-lg text-white text-sm appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
 
 const yearsInRange = (from: number | null, to: number | null): number[] => {
   if (from == null) return []
@@ -32,6 +36,7 @@ export const CarSelectionStep = ({
   onUpdate,
   onNext,
   hideNextButton = false,
+  surface = "dark",
 }: CarSelectionStepProps) => {
   const { brands, models, templates, isLoading, error } = useVehicleCatalog(
     config.brandKey,
@@ -114,6 +119,7 @@ export const CarSelectionStep = ({
       config.modelFamilyKey &&
       config.modelKey &&
       config.year &&
+      config.gearbox &&
       config.bodyTypeKey &&
       config.recordKey,
   )
@@ -125,6 +131,7 @@ export const CarSelectionStep = ({
         brandSelected: Boolean(config.brandKey && config.brand),
         modelSelected: Boolean(config.modelFamilyKey && config.model),
         year: config.year,
+        gearbox: config.gearbox,
         bodyTypeKey: config.bodyTypeKey,
         modelKey: config.modelKey,
         isLoading,
@@ -140,6 +147,7 @@ export const CarSelectionStep = ({
       config.modelFamilyKey,
       config.modelKey,
       config.year,
+      config.gearbox,
       isLoading,
       years.length,
     ],
@@ -269,6 +277,21 @@ export const CarSelectionStep = ({
         }),
     },
     {
+      id: VEHICLE_GEARBOX_FIELD_ID,
+      label: "Skrzynia biegów",
+      value: config.gearbox,
+      disabled: !config.year,
+      placeholder: "Wybierz skrzynię biegów",
+      options: GEARBOX_OPTIONS.map((option) => ({
+        value: option.value,
+        label: option.label,
+      })),
+      onChange: (gearbox: string) =>
+        onUpdate({
+          gearbox: isGearbox(gearbox) ? gearbox : "",
+        }),
+    },
+    {
       id: VEHICLE_BODY_TYPE_FIELD_ID,
       label: "Typ nadwozia",
       value: selectedBodyValue,
@@ -285,23 +308,25 @@ export const CarSelectionStep = ({
   return (
     <div className="space-y-5">
       {fields.map((field) => (
-        <label key={field.label} id={field.id} className="block text-sm text-gray-400 scroll-mt-4">
-          <span className="mb-2 block font-medium">{field.label} *</span>
-          <select
-            value={field.value}
-            onChange={(event) => field.onChange(event.target.value)}
-            disabled={field.disabled}
-            className={selectClassName}
-            aria-label={field.label}
+        <div key={field.label} id={field.id} className="block scroll-mt-4">
+          <span
+            className={`mb-2 block text-[13px] font-medium ${
+              surface === "light" ? "text-neutral-700" : "text-white/55"
+            }`}
           >
-            <option value="">{field.placeholder}</option>
-            {field.options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
+            {field.label} *
+          </span>
+          <DarkSelect
+            id={field.id ? `${field.id}-select` : field.label}
+            value={field.value}
+            placeholder={field.placeholder}
+            ariaLabel={field.label}
+            options={field.options}
+            disabled={field.disabled}
+            surface={surface}
+            onChange={field.onChange}
+          />
+        </div>
       ))}
 
       {error && (

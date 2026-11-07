@@ -1,287 +1,189 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { OrderService } from '../OrderService';
-import { Product } from '../../types/product';
-import { CustomerData, ShippingData, PaymentData, OrderStatus } from '../../types/order';
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { CreateOrderDTO } from '../../types/order-new'
 
-// Mock Supabase
-const mockSupabaseInsert = vi.fn();
-const mockSupabaseSelect = vi.fn();
+vi.mock('@/lib/database/supabase', () => ({
+  supabase: { from: () => ({}) },
+  supabaseAdmin: { from: () => ({}) },
+  shopDb: () => ({ from: () => ({}) }),
+  TABLES: {},
+  SHOP_SCHEMA: 'evapremium_shop',
+}))
 
-vi.mock('../../database/supabase', () => ({
-  supabaseAdmin: {
-    from: vi.fn(() => ({
-      insert: mockSupabaseInsert,
-      select: mockSupabaseSelect,
-    })),
+const repo = vi.hoisted(() => ({
+  countOrdersThisYear: vi.fn(async () => 0),
+  findByOrderNumber: vi.fn(async () => null),
+  findById: vi.fn(),
+  create: vi.fn(async (data: Record<string, unknown>) => ({ id: 'order-1', ...data })),
+  insertItems: vi.fn(async () => ({ error: null })),
+}))
+
+vi.mock('../../repositories/OrderRepository', () => ({
+  OrderRepository: vi.fn(function () {
+    return {
+      countOrdersThisYear: repo.countOrdersThisYear,
+      findByOrderNumber: repo.findByOrderNumber,
+      findById: repo.findById,
+      create: repo.create,
+      supabase: {
+        from: () => ({
+          insert: repo.insertItems,
+        }),
+      },
+    }
+  }),
+}))
+
+vi.mock('../AccessoryService', () => ({
+  AccessoryService: vi.fn(function () {
+    return {
+      checkAvailability: vi.fn(async () => true),
+      decrementStock: vi.fn(async () => undefined),
+    }
+  }),
+}))
+
+vi.mock('../MatService', () => ({
+  MatService: vi.fn(function () {
+    return {}
+  }),
+}))
+
+vi.mock('../PricingService', () => ({
+  PricingService: vi.fn(function () {
+    return {}
+  }),
+}))
+
+import { OrderService } from '../OrderService'
+
+const address = {
+  street: 'ul. Testowa 123',
+  city: 'Warszawa',
+  postalCode: '00-001',
+  country: 'Polska',
+}
+
+const accessory = (id: string, unitPrice: number, quantity = 1) => ({
+  productType: 'accessory' as const,
+  productId: id,
+  productName: 'Organizer',
+  quantity,
+  unitPrice,
+  subtotal: unitPrice * quantity,
+})
+
+const orderInput = (items: CreateOrderDTO['items'], extra: Partial<CreateOrderDTO> = {}): CreateOrderDTO => ({
+  customer: {
+    name: 'Jan Kowalski',
+    email: 'jan.kowalski@example.com',
+    phone: '+48123456789',
   },
-  TABLES: {
-    ORDERS: 'orders',
-  },
-}));
+  shippingAddress: address,
+  paymentMethod: 'paynow',
+  items,
+  ...extra,
+})
 
 describe('OrderService', () => {
-  let mockProduct: Product;
-  let mockCustomerData: CustomerData;
-  let mockShippingData: ShippingData;
-  let mockPaymentData: PaymentData;
+  let service: OrderService
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearAllMocks()
+    repo.countOrdersThisYear.mockResolvedValue(0)
+    repo.findByOrderNumber.mockResolvedValue(null)
+    repo.create.mockImplementation(async (data: Record<string, unknown>) => ({ id: 'order-1', ...data }))
+    repo.insertItems.mockResolvedValue({ error: null })
+    service = new OrderService()
+  })
 
-    mockProduct = {
-      id: 'product-123',
-      sessionId: 'session-123',
-      configuration: {
-        setType: '3d-with-rims',
-        cellType: 'diamonds',
-        setVariant: 'basic',
-        materialColor: 'black',
-        edgeColor: 'red',
-        heelPad: 'tak'
+  it('stores a pending order with the customer and a 27 zł shipping fee under 637 zł', async () => {
+    const order = await service.createOrder(orderInput([accessory('11111111-1111-1111-1111-111111111111', 258)]))
+
+    expect(order.id).toBe('order-1')
+    expect(order.status).toBe('pending')
+    expect(order.payment_status).toBe('pending')
+    expect(order.customer).toMatchObject({ email: 'jan.kowalski@example.com' })
+    expect(order.subtotal).toBe(258)
+    expect(order.shipping_cost).toBe(27)
+    expect(order.discount).toBe(0)
+    expect(order.total).toBe(285)
+    expect(order.order_number).toMatch(/^ORD-\d{4}-000001$/)
+  })
+
+  it('sums accessory line subtotals', async () => {
+    const order = await service.createOrder(orderInput([
+      accessory('11111111-1111-1111-1111-111111111111', 258),
+      accessory('22222222-2222-2222-2222-222222222222', 200),
+    ]))
+
+    expect(order.subtotal).toBe(458)
+    expect(order.shipping_cost).toBe(27)
+    expect(order.total).toBe(485)
+  })
+
+  it('subtracts a provided discount after shipping', async () => {
+    const order = await service.createOrder(orderInput(
+      [accessory('11111111-1111-1111-1111-111111111111', 258)],
+      { discountAmount: 25 },
+    ))
+
+    expect(order.discount).toBe(25)
+    expect(order.total).toBe(260)
+  })
+
+  it('persists company and tax id on the customer payload', async () => {
+    const order = await service.createOrder(orderInput(
+      [accessory('11111111-1111-1111-1111-111111111111', 100)],
+      {
+        customer: {
+          name: 'Jan Kowalski',
+          email: 'jan.kowalski@example.com',
+          phone: '+48123456789',
+          company: 'Firma Testowa',
+          taxId: '1234567890',
+        },
       },
-      pricing: {
-        basePrice: 219,
-        modifiers: 39,
-        totalPrice: 258
-      },
-      status: 'cached',
-      createdAt: new Date()
-    };
+    ))
 
-    mockCustomerData = {
-      firstName: 'Jan',
-      lastName: 'Kowalski',
-      email: 'jan.kowalski@example.com',
-      phone: '+48123456789',
-      address: 'ul. Testowa 123',
-      city: 'Warszawa',
-      postalCode: '00-001',
-      country: 'Polska'
-    };
+    expect(order.customer).toMatchObject({
+      company: 'Firma Testowa',
+      taxId: '1234567890',
+    })
+  })
 
-    mockShippingData = {
-      method: 'courier',
-      methodName: 'Kurier DPD',
-      cost: 15,
-      estimatedDelivery: '2-3 dni robocze'
-    };
+  it('creates an order for an empty item list and still adds the 27 zł shipping fee', async () => {
+    const order = await service.createOrder(orderInput([]))
 
-    mockPaymentData = {
-      method: 'card',
-      methodName: 'Karta kredytowa'
-    };
-  });
+    expect(order.subtotal).toBe(0)
+    expect(order.shipping_cost).toBe(27)
+    expect(order.total).toBe(27)
+    expect(order.status).toBe('pending')
+  })
 
-  describe('createOrder', () => {
-    it('should create order with correct structure', () => {
-      const order = OrderService.createOrder(
-        [mockProduct],
-        mockCustomerData,
-        mockShippingData,
-        mockPaymentData
-      );
+  it('throws the repository item error instead of saving a partial success', async () => {
+    repo.insertItems.mockResolvedValue({ error: { message: 'Database error' } })
 
-      expect(order).toBeDefined();
-      expect(order.id).toBeDefined();
-      expect(order.sessionId).toBe('session-123');
-      expect(order.product).toEqual(mockProduct);
-      expect(order.customer).toEqual(mockCustomerData);
-      expect(order.shipping).toEqual(mockShippingData);
-      expect(order.payment).toEqual(mockPaymentData);
-      expect(order.status).toBe('pending');
-      expect(order.createdAt).toBeInstanceOf(Date);
-      expect(order.updatedAt).toBeInstanceOf(Date);
-    });
+    await expect(service.createOrder(orderInput([
+      accessory('11111111-1111-1111-1111-111111111111', 100),
+    ]))).rejects.toThrow('Error saving order items: Database error')
+  })
 
-    it('should calculate correct pricing', () => {
-      const order = OrderService.createOrder(
-        [mockProduct],
-        mockCustomerData,
-        mockShippingData,
-        mockPaymentData
-      );
+  it('returns the repository row from getOrderById', async () => {
+    repo.findById.mockResolvedValue({ id: 'order-123', order_number: 'ORD-2026-000001' })
 
-      expect(order.pricing.subtotal).toBe(258);
-      expect(order.pricing.shippingCost).toBe(15);
-      expect(order.pricing.discountAmount).toBe(0);
-      expect(order.pricing.totalAmount).toBe(273);
-    });
+    await expect(service.getOrderById('order-123')).resolves.toMatchObject({ id: 'order-123' })
+    expect(repo.findById).toHaveBeenCalledWith('order-123')
+  })
 
-    it('should handle multiple products in cart', () => {
-      const secondProduct = {
-        ...mockProduct,
-        id: 'product-456',
-        pricing: { ...mockProduct.pricing, totalPrice: 200 }
-      };
+  it('returns null when the repository has no order', async () => {
+    repo.findById.mockResolvedValue(null)
 
-      const order = OrderService.createOrder(
-        [mockProduct, secondProduct],
-        mockCustomerData,
-        mockShippingData,
-        mockPaymentData
-      );
+    await expect(service.getOrderById('missing')).resolves.toBeNull()
+  })
 
-      expect(order.pricing.subtotal).toBe(458); // 258 + 200
-      expect(order.pricing.totalAmount).toBe(473); // 458 + 15
-    });
+  it('propagates a repository read failure', async () => {
+    repo.findById.mockRejectedValue(new Error('Query error'))
 
-    it('should apply discount when provided', () => {
-      const order = OrderService.createOrder(
-        [mockProduct],
-        mockCustomerData,
-        mockShippingData,
-        mockPaymentData,
-        { discountAmount: 25 }
-      );
-
-      expect(order.pricing.discountAmount).toBe(25);
-      expect(order.pricing.totalAmount).toBe(248); // 258 + 15 - 25
-    });
-
-    it('should include company data when provided', () => {
-      const companyData = {
-        name: 'Firma Testowa',
-        nip: '1234567890',
-        isInvoice: true
-      };
-
-      const order = OrderService.createOrder(
-        [mockProduct],
-        mockCustomerData,
-        mockShippingData,
-        mockPaymentData,
-        undefined,
-        companyData
-      );
-
-      expect(order.company).toEqual(companyData);
-    });
-  });
-
-  describe('saveOrderToSupabase', () => {
-    it('should save order to Supabase successfully', async () => {
-      const mockOrder = {
-        id: 'order-123',
-        sessionId: 'session-123',
-        product: mockProduct,
-        customer: mockCustomerData,
-        shipping: mockShippingData,
-        payment: mockPaymentData,
-        pricing: {
-          subtotal: 258,
-          shippingCost: 15,
-          discountAmount: 0,
-          totalAmount: 273
-        },
-        status: 'pending' as OrderStatus,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-
-      mockSupabaseInsert.mockReturnValue({
-        data: [mockOrder],
-        error: null
-      });
-
-      const result = await OrderService.saveOrderToSupabase(mockOrder);
-
-      expect(mockSupabaseInsert).toHaveBeenCalledWith({
-        id: mockOrder.id,
-        session_id: mockOrder.sessionId,
-        product: mockOrder.product,
-        customer: mockOrder.customer,
-        shipping: mockOrder.shipping,
-        payment: mockOrder.payment,
-        company: mockOrder.company,
-        pricing: mockOrder.pricing,
-        status: mockOrder.status,
-        created_at: mockOrder.createdAt,
-        updated_at: mockOrder.updatedAt
-      });
-
-      expect(result).toEqual(mockOrder);
-    });
-
-    it('should throw error when Supabase save fails', async () => {
-      const mockOrder = {
-        id: 'order-123',
-        sessionId: 'session-123',
-        product: mockProduct,
-        customer: mockCustomerData,
-        shipping: mockShippingData,
-        payment: mockPaymentData,
-        pricing: {
-          subtotal: 258,
-          shippingCost: 15,
-          discountAmount: 0,
-          totalAmount: 273
-        },
-        status: 'pending' as OrderStatus,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-
-      mockSupabaseInsert.mockReturnValue({
-        data: null,
-        error: { message: 'Database error' }
-      });
-
-      await expect(OrderService.saveOrderToSupabase(mockOrder))
-        .rejects.toThrow('Failed to save order to Supabase: Database error');
-    });
-  });
-
-  describe('getOrder', () => {
-    it('should retrieve order from Supabase', async () => {
-      const mockOrder = {
-        id: 'order-123',
-        session_id: 'session-123',
-        product: mockProduct,
-        customer: mockCustomerData,
-        shipping: mockShippingData,
-        payment: mockPaymentData,
-        pricing: {
-          subtotal: 258,
-          shippingCost: 15,
-          discountAmount: 0,
-          totalAmount: 273
-        },
-        status: 'pending',
-        created_at: new Date(),
-        updated_at: new Date()
-      };
-
-      mockSupabaseSelect.mockReturnValue({
-        data: [mockOrder],
-        error: null
-      });
-
-      const result = await OrderService.getOrder('order-123');
-
-      expect(mockSupabaseSelect).toHaveBeenCalledWith().eq('id', 'order-123');
-      expect(result).toBeDefined();
-      expect(result.id).toBe('order-123');
-    });
-
-    it('should return null when order not found', async () => {
-      mockSupabaseSelect.mockReturnValue({
-        data: [],
-        error: null
-      });
-
-      const result = await OrderService.getOrder('non-existent');
-
-      expect(result).toBeNull();
-    });
-
-    it('should throw error when Supabase query fails', async () => {
-      mockSupabaseSelect.mockReturnValue({
-        data: null,
-        error: { message: 'Query error' }
-      });
-
-      await expect(OrderService.getOrder('order-123'))
-        .rejects.toThrow('Failed to retrieve order from Supabase: Query error');
-    });
-  });
-});
+    await expect(service.getOrderById('order-123')).rejects.toThrow('Query error')
+  })
+})

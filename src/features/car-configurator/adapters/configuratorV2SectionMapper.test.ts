@@ -12,6 +12,7 @@ const baseConfig: ConfiguratorState = {
   templateId: "tpl-1",
   recordKey: "rec-1",
   year: "2020",
+  gearbox: "Automatyczna",
   bodyType: "Sedan",
   bodyTypeKey: "sedan",
   pricingCategoryKey: "passenger_car",
@@ -25,9 +26,22 @@ const baseConfig: ConfiguratorState = {
 }
 
 describe("mapConfiguratorV2Sections", () => {
+  it("requires gearbox before vehicle is complete", () => {
+    const result = mapConfiguratorV2Sections({
+      config: { ...baseConfig, gearbox: "" },
+      skipMatTypeStep: false,
+      totalPrice: 549,
+      variantPricingLabel: "Premium",
+    })
+
+    expect(result.sections.vehicle.isComplete).toBe(false)
+    expect(result.sections.matType.isDisabled).toBe(true)
+    expect(result.isReadyForCart).toBe(false)
+  })
+
   it("disables downstream sections until vehicle is complete", () => {
     const result = mapConfiguratorV2Sections({
-      config: { ...baseConfig, brand: "", year: "" },
+      config: { ...baseConfig, brand: "", year: "", gearbox: "" },
       skipMatTypeStep: false,
       totalPrice: 0,
     })

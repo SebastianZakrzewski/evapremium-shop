@@ -6,6 +6,8 @@ import { ConfiguratorV2PreviewPanel } from "./ConfiguratorV2PreviewPanel"
 import { ConfiguratorV2PreviewGalleryStrip } from "./ui/ConfiguratorV2PreviewGalleryStrip"
 import type { PreviewGalleryItem } from "./preview/buildConfiguratorV2PreviewGallery"
 import { getAdjacentGalleryItemId } from "./preview/getAdjacentGalleryItemId"
+import { isProductPhotoFramedToWindowWidth } from "./preview/productPhotoFrame"
+import { useMobilePreviewDocked } from "./MobilePreviewDockContext"
 
 type ConfiguratorV2PreviewWithGalleryProps = {
   imageSrc: string
@@ -34,8 +36,13 @@ export const ConfiguratorV2PreviewWithGallery = ({
   realizationCaption = null,
   layout,
 }: ConfiguratorV2PreviewWithGalleryProps) => {
+  const previewDocked = useMobilePreviewDocked()
   const caption = realizationCaption?.trim() || null
   const canSwipeGallery = galleryItems.length > 1
+  const activeGalleryKind = galleryItems.find(
+    (item) => item.id === activeGalleryId,
+  )?.kind
+  const fitToWindowWidth = isProductPhotoFramedToWindowWidth(activeGalleryKind)
 
   const handleSwipePrevious = useCallback(() => {
     const previousId = getAdjacentGalleryItemId(
@@ -66,8 +73,9 @@ export const ConfiguratorV2PreviewWithGallery = ({
           onSwipePrevious={handleSwipePrevious}
           onSwipeNext={handleSwipeNext}
           canSwipeGallery={canSwipeGallery}
+          fitToWindowWidth={fitToWindowWidth}
         />
-        {caption && (
+        {caption && !previewDocked && (
           <p
             className="px-3 py-2 text-center text-[11px] leading-snug text-white/70"
             role="note"
@@ -77,13 +85,15 @@ export const ConfiguratorV2PreviewWithGallery = ({
           </p>
         )}
         {showGallery && (
-          <ConfiguratorV2PreviewGalleryStrip
-            items={galleryItems}
-            activeId={activeGalleryId}
-            onSelect={onSelectGalleryItem}
-            variant="mobile"
-            showEmptyInCarSlot={showEmptyInCarSlot}
-          />
+          <div className="mt-1.5">
+            <ConfiguratorV2PreviewGalleryStrip
+              items={galleryItems}
+              activeId={activeGalleryId}
+              onSelect={onSelectGalleryItem}
+              variant="mobile"
+              showEmptyInCarSlot={showEmptyInCarSlot}
+            />
+          </div>
         )}
       </div>
     )
@@ -100,6 +110,7 @@ export const ConfiguratorV2PreviewWithGallery = ({
           onSwipePrevious={handleSwipePrevious}
           onSwipeNext={handleSwipeNext}
           canSwipeGallery={canSwipeGallery}
+          fitToWindowWidth={fitToWindowWidth}
         />
       </div>
       {caption && (

@@ -6,7 +6,7 @@ import { TeslaTrimOption } from "../ui/TeslaTrimOption"
 import { ConfiguratorV2SectionShell } from "./ConfiguratorV2SectionShell"
 
 const compareLinkClass =
-  "text-xs text-gray-400 hover:text-white underline-offset-2 hover:underline whitespace-nowrap transition-colors"
+  "text-[13px] font-medium text-red-500 hover:text-red-400 whitespace-nowrap transition-colors"
 
 type MatTypeSectionProps = {
   config: { matType: "3d-with-rims" | "classic" | "single" }
@@ -35,7 +35,7 @@ export const MatTypeSection = ({
         title="Typ dywanika"
         readiness={{ ...readiness, isDisabled: false }}
       >
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-neutral-600">
           Dla tego pojazdu obowiązuje jeden typ kompletu — przejdź do wyboru wariantu.
         </p>
       </ConfiguratorV2SectionShell>
@@ -72,7 +72,7 @@ export const MatTypeSection = ({
             subtitle={type.description}
             iconSrc={type.iconSrc}
             iconAlt={type.iconAlt}
-            onSelect={() => onUpdate({ matType: type.id, variant: "" })}
+            onSelect={() => onUpdate({ matType: type.id })}
           />
         ))}
       </div>

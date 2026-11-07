@@ -17,6 +17,7 @@ const baseConfig: ConfiguratorState = {
   templateId: "",
   recordKey: "",
   year: "",
+  gearbox: "",
   bodyType: "",
   bodyTypeKey: "",
   pricingCategoryKey: "",
@@ -115,6 +116,20 @@ describe("getConfigUpdatesFromUrl", () => {
         yearParam: "2020",
       },
       brands: [{ id: 1, name: "BMW", logo: "/bmw.png" }],
+    });
+
+    expect(updates.year).toBeUndefined();
+  });
+
+  it("keeps a selected year when the URL still contains year", () => {
+    const updates = getConfigUpdatesFromUrl({
+      previous: { ...baseConfig, brand: "Hyundai", model: "Tucson", year: "2023" },
+      urlParams: {
+        brandParam: "hyundai",
+        modelParam: "tucson",
+        yearParam: "2024",
+      },
+      brands: [],
     });
 
     expect(updates.year).toBeUndefined();
@@ -242,5 +257,33 @@ describe("mergeStoredConfig", () => {
     expect(merged.model).toBe("3 E-46");
     expect(merged.year).toBe("");
     expect(merged.bodyType).toBe("");
+  });
+
+  it("restores the saved year, gearbox and variant for the same vehicle", () => {
+    const merged = mergeStoredConfig({
+      previous: {
+        ...baseConfig,
+        brand: "Hyundai",
+        model: "Tucson",
+        year: "",
+        gearbox: "",
+        variant: "",
+      },
+      stored: {
+        ...baseConfig,
+        model: "Tucson",
+        year: "2024",
+        gearbox: "Automatyczna",
+        variant: "front",
+        structure: "honey",
+      },
+      urlParams: { brandParam: "hyundai", modelParam: "tucson" },
+    });
+
+    expect(merged.year).toBe("2024");
+    expect(merged.gearbox).toBe("Automatyczna");
+    expect(merged.variant).toBe("front");
+    expect(merged.structure).toBe("honey");
+    expect(merged.recordKey).toBe("");
   });
 });

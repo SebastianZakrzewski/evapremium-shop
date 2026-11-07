@@ -72,8 +72,19 @@ const TEMPLATE_SELECT = [
 
 const PAGE_SIZE = 1000
 
+export type PinnedTemplateFilters = {
+  modelFamilyKey?: string
+  generation?: string
+  bodyTypeKey?: string
+}
+
+const quotedEq = (column: string, value: string): string => {
+  const key = value.trim().replaceAll('"', "")
+  return `${column}.eq."${key}",${column}.eq."${key} "`
+}
+
 export const getMatTemplates = async (
-  filters: CatalogQuery = {},
+  filters: CatalogQuery & { pinned?: PinnedTemplateFilters } = {},
 ): Promise<MatTemplateDbRow[]> => {
   const rows: MatTemplateDbRow[] = []
   let offset = 0
@@ -105,6 +116,29 @@ export const getMatTemplates = async (
         .not("year_from", "is", null)
         .lte("year_from", filters.year)
         .or(`year_to.gte.${filters.year},year_to.is.null`)
+    }
+    const pinned = filters.pinned
+    const pinnedClauses: string[] = []
+    if (pinned?.modelFamilyKey && !pinned.modelFamilyKey.includes(",")) {
+      pinnedClauses.push(
+        quotedEq(
+          "model_family_key",
+          canonicalizeModelDesignation(pinned.modelFamilyKey),
+        ),
+      )
+    }
+    if (pinned?.generation && !pinned.generation.includes(",")) {
+      pinnedClauses.push(quotedEq("generation", pinned.generation))
+    }
+    if (pinned?.bodyTypeKey && !pinned.bodyTypeKey.includes(",")) {
+      pinnedClauses.push(quotedEq("body_type_key", pinned.bodyTypeKey))
+    }
+    if (pinnedClauses.length === 1) {
+      query = query.or(pinnedClauses[0])
+    } else if (pinnedClauses.length > 1) {
+      query = query.or(
+        `and(${pinnedClauses.map((clause) => `or(${clause})`).join(",")})`,
+      )
     }
 
     const { data, error } = await query

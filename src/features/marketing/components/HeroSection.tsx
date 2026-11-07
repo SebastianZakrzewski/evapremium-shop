@@ -6,8 +6,14 @@ import { Phone, ChevronRight, ShieldCheck, Droplets, Truck } from "lucide-react"
 import { cn } from "@/lib/utils";
 import {
   HERO_PROMO_ASPECT_CLASS,
+  HERO_PROMO_DESKTOP_SRCSET_AVIF,
+  HERO_PROMO_DESKTOP_SRCSET_WEBP,
+  HERO_PROMO_IMAGE_SIZES,
   HERO_PROMO_IMAGE_SRC,
+  HERO_PROMO_MOBILE_IMAGE_SIZES,
   HERO_PROMO_MOBILE_IMAGE_SRC,
+  HERO_PROMO_MOBILE_SRCSET_AVIF,
+  HERO_PROMO_MOBILE_SRCSET_WEBP,
 } from "@/features/marketing/lib/heroImage";
 
 type HeroSlide = {
@@ -116,34 +122,31 @@ const HeroPromoBanner = ({
   return (
     <>
       <div className="absolute inset-0 bg-neutral-100">
-        {slide.imageMobile ? (
-          <>
-            <img
-              src={slide.imageMobile}
-              alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
-              className="h-full w-full object-contain object-center md:hidden"
-              decoding="sync"
-              fetchPriority={priority ? "high" : "auto"}
-            />
-            {!mobileOnly ? (
-              <img
-                src={slide.image}
-                alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
-                className="hidden h-full w-full object-contain object-center md:block"
-                decoding="sync"
-                fetchPriority={priority ? "high" : "auto"}
-              />
-            ) : null}
-          </>
-        ) : (
+        <picture>
+          {slide.imageMobile ? (
+            <>
+              <source media="(max-width: 767px)" type="image/avif" srcSet={HERO_PROMO_MOBILE_SRCSET_AVIF} sizes={HERO_PROMO_MOBILE_IMAGE_SIZES} />
+              <source media="(max-width: 767px)" type="image/webp" srcSet={HERO_PROMO_MOBILE_SRCSET_WEBP} sizes={HERO_PROMO_MOBILE_IMAGE_SIZES} />
+            </>
+          ) : null}
+          {!mobileOnly ? (
+            <>
+              <source media="(min-width: 768px)" type="image/avif" srcSet={HERO_PROMO_DESKTOP_SRCSET_AVIF} sizes={HERO_PROMO_IMAGE_SIZES} />
+              <source media="(min-width: 768px)" type="image/webp" srcSet={HERO_PROMO_DESKTOP_SRCSET_WEBP} sizes={HERO_PROMO_IMAGE_SIZES} />
+            </>
+          ) : null}
           <img
-            src={slide.image}
+            src={mobileOnly ? slide.imageMobile ?? slide.image : slide.image}
             alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
             className="h-full w-full object-contain object-center"
-            decoding="sync"
-            fetchPriority={priority ? "high" : "auto"}
+            decoding="async"
+            ref={(element) => {
+              element?.setAttribute("fetchpriority", priority ? "high" : "auto")
+            }}
+            width={mobileOnly ? 941 : 2168}
+            height={mobileOnly ? 1672 : 725}
           />
-        )}
+        </picture>
       </div>
       {slide.ctaOverlay?.embeddedInImage ? null : (
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.12)_50%,rgba(0,0,0,0.42)_100%)]" />
@@ -288,7 +291,7 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative overflow-visible bg-black pt-[4.5rem] pb-14 max-sm:pb-10 md:overflow-hidden md:pt-0 md:pb-12"
+      className="relative overflow-visible bg-black pt-[4.5rem] pb-6 max-sm:pb-4 md:overflow-hidden md:pt-0 md:pb-4"
       role="region"
       aria-roledescription={isMobileHero || !HERO_HAS_CAROUSEL_NAV ? undefined : "carousel"}
       aria-label="Sekcja promocyjna - dywaniki samochodowe"
@@ -305,8 +308,23 @@ export default function HeroSection() {
       </div>
 
       {/* Carousel — wysokość = proporcja oryginalnej rozdzielczości banera */}
-      <div className="container relative mx-auto px-2 py-6 sm:px-4 sm:py-8 md:py-8">
-        {isMobileHero ? (
+      <div className="container relative mx-auto px-2 py-3 sm:px-4 sm:py-4 md:py-4">
+        {!HERO_HAS_CAROUSEL_NAV ? (
+          <div
+            className={cn(
+              "relative mx-auto w-full max-w-[1234px] overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 sm:rounded-2xl md:rounded-3xl",
+              heroCarouselFrameClass
+            )}
+            data-testid="hero-promo"
+          >
+            <div className="relative h-full w-full">
+              <HeroPromoBanner
+                slide={promoSlide}
+                onScrollToSection={handleScrollToSection}
+              />
+            </div>
+          </div>
+        ) : isMobileHero ? (
           <div
             className={cn(
               "relative mx-auto w-full max-w-[1234px] overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 sm:rounded-2xl",

@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Brand } from "@/entities/car";
 import {
   type ConfiguratorState,
   type ConfiguratorUrlParams,
+  configuratorStorageKeyForUrl,
   getConfigUpdatesFromUrl,
   mergeStoredConfig,
+  readCompatibleStoredConfig,
 } from "../utils/configuratorState";
 
 const CONFIGURATOR_STORAGE_KEY = "configurator-simple-state";
@@ -22,14 +24,13 @@ const getInitialConfig = (
   baseState: ConfiguratorState
 ): ConfiguratorState => {
   const urlParams = getUrlParams(searchParams);
-  const lockedEntry = !!(urlParams.brandParam && urlParams.modelParam);
 
   return {
     ...baseState,
     brand: urlParams.brandParam || baseState.brand,
     model: urlParams.modelParam || baseState.model,
     generation: urlParams.generationParam || baseState.generation,
-    year: lockedEntry ? "" : urlParams.yearParam || baseState.year,
+    year: "",
     bodyType: urlParams.bodyTypeParam || baseState.bodyType,
   };
 };
@@ -44,6 +45,7 @@ const defaultState: ConfiguratorState = {
   templateId: "",
   recordKey: "",
   year: "",
+  gearbox: "",
   bodyType: "",
   bodyTypeKey: "",
   pricingCategoryKey: "",
@@ -59,6 +61,9 @@ const defaultState: ConfiguratorState = {
   podpietkaMounting: undefined,
 };
 
+const isFourDigitYear = (value: string | null): value is string =>
+  Boolean(value && /^\d{4}$/.test(value.trim()));
+
 export type UseConfiguratorStateArgs = {
   searchParams: URLSearchParams;
   brands: Brand[];
@@ -72,44 +77,88 @@ export const useConfiguratorState = ({
   storageKey = CONFIGURATOR_STORAGE_KEY,
   initialState = defaultState,
 }: UseConfiguratorStateArgs) => {
+  const urlParams = getUrlParams(searchParams);
+  const activeStorageKey = configuratorStorageKeyForUrl(storageKey, urlParams);
   const [config, setConfig] = useState<ConfiguratorState>(() =>
     getInitialConfig(searchParams, initialState)
   );
+  const [hydrated, setHydrated] = useState(false);
+  const suppressSave = useRef(true);
+  const seenYearParam = useRef<string | null | undefined>(undefined);
 
   useEffect(() => {
-    const urlParams = getUrlParams(searchParams);
+    suppressSave.current = true;
+    const params = getUrlParams(searchParams);
+    const stored =
+      typeof window === "undefined"
+        ? null
+        : readCompatibleStoredConfig(storageKey, params, (key) => localStorage.getItem(key));
+    setConfig(
+      mergeStoredConfig({
+        previous: getInitialConfig(searchParams, initialState),
+        stored: stored ?? {},
+        urlParams: params,
+      }),
+    );
+    setHydrated(true);
+    // Re-read storage only when the vehicle key changes. A year-only URL
+    // change must not replace the selection that is already on screen.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeStorageKey]);
+
+  const urlSignature = searchParams.toString();
+  const brandsSignature = brands.map((brand) => brand.name).join("|");
+
+  useEffect(() => {
+    if (!hydrated) return;
+    const params = getUrlParams(searchParams);
     setConfig((prev) => {
       const updates = getConfigUpdatesFromUrl({
         previous: prev,
-        urlParams,
+        urlParams: params,
         brands,
       });
       return Object.keys(updates).length > 0 ? { ...prev, ...updates } : prev;
     });
-  }, [searchParams, brands]);
+  }, [brands, brandsSignature, hydrated, searchParams, urlSignature]);
 
   useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(config));
-  }, [config, storageKey]);
-
-  useEffect(() => {
-    const urlParams = getUrlParams(searchParams);
-    const saved = localStorage.getItem(storageKey);
-    if (!saved) return;
-
-    try {
-      const parsed = JSON.parse(saved) as Partial<ConfiguratorState>;
-      setConfig((prev) =>
-        mergeStoredConfig({ previous: prev, stored: parsed, urlParams })
-      )
-    } catch (error) {
-      console.error("Error loading saved config:", error);
+    if (!hydrated) return;
+    const yearParam = urlParams.yearParam ?? null;
+    if (seenYearParam.current === undefined) {
+      seenYearParam.current = yearParam;
+      return;
     }
-  }, [searchParams, storageKey]);
+    if (seenYearParam.current === yearParam) return;
+    seenYearParam.current = yearParam;
+    setConfig((prev) => {
+      if (isFourDigitYear(yearParam)) {
+        const year = yearParam.trim();
+        return prev.year === year ? prev : { ...prev, year };
+      }
+      if (yearParam) {
+        return prev.year === "" ? prev : { ...prev, year: "" };
+      }
+      return prev;
+    });
+  }, [hydrated, urlParams.yearParam]);
+
+  useEffect(() => {
+    if (!hydrated || typeof window === "undefined") return;
+    if (suppressSave.current) {
+      suppressSave.current = false;
+      return;
+    }
+    try {
+      localStorage.setItem(activeStorageKey, JSON.stringify(config));
+    } catch {
+      // A full browser store must not discard the in-memory selection.
+    }
+  }, [activeStorageKey, config, hydrated]);
 
   const updateConfig = useCallback((updates: Partial<ConfiguratorState>) => {
     setConfig((prev) => ({ ...prev, ...updates }));
   }, []);
 
-  return { config, setConfig, updateConfig };
+  return { config, setConfig, updateConfig, hydrated };
 };

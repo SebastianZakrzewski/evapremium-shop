@@ -19,9 +19,9 @@ export default function ContactPage() {
     <>
       <PageHeroBanner
         breadcrumb="Kontakt"
-        title="KONTAKT"
-        highlight="Z NAMI"
-        description="Masz pytania dotyczące produktów lub zamówienia? Jesteśmy tutaj, aby Ci pomóc. Skontaktuj się z nami telefonicznie, mailowo lub przez formularz kontaktowy."
+        kicker="Pomoc"
+        title="Kontakt"
+        description="Pytania o produkt albo zamówienie? Napisz, zadzwoń albo skorzystaj z formularza."
       />
       <ContactSection />
     </>

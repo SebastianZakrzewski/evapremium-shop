@@ -4,7 +4,7 @@ export const MAT_TYPE_OPTION_ICON_SIZE = 56
 export const MAT_TYPE_OPTION_ICON_SRC_SIZE = 224
 
 export const matTypeOptionIconBoxClassName =
-  "relative flex shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white/[0.07]"
+  "relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-black/30"
 
 export const matTypeOptionIconImageClassName =
   "h-full w-full rounded-lg object-contain"

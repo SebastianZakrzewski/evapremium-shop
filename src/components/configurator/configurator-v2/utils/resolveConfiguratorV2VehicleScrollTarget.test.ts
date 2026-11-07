@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest"
 import { resolveConfiguratorV2VehicleScrollTarget } from "./resolveConfiguratorV2VehicleScrollTarget"
 import {
   LOCKED_VEHICLE_BODY_TYPE_FIELD_ID,
+  LOCKED_VEHICLE_GEARBOX_FIELD_ID,
   LOCKED_VEHICLE_YEAR_FIELD_ID,
   VEHICLE_BODY_TYPE_FIELD_ID,
+  VEHICLE_GEARBOX_FIELD_ID,
   VEHICLE_YEAR_FIELD_ID,
 } from "./configuratorV2VehicleFieldIds"
 
@@ -33,17 +35,27 @@ describe("resolveConfiguratorV2VehicleScrollTarget", () => {
     )
   })
 
-  it("scrolls to body type when year is selected and body options exist", () => {
+  it("scrolls to gearbox after year is selected", () => {
     expect(
       resolveConfiguratorV2VehicleScrollTarget({
         ...baseInput,
         year: "2020",
+      }),
+    ).toBe(VEHICLE_GEARBOX_FIELD_ID)
+  })
+
+  it("scrolls to body type after year and gearbox are selected", () => {
+    expect(
+      resolveConfiguratorV2VehicleScrollTarget({
+        ...baseInput,
+        year: "2020",
+        gearbox: "Manualna",
         bodyOptionsCount: 2,
       }),
     ).toBe(VEHICLE_BODY_TYPE_FIELD_ID)
   })
 
-  it("prefers body type over year when both are pending", () => {
+  it("prefers gearbox over body type when both are pending", () => {
     expect(
       resolveConfiguratorV2VehicleScrollTarget({
         ...baseInput,
@@ -51,7 +63,7 @@ describe("resolveConfiguratorV2VehicleScrollTarget", () => {
         bodyOptionsCount: 2,
         yearOptionsCount: 5,
       }),
-    ).toBe(VEHICLE_BODY_TYPE_FIELD_ID)
+    ).toBe(VEHICLE_GEARBOX_FIELD_ID)
   })
 
   it("uses locked field ids for locked product entry", () => {
@@ -67,9 +79,18 @@ describe("resolveConfiguratorV2VehicleScrollTarget", () => {
         ...baseInput,
         isLocked: true,
         year: "2018",
+        gearbox: "Automatyczna",
         bodyOptionsCount: 3,
       }),
     ).toBe(LOCKED_VEHICLE_BODY_TYPE_FIELD_ID)
+
+    expect(
+      resolveConfiguratorV2VehicleScrollTarget({
+        ...baseInput,
+        isLocked: true,
+        year: "2018",
+      }),
+    ).toBe(LOCKED_VEHICLE_GEARBOX_FIELD_ID)
   })
 
   it("returns null while catalog is loading", () => {

@@ -1,0 +1,13 @@
+{
+  "name": "evapremium-local-harness",
+  "private": true,
+  "type": "module",
+  "description": "Local fixture proxy and purchase-path check. No production credentials.",
+  "scripts": {
+    "proxy": "node proxy.mjs",
+    "journey": "node journey.mjs"
+  },
+  "dependencies": {
+    "puppeteer-core": "24.6.0"
+  }
+}

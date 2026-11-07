@@ -8,9 +8,10 @@ export default function GaleriaPage() {
     <div className="min-h-screen bg-black">
       <PageHeroBanner
         breadcrumb="Galeria"
-        title="GALERIA"
-        highlight="PRODUKTÓW"
-        description="Odkryj naszą kolekcję najwyższej jakości dywaników samochodowych EVA Premium. Każdy produkt jest precyzyjnie dopasowany do Twojego auta i wykonany z najwyższej jakości materiałów."
+        kicker="Kolekcja"
+        title="Galeria"
+        description="Zdjęcia dywaników EVA Premium. Kolory, faktura i dopasowanie w prawdziwych autach."
+        meta="30 zdjęć"
       />
       <GallerySection />
     </div>

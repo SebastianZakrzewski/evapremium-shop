@@ -1,7 +1,7 @@
 "use client"
 
 import type { KeyboardEvent } from "react"
-import { ZoomIn } from "lucide-react"
+import { Maximize2 } from "lucide-react"
 import {
   CONFIGURATOR_V2_MOBILE_MAT_IMAGE_SCALE,
   CONFIGURATOR_V2_MOBILE_PREVIEW_HEIGHT,
@@ -18,6 +18,7 @@ type ConfiguratorV2MobilePreviewProps = {
   onSwipePrevious?: () => void
   onSwipeNext?: () => void
   canSwipeGallery?: boolean
+  fitToWindowWidth?: boolean
 }
 
 export const ConfiguratorV2MobilePreview = ({
@@ -28,14 +29,18 @@ export const ConfiguratorV2MobilePreview = ({
   onSwipePrevious,
   onSwipeNext,
   canSwipeGallery = false,
+  fitToWindowWidth = false,
 }: ConfiguratorV2MobilePreviewProps) => {
-  const canvasClass = usesMatPreviewCanvas
-    ? getMatPreviewCanvasClass("/dywaniki/preview.webp")
-    : getMatPreviewCanvasClass(imageSrc)
-  const scaleClass =
+  const canvasClass = fitToWindowWidth
+    ? "bg-white"
+    : usesMatPreviewCanvas
+      ? getMatPreviewCanvasClass("/dywaniki/preview.webp")
+      : getMatPreviewCanvasClass(imageSrc)
+  const restingScaleClass =
     usesMatPreviewCanvas || imageSrc.startsWith("/dywaniki/")
-    ? CONFIGURATOR_V2_MOBILE_MAT_IMAGE_SCALE
-    : "scale-100"
+      ? CONFIGURATOR_V2_MOBILE_MAT_IMAGE_SCALE
+      : "scale-100"
+  const scaleClass = fitToWindowWidth ? "scale-100" : restingScaleClass
 
   const swipeHandlers = useHorizontalSwipe({
     enabled: canSwipeGallery,
@@ -65,13 +70,13 @@ export const ConfiguratorV2MobilePreview = ({
       onPointerUp={swipeHandlers.onPointerUp}
       onPointerCancel={swipeHandlers.onPointerCancel}
       style={swipeHandlers.dragStyle}
-      className={`relative block w-full ${CONFIGURATOR_V2_MOBILE_PREVIEW_HEIGHT} ${canvasClass} overflow-hidden ${
+      className={`relative block w-full overflow-hidden ${canvasClass} ${CONFIGURATOR_V2_MOBILE_PREVIEW_HEIGHT} rounded-2xl ${
         canSwipeGallery ? "touch-none cursor-grab active:cursor-grabbing" : "touch-pan-y"
       }`}
-      aria-label="Powiększ podgląd"
+      aria-label={`Powiększ: ${alt}`}
     >
       <div
-        className={`absolute inset-0 origin-center ${scaleClass}`}
+        className={`absolute inset-0 origin-center transition-transform duration-300 ease-out ${scaleClass}`}
       >
         <ConfiguratorV2CrossfadeImage
           imageSrc={imageSrc}
@@ -80,8 +85,8 @@ export const ConfiguratorV2MobilePreview = ({
           priority
         />
       </div>
-      <span className="absolute bottom-2 right-2 z-10 flex items-center gap-1 text-[10px] text-white bg-black/65 backdrop-blur-sm px-2 py-0.5 rounded-full border border-black/10 pointer-events-none">
-        <ZoomIn className="w-3 h-3" aria-hidden />
+      <span className="pointer-events-none absolute bottom-3 left-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-black/55 px-3 py-1.5 text-[11px] font-medium text-white backdrop-blur-md">
+        <Maximize2 className="h-3.5 w-3.5" aria-hidden />
         Powiększ
       </span>
     </div>

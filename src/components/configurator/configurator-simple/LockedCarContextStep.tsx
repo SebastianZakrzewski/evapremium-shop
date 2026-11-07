@@ -4,7 +4,8 @@ import { useEffect, useMemo, useRef } from "react"
 import { buildVehicleDisplayLabels, formatBrandDisplayName } from "@/shared/vehicle/displayLabels"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Car, CheckCircle2 } from "lucide-react"
+import { Car } from "lucide-react"
+import { DarkSelect } from "@/components/configurator/configurator-v2/ui/DarkSelect"
 import { resolveConfiguratorBrandImage } from "@/features/car-configurator/utils/resolveConfiguratorBrandImage"
 import {
   shouldServeBrandImageUnoptimized,
@@ -25,6 +26,10 @@ import {
 } from "@/features/car-configurator/utils/lockedCarContextLogic"
 import { useConfiguratorV2InitialVehicleScroll } from "@/components/configurator/configurator-v2/hooks/useConfiguratorV2InitialVehicleScroll"
 import { resolveConfiguratorV2VehicleScrollTarget } from "@/components/configurator/configurator-v2/utils/resolveConfiguratorV2VehicleScrollTarget"
+import {
+  GEARBOX_OPTIONS,
+  isGearbox,
+} from "@/features/car-configurator/domain/gearbox"
 
 type LockedCarContextStepProps = {
   config: Pick<
@@ -36,6 +41,7 @@ type LockedCarContextStepProps = {
     | "modelKey"
     | "generation"
     | "year"
+    | "gearbox"
     | "bodyType"
     | "bodyTypeKey"
     | "recordKey"
@@ -46,10 +52,8 @@ type LockedCarContextStepProps = {
   onUpdate: (updates: Partial<ConfiguratorState>) => void
   onNext: () => void
   hideNextButton?: boolean
+  surface?: "dark" | "light"
 }
-
-const selectClassName =
-  "w-full px-4 py-3 min-h-[44px] bg-[#111] border border-white/10 rounded-lg text-white text-sm appearance-none cursor-pointer focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
 
 const normalizeToken = (value: string): string =>
   value.toLowerCase().replace(/[\s_-]+/g, "")
@@ -60,7 +64,9 @@ export const LockedCarContextStep = ({
   onUpdate,
   onNext,
   hideNextButton = false,
+  surface = "dark",
 }: LockedCarContextStepProps) => {
+  const light = surface === "light"
   const provisionalBrandKey =
     config.brandKey || productEntry.brandParam || ""
   const { brands: catalogBrands, models, isLoading: isModelsQueryLoading } =
@@ -387,6 +393,7 @@ export const LockedCarContextStep = ({
         brandSelected: Boolean(config.brand),
         modelSelected: Boolean(config.model),
         year: config.year,
+        gearbox: config.gearbox,
         bodyTypeKey: config.bodyTypeKey,
         modelKey: config.modelKey,
         isLoading,
@@ -401,6 +408,7 @@ export const LockedCarContextStep = ({
       config.model,
       config.modelKey,
       config.year,
+      config.gearbox,
       isLoading,
     ],
   )
@@ -414,6 +422,7 @@ export const LockedCarContextStep = ({
     config.brand &&
       config.model &&
       config.year &&
+      config.gearbox &&
       config.bodyTypeKey &&
       config.recordKey,
   )
@@ -456,6 +465,9 @@ export const LockedCarContextStep = ({
         ? `Wybierz rok produkcji z zakresu ${vehicleDisplay.yearRangeDisplay}`
         : "Wybierz rok produkcji z listy dostępnych roczników"
     }
+    if (config.year && !config.gearbox) {
+      return "Wybierz skrzynię biegów"
+    }
     if (bodyTypeParamMismatch) {
       return `Typ nadwozia „${productEntry.bodyTypeParam}” nie jest dostępny dla wybranego rocznika — wybierz z listy`
     }
@@ -478,9 +490,15 @@ export const LockedCarContextStep = ({
         nadwozia, aby dopasować szablon.
       </p>
 
-      <div className="bg-black/30 border border-white/10 rounded-xl p-4 space-y-3">
+      <div
+        className={
+          light
+            ? "space-y-3 rounded-2xl border border-neutral-300 bg-[#FDFDFD] p-4"
+            : "bg-[#1c1c1e] rounded-2xl p-4 space-y-3"
+        }
+      >
         <div className="flex items-start gap-3">
-          <div className="relative w-12 h-12 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
+          <div className="relative w-12 h-12 bg-black/40 rounded-xl overflow-hidden flex-shrink-0">
             {brandThumbnailSrc ? (
               <Image
                 src={brandThumbnailSrc}
@@ -511,37 +529,38 @@ export const LockedCarContextStep = ({
             <p className="text-xs text-gray-500 uppercase tracking-wider mb-0.5">
               Marka
             </p>
-            <p className="text-white font-semibold">{formatBrandDisplayName(config.brand)}</p>
+            <p className={light ? "font-semibold text-neutral-950" : "text-white font-semibold"}>
+              {formatBrandDisplayName(config.brand)}
+            </p>
           </div>
         </div>
 
         <DetailRow
           label="Model"
           value={vehicleDisplay.modelDisplay || config.model}
-          verified={isModelCatalogResolved}
+          light={light}
         />
         {vehicleDisplay.generationNumberDisplay && (
           <DetailRow
             label="Generacja"
             value={vehicleDisplay.generationNumberDisplay}
-            verified
+            light={light}
           />
         )}
         {!config.year && vehicleDisplay.yearRangeDisplay && (
           <DetailRow
             label="Roczniki"
             value={vehicleDisplay.yearRangeDisplay}
-            verified={!!resolvedGeneration}
+            light={light}
           />
         )}
         {config.bodyTypeKey && !needsManualBodyType && (
           <DetailRow
             label="Typ nadwozia"
             value={vehicleDisplay.bodyTypeDisplay || config.bodyType}
-            verified
+            light={light}
           />
         )}
-      </div>
 
       {isLoading && (
         <p className="text-xs text-gray-400 text-center">Ładowanie katalogu pojazdów…</p>
@@ -551,29 +570,47 @@ export const LockedCarContextStep = ({
         <div id="locked-car-year" className="scroll-mt-4">
           <label
             htmlFor="locked-car-year-select"
-            className="block text-sm font-medium text-gray-400 mb-2"
+            className={`mb-2 block text-[13px] font-medium ${light ? "text-neutral-700" : "text-white/55"}`}
           >
             Rok produkcji *
           </label>
-          <div className="relative">
-            <select
-              id="locked-car-year-select"
-              value={config.year}
-              onChange={(event) => handleYearChange(event.target.value)}
-              className={selectClassName}
-              aria-label="Wybierz rok produkcji"
-            >
-              <option value="">Wybierz rok</option>
-              {availableYears.map((year) => (
-                <option key={year} value={String(year)}>
-                  {year}
-                </option>
-              ))}
-            </select>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <span className="text-gray-400">▼</span>
-            </div>
-          </div>
+          <DarkSelect
+            id="locked-car-year-select"
+            value={config.year}
+            placeholder="Wybierz rok"
+            ariaLabel="Wybierz rok produkcji"
+            options={availableYears.map((year) => ({
+              value: String(year),
+              label: String(year),
+            }))}
+            onChange={handleYearChange}
+            surface={surface}
+          />
+        </div>
+      )}
+
+      {config.year && (
+        <div id="locked-car-gearbox" className="scroll-mt-4">
+          <label
+            htmlFor="locked-car-gearbox-select"
+            className={`mb-2 block text-[13px] font-medium ${light ? "text-neutral-700" : "text-white/55"}`}
+          >
+            Skrzynia biegów *
+          </label>
+          <DarkSelect
+            id="locked-car-gearbox-select"
+            value={config.gearbox}
+            placeholder="Wybierz skrzynię biegów"
+            ariaLabel="Wybierz skrzynię biegów"
+            options={GEARBOX_OPTIONS.map((option) => ({
+              value: option.value,
+              label: option.label,
+            }))}
+            onChange={(value) =>
+              onUpdate({ gearbox: isGearbox(value) ? value : "" })
+            }
+            surface={surface}
+          />
         </div>
       )}
 
@@ -581,35 +618,29 @@ export const LockedCarContextStep = ({
         <div id="locked-car-body-type" className="scroll-mt-4">
           <label
             htmlFor="locked-car-body-type-select"
-            className="block text-sm font-medium text-gray-400 mb-2"
+            className={`mb-2 block text-[13px] font-medium ${light ? "text-neutral-700" : "text-white/55"}`}
           >
             Typ nadwozia *
           </label>
-          <div className="relative">
-            <select
-              id="locked-car-body-type-select"
-              value={
-                config.recordKey && config.bodyTypeKey
-                  ? `${config.recordKey}::${config.bodyTypeKey}`
-                  : ""
-              }
-              onChange={(event) => handleBodyTypeChange(event.target.value)}
-              className={selectClassName}
-              aria-label="Wybierz typ nadwozia"
-            >
-              <option value="">Wybierz typ nadwozia</option>
-              {bodyOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.bodyType.displayLabel ?? option.bodyType.label}
-                </option>
-              ))}
-            </select>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <span className="text-gray-400">▼</span>
-            </div>
-          </div>
+          <DarkSelect
+            id="locked-car-body-type-select"
+            value={
+              config.recordKey && config.bodyTypeKey
+                ? `${config.recordKey}::${config.bodyTypeKey}`
+                : ""
+            }
+            placeholder="Wybierz typ nadwozia"
+            ariaLabel="Wybierz typ nadwozia"
+            options={bodyOptions.map((option) => ({
+              value: option.value,
+              label: option.bodyType.displayLabel ?? option.bodyType.label,
+            }))}
+            onChange={handleBodyTypeChange}
+            surface={surface}
+          />
         </div>
       )}
+      </div>
 
       {(hintMessage || !hideNextButton) && (
         <div className="flex flex-col items-end gap-2 pt-2">
@@ -635,18 +666,19 @@ export const LockedCarContextStep = ({
 const DetailRow = ({
   label,
   value,
-  verified = false,
+  light = false,
 }: {
   label: string
   value: string
-  verified?: boolean
+  light?: boolean
 }) => (
-  <div className="flex items-center justify-between gap-3 py-2 border-t border-white/5 first:border-t-0 first:pt-0">
-    <span className="text-xs text-gray-500">{label}</span>
-    <span className="text-sm text-white font-medium text-right flex items-center gap-1.5">
-      {verified && (
-        <CheckCircle2 className="w-3.5 h-3.5 text-green-500 flex-shrink-0" aria-hidden />
-      )}
+  <div
+    className={`flex items-center justify-between gap-3 border-t py-2 first:border-t-0 first:pt-0 ${
+      light ? "border-neutral-200" : "border-white/10"
+    }`}
+  >
+    <span className={light ? "text-xs text-neutral-500" : "text-xs text-white/45"}>{label}</span>
+    <span className={light ? "text-right text-sm font-medium text-neutral-950" : "text-right text-sm font-medium text-white"}>
       {value}
     </span>
   </div>

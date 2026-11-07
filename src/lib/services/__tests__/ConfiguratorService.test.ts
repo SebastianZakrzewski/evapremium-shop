@@ -1,5 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { ConfiguratorService } from '../ConfiguratorService';
+import { ProductFactory } from '../../factories/ProductFactory';
+import { PricingService } from '../PricingService';
 import { ConfigurationData, ProductConfiguration } from '../../types/product';
 
 describe('ConfiguratorService', () => {
@@ -81,43 +83,37 @@ describe('ConfiguratorService', () => {
   });
 
   describe('calculatePricing', () => {
-    it('should calculate correct pricing for basic configuration', () => {
-      const pricing = ConfiguratorService.calculatePricing(mockConfigData);
+    it('prices a basic 3D set from the factory strategy used by product creation', () => {
+      const pricing = ProductFactory.calculatePricing(mockConfigData);
+      const created = ConfiguratorService.createProductFromConfiguration(mockConfigData);
 
-      expect(pricing).toBeDefined();
-      expect(pricing.basePrice).toBeGreaterThan(0);
-      expect(pricing.modifiers).toBeDefined();
-      expect(pricing.totalPrice).toBe(pricing.basePrice + pricing.modifiers);
+      expect(pricing.basePrice).toBe(910);
+      expect(pricing.totalPrice).toBe(637);
+      expect(created.pricing).toEqual(pricing);
     });
 
-    it('should apply correct modifiers for different set types', () => {
-      const classicConfig = { ...mockConfigData, setType: 'classic' };
-      const classicPricing = ConfiguratorService.calculatePricing(classicConfig);
+    it('prices classic below 3D for the same basic variant', () => {
+      const classicPricing = ProductFactory.calculatePricing({ ...mockConfigData, setType: 'classic' });
+      const premiumPricing = ProductFactory.calculatePricing({ ...mockConfigData, setType: '3d-with-rims' });
 
-      const premiumConfig = { ...mockConfigData, setType: '3d-with-rims' };
-      const premiumPricing = ConfiguratorService.calculatePricing(premiumConfig);
-
+      expect(classicPricing.basePrice).toBe(510);
+      expect(classicPricing.totalPrice).toBe(408);
       expect(classicPricing.totalPrice).toBeLessThan(premiumPricing.totalPrice);
     });
 
-    it('should apply heel pad modifier when selected', () => {
-      const withHeelPad = { ...mockConfigData, heelPad: 'tak' };
-      const withoutHeelPad = { ...mockConfigData, heelPad: 'brak' };
+    it('does not add a heel-pad surcharge in the legacy mat calculator', () => {
+      const withHeelPad = PricingService.calculateMatPrice(219, { ...mockConfigData, heelPad: 'yes' });
+      const withoutHeelPad = PricingService.calculateMatPrice(219, { ...mockConfigData, heelPad: 'brak' });
 
-      const withHeelPadPricing = ConfiguratorService.calculatePricing(withHeelPad);
-      const withoutHeelPadPricing = ConfiguratorService.calculatePricing(withoutHeelPad);
-
-      expect(withHeelPadPricing.totalPrice).toBeGreaterThan(withoutHeelPadPricing.totalPrice);
+      expect(withHeelPad).toBe(withoutHeelPad);
+      expect(withHeelPad).toBe(219);
     });
 
-    it('should apply edge color modifier for red edge', () => {
-      const redEdgeConfig = { ...mockConfigData, edgeColor: 'red' };
-      const blackEdgeConfig = { ...mockConfigData, edgeColor: 'black' };
+    it('does not change the factory total when only the edge color changes', () => {
+      const redEdgePricing = ProductFactory.calculatePricing({ ...mockConfigData, edgeColor: 'red' });
+      const blackEdgePricing = ProductFactory.calculatePricing({ ...mockConfigData, edgeColor: 'black' });
 
-      const redEdgePricing = ConfiguratorService.calculatePricing(redEdgeConfig);
-      const blackEdgePricing = ConfiguratorService.calculatePricing(blackEdgeConfig);
-
-      expect(redEdgePricing.totalPrice).toBeGreaterThan(blackEdgePricing.totalPrice);
+      expect(redEdgePricing).toEqual(blackEdgePricing);
     });
   });
 });

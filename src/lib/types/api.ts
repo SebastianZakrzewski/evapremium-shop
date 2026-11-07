@@ -117,5 +117,6 @@ export interface CarSelection {
   brand: string;
   model: string;
   year: string;
+  gearbox?: string;
   bodyType: string;
 }

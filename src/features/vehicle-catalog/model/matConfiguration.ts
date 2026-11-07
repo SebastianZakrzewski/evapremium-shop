@@ -17,6 +17,10 @@ export const MatCarDetailsSchema = z.object({
   modelKey: optionalNonEmptyString(),
   generation: z.string().trim().optional(),
   year: z.string().trim().min(1),
+  gearbox: z.preprocess((value) => {
+    if (value === null || value === undefined || value === "") return undefined
+    return value
+  }, z.enum(["Automatyczna", "Manualna"]).optional()),
   bodyType: z.string().trim().min(1),
   bodyTypeKey: optionalNonEmptyString(),
   recordKey: optionalNonEmptyString(),

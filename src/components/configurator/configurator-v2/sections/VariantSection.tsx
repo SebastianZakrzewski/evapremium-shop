@@ -11,7 +11,7 @@ import { VariantTrunkMatRimNotice } from "../variant/VariantTrunkMatRimNotice"
 import { shouldShowVariantTrunkMatRimNotice } from "../variant/trunkMatRimNotice"
 
 const compareLinkClass =
-  "text-xs text-gray-400 hover:text-white underline-offset-2 hover:underline whitespace-nowrap transition-colors"
+  "text-[13px] font-medium text-red-500 hover:text-red-400 whitespace-nowrap transition-colors"
 
 type VariantSectionProps = {
   config: { variant: string; matType?: string }
@@ -21,6 +21,7 @@ type VariantSectionProps = {
   readiness: SectionReadiness
   onUpdate: (updates: { variant?: string }) => void
   onCompareClick?: () => void
+  unavailableNotice?: string | null
 }
 
 export const VariantSection = ({
@@ -31,6 +32,7 @@ export const VariantSection = ({
   readiness,
   onUpdate,
   onCompareClick,
+  unavailableNotice,
 }: VariantSectionProps) => {
   const selectedVariant = pricingVariants.find((v) => v.key === config.variant)
   const offeredVariantKeys = pricingVariants.map((item) => item.key)
@@ -62,8 +64,13 @@ export const VariantSection = ({
         ) : undefined
       }
     >
+      {unavailableNotice && (
+        <p role="status" className="mb-3 text-[13px] leading-snug text-neutral-800">
+          {unavailableNotice}
+        </p>
+      )}
       <div
-        className="grid gap-2 justify-items-center"
+        className="grid gap-3"
         style={{
           gridTemplateColumns: `repeat(auto-fill, minmax(${CONFIGURATOR_V2_IMAGE_CARD_MIN_WIDTH}, 1fr))`,
         }}

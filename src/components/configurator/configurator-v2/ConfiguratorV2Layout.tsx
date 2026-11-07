@@ -1,94 +1,115 @@
 "use client"
 
-import type { ReactNode } from "react"
-import {
-  CONFIGURATOR_V2_MOBILE_CONTENT_PT,
-  CONFIGURATOR_V2_MOBILE_CONTENT_PT_WITH_GALLERY,
-  CONFIGURATOR_V2_MOBILE_MAIN_PB,
-} from "./configuratorV2MobileLayout"
+import { useEffect, useRef, useState, type ReactNode } from "react"
+import { MobilePreviewDockProvider } from "./MobilePreviewDockContext"
+import { resolveMobilePreviewDocked } from "./mobilePreviewDock"
+
+const configuratorWindowClassName =
+  "rounded-2xl border border-neutral-300 bg-[#FDFDFD] text-neutral-950 shadow-sm"
 
 type ConfiguratorV2LayoutProps = {
+  topBar: ReactNode
+  stageNav?: ReactNode
   specsBar: ReactNode
+  introCard?: ReactNode
   previewPanel: ReactNode
   optionPanel: ReactNode
-  stickyBarDesktop: ReactNode
   stickyBarMobile: ReactNode
   mobilePreview?: ReactNode
-  mobilePreviewHasGallery?: boolean
   hideMobileStickyBar?: boolean
   modals?: ReactNode
 }
 
 /**
- * Mobile (Tesla): fixed hero pod navbar → scroll (metryki + opcje) → sticky CTA
- * Desktop: split-screen bez zmian
+ * Desktop: pasek u góry, przyklejona scena po lewej, opcje po prawej.
+ * Mobile: scena przyklejona u góry, opcje scrollują się pod nią, pasek na dole.
  */
 export const ConfiguratorV2Layout = ({
+  topBar,
+  stageNav,
   specsBar,
+  introCard,
   previewPanel,
   optionPanel,
-  stickyBarDesktop,
   stickyBarMobile,
   mobilePreview,
-  mobilePreviewHasGallery = false,
   hideMobileStickyBar = false,
   modals,
-}: ConfiguratorV2LayoutProps) => (
-  <div
-    className="h-[100dvh] max-h-[100dvh] min-h-0 bg-black text-white flex flex-col overflow-hidden
-      lg:h-[calc(100dvh-6rem)] lg:max-h-[calc(100dvh-6rem)]"
-  >
-    {mobilePreview && (
-      <div
-        className="lg:hidden fixed top-16 md:top-20 left-0 right-0 z-30 border-b border-black/10 shadow-[0_8px_24px_rgba(0,0,0,0.08)]"
-      >
-        {mobilePreview}
-      </div>
-    )}
+}: ConfiguratorV2LayoutProps) => {
+  const optionsRef = useRef<HTMLElement>(null)
+  const [previewDocked, setPreviewDocked] = useState(false)
 
-    <div className="flex flex-1 min-h-0 flex-col lg:flex-row">
+  useEffect(() => {
+    const options = optionsRef.current
+    if (!options) return
+
+    const handleScroll = () => {
+      setPreviewDocked((docked) =>
+        resolveMobilePreviewDocked(options.scrollTop, docked),
+      )
+    }
+
+    options.addEventListener("scroll", handleScroll, { passive: true })
+    return () => options.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  return (
+  <div className="flex h-full min-h-0 flex-col overflow-hidden overflow-x-hidden bg-black text-white">
+    <div className="hidden shrink-0 border-b border-white/[0.08] bg-black lg:block">
+      {topBar}
+    </div>
+
+    <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+      {mobilePreview && (
+        <MobilePreviewDockProvider docked={previewDocked}>
+          <div
+            className="shrink-0 border-b border-white/[0.08] bg-black px-4 pb-2 pt-2 lg:hidden"
+            aria-label="Podgląd produktu"
+          >
+            {mobilePreview}
+          </div>
+        </MobilePreviewDockProvider>
+      )}
+
       <aside
-        className="hidden lg:flex lg:w-[38%] xl:w-[40%] shrink-0 h-full min-h-0
-          bg-black items-center justify-center p-5 xl:p-8 overflow-hidden"
+        className="hidden min-h-0 shrink-0 flex-col p-4 xl:p-6 lg:flex lg:w-[62%]"
         aria-label="Podgląd produktu"
       >
-        <div className="w-full h-[92%] max-h-[92%] min-h-0">{previewPanel}</div>
+        <div className="min-h-0 flex-1">{previewPanel}</div>
       </aside>
 
-      <div className="flex flex-1 min-h-0 flex-col bg-black">
-        <header className="hidden lg:block shrink-0 border-b border-white/10 px-6 xl:px-10 py-5">
-          {specsBar}
-        </header>
-
-        <main
-          className={`flex-1 overflow-y-auto overscroll-contain
-            px-4 py-3 lg:px-6 xl:px-10 lg:py-6 ${CONFIGURATOR_V2_MOBILE_MAIN_PB} lg:pb-4
-            ${
-              mobilePreviewHasGallery
-                ? CONFIGURATOR_V2_MOBILE_CONTENT_PT_WITH_GALLERY
-                : CONFIGURATOR_V2_MOBILE_CONTENT_PT
-            } lg:pt-6`}
-        >
-          <div className="lg:hidden mb-3 pb-3 border-b border-white/10">
-            {specsBar}
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-[#E6E6E6] text-neutral-950">
+        {stageNav && (
+          <div className="shrink-0 px-3 pt-2 lg:px-4 lg:pt-4">
+            <div className={`${configuratorWindowClassName} p-1.5 sm:p-2`}>
+              {stageNav}
+            </div>
           </div>
-          {optionPanel}
+        )}
+        <main
+          ref={optionsRef}
+          data-configurator-options
+          className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden overscroll-contain bg-[#E6E6E6] px-3 pb-3 pt-2 text-neutral-950 lg:px-4 lg:py-4"
+        >
+          <div
+            data-configurator-panel
+            className={`${configuratorWindowClassName} flex min-w-0 flex-col px-3 py-2 sm:p-4`}
+          >
+            <div className="order-1">{specsBar}</div>
+            {introCard && <div className="order-2 mb-4 hidden lg:block">{introCard}</div>}
+            <div className="order-3 min-w-0">{optionPanel}</div>
+          </div>
         </main>
-
-        <div className="hidden lg:block shrink-0 sticky bottom-0 z-20 border-t border-white/10 bg-black/95 backdrop-blur-md">
-          {stickyBarDesktop}
-        </div>
       </div>
     </div>
 
     <div
-      className={`lg:hidden fixed bottom-0 left-0 right-0 z-40 pb-safe ${
-        hideMobileStickyBar ? "hidden" : ""
-      }`}
+      className={`shrink-0 pb-safe lg:hidden ${hideMobileStickyBar ? "hidden" : ""}`}
     >
       {stickyBarMobile}
     </div>
 
     {modals}
   </div>
-)
+  )
+}

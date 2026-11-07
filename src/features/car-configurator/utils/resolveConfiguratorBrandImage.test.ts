@@ -8,7 +8,7 @@ describe("resolveConfiguratorBrandImage", () => {
         brand: "alfa-romeo",
         brandParam: "alfa-romeo",
       }),
-    ).toBe("/modele/alfa_romeo.jpg")
+    ).toBe("/modele/alfa_romeo.webp")
   })
 
   it("prefers brandKey when available", () => {
@@ -17,6 +17,6 @@ describe("resolveConfiguratorBrandImage", () => {
         brand: "BMW",
         brandKey: "bmw",
       }),
-    ).toBe("/modele/bmw.png")
+    ).toBe("/modele/bmw.webp")
   })
 })

@@ -32,10 +32,10 @@ export const TeslaSwatchRow = ({
           aria-label={item.label}
           aria-pressed={isSelected}
           title={item.label}
-          className={`h-11 w-11 overflow-hidden rounded-full border-2 transition-all ${
+          className={`h-11 w-11 overflow-hidden rounded-full border-2 transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950 ${
             isSelected
-              ? "border-red-500 ring-2 ring-red-500/40 scale-105"
-              : "border-white/25 hover:border-white/50"
+              ? "border-neutral-950"
+              : "border-neutral-300 hover:border-neutral-500"
           }`}
           style={
             !item.imageSrc && item.color
@@ -45,14 +45,17 @@ export const TeslaSwatchRow = ({
         >
           {item.imageSrc && (
             <Image
-              src={item.imageSrc}
+              src={item.imageSrc.replace(/\.(png|jpe?g|webp)$/i, ".webp").replace(
+                /(\/kolor-materialu\/|\/kolor-obszycia\/|\/struktura-komorek\/)/,
+                "$1display/",
+              )}
               alt=""
               aria-hidden
               width={MATERIAL_COLOR_SWATCH_SIZE}
               height={MATERIAL_COLOR_SWATCH_SIZE}
-              quality={100}
-              unoptimized
+              quality={75}
               sizes="44px"
+              loading="lazy"
               className="h-full w-full object-cover"
               draggable={false}
             />

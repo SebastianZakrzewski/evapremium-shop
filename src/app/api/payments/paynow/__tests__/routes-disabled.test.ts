@@ -1,12 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { NextRequest } from 'next/server'
 
-vi.mock('@/config/env', () => ({ env: { features: { paynowEnabled: false } } }))
+vi.mock('@/config/env', () => ({
+  env: {
+    features: { paynowEnabled: false },
+    supabase: {
+      url: 'https://local-fixture.invalid',
+      anonKey: 'local-anon',
+      serviceRoleKey: 'local-service',
+    },
+  },
+}))
 
 vi.mock('@/lib/services/PaymentService', () => ({
-  PaymentService: vi.fn().mockImplementation(() => ({
-    initiatePayment: vi.fn(),
-  })),
+  PaymentService: vi.fn().mockImplementation(function () {
+    return { initiatePayment: vi.fn() }
+  }),
 }))
 
 import * as registerRoute from '../register/route'

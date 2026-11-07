@@ -52,8 +52,8 @@ describe("TeslaSwatchRow", () => {
     expect(button).not.toHaveStyle({ backgroundColor: "rgb(209, 45, 28)" })
 
     const icon = button.querySelector("img")
-    expect(icon).toHaveAttribute("src", "/konfigurator/kolor-materialu/red.png")
-    expect(icon).toHaveAttribute("data-unoptimized", "true")
+    expect(icon).toHaveAttribute("src", "/konfigurator/kolor-materialu/display/red.webp")
+    expect(icon).toHaveAttribute("data-unoptimized", "false")
     expect(icon).toHaveAttribute("width", String(MATERIAL_COLOR_SWATCH_SIZE))
   })
 })

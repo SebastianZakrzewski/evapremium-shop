@@ -109,7 +109,7 @@ export const GalleryLightbox = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 p-4 backdrop-blur-xl md:p-8"
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black md:bg-black/95 md:backdrop-blur-xl"
           onClick={onClose}
           role="dialog"
           aria-modal="true"
@@ -121,7 +121,7 @@ export const GalleryLightbox = ({
               event.stopPropagation()
               onClose()
             }}
-            className="fixed top-4 right-4 z-[210] flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/20 bg-black/80 text-white backdrop-blur-sm transition-colors hover:border-red-500/50 hover:bg-red-600"
+            className="fixed top-[max(1rem,env(safe-area-inset-top))] right-4 z-[210] flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/20 bg-black/80 text-white backdrop-blur-sm transition-colors hover:border-red-500/50 hover:bg-red-600"
             aria-label="Zamknij podgląd"
           >
             <X className="h-6 w-6" aria-hidden />
@@ -159,7 +159,7 @@ export const GalleryLightbox = ({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.96, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative z-[205] flex w-full max-w-5xl max-h-[90vh] flex-col px-10 md:px-14"
+            className="relative z-[205] flex h-dvh w-full max-w-none flex-col md:h-[96dvh] md:w-[min(96vw,1920px)]"
             onClick={(event) => event.stopPropagation()}
           >
             <motion.div
@@ -167,7 +167,7 @@ export const GalleryLightbox = ({
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.12}
               onDragEnd={handleDragEnd}
-              className="relative h-[55vh] min-h-[200px] max-h-[72vh] w-full touch-pan-y overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl"
+              className="relative min-h-0 w-full flex-1 touch-pan-y overflow-hidden bg-black md:rounded-2xl md:border md:border-white/10 md:shadow-2xl"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
@@ -182,8 +182,8 @@ export const GalleryLightbox = ({
                     src={current.src}
                     alt={current.alt}
                     fill
-                    className="object-contain p-2 md:p-4"
-                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    className="object-contain"
+                    sizes="100vw"
                     quality={90}
                     priority
                   />
@@ -191,21 +191,21 @@ export const GalleryLightbox = ({
               </AnimatePresence>
 
               {canNavigate && (
-                <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 -translate-x-1/2 rounded-full border border-white/10 bg-black/70 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                <div className="pointer-events-none absolute top-[max(1.15rem,env(safe-area-inset-top))] left-1/2 z-10 -translate-x-1/2 rounded-full border border-white/10 bg-black/70 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
                   {safeIndex + 1} / {itemCount}
                 </div>
               )}
             </motion.div>
 
             {(current.title || current.description) && (
-              <div className="mt-4 max-h-[22vh] overflow-y-auto rounded-xl border border-white/10 bg-black/90 p-4 backdrop-blur-md md:p-6">
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black via-black/70 to-transparent px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-16 md:rounded-b-2xl md:px-8 md:pb-8">
                 {current.title && (
-                  <h3 className="text-xl font-bold text-white md:text-2xl">
+                  <h3 className="text-lg font-bold text-white md:text-2xl">
                     {current.title}
                   </h3>
                 )}
                 {current.description && (
-                  <p className="mt-2 text-sm leading-relaxed text-gray-300 md:text-base">
+                  <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-gray-300 md:text-base">
                     {current.description}
                   </p>
                 )}

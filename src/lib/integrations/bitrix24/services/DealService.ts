@@ -11,6 +11,10 @@ import { stageMappingService } from './StageMappingService';
 import { contactService } from './ContactService';
 import { Bitrix24Deal, Bitrix24DealProduct, Bitrix24ApiResponse } from '@/lib/types/bitrix';
 import { validateBitrix24Deal, validateBitrix24DealProduct } from '@/lib/validators/bitrix24';
+import {
+  getGearboxBitrixEnumId,
+  getGearboxLabel,
+} from '@/features/car-configurator/domain/gearbox';
 
 export interface DealSearchResult {
   id: string;
@@ -105,6 +109,7 @@ export class DealService {
     model?: string;
     year?: string | number;
     body?: string;
+    gearbox?: string;
   } {
     // First try cart.car (direct car data)
     if (cart.car) {
@@ -113,6 +118,7 @@ export class DealService {
         model: cart.car.model,
         year: cart.car.year,
         body: cart.car.bodyType,
+        gearbox: cart.car.gearbox,
       };
     }
 
@@ -130,6 +136,7 @@ export class DealService {
             model: config.carDetails.model,
             year: config.carDetails.year,
             body: config.carDetails.bodyType || config.carDetails.body,
+            gearbox: config.carDetails.gearbox || config.carDetails.trans,
           };
         }
       }
@@ -552,6 +559,7 @@ export class DealService {
       if (cart.car.model) carParts.push(cart.car.model);
       if (cart.car.year) carParts.push(String(cart.car.year));
       if (cart.car.bodyType) carParts.push(cart.car.bodyType);
+      if (cart.car.gearbox) carParts.push(String(cart.car.gearbox));
       if (carParts.length > 0) {
         commentsLines.push(`Samochód: ${carParts.join(' ')}`);
       }
@@ -562,9 +570,14 @@ export class DealService {
       if (carDetails.model) carParts.push(String(carDetails.model));
       if (carDetails.year) carParts.push(String(carDetails.year));
       if (carDetails.body) carParts.push(String(carDetails.body));
+      if (carDetails.gearbox) carParts.push(String(carDetails.gearbox));
       if (carParts.length > 0) {
         commentsLines.push(`Samochód: ${carParts.join(' ')}`);
       }
+    }
+
+    if (carDetails.gearbox) {
+      commentsLines.push(`Skrzynia biegów: ${carDetails.gearbox}`);
     }
 
     // Add product details
@@ -613,6 +626,8 @@ export class DealService {
       UF_CRM_1760788302371: carDetails.model,        // Model samochodu
       UF_CRM_1760788317619: carDetails.year ? Number(carDetails.year) : undefined, // Rok samochodu (double)
       UF_CRM_1760788343011: carDetails.body,         // Typ nadwozia
+      UF_CRM_1757178158864: getGearboxLabel(carDetails.gearbox), // Skrzynia biegów (tekst)
+      UF_CRM_1768256494433: getGearboxBitrixEnumId(carDetails.gearbox), // Skrzynia biegów (enum)
       
       // ✅ POLA PRODUKTU - mapowanie danych produktu (wartości enum)
       UF_CRM_1757024835301: setType,           // Rodzaj kompletu (setType)
@@ -632,6 +647,8 @@ export class DealService {
         model: cleanedDeal.UF_CRM_1760788302371,
         year: cleanedDeal.UF_CRM_1760788317619,
         body: cleanedDeal.UF_CRM_1760788343011,
+        gearbox: cleanedDeal.UF_CRM_1757178158864,
+        gearboxEnum: cleanedDeal.UF_CRM_1768256494433,
       },
       productFields: {
         setType: cleanedDeal.UF_CRM_1757024835301,

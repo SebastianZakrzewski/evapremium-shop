@@ -136,23 +136,23 @@ export default function CustomFitSection() {
   return (
     <section
       id="custom-fit-section"
-      className="py-10 md:py-14 bg-black relative overflow-hidden"
+      className="py-7 md:py-9 bg-black relative overflow-hidden"
     >
       <div className="absolute inset-0 bg-gradient-to-bl from-red-900/5 via-black to-black pointer-events-none" />
 
       <div className="container mx-auto px-4 relative z-10">
         <div
-          className={`text-center mb-8 md:mb-12 transition-all duration-1000 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          className={`text-center mb-5 md:mb-7 transition-all duration-1000 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
         >
           <h2
-            className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight break-words px-2 transition-all duration-1000 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+            className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3 leading-tight break-words px-2 transition-all duration-1000 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
             style={{ transitionDelay: isVisible ? "200ms" : "0ms" }}
           >
             Szyte na miarę do{" "}
             <span className="text-red-500">Twojego auta</span>
           </h2>
           <p
-            className={`text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+            className={`text-sm text-gray-400 max-w-xl mx-auto leading-relaxed px-2 transition-all duration-1000 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
             style={{ transitionDelay: isVisible ? "400ms" : "0ms" }}
           >
             Każdy dywanik jest precyzyjnie dopasowany do konkretnego modelu
@@ -161,16 +161,16 @@ export default function CustomFitSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 items-center">
           <div
             className={`order-2 lg:order-1 transition-all duration-1000 ease-out ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}`}
           >
-            <div className="space-y-8">
-              <div className="mb-8">
-                <h3 className="text-2xl font-bold text-white mb-4">
+            <div className="space-y-5">
+              <div className="mb-5">
+                <h3 className="text-white mb-2">
                   Proces realizacji
                 </h3>
-                <p className="text-gray-400 leading-relaxed">
+                <p className="text-sm text-gray-400 leading-relaxed">
                   Od momentu zamówienia do wysyłki, Twój zestaw przechodzi
                   przez 7-etapowy proces produkcji, zapewniający najwyższą
                   jakość wykonania.
@@ -305,13 +305,13 @@ export default function CustomFitSection() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -12 }}
                       transition={{ duration: 0.35, ease: "easeOut" }}
-                      className="absolute bottom-0 left-0 p-8 pointer-events-none"
+                      className="absolute bottom-0 left-0 p-5 pointer-events-none"
                     >
                       <div className="flex items-center gap-2 text-red-500 font-bold uppercase tracking-wider text-sm mb-2">
                         <CheckCircle className="w-4 h-4" />
                         {activeStepData.overlayTitle}
                       </div>
-                      <p className="text-white text-lg font-medium leading-relaxed">
+                      <p className="text-white text-sm font-medium leading-relaxed">
                         {activeStepData.overlayDescription}
                       </p>
                     </motion.div>

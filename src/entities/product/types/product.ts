@@ -18,6 +18,7 @@ export interface CarDetails {
   brand: string;
   model: string;
   year: string;
+  gearbox?: string;
   bodyType?: string;
 }
 

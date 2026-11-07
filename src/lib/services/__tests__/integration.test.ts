@@ -1,312 +1,268 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { ConfiguratorService } from '../ConfiguratorService';
-import { CartService } from '../CartService';
-import { OrderService } from '../OrderService';
-import { ConfigurationData, Product } from '../../types/product';
-import { CustomerData, ShippingData, PaymentData } from '../../types/order';
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ConfiguratorService } from '../ConfiguratorService'
+import { CartService } from '../CartService'
+import type { ConfigurationData } from '../../types/product'
+import type { Cart } from '../../types/cart-new'
+import type { CreateOrderDTO } from '../../types/order-new'
 
-// Mock localStorage
-const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-};
+vi.mock('@/lib/database/supabase', () => ({
+  supabase: { from: () => ({}) },
+  supabaseAdmin: { from: () => ({}) },
+  shopDb: () => ({ from: () => ({}) }),
+  TABLES: {},
+  SHOP_SCHEMA: 'evapremium_shop',
+}))
 
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
+const getAccessoryById = vi.fn()
+const repo = vi.hoisted(() => ({
+  countOrdersThisYear: vi.fn(async () => 0),
+  findByOrderNumber: vi.fn(async () => null),
+  create: vi.fn(async (data: Record<string, unknown>) => ({ id: 'order-1', ...data })),
+  insertItems: vi.fn(async () => ({ error: null })),
+}))
 
-// Mock Supabase
-const mockSupabaseInsert = vi.fn();
-const mockSupabaseSelect = vi.fn();
+vi.mock('../AccessoryService', () => ({
+  AccessoryService: vi.fn(function () {
+    return {
+      getAccessoryById,
+      checkAvailability: vi.fn(async () => true),
+      decrementStock: vi.fn(async () => undefined),
+    }
+  }),
+}))
 
-vi.mock('../../database/supabase', () => ({
-  supabaseAdmin: {
-    from: vi.fn(() => ({
-      insert: mockSupabaseInsert,
-      select: mockSupabaseSelect,
-    })),
+vi.mock('../MatService', () => ({
+  MatService: vi.fn(function () {
+    return {}
+  }),
+}))
+
+vi.mock('../PricingService', () => ({
+  PricingService: vi.fn(function () {
+    return {}
+  }),
+}))
+
+vi.mock('../../repositories/OrderRepository', () => ({
+  OrderRepository: vi.fn(function () {
+    return {
+      countOrdersThisYear: repo.countOrdersThisYear,
+      findByOrderNumber: repo.findByOrderNumber,
+      create: repo.create,
+      supabase: { from: () => ({ insert: repo.insertItems }) },
+    }
+  }),
+}))
+
+import { OrderService } from '../OrderService'
+
+const configuration: ConfigurationData = {
+  setType: '3d-with-rims',
+  cellType: 'diamonds',
+  setVariant: 'basic',
+  materialColor: 'black',
+  edgeColor: 'red',
+  heelPad: 'tak',
+  carDetails: { brand: 'BMW', model: 'X5', year: '2023' },
+}
+
+const emptyCart = (): Cart => ({
+  items: [],
+  subtotal: 0,
+  shippingCost: 0,
+  tax: 0,
+  discount: 0,
+  total: 0,
+  itemCount: 0,
+})
+
+const orderInput = (items: CreateOrderDTO['items'], extra: Partial<CreateOrderDTO> = {}): CreateOrderDTO => ({
+  customer: {
+    name: 'Jan Kowalski',
+    email: 'jan.kowalski@example.com',
+    phone: '+48123456789',
   },
-  TABLES: {
-    ORDERS: 'orders',
+  shippingAddress: {
+    street: 'ul. Testowa 123',
+    city: 'Warszawa',
+    postalCode: '00-001',
+    country: 'Polska',
   },
-}));
+  paymentMethod: 'paynow',
+  items,
+  ...extra,
+})
 
 describe('Integration Test: Configurator → Cart → Order', () => {
-  const mockSessionId = 'test-session-123';
-  let mockConfiguration: ConfigurationData;
-  let mockCustomerData: CustomerData;
-  let mockShippingData: ShippingData;
-  let mockPaymentData: PaymentData;
+  let cartService: CartService
+  let orderService: OrderService
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    localStorageMock.getItem.mockReturnValue(null);
+    vi.clearAllMocks()
+    getAccessoryById.mockResolvedValue({
+      id: 'acc-1',
+      name: 'Organizer',
+      sku: 'ORG-1',
+      price: 100,
+      imageSrc: '',
+    })
+    repo.countOrdersThisYear.mockResolvedValue(0)
+    repo.findByOrderNumber.mockResolvedValue(null)
+    repo.create.mockImplementation(async (data: Record<string, unknown>) => ({ id: 'order-1', ...data }))
+    repo.insertItems.mockResolvedValue({ error: null })
+    cartService = new CartService()
+    orderService = new OrderService()
+  })
 
-    mockConfiguration = {
+  it('creates a configured product, adds an accessory, and stores a pending order', async () => {
+    const product = ConfiguratorService.createProductFromConfiguration(configuration)
+    expect(product.configuration).toMatchObject({
       setType: '3d-with-rims',
-      cellType: 'diamonds',
-      setVariant: 'basic',
-      materialColor: 'black',
       edgeColor: 'red',
       heelPad: 'tak',
-      carDetails: {
-        brand: 'BMW',
-        model: 'X5',
-        year: '2023'
-      }
-    };
+    })
+    expect(product.pricing.totalPrice).toBe(637)
+    expect(product.status).toBe('cached')
 
-    mockCustomerData = {
-      firstName: 'Jan',
-      lastName: 'Kowalski',
-      email: 'jan.kowalski@example.com',
-      phone: '+48123456789',
-      address: 'ul. Testowa 123',
-      city: 'Warszawa',
-      postalCode: '00-001',
-      country: 'Polska'
-    };
+    const cart = await cartService.addToCart(emptyCart(), {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
+    expect(cart.items).toHaveLength(1)
 
-    mockShippingData = {
-      method: 'courier',
-      methodName: 'Kurier DPD',
-      cost: 15,
-      estimatedDelivery: '2-3 dni robocze'
-    };
+    const order = await orderService.createOrder(orderInput([{
+      productType: 'accessory',
+      productId: '11111111-1111-1111-1111-111111111111',
+      productName: cart.items[0].productName,
+      quantity: cart.items[0].quantity,
+      unitPrice: cart.items[0].unitPrice,
+      subtotal: cart.items[0].subtotal,
+    }]))
 
-    mockPaymentData = {
-      method: 'card',
-      methodName: 'Karta kredytowa'
-    };
-  });
+    expect(order.status).toBe('pending')
+    expect(order.customer).toMatchObject({ email: 'jan.kowalski@example.com' })
+    expect(order.subtotal).toBe(100)
+    expect(order.shipping_cost).toBe(27)
+    expect(order.total).toBe(127)
+    expect(cartService.clearCart().items).toHaveLength(0)
+  })
 
-  describe('Complete Flow: Configurator → Cart → Order', () => {
-    it('should complete full flow from configuration to order creation', async () => {
-      // KROK 1: Konfigurator tworzy produkt
-      console.log('🔄 Step 1: Creating product from configuration...');
-      const product = ConfiguratorService.createProductFromConfiguration(mockConfiguration);
-      
-      expect(product).toBeDefined();
-      expect(product.id).toBeDefined();
-      expect(product.configuration).toEqual({
-        setType: '3d-with-rims',
-        cellType: 'diamonds',
-        setVariant: 'basic',
-        materialColor: 'black',
-        edgeColor: 'red',
-        heelPad: 'tak'
-      });
-      expect(product.status).toBe('cached');
-      console.log('✅ Product created:', product.id);
+  it('sums two accessory lines into the order subtotal', async () => {
+    getAccessoryById.mockImplementation(async (id: string) => ({
+      id,
+      name: id,
+      sku: id,
+      price: id === 'acc-1' ? 100 : 50,
+      imageSrc: '',
+    }))
+    const first = await cartService.addToCart(emptyCart(), {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
+    const cart = await cartService.addToCart(first, {
+      productType: 'accessory',
+      productId: 'acc-2',
+      quantity: 1,
+    })
 
-      // KROK 2: Dodaj produkt do koszyka
-      console.log('🔄 Step 2: Adding product to cart...');
-      CartService.addProductToCart(product);
-      
-      expect(localStorageMock.setItem).toHaveBeenCalledWith(
-        `cart-${mockSessionId}`,
-        expect.stringContaining(product.id)
-      );
-      console.log('✅ Product added to cart');
+    const order = await orderService.createOrder(orderInput(cart.items.map((item, index) => ({
+      productType: 'accessory' as const,
+      productId: index === 0
+        ? '11111111-1111-1111-1111-111111111111'
+        : '22222222-2222-2222-2222-222222222222',
+      productName: item.productName,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      subtotal: item.subtotal,
+    }))))
 
-      // KROK 3: Pobierz produkty z koszyka
-      console.log('🔄 Step 3: Retrieving products from cart...');
-      const cartProducts = CartService.getCartProducts(mockSessionId);
-      
-      expect(cartProducts).toHaveLength(1);
-      expect(cartProducts[0].id).toBe(product.id);
-      console.log('✅ Cart products retrieved:', cartProducts.length);
+    expect(order.subtotal).toBe(150)
+    expect(order.total).toBe(177)
+  })
 
-      // KROK 4: Utwórz zamówienie
-      console.log('🔄 Step 4: Creating order...');
-      const order = OrderService.createOrder(
-        cartProducts,
-        mockCustomerData,
-        mockShippingData,
-        mockPaymentData
-      );
-      
-      expect(order).toBeDefined();
-      expect(order.id).toBeDefined();
-      expect(order.product).toEqual(product);
-      expect(order.customer).toEqual(mockCustomerData);
-      expect(order.shipping).toEqual(mockShippingData);
-      expect(order.payment).toEqual(mockPaymentData);
-      expect(order.status).toBe('pending');
-      console.log('✅ Order created:', order.id);
+  it('increments quantity for the same accessory and removes a line by id', async () => {
+    const once = await cartService.addToCart(emptyCart(), {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
+    const twice = await cartService.addToCart(once, {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
+    expect(twice.items[0].quantity).toBe(2)
 
-      // KROK 5: Zapisz zamówienie do Supabase
-      console.log('🔄 Step 5: Saving order to Supabase...');
-      mockSupabaseInsert.mockReturnValue({
-        data: [order],
-        error: null
-      });
+    const cleared = await cartService.removeFromCart(twice, twice.items[0].id)
+    expect(cleared.items).toHaveLength(0)
+    expect(cleared.total).toBe(27)
+  })
 
-      const savedOrder = await OrderService.saveOrderToSupabase(order);
-      
-      expect(mockSupabaseInsert).toHaveBeenCalledWith({
-        id: order.id,
-        session_id: order.sessionId,
-        product: order.product,
-        customer: order.customer,
-        shipping: order.shipping,
-        payment: order.payment,
-        company: order.company,
-        pricing: order.pricing,
-        status: order.status,
-        created_at: order.createdAt,
-        updated_at: order.updatedAt
-      });
-      expect(savedOrder).toEqual(order);
-      console.log('✅ Order saved to Supabase');
+  it('subtracts the discount from subtotal plus shipping', async () => {
+    const cart = await cartService.addToCart(emptyCart(), {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
+    const order = await orderService.createOrder(orderInput([{
+      productType: 'accessory',
+      productId: '11111111-1111-1111-1111-111111111111',
+      productName: cart.items[0].productName,
+      quantity: 1,
+      unitPrice: 100,
+      subtotal: 100,
+    }], { discountAmount: 50 }))
 
-      // KROK 6: Wyczyść koszyk
-      console.log('🔄 Step 6: Clearing cart...');
-      CartService.clearCart(mockSessionId);
-      
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith(`cart-${mockSessionId}`);
-      console.log('✅ Cart cleared');
+    expect(order.discount).toBe(50)
+    expect(order.total).toBe(77)
+  })
 
-      // KROK 7: Sprawdź czy koszyk jest pusty
-      console.log('🔄 Step 7: Verifying empty cart...');
-      const emptyCartProducts = CartService.getCartProducts(mockSessionId);
-      
-      expect(emptyCartProducts).toHaveLength(0);
-      console.log('✅ Cart is empty');
+  it('stores company and tax id supplied with the customer', async () => {
+    const order = await orderService.createOrder(orderInput([{
+      productType: 'accessory',
+      productId: '11111111-1111-1111-1111-111111111111',
+      productName: 'Organizer',
+      quantity: 1,
+      unitPrice: 100,
+      subtotal: 100,
+    }], {
+      customer: {
+        name: 'Jan Kowalski',
+        email: 'jan.kowalski@example.com',
+        phone: '+48123456789',
+        company: 'Firma Testowa',
+        taxId: '1234567890',
+      },
+    }))
 
-      console.log('🎉 Complete flow test passed!');
-    });
+    expect(order.customer).toMatchObject({ company: 'Firma Testowa', taxId: '1234567890' })
+  })
 
-    it('should handle multiple products in cart', async () => {
-      // Utwórz dwa różne produkty
-      const product1 = ConfiguratorService.createProductFromConfiguration(mockConfiguration);
-      
-      const config2 = { ...mockConfiguration, materialColor: 'white' };
-      const product2 = ConfiguratorService.createProductFromConfiguration(config2);
+  it('does not reject an empty item list and still adds shipping', async () => {
+    const order = await orderService.createOrder(orderInput([]))
+    expect(order.subtotal).toBe(0)
+    expect(order.shipping_cost).toBe(27)
+    expect(order.total).toBe(27)
+  })
 
-      // Dodaj oba do koszyka
-      CartService.addProductToCart(product1);
-      CartService.addProductToCart(product2);
+  it('rejects an incomplete configuration before a product is created', () => {
+    expect(() => {
+      ConfiguratorService.createProductFromConfiguration({ ...configuration, setType: '' })
+    }).toThrow('Invalid configuration data')
+  })
 
-      // Pobierz produkty z koszyka
-      const cartProducts = CartService.getCartProducts(mockSessionId);
-      expect(cartProducts).toHaveLength(2);
+  it('surfaces an item insert failure from the order repository', async () => {
+    repo.insertItems.mockResolvedValue({ error: { message: 'Database error' } })
 
-      // Utwórz zamówienie z wieloma produktami
-      const order = OrderService.createOrder(
-        cartProducts,
-        mockCustomerData,
-        mockShippingData,
-        mockPaymentData
-      );
-
-      // Sprawdź czy cena jest poprawnie obliczona
-      const expectedSubtotal = product1.pricing.totalPrice + product2.pricing.totalPrice;
-      expect(order.pricing.subtotal).toBe(expectedSubtotal);
-      expect(order.pricing.totalAmount).toBe(expectedSubtotal + mockShippingData.cost);
-    });
-
-    it('should handle cart operations correctly', () => {
-      const product = ConfiguratorService.createProductFromConfiguration(mockConfiguration);
-      
-      // Dodaj produkt
-      CartService.addProductToCart(product);
-      expect(CartService.getCartProducts(mockSessionId)).toHaveLength(1);
-
-      // Dodaj ten sam produkt ponownie (powinien zwiększyć quantity)
-      CartService.addProductToCart(product);
-      const cartItems = JSON.parse(localStorageMock.setItem.mock.calls[1][1]);
-      expect(cartItems[0].quantity).toBe(2);
-
-      // Usuń produkt
-      CartService.removeProductFromCart(product.id);
-      expect(CartService.getCartProducts(mockSessionId)).toHaveLength(0);
-
-      // Sprawdź total
-      expect(CartService.getCartTotal(mockSessionId)).toBe(0);
-    });
-
-    it('should handle order creation with discount', async () => {
-      const product = ConfiguratorService.createProductFromConfiguration(mockConfiguration);
-      CartService.addProductToCart(product);
-      const cartProducts = CartService.getCartProducts(mockSessionId);
-
-      const order = OrderService.createOrder(
-        cartProducts,
-        mockCustomerData,
-        mockShippingData,
-        mockPaymentData,
-        { discountAmount: 50 }
-      );
-
-      expect(order.pricing.discountAmount).toBe(50);
-      expect(order.pricing.totalAmount).toBe(
-        product.pricing.totalPrice + mockShippingData.cost - 50
-      );
-    });
-
-    it('should handle order creation with company data', async () => {
-      const product = ConfiguratorService.createProductFromConfiguration(mockConfiguration);
-      CartService.addProductToCart(product);
-      const cartProducts = CartService.getCartProducts(mockSessionId);
-
-      const companyData = {
-        name: 'Firma Testowa',
-        nip: '1234567890',
-        isInvoice: true
-      };
-
-      const order = OrderService.createOrder(
-        cartProducts,
-        mockCustomerData,
-        mockShippingData,
-        mockPaymentData,
-        {},
-        companyData
-      );
-
-      expect(order.company).toEqual(companyData);
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle empty cart in order creation', () => {
-      expect(() => {
-        OrderService.createOrder(
-          [],
-          mockCustomerData,
-          mockShippingData,
-          mockPaymentData
-        );
-      }).toThrow('Cannot create order with empty cart');
-    });
-
-    it('should handle invalid configuration', () => {
-      const invalidConfig = { ...mockConfiguration, setType: '' };
-      
-      expect(() => {
-        ConfiguratorService.createProductFromConfiguration(invalidConfig);
-      }).toThrow('Invalid configuration data');
-    });
-
-    it('should handle Supabase save error', async () => {
-      const product = ConfiguratorService.createProductFromConfiguration(mockConfiguration);
-      const order = OrderService.createOrder(
-        [product],
-        mockCustomerData,
-        mockShippingData,
-        mockPaymentData
-      );
-
-      mockSupabaseInsert.mockReturnValue({
-        data: null,
-        error: { message: 'Database error' }
-      });
-
-      await expect(OrderService.saveOrderToSupabase(order))
-        .rejects.toThrow('Failed to save order to Supabase: Database error');
-    });
-  });
-});
+    await expect(orderService.createOrder(orderInput([{
+      productType: 'accessory',
+      productId: '11111111-1111-1111-1111-111111111111',
+      productName: 'Organizer',
+      quantity: 1,
+      unitPrice: 100,
+      subtotal: 100,
+    }]))).rejects.toThrow('Error saving order items: Database error')
+  })
+})

@@ -1,17 +1,24 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
+import { Inter, Montserrat } from "next/font/google";
+import { ShopChrome } from "@/components/layout/ShopChrome";
+import { EvaChatWidget } from "@/features/eva-chat-widget";
 import Script from "next/script";
 import { SessionProvider } from "@/lib/contexts/session-context";
 import { TrackingProvider } from "@/components/tracking-provider";
+import { GoogleAnalyticsScript } from "@/components/analytics/GoogleAnalyticsScript";
+import { GoogleConsentDefaultScript } from "@/components/analytics/GoogleConsentDefaultScript";
 import { QueryProvider } from "@/lib/providers/query-provider";
-import Chatbot from "@/features/chatbot/components/LazyChatbot";
-import { CookieConsentBanner } from "@/features/cookie-consent";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
@@ -146,77 +153,70 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               #CybotCookiebotDialog,
-              #CookiebotWidget {
+              #CybotCookiebotDialogBodyUnderlay,
+              #CookiebotWidget,
+              [id^="CybotCookiebot"] {
                 display: none !important;
                 visibility: hidden !important;
                 pointer-events: none !important;
-              }
-
-              body[data-cookiebot-preferences='open'] #CybotCookiebotDialog {
-                display: flex !important;
-                visibility: visible !important;
-                pointer-events: auto !important;
               }
             `,
           }}
         />
 
-        {/* Cookiebot — musi być pierwszym skryptem w <head> */}
-        <Script
-          id="Cookiebot"
-          src="https://consent.cookiebot.com/uc.js"
-          data-cbid="646107cd-5e5a-41eb-af5f-80b502582c41"
-          data-blockingmode="auto"
-          data-widget-enabled="false"
-          strategy="beforeInteractive"
-        />
-
+        {/*
+          Cookiebot is not loaded here. GTM-TD2WDGKV already injects the same
+          CBID. A second uc.js plus Cookiebot.hide() swallowed banner clicks
+          and never persisted consent. This script only keeps that injected
+          dialog from covering the shop banner.
+        */}
         <Script
           id="cookiebot-ui-suppress"
           strategy="beforeInteractive"
+          data-cookieconsent="ignore"
           dangerouslySetInnerHTML={{
             __html: `
               (function () {
-                var suppressCookiebotUi = function () {
-                  try {
-                    if (
-                      window.Cookiebot &&
-                      !window.Cookiebot.hasResponse &&
-                      document.body &&
-                      document.body.getAttribute('data-cookiebot-preferences') !== 'open'
-                    ) {
-                      window.Cookiebot.hide();
-                    }
-                  } catch (error) {}
-
-                  var widget = document.getElementById('CookiebotWidget');
-                  if (widget) {
-                    widget.style.setProperty('display', 'none', 'important');
+                var hideNode = function (node) {
+                  if (!node || !node.style) return;
+                  node.style.setProperty('display', 'none', 'important');
+                  node.style.setProperty('visibility', 'hidden', 'important');
+                  node.style.setProperty('pointer-events', 'none', 'important');
+                };
+                var hideCookiebotUi = function () {
+                  var nodes = document.querySelectorAll('[id^="CybotCookiebot"], #CookiebotWidget');
+                  for (var i = 0; i < nodes.length; i += 1) hideNode(nodes[i]);
+                };
+                hideCookiebotUi();
+                document.addEventListener('CookiebotOnDialogInit', hideCookiebotUi);
+                document.addEventListener('CookiebotOnLoad', hideCookiebotUi);
+                document.addEventListener('CookiebotOnDialogDisplay', hideCookiebotUi);
+                var observer = new MutationObserver(hideCookiebotUi);
+                var start = function () {
+                  hideCookiebotUi();
+                  if (document.body) {
+                    observer.observe(document.body, {
+                      childList: true,
+                      subtree: true,
+                      attributes: true,
+                      attributeFilter: ['style', 'class']
+                    });
                   }
                 };
-
-                document.addEventListener('CookiebotOnDialogInit', suppressCookiebotUi);
-                document.addEventListener('CookiebotOnLoad', suppressCookiebotUi);
-
-                var attempts = 0;
-                var intervalId = window.setInterval(function () {
-                  suppressCookiebotUi();
-                  attempts += 1;
-                  if (window.Cookiebot || attempts > 100) {
-                    window.clearInterval(intervalId);
-                  }
-                }, 50);
+                if (document.body) start();
+                else document.addEventListener('DOMContentLoaded', start);
               })();
             `,
           }}
         />
 
-        {/* Google Tag Manager — blokowany przez Cookiebot do czasu zgody marketingowej */}
+        <GoogleConsentDefaultScript />
+
+        {/* Google Tag Manager — zgody obsługuje samo GTM, Cookiebot nie blokuje tego skryptu */}
         <Script
           id="gtm"
-          type="text/plain"
-          data-cookieconsent="marketing"
           strategy="afterInteractive"
+          data-cookieconsent="ignore"
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -226,6 +226,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
         {/* End Google Tag Manager */}
+
+        <GoogleAnalyticsScript />
         
         {/* Schema.org */}
         <Script
@@ -243,16 +245,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
       </head>
-      <body className={`${montserrat.variable} bg-black min-h-screen`}>
-        <CookieConsentBanner />
-
+      <body className={`${montserrat.variable} ${inter.variable} bg-black min-h-screen`}>
         <QueryProvider>
           <SessionProvider>
             <TrackingProvider>
-              <Navbar />
-              <div className="pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden">{children}</div>
-              <Footer />
-              <Chatbot />
+              <ShopChrome>{children}</ShopChrome>
+              <EvaChatWidget />
             </TrackingProvider>
           </SessionProvider>
         </QueryProvider>

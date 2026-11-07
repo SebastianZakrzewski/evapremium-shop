@@ -38,7 +38,7 @@ export type ConfiguratorV2SectionMapperResult = {
 }
 
 const isVehicleComplete = (config: ConfiguratorState): boolean =>
-  !!(config.brand && config.model && config.year && config.bodyType)
+  !!(config.brand && config.model && config.year && config.gearbox && config.bodyType)
 
 const isMatTypeComplete = (
   config: ConfiguratorState,
@@ -82,7 +82,7 @@ export const mapConfiguratorV2Sections = ({
       isComplete: structureComplete,
       isDisabled: !variantComplete,
       disabledReason: !variantComplete
-        ? "Najpierw wybierz wariant zestawu"
+        ? "Najpierw wybierz wariant zestawu. Bez tego nie da się ustawić struktury komórek ani zobaczyć ceny."
         : undefined,
     },
     color: {

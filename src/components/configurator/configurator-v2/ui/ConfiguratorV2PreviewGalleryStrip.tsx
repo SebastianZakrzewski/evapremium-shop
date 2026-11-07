@@ -6,9 +6,6 @@ import { useHorizontalDragScroll } from "../hooks/useHorizontalDragScroll"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight, ImageIcon, Layers } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  CONFIGURATOR_V2_MOBILE_GALLERY_STRIP_HEIGHT,
-} from "../configuratorV2MobileLayout"
 import type { PreviewGalleryItem } from "../preview/buildConfiguratorV2PreviewGallery"
 import { getAdjacentGalleryItemId } from "../preview/getAdjacentGalleryItemId"
 
@@ -60,49 +57,37 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
   useEffect(() => {
     if (!activeId) return
     const activeElement = itemRefs.current.get(activeId)
-    if (!activeElement?.scrollIntoView) return
+    const scroller = scrollRef.current
+    if (!activeElement || !scroller?.scrollTo) return
 
-    activeElement.scrollIntoView({
-      behavior: "smooth",
-      inline: "center",
-      block: "nearest",
+    const scrollerRect = scroller.getBoundingClientRect()
+    const itemRect = activeElement.getBoundingClientRect()
+    const delta =
+      itemRect.left -
+      scrollerRect.left -
+      (scroller.clientWidth - itemRect.width) / 2
+    scroller.scrollTo({
+      left: Math.max(0, scroller.scrollLeft + delta),
+      behavior: "auto",
     })
   }, [activeId, items])
 
   if (items.length === 0 && !showEmptyInCarSlot) return null
 
   const isMobile = variant === "mobile"
-  const thumbClassName = isMobile ? "w-12 h-12" : "w-16 h-16 sm:w-20 sm:h-20"
+  const thumbClassName = isMobile ? "h-11 w-[4.5rem]" : "h-[3.7rem] w-[6.15rem]"
   const hasMultipleItems = items.length > 1
 
   return (
-    <div
-      className={
-        isMobile
-          ? `shrink-0 border-t border-white/10 bg-black ${CONFIGURATOR_V2_MOBILE_GALLERY_STRIP_HEIGHT}`
-          : "rounded-xl border border-white/10 bg-black/40 overflow-hidden shrink-0"
-      }
-    >
-      {!isMobile && (
-        <div className="px-3 pt-2.5 pb-1">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
-            Zdjęcia podglądowe
-          </p>
-        </div>
-      )}
-
-      <div
-        className={`relative flex h-full min-w-0 items-center ${
-          isMobile ? "px-2" : "px-2 pb-3"
-        }`}
-      >
+    <div className="shrink-0">
+      <div className="relative flex min-w-0 items-center">
         {hasMultipleItems && (
           <>
             <Button
               type="button"
               size="icon"
               variant="secondary"
-              className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full bg-black/80 border border-white/10 text-white ${
+              className={`absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-[#1c1c1e]/90 text-white ${
                 isMobile ? "h-7 w-7" : "h-8 w-8"
               }`}
               onClick={handlePrevious}
@@ -114,7 +99,7 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
               type="button"
               size="icon"
               variant="secondary"
-              className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full bg-black/80 border border-white/10 text-white ${
+              className={`absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-[#1c1c1e]/90 text-white ${
                 isMobile ? "h-7 w-7" : "h-8 w-8"
               }`}
               onClick={handleNext}
@@ -160,10 +145,10 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
                 type="button"
                 role="listitem"
                 onKeyDown={(event) => handleThumbKeyDown(event, item.id)}
-                className={`relative rounded-lg overflow-hidden border-2 flex-shrink-0 snap-center transition-all active:scale-95 ${thumbClassName} ${
+                className={`relative flex-shrink-0 snap-center overflow-hidden rounded-xl ring-1 transition-shadow ${thumbClassName} ${
                   isActive
-                    ? "border-red-500 ring-1 ring-red-500/40 scale-105"
-                    : "border-white/10 opacity-70 hover:opacity-100"
+                    ? "ring-white"
+                    : "ring-white/15 opacity-70 hover:opacity-100"
                 }`}
                 aria-label={thumbLabel}
                 aria-current={isActive}
@@ -173,7 +158,7 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
                   alt={item.altText}
                   fill
                   className="object-cover"
-                  sizes={isMobile ? "48px" : "80px"}
+                  sizes="100px"
                   draggable={false}
                 />
                 {item.kind === "dynamic" && (
@@ -199,7 +184,7 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
               {Array.from({ length: EMPTY_IN_CAR_SLOT_COUNT }).map((_, index) => (
                 <div
                   key={`empty-in-car-${index}`}
-                  className={`relative rounded-lg border border-dashed border-white/15 bg-white/5 flex-shrink-0 ${thumbClassName}`}
+                  className={`relative flex-shrink-0 rounded-xl bg-[#1c1c1e] ring-1 ring-white/10 ${thumbClassName}`}
                   aria-hidden
                 >
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-white/25">

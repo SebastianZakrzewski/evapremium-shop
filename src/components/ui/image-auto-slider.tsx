@@ -6,6 +6,8 @@ import { GalleryLightbox } from "@/components/ui/gallery-lightbox"
 
 export interface SliderImage {
   src: string
+  /** Pełny plik do lightboxa. Kafelek może używać mniejszego src. */
+  fullSrc?: string
   alt: string
   title?: string
   description?: string
@@ -53,7 +55,7 @@ const ImageTile = ({
       fill
       className="object-cover"
       sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 288px"
-      quality={90}
+      quality={75}
       loading={loading}
     />
     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
@@ -105,7 +107,7 @@ export const ImageAutoSlider = ({
   const duplicated = useMemo(() => [...images, ...images], [images])
 
   const tileSize = tileClassName ?? "w-48 h-48 md:w-64 md:h-64 lg:w-72 lg:h-72"
-  const eagerSlidesCount = isMobile ? 2 : 4
+  const eagerSlidesCount = 0
   const animationDuration = Math.max(1, speed)
 
   if (motionMode !== "animate") {
@@ -131,7 +133,7 @@ export const ImageAutoSlider = ({
 
         <GalleryLightbox
           isOpen={lightboxIndex !== null}
-          items={images}
+          items={images.map((image) => ({ ...image, src: image.fullSrc ?? image.src }))}
           currentIndex={lightboxIndex ?? 0}
           onIndexChange={setLightboxIndex}
           onClose={() => setLightboxIndex(null)}
@@ -166,7 +168,7 @@ export const ImageAutoSlider = ({
 
       <GalleryLightbox
         isOpen={lightboxIndex !== null}
-        items={images}
+        items={images.map((image) => ({ ...image, src: image.fullSrc ?? image.src }))}
         currentIndex={lightboxIndex ?? 0}
         onIndexChange={setLightboxIndex}
         onClose={() => setLightboxIndex(null)}

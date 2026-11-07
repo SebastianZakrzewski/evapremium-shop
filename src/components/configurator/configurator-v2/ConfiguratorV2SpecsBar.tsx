@@ -1,51 +1,66 @@
 "use client"
 
-import type { ConfiguratorV2Metric } from "@/features/car-configurator/adapters/configuratorV2SectionMapper"
+import { ChevronRight } from "lucide-react"
 
 type ConfiguratorV2SpecsBarProps = {
   title: string
-  metrics: ConfiguratorV2Metric[]
+  year?: string
   contextLine?: string
+  onLearnMore?: () => void
 }
 
-/** Metryki w stylu Tesla — duże liczby, małe etykiety pod spodem */
 export const ConfiguratorV2SpecsBar = ({
   title,
-  metrics,
+  year,
   contextLine,
+  onLearnMore,
 }: ConfiguratorV2SpecsBarProps) => (
-  <div className="space-y-2 lg:space-y-4">
-    <div>
-      <h1 className="text-lg sm:text-xl lg:text-[1.75rem] font-semibold text-white tracking-tight">
+  <div className="space-y-1 lg:space-y-3">
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 lg:gap-x-3 lg:gap-y-2">
+      <h1 className="hidden text-lg font-medium leading-tight tracking-tight text-neutral-950 sm:block lg:text-[2rem]">
         {title}
       </h1>
-      {contextLine && (
-        <p className="text-[11px] lg:text-xs text-gray-400 mt-0.5 lg:mt-1 truncate">
-          {contextLine}
-        </p>
+      {year && (
+        <span className="inline-flex items-center rounded-full border border-neutral-300 bg-[#FDFDFD] px-2.5 py-0.5 text-[13px] font-medium text-neutral-700">
+          {year}
+        </span>
       )}
     </div>
-
-    <div className="flex flex-wrap gap-x-4 gap-y-1.5 sm:gap-x-6 sm:gap-y-2 lg:gap-x-8 lg:gap-y-3 lg:justify-end">
-      {metrics.map((metric) => (
-        <div
-          key={metric.label}
-          className={`min-w-[3.5rem] lg:min-w-[4rem] ${
-            metric.label === "Cena" ? "hidden lg:block" : ""
-          }`}
-        >
-          <p
-            className={`text-base sm:text-lg lg:text-2xl font-semibold tabular-nums leading-none ${
-              metric.label === "Cena" ? "text-green-400" : "text-white"
-            }`}
-          >
-            {metric.value}
-          </p>
-          <p className="text-[10px] sm:text-[11px] text-gray-400 mt-0.5 lg:mt-1 leading-tight">
-            {metric.label}
-          </p>
-        </div>
-      ))}
-    </div>
+    {contextLine && (
+      <p className="hidden text-xs leading-snug text-neutral-600 sm:block lg:text-[13px]">{contextLine}</p>
+    )}
+    {onLearnMore && (
+      <button
+        type="button"
+        onClick={onLearnMore}
+        className="hidden text-[13px] font-medium text-red-500 transition-colors hover:text-red-400 lg:inline"
+      >
+        Dowiedz się więcej
+      </button>
+    )}
   </div>
+)
+
+type ConfiguratorV2IntroCardProps = {
+  onLearnMore: () => void
+}
+
+export const ConfiguratorV2IntroCard = ({
+  onLearnMore,
+}: ConfiguratorV2IntroCardProps) => (
+  <button
+    type="button"
+    onClick={onLearnMore}
+    className="flex w-full items-center justify-between gap-4 rounded-2xl border border-neutral-300 bg-[#FDFDFD] px-5 py-4 text-left transition-colors hover:border-neutral-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950"
+  >
+    <span className="min-w-0">
+      <span className="block text-[15px] font-medium leading-snug tracking-tight text-neutral-950">
+        Dowiedz się więcej o dywanikach EVA
+      </span>
+      <span className="mt-1 block text-[13px] leading-snug text-neutral-600">
+        Poznaj materiał, strukturę komórek i wykończenie.
+      </span>
+    </span>
+    <ChevronRight className="h-4 w-4 shrink-0 text-neutral-500" aria-hidden />
+  </button>
 )

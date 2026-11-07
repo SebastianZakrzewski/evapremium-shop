@@ -6,37 +6,40 @@ import Link from 'next/link';
 interface PageHeroBannerProps {
   breadcrumb: string;
   title: string;
-  highlight: string;
   description: string;
+  kicker?: string;
+  meta?: string;
 }
 
 export default function PageHeroBanner({
   breadcrumb,
   title,
-  highlight,
   description,
+  kicker = "Kolekcja",
+  meta,
 }: PageHeroBannerProps) {
   return (
-    <div className="relative bg-black border-b border-white/5 py-16 md:py-24 overflow-hidden">
-      {/* Gradient background – spójny z Galeria i O nas */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-900/5 opacity-50"></div>
-      <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
-
-      <div className="container mx-auto px-4 relative z-10">
-        <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
-          <Link href="/" className="hover:text-white transition-colors">Home</Link>
+    <div className="bg-black text-white">
+      <div className="mx-auto w-full max-w-6xl px-4 pt-8 md:px-6 md:pt-12">
+        <nav className="flex items-center gap-2 text-xs tracking-wide text-white/40">
+          <Link href="/" className="transition-colors hover:text-white">
+            Home
+          </Link>
           <span>/</span>
-          <span className="text-white">{breadcrumb}</span>
+          <span className="text-white/70">{breadcrumb}</span>
         </nav>
-        
-        <div className="max-w-3xl">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-white">
-            {title} <span className="text-red-600">{highlight}</span>
-          </h1>
-          <p className="text-lg text-gray-400 leading-relaxed">
-            {description}
-          </p>
+
+        <div className="mt-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl">
+            <p className="text-[11px] uppercase tracking-[0.28em] text-red-500">{kicker}</p>
+            <h1 className="mt-3 text-3xl font-medium leading-tight tracking-tight text-white md:text-4xl">
+              {title}
+            </h1>
+            <p className="mt-3 max-w-xl text-sm font-normal leading-relaxed text-white/55 md:text-base">
+              {description}
+            </p>
+          </div>
+          {meta ? <p className="text-sm text-white/40">{meta}</p> : null}
         </div>
       </div>
     </div>

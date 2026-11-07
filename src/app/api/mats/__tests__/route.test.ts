@@ -1,17 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { NextRequest } from 'next/server';
 
-import * as route from '../route';
-
-const getAvailableMats = vi.fn();
+const { getAvailableMats } = vi.hoisted(() => ({
+  getAvailableMats: vi.fn(),
+}));
 
 vi.mock('@/lib/services/MatService', () => {
   return {
-    MatService: vi.fn(() => ({
-      getAvailableMats,
-    })),
+    MatService: vi.fn(function () {
+      return { getAvailableMats }
+    }),
   };
 });
+
+import * as route from '../route';
 
 function makeRequest(query: string): NextRequest {
   return {

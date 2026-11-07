@@ -33,8 +33,8 @@ export const MatTypeOptionIcon = ({
       alt={alt}
       width={MAT_TYPE_OPTION_ICON_SRC_SIZE}
       height={MAT_TYPE_OPTION_ICON_SRC_SIZE}
-      quality={100}
-      unoptimized
+      quality={80}
+      loading="lazy"
       sizes={`${MAT_TYPE_OPTION_ICON_SIZE}px`}
       className={matTypeOptionIconImageClassName}
       draggable={false}

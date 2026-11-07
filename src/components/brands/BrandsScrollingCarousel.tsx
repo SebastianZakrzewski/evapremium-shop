@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+import Link from "next/link"
 import { Brand } from "@/entities/car"
 import BrandPopularGridCard from "@/components/brands/BrandPopularGridCard"
 
@@ -17,24 +18,25 @@ export default function BrandsScrollingCarousel({
 }: BrandsScrollingCarouselProps) {
   if (brands.length === 0) return null
 
-  const visibleBrands = brands.slice(0, 12)
+  const visibleBrands = brands.slice(0, 8)
 
   return (
-    <div className="w-full px-2">
-      <div className="grid grid-cols-3 gap-2">
+    <div className="w-full">
+      <div className="mx-auto grid w-full grid-cols-4 gap-3 lg:grid-cols-8">
         {visibleBrands.map((brand) => (
           <BrandPopularGridCard
             key={brand.id}
             brand={brand}
+            compact
             isClicked={clickedCardId === brand.id}
             onClick={onBrandClick}
           />
         ))}
       </div>
 
-      {brands.length > 12 && (
+      {brands.length > 8 && (
         <div className="mt-6 flex justify-center">
-          <a
+          <Link
             href="/dywaniki"
             className="
               px-6 py-3
@@ -48,7 +50,7 @@ export default function BrandsScrollingCarousel({
             "
           >
             Sprawdź więcej marek
-          </a>
+          </Link>
         </div>
       )}
     </div>

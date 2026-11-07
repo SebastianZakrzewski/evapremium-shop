@@ -15,9 +15,6 @@ import {
   Globe,
   ArrowRight
 } from 'lucide-react';
-import SectionHeading from "@/components/ui/section-heading";
-import { cn } from '@/lib/utils';
-
 const stats = [
   {
     icon: Award,
@@ -80,14 +77,8 @@ const values = [
 
 export default function AboutUsSection() {
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden py-20 md:py-32">
-      {/* Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-red-900/5 blur-[120px] rounded-full" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-900/5 blur-[120px] rounded-full" />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+    <div className="bg-black pb-20 pt-10">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 md:px-6">
         {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
           {stats.map((stat, idx) => {
@@ -170,7 +161,9 @@ export default function AboutUsSection() {
 
         {/* Values Grid */}
         <div className="mb-24">
-          <SectionHeading title="NASZE" highlight="WARTOŚCI" className="mb-16" />
+          <h2 className="mb-10 text-3xl font-medium leading-tight tracking-tight text-white md:text-4xl">
+            Nasze wartości
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {values.map((val, idx) => {
               const Icon = val.icon;
