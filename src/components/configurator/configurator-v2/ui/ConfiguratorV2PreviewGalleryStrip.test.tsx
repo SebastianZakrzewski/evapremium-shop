@@ -63,6 +63,27 @@ describe("ConfiguratorV2PreviewGalleryStrip", () => {
     expect(onSelect).not.toHaveBeenCalled()
   })
 
+  it("keeps the active thumbnail in the strip without scrolling the page", () => {
+    const scrollIntoView = vi.fn()
+    HTMLElement.prototype.scrollIntoView = scrollIntoView
+    const scrollTo = vi.fn()
+    HTMLElement.prototype.scrollTo = scrollTo
+
+    render(
+      <ConfiguratorV2PreviewGalleryStrip
+        items={items}
+        activeId="in-car-photo-2"
+        onSelect={vi.fn()}
+        variant="mobile"
+      />,
+    )
+
+    expect(scrollIntoView).not.toHaveBeenCalled()
+    expect(scrollTo).toHaveBeenCalled()
+    const list = screen.getByRole("list", { name: "Galeria zdjęć podglądowych" })
+    expect(list.scrollTo).toBe(scrollTo)
+  })
+
   it("navigates with next button", () => {
     const onSelect = vi.fn()
 

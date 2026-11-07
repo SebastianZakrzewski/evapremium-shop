@@ -79,7 +79,7 @@ export const ConfiguratorV2Layout = ({
           className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-4 py-4 lg:px-6 lg:py-6 lg:pb-8 xl:px-8"
         >
           <div className="order-1">{specsBar}</div>
-          {introCard && <div className="order-2 mb-4">{introCard}</div>}
+          {introCard && <div className="order-2 mb-4 hidden lg:block">{introCard}</div>}
           <div className="order-3">{optionPanel}</div>
         </main>
       </div>

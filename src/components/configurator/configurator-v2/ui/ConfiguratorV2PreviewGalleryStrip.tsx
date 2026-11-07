@@ -57,19 +57,25 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
   useEffect(() => {
     if (!activeId) return
     const activeElement = itemRefs.current.get(activeId)
-    if (!activeElement?.scrollIntoView) return
+    const scroller = scrollRef.current
+    if (!activeElement || !scroller?.scrollTo) return
 
-    activeElement.scrollIntoView({
-      behavior: "smooth",
-      inline: "center",
-      block: "nearest",
+    const scrollerRect = scroller.getBoundingClientRect()
+    const itemRect = activeElement.getBoundingClientRect()
+    const delta =
+      itemRect.left -
+      scrollerRect.left -
+      (scroller.clientWidth - itemRect.width) / 2
+    scroller.scrollTo({
+      left: Math.max(0, scroller.scrollLeft + delta),
+      behavior: "auto",
     })
   }, [activeId, items])
 
   if (items.length === 0 && !showEmptyInCarSlot) return null
 
   const isMobile = variant === "mobile"
-  const thumbClassName = "h-[3.7rem] w-[6.15rem]"
+  const thumbClassName = isMobile ? "h-11 w-[4.5rem]" : "h-[3.7rem] w-[6.15rem]"
   const hasMultipleItems = items.length > 1
 
   return (

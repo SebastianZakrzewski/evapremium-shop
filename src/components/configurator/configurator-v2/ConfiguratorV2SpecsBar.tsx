@@ -15,9 +15,9 @@ export const ConfiguratorV2SpecsBar = ({
   contextLine,
   onLearnMore,
 }: ConfiguratorV2SpecsBarProps) => (
-  <div className="space-y-3">
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-      <h1 className="text-[1.75rem] font-medium leading-tight tracking-tight text-white lg:text-[2rem]">
+  <div className="space-y-1 lg:space-y-3">
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 lg:gap-x-3 lg:gap-y-2">
+      <h1 className="text-lg font-medium leading-tight tracking-tight text-white lg:text-[2rem]">
         {title}
       </h1>
       {year && (
@@ -27,13 +27,13 @@ export const ConfiguratorV2SpecsBar = ({
       )}
     </div>
     {contextLine && (
-      <p className="text-[13px] leading-snug text-white/55">{contextLine}</p>
+      <p className="text-xs leading-snug text-white/55 lg:text-[13px]">{contextLine}</p>
     )}
     {onLearnMore && (
       <button
         type="button"
         onClick={onLearnMore}
-        className="text-[13px] font-medium text-red-500 transition-colors hover:text-red-400"
+        className="hidden text-[13px] font-medium text-red-500 transition-colors hover:text-red-400 lg:inline"
       >
         Dowiedz się więcej
       </button>

@@ -523,11 +523,13 @@ export default function ConfiguratorV2() {
       }
       optionPanel={
         <>
-          <ConfiguratorV2OptionSearch
-            query={optionQuery}
-            matchCount={optionMatchCount}
-            onQueryChange={setOptionQuery}
-          />
+          <div className="hidden lg:block">
+            <ConfiguratorV2OptionSearch
+              query={optionQuery}
+              matchCount={optionMatchCount}
+              onQueryChange={setOptionQuery}
+            />
+          </div>
           <ConfiguratorV2OptionsProvider
             query={optionQuery}
             initiallyOpenSectionIds={CONFIGURATOR_V2_INITIALLY_OPEN_SECTION_IDS}

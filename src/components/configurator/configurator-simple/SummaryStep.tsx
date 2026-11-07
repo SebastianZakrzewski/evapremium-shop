@@ -167,7 +167,7 @@ export function SummaryStep({
   return (
     <div
       className={`space-y-4 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 ${
-        stickyMobileActions ? "pb-[calc(5.75rem+env(safe-area-inset-bottom,0px))] lg:pb-0" : ""
+        stickyMobileActions ? "pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] lg:pb-0" : ""
       }`}
       data-mobile-summary={stickyMobileActions ? "true" : undefined}
     >
@@ -419,27 +419,27 @@ export function SummaryStep({
             {cartActionError}
           </p>
         )}
-        <div className="flex flex-col-reverse sm:flex-row gap-3 md:gap-4">
+        <div className="flex flex-row gap-2 sm:gap-3 md:gap-4" data-testid="summary-action-row">
         <Button
           onClick={onPrevious}
           variant="outline"
-          className="flex-1 min-h-[48px] py-2 border-white/10 hover:bg-white/5 hover:text-white text-gray-400 transition-all duration-300"
+          className="h-11 min-h-11 flex-1 px-2 text-[12px] leading-tight border-white/10 hover:bg-white/5 hover:text-white text-gray-400 transition-all duration-300 sm:h-12 sm:min-h-[48px] sm:px-4 sm:text-base"
         >
           Wróć do edycji
         </Button>
         <Button
           onClick={onAddToCart}
           disabled={isAddingToCart}
-          className="flex-1 sm:flex-[2] min-h-[48px] py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold shadow-lg shadow-red-900/20 hover:shadow-red-900/40 transition-all duration-300 sm:transform sm:hover:-translate-y-0.5"
+          className="h-11 min-h-11 flex-1 px-2 text-[12px] leading-tight bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold shadow-lg shadow-red-900/20 hover:shadow-red-900/40 transition-all duration-300 sm:h-12 sm:min-h-[48px] sm:flex-[2] sm:px-4 sm:text-base sm:transform sm:hover:-translate-y-0.5"
         >
           {isAddingToCart ? (
-            <div className="flex items-center justify-center gap-2">
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            <div className="flex items-center justify-center gap-1.5">
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               <span>Przetwarzanie...</span>
             </div>
           ) : (
-            <span className="flex items-center justify-center gap-2">
-              <ShoppingCart className="w-5 h-5" />
+            <span className="flex items-center justify-center gap-1.5">
+              <ShoppingCart className="w-4 h-4 shrink-0" />
               Przejdź do koszyka
             </span>
           )}
