@@ -64,9 +64,10 @@ Wygląd baneru jesiennego, nawigacji i banera zgody na zrzutach 1280 px jest ten
 
 - `tsc --noEmit`: sukces, po poprawce koszyka też.
 - `next build --webpack`: sukces, także po poprawce koszyka.
-- Vitest: hero, slider, próbki, ikona typu, `CartService.updateQuantity` — sukces. `ProductVideoCarouselSection`: 5 z 6; fail `heading.querySelector(".text-red-500")` jest wcześniejszy (nagłówek idzie przez `ShopSectionHeading`). Plakat w tym teście oczekuje ścieżki `display`.
+- Vitest nie jest cały na zielono. Przechodzą: hero, slider, próbki, ikona typu, `CartService.updateQuantity`. `ProductVideoCarouselSection`: 5 z 6. Pada `renders heading with highlighted akcji`, bo `heading.querySelector(".text-red-500")` jest puste (nagłówek idzie przez `ShopSectionHeading`). To nie jest skutek miniaturek.
 - ESLint na ruszanych plikach: 0 błędów, 7 ostrzeżeń wcześniejszych (`no-img-element` na plakacie filmu, `any` i nieużywane importy w koszyku).
-- Chromium: brak poziomego overflow przy 320 px. Hyundai „3 modele”. BMW pokazuje X5. Firefox i WebKit niedostępne. `pageerror` w ścieżce zakupu: 0.
+- Chromium: brak poziomego overflow przy 320 px. Hyundai „3 modele”. BMW pokazuje X5. Firefox i WebKit niedostępne.
+- W ścieżce zakupu `pageerror` (wyjątek strony): 0. `console.error`: 10, wszystkie z `useAccessories`. `AccessoryRepository` i kategorie idą do Supabase, a nie przez `/api/accessories`. Przy atrapie `https://local-fixture.invalid` to żądanie pada, a hook loguje błąd. Puppeteer pokazuje drugi argument jako `JSHandle@error`. To nie jest błąd hydracji i nie blokuje koszyka: akcesoria są opcjonalne. Proxy i tak zwraca `[]` na `/api/accessories`, ale ten hook z tego URL nie korzysta.
 
 ## Ścieżka zakupu (Chromium, atrapa)
 
@@ -107,6 +108,7 @@ W środku:
 - `lighthouse/before/*.json` i `lighthouse/after/*.json` (po 3 przebiegi)
 - `medians.json`, `e2e.log`, `RAPORT-WYDAJNOSC-PRODUKCJA-SHA.md`
 - `perf-paynow-67f71be.patch`
+- `local-harness/` (`proxy.mjs`, `fixtures.mjs`, `journey.mjs`, `start.sh`, `stop.sh`, `package.json`, `package-lock.json`, `env.local.example`, `README.md`)
 
 Stara paczka `cursor/perf-smoothness-017b` zostaje, ale do SHA `67f71be` jej nie stosować.
 
@@ -114,12 +116,32 @@ Dalsze ścinanie LCP strony głównej da się zrobić `srcset` na plakatach film
 
 ## Uruchomienie
 
-```bash
-git worktree add -b cursor/prod-perf-paynow-017b /ścieżka 67f71beef2e22086692d98218082d873a0ef0667
-# albo git apply paczki na czystym SHA
+Gałąź: `cursor/prod-perf-paynow-017b`. BASE: `67f71beef2e22086692d98218082d873a0ef0667`. HEAD z harnessem: po tym commicie, patrz `git rev-parse HEAD`.
+
+```sh
+git worktree add -b cursor/prod-perf-paynow-017b ../evapremium-shop-prod 67f71beef2e22086692d98218082d873a0ef0667
+# albo: git apply perf-paynow-67f71be.patch na czystym SHA
+cd ../evapremium-shop-prod
+npm ci
+npx prisma generate
+npx next build --webpack
+cd local-harness
+npm ci
+chmod +x start.sh stop.sh
+./start.sh
 ```
 
-`.env.local` tylko z atrapami (`NEXT_PUBLIC_SUPABASE_URL=https://local-fixture.invalid`, `SUPABASE_SERVICE_ROLE_KEY=local-fixture-not-a-production-key`, `NEXT_PUBLIC_TRACKING_ENABLED=false`, `P24_ENABLED=false`, `PAYNOW_ENABLED=false`). Potem `npm ci`, `npx prisma generate`, `npx next build --webpack`, `npx next start -H 127.0.0.1 -p 3460`. Proxy atrap jest opisane w tym raporcie jako narzędzie laboratorium (`/tmp/prod-harness/proxy.mjs` na tej maszynie), nie jako kod produkcji.
+Przeglądarka: `http://127.0.0.1:3456/`
+
+`./start.sh` kopiuje `local-harness/env.local.example` do `.env.local`, jeśli go nie ma. Są tam same atrapy (`local-fixture.invalid`, `local-fixture-not-a-production-key`). To nie są klucze produkcji. Bez proxy katalog nie wstanie, bo aplikacja i tak woła ten host.
+
+Zatrzymanie: `cd local-harness && ./stop.sh`
+
+Sam `npx next start -H 127.0.0.1 -p 3460` nie ma tej izolacji. Port 3460 idzie wprost do Nexta: odczyt katalogu pada na atrapie Supabase, a `POST /api/orders`, `/api/payments` (Paynow) i `/api/abandoned-carts` nie dostają 403. Do oglądania i testu używaj tylko `http://127.0.0.1:3456/`.
+
+Oczekiwane 403 na proxy: `POST /api/orders`, `POST /api/payments/paynow/register`, `POST /api/bitrix24/sync`, `POST /api/abandoned-carts`, `POST /api/abandoned-carts/webhook`, `POST /api/cart`. Sprawdzone z rozpakowanego harnessu na czystym katalogu tymczasowym: każdy z tych adresów zwrócił 403 i `{"error":"local harness blocked a write"}`. `GET /api/models?brand=hyundai` zwrócił 200.
+
+Ścieżka: `cd local-harness && npm run journey`. Chrome z `PATH` albo `CHROME_PATH`.
 
 ## Czego to nie dowodzi
 
