@@ -10,8 +10,12 @@ import { validateBitrix24Config } from '@/lib/integrations/bitrix24/config';
 import { contactService } from '@/lib/integrations/bitrix24/services/ContactService';
 import { dealService } from '@/lib/integrations/bitrix24/services/DealService';
 import { leadService } from '@/lib/integrations/bitrix24/services/LeadService';
+import { blockSandboxSideEffects } from '@/lib/sandbox/guard';
 
 export async function GET(request: NextRequest) {
+  const blocked = blockSandboxSideEffects();
+  if (blocked) return blocked;
+
   try {
     console.log('🧪 Testing Bitrix24 connection...');
 
@@ -150,6 +154,9 @@ async function testCrmPermissions(): Promise<{ success: boolean; details: any }>
  * POST - Run specific tests
  */
 export async function POST(request: NextRequest) {
+  const blocked = blockSandboxSideEffects();
+  if (blocked) return blocked;
+
   try {
     const body = await request.json();
     const { testType } = body;

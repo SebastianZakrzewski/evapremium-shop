@@ -1,5 +1,6 @@
 import 'server-only'
 import { supabaseAdmin } from '@/lib/database/supabase'
+import { assertSandboxDataPlane, isSandboxScope } from '@/lib/sandbox/runtime'
 import { mapOrderToContact } from '@/lib/integrations/bitrix24/mappers/orderToContact'
 import { mapOrderToDeal, mapOrderToDealProductRows } from '@/lib/integrations/bitrix24/mappers/orderToDeal'
 import { contactService } from '@/lib/integrations/bitrix24/services/ContactService'
@@ -155,6 +156,9 @@ export const convertAbandonedCartsOnPaid = async (
     return result
   }
 
+  assertSandboxDataPlane()
+  const sandbox = isSandboxScope()
+
   try {
     const { data: carts, error: selectError } = await supabaseAdmin
       .from('abandoned_carts')
@@ -202,7 +206,7 @@ export const convertAbandonedCartsOnPaid = async (
 
       result.convertedCount += 1
 
-      if (!cart.bitrix_deal_id) {
+      if (!cart.bitrix_deal_id || sandbox) {
         continue
       }
 

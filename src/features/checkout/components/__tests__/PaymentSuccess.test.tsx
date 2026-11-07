@@ -4,6 +4,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Order } from '@/lib/types/order-new'
 import { resetGa4StateForTests } from '@/lib/tracking/ga4/events'
+import { readSandboxTracking, resetSandboxTrackingForTests } from '@/lib/sandbox/trackingInspector'
 import { PaymentSuccess } from '../PaymentSuccess'
 
 const orderApi = vi.hoisted(() => ({
@@ -146,6 +147,8 @@ describe('PaymentSuccess purchase tracking', () => {
     window.dataLayer = []
     delete window.gtag
     resetGa4StateForTests()
+    resetSandboxTrackingForTests()
+    vi.unstubAllEnvs()
     orderApi.getOrder.mockReset()
   })
 
@@ -270,5 +273,28 @@ describe('PaymentSuccess purchase tracking', () => {
 
     expect(await screen.findByRole('heading', { name: 'Dziękujemy za zamówienie' })).toBeInTheDocument()
     expectNoPurchase()
+  })
+
+  it('records pending-to-paid purchase in the sandbox inspector and does not call gtag', async () => {
+    vi.stubEnv('NEXT_PUBLIC_VERCEL_ENV', 'preview')
+    orderApi.getOrder
+      .mockResolvedValueOnce(buildOrder('pending'))
+      .mockResolvedValueOnce(buildOrder('paid'))
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        payment: { status: 'pending', providerStatus: 'CONFIRMED' },
+      }),
+    })
+
+    render(<PaymentSuccess />)
+
+    expect(await screen.findByRole('heading', { name: 'Dziękujemy za zamówienie' })).toBeInTheDocument()
+    expect(gtagCalls('purchase')).toHaveLength(0)
+    expect(gtagCalls('conversion')).toHaveLength(0)
+    expect(namedEvents('purchase')).toHaveLength(0)
+    expect(readSandboxTracking().filter((entry) => entry.event === 'purchase')).toHaveLength(1)
+    expect(readSandboxTracking().filter((entry) => entry.event === 'conversion')).toHaveLength(1)
+    expect(localStorage.getItem(PURCHASE_CACHE_KEY)).toBeTruthy()
   })
 })

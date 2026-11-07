@@ -3,10 +3,21 @@ import { createClient } from '@supabase/supabase-js';
 import { env } from '@/config/env';
 import { dealService } from '@/lib/integrations/bitrix24/services/DealService';
 import { findRecentBlockingOrderForBitrixExport } from '@/lib/services/abandonedCartExportGuard';
+import { blockIfSandboxMisconfigured } from '@/lib/sandbox/guard';
+import { isSandboxScope } from '@/lib/sandbox/runtime';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
 export async function POST(_request: NextRequest) {
+  const blocked = blockIfSandboxMisconfigured();
+  if (blocked) return blocked;
+  if (isSandboxScope()) {
+    return NextResponse.json(
+      { success: true, skipped: true, reason: 'sandbox_no_crm', count: 0, results: [] },
+      { status: 200 }
+    );
+  }
+
   try {
     const nowIso = new Date().toISOString();
     // Add 1 minute buffer to prevent race condition with webhook

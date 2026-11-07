@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { env } from '@/config/env'
 import { PaymentService } from '@/lib/services/PaymentService'
+import { blockIfSandboxMisconfigured, isolationErrorResponse } from '@/lib/sandbox/guard'
 
 const paymentService = new PaymentService()
 
 export async function POST(request: NextRequest) {
+  const blocked = blockIfSandboxMisconfigured()
+  if (blocked) return blocked
+
   try {
     if (!env.features?.paynowEnabled) {
       return NextResponse.json({ error: 'Paynow disabled' }, { status: 503 })
@@ -35,6 +39,8 @@ export async function POST(request: NextRequest) {
       paymentId: result.paymentId,
     })
   } catch (error) {
+    const isolation = isolationErrorResponse(error)
+    if (isolation) return isolation
     return NextResponse.json(
       {
         success: false,

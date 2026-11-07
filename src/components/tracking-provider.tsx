@@ -8,6 +8,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { usePageView } from '@/lib/tracking/hooks/usePageView'
 import { getTrackingConfigInstance } from '@/lib/config/tracking'
 import { FacebookPixelProvider } from '@/lib/tracking/providers/FacebookPixelProvider'
+import { isSandboxTrackingScope } from '@/lib/sandbox/runtime'
 import { COOKIE_CONSENT_CHANGED_EVENT, hasConsentForCategory } from '@/features/cookie-consent'
 import { loadMicrosoftClarity } from '@/lib/tracking/consent/loadMicrosoftClarity'
 import { GoogleConsentMode } from '@/components/analytics/GoogleConsentMode'
@@ -27,7 +28,7 @@ export function TrackingProvider({ children }: { children: React.ReactNode }) {
   const clarityInitializedRef = useRef(false)
 
   const initMarketingTracking = useCallback(() => {
-    if (typeof window === 'undefined') {
+    if (isSandboxTrackingScope() || typeof window === 'undefined') {
       return
     }
 
@@ -51,7 +52,7 @@ export function TrackingProvider({ children }: { children: React.ReactNode }) {
   }, [config.enabled, config.debug])
 
   const initStatisticsTracking = useCallback(() => {
-    if (typeof window === 'undefined') {
+    if (isSandboxTrackingScope() || typeof window === 'undefined') {
       return
     }
 

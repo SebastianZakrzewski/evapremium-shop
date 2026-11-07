@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/config/env';
+import { blockIfSandboxMisconfigured } from '@/lib/sandbox/guard';
 
 export const maxDuration = 30
 import { abandonedCartUpsertInputSchema } from '@/lib/validators/abandonedCart';
@@ -9,6 +10,9 @@ import { findRecentBlockingOrderForHeartbeat } from '@/lib/services/abandonedCar
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
 export async function POST(request: NextRequest) {
+  const blocked = blockIfSandboxMisconfigured();
+  if (blocked) return blocked;
+
   try {
     const body = await request.json();
     const input = abandonedCartUpsertInputSchema.parse(body);

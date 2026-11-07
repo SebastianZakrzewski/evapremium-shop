@@ -13,10 +13,14 @@ import { mapOrderToContact } from '@/lib/integrations/bitrix24/mappers/orderToCo
 import { mapOrderToDeal, mapOrderToDealProductRows } from '@/lib/integrations/bitrix24/mappers/orderToDeal';
 import { mapFormToLead } from '@/lib/integrations/bitrix24/mappers/formToLead';
 import { bitrix24Config } from '@/lib/integrations/bitrix24/config';
+import { blockSandboxSideEffects } from '@/lib/sandbox/guard';
 
 const orderService = new OrderService();
 
 export async function POST(request: NextRequest) {
+  const blocked = blockSandboxSideEffects();
+  if (blocked) return blocked;
+
   try {
     const body = await request.json();
     const { 
@@ -502,6 +506,9 @@ function getDealStageFromOrderStatus(orderStatus: string, paymentStatus: string)
  * GET - Get sync status and statistics
  */
 export async function GET(request: NextRequest) {
+  const blocked = blockSandboxSideEffects();
+  if (blocked) return blocked;
+
   try {
     const { searchParams } = new URL(request.url);
     const orderNumber = searchParams.get('orderNumber');
