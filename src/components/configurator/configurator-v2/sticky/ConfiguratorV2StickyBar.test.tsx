@@ -11,28 +11,30 @@ const baseBreakdown = {
 }
 
 describe("ConfiguratorV2StickyBar", () => {
-  it("shows summary CTA when configuration is complete", () => {
-    const onGoToSummary = vi.fn()
+  it("moves forward when the current stage is complete", () => {
+    const onForward = vi.fn()
 
     render(
       <ConfiguratorV2StickyBar
         priceBreakdown={baseBreakdown}
         isConfigComplete
-        showSummaryCta
-        onGoToSummary={onGoToSummary}
+        showBack={false}
+        onBack={vi.fn()}
+        showForward
+        forwardDisabled={false}
+        onForward={onForward}
       />,
     )
 
     expect(screen.getByText(/549/)).toBeInTheDocument()
-    const summaryButton = screen.getByRole("button", {
-      name: "Podsumowanie zamówienia",
-    })
-    expect(summaryButton).toBeEnabled()
-    fireEvent.click(summaryButton)
-    expect(onGoToSummary).toHaveBeenCalledOnce()
+    const forward = screen.getByRole("button", { name: "Dalej" })
+    expect(forward).toBeEnabled()
+    fireEvent.click(forward)
+    expect(onForward).toHaveBeenCalledOnce()
+    expect(screen.queryByRole("button", { name: "Wstecz" })).not.toBeInTheDocument()
   })
 
-  it("shows disabled summary CTA before configuration is complete", () => {
+  it("explains why Dalej is unavailable", () => {
     render(
       <ConfiguratorV2StickyBar
         priceBreakdown={{
@@ -42,17 +44,22 @@ describe("ConfiguratorV2StickyBar", () => {
           totalPrice: 0,
         }}
         isConfigComplete={false}
-        showSummaryCta
-        onGoToSummary={vi.fn()}
+        showBack={false}
+        onBack={vi.fn()}
+        showForward
+        forwardDisabled
+        forwardDisabledReason="Aby przejść dalej, wybierz: rok produkcji."
+        onForward={vi.fn()}
       />,
     )
 
     expect(
       screen.getByText("Wybierz wariant aby zobaczyć cenę"),
     ).toBeInTheDocument()
-    expect(
-      screen.getByRole("button", { name: "Podsumowanie zamówienia" }),
-    ).toBeDisabled()
+    const forward = screen.getByRole("button", { name: "Dalej" })
+    expect(forward).toBeDisabled()
+    expect(forward).toHaveAttribute("aria-describedby", "configurator-forward-hint-fixed")
+    expect(screen.getByText("Aby przejść dalej, wybierz: rok produkcji.")).toBeInTheDocument()
   })
 
   it("calls onPriceClick when price area clicked", () => {
@@ -62,8 +69,11 @@ describe("ConfiguratorV2StickyBar", () => {
       <ConfiguratorV2StickyBar
         priceBreakdown={baseBreakdown}
         isConfigComplete
-        showSummaryCta
-        onGoToSummary={vi.fn()}
+        showBack
+        onBack={vi.fn()}
+        showForward
+        forwardDisabled={false}
+        onForward={vi.fn()}
         onPriceClick={onPriceClick}
       />,
     )
@@ -77,8 +87,11 @@ describe("ConfiguratorV2StickyBar", () => {
       <ConfiguratorV2StickyBar
         priceBreakdown={baseBreakdown}
         isConfigComplete
-        showSummaryCta
-        onGoToSummary={vi.fn()}
+        showBack={false}
+        onBack={vi.fn()}
+        showForward
+        forwardDisabled={false}
+        onForward={vi.fn()}
       />,
     )
 
@@ -95,8 +108,11 @@ describe("ConfiguratorV2StickyBar", () => {
       <ConfiguratorV2StickyBar
         priceBreakdown={baseBreakdown}
         isConfigComplete
-        showSummaryCta
-        onGoToSummary={vi.fn()}
+        showBack
+        onBack={vi.fn()}
+        showForward={false}
+        forwardDisabled={false}
+        onForward={vi.fn()}
         variant="column"
       />,
     )
@@ -107,14 +123,49 @@ describe("ConfiguratorV2StickyBar", () => {
     expect(bar.className).not.toContain("fixed")
   })
 
-  it("renders the desktop header with change-model and summary actions", () => {
+  it("shows the current step above back and forward", () => {
     render(
       <ConfiguratorV2StickyBar
         priceBreakdown={baseBreakdown}
         isConfigComplete
-        showSummaryCta
-        onGoToSummary={vi.fn()}
-        productLabel="Komplet"
+        showBack
+        onBack={vi.fn()}
+        showForward
+        forwardDisabled={false}
+        onForward={vi.fn()}
+        currentStage={2}
+      />,
+    )
+
+    const progress = screen.getByRole("progressbar", { name: "Krok 2 z 4" })
+    expect(progress).toHaveAttribute("aria-valuenow", "2")
+    expect(progress).toHaveAttribute("aria-valuemin", "1")
+    expect(progress).toHaveAttribute("aria-valuemax", "4")
+    const segments = progress.querySelectorAll("[data-progress-segment]")
+    expect(segments).toHaveLength(4)
+    expect(segments[0]).toHaveAttribute("data-reached", "true")
+    expect(segments[1]).toHaveAttribute("data-reached", "true")
+    expect(segments[2]).toHaveAttribute("data-reached", "false")
+    expect(segments[3]).toHaveAttribute("data-reached", "false")
+    expect(
+      progress.compareDocumentPosition(screen.getByRole("button", { name: "Wstecz" })),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(
+      progress.compareDocumentPosition(screen.getByRole("button", { name: "Dalej" })),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+  })
+
+  it("renders the desktop header with back and forward actions", () => {
+    const onBack = vi.fn()
+    render(
+      <ConfiguratorV2StickyBar
+        priceBreakdown={baseBreakdown}
+        isConfigComplete
+        showBack
+        onBack={onBack}
+        showForward
+        forwardDisabled={false}
+        onForward={vi.fn()}
         variant="header"
       />,
     )
@@ -123,9 +174,8 @@ describe("ConfiguratorV2StickyBar", () => {
       "href",
       "/modele",
     )
-    expect(screen.getByRole("button", { name: "Podsumowanie" })).toBeEnabled()
-    expect(
-      screen.getByRole("button", { name: "Podsumowanie zamówienia" }),
-    ).toBeEnabled()
+    fireEvent.click(screen.getByRole("button", { name: "Wstecz" }))
+    expect(onBack).toHaveBeenCalledOnce()
+    expect(screen.getByRole("button", { name: "Dalej" })).toBeEnabled()
   })
 })

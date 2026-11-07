@@ -36,6 +36,7 @@ export const AccessoriesSection = ({
       onPrevious={onPrevious}
       canProceedToSummary={canProceedToSummary}
       nextLabel="Podsumowanie zamówienia"
+      hideNavigation
       onProductModalOpenChange={onProductModalOpenChange}
     />
   </ConfiguratorV2SectionShell>

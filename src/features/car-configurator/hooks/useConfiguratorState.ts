@@ -160,5 +160,5 @@ export const useConfiguratorState = ({
     setConfig((prev) => ({ ...prev, ...updates }));
   }, []);
 
-  return { config, setConfig, updateConfig };
+  return { config, setConfig, updateConfig, hydrated };
 };

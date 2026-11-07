@@ -32,10 +32,10 @@ export const TeslaSwatchRow = ({
           aria-label={item.label}
           aria-pressed={isSelected}
           title={item.label}
-          className={`h-11 w-11 overflow-hidden rounded-full ring-1 ring-offset-2 ring-offset-black transition-shadow ${
+          className={`h-11 w-11 overflow-hidden rounded-full border-2 transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950 ${
             isSelected
-              ? "ring-red-500"
-              : "ring-white/15 hover:ring-white/40"
+              ? "border-neutral-950"
+              : "border-neutral-300 hover:border-neutral-500"
           }`}
           style={
             !item.imageSrc && item.color

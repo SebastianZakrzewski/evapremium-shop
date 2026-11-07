@@ -50,15 +50,15 @@ export const ConfiguratorV2ImageOptionCard = ({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`flex flex-col rounded-2xl px-2 py-2 text-left transition-colors ${
+      className={`flex flex-col rounded-2xl border bg-[#FDFDFD] px-2 py-2 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950 ${
         inline ? "w-[8.75rem]" : "w-full"
       } ${
         selected
-          ? "bg-[#1c1c1e] ring-1 ring-inset ring-red-500"
-          : "bg-[#1c1c1e]/70 hover:bg-[#2c2c2e]"
+          ? "border-2 border-neutral-950"
+          : "border-neutral-300 hover:border-neutral-500"
       }`}
     >
-      <span className="mb-2 flex h-24 items-center justify-center overflow-hidden rounded-xl bg-black/35">
+      <span className="mb-2 flex h-24 items-center justify-center overflow-hidden rounded-xl bg-neutral-100">
         <Image
           src={imageSrc}
           alt={imageAlt || title}
@@ -71,17 +71,17 @@ export const ConfiguratorV2ImageOptionCard = ({
 
       <span className="flex w-full items-start justify-between gap-2">
         <span className="min-w-0">
-          <span className="line-clamp-2 block text-xs font-medium leading-tight tracking-tight text-white">
+          <span className="line-clamp-2 block text-xs font-medium leading-tight tracking-tight text-neutral-950">
             {title}
           </span>
           {description && (
-            <span className="mt-0.5 line-clamp-2 block text-[10px] leading-snug text-white/45">
+            <span className="mt-0.5 line-clamp-2 block text-[10px] leading-snug text-neutral-600">
               {description}
             </span>
           )}
         </span>
         {showPrice && (
-          <span className="shrink-0 text-right">
+          <span className="shrink-0 rounded-md bg-black px-1.5 py-0.5 text-right">
             {discount > 0 && basePrice != null && (
               <span className="block text-[10px] text-white/35 line-through tabular-nums">
                 {formatPricePln(basePrice)}

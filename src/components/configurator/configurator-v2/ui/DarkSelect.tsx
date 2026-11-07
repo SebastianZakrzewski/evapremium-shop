@@ -17,6 +17,7 @@ type DarkSelectProps = {
   options: DarkSelectOption[]
   onChange: (value: string) => void
   disabled?: boolean
+  surface?: "dark" | "light"
 }
 
 type MenuBox = {
@@ -33,6 +34,7 @@ export const DarkSelect = ({
   options,
   onChange,
   disabled = false,
+  surface = "dark",
 }: DarkSelectProps) => {
   const [open, setOpen] = useState(false)
   const [menuBox, setMenuBox] = useState<MenuBox | null>(null)
@@ -89,7 +91,11 @@ export const DarkSelect = ({
             aria-label={ariaLabel}
             data-dark-select-menu
             style={{ top: menuBox.top, left: menuBox.left, width: menuBox.width }}
-            className="fixed z-[90] max-h-60 overflow-y-auto rounded-xl border border-white/10 bg-black py-1 shadow-[0_16px_40px_rgba(0,0,0,0.45)]"
+            className={`fixed z-[90] max-h-60 overflow-y-auto rounded-xl border py-1 shadow-[0_16px_40px_rgba(0,0,0,0.45)] ${
+              surface === "light"
+                ? "border-neutral-300 bg-[#FDFDFD]"
+                : "border-white/10 bg-black"
+            }`}
           >
             {options.map((option) => {
               const isSelected = option.value === value
@@ -103,10 +109,14 @@ export const DarkSelect = ({
                       onChange(option.value)
                       setOpen(false)
                     }}
-                    className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
-                      isSelected
-                        ? "bg-white/[0.06] text-white"
-                        : "text-white/80 hover:bg-white/[0.06] hover:text-white"
+                    className={`flex min-h-11 w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
+                      surface === "light"
+                        ? isSelected
+                          ? "bg-neutral-100 text-neutral-950"
+                          : "text-neutral-800 hover:bg-neutral-100"
+                        : isSelected
+                          ? "bg-white/[0.06] text-white"
+                          : "text-white/80 hover:bg-white/[0.06] hover:text-white"
                     }`}
                   >
                     <span className="min-w-0 flex-1">{option.label}</span>
@@ -134,13 +144,31 @@ export const DarkSelect = ({
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
         onClick={() => setOpen((current) => !current)}
-        className="flex w-full min-h-[44px] items-center justify-between gap-3 rounded-xl bg-black/40 px-4 py-3 text-left text-sm outline-none ring-1 ring-transparent transition-shadow focus-visible:ring-red-500/70 disabled:cursor-not-allowed disabled:opacity-50"
+        className={`flex w-full min-h-11 items-center justify-between gap-3 rounded-xl px-4 py-3 text-left text-sm outline-none transition-shadow disabled:cursor-not-allowed disabled:opacity-50 ${
+          surface === "light"
+            ? `border bg-[#FDFDFD] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950 ${
+                selected ? "border-neutral-950" : "border-neutral-300"
+              }`
+            : "bg-black/40 ring-1 ring-transparent focus-visible:ring-red-500/70"
+        }`}
       >
-        <span className={selected ? "text-white" : "text-white/45"}>
+        <span
+          className={
+            surface === "light"
+              ? selected
+                ? "text-neutral-950"
+                : "text-neutral-500"
+              : selected
+                ? "text-white"
+                : "text-white/45"
+          }
+        >
           {selected?.label ?? placeholder}
         </span>
         <ChevronDown
-          className={`h-4 w-4 shrink-0 text-white/35 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 shrink-0 transition-transform ${
+            surface === "light" ? "text-neutral-500" : "text-white/35"
+          } ${open ? "rotate-180" : ""}`}
           aria-hidden
         />
       </button>

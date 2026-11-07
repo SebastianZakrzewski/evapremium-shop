@@ -24,6 +24,7 @@ interface AccessoriesStepProps {
   onPrevious: () => void;
   canProceedToSummary?: boolean;
   nextLabel?: string;
+  hideNavigation?: boolean;
   onProductModalOpenChange?: (isOpen: boolean) => void;
 }
 
@@ -39,6 +40,7 @@ export function AccessoriesStep({
   onPrevious,
   canProceedToSummary = true,
   nextLabel = "Dalej",
+  hideNavigation = false,
   onProductModalOpenChange,
 }: AccessoriesStepProps) {
   const { accessories, isLoading } = useAccessories();
@@ -121,18 +123,22 @@ export function AccessoriesStep({
       {/* Sekcja Podpiętki */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-white">Podpiętki</h3>
+          <h3 className={`text-sm font-semibold ${hideNavigation ? "text-neutral-950" : "text-white"}`}>
+            Podpiętki
+          </h3>
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-400">Opcjonalne</span>
-            <Button
-              onClick={onNext}
-              disabled={!canProceedToSummary}
-              variant="outline"
-              size="sm"
-              className="border-white/10 hover:bg-white/5 hover:text-white text-gray-400 h-7 px-3 text-xs font-medium disabled:opacity-50"
-            >
-              Pomiń
-            </Button>
+            {!hideNavigation && (
+              <Button
+                onClick={onNext}
+                disabled={!canProceedToSummary}
+                variant="outline"
+                size="sm"
+                className="border-white/10 hover:bg-white/5 hover:text-white text-gray-400 h-7 px-3 text-xs font-medium disabled:opacity-50"
+              >
+                Pomiń
+              </Button>
+            )}
           </div>
         </div>
 
@@ -290,7 +296,7 @@ export function AccessoriesStep({
         )}
       </div>
 
-      {/* Nawigacja */}
+      {!hideNavigation && (
       <div className="flex flex-col sm:flex-row gap-3 justify-end pt-2">
         <Button onClick={onPrevious} variant="outline" className="flex-1 sm:flex-initial px-6 py-3 min-h-[44px] md:min-h-[40px] border-white/10 hover:bg-white/5 active:scale-95">
           Wstecz
@@ -303,6 +309,7 @@ export function AccessoriesStep({
           {nextLabel}
         </Button>
       </div>
+      )}
 
       {/* Sheet z szczegółami podpiętki */}
       {selectedAccessory && (

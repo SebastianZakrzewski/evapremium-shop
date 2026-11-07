@@ -35,7 +35,7 @@ export const MatTypeSection = ({
         title="Typ dywanika"
         readiness={{ ...readiness, isDisabled: false }}
       >
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-neutral-600">
           Dla tego pojazdu obowiązuje jeden typ kompletu — przejdź do wyboru wariantu.
         </p>
       </ConfiguratorV2SectionShell>
