@@ -6,6 +6,7 @@ import { resolveMobilePreviewDocked } from "./mobilePreviewDock"
 
 type ConfiguratorV2LayoutProps = {
   topBar: ReactNode
+  stageNav?: ReactNode
   specsBar: ReactNode
   introCard?: ReactNode
   previewPanel: ReactNode
@@ -22,6 +23,7 @@ type ConfiguratorV2LayoutProps = {
  */
 export const ConfiguratorV2Layout = ({
   topBar,
+  stageNav,
   specsBar,
   introCard,
   previewPanel,
@@ -49,7 +51,7 @@ export const ConfiguratorV2Layout = ({
   }, [])
 
   return (
-  <div className="flex h-full min-h-0 flex-col overflow-hidden bg-black text-white">
+  <div className="flex h-full min-h-0 flex-col overflow-hidden overflow-x-hidden bg-black text-white">
     <div className="hidden shrink-0 border-b border-white/[0.08] bg-black lg:block">
       {topBar}
     </div>
@@ -58,7 +60,7 @@ export const ConfiguratorV2Layout = ({
       {mobilePreview && (
         <MobilePreviewDockProvider docked={previewDocked}>
           <div
-            className="shrink-0 border-b border-white/[0.08] bg-black px-4 pb-3 pt-3 lg:hidden"
+            className="shrink-0 border-b border-white/[0.08] bg-black px-4 pb-2 pt-2 lg:hidden"
             aria-label="Podgląd produktu"
           >
             {mobilePreview}
@@ -73,14 +75,20 @@ export const ConfiguratorV2Layout = ({
         <div className="min-h-0 flex-1">{previewPanel}</div>
       </aside>
 
-      <div className="flex min-h-0 flex-1 flex-col bg-black">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-[#FDFDFD] text-neutral-950">
+        {stageNav && (
+          <div className="shrink-0 border-b border-neutral-200 bg-[#FDFDFD] px-3 py-2 lg:px-6">
+            {stageNav}
+          </div>
+        )}
         <main
           ref={optionsRef}
-          className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-4 py-4 lg:px-6 lg:py-6 lg:pb-8 xl:px-8"
+          data-configurator-options
+          className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden overscroll-contain bg-[#FDFDFD] px-4 py-4 text-neutral-950 lg:px-6 lg:py-6 lg:pb-8 xl:px-8"
         >
           <div className="order-1">{specsBar}</div>
           {introCard && <div className="order-2 mb-4 hidden lg:block">{introCard}</div>}
-          <div className="order-3">{optionPanel}</div>
+          <div className="order-3 min-w-0">{optionPanel}</div>
         </main>
       </div>
     </div>

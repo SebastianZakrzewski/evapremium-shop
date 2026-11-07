@@ -15,33 +15,41 @@ type ConfiguratorV2StickyBarProps = {
   priceBreakdown: PriceBreakdown
   accessoryPrice?: number
   isConfigComplete: boolean
-  showSummaryCta: boolean
-  onGoToSummary: () => void
+  showBack: boolean
+  onBack: () => void
+  showForward: boolean
+  forwardDisabled: boolean
+  forwardDisabledReason?: string | null
+  onForward: () => void
   onPriceClick?: () => void
-  productLabel?: string
   /** header: pasek górny desktopu; fixed: dół mobile; column: zgodność testów */
   variant?: "column" | "fixed" | "header"
 }
 
-const summaryButtonClassName =
-  "inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-red-600 px-4 text-[13px] font-medium text-white transition-colors hover:bg-red-500 disabled:opacity-40"
+const forwardButtonClassName =
+  "inline-flex min-h-11 min-w-11 flex-1 items-center justify-center rounded-full bg-red-600 px-4 text-[13px] font-medium text-white transition-colors hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40 lg:flex-none"
 
-const quietButtonClassName =
-  "inline-flex h-10 max-w-[11rem] shrink-0 items-center justify-center truncate rounded-full bg-[#1c1c1e] px-4 text-[13px] font-medium text-white transition-colors hover:bg-[#2c2c2e] disabled:opacity-40"
+const backButtonClassName =
+  "inline-flex min-h-11 min-w-11 flex-1 items-center justify-center rounded-full border border-white/15 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:bg-white/10 lg:flex-none"
 
 export const ConfiguratorV2StickyBar = ({
   priceBreakdown,
   accessoryPrice = 0,
   isConfigComplete,
-  showSummaryCta,
-  onGoToSummary,
+  showBack,
+  onBack,
+  showForward,
+  forwardDisabled,
+  forwardDisabledReason = null,
+  onForward,
   onPriceClick,
-  productLabel,
   variant = "fixed",
 }: ConfiguratorV2StickyBarProps) => {
   const totalWithAccessories = priceBreakdown.totalPrice + accessoryPrice
   const hasPrice = priceBreakdown.totalPrice > 0
   const isHeader = variant === "header"
+  const reasonId = `configurator-forward-hint-${variant}`
+  const reason = showForward && forwardDisabled ? forwardDisabledReason : null
 
   const priceBlock = (
     <button
@@ -82,18 +90,26 @@ export const ConfiguratorV2StickyBar = ({
     </button>
   )
 
-  const primaryCta = showSummaryCta ? (
-    <button
-      type="button"
-      onClick={onGoToSummary}
-      disabled={!isConfigComplete}
-      className={summaryButtonClassName}
-      aria-label="Podsumowanie zamówienia"
-    >
-      <span className="lg:hidden">Podsumowanie</span>
-      <span className="hidden lg:inline">Podsumowanie zamówienia</span>
-    </button>
-  ) : null
+  const navigation = (
+    <div className={`flex min-w-0 items-center gap-2 ${isHeader ? "" : "w-full"}`}>
+      {showBack && (
+        <button type="button" onClick={onBack} className={backButtonClassName}>
+          Wstecz
+        </button>
+      )}
+      {showForward && (
+        <button
+          type="button"
+          onClick={onForward}
+          disabled={forwardDisabled}
+          className={forwardButtonClassName}
+          aria-describedby={reason ? reasonId : undefined}
+        >
+          Dalej
+        </button>
+      )}
+    </div>
+  )
 
   if (isHeader) {
     return (
@@ -104,24 +120,21 @@ export const ConfiguratorV2StickyBar = ({
         <Link
           href="/modele"
           aria-label="Zmień model"
-          className="inline-flex items-center gap-2 text-[13px] font-medium text-white/80 transition-colors hover:text-white"
+          className="inline-flex min-h-11 items-center gap-2 text-[13px] font-medium text-white/80 transition-colors hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
           <span>Zmień model</span>
         </Link>
-        <div className="flex min-w-0 items-center justify-end gap-3">
-          {priceBlock}
-          {showSummaryCta && (
-            <button
-              type="button"
-              onClick={onGoToSummary}
-              disabled={!isConfigComplete}
-              className={quietButtonClassName}
-            >
-              Podsumowanie
-            </button>
+        <div className="flex min-w-0 flex-col items-end gap-1">
+          <div className="flex min-w-0 items-center justify-end gap-3">
+            {priceBlock}
+            {navigation}
+          </div>
+          {reason && (
+            <p id={reasonId} className="max-w-sm text-right text-[12px] leading-snug text-white/80">
+              {reason}
+            </p>
           )}
-          {primaryCta}
         </div>
       </div>
     )
@@ -132,16 +145,14 @@ export const ConfiguratorV2StickyBar = ({
       className="relative w-full border-t border-white/[0.08] bg-black/80 backdrop-blur-2xl"
       data-variant={variant}
     >
-      <div className="flex items-center justify-between gap-2.5 px-3 py-2.5 lg:gap-4 lg:px-6 lg:py-3">
+      <div className="flex flex-col gap-2 px-3 py-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] lg:px-6">
         {priceBlock}
-        <div className="flex min-w-0 items-center justify-end gap-2">
-          {variant === "fixed" && productLabel && (
-            <span className="max-w-[34vw] truncate rounded-full bg-[#1c1c1e] px-3 py-2 text-[13px] font-medium text-white/80 sm:max-w-[11rem] sm:px-4">
-              {productLabel}
-            </span>
-          )}
-          {primaryCta}
-        </div>
+        {reason && (
+          <p id={reasonId} className="text-[12px] leading-snug text-white/80">
+            {reason}
+          </p>
+        )}
+        {(showBack || showForward) && navigation}
       </div>
     </div>
   )

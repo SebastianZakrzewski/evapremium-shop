@@ -1,7 +1,7 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { useSearchParams } from "next/navigation"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCart } from "@/features/shopping-cart/hooks/useCart"
 import { openCartModal } from "@/features/shopping-cart/utils/openCartModal"
 import { useAccessories } from "@/features/accessories/hooks/useAccessories"
@@ -36,10 +36,7 @@ import {
   ConfiguratorV2SpecsBar,
 } from "./ConfiguratorV2SpecsBar"
 import { ConfiguratorV2OptionSearch } from "./option-search/ConfiguratorV2OptionSearch"
-import {
-  CONFIGURATOR_V2_INITIALLY_OPEN_SECTION_IDS,
-  ConfiguratorV2OptionsProvider,
-} from "./option-search/ConfiguratorV2OptionsProvider"
+import { ConfiguratorV2OptionsProvider } from "./option-search/ConfiguratorV2OptionsProvider"
 import { countMatchingSections } from "./option-search/sectionMatchesOptionQuery"
 import { buildConfiguratorSearchIndex } from "./option-search/buildConfiguratorSearchIndex"
 import { ConfiguratorV2PreviewWithGallery } from "./ConfiguratorV2PreviewWithGallery"
@@ -54,8 +51,23 @@ import { ColorSection } from "./sections/ColorSection"
 import { EdgeColorSection } from "./sections/EdgeColorSection"
 import { AccessoriesSection } from "./sections/AccessoriesSection"
 import { SummarySection } from "./sections/SummarySection"
-import { scrollConfiguratorV2ToElementWhenReady } from "./utils/scrollConfiguratorV2ToElement"
 import { ConfiguratorV2StickyBar } from "./sticky/ConfiguratorV2StickyBar"
+import { ConfiguratorStageStepper } from "./steps/ConfiguratorStageStepper"
+import { buildMatCartPayload } from "./steps/buildMatCartPayload"
+import { explainConfigurationReset } from "./steps/explainConfigurationReset"
+import { focusStageHeading } from "./steps/focusStageHeading"
+import {
+  CONFIGURATOR_STAGE_PARAM,
+  CONFIGURATOR_STAGE_STORAGE_KEY,
+  buildStageSnapshots,
+  forwardDisabledReason,
+  isSectionVisibleForStage,
+  parseEtapParam,
+  resolveConfiguratorStage,
+  stageRequirementsFromSections,
+  withEtapParam,
+  type ConfiguratorStageId,
+} from "./steps/configuratorStages"
 import { PriceBreakdownModal } from "./sticky/PriceBreakdownModal"
 import { CompareMatTypesModal } from "./modals/CompareMatTypesModal"
 import { CompareVariantsModal } from "./modals/CompareVariantsModal"
@@ -64,12 +76,42 @@ import type { ConfiguratorState } from "@/features/car-configurator/utils/config
 
 const V2_STORAGE_KEY = "configurator-v2-state"
 
+const STAGE_SECTION_IDS = [
+  "section-vehicle",
+  "section-matType",
+  "section-variant",
+  "section-structure",
+  "section-color",
+  "section-edgeColor",
+  "section-accessories",
+  "section-summary",
+]
+
+const readStoredEtap = (): ConfiguratorStageId | null => {
+  if (typeof window === "undefined") return null
+  try {
+    return parseEtapParam(window.sessionStorage.getItem(CONFIGURATOR_STAGE_STORAGE_KEY))
+  } catch {
+    return null
+  }
+}
+
+const writeStoredEtap = (stage: ConfiguratorStageId) => {
+  try {
+    window.sessionStorage.setItem(CONFIGURATOR_STAGE_STORAGE_KEY, String(stage))
+  } catch {
+    // A blocked session store must not discard the visible step.
+  }
+}
+
 export default function ConfiguratorV2() {
+  const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
   const { addToCart, isLoading: cartLoading } = useCart()
   const { accessories } = useAccessories()
   const { brands, isLoading: brandsLoading } = useBrands()
-  const { config, updateConfig } = useConfiguratorState({
+  const { config, updateConfig, hydrated } = useConfiguratorState({
     searchParams,
     brands,
     storageKey: V2_STORAGE_KEY,
@@ -310,9 +352,103 @@ export default function ConfiguratorV2() {
   const [isCompareVariantsOpen, setIsCompareVariantsOpen] = useState(false)
   const [isFeaturesModalOpen, setIsFeaturesModalOpen] = useState(false)
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false)
-  const [showSummary, setShowSummary] = useState(false)
   const [cartActionError, setCartActionError] = useState<string | null>(null)
+  const [resetNotice, setResetNotice] = useState<string | null>(null)
   const [optionQuery, setOptionQuery] = useState("")
+  const [stage, setStage] = useState<ConfiguratorStageId>(
+    () => parseEtapParam(searchParams.get(CONFIGURATOR_STAGE_PARAM)) ?? 1,
+  )
+  const stageRef = useRef(stage)
+  stageRef.current = stage
+  const writtenEtap = useRef<ConfiguratorStageId | null>(
+    parseEtapParam(searchParams.get(CONFIGURATOR_STAGE_PARAM)),
+  )
+  const stageReady = useRef(false)
+  const pendingFocus = useRef(false)
+  const [stageSettled, setStageSettled] = useState(false)
+  const previousConfig = useRef(config)
+  const sawHydratedConfig = useRef(false)
+
+  const stageInput = useMemo(
+    () => stageRequirementsFromSections(mapperResult.sections),
+    [mapperResult.sections],
+  )
+  const urlEtapNow = parseEtapParam(searchParams.get(CONFIGURATOR_STAGE_PARAM))
+  const stageForView = resolveConfiguratorStage(
+    !hydrated
+      ? stage
+      : !stageSettled
+        ? (urlEtapNow ?? readStoredEtap() ?? stage)
+        : stage,
+    stageInput,
+  )
+  const stageSnapshots = useMemo(
+    () => buildStageSnapshots(stageForView, stageInput),
+    [stageForView, stageInput],
+  )
+  const disabledReason = forwardDisabledReason(stageForView, config, stageInput)
+  const searchActive = optionQuery.trim().length > 0
+
+  const writeEtap = useCallback(
+    (next: ConfiguratorStageId, history: "push" | "replace") => {
+      writeStoredEtap(next)
+      writtenEtap.current = next
+      const href = `${pathname}?${withEtapParam(searchParams.toString(), next)}`
+      if (history === "push") router.push(href, { scroll: false })
+      else router.replace(href, { scroll: false })
+    },
+    [pathname, router, searchParams],
+  )
+
+  const moveToStage = useCallback(
+    (requested: number, history: "push" | "replace") => {
+      const next = resolveConfiguratorStage(requested, stageInput)
+      pendingFocus.current = true
+      setStage(next)
+      writeEtap(next, history)
+    },
+    [stageInput, writeEtap],
+  )
+
+  useEffect(() => {
+    if (!hydrated) {
+      previousConfig.current = config
+      return
+    }
+    if (!sawHydratedConfig.current) {
+      sawHydratedConfig.current = true
+      previousConfig.current = config
+      return
+    }
+    const message = explainConfigurationReset(previousConfig.current, config)
+    previousConfig.current = config
+    if (message) setResetNotice(message)
+  }, [config, hydrated])
+
+  useEffect(() => {
+    if (!hydrated) return
+    const urlEtap = parseEtapParam(searchParams.get(CONFIGURATOR_STAGE_PARAM))
+    const externalNavigation = stageReady.current && urlEtap !== writtenEtap.current
+    const requested = !stageReady.current
+      ? (urlEtap ?? readStoredEtap() ?? stageRef.current)
+      : externalNavigation
+        ? (urlEtap ?? 1)
+        : stageRef.current
+    stageReady.current = true
+    const next = resolveConfiguratorStage(requested, stageInput)
+    writtenEtap.current = next
+    if (next !== stageRef.current) setStage(next)
+    writeStoredEtap(next)
+    setStageSettled(true)
+    if (urlEtap !== next) writeEtap(next, "replace")
+  }, [hydrated, searchParams, stageInput, writeEtap])
+
+  useEffect(() => {
+    if (!pendingFocus.current) return
+    pendingFocus.current = false
+    const heading = document.getElementById("configurator-stage-heading")
+    if (heading instanceof HTMLElement) focusStageHeading(heading)
+  }, [stage])
 
   const summaryPriceBreakdown = useMemo(
     () => ({
@@ -323,33 +459,6 @@ export default function ConfiguratorV2() {
     }),
     [priceBreakdown],
   )
-
-  const scrollToSection = useCallback((sectionId: string) => {
-    scrollConfiguratorV2ToElementWhenReady(sectionId)
-  }, [])
-
-  const handleGoToSummary = useCallback(() => {
-    if (!mapperResult.isReadyForCart) return
-    setShowSummary(true)
-  }, [mapperResult.isReadyForCart])
-
-  useEffect(() => {
-    if (!showSummary) return
-    const cancelScroll = scrollConfiguratorV2ToElementWhenReady("summary-order-heading", {
-      alignToContentStart: true,
-      offset: 12,
-    })
-    return cancelScroll
-  }, [showSummary])
-
-  const handleBackFromSummary = useCallback(() => {
-    setShowSummary(false)
-    scrollToSection("section-accessories")
-  }, [scrollToSection])
-
-  const handleBackToEdgeColors = useCallback(() => {
-    scrollToSection("section-edgeColor")
-  }, [scrollToSection])
 
   const handleAddToCart = useCallback(async () => {
     if (!mapperResult.isReadyForCart) {
@@ -382,44 +491,19 @@ export default function ConfiguratorV2() {
         pricingLabel: pricingQuery.data?.selectedVariant?.label,
       })
 
-      await addToCart({
-        productType: "mat",
-        productId,
-        quantity: 1,
-        unitPrice: priceBreakdown.totalPrice,
-        productName: `Dywaniki ${formatBrandDisplayName(config.brand)} ${config.model}`,
-        productSku: `MAT-${config.brand.toUpperCase()}-${config.model.toUpperCase()}`,
-        productImage: productImagePath,
-        configuration: {
-          carDetails: {
-            brand: config.brand,
-            brandKey: config.brandKey,
-            model: config.model,
-            modelFamilyKey: config.modelFamilyKey,
-            modelKey: config.modelKey,
-            generation: config.generation,
-            year: config.year,
-            gearbox: config.gearbox || undefined,
-            bodyType: config.bodyType,
-            bodyTypeKey: config.bodyTypeKey,
-            recordKey: config.recordKey,
-            templateId: config.templateId,
-          },
-          pricing: {
-            pricingCategoryKey: config.pricingCategoryKey,
-            catalogVersionCode: config.catalogVersionCode,
+      await addToCart(
+        buildMatCartPayload({
+          config,
+          price: {
             basePrice: priceBreakdown.basePrice,
             priceAfterDiscount: priceBreakdown.priceAfterDiscount,
             totalPrice: priceBreakdown.totalPrice,
           },
-          setType: config.matType,
-          setVariant: config.variant,
+          productId,
+          productImage: productImagePath,
           setVariantLabel,
-          cellType: config.structure,
-          materialColor: config.color,
-          edgeColor: config.edgeColor,
-        },
-      })
+        }),
+      )
 
       if (config.selectedPodpietka && selectedPodpietka) {
         const podpietkaImage =
@@ -489,9 +573,9 @@ export default function ConfiguratorV2() {
       "Kolor obszycia",
       "Akcesoria",
     ]
-    if (showSummary) titles.push("Podsumowanie zamówienia")
+    titles.push("Podsumowanie zamówienia")
     return titles
-  }, [productEntry.isLocked, showSummary])
+  }, [productEntry.isLocked])
 
   const searchTermsById = useMemo(
     () =>
@@ -544,10 +628,17 @@ export default function ConfiguratorV2() {
     [optionQuery, searchTermsById, sectionTitles],
   )
 
-  const setMetric = mapperResult.metrics.find((metric) => metric.label === "Zestaw")?.value
-  const productLabel = setMetric && setMetric !== "—" ? setMetric : pageTitle
+  const currentStageName =
+    stageSnapshots.find((item) => item.id === stageForView)?.name ?? "Samochód"
+  const showSection = (section: Parameters<typeof isSectionVisibleForStage>[0]["section"]) =>
+    isSectionVisibleForStage({
+      section,
+      stage: stageForView,
+      searchActive,
+      input: stageInput,
+    })
 
-  if (brandsLoading && !config.brand) {
+  if ((brandsLoading && !config.brand) || !hydrated) {
     return <ConfiguratorLoader />
   }
 
@@ -555,16 +646,24 @@ export default function ConfiguratorV2() {
     priceBreakdown,
     accessoryPrice,
     isConfigComplete: mapperResult.isReadyForCart,
-    showSummaryCta: !showSummary,
-    onGoToSummary: handleGoToSummary,
+    showBack: stageForView > 1,
+    onBack: () => moveToStage(stageForView - 1, "push"),
+    showForward: stageForView < 4,
+    forwardDisabled: disabledReason != null,
+    forwardDisabledReason: disabledReason,
+    onForward: () => moveToStage(stageForView + 1, "push"),
     onPriceClick: () => setIsPriceModalOpen(true),
-    productLabel,
   }
 
   return (
     <ConfiguratorV2Layout
-      hideMobileStickyBar={showSummary}
       topBar={<ConfiguratorV2StickyBar {...stickyBarProps} variant="header" />}
+      stageNav={
+        <ConfiguratorStageStepper
+          stages={stageSnapshots}
+          onOpen={(next) => moveToStage(next, "push")}
+        />
+      }
       specsBar={
         <ConfiguratorV2SpecsBar
           title={pageTitle}
@@ -615,18 +714,33 @@ export default function ConfiguratorV2() {
               onQueryChange={setOptionQuery}
             />
           </div>
+          <h2
+            id="configurator-stage-heading"
+            tabIndex={-1}
+            className="mb-1 text-sm font-semibold tracking-tight text-neutral-950 outline-none"
+          >
+            {currentStageName}
+          </h2>
+          {resetNotice && (
+            <p role="status" className="mb-3 text-[13px] leading-snug text-neutral-800">
+              {resetNotice}
+            </p>
+          )}
           <ConfiguratorV2OptionsProvider
             query={optionQuery}
-            initiallyOpenSectionIds={CONFIGURATOR_V2_INITIALLY_OPEN_SECTION_IDS}
+            initiallyOpenSectionIds={STAGE_SECTION_IDS}
             searchTermsById={searchTermsById}
             requestedOpen={requestedOpen}
           >
+          {showSection("vehicle") && (
           <VehicleContextSection
             config={config}
             productEntry={productEntry}
             readiness={mapperResult.sections.vehicle}
             onUpdate={updateConfig}
           />
+          )}
+          {showSection("matType") && (
           <MatTypeSection
             config={config}
             skipMatTypeStep={skipMatTypeStep}
@@ -635,6 +749,8 @@ export default function ConfiguratorV2() {
             onUpdate={updateConfig}
             onCompareClick={() => setIsCompareMatTypesOpen(true)}
           />
+          )}
+          {showSection("variant") && (
           <VariantSection
             config={config}
             pricingVariants={pricingVariants}
@@ -643,40 +759,50 @@ export default function ConfiguratorV2() {
             readiness={mapperResult.sections.variant}
             onUpdate={updateConfig}
             onCompareClick={() => setIsCompareVariantsOpen(true)}
-            unavailableNotice={variantNotice}
+            unavailableNotice={resetNotice ? null : variantNotice}
           />
+          )}
+          {showSection("structure") && (
           <StructureSection
             config={config}
             readiness={mapperResult.sections.structure}
             onUpdate={updateConfig}
           />
+          )}
+          {showSection("color") && (
           <ColorSection
             config={config}
             readiness={mapperResult.sections.color}
             onUpdate={updateConfig}
           />
+          )}
+          {showSection("edgeColor") && (
           <EdgeColorSection
             config={config}
             readiness={mapperResult.sections.edgeColor}
             onUpdate={updateConfig}
           />
+          )}
+          {showSection("accessories") && (
           <AccessoriesSection
             config={config}
             readiness={mapperResult.sections.accessories}
             onUpdate={updateConfig}
-            onNext={handleGoToSummary}
-            onPrevious={handleBackToEdgeColors}
+            onNext={() => undefined}
+            onPrevious={() => moveToStage(3, "push")}
             canProceedToSummary={mapperResult.isReadyForCart}
           />
-          {showSummary && (
+          )}
+          {showSection("summary") && (
             <SummarySection
               config={config}
               priceBreakdown={summaryPriceBreakdown}
-              onPrevious={handleBackFromSummary}
+              onPrevious={() => moveToStage(3, "push")}
               onAddToCart={handleAddToCart}
               isAddingToCart={isAddingToCart || cartLoading}
               cartActionError={cartActionError}
               vehiclePreviewImage={vehiclePreviewImage}
+              stickyMobileActions={false}
             />
           )}
           </ConfiguratorV2OptionsProvider>

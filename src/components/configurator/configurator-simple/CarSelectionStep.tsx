@@ -22,6 +22,7 @@ type CarSelectionStepProps = {
   onUpdate: (updates: Partial<ConfiguratorState>) => void
   onNext: () => void
   hideNextButton?: boolean
+  surface?: "dark" | "light"
 }
 
 const yearsInRange = (from: number | null, to: number | null): number[] => {
@@ -35,6 +36,7 @@ export const CarSelectionStep = ({
   onUpdate,
   onNext,
   hideNextButton = false,
+  surface = "dark",
 }: CarSelectionStepProps) => {
   const { brands, models, templates, isLoading, error } = useVehicleCatalog(
     config.brandKey,
@@ -307,7 +309,11 @@ export const CarSelectionStep = ({
     <div className="space-y-5">
       {fields.map((field) => (
         <div key={field.label} id={field.id} className="block scroll-mt-4">
-          <span className="mb-2 block text-[13px] font-medium text-white/55">
+          <span
+            className={`mb-2 block text-[13px] font-medium ${
+              surface === "light" ? "text-neutral-700" : "text-white/55"
+            }`}
+          >
             {field.label} *
           </span>
           <DarkSelect
@@ -317,6 +323,7 @@ export const CarSelectionStep = ({
             ariaLabel={field.label}
             options={field.options}
             disabled={field.disabled}
+            surface={surface}
             onChange={field.onChange}
           />
         </div>

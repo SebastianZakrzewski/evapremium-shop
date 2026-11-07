@@ -106,7 +106,7 @@ describe("ConfiguratorV2PreviewWithGallery", () => {
     expect(preview).toHaveClass("object-contain")
     expect(preview.parentElement?.parentElement).toHaveClass("scale-100")
     expect(preview.parentElement?.parentElement).not.toHaveClass("scale-110")
-    expect(frame).toHaveClass("h-[52vw]", "max-h-[320px]")
+    expect(frame).toHaveClass("h-[72px]", "max-h-[72px]")
     expect(frame).not.toHaveClass("h-[38vh]")
   })
 })

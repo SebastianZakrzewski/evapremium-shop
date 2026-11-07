@@ -65,7 +65,7 @@ export const VariantSection = ({
       }
     >
       {unavailableNotice && (
-        <p role="status" className="mb-3 text-[13px] leading-snug text-white/80">
+        <p role="status" className="mb-3 text-[13px] leading-snug text-neutral-800">
           {unavailableNotice}
         </p>
       )}

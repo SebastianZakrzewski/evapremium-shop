@@ -17,17 +17,17 @@ export const ConfiguratorV2SpecsBar = ({
 }: ConfiguratorV2SpecsBarProps) => (
   <div className="space-y-1 lg:space-y-3">
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 lg:gap-x-3 lg:gap-y-2">
-      <h1 className="text-lg font-medium leading-tight tracking-tight text-white lg:text-[2rem]">
+      <h1 className="hidden text-lg font-medium leading-tight tracking-tight text-neutral-950 sm:block lg:text-[2rem]">
         {title}
       </h1>
       {year && (
-        <span className="inline-flex items-center rounded-full bg-[#1c1c1e] px-2.5 py-0.5 text-[13px] font-medium text-white/70">
+        <span className="inline-flex items-center rounded-full border border-neutral-300 bg-[#FDFDFD] px-2.5 py-0.5 text-[13px] font-medium text-neutral-700">
           {year}
         </span>
       )}
     </div>
     {contextLine && (
-      <p className="text-xs leading-snug text-white/55 lg:text-[13px]">{contextLine}</p>
+      <p className="hidden text-xs leading-snug text-neutral-600 sm:block lg:text-[13px]">{contextLine}</p>
     )}
     {onLearnMore && (
       <button
@@ -51,16 +51,16 @@ export const ConfiguratorV2IntroCard = ({
   <button
     type="button"
     onClick={onLearnMore}
-    className="flex w-full items-center justify-between gap-4 rounded-2xl bg-[#1c1c1e] px-5 py-4 text-left transition-colors hover:bg-[#2c2c2e]"
+    className="flex w-full items-center justify-between gap-4 rounded-2xl border border-neutral-300 bg-[#FDFDFD] px-5 py-4 text-left transition-colors hover:border-neutral-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950"
   >
     <span className="min-w-0">
-      <span className="block text-[15px] font-medium leading-snug tracking-tight text-white">
+      <span className="block text-[15px] font-medium leading-snug tracking-tight text-neutral-950">
         Dowiedz się więcej o dywanikach EVA
       </span>
-      <span className="mt-1 block text-[13px] leading-snug text-white/55">
+      <span className="mt-1 block text-[13px] leading-snug text-neutral-600">
         Poznaj materiał, strukturę komórek i wykończenie.
       </span>
     </span>
-    <ChevronRight className="h-4 w-4 shrink-0 text-white/35" aria-hidden />
+    <ChevronRight className="h-4 w-4 shrink-0 text-neutral-500" aria-hidden />
   </button>
 )

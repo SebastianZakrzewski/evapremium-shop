@@ -34,6 +34,7 @@ export const VehicleContextSection = ({
         onUpdate={onUpdate}
         onNext={noop}
         hideNextButton
+        surface="light"
       />
     ) : (
       <CarSelectionStep
@@ -41,6 +42,7 @@ export const VehicleContextSection = ({
         onUpdate={onUpdate}
         onNext={noop}
         hideNextButton
+        surface="light"
       />
     )}
   </ConfiguratorV2SectionShell>

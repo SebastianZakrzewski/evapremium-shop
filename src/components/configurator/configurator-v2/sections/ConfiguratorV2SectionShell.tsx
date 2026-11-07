@@ -100,14 +100,14 @@ export const ConfiguratorV2SectionShell = ({
       id={id}
       aria-disabled={readiness.isDisabled}
       hidden={!visible}
-      className={`scroll-mt-4 border-b border-white/[0.08] py-1.5 last:border-b-0 ${
+      className={`scroll-mt-4 border-b border-neutral-200 py-1.5 last:border-b-0 ${
         readiness.isDisabled ? "opacity-40" : ""
       }`}
     >
-      <h2 id={headingId} className="text-[17px] font-medium tracking-tight text-white">
+      <h2 id={headingId} className="text-[17px] font-medium tracking-tight text-neutral-950">
         <button
           type="button"
-          className="flex w-full items-center justify-between gap-3 rounded-2xl px-3 py-3 text-left hover:bg-white/[0.04] disabled:cursor-not-allowed disabled:hover:bg-transparent"
+          className="flex min-h-11 w-full items-center justify-between gap-3 rounded-2xl px-3 py-2 text-left hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950 disabled:cursor-not-allowed disabled:hover:bg-transparent"
           aria-expanded={panelVisible}
           aria-controls={`${id}-panel`}
           disabled={readiness.isDisabled}
@@ -115,14 +115,14 @@ export const ConfiguratorV2SectionShell = ({
         >
           <span>{title}</span>
           {expanded ? (
-            <ChevronUp className="h-4 w-4 shrink-0 text-white/35" aria-hidden />
+            <ChevronUp className="h-4 w-4 shrink-0 text-neutral-500" aria-hidden />
           ) : showOnMobileBeforeMount ? (
             <>
-              <ChevronUp className="h-4 w-4 shrink-0 text-white/35 lg:hidden" aria-hidden />
-              <ChevronDown className="hidden h-4 w-4 shrink-0 text-white/35 lg:block" aria-hidden />
+              <ChevronUp className="h-4 w-4 shrink-0 text-neutral-500 lg:hidden" aria-hidden />
+              <ChevronDown className="hidden h-4 w-4 shrink-0 text-neutral-500 lg:block" aria-hidden />
             </>
           ) : (
-            <ChevronDown className="h-4 w-4 shrink-0 text-white/35" aria-hidden />
+            <ChevronDown className="h-4 w-4 shrink-0 text-neutral-500" aria-hidden />
           )}
         </button>
       </h2>
@@ -130,10 +130,10 @@ export const ConfiguratorV2SectionShell = ({
       {(selectedLabel || readiness.disabledReason) && (
         <div className="px-3 pb-2">
           {selectedLabel && (
-            <p className="text-[13px] text-white/55">{selectedLabel}</p>
+            <p className="text-[13px] text-neutral-600">{selectedLabel}</p>
           )}
           {readiness.isDisabled && readiness.disabledReason && (
-            <p className="mt-1 text-[13px] leading-snug text-white/80" role="status">
+            <p className="mt-1 text-[13px] leading-snug text-neutral-800" role="status">
               {readiness.disabledReason}
             </p>
           )}
@@ -146,7 +146,7 @@ export const ConfiguratorV2SectionShell = ({
         className={`px-3 pb-4 ${showOnMobileBeforeMount && !expanded ? "max-lg:!block lg:hidden" : ""}`}
       >
         {included && (
-          <p className="mb-2 text-[11px] font-medium tracking-wide text-white/40">W zestawie</p>
+          <p className="mb-2 text-[11px] font-medium tracking-wide text-neutral-500">W zestawie</p>
         )}
         {headerAction && (
           <div className="mb-3 flex justify-end">{headerAction}</div>
