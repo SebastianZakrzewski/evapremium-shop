@@ -13,6 +13,7 @@ Kopia na Windowsie nie była ruszana. Paczka jest do późniejszego `npm ci` na 
 | Gałąź | `cursor/prod-perf-paynow-017b` |
 | BASE | `67f71beef2e22086692d98218082d873a0ef0667` |
 | Poprzedni HEAD (obrazy + koszyk) | `6050414d024d5caa54ded4b2cf685bf8db233790` |
+| Commit zależności | `d5b3858b6f1137c5a562b6513ba9276053de263b` |
 | Node testu | 22.23.4 |
 | Node Vercel | 22.x |
 | Node na Windowsie | 24, poza tym przebiegiem |

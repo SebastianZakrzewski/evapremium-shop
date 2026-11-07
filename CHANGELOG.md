@@ -5,6 +5,7 @@
 Gałąź: `cursor/prod-perf-paynow-017b`.
 BASE: `67f71beef2e22086692d98218082d873a0ef0667`.
 Poprzedni HEAD z optymalizacją obrazów i koszykiem: `6050414d024d5caa54ded4b2cf685bf8db233790`.
+Commit zależności: `d5b3858b6f1137c5a562b6513ba9276053de263b`.
 Środowisko testu: Node.js 22.23.4 na maszynie wirtualnej. Vercel zostaje na Node 22.x. Lokalny Windows (Node 24) nie był uruchamiany i nie był zmieniany.
 
 Nie było pusha, pull requestu, merge ani wdrożenia. Alias `www.evapremium.pl` nie był ruszany. Cel wycofania, wyłącznie planistyczny: deployment `dpl_8z2mC6E1X2mZcScnx6aTaNpesjTD`.
