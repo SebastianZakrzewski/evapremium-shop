@@ -5,6 +5,7 @@ import { buildMatCartPayload } from "./buildMatCartPayload"
 import {
   buildStageSnapshots,
   canEnterStage,
+  configuratorProgressLabel,
   forwardDisabledReason,
   highestEnterableStage,
   isSectionVisibleForStage,
@@ -241,6 +242,18 @@ describe("configurator stages", () => {
         edgeColor: "red",
       },
     })
+  })
+
+  it("names the current step without treating it as field completion", () => {
+    const complete = requirementsFor(completeConfig)
+    const partial = requirementsFor({ ...completeConfig, variant: "" })
+
+    expect(configuratorProgressLabel(1)).toBe("Krok 1 z 4")
+    expect(configuratorProgressLabel(resolveConfiguratorStage(2, complete))).toBe("Krok 2 z 4")
+    expect(configuratorProgressLabel(resolveConfiguratorStage(1, complete))).toBe("Krok 1 z 4")
+    expect(configuratorProgressLabel(resolveConfiguratorStage(4, complete))).toBe("Krok 4 z 4")
+    expect(configuratorProgressLabel(resolveConfiguratorStage(4, partial))).toBe("Krok 2 z 4")
+    expect(configuratorProgressLabel(resolveConfiguratorStage(3, partial))).toBe("Krok 2 z 4")
   })
 
   it("moves focus to the stage heading without scrolling the window", () => {

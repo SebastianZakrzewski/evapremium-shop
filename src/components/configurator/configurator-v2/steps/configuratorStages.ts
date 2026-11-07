@@ -13,6 +13,11 @@ export const CONFIGURATOR_STAGES = [
 
 export type ConfiguratorStageId = (typeof CONFIGURATOR_STAGES)[number]["id"]
 
+export const configuratorProgressLabel = (
+  stage: number,
+  stageCount: number = CONFIGURATOR_STAGES.length,
+): string => `Krok ${stage} z ${stageCount}`
+
 export type StageStatus = "current" | "completed" | "available" | "locked"
 
 export type StageRequirementInput = {

@@ -653,6 +653,7 @@ export default function ConfiguratorV2() {
     forwardDisabledReason: disabledReason,
     onForward: () => moveToStage(stageForView + 1, "push"),
     onPriceClick: () => setIsPriceModalOpen(true),
+    currentStage: stageForView,
   }
 
   return (
@@ -717,7 +718,7 @@ export default function ConfiguratorV2() {
           <h2
             id="configurator-stage-heading"
             tabIndex={-1}
-            className="mb-1 text-sm font-semibold tracking-tight text-neutral-950 outline-none"
+            className="mb-1 text-sm font-semibold tracking-tight text-neutral-950 outline-none max-[380px]:sr-only"
           >
             {currentStageName}
           </h2>

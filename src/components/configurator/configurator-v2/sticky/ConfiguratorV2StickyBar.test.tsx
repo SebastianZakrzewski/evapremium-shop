@@ -123,6 +123,38 @@ describe("ConfiguratorV2StickyBar", () => {
     expect(bar.className).not.toContain("fixed")
   })
 
+  it("shows the current step above back and forward", () => {
+    render(
+      <ConfiguratorV2StickyBar
+        priceBreakdown={baseBreakdown}
+        isConfigComplete
+        showBack
+        onBack={vi.fn()}
+        showForward
+        forwardDisabled={false}
+        onForward={vi.fn()}
+        currentStage={2}
+      />,
+    )
+
+    const progress = screen.getByRole("progressbar", { name: "Krok 2 z 4" })
+    expect(progress).toHaveAttribute("aria-valuenow", "2")
+    expect(progress).toHaveAttribute("aria-valuemin", "1")
+    expect(progress).toHaveAttribute("aria-valuemax", "4")
+    const segments = progress.querySelectorAll("[data-progress-segment]")
+    expect(segments).toHaveLength(4)
+    expect(segments[0]).toHaveAttribute("data-reached", "true")
+    expect(segments[1]).toHaveAttribute("data-reached", "true")
+    expect(segments[2]).toHaveAttribute("data-reached", "false")
+    expect(segments[3]).toHaveAttribute("data-reached", "false")
+    expect(
+      progress.compareDocumentPosition(screen.getByRole("button", { name: "Wstecz" })),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(
+      progress.compareDocumentPosition(screen.getByRole("button", { name: "Dalej" })),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+  })
+
   it("renders the desktop header with back and forward actions", () => {
     const onBack = vi.fn()
     render(

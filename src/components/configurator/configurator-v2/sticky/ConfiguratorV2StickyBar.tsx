@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { ArrowLeft, ChevronDown } from "lucide-react"
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice"
+import { configuratorProgressLabel } from "../steps/configuratorStages"
 
 export type PriceBreakdown = {
   basePrice: number
@@ -22,6 +23,8 @@ type ConfiguratorV2StickyBarProps = {
   forwardDisabledReason?: string | null
   onForward: () => void
   onPriceClick?: () => void
+  currentStage?: number
+  stageCount?: number
   /** header: pasek górny desktopu; fixed: dół mobile; column: zgodność testów */
   variant?: "column" | "fixed" | "header"
 }
@@ -43,6 +46,8 @@ export const ConfiguratorV2StickyBar = ({
   forwardDisabledReason = null,
   onForward,
   onPriceClick,
+  currentStage = 1,
+  stageCount = 4,
   variant = "fixed",
 }: ConfiguratorV2StickyBarProps) => {
   const totalWithAccessories = priceBreakdown.totalPrice + accessoryPrice
@@ -50,6 +55,38 @@ export const ConfiguratorV2StickyBar = ({
   const isHeader = variant === "header"
   const reasonId = `configurator-forward-hint-${variant}`
   const reason = showForward && forwardDisabled ? forwardDisabledReason : null
+  const progressLabel = configuratorProgressLabel(currentStage, stageCount)
+
+  const progress = (
+    <div
+      role="progressbar"
+      aria-valuemin={1}
+      aria-valuemax={stageCount}
+      aria-valuenow={currentStage}
+      aria-label={progressLabel}
+      className="flex min-w-0 items-center gap-2"
+    >
+      <span className="shrink-0 text-[11px] font-medium leading-none text-white/80" aria-hidden>
+        {progressLabel}
+      </span>
+      <span className="flex min-w-0 flex-1 gap-1" aria-hidden>
+        {Array.from({ length: stageCount }, (_, index) => {
+          const step = index + 1
+          const reached = step <= currentStage
+          return (
+            <span
+              key={step}
+              data-progress-segment={step}
+              data-reached={reached ? "true" : "false"}
+              className={`h-1 min-w-[1.25rem] flex-1 rounded-full ${
+                reached ? "bg-white" : "bg-white/25"
+              }`}
+            />
+          )
+        })}
+      </span>
+    </div>
+  )
 
   const priceBlock = (
     <button
@@ -114,27 +151,30 @@ export const ConfiguratorV2StickyBar = ({
   if (isHeader) {
     return (
       <div
-        className="relative flex w-full items-center justify-between gap-4 bg-black px-4 py-3 xl:px-6"
+        className="relative flex w-full flex-col gap-2 bg-black px-4 py-3 xl:px-6"
         data-variant={variant}
       >
-        <Link
-          href="/modele"
-          aria-label="Zmień model"
-          className="inline-flex min-h-11 items-center gap-2 text-[13px] font-medium text-white/80 transition-colors hover:text-white"
-        >
-          <ArrowLeft className="h-4 w-4" aria-hidden />
-          <span>Zmień model</span>
-        </Link>
-        <div className="flex min-w-0 flex-col items-end gap-1">
-          <div className="flex min-w-0 items-center justify-end gap-3">
-            {priceBlock}
-            {navigation}
+        {progress}
+        <div className="flex w-full items-center justify-between gap-4">
+          <Link
+            href="/modele"
+            aria-label="Zmień model"
+            className="inline-flex min-h-11 items-center gap-2 text-[13px] font-medium text-white/80 transition-colors hover:text-white"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden />
+            <span>Zmień model</span>
+          </Link>
+          <div className="flex min-w-0 flex-col items-end gap-1">
+            <div className="flex min-w-0 items-center justify-end gap-3">
+              {priceBlock}
+              {navigation}
+            </div>
+            {reason && (
+              <p id={reasonId} className="max-w-sm text-right text-[12px] leading-snug text-white/80">
+                {reason}
+              </p>
+            )}
           </div>
-          {reason && (
-            <p id={reasonId} className="max-w-sm text-right text-[12px] leading-snug text-white/80">
-              {reason}
-            </p>
-          )}
         </div>
       </div>
     )
@@ -145,13 +185,14 @@ export const ConfiguratorV2StickyBar = ({
       className="relative w-full border-t border-white/[0.08] bg-black/80 backdrop-blur-2xl"
       data-variant={variant}
     >
-      <div className="flex flex-col gap-2 px-3 py-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] lg:px-6">
+      <div className="flex flex-col gap-1 px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] lg:px-6">
         {priceBlock}
         {reason && (
           <p id={reasonId} className="text-[12px] leading-snug text-white/80">
             {reason}
           </p>
         )}
+        {progress}
         {(showBack || showForward) && navigation}
       </div>
     </div>
