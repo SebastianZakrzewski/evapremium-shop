@@ -134,23 +134,32 @@ try {
   }
   log(`cart-modal-click ${opened}`)
   await page.waitForSelector('[aria-label="Zwiększ ilość"]', { timeout: 5000 })
-  await page.evaluate(() => {
-    const button = [...document.querySelectorAll('[aria-label="Zwiększ ilość"]')]
-      .find((el) => el.getClientRects().length > 0)
-    button?.click()
-  })
-  await new Promise((r) => setTimeout(r, 800))
+  const increase = async () => {
+    await page.evaluate(() => {
+      const button = [...document.querySelectorAll('[aria-label="Zwiększ ilość"]')]
+        .find((el) => el.getClientRects().length > 0)
+      button?.click()
+    })
+    await new Promise((r) => setTimeout(r, 800))
+  }
+  await increase()
   const qty2 = await page.evaluate(() => {
     const raw = JSON.parse(localStorage.getItem("cart-v2"))
     return raw.items?.[0]?.quantity ?? raw[0]?.quantity
   })
   log(`qty-after-plus ${qty2}`)
-  await page.reload({ waitUntil: "domcontentloaded" })
+  await increase()
   const qty3 = await page.evaluate(() => {
     const raw = JSON.parse(localStorage.getItem("cart-v2"))
     return raw.items?.[0]?.quantity ?? raw[0]?.quantity
   })
-  log(`qty-persists ${qty3}`)
+  log(`qty-after-second-plus ${qty3}`)
+  await page.reload({ waitUntil: "domcontentloaded" })
+  const qtyPersisted = await page.evaluate(() => {
+    const raw = JSON.parse(localStorage.getItem("cart-v2"))
+    return raw.items?.[0]?.quantity ?? raw[0]?.quantity
+  })
+  log(`qty-persists ${qtyPersisted}`)
 
   await page.goto(`${baseUrl}/checkout`, { waitUntil: "networkidle2", timeout: 25000 })
   await dismissConsent()

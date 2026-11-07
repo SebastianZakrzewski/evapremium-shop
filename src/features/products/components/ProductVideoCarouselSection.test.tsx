@@ -92,12 +92,21 @@ describe("ProductVideoCarouselSection", () => {
     ).toBeInTheDocument()
   })
 
-  it("renders heading with highlighted akcji", () => {
+  it("renders the heading Premium w akcji with the red kicker outside the heading", () => {
     render(<ProductVideoCarouselSection />)
 
-    const heading = screen.getByRole("heading", { level: 2 })
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "Premium w akcji",
+    })
     expect(heading).toHaveTextContent("Premium w akcji")
-    expect(heading.querySelector(".text-red-500")).toHaveTextContent("akcji")
+    expect(heading.querySelector(".text-red-500")).toBeNull()
+    expect(heading).toHaveClass("text-white")
+
+    const kicker = screen.getByText("Wideo")
+    expect(kicker.tagName).toBe("P")
+    expect(kicker).toHaveClass("text-red-500")
+    expect(kicker.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it("renders one video card per product video entry", () => {

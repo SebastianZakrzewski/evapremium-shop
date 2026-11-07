@@ -5,17 +5,21 @@ import type { Cart } from "../../types/cart-new"
 const getAccessoryById = vi.fn()
 
 vi.mock("../AccessoryService", () => ({
-  AccessoryService: vi.fn().mockImplementation(() => ({
-    getAccessoryById,
-  })),
+  AccessoryService: vi.fn().mockImplementation(function () {
+    return { getAccessoryById }
+  }),
 }))
 
 vi.mock("../MatService", () => ({
-  MatService: vi.fn().mockImplementation(() => ({})),
+  MatService: vi.fn().mockImplementation(function () {
+    return {}
+  }),
 }))
 
 vi.mock("../PricingService", () => ({
-  PricingService: vi.fn().mockImplementation(() => ({})),
+  PricingService: vi.fn().mockImplementation(function () {
+    return {}
+  }),
 }))
 
 describe("CartService accessory mounting surcharge", () => {

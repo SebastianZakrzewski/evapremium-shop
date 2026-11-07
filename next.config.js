@@ -12,7 +12,6 @@ const nextConfig = {
     ignoreBuildErrors: false,
   },
   experimental: {
-    turbopackUseSystemTlsCerts: true,
     optimizePackageImports: ['lucide-react', 'framer-motion', 'swiper'],
   },
   images: {

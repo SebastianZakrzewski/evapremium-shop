@@ -6,11 +6,13 @@ const { pageViewMock, initMock } = vi.hoisted(() => ({
 }))
 
 vi.mock('../../providers/FacebookPixelProvider', () => ({
-  FacebookPixelProvider: vi.fn().mockImplementation(() => ({
-    init: initMock,
-    pageView: pageViewMock,
-    track: vi.fn(),
-  })),
+  FacebookPixelProvider: vi.fn().mockImplementation(function () {
+    return {
+      init: initMock,
+      pageView: pageViewMock,
+      track: vi.fn(),
+    }
+  }),
 }))
 
 vi.mock('@/lib/config/tracking', () => ({
