@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Nieprawidłowe parametry zapytania", details: error.errors },
+        { error: "Nieprawidłowe parametry zapytania", details: error.issues },
         { status: 400 },
       )
     }

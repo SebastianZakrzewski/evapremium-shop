@@ -15,7 +15,7 @@ export const CartItemSchema = z.object({
   unitPrice: z.number().positive('Cena jednostkowa musi być większa od 0'),
   subtotal: z.number().positive('Wartość pozycji musi być większa od 0'),
   productType: z.enum(['accessory', 'mat'], {
-    errorMap: () => ({ message: 'Typ produktu musi być "accessory" lub "mat"' })
+    error: 'Typ produktu musi być "accessory" lub "mat"'
   }),
   productId: z.string().min(1, 'ID produktu jest wymagane'),
   productName: z.string().min(1, 'Nazwa produktu jest wymagana'),
@@ -36,7 +36,7 @@ export const CartSchema = z.object({
 
 export const AddToCartSchema = z.object({
   productType: z.enum(['accessory', 'mat'], {
-    errorMap: () => ({ message: 'Typ produktu musi być "accessory" lub "mat"' })
+    error: 'Typ produktu musi być "accessory" lub "mat"'
   }),
   productId: z.string().min(1, 'ID produktu jest wymagane'),
   quantity: z.number().int().positive('Ilość musi być większa od 0'),
@@ -50,7 +50,7 @@ export const UpdateCartItemSchema = z.object({
 
 export const CartActionSchema = z.object({
   action: z.enum(['add', 'remove', 'update', 'clear'], {
-    errorMap: () => ({ message: 'Akcja musi być: add, remove, update, lub clear' })
+    error: 'Akcja musi być: add, remove, update, lub clear'
   }),
   cart: CartSchema,
   itemId: z.string().optional(),

@@ -30,7 +30,7 @@ const OrderItemBaseSchema = z.object({
   unitPrice: z.number().positive('Cena jednostkowa musi być większa od 0'),
   subtotal: z.number().positive('Wartość pozycji musi być większa od 0'),
   productType: z.enum(['accessory', 'mat'], {
-    errorMap: () => ({ message: 'Typ produktu musi być "accessory" lub "mat"' })
+    error: 'Typ produktu musi być "accessory" lub "mat"'
   }),
   productId: z.string().uuid('Nieprawidłowy ID produktu').nullable().optional(),
   productName: z.string().min(1, 'Nazwa produktu jest wymagana'),

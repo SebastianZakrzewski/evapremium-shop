@@ -52,6 +52,10 @@ Lockfile odświeżony zwykłym `npm install` i `npm update` wskazanych pakietów
 
 `ProductVideoCarouselSection` sprawdza nagłówek „Premium w akcji”, biały `h2` bez czerwonego fragmentu w środku oraz czerwony kicker „Wideo” (`text-red-500`) przed nagłówkiem. Wygląd sekcji bez zmian.
 
+## 2026-11-07 — Zod 4.6.7
+
+`zod` 3.25.76 → 4.6.7. GHSA-mrhx-c7xc-m3w5 / CVE-2023-54404 ma zakres `< 4.6.6`, pierwsza poprawka w rejestrze to 4.6.6, aktualny stabilny patch to 4.6.7. Komunikaty polskie zostają przez `error` zamiast `errorMap` i `required_error`. `z.record` ma jawny klucz `string`. Odpowiedzi walidacji zwracają `error.issues`. Audyt `--omit=dev` po tej zmianie: 0. Sandbox Paynow nie był wołany: w środowisku nie ma kluczy, tylko `PAYNOW_ENABLED=false`.
+
 ## 2026-11-07 — naprawa 48 czerwonych testów
 
 Testy wołają metody, które są w kodzie od produkcyjnego SHA: koszyk instancyjny, `OrderService.createOrder` z atrapą repozytorium, `ProductFactory.calculatePricing`, `response.text()` dla P24, sesja porzuconego koszyka o długości co najmniej 8 znaków, singleton mapowania Bitrixa z atrapą klienta. P24 i Bitrix zostają wyłączone. Ceny i próg dostawy 637 zł / 27 zł bez zmian. Szczegóły: `docs/RAPORT-TESTY.md`.

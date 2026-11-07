@@ -48,7 +48,7 @@ export const abandonedCartUpsertInputObjectSchema = z.object({
   sessionId: z.string().min(8),
   stage: z.enum(['checkout_step2', 'checkout_step3']),
   cartHasItems: z.boolean(),
-  utm: z.record(z.unknown()).optional(),
+  utm: z.record(z.string(), z.unknown()).optional(),
   contact: abandonedCartContactSchema.optional(),
   address: abandonedCartAddressSchema.optional(),
   car: abandonedCartCarSchema.optional(),
@@ -58,7 +58,7 @@ export const abandonedCartUpsertInputObjectSchema = z.object({
   totalAmount: z.number().min(0).optional(),
   ip: z.string().optional(),
   userAgent: z.string().optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 }).strict();
 
 export const abandonedCartUpsertInputSchema = z.preprocess(
@@ -81,7 +81,7 @@ export const abandonedCartRecordSchema = z.object({
   updated_at: z.string(),
   last_activity_at: z.string(),
   expire_at: z.string(),
-  utm: z.record(z.unknown()),
+  utm: z.record(z.string(), z.unknown()),
   contact: abandonedCartContactSchema.default({}).catch({}),
   address: abandonedCartAddressSchema.default({}).catch({}).optional(),
   car: abandonedCartCarSchema.default({}).catch({}),
@@ -91,7 +91,7 @@ export const abandonedCartRecordSchema = z.object({
   total_amount: z.number(),
   ip: z.string().nullish(),
   user_agent: z.string().nullish(),
-  metadata: z.record(z.unknown()).default({}).catch({}),
+  metadata: z.record(z.string(), z.unknown()).default({}).catch({}),
   bitrix_deal_id: z.string().nullish(),
   bitrix_category_id: z.number().int().nullish(),
   bitrix_stage_id: z.string().nullish(),

@@ -35,10 +35,10 @@ describe("patched runtime dependency contracts", () => {
     expect(versionAtLeast(postcss, "8.5.23")).toBe(true)
   })
 
-  it("stays on Zod 3 because 4.6.6 is a major validation change", () => {
+  it("keeps Zod on the release that closes GHSA-mrhx-c7xc-m3w5", () => {
     const zod = installedVersion("zod")
-    expect(zod.startsWith("3.")).toBe(true)
-    expect(versionAtLeast(zod, "3.25.76")).toBe(true)
+    expect(zod.startsWith("4.")).toBe(true)
+    expect(versionAtLeast(zod, "4.6.6")).toBe(true)
   })
 
   it("keeps cart, customer and Paynow webhook validation semantics", () => {

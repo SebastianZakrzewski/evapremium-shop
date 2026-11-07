@@ -140,8 +140,8 @@ export const Bitrix24ApiResponseSchema = z.object({
 export const Bitrix24WebhookEventSchema = z.object({
   event: z.string(),
   data: z.object({
-    FIELDS: z.record(z.any()),
-  }).and(z.record(z.any())),
+    FIELDS: z.record(z.string(), z.any()),
+  }).and(z.record(z.string(), z.any())),
   ts: z.number(),
   auth: z.object({
     domain: z.string(),

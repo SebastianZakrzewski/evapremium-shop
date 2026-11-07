@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { checkoutSchema, type CheckoutFormData } from "@/features/checkout/model/checkoutSchema";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -54,56 +54,6 @@ import {
   getMatTypeLabel,
   isSinglePriceSetType,
 } from '@/shared/mat-set-labels';
-
-// Schema walidacji - zaktualizowany dla nowego formatu
-const checkoutSchema = z.object({
-  // Dane kontaktowe
-  firstName: z.string().min(2, "Imię musi mieć minimum 2 znaki"),
-  lastName: z.string().min(2, "Nazwisko musi mieć minimum 2 znaki"),
-  email: z.string().email("Nieprawidłowy adres email"),
-  phone: z.string().min(9, "Nieprawidłowy numer telefonu"),
-  
-  // Adres wysyłkowy
-  street: z.string().min(5, "Ulica musi mieć minimum 5 znaków"),
-  postalCode: z.string().min(5, "Nieprawidłowy kod pocztowy"),
-  city: z.string().min(2, "Miasto musi mieć minimum 2 znaki"),
-  country: z.string().min(2, "Kraj musi mieć minimum 2 znaki"),
-  
-  // Dane do faktury
-  sameAsShipping: z.boolean(),
-  billingStreet: z.string().optional(),
-  billingPostalCode: z.string().optional(),
-  billingCity: z.string().optional(),
-  billingCountry: z.string().optional(),
-  /** NIP (opcjonalnie) - polski numer identyfikacji podatkowej, 10 cyfr */
-  nip: z.string()
-    .optional()
-    .refine(
-      (val) => !val || val.trim() === '' || /^\d{10}$/.test(val.replace(/[\s-]/g, '')),
-      { message: "NIP musi składać się z 10 cyfr" }
-    )
-    .transform((val) => {
-      const cleaned = val?.replace(/[\s-]/g, '');
-      return cleaned && cleaned.length === 10 ? cleaned : undefined;
-    }),
-  
-  // Metoda płatności
-  paymentMethod: z.enum(['p24', 'paynow'], {
-    required_error: "Wybierz metodę płatności"
-  }),
-  
-  // Zgody
-  termsAccepted: z.boolean().refine(val => val === true, "Musisz zaakceptować regulamin"),
-  marketingAccepted: z.boolean(),
-  
-  // Notatki
-  notes: z.string().optional(),
-  
-  // Kod rabatowy (opcjonalny)
-  discountCode: z.string().optional(),
-});
-
-type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
 const paymentMarks = [
   { src: "/formy_platnosci/blik.png", alt: "BLIK" },
