@@ -1,4 +1,10 @@
 import { supabaseAdmin } from '@/lib/database/supabase'
+import { assertSandboxDataPlane } from '@/lib/sandbox/runtime'
+
+const sandboxAdmin = () => {
+  assertSandboxDataPlane()
+  return supabaseAdmin
+}
 import type { PaymentInternalStatus, PaymentRecord } from '@/lib/types/paynow'
 
 const SCHEMA = 'evapremium_shop'
@@ -72,7 +78,7 @@ export type UpdatePaymentInput = Partial<{
 
 export class PaymentRepository {
   async create(input: CreatePaymentInput): Promise<PaymentRecord> {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await sandboxAdmin()
       .schema(SCHEMA)
       .from(TABLE)
       .insert({
@@ -97,7 +103,7 @@ export class PaymentRepository {
   }
 
   async findByIdempotencyKey(idempotencyKey: string): Promise<PaymentRecord | null> {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await sandboxAdmin()
       .schema(SCHEMA)
       .from(TABLE)
       .select('*')
@@ -115,7 +121,7 @@ export class PaymentRepository {
     provider: string,
     providerPaymentId: string
   ): Promise<PaymentRecord | null> {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await sandboxAdmin()
       .schema(SCHEMA)
       .from(TABLE)
       .select('*')
@@ -131,7 +137,7 @@ export class PaymentRepository {
   }
 
   async findLatestByOrderId(orderId: string): Promise<PaymentRecord | null> {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await sandboxAdmin()
       .schema(SCHEMA)
       .from(TABLE)
       .select('*')
@@ -148,7 +154,7 @@ export class PaymentRepository {
   }
 
   async findByWebhookDedupeKey(dedupeKey: string): Promise<PaymentRecord | null> {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await sandboxAdmin()
       .schema(SCHEMA)
       .from(TABLE)
       .select('*')
@@ -174,7 +180,7 @@ export class PaymentRepository {
     if (input.lastWebhookAt !== undefined) payload.last_webhook_at = input.lastWebhookAt
     if (input.paidAt !== undefined) payload.paid_at = input.paidAt
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await sandboxAdmin()
       .schema(SCHEMA)
       .from(TABLE)
       .update(payload)

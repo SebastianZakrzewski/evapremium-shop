@@ -12,6 +12,7 @@ import {
   trackGaPurchase,
   trackGaViewContent,
 } from '../ga4/events';
+import { isSandboxTrackingScope } from '@/lib/sandbox/runtime';
 import type {
   PageViewData,
   ViewContentData,
@@ -205,6 +206,9 @@ export function trackAddPaymentInfo(data: AddPaymentInfoData): void {
 export function trackPurchase(data: PurchaseData): void {
   try {
     trackGaPurchase(data);
+    if (isSandboxTrackingScope()) {
+      return;
+    }
     const provider = getProvider();
     if (!provider) {
       return;

@@ -6,6 +6,8 @@ import type {
   ViewContentData,
 } from '../types'
 import { GOOGLE_ADS_PURCHASE_SEND_TO } from './consentScript'
+import { recordSandboxTracking } from '@/lib/sandbox/trackingInspector'
+import { isSandboxTrackingScope } from '@/lib/sandbox/runtime'
 import { pushGtag } from './gtag'
 
 export type Ga4Item = {
@@ -139,6 +141,23 @@ export const trackGaPurchase = (data: PurchaseData): void => {
   }
 
   sentPurchaseIds.add(transactionId)
+
+  if (isSandboxTrackingScope()) {
+    recordSandboxTracking({ channel: 'inspector', event: 'purchase', payload })
+    recordSandboxTracking({
+      channel: 'inspector',
+      event: 'conversion',
+      payload: {
+        send_to: GOOGLE_ADS_PURCHASE_SEND_TO,
+        value: payload.value,
+        currency: payload.currency,
+        transaction_id: payload.transaction_id,
+      },
+    })
+    rememberPurchase(transactionId)
+    return
+  }
+
   pushGtag('event', 'purchase', payload)
   pushNamedPurchase(payload)
   pushGtag('event', 'conversion', {

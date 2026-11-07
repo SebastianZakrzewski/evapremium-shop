@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { OrderService } from '@/lib/services/OrderService'
+import { blockIfSandboxMisconfigured } from '@/lib/sandbox/guard'
 
 const isE2eAllowed = (): boolean => {
   return process.env.NODE_ENV !== 'production' || process.env.ALLOW_ABANDONED_E2E === 'true'
@@ -17,6 +18,9 @@ export async function POST(request: NextRequest) {
   if (!isE2eAllowed()) {
     return NextResponse.json({ success: false, error: 'Not available' }, { status: 404 })
   }
+
+  const blocked = blockIfSandboxMisconfigured()
+  if (blocked) return blocked
 
   try {
     const input = bodySchema.parse(await request.json())

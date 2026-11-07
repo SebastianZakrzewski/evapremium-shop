@@ -1,3 +1,5 @@
+import { isSandboxTrackingScope } from '@/lib/sandbox/runtime'
+
 const CLARITY_PROJECT_ID = 'ubkouhtkbb'
 
 let clarityLoaded = false
@@ -13,7 +15,7 @@ declare global {
 export const loadMicrosoftClarity = (
   projectId: string = CLARITY_PROJECT_ID
 ): void => {
-  if (typeof window === 'undefined' || clarityLoaded) {
+  if (isSandboxTrackingScope() || typeof window === 'undefined' || clarityLoaded) {
     return
   }
 

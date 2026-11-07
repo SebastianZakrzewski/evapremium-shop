@@ -9,6 +9,7 @@ import { TrackingProvider } from "@/components/tracking-provider";
 import { GoogleAnalyticsScript } from "@/components/analytics/GoogleAnalyticsScript";
 import { GoogleConsentDefaultScript } from "@/components/analytics/GoogleConsentDefaultScript";
 import { QueryProvider } from "@/lib/providers/query-provider";
+import { isSandboxTrackingScope } from "@/lib/sandbox/runtime";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -212,6 +213,8 @@ export default function RootLayout({
 
         <GoogleConsentDefaultScript />
 
+        {isSandboxTrackingScope() ? null : (
+        <>
         {/* Google Tag Manager — zgody obsługuje samo GTM, Cookiebot nie blokuje tego skryptu */}
         <Script
           id="gtm"
@@ -228,6 +231,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* End Google Tag Manager */}
 
         <GoogleAnalyticsScript />
+        </>
+        )}
         
         {/* Schema.org */}
         <Script
