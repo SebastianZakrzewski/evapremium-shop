@@ -85,10 +85,10 @@ describe('abandoned-carts heartbeat API', () => {
 
   it('creates record and sets 15m expire for valid payload', async () => {
     const start = Date.now();
-    const req: any = { json: async () => ({ sessionId: 's2', stage: 'checkout_step2', cartHasItems: true, totalAmount: 100 }) };
+    const req: any = { json: async () => ({ sessionId: 'session-s2', stage: 'checkout_step2', cartHasItems: true, totalAmount: 100 }) };
     const res: any = await HeartbeatPOST(req);
     expect(res.status).toBe(200);
-    const rec = db.abandoned_carts.find((r) => r.session_id === 's2');
+    const rec = db.abandoned_carts.find((r) => r.session_id === 'session-s2');
     expect(rec).toBeTruthy();
     const expireTs = new Date(rec.expire_at).getTime();
     expect(expireTs - start).toBeGreaterThanOrEqual(14 * 60 * 1000); // ~15m window

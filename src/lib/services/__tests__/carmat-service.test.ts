@@ -1,47 +1,53 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CarMatService } from '../carmat-service';
 import { MatsModel } from '@/lib/mapping/carmat-mapping';
 
-// Mock Supabase client
-jest.mock('@supabase/supabase-js', () => ({
-  createClient: jest.fn(() => ({
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          single: jest.fn(),
-          limit: jest.fn(),
-          range: jest.fn()
-        })),
-        or: jest.fn(() => ({
-          eq: jest.fn(() => ({
-            limit: jest.fn(),
-            range: jest.fn()
-          }))
-        })),
-        limit: jest.fn(),
-        range: jest.fn(),
-        insert: jest.fn(() => ({
-          select: jest.fn(() => ({
-            single: jest.fn()
-          }))
-        })),
-        update: jest.fn(() => ({
-          eq: jest.fn(() => ({
-            select: jest.fn(() => ({
-              single: jest.fn()
-            }))
-          }))
-        })),
-        delete: jest.fn(() => ({
-          eq: jest.fn()
-        }))
-      }))
-    }))
-  }))
+const { query } = vi.hoisted(() => {
+  let pending: Promise<{ data: unknown; error: unknown; count?: number }> = Promise.resolve({ data: [], error: null, count: 0 });
+  const once: Array<{ data: unknown; error: unknown; count?: number }> = [];
+  let wantsSingle = false;
+  const api: Record<string, unknown> = {};
+  const passthrough = () => api;
+  for (const name of ['from', 'select', 'eq', 'limit', 'range', 'or', 'insert', 'update', 'delete', 'order', 'is', 'in']) {
+    api[name] = () => {
+      wantsSingle = false;
+      return api;
+    };
+  }
+  api.single = () => {
+    wantsSingle = true;
+    return api;
+  };
+  api.mockResolvedValue = (value: { data: unknown; error: unknown; count?: number }) => {
+    pending = Promise.resolve(value);
+    return api;
+  };
+  api.mockResolvedValueOnce = (value: { data: unknown; error: unknown; count?: number }) => {
+    once.push(value);
+    return api;
+  };
+  api.then = (resolve: (value: unknown) => void, reject?: (reason: unknown) => void) => {
+    const next = once.length ? Promise.resolve(once.shift()) : pending;
+    const asSingle = wantsSingle;
+    wantsSingle = false;
+    return next.then((value) => {
+      const data = value.data;
+      const shaped = asSingle
+        ? (Array.isArray(data) ? data[0] ?? null : data)
+        : (data == null || Array.isArray(data) ? data : [data]);
+      resolve({ ...value, data: shaped });
+    }, reject);
+  };
+  return { query: api };
+});
+
+vi.mock('@supabase/supabase-js', () => ({
+  createClient: () => ({ from: () => query }),
 }));
 
 describe('CarMatService', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('getAllMats', () => {
@@ -59,8 +65,7 @@ describe('CarMatService', () => {
         }
       ];
 
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      mockSupabase.from().select().mockResolvedValue({
+      query.mockResolvedValue({
         data: mockData,
         error: null,
         count: 1
@@ -91,8 +96,7 @@ describe('CarMatService', () => {
         }
       ];
 
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      mockSupabase.from().select().eq().limit().mockResolvedValue({
+      query.mockResolvedValue({
         data: mockData,
         error: null,
         count: 1
@@ -109,8 +113,7 @@ describe('CarMatService', () => {
     });
 
     it('should handle errors gracefully', async () => {
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      mockSupabase.from().select().mockResolvedValue({
+      query.mockResolvedValue({
         data: null,
         error: { message: 'Database error' },
         count: 0
@@ -137,8 +140,7 @@ describe('CarMatService', () => {
         imagePath: '/test/image.webp'
       };
 
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      mockSupabase.from().select().eq().single().mockResolvedValue({
+      query.mockResolvedValue({
         data: mockData,
         error: null
       });
@@ -151,8 +153,7 @@ describe('CarMatService', () => {
     });
 
     it('should return null for non-existent id', async () => {
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      mockSupabase.from().select().eq().single().mockResolvedValue({
+      query.mockResolvedValue({
         data: null,
         error: { code: 'PGRST116', message: 'No rows found' }
       });
@@ -180,8 +181,7 @@ describe('CarMatService', () => {
         }
       ];
 
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      mockSupabase.from().select().eq().mockResolvedValue({
+      query.mockResolvedValue({
         data: mockData,
         error: null,
         count: 1
@@ -210,8 +210,7 @@ describe('CarMatService', () => {
         }
       ];
 
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      mockSupabase.from().select().eq().mockResolvedValue({
+      query.mockResolvedValue({
         data: mockData,
         error: null,
         count: 1
@@ -234,8 +233,7 @@ describe('CarMatService', () => {
         { materialColor: 'niebieski' }
       ];
 
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      mockSupabase.from().select().mockResolvedValue({
+      query.mockResolvedValue({
         data: mockData,
         error: null
       });
@@ -269,8 +267,7 @@ describe('CarMatService', () => {
         imagePath: '/test/image.webp'
       };
 
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      mockSupabase.from().insert().select().single().mockResolvedValue({
+      query.mockResolvedValue({
         data: mockData,
         error: null
       });
@@ -323,10 +320,7 @@ describe('CarMatService', () => {
         imagePath: '/test/image.webp'
       };
 
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      
-      // Mock getMatById
-      mockSupabase.from().select().eq().single().mockResolvedValueOnce({
+      query.mockResolvedValueOnce({
         data: {
           id: 'cb465347-82dc-4f40-ae66-5e20628d4617',
           matType: '3d-with-rims',
@@ -340,8 +334,7 @@ describe('CarMatService', () => {
         error: null
       });
 
-      // Mock update
-      mockSupabase.from().update().eq().select().single().mockResolvedValue({
+      query.mockResolvedValue({
         data: mockData,
         error: null
       });
@@ -356,8 +349,11 @@ describe('CarMatService', () => {
 
   describe('deleteMat', () => {
     it('should delete a mat successfully', async () => {
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      mockSupabase.from().delete().eq().mockResolvedValue({
+      query.mockResolvedValueOnce({
+        data: [{ id: 'cb465347-82dc-4f40-ae66-5e20628d4617' }],
+        error: null,
+      });
+      query.mockResolvedValue({
         data: null,
         error: null
       });
@@ -384,8 +380,7 @@ describe('CarMatService', () => {
         }
       ];
 
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      mockSupabase.from().select().or().eq().mockResolvedValue({
+      query.mockResolvedValue({
         data: mockData,
         error: null,
         count: 1
@@ -416,8 +411,7 @@ describe('CarMatService', () => {
         }
       ];
 
-      const mockSupabase = require('@supabase/supabase-js').createClient();
-      mockSupabase.from().select().mockResolvedValue({
+      query.mockResolvedValue({
         data: mockData,
         error: null
       });

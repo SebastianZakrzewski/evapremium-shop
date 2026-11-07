@@ -1,198 +1,197 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CartService } from '../CartService';
-import { Product } from '../../types/product';
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { CartService } from '../CartService'
+import type { Cart } from '../../types/cart-new'
 
-// Mock localStorage
-const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-};
+const getAccessoryById = vi.fn()
 
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
+vi.mock('../AccessoryService', () => ({
+  AccessoryService: vi.fn(function () {
+    return { getAccessoryById }
+  }),
+}))
+
+vi.mock('../MatService', () => ({
+  MatService: vi.fn(function () {
+    return {}
+  }),
+}))
+
+vi.mock('../PricingService', () => ({
+  PricingService: vi.fn(function () {
+    return {}
+  }),
+}))
+
+const emptyCart = (): Cart => ({
+  items: [],
+  subtotal: 0,
+  shippingCost: 0,
+  tax: 0,
+  discount: 0,
+  total: 0,
+  itemCount: 0,
+})
 
 describe('CartService', () => {
-  const mockSessionId = 'test-session-123';
-  let mockProduct: Product;
+  let cartService: CartService
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    
-    mockProduct = {
-      id: 'product-123',
-      sessionId: mockSessionId,
-      configuration: {
-        setType: '3d-with-rims',
-        cellType: 'diamonds',
-        setVariant: 'basic',
-        materialColor: 'black',
-        edgeColor: 'red',
-        heelPad: 'tak'
-      },
-      pricing: {
-        basePrice: 219,
-        modifiers: 39,
-        totalPrice: 258
-      },
-      status: 'cached',
-      createdAt: new Date()
-    };
-  });
+    vi.clearAllMocks()
+    cartService = new CartService()
+    getAccessoryById.mockResolvedValue({
+      id: 'acc-1',
+      name: 'Organizer',
+      sku: 'ORG-1',
+      price: 100,
+      imageSrc: '/organizer.webp',
+    })
+  })
 
-  describe('addProductToCart', () => {
-    it('should add product to cart in localStorage', () => {
-      localStorageMock.getItem.mockReturnValue(null);
+  it('adds an accessory to an empty cart and charges shipping below 637 zł', async () => {
+    const cart = await cartService.addToCart(emptyCart(), {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
 
-      CartService.addProductToCart(mockProduct);
+    expect(cart.items).toHaveLength(1)
+    expect(cart.items[0].productId).toBe('acc-1')
+    expect(cart.items[0].quantity).toBe(1)
+    expect(cart.items[0].unitPrice).toBe(100)
+    expect(cart.subtotal).toBe(100)
+    expect(cart.shippingCost).toBe(27)
+    expect(cart.total).toBe(127)
+    expect(cart.itemCount).toBe(1)
+  })
 
-      expect(localStorageMock.setItem).toHaveBeenCalledWith(
-        `cart-${mockSessionId}`,
-        expect.stringContaining('product-123')
-      );
-    });
+  it('keeps a second accessory as its own line', async () => {
+    getAccessoryById.mockImplementation(async (id: string) => ({
+      id,
+      name: id,
+      sku: id,
+      price: id === 'acc-1' ? 100 : 50,
+      imageSrc: '',
+    }))
+    const withFirst = await cartService.addToCart(emptyCart(), {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
+    const cart = await cartService.addToCart(withFirst, {
+      productType: 'accessory',
+      productId: 'acc-2',
+      quantity: 1,
+    })
 
-    it('should add product to existing cart', () => {
-      const existingCart = JSON.stringify([mockProduct]);
-      localStorageMock.getItem.mockReturnValue(existingCart);
+    expect(cart.items.map((item) => item.productId)).toEqual(['acc-1', 'acc-2'])
+    expect(cart.subtotal).toBe(150)
+    expect(cart.shippingCost).toBe(27)
+    expect(cart.total).toBe(177)
+  })
 
-      const newProduct = { ...mockProduct, id: 'product-456' };
-      CartService.addProductToCart(newProduct);
+  it('increments quantity when the same accessory and configuration are added again', async () => {
+    const once = await cartService.addToCart(emptyCart(), {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
+    const cart = await cartService.addToCart(once, {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
 
-      expect(localStorageMock.setItem).toHaveBeenCalledWith(
-        `cart-${mockSessionId}`,
-        expect.stringContaining('product-123')
-      );
-      expect(localStorageMock.setItem).toHaveBeenCalledWith(
-        `cart-${mockSessionId}`,
-        expect.stringContaining('product-456')
-      );
-    });
+    expect(cart.items).toHaveLength(1)
+    expect(cart.items[0].quantity).toBe(2)
+    expect(cart.items[0].subtotal).toBe(200)
+    expect(cart.itemCount).toBe(2)
+  })
 
-    it('should increment quantity for existing product', () => {
-      const existingCart = JSON.stringify([{ ...mockProduct, quantity: 1 }]);
-      localStorageMock.getItem.mockReturnValue(existingCart);
+  it('removes one line and leaves the other', async () => {
+    getAccessoryById.mockImplementation(async (id: string) => ({
+      id,
+      name: id,
+      sku: id,
+      price: 100,
+      imageSrc: '',
+    }))
+    const withFirst = await cartService.addToCart(emptyCart(), {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
+    const withBoth = await cartService.addToCart(withFirst, {
+      productType: 'accessory',
+      productId: 'acc-2',
+      quantity: 1,
+    })
+    const cart = await cartService.removeFromCart(withBoth, withBoth.items[0].id)
 
-      CartService.addProductToCart(mockProduct);
+    expect(cart.items).toHaveLength(1)
+    expect(cart.items[0].productId).toBe('acc-2')
+  })
 
-      const setItemCall = localStorageMock.setItem.mock.calls[0];
-      const cartData = JSON.parse(setItemCall[1]);
-      const product = cartData.find((p: any) => p.id === 'product-123');
-      
-      expect(product.quantity).toBe(2);
-    });
-  });
+  it('leaves the cart unchanged when the removed id is absent', async () => {
+    const withItem = await cartService.addToCart(emptyCart(), {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
+    const cart = await cartService.removeFromCart(withItem, 'missing')
 
-  describe('getCartProducts', () => {
-    it('should return empty array when no cart exists', () => {
-      localStorageMock.getItem.mockReturnValue(null);
+    expect(cart.items).toHaveLength(1)
+    expect(cart.items[0].productId).toBe('acc-1')
+  })
 
-      const products = CartService.getCartProducts(mockSessionId);
+  it('clears the cart to a zero total', () => {
+    expect(cartService.clearCart()).toEqual(emptyCart())
+  })
 
-      expect(products).toEqual([]);
-    });
+  it('drops shipping once the subtotal reaches 637 zł', async () => {
+    getAccessoryById.mockResolvedValue({
+      id: 'acc-1',
+      name: 'Zestaw',
+      sku: 'SET',
+      price: 700,
+      imageSrc: '',
+    })
+    const cart = await cartService.addToCart(emptyCart(), {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
 
-    it('should return products from localStorage', () => {
-      const cartData = JSON.stringify([mockProduct]);
-      localStorageMock.getItem.mockReturnValue(cartData);
+    expect(cart.subtotal).toBe(700)
+    expect(cart.shippingCost).toBe(0)
+    expect(cart.total).toBe(700)
+  })
 
-      const products = CartService.getCartProducts(mockSessionId);
+  it('updates quantity and subtotal without dropping the line', async () => {
+    const withItem = await cartService.addToCart(emptyCart(), {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
+    const cart = await cartService.updateQuantity(withItem, withItem.items[0].id, 3)
 
-      expect(products).toEqual([mockProduct]);
-    });
+    expect(cart.items[0].quantity).toBe(3)
+    expect(cart.items[0].subtotal).toBe(300)
+    expect(cart.itemCount).toBe(3)
+    expect(cart).not.toBe(withItem)
+  })
 
-    it('should return empty array for invalid JSON', () => {
-      localStorageMock.getItem.mockReturnValue('invalid-json');
+  it('keeps a line when quantity is set to 0 instead of deleting it', async () => {
+    const withItem = await cartService.addToCart(emptyCart(), {
+      productType: 'accessory',
+      productId: 'acc-1',
+      quantity: 1,
+    })
+    const cart = await cartService.updateQuantity(withItem, withItem.items[0].id, 0)
 
-      const products = CartService.getCartProducts(mockSessionId);
-
-      expect(products).toEqual([]);
-    });
-  });
-
-  describe('removeProductFromCart', () => {
-    it('should remove product from cart', () => {
-      const cartData = JSON.stringify([mockProduct, { ...mockProduct, id: 'product-456' }]);
-      localStorageMock.getItem.mockReturnValue(cartData);
-
-      CartService.removeProductFromCart('product-123');
-
-      const setItemCall = localStorageMock.setItem.mock.calls[0];
-      const updatedCart = JSON.parse(setItemCall[1]);
-      
-      expect(updatedCart).toHaveLength(1);
-      expect(updatedCart[0].id).toBe('product-456');
-    });
-
-    it('should handle removing non-existent product', () => {
-      const cartData = JSON.stringify([mockProduct]);
-      localStorageMock.getItem.mockReturnValue(cartData);
-
-      CartService.removeProductFromCart('non-existent');
-
-      const setItemCall = localStorageMock.setItem.mock.calls[0];
-      const updatedCart = JSON.parse(setItemCall[1]);
-      
-      expect(updatedCart).toEqual([mockProduct]);
-    });
-  });
-
-  describe('clearCart', () => {
-    it('should clear cart from localStorage', () => {
-      CartService.clearCart(mockSessionId);
-
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith(`cart-${mockSessionId}`);
-    });
-  });
-
-  describe('getCartTotal', () => {
-    it('should calculate total for empty cart', () => {
-      localStorageMock.getItem.mockReturnValue(null);
-
-      const total = CartService.getCartTotal(mockSessionId);
-
-      expect(total).toBe(0);
-    });
-
-    it('should calculate total for cart with products', () => {
-      const cartData = JSON.stringify([
-        { ...mockProduct, quantity: 1 },
-        { ...mockProduct, id: 'product-456', quantity: 2, pricing: { ...mockProduct.pricing, totalPrice: 200 } }
-      ]);
-      localStorageMock.getItem.mockReturnValue(cartData);
-
-      const total = CartService.getCartTotal(mockSessionId);
-
-      expect(total).toBe(258 + (200 * 2)); // 258 + 400 = 658
-    });
-  });
-
-  describe('updateProductQuantity', () => {
-    it('should update product quantity', () => {
-      const cartData = JSON.stringify([{ ...mockProduct, quantity: 1 }]);
-      localStorageMock.getItem.mockReturnValue(cartData);
-
-      CartService.updateProductQuantity('product-123', 3);
-
-      const setItemCall = localStorageMock.setItem.mock.calls[0];
-      const updatedCart = JSON.parse(setItemCall[1]);
-      const product = updatedCart.find((p: any) => p.id === 'product-123');
-      
-      expect(product.quantity).toBe(3);
-    });
-
-    it('should remove product when quantity is 0', () => {
-      const cartData = JSON.stringify([{ ...mockProduct, quantity: 1 }]);
-      localStorageMock.getItem.mockReturnValue(cartData);
-
-      CartService.updateProductQuantity('product-123', 0);
-
-      const setItemCall = localStorageMock.setItem.mock.calls[0];
-      const updatedCart = JSON.parse(setItemCall[1]);
-      
-      expect(updatedCart).toHaveLength(0);
-    });
-  });
-});
+    expect(cart.items).toHaveLength(1)
+    expect(cart.items[0].quantity).toBe(0)
+    expect(cart.items[0].subtotal).toBe(0)
+    expect(cart.subtotal).toBe(0)
+    expect(cart.shippingCost).toBe(27)
+  })
+})

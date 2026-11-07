@@ -1,34 +1,50 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { DealService } from '@/lib/integrations/bitrix24/services/DealService';
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+vi.mock('@/lib/integrations/bitrix24/services/ContactService', () => ({
+  contactService: {
+    createOrFindContactFromAbandonedCart: vi.fn(async () => ({ id: null, created: false })),
+  },
+}))
+
+import { DealService } from '@/lib/integrations/bitrix24/services/DealService'
+import { stageMappingService } from '@/lib/integrations/bitrix24/services/StageMappingService'
 
 const mockClient = {
   get: vi.fn(),
   post: vi.fn(),
-};
+}
 
 describe('DealService - Abandoned carts', () => {
   beforeEach(() => {
-    vi.resetAllMocks();
-  });
+    vi.clearAllMocks()
+    ;(stageMappingService as unknown as { cache: Record<string, unknown>; client: unknown }).cache = {}
+    ;(stageMappingService as unknown as { client: unknown }).client = mockClient
+    delete process.env.BITRIX24_ABANDONED_CATEGORY_ID
+    delete process.env.BITRIX24_ABANDONED_STAGE_ID
+
+    mockClient.get.mockImplementation(async (method: string) => {
+      if (method === 'crm.dealcategory.list') {
+        return {
+          result: [
+            { ID: 0, NAME: 'Deale' },
+            { ID: 7, NAME: 'Leady z Reklam' },
+          ],
+        }
+      }
+      if (method === 'crm.deal.list') return { result: [] }
+      return { result: [] }
+    })
+    mockClient.post.mockImplementation(async (method: string) => {
+      if (method === 'crm.status.list') {
+        return { result: [{ NAME: 'Porzucone Koszyki', STATUS_ID: 'UC_ABC' }] }
+      }
+      if (method === 'crm.deal.add') return { result: '12345' }
+      return { result: {} }
+    })
+  })
 
   it('resolves category/stage by name and creates deal', async () => {
-    // crm.dealcategory.list
-    mockClient.get.mockResolvedValueOnce({
-      result: [
-        { ID: 0, NAME: 'Deale' },
-        { ID: 7, NAME: 'Leady z Reklam' },
-      ],
-    });
-    // crm.dealcategory.stage.list
-    mockClient.get.mockResolvedValueOnce({
-      result: [
-        { CATEGORY_ID: 7, STATUS_ID: 'UC_ABC', NAME: 'Porzucone Koszyki' },
-      ],
-    });
-    // crm.deal.add
-    mockClient.post = vi.fn().mockResolvedValue({ result: '12345' });
-
-    const svc = new DealService(mockClient as any);
+    const svc = new DealService(mockClient as never)
     const cart: any = {
       id: 'c1',
       session_id: 'sess',
@@ -44,13 +60,16 @@ describe('DealService - Abandoned carts', () => {
       items: [],
       currency: 'PLN',
       total_amount: 199,
-    };
+    }
 
-    const result = await svc.createDealForAbandonedCart(cart);
-    expect(result.success).toBe(true);
-    expect(result.id).toBe('12345');
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-});
-
-
+    const result = await svc.createDealForAbandonedCart(cart)
+    expect(result.success).toBe(true)
+    expect(result.id).toBe('12345')
+    expect(mockClient.post).toHaveBeenCalledWith('crm.deal.add', expect.objectContaining({
+      fields: expect.objectContaining({
+        CATEGORY_ID: 7,
+        STAGE_ID: 'UC_ABC',
+      }),
+    }))
+  })
+})

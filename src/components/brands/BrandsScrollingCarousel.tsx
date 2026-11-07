@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+import Link from "next/link"
 import { Brand } from "@/entities/car"
 import BrandPopularGridCard from "@/components/brands/BrandPopularGridCard"
 
@@ -35,7 +36,7 @@ export default function BrandsScrollingCarousel({
 
       {brands.length > 8 && (
         <div className="mt-6 flex justify-center">
-          <a
+          <Link
             href="/dywaniki"
             className="
               px-6 py-3
@@ -49,7 +50,7 @@ export default function BrandsScrollingCarousel({
             "
           >
             Sprawdź więcej marek
-          </a>
+          </Link>
         </div>
       )}
     </div>

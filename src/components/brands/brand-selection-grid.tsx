@@ -30,7 +30,7 @@ export default function BrandSelectionGrid() {
 
   // Filtrowanie marek na podstawie wyszukiwania
   const filteredBrands = useMemo(() => {
-    let result = brands.filter(brand => {
+    const result = brands.filter(brand => {
       const isImage = brand.logo.includes('.jpg') || 
                       brand.logo.includes('.png') || 
                       brand.logo.includes('.jpeg') || 

@@ -52,6 +52,12 @@ Lockfile odświeżony zwykłym `npm install` i `npm update` wskazanych pakietów
 
 `ProductVideoCarouselSection` sprawdza nagłówek „Premium w akcji”, biały `h2` bez czerwonego fragmentu w środku oraz czerwony kicker „Wideo” (`text-red-500`) przed nagłówkiem. Wygląd sekcji bez zmian.
 
+## 2026-11-07 — naprawa 48 czerwonych testów
+
+Testy wołają metody, które są w kodzie od produkcyjnego SHA: koszyk instancyjny, `OrderService.createOrder` z atrapą repozytorium, `ProductFactory.calculatePricing`, `response.text()` dla P24, sesja porzuconego koszyka o długości co najmniej 8 znaków, singleton mapowania Bitrixa z atrapą klienta. P24 i Bitrix zostają wyłączone. Ceny i próg dostawy 637 zł / 27 zł bez zmian. Szczegóły: `docs/RAPORT-TESTY.md`.
+
+Dwa błędy ESLint: `const` w siatce marek i `next/link` zamiast `<a href="/dywaniki">`.
+
 ### Czego ten wpis nie zamyka
 
 - GHSA-mrhx-c7xc-m3w5 (zod, high, zakres `< 4.6.6`). Ostatnie 3.x to 3.25.76 i nadal wpada w ten zakres. Zod 4.6.7 zmienia walidację używaną w koszyku, zamówieniu i Paynow (`errorMap`, `required_error`, `z.record`). Major nie został włączony.
