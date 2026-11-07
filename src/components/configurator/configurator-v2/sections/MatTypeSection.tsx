@@ -72,7 +72,7 @@ export const MatTypeSection = ({
             subtitle={type.description}
             iconSrc={type.iconSrc}
             iconAlt={type.iconAlt}
-            onSelect={() => onUpdate({ matType: type.id, variant: "" })}
+            onSelect={() => onUpdate({ matType: type.id })}
           />
         ))}
       </div>

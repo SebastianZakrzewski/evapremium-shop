@@ -21,6 +21,7 @@ type VariantSectionProps = {
   readiness: SectionReadiness
   onUpdate: (updates: { variant?: string }) => void
   onCompareClick?: () => void
+  unavailableNotice?: string | null
 }
 
 export const VariantSection = ({
@@ -31,6 +32,7 @@ export const VariantSection = ({
   readiness,
   onUpdate,
   onCompareClick,
+  unavailableNotice,
 }: VariantSectionProps) => {
   const selectedVariant = pricingVariants.find((v) => v.key === config.variant)
   const offeredVariantKeys = pricingVariants.map((item) => item.key)
@@ -62,6 +64,11 @@ export const VariantSection = ({
         ) : undefined
       }
     >
+      {unavailableNotice && (
+        <p role="status" className="mb-3 text-[13px] leading-snug text-white/80">
+          {unavailableNotice}
+        </p>
+      )}
       <div
         className="grid gap-3"
         style={{

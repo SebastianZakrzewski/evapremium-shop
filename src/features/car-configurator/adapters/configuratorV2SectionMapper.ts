@@ -82,7 +82,7 @@ export const mapConfiguratorV2Sections = ({
       isComplete: structureComplete,
       isDisabled: !variantComplete,
       disabledReason: !variantComplete
-        ? "Najpierw wybierz wariant zestawu"
+        ? "Najpierw wybierz wariant zestawu. Bez tego nie da się ustawić struktury komórek ani zobaczyć ceny."
         : undefined,
     },
     color: {

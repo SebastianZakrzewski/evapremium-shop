@@ -31,9 +31,14 @@ export const ConfiguratorV2OptionSearch = ({
           className="h-11 w-full rounded-xl border-0 bg-[#1c1c1e] pl-10 pr-4 text-sm text-white outline-none ring-1 ring-transparent placeholder:text-white/35 transition-shadow focus:ring-red-500/70"
         />
       </label>
-      {hasQuery && (
+      {hasQuery && matchCount > 0 && (
         <p className="mt-2 text-xs text-white/40" aria-live="polite">
           Liczba trafień: {matchCount}
+        </p>
+      )}
+      {hasQuery && matchCount === 0 && (
+        <p className="mt-2 text-[13px] leading-snug text-white/80" role="status">
+          Brak pasujących opcji. Dotychczasowy wybór zostaje bez zmian.
         </p>
       )}
     </div>

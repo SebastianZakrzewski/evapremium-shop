@@ -82,7 +82,12 @@ describe("ConfiguratorV2StickyBar", () => {
       />,
     )
 
-    expect(screen.getByText(/Rabat: -51,00 zł/)).toBeInTheDocument()
+    const price = screen.getByText(/549/)
+    const discount = screen.getByText(/Rabat: -51,00 zł/)
+    expect(price.className).toContain("text-white")
+    expect(price.className).not.toMatch(/text-green|text-emerald/)
+    expect(discount.className).toContain("text-white/45")
+    expect(discount.className).not.toMatch(/text-red/)
   })
 
   it("uses column variant for desktop footer placement", () => {

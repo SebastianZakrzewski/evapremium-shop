@@ -89,11 +89,9 @@ export const computeLockedCarAvailableYears = (input: {
   templates: LockedCarTemplate[]
 }): number[] => {
   const { yearParam, generationParam, resolvedGeneration, templates } = input
-
-  if (yearParam) {
-    const year = Number(yearParam)
-    if (!Number.isNaN(year)) return [year]
-  }
+  // The year query only preselects a value. It must not replace the catalog
+  // range, so a direct link still lets the customer pick another year.
+  void yearParam
 
   if (resolvedGeneration) {
     return yearsInRange(resolvedGeneration.yearFrom, resolvedGeneration.yearTo)

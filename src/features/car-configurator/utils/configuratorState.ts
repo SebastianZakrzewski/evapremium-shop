@@ -1,5 +1,5 @@
 import type { Brand } from "@/entities/car"
-import type { Gearbox } from "@/features/car-configurator/domain/gearbox"
+import { isGearbox, type Gearbox } from "@/features/car-configurator/domain/gearbox"
 import type { PodpietkaMounting } from "@/features/car-configurator/domain/podpietkaMounting"
 import {
   brandNameToNavigationSlug,
@@ -78,7 +78,7 @@ export const getConfigUpdatesFromUrl = ({
   brands: Brand[];
 }): Partial<ConfiguratorState> => {
   const updates: Partial<ConfiguratorState> = {};
-  const { brandParam, modelParam, yearParam, bodyTypeParam, generationParam } = urlParams;
+  const { brandParam, modelParam, bodyTypeParam, generationParam } = urlParams;
 
   if (brandParam) {
     const resolvedBrand = resolveBrandFromParam(brandParam, brands);
@@ -97,10 +97,6 @@ export const getConfigUpdatesFromUrl = ({
 
   if (generationParam && previous.generation !== generationParam) {
     updates.generation = generationParam;
-  }
-
-  if (modelParam && yearParam && previous.year) {
-    updates.year = "";
   }
 
   if (bodyTypeParam && !isSameToken(previous.bodyType, bodyTypeParam)) {
@@ -127,20 +123,27 @@ export const mergeStoredConfig = ({
   }
 
   if (urlParams.modelParam) {
-    delete updates.year
+    const storedModel = stored.model ?? ""
+    const storedModelMatchesUrl =
+      storedModel.length > 0 && isSameToken(storedModel, urlParams.modelParam)
+
+    if (!storedModelMatchesUrl) {
+      delete updates.year
+      delete updates.gearbox
+      delete updates.variant
+    }
+
     delete updates.modelFamilyKey
     delete updates.modelKey
     delete updates.recordKey
     delete updates.templateId
     delete updates.pricingCategoryKey
+    delete updates.catalogVersionCode
     delete updates.bodyTypeKey
 
     if (!urlParams.generationParam) {
       delete updates.generation
     }
-
-    const storedModelMatchesUrl =
-      stored.model && isSameToken(stored.model, urlParams.modelParam)
 
     if (
       !previous.model ||
@@ -177,3 +180,69 @@ export const mergeStoredConfig = ({
 
   return { ...previous, ...updates };
 };
+
+const MAT_TYPES = new Set(["3d-with-rims", "classic", "single"])
+const STRUCTURES = new Set(["diamonds", "honey"])
+
+export const configuratorStorageKeyForUrl = (
+  baseKey: string,
+  urlParams: ConfiguratorUrlParams,
+): string => {
+  const brand = urlParams.brandParam?.trim().toLowerCase()
+  const model = urlParams.modelParam?.trim().toLowerCase()
+  if (!brand || !model) return baseKey
+  return `${baseKey}::${brand}::${model}`
+}
+
+export const parseStoredConfiguratorState = (
+  raw: string | null,
+): Partial<ConfiguratorState> | null => {
+  if (!raw) return null
+  try {
+    const parsed = JSON.parse(raw) as unknown
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null
+    const record = parsed as Record<string, unknown>
+    const stored: Partial<ConfiguratorState> = {}
+
+    if (typeof record.brand === "string") stored.brand = record.brand
+    if (typeof record.model === "string") stored.model = record.model
+    if (typeof record.generation === "string") stored.generation = record.generation
+    if (typeof record.year === "string" && /^\d{4}$/.test(record.year)) stored.year = record.year
+    if (isGearbox(record.gearbox)) stored.gearbox = record.gearbox
+    if (typeof record.bodyType === "string") stored.bodyType = record.bodyType
+    if (typeof record.variant === "string") stored.variant = record.variant
+    if (typeof record.matType === "string" && MAT_TYPES.has(record.matType)) {
+      stored.matType = record.matType as ConfiguratorState["matType"]
+    }
+    if (typeof record.structure === "string" && STRUCTURES.has(record.structure)) {
+      stored.structure = record.structure as ConfiguratorState["structure"]
+    }
+    if (typeof record.color === "string") stored.color = record.color
+    if (typeof record.edgeColor === "string") stored.edgeColor = record.edgeColor
+    if (typeof record.heelPad === "boolean") stored.heelPad = record.heelPad
+
+    return stored
+  } catch {
+    return null
+  }
+}
+
+export const readCompatibleStoredConfig = (
+  baseKey: string,
+  urlParams: ConfiguratorUrlParams,
+  readItem: (key: string) => string | null,
+): Partial<ConfiguratorState> | null => {
+  const scoped = parseStoredConfiguratorState(readItem(configuratorStorageKeyForUrl(baseKey, urlParams)))
+  if (scoped) return scoped
+
+  const legacy = parseStoredConfiguratorState(readItem(baseKey))
+  if (!legacy) return null
+  if (
+    urlParams.modelParam &&
+    legacy.model &&
+    !isSameToken(legacy.model, urlParams.modelParam)
+  ) {
+    return null
+  }
+  return legacy
+}

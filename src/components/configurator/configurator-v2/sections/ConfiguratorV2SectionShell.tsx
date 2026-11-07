@@ -3,10 +3,12 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { ChevronDown, ChevronUp } from "lucide-react"
 import type { SectionReadiness } from "@/features/car-configurator/adapters/configuratorV2SectionMapper"
-import { sectionHeaderMatchesQuery } from "../option-search/sectionHeaderMatchesQuery"
+import { sectionMatchesOptionQuery } from "../option-search/sectionMatchesOptionQuery"
 import {
   useConfiguratorV2InitiallyOpenSectionIds,
   useConfiguratorV2OptionQuery,
+  useConfiguratorV2RequestedOpen,
+  useConfiguratorV2SearchTerms,
 } from "../option-search/ConfiguratorV2OptionsProvider"
 
 const MOBILE_LAYOUT_QUERY = "(max-width: 1023px)"
@@ -39,8 +41,16 @@ export const ConfiguratorV2SectionShell = ({
   children,
 }: ConfiguratorV2SectionShellProps) => {
   const optionQuery = useConfiguratorV2OptionQuery()
+  const searchTerms = useConfiguratorV2SearchTerms(id)
+  const requestedOpen = useConfiguratorV2RequestedOpen()
   const initiallyOpenSectionIds = useConfiguratorV2InitiallyOpenSectionIds()
-  const matchesQuery = sectionHeaderMatchesQuery(title, optionQuery)
+  const [desktopSearch, setDesktopSearch] = useState(false)
+  const seenOpenToken = useRef(0)
+  const matchesQuery = sectionMatchesOptionQuery(
+    title,
+    searchTerms,
+    desktopSearch ? optionQuery : "",
+  )
   const [isOpen, setIsOpen] = useState(() => {
     if (readiness.isDisabled) return false
     if (optionQuery.trim() && matchesQuery) return true
@@ -52,15 +62,33 @@ export const ConfiguratorV2SectionShell = ({
 
   useEffect(() => {
     setHasMounted(true)
-    if (didApplyMobileOpen.current || readiness.isDisabled) return
+    if (typeof window.matchMedia !== "function") {
+      setDesktopSearch(true)
+      return
+    }
+    const media = window.matchMedia("(min-width: 1024px)")
+    const apply = () => setDesktopSearch(media.matches)
+    apply()
+    media.addEventListener("change", apply)
+    if (didApplyMobileOpen.current || readiness.isDisabled) {
+      return () => media.removeEventListener("change", apply)
+    }
     didApplyMobileOpen.current = true
     if (isMobileLayout()) setIsOpen(true)
+    return () => media.removeEventListener("change", apply)
   }, [readiness.isDisabled])
 
   useEffect(() => {
-    if (!optionQuery.trim() || !matchesQuery || readiness.isDisabled) return
+    if (!optionQuery.trim() || !matchesQuery || readiness.isDisabled || !desktopSearch) return
     setIsOpen(true)
-  }, [matchesQuery, optionQuery, readiness.isDisabled])
+  }, [desktopSearch, matchesQuery, optionQuery, readiness.isDisabled])
+
+  useEffect(() => {
+    if (!requestedOpen || requestedOpen.token === seenOpenToken.current) return
+    if (requestedOpen.id !== id) return
+    seenOpenToken.current = requestedOpen.token
+    setIsOpen(true)
+  }, [id, requestedOpen])
 
   const expanded = isOpen && !readiness.isDisabled
   const showOnMobileBeforeMount = !hasMounted && !readiness.isDisabled
@@ -105,7 +133,7 @@ export const ConfiguratorV2SectionShell = ({
             <p className="text-[13px] text-white/55">{selectedLabel}</p>
           )}
           {readiness.isDisabled && readiness.disabledReason && (
-            <p className="mt-1 text-xs text-white/40">
+            <p className="mt-1 text-[13px] leading-snug text-white/80" role="status">
               {readiness.disabledReason}
             </p>
           )}

@@ -15,6 +15,10 @@ import { useMatModelPreviews } from "@/features/mat-model-previews"
 import { useConfiguratorState } from "@/features/car-configurator/hooks/useConfiguratorState"
 import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import { useResolvedPricing } from "@/features/vehicle-catalog/hooks/useResolvedPricing"
+import {
+  reconcileVariantWithOfferedKeys,
+  VARIANT_UNAVAILABLE_NOTICE,
+} from "@/features/vehicle-catalog/domain/reconcileVariantWithOfferedKeys"
 import { mapConfiguratorV2Sections } from "@/features/car-configurator/adapters/configuratorV2SectionMapper"
 import {
   getPodpietkaMountingFee,
@@ -36,7 +40,8 @@ import {
   CONFIGURATOR_V2_INITIALLY_OPEN_SECTION_IDS,
   ConfiguratorV2OptionsProvider,
 } from "./option-search/ConfiguratorV2OptionsProvider"
-import { sectionHeaderMatchesQuery } from "./option-search/sectionHeaderMatchesQuery"
+import { countMatchingSections } from "./option-search/sectionMatchesOptionQuery"
+import { buildConfiguratorSearchIndex } from "./option-search/buildConfiguratorSearchIndex"
 import { ConfiguratorV2PreviewWithGallery } from "./ConfiguratorV2PreviewWithGallery"
 import { ConfiguratorV2MatPreviewLightbox } from "./ConfiguratorV2MatPreviewLightbox"
 import { useConfiguratorV2Preview } from "./hooks/useConfiguratorV2Preview"
@@ -133,8 +138,17 @@ export default function ConfiguratorV2() {
     variantKey: config.variant || undefined,
   })
 
-  const pricingVariants = pricingQuery.data?.variants ?? []
-  const availableMatTypes = pricingQuery.data?.availableMatTypes ?? []
+  const [variantNotice, setVariantNotice] = useState<string | null>(null)
+  const [requestedOpen, setRequestedOpen] = useState<{ id: string; token: number } | null>(null)
+
+  const pricingVariants = useMemo(
+    () => pricingQuery.data?.variants ?? [],
+    [pricingQuery.data],
+  )
+  const availableMatTypes = useMemo(
+    () => pricingQuery.data?.availableMatTypes ?? [],
+    [pricingQuery.data],
+  )
   const skipMatTypeStep = availableMatTypes.length === 1
 
   useEffect(() => {
@@ -168,6 +182,31 @@ export default function ConfiguratorV2() {
     config.matType,
     config.pricingCategoryKey,
     config.catalogVersionCode,
+    updateConfig,
+  ])
+
+  useEffect(() => {
+    if (!pricingQuery.isSuccess || pricingQuery.isFetching || !pricingQuery.data) return
+    const reconciled = reconcileVariantWithOfferedKeys(
+      config.variant,
+      pricingQuery.data.variants.map((variant) => variant.key),
+    )
+    if (!config.variant) return
+    if (!reconciled.cleared) {
+      setVariantNotice(null)
+      return
+    }
+    updateConfig({ variant: "" })
+    setVariantNotice(VARIANT_UNAVAILABLE_NOTICE)
+    setRequestedOpen((current) => ({
+      id: "section-variant",
+      token: (current?.token ?? 0) + 1,
+    }))
+  }, [
+    config.variant,
+    pricingQuery.data,
+    pricingQuery.isFetching,
+    pricingQuery.isSuccess,
     updateConfig,
   ])
 
@@ -454,9 +493,55 @@ export default function ConfiguratorV2() {
     return titles
   }, [productEntry.isLocked, showSummary])
 
+  const searchTermsById = useMemo(
+    () =>
+      buildConfiguratorSearchIndex({
+        brand: config.brand,
+        model: config.model,
+        year: config.year,
+        gearbox: config.gearbox,
+        bodyType: config.bodyType,
+        matType: config.matType,
+        structure: config.structure,
+        availableMatTypes,
+        pricingVariants,
+        pricingCategoryKey: config.pricingCategoryKey,
+        bodyTypeKey: config.bodyTypeKey,
+      }),
+    [
+      availableMatTypes,
+      config.bodyType,
+      config.bodyTypeKey,
+      config.brand,
+      config.gearbox,
+      config.matType,
+      config.model,
+      config.pricingCategoryKey,
+      config.structure,
+      config.year,
+      pricingVariants,
+    ],
+  )
+
   const optionMatchCount = useMemo(
-    () => sectionTitles.filter((title) => sectionHeaderMatchesQuery(title, optionQuery)).length,
-    [optionQuery, sectionTitles],
+    () =>
+      countMatchingSections(
+        sectionTitles.map((title, index) => {
+          const id = [
+            "section-vehicle",
+            "section-matType",
+            "section-variant",
+            "section-structure",
+            "section-color",
+            "section-edgeColor",
+            "section-accessories",
+            "section-summary",
+          ][index]
+          return { title, terms: id ? searchTermsById[id] ?? [] : [] }
+        }),
+        optionQuery,
+      ),
+    [optionQuery, searchTermsById, sectionTitles],
   )
 
   const setMetric = mapperResult.metrics.find((metric) => metric.label === "Zestaw")?.value
@@ -533,6 +618,8 @@ export default function ConfiguratorV2() {
           <ConfiguratorV2OptionsProvider
             query={optionQuery}
             initiallyOpenSectionIds={CONFIGURATOR_V2_INITIALLY_OPEN_SECTION_IDS}
+            searchTermsById={searchTermsById}
+            requestedOpen={requestedOpen}
           >
           <VehicleContextSection
             config={config}
@@ -556,6 +643,7 @@ export default function ConfiguratorV2() {
             readiness={mapperResult.sections.variant}
             onUpdate={updateConfig}
             onCompareClick={() => setIsCompareVariantsOpen(true)}
+            unavailableNotice={variantNotice}
           />
           <StructureSection
             config={config}

@@ -92,6 +92,28 @@ describe("computeLockedCarAvailableYears", () => {
     ).toEqual([2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005])
   })
 
+  it("keeps the catalog range when the URL also names one year", () => {
+    expect(
+      computeLockedCarAvailableYears({
+        yearParam: "2010",
+        generationParam: "2005-2012",
+        resolvedGeneration: null,
+        templates: civicTemplates,
+      }),
+    ).toEqual([2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005])
+  })
+
+  it("does not invent a year that is outside the catalog range", () => {
+    expect(
+      computeLockedCarAvailableYears({
+        yearParam: "1999",
+        generationParam: "2005-2012",
+        resolvedGeneration: null,
+        templates: [],
+      }),
+    ).not.toContain(1999)
+  })
+
   it("falls back to generation param range when templates are not loaded yet", () => {
     expect(
       computeLockedCarAvailableYears({
