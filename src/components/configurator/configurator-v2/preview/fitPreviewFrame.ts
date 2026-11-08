@@ -3,6 +3,34 @@ import type { CSSProperties } from "react"
 /** iPhone 14 / 16 / 16 Pro zostawiają zdjęcie w pełnej wysokości. */
 export const MOBILE_PREVIEW_FULL_FROM_PX = 840
 
+/** Węższy bok ekranu nadal uznajemy za telefon, nie za okno desktopu. */
+const PHONE_SCREEN_MAX_SHORT_SIDE_PX = 500
+
+export type MobilePreviewViewportMetrics = {
+  innerWidth: number
+  innerHeight: number
+  screenWidth: number
+  screenHeight: number
+}
+
+/**
+ * Safari zmniejsza innerHeight o paski przeglądarki. Progi pełnego zdjęcia
+ * są liczone od wysokości ekranu telefonu w pionie.
+ */
+export const mobilePreviewViewportHeight = ({
+  innerWidth,
+  innerHeight,
+  screenWidth,
+  screenHeight,
+}: MobilePreviewViewportMetrics): number => {
+  const shortSide = Math.min(screenWidth, screenHeight)
+  const longSide = Math.max(screenWidth, screenHeight)
+  const isPhone = shortSide > 0 && shortSide <= PHONE_SCREEN_MAX_SHORT_SIDE_PX
+  const isPortrait = innerHeight >= innerWidth
+  if (!isPhone || !isPortrait || longSide <= 0) return innerHeight
+  return Math.max(innerHeight, longSide)
+}
+
 /** Poniżej tej wysokości podgląd jest niskim, ściętym paskiem. */
 export const MOBILE_PREVIEW_COMPACT_BELOW_PX = 700
 

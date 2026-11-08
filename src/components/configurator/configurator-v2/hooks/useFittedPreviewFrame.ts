@@ -1,6 +1,17 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { mobilePreviewViewportHeight } from "../preview/fitPreviewFrame"
+
+const readMobilePreviewViewportHeight = () => {
+  if (typeof window === "undefined") return 900
+  return mobilePreviewViewportHeight({
+    innerWidth: window.innerWidth,
+    innerHeight: window.innerHeight,
+    screenWidth: window.screen?.width ?? 0,
+    screenHeight: window.screen?.height ?? 0,
+  })
+}
 
 export const useImageNaturalSize = (src: string) => {
   const [size, setSize] = useState<{ width: number; height: number } | null>(null)
@@ -27,18 +38,20 @@ export const useImageNaturalSize = (src: string) => {
 }
 
 export const useMobilePreviewViewportHeight = () => {
-  const [height, setHeight] = useState(() =>
-    typeof window === "undefined" ? 900 : window.innerHeight,
-  )
+  const [height, setHeight] = useState(readMobilePreviewViewportHeight)
 
   useEffect(() => {
     const update = () => {
-      setHeight(window.innerHeight)
+      setHeight(readMobilePreviewViewportHeight())
     }
 
     update()
     window.addEventListener("resize", update)
-    return () => window.removeEventListener("resize", update)
+    window.addEventListener("orientationchange", update)
+    return () => {
+      window.removeEventListener("resize", update)
+      window.removeEventListener("orientationchange", update)
+    }
   }, [])
 
   return height

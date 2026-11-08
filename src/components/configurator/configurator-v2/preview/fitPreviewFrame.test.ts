@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import {
   MODEL_CARD_FRAME_SIZE,
   mobilePreviewFit,
+  mobilePreviewViewportHeight,
   previewFrameStyle,
   resolvePreviewFrame,
 } from "./fitPreviewFrame"
@@ -25,6 +26,41 @@ describe("mobilePreviewFit", () => {
   it("uses a short cropped strip on the smallest phones", () => {
     expect(mobilePreviewFit(667)).toEqual({ kind: "compact", scale: 1, frameHeight: 96 })
     expect(mobilePreviewFit(640)).toEqual({ kind: "compact", scale: 1, frameHeight: 72 })
+  })
+})
+
+describe("mobilePreviewViewportHeight", () => {
+  it("uses the iPhone 16 Pro screen height when Safari chrome shrinks the window", () => {
+    expect(
+      mobilePreviewViewportHeight({
+        innerWidth: 402,
+        innerHeight: 745,
+        screenWidth: 402,
+        screenHeight: 874,
+      }),
+    ).toBe(874)
+  })
+
+  it("keeps a short window on a desktop display", () => {
+    expect(
+      mobilePreviewViewportHeight({
+        innerWidth: 390,
+        innerHeight: 640,
+        screenWidth: 1920,
+        screenHeight: 1080,
+      }),
+    ).toBe(640)
+  })
+
+  it("follows the visible height in landscape", () => {
+    expect(
+      mobilePreviewViewportHeight({
+        innerWidth: 874,
+        innerHeight: 380,
+        screenWidth: 402,
+        screenHeight: 874,
+      }),
+    ).toBe(380)
   })
 })
 
