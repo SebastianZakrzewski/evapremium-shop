@@ -17,11 +17,11 @@ describe("mobilePreviewMaxHeight", () => {
 })
 
 describe("previewFrameStyle", () => {
-  it("fits the mobile window to the photo within the height cap", () => {
-    expect(previewFrameStyle({ width: 1600, height: 1000 }, "mobile", 360)).toEqual({
+  it("fills the mobile preview width and keeps the photo ratio", () => {
+    expect(previewFrameStyle({ width: 1600, height: 1000 }, "mobile")).toEqual({
       aspectRatio: "1600 / 1000",
-      width: "min(100%, calc(360px * 1600 / 1000))",
-      height: "min(360px, calc(100cqw * 1000 / 1600))",
+      width: "100%",
+      height: "calc(100cqw * 1000 / 1600)",
     })
   })
 

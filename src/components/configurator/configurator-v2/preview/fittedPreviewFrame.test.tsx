@@ -23,7 +23,8 @@ describe("preview frame fitted to the photo", () => {
     expect(frame).toHaveAttribute("data-preview-frame", "fitted")
     expect(frame).toHaveStyle({
       aspectRatio: "1600 / 1000",
-      width: "min(100%, calc(360px * 1600 / 1000))",
+      width: "100%",
+      height: "calc(100cqw * 1000 / 1600)",
     })
     expect(frame).not.toHaveClass("h-[150px]")
     expect(screen.getByAltText("Podgląd")).toHaveClass("object-cover")
@@ -41,7 +42,8 @@ describe("preview frame fitted to the photo", () => {
     const frame = screen.getByRole("button", { name: "Powiększ: Dywanik" })
     expect(frame).toHaveStyle({
       aspectRatio: "2954 / 1620",
-      width: "min(100%, calc(360px * 2954 / 1620))",
+      width: "100%",
+      height: "calc(100cqw * 1620 / 2954)",
     })
     expect(screen.getByAltText("Dywanik")).toHaveClass("object-contain")
   })

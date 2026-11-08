@@ -56,7 +56,6 @@ export const resolveMobilePreviewFrameSrc = (
 export const previewFrameStyle = (
   size: { width: number; height: number } | null,
   mode: "mobile" | "desktop",
-  maxHeightPx = MOBILE_PREVIEW_MAX_HEIGHT_PX,
 ): CSSProperties | undefined => {
   if (!size || size.width <= 0 || size.height <= 0) return undefined
 
@@ -65,9 +64,9 @@ export const previewFrameStyle = (
   if (mode === "mobile") {
     return {
       aspectRatio: ratio,
-      width: `min(100%, calc(${maxHeightPx}px * ${size.width} / ${size.height}))`,
+      width: "100%",
       // Jawna wysokość. Safari zwija height:auto + aspect-ratio w flexie do paska.
-      height: `min(${maxHeightPx}px, calc(100cqw * ${size.height} / ${size.width}))`,
+      height: `calc(100cqw * ${size.height} / ${size.width})`,
     }
   }
 

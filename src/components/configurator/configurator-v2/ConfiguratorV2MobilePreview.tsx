@@ -13,10 +13,7 @@ import {
   FILLED_PREVIEW_IMAGE_CLASS,
 } from "./preview/productPhotoFrame"
 import { ConfiguratorV2CrossfadeImage } from "./ui/ConfiguratorV2CrossfadeImage"
-import {
-  useImageNaturalSize,
-  useMobilePreviewMaxHeight,
-} from "./hooks/useFittedPreviewFrame"
+import { useImageNaturalSize } from "./hooks/useFittedPreviewFrame"
 import { useHorizontalSwipe } from "./hooks/useHorizontalSwipe"
 
 type ConfiguratorV2MobilePreviewProps = {
@@ -54,11 +51,10 @@ export const ConfiguratorV2MobilePreview = ({
       ? CONFIGURATOR_V2_MOBILE_MAT_IMAGE_SCALE
       : "scale-100"
   const scaleClass = fitToWindowWidth ? "scale-100" : restingScaleClass
-  const maxHeightPx = useMobilePreviewMaxHeight()
   const frameSource = frameImageSrc || imageSrc
   const measuredSize = useImageNaturalSize(frameSource)
   const imageSize = useModelCardFrame ? MODEL_CARD_FRAME_SIZE : measuredSize
-  const fittedStyle = previewFrameStyle(imageSize, "mobile", maxHeightPx)
+  const fittedStyle = previewFrameStyle(imageSize, "mobile")
   const showsWholePhoto =
     useModelCardFrame || Boolean(frameImageSrc && frameImageSrc !== imageSrc)
 
