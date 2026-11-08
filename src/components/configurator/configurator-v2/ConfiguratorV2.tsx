@@ -52,7 +52,7 @@ import { ConfiguratorV2StickyBar } from "./sticky/ConfiguratorV2StickyBar"
 import { ConfiguratorStageStepper } from "./steps/ConfiguratorStageStepper"
 import { buildMatCartPayload } from "./steps/buildMatCartPayload"
 import { explainConfigurationReset } from "./steps/explainConfigurationReset"
-import { focusStageHeading } from "./steps/focusStageHeading"
+import { applyStageChangeScroll } from "./steps/focusStageHeading"
 import {
   CONFIGURATOR_STAGE_PARAM,
   CONFIGURATOR_STAGES,
@@ -435,8 +435,7 @@ export default function ConfiguratorV2() {
   useEffect(() => {
     if (!pendingFocus.current) return
     pendingFocus.current = false
-    const heading = document.getElementById("configurator-stage-heading")
-    if (heading instanceof HTMLElement) focusStageHeading(heading)
+    applyStageChangeScroll()
   }, [stage])
 
   const summaryPriceBreakdown = useMemo(

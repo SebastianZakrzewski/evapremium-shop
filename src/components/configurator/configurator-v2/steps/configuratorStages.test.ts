@@ -16,7 +16,7 @@ import {
   type StageRequirementInput,
 } from "./configuratorStages"
 import { explainConfigurationReset } from "./explainConfigurationReset"
-import { focusStageHeading } from "./focusStageHeading"
+import { applyStageChangeScroll, focusStageHeading } from "./focusStageHeading"
 
 const completeConfig: ConfiguratorState = {
   brand: "Audi",
@@ -312,5 +312,34 @@ describe("configurator stages", () => {
     expect(scroller.scrollTop).toBe(100)
     expect(window.scrollY).toBe(0)
     scroller.remove()
+  })
+
+  it("returns the mobile options pane to the top after a stage change", () => {
+    vi.stubGlobal("matchMedia", (query: string) => ({
+      matches: query.includes("max-width"),
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }))
+
+    const scroller = document.createElement("main")
+    scroller.setAttribute("data-configurator-options", "")
+    scroller.scrollTop = 480
+    const heading = document.createElement("h2")
+    heading.id = "configurator-stage-heading"
+    heading.tabIndex = -1
+    scroller.appendChild(heading)
+    document.body.appendChild(scroller)
+    const focus = vi.spyOn(heading, "focus").mockImplementation(() => undefined)
+
+    applyStageChangeScroll()
+
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true })
+    expect(scroller.scrollTop).toBe(0)
+    scroller.remove()
+    vi.unstubAllGlobals()
   })
 })

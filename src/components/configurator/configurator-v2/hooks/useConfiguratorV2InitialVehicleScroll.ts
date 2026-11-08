@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 export const isConfiguratorV2MobileViewport = (): boolean => {
-  if (typeof window === "undefined") return false
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") return false
   return window.matchMedia("(max-width: 1023px)").matches
 }
 

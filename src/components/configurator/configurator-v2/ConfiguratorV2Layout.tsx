@@ -83,7 +83,7 @@ export const ConfiguratorV2Layout = ({
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-[#E6E6E6] text-neutral-950">
         {stageNav && (
-          <div className="relative z-20 shrink-0 overflow-hidden px-3 pt-1 lg:px-4 lg:pt-3">
+          <div className="relative z-20 hidden shrink-0 overflow-hidden px-3 pt-1 lg:block lg:px-4 lg:pt-3">
             <div className={`${configuratorWindowClassName} overflow-hidden p-1`}>
               {stageNav}
             </div>

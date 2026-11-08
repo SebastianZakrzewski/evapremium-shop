@@ -22,6 +22,10 @@ describe("ConfiguratorV2Layout", () => {
     expect(panel?.parentElement).toHaveClass("px-3", "bg-[#E6E6E6]")
     expect(screen.getByRole("button", { name: "Marka" })).toBeInTheDocument()
     expect(screen.getByRole("complementary", { name: "Podgląd produktu" })).toBeInTheDocument()
+    expect(screen.getByText("Etapy").parentElement?.parentElement).toHaveClass(
+      "hidden",
+      "lg:block",
+    )
   })
 
   it("keeps the desktop summary in the configurator card beside the preview", () => {
