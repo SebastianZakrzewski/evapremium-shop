@@ -66,7 +66,8 @@ export const previewFrameStyle = (
     return {
       aspectRatio: ratio,
       width: `min(100%, calc(${maxHeightPx}px * ${size.width} / ${size.height}))`,
-      height: "auto",
+      // Jawna wysokość. Safari zwija height:auto + aspect-ratio w flexie do paska.
+      height: `min(${maxHeightPx}px, calc(100cqw * ${size.height} / ${size.width}))`,
     }
   }
 

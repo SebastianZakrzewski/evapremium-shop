@@ -80,7 +80,7 @@ export const ConfiguratorV2MobilePreview = ({
   }
 
   return (
-    <div className="flex w-full justify-center">
+    <div className="w-full [container-type:inline-size]">
     <div
       role="button"
       tabIndex={0}
@@ -92,7 +92,7 @@ export const ConfiguratorV2MobilePreview = ({
       onPointerCancel={swipeHandlers.onPointerCancel}
       data-preview-frame={fittedStyle ? "fitted" : "pending"}
       style={{ ...swipeHandlers.dragStyle, ...fittedStyle }}
-      className={`relative block overflow-hidden ${canvasClass} rounded-2xl ${
+      className={`relative mx-auto block overflow-hidden ${canvasClass} rounded-2xl ${
         fittedStyle ? "max-w-full" : `w-full ${CONFIGURATOR_V2_MOBILE_PREVIEW_HEIGHT}`
       } ${
         canSwipeGallery ? "touch-none cursor-grab active:cursor-grabbing" : "touch-pan-y"

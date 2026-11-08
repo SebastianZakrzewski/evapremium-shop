@@ -21,7 +21,7 @@ describe("previewFrameStyle", () => {
     expect(previewFrameStyle({ width: 1600, height: 1000 }, "mobile", 360)).toEqual({
       aspectRatio: "1600 / 1000",
       width: "min(100%, calc(360px * 1600 / 1000))",
-      height: "auto",
+      height: "min(360px, calc(100cqw * 1000 / 1600))",
     })
   })
 
