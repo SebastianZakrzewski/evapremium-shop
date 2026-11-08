@@ -92,7 +92,7 @@ export const ConfiguratorV2Layout = ({
         <main
           ref={optionsRef}
           data-configurator-options
-          className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden overscroll-contain bg-[#E6E6E6] px-3 pb-3 pt-2 text-neutral-950 lg:px-4 lg:py-4"
+          className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden overscroll-contain [overflow-anchor:none] bg-[#E6E6E6] px-3 pb-3 pt-2 text-neutral-950 lg:px-4 lg:py-4"
         >
           <div
             data-configurator-panel

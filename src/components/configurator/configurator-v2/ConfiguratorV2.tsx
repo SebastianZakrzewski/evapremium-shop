@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCart } from "@/features/shopping-cart/hooks/useCart"
 import { openCartModal } from "@/features/shopping-cart/utils/openCartModal"
@@ -52,7 +52,11 @@ import { ConfiguratorV2StickyBar } from "./sticky/ConfiguratorV2StickyBar"
 import { ConfiguratorStageStepper } from "./steps/ConfiguratorStageStepper"
 import { buildMatCartPayload } from "./steps/buildMatCartPayload"
 import { explainConfigurationReset } from "./steps/explainConfigurationReset"
-import { applyStageChangeScroll } from "./steps/focusStageHeading"
+import {
+  applyStageChangeScroll,
+  mobileStageScrollIsFresh,
+  rememberMobileStageScroll,
+} from "./steps/focusStageHeading"
 import {
   CONFIGURATOR_STAGE_PARAM,
   CONFIGURATOR_STAGES,
@@ -380,6 +384,7 @@ export default function ConfiguratorV2() {
   const moveToStage = useCallback(
     (requested: number, history: "push" | "replace") => {
       const next = resolveConfiguratorStage(requested, stageInput)
+      rememberMobileStageScroll()
       pendingFocus.current = true
       setStage(next)
       writeEtap(next, history)
@@ -432,11 +437,11 @@ export default function ConfiguratorV2() {
     if (nextQuery !== currentQuery) writeEtap(next, "replace")
   }, [hydrated, searchParams, stageInput, stageSettled, vehicleKey, writeEtap])
 
-  useEffect(() => {
-    if (!pendingFocus.current) return
+  useLayoutEffect(() => {
+    if (!pendingFocus.current && !mobileStageScrollIsFresh()) return
     pendingFocus.current = false
     applyStageChangeScroll()
-  }, [stage])
+  }, [stage, searchParams])
 
   const summaryPriceBreakdown = useMemo(
     () => ({

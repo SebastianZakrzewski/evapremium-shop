@@ -58,7 +58,7 @@ export const ConfiguratorV2ImageOptionCard = ({
           : "border-neutral-300 hover:border-neutral-500"
       }`}
     >
-      <span className="mb-2 flex h-24 items-center justify-center overflow-hidden rounded-xl bg-neutral-100">
+      <span className="mb-2 flex h-24 items-center justify-center overflow-hidden rounded-xl bg-[#FDFDFD]">
         <Image
           src={imageSrc}
           alt={imageAlt || title}
