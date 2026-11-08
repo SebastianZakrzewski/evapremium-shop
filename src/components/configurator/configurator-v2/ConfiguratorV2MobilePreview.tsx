@@ -7,7 +7,16 @@ import {
   CONFIGURATOR_V2_MOBILE_PREVIEW_HEIGHT,
 } from "./configuratorV2MobileLayout"
 import { getMatPreviewCanvasClass } from "./matPreviewCanvas"
+import { MODEL_CARD_FRAME_SIZE, previewFrameStyle } from "./preview/fitPreviewFrame"
+import {
+  CONTAINED_PREVIEW_IMAGE_CLASS,
+  FILLED_PREVIEW_IMAGE_CLASS,
+} from "./preview/productPhotoFrame"
 import { ConfiguratorV2CrossfadeImage } from "./ui/ConfiguratorV2CrossfadeImage"
+import {
+  useImageNaturalSize,
+  useMobilePreviewMaxHeight,
+} from "./hooks/useFittedPreviewFrame"
 import { useHorizontalSwipe } from "./hooks/useHorizontalSwipe"
 
 type ConfiguratorV2MobilePreviewProps = {
@@ -19,6 +28,8 @@ type ConfiguratorV2MobilePreviewProps = {
   onSwipeNext?: () => void
   canSwipeGallery?: boolean
   fitToWindowWidth?: boolean
+  frameImageSrc?: string | null
+  useModelCardFrame?: boolean
 }
 
 export const ConfiguratorV2MobilePreview = ({
@@ -30,6 +41,8 @@ export const ConfiguratorV2MobilePreview = ({
   onSwipeNext,
   canSwipeGallery = false,
   fitToWindowWidth = false,
+  frameImageSrc,
+  useModelCardFrame = false,
 }: ConfiguratorV2MobilePreviewProps) => {
   const canvasClass = fitToWindowWidth
     ? "bg-white"
@@ -41,6 +54,13 @@ export const ConfiguratorV2MobilePreview = ({
       ? CONFIGURATOR_V2_MOBILE_MAT_IMAGE_SCALE
       : "scale-100"
   const scaleClass = fitToWindowWidth ? "scale-100" : restingScaleClass
+  const maxHeightPx = useMobilePreviewMaxHeight()
+  const frameSource = frameImageSrc || imageSrc
+  const measuredSize = useImageNaturalSize(frameSource)
+  const imageSize = useModelCardFrame ? MODEL_CARD_FRAME_SIZE : measuredSize
+  const fittedStyle = previewFrameStyle(imageSize, "mobile", maxHeightPx)
+  const showsWholePhoto =
+    useModelCardFrame || Boolean(frameImageSrc && frameImageSrc !== imageSrc)
 
   const swipeHandlers = useHorizontalSwipe({
     enabled: canSwipeGallery,
@@ -60,6 +80,7 @@ export const ConfiguratorV2MobilePreview = ({
   }
 
   return (
+    <div className="flex w-full justify-center">
     <div
       role="button"
       tabIndex={0}
@@ -69,8 +90,11 @@ export const ConfiguratorV2MobilePreview = ({
       onPointerMove={swipeHandlers.onPointerMove}
       onPointerUp={swipeHandlers.onPointerUp}
       onPointerCancel={swipeHandlers.onPointerCancel}
-      style={swipeHandlers.dragStyle}
-      className={`relative block w-full overflow-hidden ${canvasClass} ${CONFIGURATOR_V2_MOBILE_PREVIEW_HEIGHT} rounded-2xl ${
+      data-preview-frame={fittedStyle ? "fitted" : "pending"}
+      style={{ ...swipeHandlers.dragStyle, ...fittedStyle }}
+      className={`relative block overflow-hidden ${canvasClass} rounded-2xl ${
+        fittedStyle ? "max-w-full" : `w-full ${CONFIGURATOR_V2_MOBILE_PREVIEW_HEIGHT}`
+      } ${
         canSwipeGallery ? "touch-none cursor-grab active:cursor-grabbing" : "touch-pan-y"
       }`}
       aria-label={`Powiększ: ${alt}`}
@@ -81,6 +105,13 @@ export const ConfiguratorV2MobilePreview = ({
         <ConfiguratorV2CrossfadeImage
           imageSrc={imageSrc}
           alt={alt}
+          imageClassName={
+            fittedStyle
+              ? showsWholePhoto
+                ? CONTAINED_PREVIEW_IMAGE_CLASS
+                : FILLED_PREVIEW_IMAGE_CLASS
+              : undefined
+          }
           canvasClassName={canvasClass}
           priority
         />
@@ -89,6 +120,7 @@ export const ConfiguratorV2MobilePreview = ({
         <Maximize2 className="h-3.5 w-3.5" aria-hidden />
         Powiększ
       </span>
+    </div>
     </div>
   )
 }

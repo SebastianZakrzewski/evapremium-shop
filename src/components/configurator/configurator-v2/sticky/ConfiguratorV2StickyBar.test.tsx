@@ -97,8 +97,7 @@ describe("ConfiguratorV2StickyBar", () => {
 
     const price = screen.getByText(/549/)
     const discount = screen.getByText(/Rabat: -51,00 zł/)
-    expect(price.className).toContain("text-white")
-    expect(price.className).not.toMatch(/text-green|text-emerald/)
+    expect(price.className).toContain("text-green-400")
     expect(discount.className).toContain("text-white/45")
     expect(discount.className).not.toMatch(/text-red/)
   })
@@ -137,16 +136,20 @@ describe("ConfiguratorV2StickyBar", () => {
       />,
     )
 
-    const progress = screen.getByRole("progressbar", { name: "Krok 2 z 4" })
+    const progress = screen.getByRole("progressbar", { name: "Krok 2 z 5" })
     expect(progress).toHaveAttribute("aria-valuenow", "2")
     expect(progress).toHaveAttribute("aria-valuemin", "1")
-    expect(progress).toHaveAttribute("aria-valuemax", "4")
+    expect(progress).toHaveAttribute("aria-valuemax", "5")
     const segments = progress.querySelectorAll("[data-progress-segment]")
-    expect(segments).toHaveLength(4)
+    expect(segments).toHaveLength(5)
     expect(segments[0]).toHaveAttribute("data-reached", "true")
     expect(segments[1]).toHaveAttribute("data-reached", "true")
     expect(segments[2]).toHaveAttribute("data-reached", "false")
     expect(segments[3]).toHaveAttribute("data-reached", "false")
+    expect(segments[0]).toHaveClass("bg-red-600")
+    expect(segments[1]).toHaveClass("bg-red-600")
+    expect(segments[2]).toHaveClass("bg-white/25")
+    expect(segments[2]).not.toHaveClass("bg-red-600")
     expect(
       progress.compareDocumentPosition(screen.getByRole("button", { name: "Wstecz" })),
     ).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
@@ -176,6 +179,13 @@ describe("ConfiguratorV2StickyBar", () => {
     )
     fireEvent.click(screen.getByRole("button", { name: "Wstecz" }))
     expect(onBack).toHaveBeenCalledOnce()
-    expect(screen.getByRole("button", { name: "Dalej" })).toBeEnabled()
+    const forward = screen.getByRole("button", { name: "Dalej" })
+    expect(forward).toBeEnabled()
+    expect(forward).toHaveClass("min-w-[9.5rem]", "h-12", "text-[15px]")
+    const reached = screen
+      .getByRole("progressbar", { name: "Krok 1 z 5" })
+      .querySelector("[data-reached='true']")
+    expect(reached).toHaveClass("bg-red-600")
+    expect(reached).not.toHaveClass("bg-white")
   })
 })

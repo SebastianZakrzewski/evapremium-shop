@@ -87,7 +87,7 @@ export const ConfiguratorV2ImageOptionCard = ({
                 {formatPricePln(basePrice)}
               </span>
             )}
-            <span className="block text-xs font-medium tabular-nums text-white/80">
+            <span className="block text-xs font-medium tabular-nums text-green-400">
               {formatPricePln(priceAfterDiscount)}
             </span>
           </span>

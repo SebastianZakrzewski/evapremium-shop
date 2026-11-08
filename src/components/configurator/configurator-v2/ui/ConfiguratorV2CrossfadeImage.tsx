@@ -7,6 +7,7 @@ type ConfiguratorV2CrossfadeImageProps = {
   imageSrc: string
   alt: string
   className?: string
+  imageClassName?: string
   canvasClassName?: string
   priority?: boolean
 }
@@ -14,12 +15,12 @@ type ConfiguratorV2CrossfadeImageProps = {
 export const ConfiguratorV2CrossfadeImage = ({
   imageSrc,
   alt,
+  imageClassName = CONTAINED_PREVIEW_IMAGE_CLASS,
   canvasClassName = "bg-[#111]",
   priority = false,
 }: ConfiguratorV2CrossfadeImageProps) => {
   const { layers, durationMs } = useCrossfadeImageSrc(imageSrc)
   const [baseLayer, topLayer] = layers
-  const imageClassName = CONTAINED_PREVIEW_IMAGE_CLASS
 
   const transitionStyle = {
     transitionProperty: "opacity",

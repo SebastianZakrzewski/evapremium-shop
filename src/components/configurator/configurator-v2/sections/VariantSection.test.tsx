@@ -31,6 +31,7 @@ describe("VariantSection", () => {
     expect(
       screen.getByText(VARIANT_TRUNK_MAT_RIM_NOTICE_LABEL),
     ).toBeInTheDocument()
+    expect(screen.getByText("280,00 zł").className).toContain("text-green-400")
   })
 
   it("hides trunk mat rim notice until a trunk set is selected", () => {

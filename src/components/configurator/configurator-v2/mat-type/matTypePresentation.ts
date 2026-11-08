@@ -4,16 +4,16 @@ export const MAT_TYPE_OPTION_ICON_SIZE = 56
 export const MAT_TYPE_OPTION_ICON_SRC_SIZE = 224
 
 export const matTypeOptionIconBoxClassName =
-  "relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-black/30"
+  "relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#FDFDFD]"
 
 export const matTypeOptionIconImageClassName =
   "h-full w-full rounded-lg object-contain"
 
 export const MAT_TYPE_WITH_RIMS_ICON_SRC =
-  "/konfigurator/typ-dywanika/3d-z-rantami.png"
+  "/konfigurator/typ-dywanika/3d-z-rantami-v2.png"
 
 export const MAT_TYPE_WITHOUT_RIMS_ICON_SRC =
-  "/konfigurator/typ-dywanika/3d-bez-rantow.png"
+  "/konfigurator/typ-dywanika/3d-bez-rantow-v2.png"
 
 export const matTypeOptions = [
   {

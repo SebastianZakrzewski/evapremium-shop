@@ -3,7 +3,10 @@
 import { useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { DarkSelect } from "@/components/configurator/configurator-v2/ui/DarkSelect"
-import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
+import {
+  freshVehicleConfiguration,
+  type ConfiguratorState,
+} from "@/features/car-configurator/utils/configuratorState"
 import {
   GEARBOX_OPTIONS,
   isGearbox,
@@ -21,6 +24,7 @@ type CarSelectionStepProps = {
   config: ConfiguratorState
   onUpdate: (updates: Partial<ConfiguratorState>) => void
   onNext: () => void
+  onVehicleChange?: () => void
   hideNextButton?: boolean
   surface?: "dark" | "light"
 }
@@ -35,6 +39,7 @@ export const CarSelectionStep = ({
   config,
   onUpdate,
   onNext,
+  onVehicleChange,
   hideNextButton = false,
   surface = "dark",
 }: CarSelectionStepProps) => {
@@ -159,38 +164,26 @@ export const CarSelectionStep = ({
   })
 
   const handleBrandChange = (brandKey: string) => {
+    if (brandKey === config.brandKey) return
     const brand = brands.find((item) => item.key === brandKey)
+    onVehicleChange?.()
     onUpdate({
       brand: brand?.displayName ?? brand?.name ?? "",
       brandKey,
       model: "",
       modelFamilyKey: "",
-      modelKey: "",
-      generation: "",
-      year: "",
-      bodyType: "",
-      bodyTypeKey: "",
-      recordKey: "",
-      templateId: "",
-      pricingCategoryKey: "",
-      variant: "",
+      ...freshVehicleConfiguration,
     })
   }
 
   const handleModelChange = (modelFamilyKey: string) => {
+    if (modelFamilyKey === config.modelFamilyKey) return
     const model = models.find((item) => item.key === modelFamilyKey)
+    onVehicleChange?.()
     onUpdate({
       model: model?.displayName ?? model?.name ?? "",
       modelFamilyKey,
-      modelKey: "",
-      generation: "",
-      year: "",
-      bodyType: "",
-      bodyTypeKey: "",
-      recordKey: "",
-      templateId: "",
-      pricingCategoryKey: "",
-      variant: "",
+      ...freshVehicleConfiguration,
     })
   }
 

@@ -12,6 +12,12 @@ export const explainConfigurationReset = (
   previous: ConfiguratorState,
   next: ConfiguratorState,
 ): string | null => {
+  const sameLabel = (left: string, right: string) =>
+    left.trim().toLowerCase() === right.trim().toLowerCase()
+  if (!sameLabel(previous.brand, next.brand) || !sameLabel(previous.model, next.model)) {
+    return null
+  }
+
   const variantCleared = previous.variant.trim() !== "" && next.variant.trim() === ""
   const matTypeChanged = previous.matType !== next.matType
   if (!variantCleared) return null

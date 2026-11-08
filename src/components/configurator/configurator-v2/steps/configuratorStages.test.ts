@@ -62,6 +62,7 @@ describe("configurator stages", () => {
     expect(canEnterStage(2, input)).toBe(false)
     expect(canEnterStage(3, input)).toBe(false)
     expect(canEnterStage(4, input)).toBe(false)
+    expect(canEnterStage(5, input)).toBe(false)
     expect(highestEnterableStage(input)).toBe(1)
     expect(forwardDisabledReason(1, { ...completeConfig, variant: "", year: "" }, input)).toBe(
       "Aby przejść dalej, wybierz: rok produkcji.",
@@ -77,20 +78,40 @@ describe("configurator stages", () => {
       "available",
       "locked",
       "locked",
+      "locked",
     ])
     expect(forwardDisabledReason(2, { ...completeConfig, variant: "" }, input)).toBe(
       "Aby przejść dalej, wybierz: zestaw.",
     )
   })
 
-  it("does not treat accessories as a fifth stage and keeps them optional", () => {
+  it("keeps accessories optional and shows the summary as its own fifth step", () => {
     const input = requirementsFor(completeConfig)
-    const snapshots = buildStageSnapshots(4, input)
+    const snapshots = buildStageSnapshots(5, input)
 
-    expect(snapshots).toHaveLength(4)
-    expect(snapshots[3]).toMatchObject({ name: "Akcesoria", status: "current" })
-    expect(snapshots.slice(0, 3).every((stage) => stage.status === "completed")).toBe(true)
+    expect(snapshots).toHaveLength(5)
+    expect(snapshots[3]).toMatchObject({ name: "Akcesoria", status: "completed" })
+    expect(snapshots[4]).toMatchObject({ name: "Podsumowanie", status: "current" })
     expect(forwardDisabledReason(4, completeConfig, input)).toBeNull()
+    expect(forwardDisabledReason(5, completeConfig, input)).toBeNull()
+    expect(isSectionVisibleForStage({
+      section: "accessories",
+      stage: 4,
+      searchActive: false,
+      input,
+    })).toBe(true)
+    expect(isSectionVisibleForStage({
+      section: "summary",
+      stage: 4,
+      searchActive: false,
+      input,
+    })).toBe(false)
+    expect(isSectionVisibleForStage({
+      section: "summary",
+      stage: 5,
+      searchActive: false,
+      input,
+    })).toBe(true)
   })
 
   it("reopens a completed stage without dropping a still-valid later choice", () => {
@@ -127,6 +148,7 @@ describe("configurator stages", () => {
 
     expect(resolveConfiguratorStage(parseEtapParam("3"), input)).toBe(3)
     expect(resolveConfiguratorStage(parseEtapParam("4"), input)).toBe(4)
+    expect(resolveConfiguratorStage(parseEtapParam("5"), input)).toBe(5)
   })
 
   it("relocks dependent stages when an earlier change clears the variant", () => {
@@ -148,6 +170,19 @@ describe("configurator stages", () => {
     expect(explainConfigurationReset(completeConfig, next)).toBeNull()
     expect(resolveConfiguratorStage(3, requirementsFor(next))).toBe(3)
     expect(next.variant).toBe("premium")
+  })
+
+  it("stays quiet when a new brand and model clear the whole configuration", () => {
+    const next = {
+      ...completeConfig,
+      brand: "BMW",
+      model: "X5",
+      year: "",
+      variant: "",
+      matType: "classic" as const,
+    }
+
+    expect(explainConfigurationReset(completeConfig, next)).toBeNull()
   })
 
   it("explains a mat type change that also clears the variant", () => {
@@ -248,12 +283,13 @@ describe("configurator stages", () => {
     const complete = requirementsFor(completeConfig)
     const partial = requirementsFor({ ...completeConfig, variant: "" })
 
-    expect(configuratorProgressLabel(1)).toBe("Krok 1 z 4")
-    expect(configuratorProgressLabel(resolveConfiguratorStage(2, complete))).toBe("Krok 2 z 4")
-    expect(configuratorProgressLabel(resolveConfiguratorStage(1, complete))).toBe("Krok 1 z 4")
-    expect(configuratorProgressLabel(resolveConfiguratorStage(4, complete))).toBe("Krok 4 z 4")
-    expect(configuratorProgressLabel(resolveConfiguratorStage(4, partial))).toBe("Krok 2 z 4")
-    expect(configuratorProgressLabel(resolveConfiguratorStage(3, partial))).toBe("Krok 2 z 4")
+    expect(configuratorProgressLabel(1)).toBe("Krok 1 z 5")
+    expect(configuratorProgressLabel(resolveConfiguratorStage(2, complete))).toBe("Krok 2 z 5")
+    expect(configuratorProgressLabel(resolveConfiguratorStage(1, complete))).toBe("Krok 1 z 5")
+    expect(configuratorProgressLabel(resolveConfiguratorStage(4, complete))).toBe("Krok 4 z 5")
+    expect(configuratorProgressLabel(resolveConfiguratorStage(5, complete))).toBe("Krok 5 z 5")
+    expect(configuratorProgressLabel(resolveConfiguratorStage(5, partial))).toBe("Krok 2 z 5")
+    expect(configuratorProgressLabel(resolveConfiguratorStage(3, partial))).toBe("Krok 2 z 5")
   })
 
   it("moves focus to the stage heading without scrolling the window", () => {

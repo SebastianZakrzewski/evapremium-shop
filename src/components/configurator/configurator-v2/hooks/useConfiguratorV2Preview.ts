@@ -52,6 +52,7 @@ export const useConfiguratorV2Preview = (
   productEntry: ProductEntryLock,
   realizationPhotos: MatRealizationPhoto[] = [],
   modelPreviews: MatModelPreview[] = [],
+  showDynamicMatPreview = true,
 ): ConfiguratorV2PreviewState => {
   const classicProductImages = useMemo(
     () => [
@@ -188,7 +189,7 @@ export const useConfiguratorV2Preview = (
       ? `Podgląd dywaników ${config.brand} ${config.model}`
       : "Podgląd dywaników EVA"
 
-  const galleryItems = useMemo(
+  const sourceGalleryItems = useMemo(
     () =>
       buildConfiguratorV2PreviewGallery({
         dynamicPreviewPath,
@@ -220,6 +221,14 @@ export const useConfiguratorV2Preview = (
     ],
   )
 
+  const galleryItems = useMemo(
+    () =>
+      showDynamicMatPreview
+        ? sourceGalleryItems
+        : sourceGalleryItems.filter((item) => item.kind !== "dynamic"),
+    [showDynamicMatPreview, sourceGalleryItems],
+  )
+
   const defaultGalleryId = useMemo(
     () =>
       resolveDefaultGalleryItemId(galleryItems, autoImageSrc, {
@@ -228,10 +237,11 @@ export const useConfiguratorV2Preview = (
           !hasDynamicMatPreview &&
           !isVehiclePreviewReady,
         preferModelTemplate:
-          productEntry.isLocked &&
-          isVehiclePreviewReady &&
-          !hasDynamicMatPreview &&
-          !brandPlaceholderUrl,
+          !showDynamicMatPreview ||
+          (productEntry.isLocked &&
+            isVehiclePreviewReady &&
+            !hasDynamicMatPreview &&
+            !brandPlaceholderUrl),
       }),
     [
       galleryItems,
@@ -240,6 +250,7 @@ export const useConfiguratorV2Preview = (
       isVehiclePreviewReady,
       hasDynamicMatPreview,
       brandPlaceholderUrl,
+      showDynamicMatPreview,
     ],
   )
 
@@ -264,6 +275,7 @@ export const useConfiguratorV2Preview = (
     config.matType,
     modelTemplateUrl,
     hasDynamicMatPreview,
+    showDynamicMatPreview,
   ].join("|")
 
   useEffect(() => {
@@ -275,10 +287,13 @@ export const useConfiguratorV2Preview = (
   const activeGalleryItem =
     galleryItems.find((item) => item.id === activeGalleryId) ?? galleryItems[0]
 
+  const fallbackImageSrc = showDynamicMatPreview
+    ? autoImageSrc
+    : modelTemplateUrl || brandPlaceholderUrl || ""
   const imageSrc =
     activeGalleryItem?.kind === "dynamic"
       ? dynamicPreviewPath
-      : activeGalleryItem?.imageUrl ?? autoImageSrc
+      : activeGalleryItem?.imageUrl ?? fallbackImageSrc
   const hasInCarPhotos = galleryItems.some((item) => item.kind === "in-car-photo")
   const showEmptyInCarSlot = isVehiclePreviewReady && !hasInCarPhotos
   const showGallery =
@@ -312,7 +327,8 @@ export const useConfiguratorV2Preview = (
     activeGalleryId: activeGalleryItem?.id ?? null,
     showGallery,
     showEmptyInCarSlot,
-    usesMatPreviewCanvas: hasDynamicMatPreview,
+    usesMatPreviewCanvas:
+      showDynamicMatPreview && activeGalleryItem?.kind === "dynamic",
     lightboxImages,
     lightboxIndex,
     realizationCaption,

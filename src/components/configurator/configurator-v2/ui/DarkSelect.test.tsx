@@ -29,4 +29,22 @@ describe("DarkSelect", () => {
     expect(onChange).toHaveBeenCalledWith("2011")
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument()
   })
+
+  it("names the field with the selected year", () => {
+    render(
+      <DarkSelect
+        id="year"
+        value="2015"
+        placeholder="Wybierz rok"
+        ariaLabel="Rok produkcji"
+        options={[
+          { value: "2015", label: "2015" },
+          { value: "2014", label: "2014" },
+        ]}
+        onChange={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByRole("button", { name: "Rok produkcji, 2015" })).toBeInTheDocument()
+  })
 })

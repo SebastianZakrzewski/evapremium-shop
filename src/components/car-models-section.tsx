@@ -32,6 +32,7 @@ import {
 } from "@/shared/vehicle/displayLabels";
 import { useCarModelsFilters } from "@/features/brands/hooks";
 import { isPinnedModelCard, readModelCardQuery } from "@/features/brands/model/modelCardUrl";
+import { shouldServeModelProductPhotoOriginal } from "@/shared/images/modelProductPhoto";
 import { formatPriceCurrency } from "@/lib/utils/formatPrice";
 import { Car, Loader2, SlidersHorizontal, X, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
@@ -630,8 +631,11 @@ export default function CarModelsSection() {
                             style={pinnedCard ? { width: '100%', height: 'auto' } : undefined}
                             sizes={pinnedCard ? "420px" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"}
                             priority={pinnedCard || index < 2}
-                            quality={pinnedCard ? 60 : 75}
-                            unoptimized={shouldServeBrandImageUnoptimized(imageSrc)}
+                            quality={100}
+                            unoptimized={
+                              shouldServeBrandImageUnoptimized(imageSrc) ||
+                              shouldServeModelProductPhotoOriginal(imageSrc)
+                            }
                           />
                         </div>
 

@@ -37,8 +37,13 @@ export const SummarySection = ({
     headingId="summary-order-heading"
     title="Podsumowanie zamówienia"
     readiness={{ isComplete: true, isDisabled: false }}
+    className="flex min-h-0 min-w-0 max-w-full flex-1 flex-col"
+    panelClassName="flex min-h-0 min-w-0 max-w-full flex-1 flex-col"
   >
-    <div className="rounded-2xl bg-black p-3 text-white">
+    <div
+      data-testid="summary-surface"
+      className="flex min-h-full w-full min-w-0 max-w-full flex-1 flex-col overflow-hidden rounded-2xl bg-[#FDFDFD] p-3 text-neutral-950"
+    >
     <SummaryStep
       config={config}
       priceBreakdown={priceBreakdown}
@@ -48,6 +53,7 @@ export const SummarySection = ({
       cartActionError={cartActionError}
       stickyMobileActions={stickyMobileActions}
       vehiclePreviewImage={vehiclePreviewImage}
+      surface="light"
     />
     </div>
   </ConfiguratorV2SectionShell>

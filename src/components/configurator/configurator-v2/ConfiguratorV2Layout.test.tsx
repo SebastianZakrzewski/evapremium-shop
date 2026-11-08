@@ -21,5 +21,29 @@ describe("ConfiguratorV2Layout", () => {
     expect(panel).not.toHaveClass("overflow-hidden")
     expect(panel?.parentElement).toHaveClass("px-3", "bg-[#E6E6E6]")
     expect(screen.getByRole("button", { name: "Marka" })).toBeInTheDocument()
+    expect(screen.getByRole("complementary", { name: "Podgląd produktu" })).toBeInTheDocument()
+  })
+
+  it("keeps the desktop summary in the configurator card beside the preview", () => {
+    render(
+      <ConfiguratorV2Layout
+        topBar={<div>Góra</div>}
+        stageNav={<div>Etapy</div>}
+        specsBar={<div>Parametry</div>}
+        previewPanel={<div>Podgląd</div>}
+        mobilePreview={<div>Podgląd mobile</div>}
+        optionPanel={<div>Podsumowanie zamówienia</div>}
+        stickyBarMobile={<div>Pasek</div>}
+        fullScreen
+      />,
+    )
+
+    const panel = document.querySelector("[data-configurator-panel]")
+    expect(panel).toHaveAttribute("data-content-layout", "full")
+    expect(panel).toHaveClass("max-lg:min-h-full")
+    expect(panel).not.toHaveClass("min-h-full")
+    expect(screen.getByRole("complementary", { name: "Podgląd produktu" })).toBeInTheDocument()
+    expect(screen.queryByText("Podgląd mobile")).not.toBeInTheDocument()
+    expect(screen.getByText("Podsumowanie zamówienia")).toBeInTheDocument()
   })
 })

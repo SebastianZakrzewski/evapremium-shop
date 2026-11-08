@@ -31,10 +31,7 @@ import { getMatImagePath } from "@/lib/image-mapping"
 import { getMatTypeForDynamicPreview } from "@/components/configurator/configurator-simple/rugPreviewConfig"
 import { ConfiguratorLoader } from "@/components/configurator/configurator-simple/ConfiguratorLoader"
 import { ConfiguratorV2Layout } from "./ConfiguratorV2Layout"
-import {
-  ConfiguratorV2IntroCard,
-  ConfiguratorV2SpecsBar,
-} from "./ConfiguratorV2SpecsBar"
+import { ConfiguratorV2SpecsBar } from "./ConfiguratorV2SpecsBar"
 import { ConfiguratorV2OptionSearch } from "./option-search/ConfiguratorV2OptionSearch"
 import { ConfiguratorV2OptionsProvider } from "./option-search/ConfiguratorV2OptionsProvider"
 import { countMatchingSections } from "./option-search/sectionMatchesOptionQuery"
@@ -58,7 +55,7 @@ import { explainConfigurationReset } from "./steps/explainConfigurationReset"
 import { focusStageHeading } from "./steps/focusStageHeading"
 import {
   CONFIGURATOR_STAGE_PARAM,
-  CONFIGURATOR_STAGE_STORAGE_KEY,
+  CONFIGURATOR_STAGES,
   buildStageSnapshots,
   forwardDisabledReason,
   isSectionVisibleForStage,
@@ -71,7 +68,6 @@ import {
 import { PriceBreakdownModal } from "./sticky/PriceBreakdownModal"
 import { CompareMatTypesModal } from "./modals/CompareMatTypesModal"
 import { CompareVariantsModal } from "./modals/CompareVariantsModal"
-import { MatFeaturesModal } from "./modals/MatFeaturesModal"
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
 
 const V2_STORAGE_KEY = "configurator-v2-state"
@@ -86,23 +82,6 @@ const STAGE_SECTION_IDS = [
   "section-accessories",
   "section-summary",
 ]
-
-const readStoredEtap = (): ConfiguratorStageId | null => {
-  if (typeof window === "undefined") return null
-  try {
-    return parseEtapParam(window.sessionStorage.getItem(CONFIGURATOR_STAGE_STORAGE_KEY))
-  } catch {
-    return null
-  }
-}
-
-const writeStoredEtap = (stage: ConfiguratorStageId) => {
-  try {
-    window.sessionStorage.setItem(CONFIGURATOR_STAGE_STORAGE_KEY, String(stage))
-  } catch {
-    // A blocked session store must not discard the visible step.
-  }
-}
 
 export default function ConfiguratorV2() {
   const router = useRouter()
@@ -152,7 +131,7 @@ export default function ConfiguratorV2() {
 
   const { photos: realizationPhotos } = useMatRealizationPhotos({
     recordKey: config.recordKey || undefined,
-    brandKey: config.brandKey || config.brand || undefined,
+    brandKey: config.brandKey || undefined,
     modelKey: config.modelKey || config.model || undefined,
     matType: realizationMatType,
     enabled: isRealizationPhotosReady,
@@ -166,7 +145,7 @@ export default function ConfiguratorV2() {
 
   const { previews: modelPreviews } = useMatModelPreviews({
     recordKey: config.recordKey || undefined,
-    brandKey: config.brandKey || config.brand || undefined,
+    brandKey: config.brandKey || undefined,
     modelKey: config.modelKey || config.model || undefined,
     bodyTypeKey: config.bodyTypeKey || config.bodyType || undefined,
     enabled: isModelPreviewsReady,
@@ -304,14 +283,6 @@ export default function ConfiguratorV2() {
     ],
   )
 
-  const preview = useConfiguratorV2Preview(
-    config,
-    matProductImages,
-    productEntry,
-    realizationPhotos,
-    modelPreviews,
-  )
-
   const entryPreviewImage = productEntry.previewImageParam
 
   const primaryModelPreviewUrl = useMemo(() => {
@@ -350,7 +321,6 @@ export default function ConfiguratorV2() {
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false)
   const [isCompareMatTypesOpen, setIsCompareMatTypesOpen] = useState(false)
   const [isCompareVariantsOpen, setIsCompareVariantsOpen] = useState(false)
-  const [isFeaturesModalOpen, setIsFeaturesModalOpen] = useState(false)
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false)
   const [cartActionError, setCartActionError] = useState<string | null>(null)
   const [resetNotice, setResetNotice] = useState<string | null>(null)
@@ -364,6 +334,7 @@ export default function ConfiguratorV2() {
     parseEtapParam(searchParams.get(CONFIGURATOR_STAGE_PARAM)),
   )
   const stageReady = useRef(false)
+  const vehicleKeyRef = useRef<string | null>(null)
   const pendingFocus = useRef(false)
   const [stageSettled, setStageSettled] = useState(false)
   const previousConfig = useRef(config)
@@ -374,13 +345,20 @@ export default function ConfiguratorV2() {
     [mapperResult.sections],
   )
   const urlEtapNow = parseEtapParam(searchParams.get(CONFIGURATOR_STAGE_PARAM))
+  const vehicleKey = `${searchParams.get("brand") ?? ""}::${searchParams.get("model") ?? ""}`
+    .trim()
+    .toLowerCase()
   const stageForView = resolveConfiguratorStage(
-    !hydrated
-      ? stage
-      : !stageSettled
-        ? (urlEtapNow ?? readStoredEtap() ?? stage)
-        : stage,
+    !hydrated || !stageSettled ? (urlEtapNow ?? stage) : stage,
     stageInput,
+  )
+  const preview = useConfiguratorV2Preview(
+    config,
+    matProductImages,
+    productEntry,
+    realizationPhotos,
+    modelPreviews,
+    stageForView >= 2,
   )
   const stageSnapshots = useMemo(
     () => buildStageSnapshots(stageForView, stageInput),
@@ -391,7 +369,6 @@ export default function ConfiguratorV2() {
 
   const writeEtap = useCallback(
     (next: ConfiguratorStageId, history: "push" | "replace") => {
-      writeStoredEtap(next)
       writtenEtap.current = next
       const href = `${pathname}?${withEtapParam(searchParams.toString(), next)}`
       if (history === "push") router.push(href, { scroll: false })
@@ -425,23 +402,35 @@ export default function ConfiguratorV2() {
     if (message) setResetNotice(message)
   }, [config, hydrated])
 
+  const handleVehicleIdentityChange = useCallback(() => {
+    const urlEtap = parseEtapParam(searchParams.get(CONFIGURATOR_STAGE_PARAM))
+    if (stageRef.current === 1 && (urlEtap === null || urlEtap === 1)) return
+    setStage(1)
+    writeEtap(1, "replace")
+  }, [searchParams, writeEtap])
+
   useEffect(() => {
     if (!hydrated) return
     const urlEtap = parseEtapParam(searchParams.get(CONFIGURATOR_STAGE_PARAM))
+    const vehicleChanged = vehicleKeyRef.current !== null && vehicleKeyRef.current !== vehicleKey
+    vehicleKeyRef.current = vehicleKey
     const externalNavigation = stageReady.current && urlEtap !== writtenEtap.current
-    const requested = !stageReady.current
-      ? (urlEtap ?? readStoredEtap() ?? stageRef.current)
-      : externalNavigation
-        ? (urlEtap ?? 1)
-        : stageRef.current
+    const requested = vehicleChanged
+      ? 1
+      : !stageReady.current
+        ? (urlEtap ?? stageRef.current)
+        : externalNavigation
+          ? (urlEtap ?? 1)
+          : stageRef.current
     stageReady.current = true
     const next = resolveConfiguratorStage(requested, stageInput)
+    const currentQuery = searchParams.toString()
+    const nextQuery = withEtapParam(currentQuery, next)
     writtenEtap.current = next
     if (next !== stageRef.current) setStage(next)
-    writeStoredEtap(next)
-    setStageSettled(true)
-    if (urlEtap !== next) writeEtap(next, "replace")
-  }, [hydrated, searchParams, stageInput, writeEtap])
+    if (!stageSettled) setStageSettled(true)
+    if (nextQuery !== currentQuery) writeEtap(next, "replace")
+  }, [hydrated, searchParams, stageInput, stageSettled, vehicleKey, writeEtap])
 
   useEffect(() => {
     if (!pendingFocus.current) return
@@ -648,7 +637,8 @@ export default function ConfiguratorV2() {
     isConfigComplete: mapperResult.isReadyForCart,
     showBack: stageForView > 1,
     onBack: () => moveToStage(stageForView - 1, "push"),
-    showForward: stageForView < 4,
+    showForward: stageForView < CONFIGURATOR_STAGES.length,
+    stageCount: CONFIGURATOR_STAGES.length,
     forwardDisabled: disabledReason != null,
     forwardDisabledReason: disabledReason,
     onForward: () => moveToStage(stageForView + 1, "push"),
@@ -670,11 +660,7 @@ export default function ConfiguratorV2() {
           title={pageTitle}
           year={config.year || undefined}
           contextLine={mapperResult.contextLine}
-          onLearnMore={() => setIsFeaturesModalOpen(true)}
         />
-      }
-      introCard={
-        <ConfiguratorV2IntroCard onLearnMore={() => setIsFeaturesModalOpen(true)} />
       }
       mobilePreview={
         <ConfiguratorV2PreviewWithGallery
@@ -739,6 +725,7 @@ export default function ConfiguratorV2() {
             productEntry={productEntry}
             readiness={mapperResult.sections.vehicle}
             onUpdate={updateConfig}
+            onVehicleChange={handleVehicleIdentityChange}
           />
           )}
           {showSection("matType") && (
@@ -798,7 +785,7 @@ export default function ConfiguratorV2() {
             <SummarySection
               config={config}
               priceBreakdown={summaryPriceBreakdown}
-              onPrevious={() => moveToStage(3, "push")}
+              onPrevious={() => moveToStage(4, "push")}
               onAddToCart={handleAddToCart}
               isAddingToCart={isAddingToCart || cartLoading}
               cartActionError={cartActionError}
@@ -809,6 +796,7 @@ export default function ConfiguratorV2() {
           </ConfiguratorV2OptionsProvider>
         </>
       }
+      fullScreen={stageForView === 5}
       stickyBarMobile={
         <ConfiguratorV2StickyBar {...stickyBarProps} variant="fixed" />
       }
@@ -834,10 +822,6 @@ export default function ConfiguratorV2() {
             bodyTypeKey={config.bodyTypeKey}
             selectedVariantKey={config.variant}
             onSelectVariant={(key) => updateConfig({ variant: key })}
-          />
-          <MatFeaturesModal
-            isOpen={isFeaturesModalOpen}
-            onClose={() => setIsFeaturesModalOpen(false)}
           />
           <ConfiguratorV2MatPreviewLightbox
             isOpen={isPreviewModalOpen}

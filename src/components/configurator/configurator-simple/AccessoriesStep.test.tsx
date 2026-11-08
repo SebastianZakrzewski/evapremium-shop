@@ -141,6 +141,23 @@ describe("AccessoriesStep mounting flow", () => {
     expect(screen.queryByText("Montaż podpiętki")).not.toBeInTheDocument()
   })
 
+  it("uses configurator colors when the surface is light", () => {
+    render(
+      <AccessoriesStep
+        config={baseConfig}
+        onUpdate={vi.fn()}
+        onNext={vi.fn()}
+        onPrevious={vi.fn()}
+        surface="light"
+      />,
+    )
+
+    const card = screen.getByLabelText(/Wybierz podpiętkę Podpiętka gumowa/i)
+    expect(card).toHaveClass("bg-[#FDFDFD]", "border-neutral-300")
+    expect(card.className).not.toContain("bg-[#111]")
+    expect(screen.getByText("Podpiętka gumowa")).toHaveClass("text-neutral-950")
+  })
+
   it("clears mounting when podpietka is removed", () => {
     const onUpdate = vi.fn()
     render(

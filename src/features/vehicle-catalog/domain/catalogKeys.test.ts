@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import {
   bodyTypeMatchesParam,
   brandParamToCatalogKey,
+  catalogQueryBrandKey,
   resolveCatalogBrandKey,
   resolveModelFamiliesFromParam,
 } from "./catalogKeys"
@@ -32,6 +33,22 @@ describe("brandParamToCatalogKey", () => {
 
   it("maps mercedes slug to mercedes_benz catalog key", () => {
     expect(brandParamToCatalogKey("mercedes")).toBe("mercedes_benz")
+  })
+})
+
+describe("catalogQueryBrandKey", () => {
+  it("waits for the brand list instead of querying the URL slug", () => {
+    expect(catalogQueryBrandKey([], "hyundai", "")).toBe("")
+  })
+
+  it("uses the catalog key once brands are loaded", () => {
+    expect(
+      catalogQueryBrandKey(
+        [{ key: "Hyundai", name: "Hyundai" }],
+        "hyundai",
+        "",
+      ),
+    ).toBe("Hyundai")
   })
 })
 

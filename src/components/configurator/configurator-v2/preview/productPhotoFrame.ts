@@ -7,3 +7,7 @@ export const isProductPhotoFramedToWindowWidth = (
 
 export const CONTAINED_PREVIEW_IMAGE_CLASS =
   "absolute inset-0 h-full w-full object-contain object-center select-none pointer-events-none"
+
+/** Zdjęcie wypełnia okno, które ma już jego proporcje. */
+export const FILLED_PREVIEW_IMAGE_CLASS =
+  "absolute inset-0 h-full w-full object-cover object-center select-none pointer-events-none"

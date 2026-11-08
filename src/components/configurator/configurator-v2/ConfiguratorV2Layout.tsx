@@ -17,6 +17,8 @@ type ConfiguratorV2LayoutProps = {
   stickyBarMobile: ReactNode
   mobilePreview?: ReactNode
   hideMobileStickyBar?: boolean
+  /** Na telefonie podsumowanie zajmuje ekran, bez podglądu. Na desktopie zostaje w karcie. */
+  fullScreen?: boolean
   modals?: ReactNode
 }
 
@@ -34,6 +36,7 @@ export const ConfiguratorV2Layout = ({
   stickyBarMobile,
   mobilePreview,
   hideMobileStickyBar = false,
+  fullScreen = false,
   modals,
 }: ConfiguratorV2LayoutProps) => {
   const optionsRef = useRef<HTMLElement>(null)
@@ -60,7 +63,7 @@ export const ConfiguratorV2Layout = ({
     </div>
 
     <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-      {mobilePreview && (
+      {!fullScreen && mobilePreview && (
         <MobilePreviewDockProvider docked={previewDocked}>
           <div
             className="shrink-0 border-b border-white/[0.08] bg-black px-4 pb-2 pt-2 lg:hidden"
@@ -80,8 +83,8 @@ export const ConfiguratorV2Layout = ({
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-[#E6E6E6] text-neutral-950">
         {stageNav && (
-          <div className="shrink-0 px-3 pt-2 lg:px-4 lg:pt-4">
-            <div className={`${configuratorWindowClassName} p-1.5 sm:p-2`}>
+          <div className="relative z-20 shrink-0 overflow-hidden px-3 pt-1.5 lg:px-4 lg:pt-3">
+            <div className={`${configuratorWindowClassName} p-1`}>
               {stageNav}
             </div>
           </div>
@@ -93,11 +96,20 @@ export const ConfiguratorV2Layout = ({
         >
           <div
             data-configurator-panel
-            className={`${configuratorWindowClassName} flex min-w-0 flex-col px-3 py-2 sm:p-4`}
+            data-content-layout={fullScreen ? "full" : "split"}
+            className={`${configuratorWindowClassName} flex min-w-0 flex-col px-3 py-2 sm:p-4 ${
+              fullScreen ? "max-lg:min-h-full" : ""
+            }`}
           >
             <div className="order-1">{specsBar}</div>
             {introCard && <div className="order-2 mb-4 hidden lg:block">{introCard}</div>}
-            <div className="order-3 min-w-0">{optionPanel}</div>
+            <div
+              className={`order-3 min-w-0 ${
+                fullScreen ? "max-lg:flex max-lg:flex-1 max-lg:flex-col" : ""
+              }`}
+            >
+              {optionPanel}
+            </div>
           </div>
         </main>
       </div>

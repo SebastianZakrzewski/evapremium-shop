@@ -6,6 +6,7 @@ import { ConfiguratorV2PreviewPanel } from "./ConfiguratorV2PreviewPanel"
 import { ConfiguratorV2PreviewGalleryStrip } from "./ui/ConfiguratorV2PreviewGalleryStrip"
 import type { PreviewGalleryItem } from "./preview/buildConfiguratorV2PreviewGallery"
 import { getAdjacentGalleryItemId } from "./preview/getAdjacentGalleryItemId"
+import { resolvePreviewFrame } from "./preview/fitPreviewFrame"
 import { isProductPhotoFramedToWindowWidth } from "./preview/productPhotoFrame"
 import { useMobilePreviewDocked } from "./MobilePreviewDockContext"
 
@@ -43,6 +44,7 @@ export const ConfiguratorV2PreviewWithGallery = ({
     (item) => item.id === activeGalleryId,
   )?.kind
   const fitToWindowWidth = isProductPhotoFramedToWindowWidth(activeGalleryKind)
+  const previewFrame = resolvePreviewFrame(galleryItems, imageSrc)
 
   const handleSwipePrevious = useCallback(() => {
     const previousId = getAdjacentGalleryItemId(
@@ -74,6 +76,8 @@ export const ConfiguratorV2PreviewWithGallery = ({
           onSwipeNext={handleSwipeNext}
           canSwipeGallery={canSwipeGallery}
           fitToWindowWidth={fitToWindowWidth}
+          frameImageSrc={previewFrame.src}
+          useModelCardFrame={previewFrame.useModelCardFrame}
         />
         {caption && !previewDocked && (
           <p
@@ -111,6 +115,8 @@ export const ConfiguratorV2PreviewWithGallery = ({
           onSwipeNext={handleSwipeNext}
           canSwipeGallery={canSwipeGallery}
           fitToWindowWidth={fitToWindowWidth}
+          frameImageSrc={previewFrame.src}
+          useModelCardFrame={previewFrame.useModelCardFrame}
         />
       </div>
       {caption && (

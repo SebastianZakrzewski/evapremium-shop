@@ -18,7 +18,7 @@ const savedVehicle = {
 }
 
 describe("useConfiguratorState", () => {
-  it("restores a saved vehicle before the empty state can overwrite it", async () => {
+  it("starts a brand and model from the link without restoring a saved configuration", async () => {
     localStorage.setItem(`${storageKey}::hyundai::tucson`, JSON.stringify(savedVehicle))
 
     const { result } = renderHook(() =>
@@ -29,21 +29,35 @@ describe("useConfiguratorState", () => {
       }),
     )
 
-    await waitFor(() => expect(result.current.config.year).toBe("2024"))
-    expect(result.current.config.gearbox).toBe("Automatyczna")
-    expect(result.current.config.variant).toBe("front")
-    expect(result.current.config.structure).toBe("honey")
-    expect(JSON.parse(localStorage.getItem(`${storageKey}::hyundai::tucson`) || "{}").year).toBe("2024")
+    await waitFor(() => expect(result.current.config.model.toLowerCase()).toContain("tucson"))
+    expect(result.current.config.year).toBe("")
+    expect(result.current.config.gearbox).toBe("")
+    expect(result.current.config.variant).toBe("")
+    expect(result.current.config.matType).toBe("3d-with-rims")
+    expect(result.current.config.structure).toBe("diamonds")
+    expect(result.current.config.color).toBe("black")
+    expect(result.current.config.bodyType.toLowerCase()).toBe("suv")
   })
 
-  it("does not copy another vehicle into the opened link", async () => {
+  it("starts a different brand and model from defaults", async () => {
     localStorage.setItem(
       `${storageKey}::hyundai::tucson`,
       JSON.stringify(savedVehicle),
     )
     localStorage.setItem(
       `${storageKey}::bmw::x5`,
-      JSON.stringify({ ...savedVehicle, model: "X5", year: "2019", gearbox: "Manualna", variant: "basic" }),
+      JSON.stringify({
+        ...savedVehicle,
+        model: "X5",
+        year: "2019",
+        gearbox: "Manualna",
+        variant: "basic",
+        matType: "classic",
+        structure: "honey",
+        color: "red",
+        edgeColor: "grey",
+        heelPad: true,
+      }),
     )
 
     const { result, rerender } = renderHook(
@@ -56,11 +70,18 @@ describe("useConfiguratorState", () => {
       { initialProps: { query: "brand=hyundai&model=tucson" } },
     )
 
-    await waitFor(() => expect(result.current.config.year).toBe("2024"))
+    await waitFor(() => expect(result.current.config.model.toLowerCase()).toContain("tucson"))
+    expect(result.current.config.year).toBe("")
     rerender({ query: "brand=bmw&model=x5" })
-    await waitFor(() => expect(result.current.config.year).toBe("2019"))
-    expect(result.current.config.gearbox).toBe("Manualna")
-    expect(result.current.config.model.toLowerCase()).toContain("x5")
+    await waitFor(() => expect(result.current.config.model.toLowerCase()).toContain("x5"))
+    expect(result.current.config.year).toBe("")
+    expect(result.current.config.gearbox).toBe("")
+    expect(result.current.config.variant).toBe("")
+    expect(result.current.config.matType).toBe("3d-with-rims")
+    expect(result.current.config.structure).toBe("diamonds")
+    expect(result.current.config.color).toBe("black")
+    expect(result.current.config.edgeColor).toBe("black")
+    expect(result.current.config.heelPad).toBe(false)
     expect(JSON.parse(localStorage.getItem(`${storageKey}::hyundai::tucson`) || "{}").year).toBe("2024")
   })
 

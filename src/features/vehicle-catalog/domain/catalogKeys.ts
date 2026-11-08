@@ -215,6 +215,16 @@ export const resolveCatalogBrandKey = (
   return ""
 }
 
+/** Klucz do zapytań katalogu. Bez listy marek nie zwraca sluga z URL, bo potem katalog ma inny zapis tego samego klucza. */
+export const catalogQueryBrandKey = (
+  brands: CatalogBrand[],
+  brandParam: string | null | undefined,
+  storedBrandKey: string | null | undefined,
+): string => {
+  if (brands.length === 0) return ""
+  return resolveCatalogBrandKey(brandParam, storedBrandKey, brands)
+}
+
 export const bodyTypeMatchesParam = (
   bodyType: { key: string; label: string },
   bodyTypeParam: string,

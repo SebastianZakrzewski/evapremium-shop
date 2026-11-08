@@ -47,11 +47,23 @@ describe("ConfiguratorStageStepper", () => {
       />,
     )
 
+    const stages = screen.getByRole("list")
+    expect(stages).toHaveClass("flex")
+    expect(stages).not.toHaveClass("grid-cols-2")
     expect(screen.getByRole("navigation", { name: "Etapy konfiguracji" })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: /1\. Samochód, gotowe/ })).toBeEnabled()
+    expect(screen.getByRole("button", { name: /5\. Podsumowanie, dostępny/ })).toBeEnabled()
     expect(screen.getByRole("button", { name: /4\. Akcesoria, teraz/ })).toHaveAttribute(
       "aria-current",
       "step",
+    )
+    expect(screen.getByRole("button", { name: /4\. Akcesoria, teraz/ })).toHaveClass(
+      "bg-red-600",
+      "text-white",
+    )
+    expect(screen.getByRole("button", { name: /1\. Samochód, gotowe/ })).toHaveClass(
+      "border-red-600",
+      "text-red-600",
     )
 
     fireEvent.click(screen.getByRole("button", { name: /1\. Samochód, gotowe/ }))

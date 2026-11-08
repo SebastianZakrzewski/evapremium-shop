@@ -1,9 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowLeft, ChevronDown } from "lucide-react"
+import { ArrowLeft, ChevronDown, ChevronRight } from "lucide-react"
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice"
-import { configuratorProgressLabel } from "../steps/configuratorStages"
+import { CONFIGURATOR_STAGES, configuratorProgressLabel } from "../steps/configuratorStages"
 
 export type PriceBreakdown = {
   basePrice: number
@@ -32,6 +32,9 @@ type ConfiguratorV2StickyBarProps = {
 const forwardButtonClassName =
   "inline-flex min-h-11 min-w-11 flex-1 items-center justify-center rounded-full bg-red-600 px-4 text-[13px] font-medium text-white transition-colors hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40 lg:flex-none"
 
+const headerForwardButtonClassName =
+  "inline-flex h-12 min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-red-600 px-6 text-[15px] font-semibold text-white shadow-lg shadow-black/40 transition-colors hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-70"
+
 const backButtonClassName =
   "inline-flex min-h-11 min-w-11 flex-1 items-center justify-center rounded-full border border-white/15 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:bg-white/10 lg:flex-none"
 
@@ -47,7 +50,7 @@ export const ConfiguratorV2StickyBar = ({
   onForward,
   onPriceClick,
   currentStage = 1,
-  stageCount = 4,
+  stageCount = CONFIGURATOR_STAGES.length,
   variant = "fixed",
 }: ConfiguratorV2StickyBarProps) => {
   const totalWithAccessories = priceBreakdown.totalPrice + accessoryPrice
@@ -79,7 +82,7 @@ export const ConfiguratorV2StickyBar = ({
               data-progress-segment={step}
               data-reached={reached ? "true" : "false"}
               className={`h-1 min-w-[1.25rem] flex-1 rounded-full ${
-                reached ? "bg-white" : "bg-white/25"
+                reached ? "bg-red-600" : "bg-white/25"
               }`}
             />
           )
@@ -101,7 +104,7 @@ export const ConfiguratorV2StickyBar = ({
       {hasPrice ? (
         <>
           <span className="flex items-center gap-1.5">
-            <span className="text-lg font-medium tabular-nums tracking-tight text-white lg:text-xl">
+            <span className="text-lg font-medium tabular-nums tracking-tight text-green-400 lg:text-xl">
               {formatPricePln(totalWithAccessories)}
             </span>
             {onPriceClick && (
@@ -139,10 +142,11 @@ export const ConfiguratorV2StickyBar = ({
           type="button"
           onClick={onForward}
           disabled={forwardDisabled}
-          className={forwardButtonClassName}
+          className={isHeader ? headerForwardButtonClassName : forwardButtonClassName}
           aria-describedby={reason ? reasonId : undefined}
         >
           Dalej
+          {isHeader && <ChevronRight className="h-4 w-4" aria-hidden />}
         </button>
       )}
     </div>

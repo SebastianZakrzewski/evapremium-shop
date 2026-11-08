@@ -390,6 +390,34 @@ describe("useConfiguratorV2Preview", () => {
     expect(result.current.showGallery).toBe(true)
   })
 
+  it("keeps the model card and gallery, and hides the mat preview before step 2", () => {
+    const configured = {
+      ...baseConfig,
+      matType: "3d-with-rims" as const,
+      pricingCategoryKey: "standard",
+      variant: "5os",
+      structure: "diamonds",
+      color: "black",
+      edgeColor: "black",
+    }
+
+    const { result } = renderHook(() =>
+      useConfiguratorV2Preview(configured, matImages, unlockedEntry, [], [], false),
+    )
+
+    expect(result.current.imageSrc).toBe("/mat/template.webp")
+    expect(result.current.galleryItems.map((item) => item.kind)).toEqual([
+      "product-set",
+      "product-set",
+      "product-set",
+      "product-set",
+      "model-template",
+      "in-car-photo",
+    ])
+    expect(result.current.showGallery).toBe(true)
+    expect(result.current.usesMatPreviewCanvas).toBe(false)
+  })
+
   it("shows dynamic mat preview after mat type is selected without variant", () => {
     const { result } = renderHook(() =>
       useConfiguratorV2Preview(

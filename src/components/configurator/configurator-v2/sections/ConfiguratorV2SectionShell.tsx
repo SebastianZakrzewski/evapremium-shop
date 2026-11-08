@@ -26,6 +26,8 @@ type ConfiguratorV2SectionShellProps = {
   readiness: SectionReadiness
   headerAction?: ReactNode
   defaultOpen?: boolean
+  className?: string
+  panelClassName?: string
   children: ReactNode
 }
 
@@ -38,6 +40,8 @@ export const ConfiguratorV2SectionShell = ({
   readiness,
   headerAction,
   defaultOpen = true,
+  className = "",
+  panelClassName = "",
   children,
 }: ConfiguratorV2SectionShellProps) => {
   const optionQuery = useConfiguratorV2OptionQuery()
@@ -102,7 +106,7 @@ export const ConfiguratorV2SectionShell = ({
       hidden={!visible}
       className={`scroll-mt-4 border-b border-neutral-200 py-1.5 last:border-b-0 ${
         readiness.isDisabled ? "opacity-40" : ""
-      }`}
+      } ${className}`}
     >
       <h2 id={headingId} className="text-[17px] font-medium tracking-tight text-neutral-950">
         <button
@@ -143,7 +147,7 @@ export const ConfiguratorV2SectionShell = ({
       <div
         id={`${id}-panel`}
         hidden={panelVisible ? undefined : true}
-        className={`px-3 pb-4 ${showOnMobileBeforeMount && !expanded ? "max-lg:!block lg:hidden" : ""}`}
+        className={`px-3 pb-4 ${panelClassName} ${showOnMobileBeforeMount && !expanded ? "max-lg:!block lg:hidden" : ""}`}
       >
         {included && (
           <p className="mb-2 text-[11px] font-medium tracking-wide text-neutral-500">W zestawie</p>

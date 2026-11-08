@@ -79,18 +79,23 @@ export const useConfiguratorState = ({
 }: UseConfiguratorStateArgs) => {
   const urlParams = getUrlParams(searchParams);
   const activeStorageKey = configuratorStorageKeyForUrl(storageKey, urlParams);
+  const enteredVehicle = Boolean(urlParams.brandParam?.trim() && urlParams.modelParam?.trim());
   const [config, setConfig] = useState<ConfiguratorState>(() =>
     getInitialConfig(searchParams, initialState)
   );
   const [hydrated, setHydrated] = useState(false);
   const suppressSave = useRef(true);
   const seenYearParam = useRef<string | null | undefined>(undefined);
+  const hydratedKey = useRef<string | null>(null);
 
   useEffect(() => {
     suppressSave.current = true;
     const params = getUrlParams(searchParams);
+    const switchingVehicle =
+      hydratedKey.current !== null && hydratedKey.current !== activeStorageKey;
+    hydratedKey.current = activeStorageKey;
     const stored =
-      typeof window === "undefined"
+      enteredVehicle || switchingVehicle || typeof window === "undefined"
         ? null
         : readCompatibleStoredConfig(storageKey, params, (key) => localStorage.getItem(key));
     setConfig(
@@ -101,8 +106,9 @@ export const useConfiguratorState = ({
       }),
     );
     setHydrated(true);
-    // Re-read storage only when the vehicle key changes. A year-only URL
-    // change must not replace the selection that is already on screen.
+    // A brand and model in the URL always start from defaults. Storage is
+    // only a draft for the open configurator before a vehicle is chosen.
+    // A year-only URL change must not replace the selection on screen.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStorageKey]);
 
@@ -149,12 +155,13 @@ export const useConfiguratorState = ({
       suppressSave.current = false;
       return;
     }
+    if (enteredVehicle) return;
     try {
       localStorage.setItem(activeStorageKey, JSON.stringify(config));
     } catch {
       // A full browser store must not discard the in-memory selection.
     }
-  }, [activeStorageKey, config, hydrated]);
+  }, [activeStorageKey, config, enteredVehicle, hydrated]);
 
   const updateConfig = useCallback((updates: Partial<ConfiguratorState>) => {
     setConfig((prev) => ({ ...prev, ...updates }));

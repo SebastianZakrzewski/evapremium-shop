@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { ChevronDown } from "lucide-react"
+import { placeDarkSelectMenu } from "./placeDarkSelectMenu"
 
 export type DarkSelectOption = {
   value: string
@@ -24,6 +25,7 @@ type MenuBox = {
   top: number
   left: number
   width: number
+  maxHeight: number
 }
 
 export const DarkSelect = ({
@@ -42,18 +44,38 @@ export const DarkSelect = ({
   const buttonRef = useRef<HTMLButtonElement>(null)
   const listId = useId()
   const selected = options.find((option) => option.value === value)
+  const accessibleName = selected ? `${ariaLabel}, ${selected.label}` : ariaLabel
 
   useEffect(() => {
     if (!open) return
 
     const placeMenu = () => {
-      const rect = buttonRef.current?.getBoundingClientRect()
-      if (!rect) return
-      setMenuBox({
-        top: rect.bottom + 8,
-        left: rect.left,
-        width: rect.width,
-      })
+      const button = buttonRef.current
+      if (!button) return
+      const scroller = button.closest("[data-configurator-options]")
+      if (scroller instanceof HTMLElement) {
+        const buttonRect = button.getBoundingClientRect()
+        const scrollerRect = scroller.getBoundingClientRect()
+        if (buttonRect.top < scrollerRect.top) {
+          scroller.scrollTop -= scrollerRect.top - buttonRect.top + 8
+        } else if (buttonRect.bottom > scrollerRect.bottom) {
+          scroller.scrollTop += buttonRect.bottom - scrollerRect.bottom + 8
+        }
+      }
+      const rect = button.getBoundingClientRect()
+      const limit = { top: 8, bottom: window.innerHeight - 8 }
+      setMenuBox(
+        placeDarkSelectMenu(
+          {
+            top: rect.top,
+            bottom: rect.bottom,
+            left: rect.left,
+            width: rect.width,
+          },
+          { top: limit.top, bottom: limit.bottom },
+          options.length,
+        ),
+      )
     }
 
     const closeOnOutside = (event: PointerEvent) => {
@@ -80,7 +102,7 @@ export const DarkSelect = ({
       window.removeEventListener("resize", placeMenu)
       window.removeEventListener("scroll", placeMenu, true)
     }
-  }, [open])
+  }, [open, options.length])
 
   const menu =
     open && menuBox
@@ -90,8 +112,13 @@ export const DarkSelect = ({
             role="listbox"
             aria-label={ariaLabel}
             data-dark-select-menu
-            style={{ top: menuBox.top, left: menuBox.left, width: menuBox.width }}
-            className={`fixed z-[90] max-h-60 overflow-y-auto rounded-xl border py-1 shadow-[0_16px_40px_rgba(0,0,0,0.45)] ${
+            style={{
+              top: menuBox.top,
+              left: menuBox.left,
+              width: menuBox.width,
+              maxHeight: menuBox.maxHeight,
+            }}
+            className={`fixed z-[90] overflow-y-auto rounded-xl border py-1 shadow-[0_16px_40px_rgba(0,0,0,0.45)] ${
               surface === "light"
                 ? "border-neutral-300 bg-[#FDFDFD]"
                 : "border-white/10 bg-black"
@@ -139,7 +166,7 @@ export const DarkSelect = ({
         id={id}
         type="button"
         disabled={disabled}
-        aria-label={ariaLabel}
+        aria-label={accessibleName}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listId : undefined}

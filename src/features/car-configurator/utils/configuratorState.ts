@@ -68,6 +68,29 @@ export const resolveBrandFromParam = (brandParam: string, brands: Brand[]): stri
   return formatBrandDisplayName(brandParam)
 }
 
+/** Wybory produktu kasowane przy nowej marce lub modelu. */
+export const freshVehicleConfiguration: Partial<ConfiguratorState> = {
+  modelKey: "",
+  generation: "",
+  templateId: "",
+  recordKey: "",
+  year: "",
+  gearbox: "",
+  bodyType: "",
+  bodyTypeKey: "",
+  pricingCategoryKey: "",
+  catalogVersionCode: "",
+  matType: "3d-with-rims",
+  variant: "",
+  structure: "diamonds",
+  color: "black",
+  edgeColor: "black",
+  heelPad: false,
+  selectedPodpietka: undefined,
+  podpietkaColor: undefined,
+  podpietkaMounting: undefined,
+}
+
 export const getConfigUpdatesFromUrl = ({
   previous,
   urlParams,

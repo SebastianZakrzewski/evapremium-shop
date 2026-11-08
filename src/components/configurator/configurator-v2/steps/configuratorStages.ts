@@ -2,13 +2,13 @@ import type { ConfiguratorV2SectionId, SectionReadiness } from "@/features/car-c
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
 
 export const CONFIGURATOR_STAGE_PARAM = "etap"
-export const CONFIGURATOR_STAGE_STORAGE_KEY = "configurator-v2-etap"
 
 export const CONFIGURATOR_STAGES = [
   { id: 1, name: "Samochód" },
   { id: 2, name: "Dywaniki i zestaw" },
   { id: 3, name: "Wygląd" },
   { id: 4, name: "Akcesoria" },
+  { id: 5, name: "Podsumowanie" },
 ] as const
 
 export type ConfiguratorStageId = (typeof CONFIGURATOR_STAGES)[number]["id"]
@@ -42,7 +42,7 @@ const SECTION_STAGE: Record<ConfiguratorV2SectionId | "summary", ConfiguratorSta
   color: 3,
   edgeColor: 3,
   accessories: 4,
-  summary: 4,
+  summary: 5,
 }
 
 export const stageRequirementsFromSections = (
@@ -58,10 +58,10 @@ export const stageRequirementsFromSections = (
 })
 
 export const isConfiguratorStageId = (value: number): value is ConfiguratorStageId =>
-  value === 1 || value === 2 || value === 3 || value === 4
+  CONFIGURATOR_STAGES.some((stage) => stage.id === value)
 
 export const parseEtapParam = (value: string | null | undefined): ConfiguratorStageId | null => {
-  if (!value || !/^[1-4]$/.test(value)) return null
+  if (!value || !/^[1-5]$/.test(value)) return null
   const stage = Number(value)
   return isConfiguratorStageId(stage) ? stage : null
 }
@@ -134,7 +134,7 @@ export const buildStageSnapshots = (
     let status: StageStatus = "locked"
     if (stage.id === current) status = "current"
     else if (!canOpen) status = "locked"
-    else if (stage.id < 4 && requirementsMet(stage.id, input)) status = "completed"
+    else if (stage.id < CONFIGURATOR_STAGES.length && requirementsMet(stage.id, input)) status = "completed"
     else status = "available"
     return { id: stage.id, name: stage.name, status, canOpen }
   })
@@ -152,7 +152,7 @@ export const forwardDisabledReason = (
   >,
   input: StageRequirementInput,
 ): string | null => {
-  if (stage >= 4) return null
+  if (stage >= CONFIGURATOR_STAGES.length) return null
   const next = (stage + 1) as ConfiguratorStageId
   if (canEnterStage(next, input)) return null
 

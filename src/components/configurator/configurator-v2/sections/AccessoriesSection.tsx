@@ -37,6 +37,7 @@ export const AccessoriesSection = ({
       canProceedToSummary={canProceedToSummary}
       nextLabel="Podsumowanie zamówienia"
       hideNavigation
+      surface="light"
       onProductModalOpenChange={onProductModalOpenChange}
     />
   </ConfiguratorV2SectionShell>

@@ -4,6 +4,12 @@ import { Maximize2 } from "lucide-react"
 import type { MouseEvent } from "react"
 import { ConfiguratorV2CrossfadeImage } from "./ui/ConfiguratorV2CrossfadeImage"
 import { getMatPreviewCanvasClass } from "./matPreviewCanvas"
+import { MODEL_CARD_FRAME_SIZE, previewFrameStyle } from "./preview/fitPreviewFrame"
+import {
+  CONTAINED_PREVIEW_IMAGE_CLASS,
+  FILLED_PREVIEW_IMAGE_CLASS,
+} from "./preview/productPhotoFrame"
+import { useImageNaturalSize } from "./hooks/useFittedPreviewFrame"
 import { useHorizontalSwipe } from "./hooks/useHorizontalSwipe"
 
 type ConfiguratorV2PreviewPanelProps = {
@@ -15,6 +21,8 @@ type ConfiguratorV2PreviewPanelProps = {
   onSwipeNext?: () => void
   canSwipeGallery?: boolean
   fitToWindowWidth?: boolean
+  frameImageSrc?: string | null
+  useModelCardFrame?: boolean
 }
 
 export const ConfiguratorV2PreviewPanel = ({
@@ -26,6 +34,8 @@ export const ConfiguratorV2PreviewPanel = ({
   onSwipeNext,
   canSwipeGallery = false,
   fitToWindowWidth = false,
+  frameImageSrc,
+  useModelCardFrame = false,
 }: ConfiguratorV2PreviewPanelProps) => {
   const isInteractive = !!onOpenZoom
   const canvasClass = fitToWindowWidth
@@ -33,6 +43,12 @@ export const ConfiguratorV2PreviewPanel = ({
     : usesMatPreviewCanvas
       ? getMatPreviewCanvasClass("/dywaniki/preview.webp")
       : getMatPreviewCanvasClass(imageSrc)
+
+  const measuredSize = useImageNaturalSize(frameImageSrc || imageSrc)
+  const imageSize = useModelCardFrame ? MODEL_CARD_FRAME_SIZE : measuredSize
+  const fittedStyle = previewFrameStyle(imageSize, "desktop")
+  const showsWholePhoto =
+    useModelCardFrame || Boolean(frameImageSrc && frameImageSrc !== imageSrc)
 
   const swipeHandlers = useHorizontalSwipe({
     enabled: canSwipeGallery,
@@ -52,7 +68,7 @@ export const ConfiguratorV2PreviewPanel = ({
 
   return (
     <div
-      className={`relative group h-full w-full min-h-0 flex flex-col overflow-hidden rounded-2xl bg-[#111] ${
+      className={`relative group flex h-full w-full min-h-0 items-center justify-center [container-type:size] ${
         canSwipeGallery
           ? "cursor-grab active:cursor-grabbing"
           : isInteractive
@@ -66,10 +82,23 @@ export const ConfiguratorV2PreviewPanel = ({
       onPointerCancel={swipeHandlers.onPointerCancel}
       style={swipeHandlers.dragStyle}
     >
-      <div className={`relative flex-1 min-h-0 w-full h-full overflow-hidden ${canvasClass}`}>
+      <div
+        data-preview-frame={fittedStyle ? "fitted" : "pending"}
+        className={`relative overflow-hidden rounded-2xl ${canvasClass} ${
+          fittedStyle ? "" : "h-full w-full"
+        }`}
+        style={fittedStyle}
+      >
         <ConfiguratorV2CrossfadeImage
           imageSrc={imageSrc}
           alt={alt}
+          imageClassName={
+            fittedStyle
+              ? showsWholePhoto
+                ? CONTAINED_PREVIEW_IMAGE_CLASS
+                : FILLED_PREVIEW_IMAGE_CLASS
+              : undefined
+          }
           canvasClassName={canvasClass}
           priority
         />

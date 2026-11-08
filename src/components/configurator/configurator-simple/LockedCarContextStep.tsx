@@ -15,7 +15,8 @@ import type { ConfiguratorState } from "@/features/car-configurator/utils/config
 import type { ProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import {
   bodyTypeMatchesParam,
-  resolveCatalogBrandKey,
+  brandParamToCatalogKey,
+  catalogQueryBrandKey,
   resolveModelFamiliesFromParam,
 } from "@/features/vehicle-catalog/domain/catalogKeys"
 import { useVehicleCatalog } from "@/features/vehicle-catalog/hooks/useVehicleCatalog"
@@ -67,20 +68,29 @@ export const LockedCarContextStep = ({
   surface = "dark",
 }: LockedCarContextStepProps) => {
   const light = surface === "light"
-  const provisionalBrandKey =
-    config.brandKey || productEntry.brandParam || ""
-  const { brands: catalogBrands, models, isLoading: isModelsQueryLoading } =
-    useVehicleCatalog(provisionalBrandKey, "", "", productEntry.modelParam ?? "")
+  const brandDirectory = useVehicleCatalog("", "", "")
   const brandKey = useMemo(
     () =>
-      resolveCatalogBrandKey(
+      catalogQueryBrandKey(
+        brandDirectory.brands,
         productEntry.brandParam,
         config.brandKey,
-        catalogBrands,
       ),
-    [catalogBrands, config.brandKey, productEntry.brandParam],
+    [brandDirectory.brands, config.brandKey, productEntry.brandParam],
   )
-  const catalogBrandKey = brandKey || provisionalBrandKey
+  const queryBrandKey =
+    brandKey ||
+    (brandDirectory.error
+      ? config.brandKey || brandParamToCatalogKey(productEntry.brandParam ?? "")
+      : "")
+  const { models, isLoading: isModelsQueryLoading } = useVehicleCatalog(
+    queryBrandKey,
+    "",
+    "",
+    productEntry.modelParam ?? "",
+  )
+  const catalogBrands = brandDirectory.brands
+  const brandsPending = catalogBrands.length === 0 && brandDirectory.isLoading
 
   const modelResolution = useMemo(() => {
     if (!productEntry.modelParam || models.length === 0) {
@@ -95,12 +105,12 @@ export const LockedCarContextStep = ({
     modelResolution.mode === "prefix" ? modelResolution.prefix : ""
 
   const { templates, isLoading: isTemplatesQueryLoading } = useVehicleCatalog(
-    catalogBrandKey,
+    queryBrandKey,
     templateModelFamilyKey,
     templateModelFamilyPrefix,
   )
   const isLoading = isCatalogResolving({
-    isModelsQueryLoading,
+    isModelsQueryLoading: brandsPending || isModelsQueryLoading,
     modelsCount: models.length,
     isTemplatesQueryLoading,
     templatesCount: templates.length,
@@ -152,13 +162,11 @@ export const LockedCarContextStep = ({
 
   const { previews: modelPreviews } = useMatModelPreviews({
     recordKey: config.recordKey || undefined,
-    brandKey: config.brandKey || brandKey || config.brand || undefined,
+    brandKey: queryBrandKey || undefined,
     modelKey: config.modelKey || config.model || undefined,
     bodyTypeKey: config.bodyTypeKey || config.bodyType || undefined,
     enabled: Boolean(
-      config.recordKey ||
-        config.modelKey ||
-        ((config.brandKey || brandKey || config.brand) && config.model),
+      config.recordKey || config.modelKey || (queryBrandKey && config.model),
     ),
   })
 
@@ -578,7 +586,7 @@ export const LockedCarContextStep = ({
             id="locked-car-year-select"
             value={config.year}
             placeholder="Wybierz rok"
-            ariaLabel="Wybierz rok produkcji"
+            ariaLabel="Rok produkcji"
             options={availableYears.map((year) => ({
               value: String(year),
               label: String(year),
@@ -601,7 +609,7 @@ export const LockedCarContextStep = ({
             id="locked-car-gearbox-select"
             value={config.gearbox}
             placeholder="Wybierz skrzynię biegów"
-            ariaLabel="Wybierz skrzynię biegów"
+            ariaLabel="Skrzynia biegów"
             options={GEARBOX_OPTIONS.map((option) => ({
               value: option.value,
               label: option.label,
@@ -630,7 +638,7 @@ export const LockedCarContextStep = ({
                 : ""
             }
             placeholder="Wybierz typ nadwozia"
-            ariaLabel="Wybierz typ nadwozia"
+            ariaLabel="Typ nadwozia"
             options={bodyOptions.map((option) => ({
               value: option.value,
               label: option.bodyType.displayLabel ?? option.bodyType.label,

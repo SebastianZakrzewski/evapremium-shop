@@ -12,6 +12,7 @@ type VehicleContextSectionProps = {
   productEntry: ProductEntryLock
   readiness: SectionReadiness
   onUpdate: (updates: Partial<ConfiguratorState>) => void
+  onVehicleChange?: () => void
 }
 
 const noop = () => {}
@@ -21,6 +22,7 @@ export const VehicleContextSection = ({
   productEntry,
   readiness,
   onUpdate,
+  onVehicleChange,
 }: VehicleContextSectionProps) => (
   <ConfiguratorV2SectionShell
     id="section-vehicle"
@@ -41,6 +43,7 @@ export const VehicleContextSection = ({
         config={config}
         onUpdate={onUpdate}
         onNext={noop}
+        onVehicleChange={onVehicleChange}
         hideNextButton
         surface="light"
       />

@@ -17,6 +17,43 @@ import {
 } from "@/features/car-configurator/domain/podpietkaMounting";
 import { formatPriceCurrency, formatPriceValue } from "@/lib/utils/formatPrice";
 
+type AccessoriesSurface = "dark" | "light"
+
+const accessoriesStyles = {
+  dark: {
+    heading: "text-white",
+    muted: "text-gray-400",
+    empty: "text-gray-400",
+    card: "border-white/10 bg-[#111] hover:border-white/20 hover:bg-white/5",
+    cardSelected: "border-red-600 bg-red-600/10",
+    image: "bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a]",
+    title: "text-white",
+    price: "text-white",
+    swatch: "border-white/20",
+    details: "border-white/10 hover:bg-white/5",
+    selectedBox: "bg-green-500/10 border border-green-500/20",
+    selectedLabel: "text-green-400",
+    selectedName: "text-white",
+    remove: "text-red-400 hover:text-red-300 hover:bg-red-500/10",
+  },
+  light: {
+    heading: "text-neutral-950",
+    muted: "text-neutral-600",
+    empty: "text-neutral-600",
+    card: "border-neutral-300 bg-[#FDFDFD] hover:border-neutral-500",
+    cardSelected: "border-neutral-950 bg-[#FDFDFD]",
+    image: "bg-neutral-100",
+    title: "text-neutral-950",
+    price: "text-neutral-950",
+    swatch: "border-neutral-300",
+    details: "border-neutral-300 bg-[#FDFDFD] text-neutral-950 hover:bg-neutral-100",
+    selectedBox: "bg-green-50 border border-green-200",
+    selectedLabel: "text-green-700",
+    selectedName: "text-neutral-950",
+    remove: "text-red-600 hover:text-red-700 hover:bg-red-50",
+  },
+} as const
+
 interface AccessoriesStepProps {
   config: ConfiguratorState;
   onUpdate: (updates: Partial<ConfiguratorState>) => void;
@@ -25,6 +62,7 @@ interface AccessoriesStepProps {
   canProceedToSummary?: boolean;
   nextLabel?: string;
   hideNavigation?: boolean;
+  surface?: AccessoriesSurface;
   onProductModalOpenChange?: (isOpen: boolean) => void;
 }
 
@@ -41,8 +79,10 @@ export function AccessoriesStep({
   canProceedToSummary = true,
   nextLabel = "Dalej",
   hideNavigation = false,
+  surface = "dark",
   onProductModalOpenChange,
 }: AccessoriesStepProps) {
+  const styles = accessoriesStyles[surface];
   const { accessories, isLoading } = useAccessories();
   const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -123,11 +163,11 @@ export function AccessoriesStep({
       {/* Sekcja Podpiętki */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className={`text-sm font-semibold ${hideNavigation ? "text-neutral-950" : "text-white"}`}>
+          <h3 className={`text-sm font-semibold ${styles.heading}`}>
             Podpiętki
           </h3>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400">Opcjonalne</span>
+            <span className={`text-xs ${styles.muted}`}>Opcjonalne</span>
             {!hideNavigation && (
               <Button
                 onClick={onNext}
@@ -144,10 +184,10 @@ export function AccessoriesStep({
 
         {isLoading ? (
           <div className="flex items-center justify-center py-6">
-            <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+            <Loader2 className={`w-5 h-5 animate-spin ${styles.muted}`} />
           </div>
         ) : podpietki.length === 0 ? (
-          <div className="text-center py-6 text-gray-400">
+          <div className={`text-center py-6 ${styles.empty}`}>
             <p className="text-sm">Brak dostępnych podpiętek</p>
           </div>
         ) : (
@@ -163,10 +203,7 @@ export function AccessoriesStep({
                   key={podpietka.id}
                   className={`
                     relative group cursor-pointer rounded-lg border-2 overflow-hidden transition-all min-h-[140px] active:scale-[0.98]
-                    ${isSelected 
-                      ? 'border-red-600 bg-red-600/10' 
-                      : 'border-white/10 bg-[#111] hover:border-white/20 hover:bg-white/5'
-                    }
+                    ${isSelected ? styles.cardSelected : styles.card}
                   `}
                   onClick={() => handlePodpietkaClick(podpietka)}
                   onKeyDown={(e) => {
@@ -180,7 +217,7 @@ export function AccessoriesStep({
                   aria-label={`Wybierz podpiętkę ${podpietka.name}`}
                 >
                   {/* Obraz */}
-                  <div className="relative aspect-square bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] max-h-[120px]">
+                  <div className={`relative aspect-square max-h-[120px] ${styles.image}`}>
                     {displayImage ? (
                       <Image
                         src={displayImage}
@@ -190,7 +227,7 @@ export function AccessoriesStep({
                         sizes="(max-width: 768px) 100vw, 50vw"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                      <div className={`w-full h-full flex items-center justify-center ${styles.muted}`}>
                         <span className="text-2xl">📦</span>
                       </div>
                     )}
@@ -205,21 +242,21 @@ export function AccessoriesStep({
 
                   {/* Informacje */}
                   <div className="p-2.5">
-                    <h4 className="font-medium text-white mb-0.5 text-xs">{podpietka.name}</h4>
+                    <h4 className={`font-medium mb-0.5 text-xs ${styles.title}`}>{podpietka.name}</h4>
                     {podpietka.description && (
-                      <p className="text-[10px] text-gray-400 line-clamp-2 mb-1.5">{podpietka.description}</p>
+                      <p className={`text-[10px] line-clamp-2 mb-1.5 ${styles.muted}`}>{podpietka.description}</p>
                     )}
                     
                     {/* Dostępne kolory */}
                     {podpietka.availableColors && podpietka.availableColors.length > 0 && (
                       <div className="flex items-center gap-1 mb-1.5">
-                        <span className="text-[10px] text-gray-400">Kolory:</span>
+                        <span className={`text-[10px] ${styles.muted}`}>Kolory:</span>
                         <div className="flex gap-0.5 flex-wrap">
                           {podpietka.availableColors.slice(0, 5).map((color) => (
                             <div
                               key={color}
                               className={`
-                                w-3 h-3 rounded-full border border-white/20
+                                w-3 h-3 rounded-full border ${styles.swatch}
                                 ${config.podpietkaColor === color ? 'ring-1.5 ring-red-500' : ''}
                               `}
                               style={{
@@ -234,20 +271,20 @@ export function AccessoriesStep({
                             />
                           ))}
                           {podpietka.availableColors.length > 5 && (
-                            <span className="text-[10px] text-gray-400">+{podpietka.availableColors.length - 5}</span>
+                            <span className={`text-[10px] ${styles.muted}`}>+{podpietka.availableColors.length - 5}</span>
                           )}
                         </div>
                       </div>
                     )}
 
                     <div className="flex items-center justify-between mt-1">
-                      <span className="text-sm font-bold text-white">
-                        {formatPriceValue(podpietka.price)} <span className="text-[10px] text-gray-400">PLN</span>
+                      <span className={`text-sm font-bold ${styles.price}`}>
+                        {formatPriceValue(podpietka.price)} <span className={`text-[10px] ${styles.muted}`}>PLN</span>
                       </span>
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-white/10 hover:bg-white/5 h-7 text-[10px] px-2"
+                        className={`h-7 text-[10px] px-2 ${styles.details}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           handlePodpietkaClick(podpietka);
@@ -266,20 +303,20 @@ export function AccessoriesStep({
 
         {/* Wybrana podpiętka - podsumowanie */}
         {selectedPodpietka && (
-          <div className="mt-3 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+          <div className={`mt-3 p-3 rounded-lg ${styles.selectedBox}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-green-400 mb-0.5">Wybrana podpiętka:</p>
-                <p className="text-white font-semibold text-sm">{selectedPodpietka.name}</p>
+                <p className={`text-xs font-medium mb-0.5 ${styles.selectedLabel}`}>Wybrana podpiętka:</p>
+                <p className={`font-semibold text-sm ${styles.selectedName}`}>{selectedPodpietka.name}</p>
                 {config.podpietkaColor && (
-                  <p className="text-[10px] text-gray-400 mt-0.5">Kolor: {config.podpietkaColor}</p>
+                  <p className={`text-[10px] mt-0.5 ${styles.muted}`}>Kolor: {config.podpietkaColor}</p>
                 )}
                 {config.podpietkaMounting && (
-                  <p className="text-[10px] text-gray-400 mt-0.5">
+                  <p className={`text-[10px] mt-0.5 ${styles.muted}`}>
                     {getPodpietkaMountingLabel(config.podpietkaMounting)}
                   </p>
                 )}
-                <p className="text-xs text-gray-400 mt-0.5">
+                <p className={`text-xs mt-0.5 ${styles.muted}`}>
                   {formatPriceCurrency(selectedPodpietkaTotalPrice)}
                 </p>
               </div>
@@ -287,7 +324,7 @@ export function AccessoriesStep({
                 size="sm"
                 variant="ghost"
                 onClick={handleRemovePodpietka}
-                className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-7 px-2 text-xs"
+                className={`h-7 px-2 text-xs ${styles.remove}`}
               >
                 Usuń
               </Button>
