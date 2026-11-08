@@ -5,6 +5,7 @@ import {
   mobilePreviewViewportHeight,
   previewFrameStyle,
   resolvePreviewFrame,
+  shrinkMobilePreviewFrame,
 } from "./fitPreviewFrame"
 
 describe("mobilePreviewFit", () => {
@@ -65,11 +66,11 @@ describe("mobilePreviewViewportHeight", () => {
 })
 
 describe("previewFrameStyle", () => {
-  it("fills the mobile preview width and keeps the photo ratio", () => {
-    expect(previewFrameStyle({ width: 1600, height: 1000 }, "mobile")).toEqual({
-      aspectRatio: "1600 / 1000",
+  it("fills the mobile preview width and keeps a wide photo at full width", () => {
+    expect(previewFrameStyle({ width: 2954, height: 1620 }, "mobile")).toEqual({
+      aspectRatio: "2954 / 1620",
       width: "100%",
-      height: "calc(100cqw * 1000 / 1600)",
+      height: "calc(100cqw * 1620 / 2954)",
     })
   })
 
@@ -87,19 +88,22 @@ describe("previewFrameStyle", () => {
     expect(previewFrameStyle(null, "mobile")).toBeUndefined()
   })
 
-  it("shrinks the mobile frame height on a mid-height phone", () => {
-    expect(previewFrameStyle({ width: 1600, height: 1000 }, "mobile", 740)).toEqual({
-      aspectRatio: "1600 / 1000",
+  it("keeps a wide model photo at full width instead of shortening it further", () => {
+    expect(previewFrameStyle({ width: 2954, height: 1620 }, "mobile", 740)).toEqual({
+      aspectRatio: "2954 / 1620",
       width: "100%",
-      height: "calc(0.493 * 100cqw * 1000 / 1600)",
+      height: "calc(100cqw * 1620 / 2954)",
     })
   })
 
-  it("crops the mobile frame to a short strip on a very small phone", () => {
-    expect(previewFrameStyle({ width: 1600, height: 1000 }, "mobile", 640)).toEqual({
-      aspectRatio: "1600 / 1000",
+  it("shrinks a tall photo to the mat preview height and then stops", () => {
+    expect(shrinkMobilePreviewFrame({ width: 1000, height: 1000 })).toEqual(
+      MODEL_CARD_FRAME_SIZE,
+    )
+    expect(previewFrameStyle({ width: 1000, height: 1000 }, "mobile", 640)).toEqual({
+      aspectRatio: "2954 / 1620",
       width: "100%",
-      height: "72px",
+      height: "calc(100cqw * 1620 / 2954)",
     })
   })
 })
@@ -127,15 +131,28 @@ describe("resolvePreviewFrame", () => {
     expect(MODEL_CARD_FRAME_SIZE).toEqual({ width: 2954, height: 1620 })
   })
 
-  it("frames other slides with the model photo when one exists", () => {
+  it("frames every other slide with the model photo when one exists", () => {
     expect(
       resolvePreviewFrame(
         [
           { kind: "dynamic", imageUrl: "/dywaniki/mat.webp" },
+          { kind: "product-set", imageUrl: "/products/mounts.webp" },
           { kind: "model-template", imageUrl: "/model.webp" },
         ],
-        "/model.webp",
-      ).src,
-    ).toBe("/model.webp")
+        "/products/mounts.webp",
+      ),
+    ).toEqual({ src: "/model.webp", useModelCardFrame: false })
+  })
+
+  it("keeps product photos in the mat preview frame when the model photo is missing", () => {
+    expect(
+      resolvePreviewFrame(
+        [
+          { kind: "dynamic", imageUrl: "/dywaniki/mat.webp" },
+          { kind: "product-set", imageUrl: "/products/mounts.webp" },
+        ],
+        "/products/mounts.webp",
+      ),
+    ).toEqual({ src: null, useModelCardFrame: true })
   })
 })

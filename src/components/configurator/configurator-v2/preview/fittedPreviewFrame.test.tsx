@@ -24,9 +24,9 @@ describe("preview frame fitted to the photo", () => {
     const frame = screen.getByRole("button", { name: "Powiększ: Podgląd" })
     expect(frame).toHaveAttribute("data-preview-frame", "fitted")
     expect(frame).toHaveStyle({
-      aspectRatio: "1600 / 1000",
+      aspectRatio: "2954 / 1620",
       width: "100%",
-      height: "calc(100cqw * 1000 / 1600)",
+      height: "calc(100cqw * 1620 / 2954)",
     })
     expect(frame).not.toHaveClass("h-[150px]")
     expect(screen.getByAltText("Podgląd")).toHaveClass("object-cover")
@@ -50,7 +50,7 @@ describe("preview frame fitted to the photo", () => {
     expect(screen.getByAltText("Dywanik")).toHaveClass("object-contain")
   })
 
-  it("crops the preview to a short strip on a very small phone", () => {
+  it("keeps the model frame on a short phone instead of collapsing to a strip", () => {
     viewport.height = 640
     render(
       <ConfiguratorV2MobilePreview
@@ -61,8 +61,10 @@ describe("preview frame fitted to the photo", () => {
     )
 
     const frame = screen.getByRole("button", { name: "Powiększ: Dywanik" })
-    expect(frame).toHaveStyle({ width: "100%", height: "72px" })
-    expect(screen.getByAltText("Dywanik")).toHaveClass("object-cover")
+    expect(frame).toHaveStyle({
+      width: "100%",
+      height: "calc(100cqw * 1620 / 2954)",
+    })
     viewport.height = 900
   })
 

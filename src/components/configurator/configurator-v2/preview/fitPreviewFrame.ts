@@ -61,9 +61,6 @@ export const mobilePreviewFit = (viewportHeight: number): MobilePreviewFit => {
   return { kind: "scaled", scale }
 }
 
-const isDynamicMatPreview = (src: string) =>
-  src.startsWith("/dywaniki/") && !src.includes("/previews/")
-
 /** Proporcje karty modelu, gdy marka nie ma własnego zdjęcia. */
 export const MODEL_CARD_FRAME_SIZE = { width: 2954, height: 1620 }
 
@@ -73,12 +70,12 @@ export type PreviewFrameRequest = {
 }
 
 /**
- * Okno podglądu ma wielkość zdjęcia karty modelu.
- * Bez tego zdjęcia podgląd dywanika dostaje te same proporcje.
+ * Każdy slajd dostaje to samo okno: zdjęcie podglądu modelu,
+ * a gdy go nie ma — proporcje karty modelu używane przez podgląd dywanika.
  */
 export const resolvePreviewFrame = (
   items: ReadonlyArray<{ kind: string; imageUrl: string }>,
-  activeSrc: string,
+  _activeSrc: string,
 ): PreviewFrameRequest => {
   const modelPhoto = items.find(
     (item) => item.kind === "model-template" && item.imageUrl,
@@ -86,10 +83,7 @@ export const resolvePreviewFrame = (
   if (modelPhoto?.imageUrl) {
     return { src: modelPhoto.imageUrl, useModelCardFrame: false }
   }
-  if (isDynamicMatPreview(activeSrc)) {
-    return { src: null, useModelCardFrame: true }
-  }
-  return { src: activeSrc, useModelCardFrame: false }
+  return { src: null, useModelCardFrame: true }
 }
 
 export const resolveMobilePreviewFrameSrc = (
@@ -97,37 +91,47 @@ export const resolveMobilePreviewFrameSrc = (
   activeSrc: string,
 ): string | null => resolvePreviewFrame(items, activeSrc).src
 
+/**
+ * Skraca zbyt wysokie okno krokami do wysokości podglądu dywanika.
+ * Zdjęcie modelu zostaje na całej szerokości. Niższy krok dałby czarny pas
+ * u góry i po bokach, więc tam się zatrzymuje.
+ */
+export const shrinkMobilePreviewFrame = (size: {
+  width: number
+  height: number
+}): { width: number; height: number } => {
+  const matPreviewHeight =
+    (size.width * MODEL_CARD_FRAME_SIZE.height) / MODEL_CARD_FRAME_SIZE.width
+  if (size.height <= matPreviewHeight) return size
+
+  let height = size.height
+  const step = Math.max(1, Math.round(size.width * 0.02))
+  while (height - step >= matPreviewHeight) {
+    height -= step
+  }
+  return {
+    width: MODEL_CARD_FRAME_SIZE.width,
+    height: MODEL_CARD_FRAME_SIZE.height,
+  }
+}
+
 /** Okno przyjmuje proporcje zdjęcia i mieści się w dostępnej przestrzeni. */
 export const previewFrameStyle = (
   size: { width: number; height: number } | null,
   mode: "mobile" | "desktop",
-  viewportHeight = MOBILE_PREVIEW_FULL_FROM_PX,
+  _viewportHeight = MOBILE_PREVIEW_FULL_FROM_PX,
 ): CSSProperties | undefined => {
   if (!size || size.width <= 0 || size.height <= 0) return undefined
 
   const ratio = `${size.width} / ${size.height}`
 
   if (mode === "mobile") {
-    const fit = mobilePreviewFit(viewportHeight)
-    if (fit.kind === "compact") {
-      return {
-        aspectRatio: ratio,
-        width: "100%",
-        height: `${fit.frameHeight}px`,
-      }
-    }
-    if (fit.kind === "scaled") {
-      return {
-        aspectRatio: ratio,
-        width: "100%",
-        height: `calc(${fit.scale} * 100cqw * ${size.height} / ${size.width})`,
-      }
-    }
+    const frame = shrinkMobilePreviewFrame(size)
     return {
-      aspectRatio: ratio,
+      aspectRatio: `${frame.width} / ${frame.height}`,
       width: "100%",
       // Jawna wysokość. Safari zwija height:auto + aspect-ratio w flexie do paska.
-      height: `calc(100cqw * ${size.height} / ${size.width})`,
+      height: `calc(100cqw * ${frame.height} / ${frame.width})`,
     }
   }
 
