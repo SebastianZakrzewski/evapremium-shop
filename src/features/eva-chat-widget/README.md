@@ -11,7 +11,7 @@ Widget podstawia każdy token, który jest w polach wiersza, oraz `{productId}`.
 
 `mountObject(object, host)` czyta `object.fields` (`brand`, `model`, `generation`, `bodyType`) i wstawia w `host` iframe tej samej karty. Zwrócona funkcja zdejmuje ją. Przy `object: null` nic nie wstawia. Widget jeszcze nie woła tej metody.
 
-Na stronie widać ikonę w prawym dolnym rogu. Chmurka startuje dopiero po akceptacji okna prywatności: najpierw animacja pisania, potem „Cześć! Służę pomocą.”. Ramka czatu powstaje po kliknięciu ikony. Skrypt `embed.js` nie jest wstawiany dynamicznie: w Chrome ma wtedy puste `document.currentScript` i nie rysuje okna.
+Na stronie widać ikonę w prawym dolnym rogu. Chmurka startuje dopiero po akceptacji okna prywatności: najpierw animacja pisania, potem „Cześć! Służę pomocą.”, a po chwili znika. Ramka czatu powstaje po kliknięciu ikony. Skrypt `embed.js` nie jest wstawiany dynamicznie: w Chrome ma wtedy puste `document.currentScript` i nie rysuje okna.
 
 Origin: `https://widget-xi-eight.vercel.app`.  
 Na tym originie działa `/embed.js` (`data-eva-widget="eva-shop"`). `/widget-plugin.js` z README zwraca 404.

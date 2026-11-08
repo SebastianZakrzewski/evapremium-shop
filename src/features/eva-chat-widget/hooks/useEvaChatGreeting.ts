@@ -7,9 +7,11 @@ export const EVA_CHAT_TYPING_MS = 1000
 
 export const EVA_CHAT_TYPE_INTERVAL_MS = 40
 
+export const EVA_CHAT_GREETING_HOLD_MS = 3500
+
 export const EVA_CHAT_GREETING_TEXT = `${EVA_CHAT_GREETING_TITLE}\n${EVA_CHAT_GREETING_BODY}`
 
-export type EvaChatGreetingPhase = 'idle' | 'typing' | 'writing'
+export type EvaChatGreetingPhase = 'idle' | 'typing' | 'writing' | 'done'
 
 const prefersReducedMotion = (): boolean => {
   if (typeof window.matchMedia !== 'function') {
@@ -69,6 +71,20 @@ export const useEvaChatGreeting = (enabled: boolean) => {
 
     return () => {
       window.clearTimeout(typeId)
+    }
+  }, [enabled, phase, written])
+
+  useEffect(() => {
+    if (!enabled || phase !== 'writing' || written !== EVA_CHAT_GREETING_TEXT) {
+      return undefined
+    }
+
+    const holdId = window.setTimeout(() => {
+      setPhase('done')
+    }, EVA_CHAT_GREETING_HOLD_MS)
+
+    return () => {
+      window.clearTimeout(holdId)
     }
   }, [enabled, phase, written])
 

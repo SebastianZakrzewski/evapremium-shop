@@ -11,7 +11,7 @@ import { mountEvaChatWidget } from '../lib/mountEvaChatWidget'
 const launcherChromeClassName =
   'shrink-0 overflow-visible bg-transparent p-0 drop-shadow-[0_10px_16px_rgba(0,0,0,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e10600]'
 
-const launcherButtonClassName = `relative h-32 w-32 ${launcherChromeClassName}`
+const launcherButtonClassName = `relative h-20 w-20 ${launcherChromeClassName}`
 
 const configuratorMobileQuery = '(max-width: 1023px)'
 
@@ -25,7 +25,7 @@ export const EvaChatWidget = () => {
   const showGreeting = !isOpen && !hasOpened
   const privacyAccepted = usePrivacyWindowAccepted()
   const greeting = useEvaChatGreeting(showGreeting && isReady && privacyAccepted)
-  const showBubble = showGreeting && greeting.phase !== 'idle'
+  const showBubble = showGreeting && (greeting.phase === 'typing' || greeting.phase === 'writing')
   const [greetingTitle, greetingBody = ''] = greeting.written.split('\n')
   const isGreetingComplete = greeting.written === EVA_CHAT_GREETING_TEXT
 
@@ -140,7 +140,7 @@ export const EvaChatWidget = () => {
     ? 'min-h-0 w-full flex-1 md:h-[min(640px,calc(100dvh-7rem))] md:w-[min(420px,calc(100vw-2rem))] md:flex-none'
     : 'hidden'
 
-  const openLauncherClassName = `absolute top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-10 h-16 w-16 md:static md:h-32 md:w-32 ${launcherChromeClassName}`
+  const openLauncherClassName = `absolute top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-10 h-14 w-14 md:static md:h-20 md:w-20 ${launcherChromeClassName}`
 
   if (!isReady || embeddedInProductWindow || hideLauncherOnMobileConfigurator) {
     return null

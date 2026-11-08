@@ -3,6 +3,7 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   EVA_CHAT_GREETING_DELAY_MS,
+  EVA_CHAT_GREETING_HOLD_MS,
   EVA_CHAT_GREETING_TEXT,
   EVA_CHAT_TYPE_INTERVAL_MS,
   EVA_CHAT_TYPING_MS,
@@ -106,6 +107,13 @@ describe('EvaChatWidget', () => {
 
     const launcher = screen.getByRole('button', { name: 'Otwórz czat EvaBot' })
     expect(launcher.compareDocumentPosition(greeting) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(0)
+
+    act(() => {
+      vi.advanceTimersByTime(EVA_CHAT_GREETING_HOLD_MS)
+    })
+
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Otwórz czat EvaBot' })).toBeInTheDocument()
   })
 
   it('hides the launcher when the shop page is the product window', () => {
