@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { mobilePreviewMaxHeight } from "../preview/fitPreviewFrame"
 
 export const useImageNaturalSize = (src: string) => {
   const [size, setSize] = useState<{ width: number; height: number } | null>(null)
@@ -27,14 +26,14 @@ export const useImageNaturalSize = (src: string) => {
   return size
 }
 
-export const useMobilePreviewMaxHeight = () => {
-  const [maxHeight, setMaxHeight] = useState(() =>
-    mobilePreviewMaxHeight(typeof window === "undefined" ? 900 : window.innerHeight),
+export const useMobilePreviewViewportHeight = () => {
+  const [height, setHeight] = useState(() =>
+    typeof window === "undefined" ? 900 : window.innerHeight,
   )
 
   useEffect(() => {
     const update = () => {
-      setMaxHeight(mobilePreviewMaxHeight(window.innerHeight))
+      setHeight(window.innerHeight)
     }
 
     update()
@@ -42,5 +41,5 @@ export const useMobilePreviewMaxHeight = () => {
     return () => window.removeEventListener("resize", update)
   }, [])
 
-  return maxHeight
+  return height
 }

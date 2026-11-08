@@ -328,10 +328,14 @@ describe("configurator stages", () => {
     const scroller = document.createElement("main")
     scroller.setAttribute("data-configurator-options", "")
     scroller.scrollTop = 480
+    const panel = document.createElement("div")
+    panel.setAttribute("data-configurator-panel", "")
+    panel.scrollTop = 920
     const heading = document.createElement("h2")
     heading.id = "configurator-stage-heading"
     heading.tabIndex = -1
-    scroller.appendChild(heading)
+    panel.appendChild(heading)
+    scroller.appendChild(panel)
     document.body.appendChild(scroller)
     const focus = vi.spyOn(heading, "focus").mockImplementation(() => undefined)
 
@@ -339,6 +343,7 @@ describe("configurator stages", () => {
 
     expect(focus).toHaveBeenCalledWith({ preventScroll: true })
     expect(scroller.scrollTop).toBe(0)
+    expect(panel.scrollTop).toBe(0)
     scroller.remove()
     vi.unstubAllGlobals()
   })

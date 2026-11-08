@@ -40,19 +40,30 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
   --color-card-foreground: 0 0% 100%;
   --color-popover: 0 0% 5%;
   --color-popover-foreground: 0 0% 100%;
-  --color-primary: 355 86% 43%;
-  --color-primary-foreground: 0 0% 100%;
+  --color-primary: #d00328;
+  --color-primary-foreground: #ffffff;
   --color-secondary: 0 0% 10%;
   --color-secondary-foreground: 0 0% 100%;
   --color-muted: 0 0% 10%;
   --color-muted-foreground: 0 0% 65%;
   --color-accent: 0 0% 15%;
   --color-accent-foreground: 0 0% 100%;
-  --color-destructive: 355 86% 43%;
-  --color-destructive-foreground: 0 0% 100%;
+  --color-destructive: #d00328;
+  --color-destructive-foreground: #ffffff;
   --color-border: 0 0% 15%;
   --color-input: 0 0% 15%;
-  --color-ring: 355 86% 43%;
+  --color-ring: #d00328;
+  --color-red-50: #fde2e7;
+  --color-red-100: #ffd1d9;
+  --color-red-200: #ffb9c6;
+  --color-red-300: #ff92a6;
+  --color-red-400: #ff5473;
+  --color-red-500: #fb1b44;
+  --color-red-600: #d00328;
+  --color-red-700: #ae001f;
+  --color-red-800: #8f061f;
+  --color-red-900: #741526;
+  --color-red-950: #37060f;
   --radius: 0.5rem;
 }
 
@@ -63,19 +74,19 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
   --color-card-foreground: 0 0% 100%;
   --color-popover: 0 0% 5%;
   --color-popover-foreground: 0 0% 100%;
-  --color-primary: 355 86% 43%;
-  --color-primary-foreground: 0 0% 100%;
+  --color-primary: #d00328;
+  --color-primary-foreground: #ffffff;
   --color-secondary: 0 0% 10%;
   --color-secondary-foreground: 0 0% 100%;
   --color-muted: 0 0% 10%;
   --color-muted-foreground: 0 0% 65%;
   --color-accent: 0 0% 15%;
   --color-accent-foreground: 0 0% 100%;
-  --color-destructive: 355 86% 35%;
-  --color-destructive-foreground: 0 0% 100%;
+  --color-destructive: #d00328;
+  --color-destructive-foreground: #ffffff;
   --color-border: 0 0% 15%;
   --color-input: 0 0% 15%;
-  --color-ring: 355 86% 43%;
+  --color-ring: #d00328;
 }
 
 @layer utilities {
@@ -85,7 +96,23 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
 }
 
 :root {
-  --eva-chat-accent: #dc2626;
+  --eva-chat-accent: #d00328;
+  --color-primary: #d00328;
+  --color-primary-foreground: #ffffff;
+  --color-destructive: #d00328;
+  --color-destructive-foreground: #ffffff;
+  --color-ring: #d00328;
+  --color-red-50: #fde2e7;
+  --color-red-100: #ffd1d9;
+  --color-red-200: #ffb9c6;
+  --color-red-300: #ff92a6;
+  --color-red-400: #ff5473;
+  --color-red-500: #fb1b44;
+  --color-red-600: #d00328;
+  --color-red-700: #ae001f;
+  --color-red-800: #8f061f;
+  --color-red-900: #741526;
+  --color-red-950: #37060f;
 }
 
 @layer base {
@@ -166,7 +193,7 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
 
   /* Custom Selection */
   ::selection {
-    background-color: #CC1020;
+    background-color: #d00328;
     color: #ffffff;
   }
   
@@ -286,6 +313,23 @@ html {
   
   .animate-pulse-glow {
     animation: pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .quick-search-glow {
+    left: 50%;
+    bottom: -0.85rem;
+    width: min(92%, 52rem);
+    height: 2.75rem;
+    border-radius: 9999px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(239, 68, 68, 0.95) 0%,
+      rgba(220, 38, 38, 0.55) 46%,
+      transparent 74%
+    );
+    filter: blur(16px);
+    transform: translateX(-50%);
+    animation: quickSearchGlow 3.2s ease-in-out infinite;
   }
   
   .animate-rotate-slow {
@@ -555,6 +599,17 @@ html {
   }
 }
 
+@keyframes quickSearchGlow {
+  0%, 100% {
+    opacity: 0.72;
+    transform: translateX(-50%) scaleX(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
 @keyframes rotateSlow {
   from {
     transform: rotate(0deg);
@@ -708,7 +763,7 @@ html {
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  background: #CC1020;
+  background: #d00328;
   height: 20px;
   width: 20px;
   border-radius: 50%;
@@ -717,7 +772,7 @@ html {
 }
 
 .slider::-webkit-slider-thumb:hover {
-  background: #A40D1A;
+  background: #ae001f;
   transform: scale(1.1);
 }
 
@@ -808,7 +863,7 @@ html {
 }
 
 .slider::-moz-range-thumb {
-  background: #CC1020;
+  background: #d00328;
   height: 20px;
   width: 20px;
   border-radius: 50%;
@@ -818,7 +873,7 @@ html {
 }
 
 .slider::-moz-range-thumb:hover {
-  background: #A40D1A;
+  background: #ae001f;
   transform: scale(1.1);
 }
 

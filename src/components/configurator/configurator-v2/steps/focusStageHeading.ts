@@ -53,6 +53,11 @@ export const applyStageChangeScroll = (): void => {
     if (!scroller) return
     scroller.style.overflowAnchor = "none"
     scroller.scrollTop = 0
+    const panel = scroller.querySelector("[data-configurator-panel]")
+    if (panel instanceof HTMLElement) {
+      panel.style.overflowAnchor = "none"
+      panel.scrollTop = 0
+    }
   }
   reset()
   window.requestAnimationFrame(reset)

@@ -6,7 +6,8 @@ import { ConfiguratorV2PreviewPanel } from "./ConfiguratorV2PreviewPanel"
 import { ConfiguratorV2PreviewGalleryStrip } from "./ui/ConfiguratorV2PreviewGalleryStrip"
 import type { PreviewGalleryItem } from "./preview/buildConfiguratorV2PreviewGallery"
 import { getAdjacentGalleryItemId } from "./preview/getAdjacentGalleryItemId"
-import { resolvePreviewFrame } from "./preview/fitPreviewFrame"
+import { mobilePreviewFit, resolvePreviewFrame } from "./preview/fitPreviewFrame"
+import { useMobilePreviewViewportHeight } from "./hooks/useFittedPreviewFrame"
 import { isProductPhotoFramedToWindowWidth } from "./preview/productPhotoFrame"
 import { useMobilePreviewDocked } from "./MobilePreviewDockContext"
 
@@ -38,6 +39,9 @@ export const ConfiguratorV2PreviewWithGallery = ({
   layout,
 }: ConfiguratorV2PreviewWithGalleryProps) => {
   const previewDocked = useMobilePreviewDocked()
+  const viewportHeight = useMobilePreviewViewportHeight()
+  const compactMobilePreview =
+    layout === "mobile" && mobilePreviewFit(viewportHeight).kind === "compact"
   const caption = realizationCaption?.trim() || null
   const canSwipeGallery = galleryItems.length > 1
   const activeGalleryKind = galleryItems.find(
@@ -88,7 +92,7 @@ export const ConfiguratorV2PreviewWithGallery = ({
             {caption}
           </p>
         )}
-        {showGallery && (
+        {showGallery && !compactMobilePreview && (
           <div className="mt-1">
             <ConfiguratorV2PreviewGalleryStrip
               items={galleryItems}

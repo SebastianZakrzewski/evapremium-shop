@@ -44,6 +44,27 @@ export type ConfiguratorUrlParams = {
 const isSameToken = (left: string, right: string): boolean =>
   left.trim().toLowerCase() === right.trim().toLowerCase();
 
+/** Nazwa z katalogu, np. „Bayon 1 gen”, to ten sam model co slug „bayon” w adresie. */
+const urlModelMatchesConfiguredModel = (
+  previous: ConfiguratorState,
+  modelParam: string,
+): boolean => {
+  const param = modelParam.trim().toLowerCase()
+  if (!param) return false
+  if (
+    [previous.modelKey, previous.modelFamilyKey].some(
+      (value) => value.trim().toLowerCase() === param,
+    )
+  ) {
+    return true
+  }
+  const model = previous.model.trim().toLowerCase()
+  if (model === param) return true
+  if (!model.startsWith(param)) return false
+  const boundary = model.charAt(param.length)
+  return boundary === "" || /[\s\-_(]/.test(boundary)
+}
+
 export const isLockedProductEntry = (urlParams: ConfiguratorUrlParams): boolean =>
   !!(urlParams.brandParam?.trim() && urlParams.modelParam?.trim());
 
@@ -110,7 +131,7 @@ export const getConfigUpdatesFromUrl = ({
     }
   }
 
-  if (modelParam && !isSameToken(previous.model, modelParam)) {
+  if (modelParam && !urlModelMatchesConfiguredModel(previous, modelParam)) {
     updates.model = modelParam;
     updates.year = "";
     if (!bodyTypeParam) {

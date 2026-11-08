@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
-import { Phone, ChevronRight, ShieldCheck, Droplets, Truck } from "lucide-react";
+import { ChevronRight, ShieldCheck, Droplets, Truck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   HERO_PROMO_ASPECT_CLASS,
@@ -12,8 +12,10 @@ import {
   HERO_PROMO_IMAGE_SRC,
   HERO_PROMO_MOBILE_IMAGE_SIZES,
   HERO_PROMO_MOBILE_IMAGE_SRC,
-  HERO_PROMO_MOBILE_SRCSET_AVIF,
-  HERO_PROMO_MOBILE_SRCSET_WEBP,
+  HERO_PROMO_MOBILE_NATIVE_HEIGHT,
+  HERO_PROMO_MOBILE_NATIVE_WIDTH,
+  HERO_PROMO_NATIVE_HEIGHT,
+  HERO_PROMO_NATIVE_WIDTH,
 } from "@/features/marketing/lib/heroImage";
 
 type HeroSlide = {
@@ -124,10 +126,11 @@ const HeroPromoBanner = ({
       <div className="absolute inset-0 bg-neutral-100">
         <picture>
           {slide.imageMobile ? (
-            <>
-              <source media="(max-width: 767px)" type="image/avif" srcSet={HERO_PROMO_MOBILE_SRCSET_AVIF} sizes={HERO_PROMO_MOBILE_IMAGE_SIZES} />
-              <source media="(max-width: 767px)" type="image/webp" srcSet={HERO_PROMO_MOBILE_SRCSET_WEBP} sizes={HERO_PROMO_MOBILE_IMAGE_SIZES} />
-            </>
+            <source
+              media="(max-width: 767px)"
+              srcSet={slide.imageMobile}
+              sizes={HERO_PROMO_MOBILE_IMAGE_SIZES}
+            />
           ) : null}
           {!mobileOnly ? (
             <>
@@ -143,8 +146,8 @@ const HeroPromoBanner = ({
             ref={(element) => {
               element?.setAttribute("fetchpriority", priority ? "high" : "auto")
             }}
-            width={mobileOnly ? 941 : 2168}
-            height={mobileOnly ? 1672 : 725}
+            width={mobileOnly ? HERO_PROMO_MOBILE_NATIVE_WIDTH : HERO_PROMO_NATIVE_WIDTH}
+            height={mobileOnly ? HERO_PROMO_MOBILE_NATIVE_HEIGHT : HERO_PROMO_NATIVE_HEIGHT}
           />
         </picture>
       </div>
@@ -153,6 +156,18 @@ const HeroPromoBanner = ({
       )}
       {slide.ctaOverlay ? (
         <div className="pointer-events-none absolute inset-0 z-30">
+          {slide.imageMobile ? (
+            <button
+              type="button"
+              onClick={() => onScrollToSection(slide.ctaOverlay!.scrollToSectionId)}
+              data-testid="hero-mobile-promo-cta-button"
+              className="pointer-events-auto absolute bottom-[1.5%] left-1/2 z-40 flex min-h-11 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-600 to-red-700 px-4 py-3 text-center text-sm font-bold leading-snug text-white shadow-xl shadow-red-900/30 transition-all duration-300 hover:scale-[1.02] hover:from-red-500 hover:to-red-600 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 focus-visible:ring-offset-white md:hidden"
+              aria-label={`${slide.ctaOverlay.label} — przewiń do wyboru dywaników`}
+            >
+              <span className="min-w-0 leading-tight">{slide.ctaOverlay.label}</span>
+              <ChevronRight className="size-4 shrink-0" aria-hidden="true" />
+            </button>
+          ) : null}
           {!slide.imageMobile && !slide.ctaOverlay.embeddedInImage ? (
             <button
               type="button"
@@ -174,6 +189,7 @@ const HeroPromoBanner = ({
             data-testid={ctaTestId}
             className={cn(
               "pointer-events-auto absolute inset-x-0 bottom-0 z-30 cursor-pointer border-0 bg-transparent p-0",
+              slide.imageMobile && "hidden md:block",
               slide.ctaOverlay.embeddedInImage
                 ? "top-[72%] sm:top-[74%] md:top-[76%]"
                 : slide.imageMobile
@@ -291,22 +307,11 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative overflow-visible bg-black pt-[4.5rem] pb-6 max-sm:pb-4 md:overflow-hidden md:pt-0 md:pb-4"
+      className="relative overflow-visible bg-black pb-6 max-sm:pb-4 md:overflow-hidden md:pb-4"
       role="region"
       aria-roledescription={isMobileHero || !HERO_HAS_CAROUSEL_NAV ? undefined : "carousel"}
       aria-label="Sekcja promocyjna - dywaniki samochodowe"
     >
-      {/* Phone number - Mobile only */}
-      <div className="md:hidden absolute top-3 left-0 right-0 z-30 px-3">
-        <a 
-          href="tel:+48793993430"
-          className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-red-600 to-red-700 px-3 py-2 text-sm font-semibold text-white shadow-lg shadow-red-900/50 transition-all duration-300 hover:from-red-500 hover:to-red-600 active:scale-95"
-        >
-          <Phone className="size-4 shrink-0" aria-hidden="true" />
-          <span>+48 793 993 430</span>
-        </a>
-      </div>
-
       {/* Carousel — wysokość = proporcja oryginalnej rozdzielczości banera */}
       <div className="container relative mx-auto px-2 py-3 sm:px-4 sm:py-4 md:py-4">
         {!HERO_HAS_CAROUSEL_NAV ? (

@@ -7,13 +7,20 @@ import {
   CONFIGURATOR_V2_MOBILE_PREVIEW_HEIGHT,
 } from "./configuratorV2MobileLayout"
 import { getMatPreviewCanvasClass } from "./matPreviewCanvas"
-import { MODEL_CARD_FRAME_SIZE, previewFrameStyle } from "./preview/fitPreviewFrame"
+import {
+  MODEL_CARD_FRAME_SIZE,
+  mobilePreviewFit,
+  previewFrameStyle,
+} from "./preview/fitPreviewFrame"
 import {
   CONTAINED_PREVIEW_IMAGE_CLASS,
   FILLED_PREVIEW_IMAGE_CLASS,
 } from "./preview/productPhotoFrame"
 import { ConfiguratorV2CrossfadeImage } from "./ui/ConfiguratorV2CrossfadeImage"
-import { useImageNaturalSize } from "./hooks/useFittedPreviewFrame"
+import {
+  useImageNaturalSize,
+  useMobilePreviewViewportHeight,
+} from "./hooks/useFittedPreviewFrame"
 import { useHorizontalSwipe } from "./hooks/useHorizontalSwipe"
 
 type ConfiguratorV2MobilePreviewProps = {
@@ -54,9 +61,12 @@ export const ConfiguratorV2MobilePreview = ({
   const frameSource = frameImageSrc || imageSrc
   const measuredSize = useImageNaturalSize(frameSource)
   const imageSize = useModelCardFrame ? MODEL_CARD_FRAME_SIZE : measuredSize
-  const fittedStyle = previewFrameStyle(imageSize, "mobile")
+  const viewportHeight = useMobilePreviewViewportHeight()
+  const previewFit = mobilePreviewFit(viewportHeight)
+  const fittedStyle = previewFrameStyle(imageSize, "mobile", viewportHeight)
   const showsWholePhoto =
-    useModelCardFrame || Boolean(frameImageSrc && frameImageSrc !== imageSrc)
+    previewFit.kind === "full" &&
+    (useModelCardFrame || Boolean(frameImageSrc && frameImageSrc !== imageSrc))
 
   const swipeHandlers = useHorizontalSwipe({
     enabled: canSwipeGallery,

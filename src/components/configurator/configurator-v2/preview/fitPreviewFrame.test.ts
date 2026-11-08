@@ -1,18 +1,30 @@
 import { describe, expect, it } from "vitest"
 import {
   MODEL_CARD_FRAME_SIZE,
-  mobilePreviewMaxHeight,
+  mobilePreviewFit,
   previewFrameStyle,
   resolvePreviewFrame,
 } from "./fitPreviewFrame"
 
-describe("mobilePreviewMaxHeight", () => {
-  it("keeps the tall cap on a desktop-height window", () => {
-    expect(mobilePreviewMaxHeight(900)).toBe(150)
+describe("mobilePreviewFit", () => {
+  it("keeps the full photo on an iPhone 16 Pro height", () => {
+    expect(mobilePreviewFit(874)).toEqual({ kind: "full", scale: 1 })
   })
 
-  it("shrinks the preview on a short window so the first field stays below the stages", () => {
-    expect(mobilePreviewMaxHeight(520)).toBe(120)
+  it("keeps the full photo from 840px upward", () => {
+    expect(mobilePreviewFit(844)).toEqual({ kind: "full", scale: 1 })
+    expect(mobilePreviewFit(800).kind).toBe("scaled")
+  })
+
+  it("shrinks the frame height as the phone gets shorter", () => {
+    expect(mobilePreviewFit(800)).toEqual({ kind: "scaled", scale: 0.797 })
+    expect(mobilePreviewFit(740)).toEqual({ kind: "scaled", scale: 0.493 })
+    expect(mobilePreviewFit(700)).toEqual({ kind: "scaled", scale: 0.29 })
+  })
+
+  it("uses a short cropped strip on the smallest phones", () => {
+    expect(mobilePreviewFit(667)).toEqual({ kind: "compact", scale: 1, frameHeight: 96 })
+    expect(mobilePreviewFit(640)).toEqual({ kind: "compact", scale: 1, frameHeight: 72 })
   })
 })
 
@@ -37,6 +49,22 @@ describe("previewFrameStyle", () => {
 
   it("keeps the previous window until the photo size is known", () => {
     expect(previewFrameStyle(null, "mobile")).toBeUndefined()
+  })
+
+  it("shrinks the mobile frame height on a mid-height phone", () => {
+    expect(previewFrameStyle({ width: 1600, height: 1000 }, "mobile", 740)).toEqual({
+      aspectRatio: "1600 / 1000",
+      width: "100%",
+      height: "calc(0.493 * 100cqw * 1000 / 1600)",
+    })
+  })
+
+  it("crops the mobile frame to a short strip on a very small phone", () => {
+    expect(previewFrameStyle({ width: 1600, height: 1000 }, "mobile", 640)).toEqual({
+      aspectRatio: "1600 / 1000",
+      width: "100%",
+      height: "72px",
+    })
   })
 })
 

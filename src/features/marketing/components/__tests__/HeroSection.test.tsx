@@ -66,14 +66,19 @@ describe("HeroSection", () => {
     expect(screen.queryByTestId("hero-mobile-static")).not.toBeInTheDocument()
     expect(screen.queryByTestId("hero-video-1")).not.toBeInTheDocument()
     expect(screen.getByTestId("hero-promo-cta-hit-area")).toBeInTheDocument()
+    expect(screen.queryByRole("link", { name: "+48 793 993 430" })).not.toBeInTheDocument()
     const image = screen.getByAltText(
       "Jesienna promocja dywaników samochodowych EVA Premium do -30%"
     )
     expect(image).toHaveAttribute("src", "/jesien_hero.png?v=2168")
     expect(document.querySelector('source[media="(max-width: 767px)"]')).toHaveAttribute(
       "srcset",
-      expect.stringContaining("jesien-mobile-768.avif"),
+      "/zimowa_mobile_hero.png?v=577",
     )
+    expect(screen.getByTestId("hero-mobile-promo-cta-button")).toHaveTextContent(
+      "Skonfiguruj dywaniki do swojego auta",
+    )
+    expect(screen.getByTestId("hero-mobile-promo-cta-button")).toHaveClass("md:hidden")
   })
 
   it("keeps the same promo markup on a mobile viewport", () => {
@@ -99,6 +104,10 @@ describe("HeroSection", () => {
     expect(scrollIntoView).toHaveBeenCalledWith(
       expect.objectContaining({ behavior: "smooth", block: "start" })
     )
+
+    fireEvent.click(screen.getByTestId("hero-mobile-promo-cta-button"))
+
+    expect(scrollIntoView).toHaveBeenCalledTimes(2)
 
     target.remove()
   })

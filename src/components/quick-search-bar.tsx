@@ -69,7 +69,7 @@ export default function QuickSearchBar() {
   return (
     <section
       id="quick-search"
-      className="w-full bg-black py-7 md:py-9 relative"
+      className="w-full bg-black pt-7 pb-14 md:pt-9 md:pb-16 relative"
       role="region"
       aria-label="Wyszukiwarka dywaników - wybierz markę i model samochodu"
     >
@@ -81,7 +81,9 @@ export default function QuickSearchBar() {
           description="Wybierz markę i model, a my dopasujemy idealne dywaniki."
         />
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl md:rounded-3xl p-3 md:p-4 shadow-xl shadow-red-900/30">
+        <div className="relative">
+          <div className="quick-search-glow pointer-events-none absolute" aria-hidden="true" />
+          <div className="relative z-10 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl md:rounded-3xl p-3 md:p-4">
           <div className="flex flex-col md:flex-row gap-3 md:gap-2">
             <div className="flex-1 relative group">
               <div className="absolute inset-y-0 left-3 md:left-4 flex items-center pointer-events-none">
@@ -147,12 +149,13 @@ export default function QuickSearchBar() {
               type="button"
               onClick={handleSearch}
               disabled={!selectedBrand}
-              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold uppercase tracking-wide px-6 md:px-8 py-3.5 md:py-4 rounded-full shadow-xl shadow-red-900/30 transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 text-sm md:text-base w-full md:w-auto md:min-w-[160px] min-h-[44px]"
+              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold uppercase tracking-wide px-6 md:px-8 py-3.5 md:py-4 rounded-full shadow-md shadow-red-950/40 transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 text-sm md:text-base w-full md:w-auto md:min-w-[160px] min-h-[44px]"
               aria-label="Szukaj dywaników dla wybranego samochodu"
             >
               <Search className="w-4 h-4 md:w-5 md:h-5" />
               <span>Szukaj</span>
             </button>
+          </div>
           </div>
         </div>
 

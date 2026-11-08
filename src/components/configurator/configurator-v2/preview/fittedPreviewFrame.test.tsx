@@ -5,12 +5,14 @@ import { ConfiguratorV2MobilePreview } from "../ConfiguratorV2MobilePreview"
 import { ConfiguratorV2PreviewPanel } from "../ConfiguratorV2PreviewPanel"
 import { MODEL_CARD_FRAME_SIZE } from "./fitPreviewFrame"
 
+const viewport = vi.hoisted(() => ({ height: 900 }))
+
 vi.mock("../hooks/useFittedPreviewFrame", () => ({
   useImageNaturalSize: (src: string) =>
     src === "/model.webp"
       ? { width: 2954, height: 1620 }
       : { width: 1600, height: 1000 },
-  useMobilePreviewMaxHeight: () => 360,
+  useMobilePreviewViewportHeight: () => viewport.height,
 }))
 
 describe("preview frame fitted to the photo", () => {
@@ -46,6 +48,22 @@ describe("preview frame fitted to the photo", () => {
       height: "calc(100cqw * 1620 / 2954)",
     })
     expect(screen.getByAltText("Dywanik")).toHaveClass("object-contain")
+  })
+
+  it("crops the preview to a short strip on a very small phone", () => {
+    viewport.height = 640
+    render(
+      <ConfiguratorV2MobilePreview
+        imageSrc="/dywaniki/mat.webp"
+        frameImageSrc="/model.webp"
+        alt="Dywanik"
+      />,
+    )
+
+    const frame = screen.getByRole("button", { name: "Powiększ: Dywanik" })
+    expect(frame).toHaveStyle({ width: "100%", height: "72px" })
+    expect(screen.getByAltText("Dywanik")).toHaveClass("object-cover")
+    viewport.height = 900
   })
 
   it("keeps the mat preview at the model-card size when the brand has no photo", () => {

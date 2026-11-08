@@ -1,19 +1,36 @@
 import type { CSSProperties } from "react"
 
-export const MOBILE_PREVIEW_MAX_HEIGHT_PX = 150
-export const MOBILE_PREVIEW_MAX_HEIGHT_RATIO = 0.34
+/** iPhone 14 / 16 / 16 Pro zostawiają zdjęcie w pełnej wysokości. */
+export const MOBILE_PREVIEW_FULL_FROM_PX = 840
 
-/** Miejsce na pasek, etapy, pierwsze pole i dolny pasek, żeby rocznik nie wchodził pod nawigację etapów. */
-const MOBILE_PREVIEW_RESERVED_PX = 420
+/** Poniżej tej wysokości podgląd jest niskim, ściętym paskiem. */
+export const MOBILE_PREVIEW_COMPACT_BELOW_PX = 700
 
-export const mobilePreviewMaxHeight = (viewportHeight: number): number => {
-  const byRatio = Math.round(viewportHeight * MOBILE_PREVIEW_MAX_HEIGHT_RATIO)
-  const roomForFirstField = viewportHeight - MOBILE_PREVIEW_RESERVED_PX
-  return Math.min(
-    MOBILE_PREVIEW_MAX_HEIGHT_PX,
-    Math.max(120, byRatio),
-    Math.max(120, roomForFirstField),
-  )
+export type MobilePreviewFit =
+  | { kind: "full"; scale: 1 }
+  | { kind: "scaled"; scale: number }
+  | { kind: "compact"; scale: number; frameHeight: number }
+
+/**
+ * Pełna ramka na wysokich telefonach.
+ * Między 700 a 840 px wysokość spada liniowo do 29%, szerokość zostaje 100%.
+ * Niżej zostaje ścięty pasek, który nadal otwiera powiększenie.
+ */
+export const mobilePreviewFit = (viewportHeight: number): MobilePreviewFit => {
+  if (viewportHeight >= MOBILE_PREVIEW_FULL_FROM_PX) {
+    return { kind: "full", scale: 1 }
+  }
+  if (viewportHeight < MOBILE_PREVIEW_COMPACT_BELOW_PX) {
+    return {
+      kind: "compact",
+      scale: 1,
+      frameHeight: viewportHeight <= 650 ? 72 : 96,
+    }
+  }
+  const span = MOBILE_PREVIEW_FULL_FROM_PX - MOBILE_PREVIEW_COMPACT_BELOW_PX
+  const progress = (viewportHeight - MOBILE_PREVIEW_COMPACT_BELOW_PX) / span
+  const scale = Math.round((0.29 + 0.71 * progress) * 1000) / 1000
+  return { kind: "scaled", scale }
 }
 
 const isDynamicMatPreview = (src: string) =>
@@ -56,12 +73,28 @@ export const resolveMobilePreviewFrameSrc = (
 export const previewFrameStyle = (
   size: { width: number; height: number } | null,
   mode: "mobile" | "desktop",
+  viewportHeight = MOBILE_PREVIEW_FULL_FROM_PX,
 ): CSSProperties | undefined => {
   if (!size || size.width <= 0 || size.height <= 0) return undefined
 
   const ratio = `${size.width} / ${size.height}`
 
   if (mode === "mobile") {
+    const fit = mobilePreviewFit(viewportHeight)
+    if (fit.kind === "compact") {
+      return {
+        aspectRatio: ratio,
+        width: "100%",
+        height: `${fit.frameHeight}px`,
+      }
+    }
+    if (fit.kind === "scaled") {
+      return {
+        aspectRatio: ratio,
+        width: "100%",
+        height: `calc(${fit.scale} * 100cqw * ${size.height} / ${size.width})`,
+      }
+    }
     return {
       aspectRatio: ratio,
       width: "100%",

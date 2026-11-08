@@ -121,6 +121,24 @@ describe("getConfigUpdatesFromUrl", () => {
     expect(updates.year).toBeUndefined();
   });
 
+  it("keeps the selected year when only the stage changes and the model name is longer than the URL slug", () => {
+    const updates = getConfigUpdatesFromUrl({
+      previous: {
+        ...baseConfig,
+        brand: "Hyundai",
+        model: "Bayon 1 gen",
+        year: "2024",
+        bodyType: "SUV",
+      },
+      urlParams: { brandParam: "hyundai", modelParam: "bayon" },
+      brands: [],
+    });
+
+    expect(updates.year).toBeUndefined();
+    expect(updates.model).toBeUndefined();
+    expect(updates.bodyType).toBeUndefined();
+  });
+
   it("keeps a selected year when the URL still contains year", () => {
     const updates = getConfigUpdatesFromUrl({
       previous: { ...baseConfig, brand: "Hyundai", model: "Tucson", year: "2023" },

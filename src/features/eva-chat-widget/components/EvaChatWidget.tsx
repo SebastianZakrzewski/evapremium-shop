@@ -9,25 +9,9 @@ import { usePrivacyWindowAccepted } from '../hooks/usePrivacyWindowAccepted'
 import { mountEvaChatWidget } from '../lib/mountEvaChatWidget'
 
 const launcherChromeClassName =
-  'shrink-0 overflow-hidden rounded-full border-2 border-[#e10600] bg-black p-0 shadow-[0_0_24px_rgba(225,6,0,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e10600]'
+  'shrink-0 overflow-visible bg-transparent p-0 drop-shadow-[0_10px_16px_rgba(0,0,0,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e10600]'
 
-const launcherButtonClassName = `relative h-16 w-16 ${launcherChromeClassName}`
-
-const launcherIconStyle = {
-  width: '64px',
-  height: '64px',
-  maxWidth: '64px',
-  minWidth: '64px',
-  objectFit: 'cover',
-} as const
-
-const openLauncherIconStyle = {
-  width: '100%',
-  height: '100%',
-  maxWidth: 'none',
-  minWidth: '0',
-  objectFit: 'cover',
-} as const
+const launcherButtonClassName = `relative h-32 w-32 ${launcherChromeClassName}`
 
 const configuratorMobileQuery = '(max-width: 1023px)'
 
@@ -156,7 +140,7 @@ export const EvaChatWidget = () => {
     ? 'min-h-0 w-full flex-1 md:h-[min(640px,calc(100dvh-7rem))] md:w-[min(420px,calc(100vw-2rem))] md:flex-none'
     : 'hidden'
 
-  const openLauncherClassName = `absolute top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-10 h-11 w-11 md:static md:h-16 md:w-16 ${launcherChromeClassName}`
+  const openLauncherClassName = `absolute top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-10 h-16 w-16 md:static md:h-32 md:w-32 ${launcherChromeClassName}`
 
   if (!isReady || embeddedInProductWindow || hideLauncherOnMobileConfigurator) {
     return null
@@ -208,10 +192,9 @@ export const EvaChatWidget = () => {
         <img
           src={EVA_CHAT_ICON_SRC}
           alt=""
-          width={64}
-          height={64}
-          className="pointer-events-none block h-full w-full max-w-none object-cover"
-          style={isOpen ? openLauncherIconStyle : launcherIconStyle}
+          width={1024}
+          height={1024}
+          className="pointer-events-none block h-full w-full object-contain"
         />
       </button>
     </div>,
