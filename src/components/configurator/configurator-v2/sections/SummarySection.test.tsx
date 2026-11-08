@@ -75,7 +75,7 @@ describe("SummarySection", () => {
     const grid = screen.getByTestId("summary-grid")
     expect(grid).toHaveClass("min-w-0", "grid-cols-[minmax(0,1fr)]")
     expect(screen.getByTestId("summary-config-card")).toHaveClass("min-w-0", "max-w-full")
-    const totalPrice = screen.getByText("449,00 zł", { selector: ".text-2xl" })
+    const totalPrice = screen.getByText("449,00 zł", { selector: ".text-xl" })
     expect(totalPrice.className).toContain("text-green-600")
     expect(screen.getByRole("button", { name: /Przejdź do koszyka/i })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Wróć do edycji" })).toBeInTheDocument()

@@ -75,7 +75,7 @@ export const ConfiguratorV2PreviewGalleryStrip = ({
   if (items.length === 0 && !showEmptyInCarSlot) return null
 
   const isMobile = variant === "mobile"
-  const thumbClassName = isMobile ? "h-11 w-[4.5rem]" : "h-[3.7rem] w-[6.15rem]"
+  const thumbClassName = isMobile ? "h-9 w-14" : "h-[3.7rem] w-[6.15rem]"
   const hasMultipleItems = items.length > 1
 
   return (

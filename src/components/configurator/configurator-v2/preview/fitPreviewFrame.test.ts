@@ -8,11 +8,11 @@ import {
 
 describe("mobilePreviewMaxHeight", () => {
   it("keeps the tall cap on a desktop-height window", () => {
-    expect(mobilePreviewMaxHeight(900)).toBe(360)
+    expect(mobilePreviewMaxHeight(900)).toBe(150)
   })
 
   it("shrinks the preview on a short window so the first field stays below the stages", () => {
-    expect(mobilePreviewMaxHeight(601)).toBe(181)
+    expect(mobilePreviewMaxHeight(520)).toBe(120)
   })
 })
 

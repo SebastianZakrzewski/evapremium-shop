@@ -25,7 +25,7 @@ describe("preview frame fitted to the photo", () => {
       aspectRatio: "1600 / 1000",
       width: "min(100%, calc(360px * 1600 / 1000))",
     })
-    expect(frame).not.toHaveClass("h-[180px]")
+    expect(frame).not.toHaveClass("h-[150px]")
     expect(screen.getByAltText("Podgląd")).toHaveClass("object-cover")
   })
 

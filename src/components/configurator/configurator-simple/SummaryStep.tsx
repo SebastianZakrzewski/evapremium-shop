@@ -289,16 +289,16 @@ export function SummaryStep({
             </div>
 
             <div className={styles.divider}>
-              <div className="flex justify-between items-end gap-3 mb-1">
-                <span className={`font-medium text-sm md:text-base ${styles.muted}`}>Do zapłaty</span>
-                <div className="flex flex-col items-end gap-0.5 min-w-0">
-                  <div className="flex items-baseline gap-2 flex-wrap justify-end">
+              <div className="mb-1 flex min-w-0 items-end justify-between gap-2">
+                <span className={`shrink-0 font-medium text-sm md:text-base ${styles.muted}`}>Do zapłaty</span>
+                <div className="flex min-w-0 flex-col items-end gap-0.5">
+                  <div className="flex min-w-0 flex-col items-end">
                     {priceBreakdown.discount > 0 && (
-                      <span className={`text-sm md:text-base line-through font-medium ${styles.muted}`}>
+                      <span className={`text-sm font-medium line-through ${styles.muted}`}>
                         {formatPricePln(priceBreakdown.basePrice + accessoryPrice)}
                       </span>
                     )}
-                    <span className={`text-2xl md:text-3xl font-bold tracking-tight tabular-nums ${styles.total}`}>
+                    <span className={`text-xl font-bold tracking-tight tabular-nums md:text-3xl ${styles.total}`}>
                       {formatPricePln(totalWithAccessories)}
                     </span>
                   </div>
@@ -488,14 +488,14 @@ export function SummaryStep({
         <Button
           onClick={onPrevious}
           variant="outline"
-          className={styles.back}
+          className={`${styles.back} min-w-0 basis-0 whitespace-normal`}
         >
           Wróć do edycji
         </Button>
         <Button
           onClick={onAddToCart}
           disabled={isAddingToCart}
-          className={styles.cart}
+          className={`${styles.cart} min-w-0 basis-0 whitespace-normal`}
         >
           {isAddingToCart ? (
             <div className="flex items-center justify-center gap-1.5">

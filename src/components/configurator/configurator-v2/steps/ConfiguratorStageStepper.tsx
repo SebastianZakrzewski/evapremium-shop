@@ -12,17 +12,21 @@ type ConfiguratorStageStepperProps = {
 
 const stageButtonClass = (stage: StageSnapshot): string => {
   const base =
-    "flex h-11 w-full items-center justify-center gap-1.5 rounded-full border px-2 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+    "flex h-8 max-w-full min-w-0 items-center justify-center gap-1 overflow-hidden rounded-full border text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+  const width =
+    stage.status === "current"
+      ? "w-max px-2.5 lg:w-full"
+      : "w-full px-0 lg:px-1.5"
   if (stage.status === "current") {
-    return `${base} border-red-600 bg-red-600 text-white`
+    return `${base} ${width} border-red-600 bg-red-600 text-white`
   }
   if (stage.status === "completed") {
-    return `${base} border-red-600 bg-[#FDFDFD] text-red-600`
+    return `${base} ${width} border-red-600 bg-[#FDFDFD] text-red-600`
   }
   if (stage.status === "available") {
-    return `${base} border-red-600 bg-[#FDFDFD] text-red-600`
+    return `${base} ${width} border-red-600 bg-[#FDFDFD] text-red-600`
   }
-  return `${base} cursor-not-allowed border-red-200 bg-[#FDFDFD] text-red-300`
+  return `${base} ${width} cursor-not-allowed border-red-200 bg-[#FDFDFD] text-red-300`
 }
 
 export const ConfiguratorStageStepper = ({
@@ -30,12 +34,19 @@ export const ConfiguratorStageStepper = ({
   onOpen,
 }: ConfiguratorStageStepperProps) => (
   <nav aria-label="Etapy konfiguracji" className="bg-[#FDFDFD] text-neutral-950">
-    <ol className="flex items-stretch gap-1">
+    <ol className="flex min-w-0 items-center gap-2">
       {stages.map((stage) => {
         const statusLabel = stageStatusLabel(stage.status)
         const isCurrent = stage.status === "current"
         return (
-          <li key={stage.id} className={isCurrent ? "min-w-0 flex-1" : "w-11 shrink-0 lg:min-w-0 lg:flex-1"}>
+          <li
+            key={stage.id}
+            className={
+              isCurrent
+                ? "min-w-0 max-w-[calc(100%-10rem)] shrink overflow-hidden lg:max-w-none lg:flex-1"
+                : "w-8 shrink-0 overflow-hidden lg:w-auto lg:min-w-0 lg:flex-1"
+            }
+          >
             <button
               type="button"
               className={stageButtonClass(stage)}
@@ -48,7 +59,7 @@ export const ConfiguratorStageStepper = ({
               }}
             >
               <span
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${
+                className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${
                   isCurrent
                     ? "bg-white text-red-600"
                     : "bg-red-50 text-current"
@@ -58,7 +69,7 @@ export const ConfiguratorStageStepper = ({
                 {stage.id}
               </span>
               <span
-                className={`min-w-0 truncate text-[12px] font-medium leading-none ${
+                className={`min-w-0 truncate text-[11px] font-medium leading-none ${
                   isCurrent ? "" : "hidden lg:block"
                 }`}
               >

@@ -30,12 +30,15 @@ type ConfiguratorV2StickyBarProps = {
 }
 
 const forwardButtonClassName =
-  "inline-flex min-h-11 min-w-11 flex-1 items-center justify-center rounded-full bg-red-600 px-4 text-[13px] font-medium text-white transition-colors hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40 lg:flex-none"
+  "inline-flex min-h-9 min-w-9 flex-1 items-center justify-center rounded-full bg-red-600 px-4 text-[13px] font-medium text-white transition-colors hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40 lg:flex-none"
 
 const headerForwardButtonClassName =
   "inline-flex h-12 min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-red-600 px-6 text-[15px] font-semibold text-white shadow-lg shadow-black/40 transition-colors hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-70"
 
 const backButtonClassName =
+  "inline-flex min-h-9 min-w-9 flex-1 items-center justify-center rounded-full border border-white/15 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:bg-white/10 lg:flex-none"
+
+const headerBackButtonClassName =
   "inline-flex min-h-11 min-w-11 flex-1 items-center justify-center rounded-full border border-white/15 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:bg-white/10 lg:flex-none"
 
 export const ConfiguratorV2StickyBar = ({
@@ -104,7 +107,7 @@ export const ConfiguratorV2StickyBar = ({
       {hasPrice ? (
         <>
           <span className="flex items-center gap-1.5">
-            <span className="text-lg font-medium tabular-nums tracking-tight text-green-400 lg:text-xl">
+            <span className="text-base font-medium tabular-nums tracking-tight text-green-400 lg:text-xl">
               {formatPricePln(totalWithAccessories)}
             </span>
             {onPriceClick && (
@@ -133,7 +136,11 @@ export const ConfiguratorV2StickyBar = ({
   const navigation = (
     <div className={`flex min-w-0 items-center gap-2 ${isHeader ? "" : "w-full"}`}>
       {showBack && (
-        <button type="button" onClick={onBack} className={backButtonClassName}>
+        <button
+          type="button"
+          onClick={onBack}
+          className={isHeader ? headerBackButtonClassName : backButtonClassName}
+        >
           Wstecz
         </button>
       )}
@@ -189,14 +196,17 @@ export const ConfiguratorV2StickyBar = ({
       className="relative w-full border-t border-white/[0.08] bg-black/80 backdrop-blur-2xl"
       data-variant={variant}
     >
-      <div className="flex flex-col gap-1 px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] lg:px-6">
-        {priceBlock}
+      <div className="flex flex-col gap-1 px-3 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] lg:px-6">
+        <div className="flex min-w-0 items-center gap-3">
+          {hasPrice && <div className="shrink-0">{priceBlock}</div>}
+          <div className="min-w-0 flex-1">{progress}</div>
+        </div>
+        {!hasPrice && !reason && priceBlock}
         {reason && (
-          <p id={reasonId} className="text-[12px] leading-snug text-white/80">
+          <p id={reasonId} className="text-[13px] font-medium leading-tight text-white/90">
             {reason}
           </p>
         )}
-        {progress}
         {(showBack || showForward) && navigation}
       </div>
     </div>

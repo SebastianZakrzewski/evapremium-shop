@@ -1,6 +1,6 @@
 /** Wysokość przyklejonej sceny podglądu na mobile */
 export const CONFIGURATOR_V2_MOBILE_PREVIEW_HEIGHT =
-  "h-[180px] min-h-[180px] max-h-[180px]"
+  "h-[150px] min-h-[150px] max-h-[150px]"
 
 /** Stała wysokość paska miniaturek pod hero na mobile */
 export const CONFIGURATOR_V2_MOBILE_GALLERY_STRIP_HEIGHT = "h-[64px]"

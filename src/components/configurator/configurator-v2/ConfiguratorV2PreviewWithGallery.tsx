@@ -89,7 +89,7 @@ export const ConfiguratorV2PreviewWithGallery = ({
           </p>
         )}
         {showGallery && (
-          <div className="mt-1.5">
+          <div className="mt-1">
             <ConfiguratorV2PreviewGalleryStrip
               items={galleryItems}
               activeId={activeGalleryId}

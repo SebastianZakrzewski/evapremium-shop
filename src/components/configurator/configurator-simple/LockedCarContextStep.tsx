@@ -492,19 +492,22 @@ export const LockedCarContextStep = ({
   })()
 
   return (
-    <div className="space-y-5">
-      <p className="text-sm text-gray-400 leading-relaxed">
-        Konfigurujesz dywaniki dla wybranego modelu. Uzupełnij rok produkcji i typ
-        nadwozia, aby dopasować szablon.
-      </p>
-
+    <div>
       <div
         className={
           light
-            ? "space-y-3 rounded-2xl border border-neutral-300 bg-[#FDFDFD] p-4"
-            : "bg-[#1c1c1e] rounded-2xl p-4 space-y-3"
+            ? "space-y-2 rounded-2xl border border-neutral-300 bg-[#FDFDFD] p-3"
+            : "space-y-2 rounded-2xl bg-[#1c1c1e] p-3"
         }
       >
+        <p
+          className={`text-[13px] leading-snug ${
+            light ? "text-neutral-600" : "text-gray-400"
+          }`}
+        >
+          Konfigurujesz dywaniki dla wybranego modelu. Uzupełnij rok produkcji i typ
+          nadwozia, aby dopasować szablon.
+        </p>
         <div className="flex items-start gap-3">
           <div className="relative w-12 h-12 bg-black/40 rounded-xl overflow-hidden flex-shrink-0">
             {brandThumbnailSrc ? (

@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react"
 
-export const MOBILE_PREVIEW_MAX_HEIGHT_PX = 360
-export const MOBILE_PREVIEW_MAX_HEIGHT_RATIO = 0.46
+export const MOBILE_PREVIEW_MAX_HEIGHT_PX = 150
+export const MOBILE_PREVIEW_MAX_HEIGHT_RATIO = 0.34
 
 /** Miejsce na pasek, etapy, pierwsze pole i dolny pasek, żeby rocznik nie wchodził pod nawigację etapów. */
 const MOBILE_PREVIEW_RESERVED_PX = 420

@@ -53,9 +53,7 @@ describe("ConfiguratorV2StickyBar", () => {
       />,
     )
 
-    expect(
-      screen.getByText("Wybierz wariant aby zobaczyć cenę"),
-    ).toBeInTheDocument()
+    expect(screen.queryByText("Wybierz wariant aby zobaczyć cenę")).not.toBeInTheDocument()
     const forward = screen.getByRole("button", { name: "Dalej" })
     expect(forward).toBeDisabled()
     expect(forward).toHaveAttribute("aria-describedby", "configurator-forward-hint-fixed")
