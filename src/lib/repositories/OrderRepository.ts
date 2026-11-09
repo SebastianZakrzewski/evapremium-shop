@@ -2,6 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { BaseRepository } from './BaseRepository';
 import { shopDb } from '@/lib/database/supabase';
 import { Order, OrderStatus, PaymentStatus } from '../types/order-new';
+import type { PurchaseTrackingRecord } from '@/lib/tracking/attribution/types';
 
 export class OrderRepository extends BaseRepository<Order> {
   protected tableName = 'orders';
@@ -50,6 +51,7 @@ export class OrderRepository extends BaseRepository<Order> {
       p24TransactionId: data.p24_transaction_id,
       p24Token: data.p24_token,
       p24MethodId: data.p24_method_id,
+      purchaseTracking: data.purchase_tracking ?? null,
       // ✅ MAPOWANIE ORDER_ITEMS NA ITEMS z konwersją snake_case -> camelCase
       items: data.order_items ? data.order_items.map((item: any) => this.mapOrderItemFromDB(item)) : []
     };
@@ -314,6 +316,16 @@ export class OrderRepository extends BaseRepository<Order> {
     return data ? this.mapOrderFromDB(data) : null;
   }
 
+  async updatePurchaseTracking(id: string, tracking: PurchaseTrackingRecord): Promise<void> {
+    const { error } = await this.supabase
+      .from(this.tableName)
+      .update({ purchase_tracking: tracking })
+      .eq('id', id)
+
+    if (error) {
+      throw new Error(`Error saving purchase tracking: ${error.message}`)
+    }
+  }
 
   async findBySessionId(sessionId: string): Promise<Order | null> {
     console.log('🔍 OrderRepository: findBySessionId', { sessionId });

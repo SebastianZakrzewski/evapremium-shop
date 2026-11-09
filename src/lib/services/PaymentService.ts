@@ -11,6 +11,10 @@ import {
 } from '@/lib/types/paynow'
 import type { Order } from '@/lib/types/order-new'
 import { exportPendingAbandonedCartsForEmail } from '@/lib/services/AbandonedCartExportService'
+import {
+  trackPaidPaynowPurchaseFromDatabase,
+} from '@/lib/tracking/server/sendPurchaseFromDatabase'
+import type { TrackPaidPaynowInput } from '@/lib/tracking/server/sendPurchase'
 
 export type InitiatePaymentResult = {
   success: boolean
@@ -79,7 +83,8 @@ export class PaymentService {
   constructor(
     paymentRepository = new PaymentRepository(),
     orderService = new OrderService(),
-    paynowService = new PaynowService()
+    paynowService = new PaynowService(),
+    private readonly trackPaidPurchase: (input: TrackPaidPaynowInput) => Promise<void> = trackPaidPaynowPurchaseFromDatabase
   ) {
     this.paymentRepository = paymentRepository
     this.orderService = orderService
@@ -209,6 +214,9 @@ export class PaymentService {
         webhookDedupeKey: dedupeKey,
         lastWebhookAt: new Date().toISOString(),
       })
+      if (notification.status === 'CONFIRMED') {
+        await this.safeTrackPaidPurchase(payment, notification.paymentId, notification.modifiedAt)
+      }
       return { success: true, duplicate: true }
     }
 
@@ -247,6 +255,10 @@ export class PaymentService {
       })
     }
 
+    if (notification.status === 'CONFIRMED') {
+      await this.safeTrackPaidPurchase(payment, notification.paymentId, notification.modifiedAt)
+    }
+
     if (orderPaymentStatus === 'failed') {
       const customer = order.customer as Order['customer']
       if (customer?.email) {
@@ -259,5 +271,22 @@ export class PaymentService {
 
   async getLatestPaymentForOrder(orderId: string) {
     return this.paymentRepository.findLatestByOrderId(orderId)
+  }
+
+  private async safeTrackPaidPurchase(
+    payment: { orderId: string; providerPaymentId: string | null; environment: 'sandbox' | 'production'; paidAt: string | null },
+    notificationPaymentId: string,
+    modifiedAt: string
+  ): Promise<void> {
+    try {
+      await this.trackPaidPurchase({
+        orderId: payment.orderId,
+        providerPaymentId: payment.providerPaymentId ?? notificationPaymentId,
+        paymentEnvironment: payment.environment,
+        paidAt: payment.paidAt ?? modifiedAt,
+      })
+    } catch (trackingError) {
+      console.error('[ServerTracking] Purchase tracking failed without failing the Paynow webhook', trackingError)
+    }
   }
 }
