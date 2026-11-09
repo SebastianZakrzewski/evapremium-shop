@@ -11,10 +11,14 @@ import { contactService } from '@/lib/integrations/bitrix24/services/ContactServ
 import { dealService } from '@/lib/integrations/bitrix24/services/DealService';
 import { leadService } from '@/lib/integrations/bitrix24/services/LeadService';
 import { bitrix24Config } from '@/lib/integrations/bitrix24/config';
+import { blockSandboxSideEffects } from '@/lib/sandbox/guard';
 
 const orderService = new OrderService();
 
 export async function POST(request: NextRequest) {
+  const blocked = blockSandboxSideEffects();
+  if (blocked) return blocked;
+
   try {
     console.log('🔔 Bitrix24 webhook received');
 
@@ -357,6 +361,9 @@ function mapDealStageToOrderStatus(stageId: string): string | null {
  * GET - Webhook health check
  */
 export async function GET() {
+  const blocked = blockSandboxSideEffects();
+  if (blocked) return blocked;
+
   try {
     return NextResponse.json({
       success: true,
@@ -379,6 +386,9 @@ export async function GET() {
  * PUT - Update webhook configuration
  */
 export async function PUT(request: NextRequest) {
+  const blocked = blockSandboxSideEffects();
+  if (blocked) return blocked;
+
   try {
     const body = await request.json();
     const { action, events } = body;

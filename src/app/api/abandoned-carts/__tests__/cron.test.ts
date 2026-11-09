@@ -56,6 +56,7 @@ vi.mock('@/lib/integrations/bitrix24/services/DealService', () => ({
 }));
 
 import { POST as CronPOST } from '@/app/api/abandoned-carts/cron/route';
+import { dealService } from '@/lib/integrations/bitrix24/services/DealService';
 
 describe('abandoned-carts cron API', () => {
   beforeEach(() => {
@@ -77,6 +78,35 @@ describe('abandoned-carts cron API', () => {
     const req: any = {};
     const res: any = await CronPOST(req as any);
     expect(res.status).toBe(200);
+  });
+
+  it('does not export carts when preview isolation is missing or active', async () => {
+    vi.mocked(dealService.createDealForAbandonedCart).mockClear()
+    vi.stubEnv('VERCEL_ENV', 'preview')
+    const blocked: any = await CronPOST({} as any)
+    expect(blocked.status).toBe(503)
+    expect(dealService.createDealForAbandonedCart).not.toHaveBeenCalled()
+
+    vi.stubEnv('SANDBOX_SUPABASE_PROJECT_REF', 'aaaaaaaaaaaaaaaaaaaa')
+    vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', 'https://aaaaaaaaaaaaaaaaaaaa.supabase.co')
+    vi.stubEnv('PAYNOW_ENABLED', 'true')
+    vi.stubEnv('PAYNOW_ENVIRONMENT', 'sandbox')
+    vi.stubEnv('PAYNOW_API_KEY', 'sandbox-key')
+    vi.stubEnv('PAYNOW_SIGNATURE_KEY', 'sandbox-secret')
+    vi.stubEnv('PAYNOW_RETURN_URL', 'https://preview.example/payment/success')
+    vi.stubEnv('PAYNOW_NOTIFICATION_URL', 'https://preview.example/api/payments/paynow/webhook')
+    vi.stubEnv('SANDBOX_PUBLIC_HOST', 'preview.example')
+    vi.stubEnv('P24_ENABLED', 'false')
+    vi.stubEnv('BITRIX24_WEBHOOK_ENABLED', 'false')
+    vi.stubEnv('BITRIX24_WEBHOOK_URL', '')
+    vi.stubEnv('BITRIX24_AUTO_SYNC_ORDERS', 'false')
+
+    const skipped: any = await CronPOST({} as any)
+    const body = await skipped.json()
+    expect(skipped.status).toBe(200)
+    expect(body.reason).toBe('sandbox_no_crm')
+    expect(dealService.createDealForAbandonedCart).not.toHaveBeenCalled()
+    vi.unstubAllEnvs()
   });
 });
 

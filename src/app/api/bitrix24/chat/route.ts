@@ -12,11 +12,15 @@ import { stageMappingService } from '@/lib/integrations/bitrix24/services/StageM
 import { mapChatToDeal, ChatFormData } from '@/lib/integrations/bitrix24/mappers/chatToDeal';
 import { Bitrix24Contact } from '@/lib/types/bitrix';
 import { bitrix24Config } from '@/lib/integrations/bitrix24/config';
+import { blockSandboxSideEffects } from '@/lib/sandbox/guard';
 
 /**
  * POST - Submit chat form and create deal in Bitrix24
  */
 export async function POST(request: NextRequest) {
+  const blocked = blockSandboxSideEffects();
+  if (blocked) return blocked;
+
   try {
     const body = await request.json();
     const { name, phone, message } = body;

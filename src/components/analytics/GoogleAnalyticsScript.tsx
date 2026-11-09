@@ -1,12 +1,17 @@
 import Script from 'next/script'
 import { buildGa4InitScript } from '@/lib/tracking/ga4/consentScript'
 import { getGaMeasurementId } from '@/lib/tracking/ga4/measurementId'
+import { isSandboxTrackingScope } from '@/lib/sandbox/runtime'
 
 /**
  * Direct gtag.js for our GA4 property. Page views on SPA navigations are left
  * to GA4 enhanced measurement (history changes). Do not also emit page_view.
  */
 export function GoogleAnalyticsScript() {
+  if (isSandboxTrackingScope()) {
+    return null
+  }
+
   const measurementId = getGaMeasurementId()
 
   return (

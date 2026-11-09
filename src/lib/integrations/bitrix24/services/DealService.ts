@@ -11,6 +11,7 @@ import { stageMappingService } from './StageMappingService';
 import { contactService } from './ContactService';
 import { Bitrix24Deal, Bitrix24DealProduct, Bitrix24ApiResponse } from '@/lib/types/bitrix';
 import { validateBitrix24Deal, validateBitrix24DealProduct } from '@/lib/validators/bitrix24';
+import { isSandboxScope } from '@/lib/sandbox/runtime';
 import {
   getGearboxBitrixEnumId,
   getGearboxLabel,
@@ -453,6 +454,10 @@ export class DealService {
    * Build deal payload from abandoned cart
    */
   async createDealForAbandonedCart(cart: AbandonedCartRecord): Promise<{ id: string; success: boolean; error?: string }> {
+    if (isSandboxScope()) {
+      return { id: '', success: false, error: 'sandbox_no_crm' };
+    }
+
     console.log('[DealService] createDealForAbandonedCart: Starting', {
       cartId: cart.id,
       itemsCount: cart.items?.length || 0,
@@ -728,6 +733,10 @@ export class DealService {
     dealData: Bitrix24Deal,
     options: CreateDealOptions = {}
   ): Promise<{ id: string; success: boolean; error?: string }> {
+    if (isSandboxScope()) {
+      return { id: '', success: false, error: 'sandbox_no_crm' };
+    }
+
     try {
       // Validate deal data
       const validatedData = validateBitrix24Deal(dealData);

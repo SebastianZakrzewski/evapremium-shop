@@ -14,12 +14,16 @@ import { OrderService } from '@/lib/services/OrderService'
 import { OrderRepository } from '@/lib/repositories/OrderRepository'
 import { Przelewy24Service } from '@/lib/services/Przelewy24Service'
 import { P24WebhookData, P24Error } from '@/lib/types/przelewy24'
+import { blockSandboxSideEffects } from '@/lib/sandbox/guard'
 
 const orderService = new OrderService()
 const orderRepository = new OrderRepository()
 const p24Service = new Przelewy24Service()
 
 export async function POST(request: NextRequest) {
+  const blocked = blockSandboxSideEffects()
+  if (blocked) return blocked
+
   try {
     if (!env.features?.p24Enabled) {
       return NextResponse.json({ error: 'P24 disabled' }, { status: 503 })

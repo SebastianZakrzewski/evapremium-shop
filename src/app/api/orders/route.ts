@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { OrderService } from '@/lib/services/OrderService';
+import { blockIfSandboxMisconfigured, isolationErrorResponse } from '@/lib/sandbox/guard';
 
 const orderService = new OrderService();
 
 export async function GET(request: NextRequest) {
+  const blocked = blockIfSandboxMisconfigured();
+  if (blocked) return blocked;
+
   try {
     const { searchParams } = new URL(request.url);
     
@@ -44,6 +48,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const blocked = blockIfSandboxMisconfigured();
+  if (blocked) return blocked;
+
   try {
     const body = await request.json();
     
@@ -65,6 +72,8 @@ export async function POST(request: NextRequest) {
       data: order
     }, { status: 201 });
   } catch (error) {
+    const isolation = isolationErrorResponse(error);
+    if (isolation) return isolation;
     console.error('Error creating order:', error);
     return NextResponse.json(
       { 

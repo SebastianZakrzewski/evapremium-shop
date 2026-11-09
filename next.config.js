@@ -8,6 +8,10 @@ const modelCardFrameAncestors = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  env: {
+    NEXT_PUBLIC_VERCEL_ENV: process.env.VERCEL_ENV || '',
+    NEXT_PUBLIC_SANDBOX_ISOLATION: process.env.SANDBOX_ISOLATION || '',
+  },
   typescript: {
     ignoreBuildErrors: false,
   },

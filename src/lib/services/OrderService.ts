@@ -11,6 +11,7 @@ import { mapOrderToContact } from '../integrations/bitrix24/mappers/orderToConta
 import { mapOrderToDeal, mapOrderToDealProductRows } from '../integrations/bitrix24/mappers/orderToDeal';
 import { stageMappingService } from '../integrations/bitrix24/services/StageMappingService';
 import { convertAbandonedCartsOnPaid } from './AbandonedCartConversionService';
+import { assertSandboxDataPlane, isSandboxScope } from '@/lib/sandbox/runtime';
 import { randomUUID } from 'crypto';
 import 'server-only';
 import { revalidateMatItemPrice } from '@/features/vehicle-catalog/server/matCartValidation';
@@ -39,6 +40,7 @@ export class OrderService {
    * Utwórz nowe zamówienie
    */
   async createOrder(data: CreateOrderDTO, maxRetries: number = 3): Promise<Order> {
+    assertSandboxDataPlane();
     console.log('🛒 OrderService: createOrder called with data:', data);
     
     let lastError: Error | null = null;
@@ -429,6 +431,7 @@ export class OrderService {
     error?: string;
   }): Promise<void> {
     try {
+      assertSandboxDataPlane();
       console.log('🛒 OrderService: updatePaymentStatus', { orderId, status, p24Data });
       
       // Pobierz aktualne dane zamówienia PRZED aktualizacją
@@ -513,7 +516,9 @@ export class OrderService {
         }
       }
 
-      if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders && syncDecision.shouldSync) {
+      if (isSandboxScope()) {
+        console.log('⚠️ OrderService: Sandbox isolation skips Bitrix24 sync');
+      } else if (bitrix24Config.enabled && bitrix24Config.autoSyncOrders && syncDecision.shouldSync) {
         try {
           console.log('🔍 OrderService: Order after update (before sync):', {
             id: orderForSync?.id,

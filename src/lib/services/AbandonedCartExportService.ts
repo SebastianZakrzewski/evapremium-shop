@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { env } from '@/config/env'
 import type { AbandonedCartRecord } from '@/lib/types/abandonedCart'
 import { dealService } from '@/lib/integrations/bitrix24/services/DealService'
+import { assertSandboxDataPlane, isSandboxScope } from '@/lib/sandbox/runtime'
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey)
 
@@ -78,6 +79,11 @@ export const exportPendingAbandonedCartsForEmail = async (
 
   const normalizedEmail = email.trim()
   if (!normalizedEmail) {
+    return result
+  }
+
+  assertSandboxDataPlane()
+  if (isSandboxScope()) {
     return result
   }
 

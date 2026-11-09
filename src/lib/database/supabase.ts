@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/config/env';
+import { assertSandboxDataPlane } from '@/lib/sandbox/runtime';
 
 // Client for client-side operations (uses anon key)
 export const supabase = createClient(env.supabase.url, env.supabase.anonKey);
@@ -10,7 +11,10 @@ export const supabaseAdmin = createClient(env.supabase.url, env.supabase.service
 export const SHOP_SCHEMA = 'evapremium_shop';
 
 /** PostgREST client scoped to evapremium_shop (orders, order_items, catalog, payments). */
-export const shopDb = () => supabaseAdmin.schema(SHOP_SCHEMA);
+export const shopDb = () => {
+  assertSandboxDataPlane();
+  return supabaseAdmin.schema(SHOP_SCHEMA);
+};
 
 // Database table names
 export const TABLES = {

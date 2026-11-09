@@ -5,6 +5,7 @@
  */
 
 import { getBitrix24Config, getBitrix24ApiUrl } from './config';
+import { isSandboxScope } from '@/lib/sandbox/runtime';
 import { 
   Bitrix24ApiResponse, 
   Bitrix24BatchResponse,
@@ -75,6 +76,9 @@ export class Bitrix24Client {
     data: Record<string, any> = {}
   ): Promise<Bitrix24ApiResponse<T>> {
     const bitrix24Config = getBitrix24Config();
+    if (isSandboxScope()) {
+      throw new Error('Bitrix24 blocked in sandbox isolation');
+    }
     if (!bitrix24Config.enabled) {
       throw new Error('Bitrix24 integration is disabled');
     }

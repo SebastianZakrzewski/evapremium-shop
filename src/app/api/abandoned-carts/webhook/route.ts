@@ -6,12 +6,17 @@ import type { AbandonedCartRecord } from '@/lib/types/abandonedCart';
 import { isAbandonedPaymentRedirectEvent } from '@/lib/services/abandonedCartPaymentRedirectPolicy'
 import { findRecentBlockingOrderForBitrixExport, findRecentBlockingOrderForHeartbeat } from '@/lib/services/abandonedCartExportGuard'
 import { dealService } from '@/lib/integrations/bitrix24/services/DealService';
+import { blockIfSandboxMisconfigured } from '@/lib/sandbox/guard';
+import { isSandboxScope } from '@/lib/sandbox/runtime';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
 const webhookInputSchema = abandonedCartWebhookInputSchema;
 
 export async function POST(request: NextRequest) {
+  const blocked = blockIfSandboxMisconfigured();
+  if (blocked) return blocked;
+
   try {
     // Handle both regular JSON and Blob from sendBeacon
     let raw: any = {};
@@ -261,6 +266,14 @@ export async function POST(request: NextRequest) {
       if (!lockedPaymentCart) {
         return NextResponse.json(
           { success: true, skipped: true, reason: 'already_processing', recordId: paymentCartId },
+          { status: 200 }
+        )
+      }
+
+      if (isSandboxScope()) {
+        await supabase.from('abandoned_carts').update({ status: 'pending' }).eq('id', paymentCartId)
+        return NextResponse.json(
+          { success: true, skipped: true, reason: 'sandbox_no_crm', recordId: paymentCartId },
           { status: 200 }
         )
       }
@@ -547,6 +560,13 @@ export async function POST(request: NextRequest) {
       } catch (checkError) {
         console.error('[AbandonedCart:Webhook] Error checking export guard before Bitrix', checkError)
       }
+    }
+
+    if (isSandboxScope()) {
+      return NextResponse.json(
+        { success: true, skipped: true, reason: 'sandbox_no_crm', recordId: (record as any).id },
+        { status: 200 }
+      )
     }
 
     // Atomic lock: set status to 'processing' to prevent concurrent processing
