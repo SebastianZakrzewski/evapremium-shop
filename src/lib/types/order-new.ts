@@ -24,6 +24,7 @@ export interface Order {
   p24Token?: string;
   p24OrderId?: string; // Zmienione z number na string - P24 zwraca bardzo długie ID
   p24MethodId?: number;
+  purchaseTracking?: import('@/lib/tracking/attribution/types').PurchaseTrackingRecord | null;
 }
 
 export interface OrderItem {
@@ -67,6 +68,7 @@ export interface CreateOrderDTO {
   discountCode?: string;
   discountAmount?: number;
   items: CreateOrderItemDTO[];
+  purchaseTracking?: import('@/lib/tracking/attribution/types').PurchaseAttribution | null;
 }
 
 export interface CreateOrderItemDTO {

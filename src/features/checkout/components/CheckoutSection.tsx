@@ -41,6 +41,7 @@ import { useTracking, createInitiateCheckoutData } from '@/lib/tracking';
 import { motion } from 'framer-motion';
 import { getColorInfo } from '@/lib/color-mapping';
 import { paymentsApi, abandonedCartsApi } from '@/lib/api';
+import { collectPurchaseAttributionFromBrowser } from '@/lib/tracking/attribution/collect';
 import { markPaymentRedirect } from '@/features/checkout/lib/paymentRedirectFlag';
 import {
   isPaynowCheckoutEnabled,
@@ -766,7 +767,8 @@ export default function CheckoutSection() {
           productSku: item.productSku,
           productImage: item.productImage,
           configuration: item.configuration
-        }))
+        })),
+        purchaseTracking: collectPurchaseAttributionFromBrowser(),
       };
       
       // Utwórz zamówienie

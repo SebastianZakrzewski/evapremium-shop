@@ -15,6 +15,7 @@ import { randomUUID } from 'crypto';
 import 'server-only';
 import { revalidateMatItemPrice } from '@/features/vehicle-catalog/server/matCartValidation';
 import { MatConfigurationSchema } from '@/features/vehicle-catalog/model/matConfiguration';
+import { sanitizePurchaseAttribution } from '@/lib/tracking/attribution/types';
 
 type BitrixOrderSyncOptions = {
   createIfMissing?: boolean
@@ -74,6 +75,7 @@ export class OrderService {
           total: pricing.total,
           paymentMethod: data.paymentMethod,
           notes: data.notes,
+          purchaseTracking: data.purchaseTracking,
           items: data.items
         };
         console.log('🛒 OrderService: Order data prepared:', orderData);
@@ -82,6 +84,7 @@ export class OrderService {
         const { items: orderItems, ...orderDataWithoutItems } = orderData;
         
         // Mapuj camelCase na snake_case dla bazy danych
+        const attribution = sanitizePurchaseAttribution(orderDataWithoutItems.purchaseTracking)
         const orderDataForDB = {
           order_number: orderDataWithoutItems.orderNumber,
           status: orderDataWithoutItems.status,
@@ -95,7 +98,16 @@ export class OrderService {
           discount: orderDataWithoutItems.discount,
           total: orderDataWithoutItems.total,
           payment_method: orderDataWithoutItems.paymentMethod,
-          notes: orderDataWithoutItems.notes
+          notes: orderDataWithoutItems.notes,
+          ...(attribution
+            ? {
+                purchase_tracking: {
+                  attribution,
+                  ga4: { status: 'pending' },
+                  ads: { status: 'pending' },
+                },
+              }
+            : {}),
         };
         
         console.log('🛒 OrderService: Saving order to database...');
