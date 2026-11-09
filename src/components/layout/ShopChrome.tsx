@@ -6,6 +6,7 @@ import Navbar from '@/components/layout/navbar'
 import Footer from '@/components/layout/footer'
 import { CookieConsentBanner } from '@/features/cookie-consent'
 import { readModelCardQuery, shouldPinShopChrome } from '@/features/brands/model/modelCardUrl'
+import { persistLandingClickIds } from '@/lib/tracking/attribution/collect'
 
 const pageOffsetClassName = 'pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden'
 const configuratorFrameClassName =
@@ -36,6 +37,10 @@ const ShopChromeContent = ({ children }: { children: ReactNode }) => {
   const searchParams = useSearchParams()
   const pinnedCard = shouldPinShopChrome(pathname, readModelCardQuery(searchParams))
   const configuratorRoute = isConfiguratorPath(pathname)
+
+  useEffect(() => {
+    persistLandingClickIds(searchParams.toString())
+  }, [searchParams])
 
   useEffect(() => {
     if (!pinnedCard || window.parent === window) {
