@@ -69,8 +69,8 @@ describe("previewFrameStyle", () => {
   it("keeps a wide photo in a smaller window on every phone", () => {
     expect(previewFrameStyle({ width: 2954, height: 1620 }, "mobile")).toEqual({
       aspectRatio: "2954 / 1620",
-      width: "50%",
-      height: "calc(50cqw * 1620 / 2954)",
+      width: "40%",
+      height: "calc(40cqw * 1620 / 2954)",
     })
   })
 
@@ -91,8 +91,8 @@ describe("previewFrameStyle", () => {
   it("keeps a wide model photo at full width instead of shortening it further", () => {
     expect(previewFrameStyle({ width: 2954, height: 1620 }, "mobile", 740)).toEqual({
       aspectRatio: "2954 / 1620",
-      width: "50%",
-      height: "calc(50cqw * 1620 / 2954)",
+      width: "40%",
+      height: "calc(40cqw * 1620 / 2954)",
     })
   })
 
@@ -102,8 +102,8 @@ describe("previewFrameStyle", () => {
     )
     expect(previewFrameStyle({ width: 1000, height: 1000 }, "mobile", 640)).toEqual({
       aspectRatio: "2954 / 1620",
-      width: "50%",
-      height: "calc(50cqw * 1620 / 2954)",
+      width: "40%",
+      height: "calc(40cqw * 1620 / 2954)",
     })
   })
 })
