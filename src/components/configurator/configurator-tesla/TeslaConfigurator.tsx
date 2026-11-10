@@ -59,13 +59,11 @@ import {
 } from "./analytics/configuratorAnalytics"
 import { filterPreviewsForBodyType } from "./preview/filterPreviewsForBodyType"
 import { TeslaPinnedGallery, type GallerySlide } from "./preview/TeslaPinnedGallery"
+import { isMarketingConfiguratorImage } from "./preview/isMarketingConfiguratorImage"
 import {
   DEFAULT_MAT_IMAGE,
   resolvePerColorMatImage,
-  resolvePinnedMatImage,
-  type PinnedMatFocus,
 } from "./preview/resolvePinnedMatImage"
-import { primaryTypePreviewImage, typePreviewImages } from "./preview/typePreviewImages"
 import { TESLA_LAYOUT } from "./tokens"
 import { TeslaRoundPicker } from "./ui/TeslaRoundPicker"
 import { TeslaSection } from "./ui/TeslaSection"
@@ -120,7 +118,6 @@ export default function TeslaConfigurator() {
   })
 
   const [editingCar, setEditingCar] = useState(false)
-  const [imageFocus, setImageFocus] = useState<PinnedMatFocus>("type")
   const [matInView, setMatInView] = useState(false)
   const [resetNotice, setResetNotice] = useState<string | null>(null)
   const [priceOpen, setPriceOpen] = useState(false)
@@ -322,20 +319,11 @@ export default function TeslaConfigurator() {
             continue
           }
           const element = entry.target as HTMLElement
-          if (element.id === "section-zestaw") setMatInView(true)
           trackConfiguratorSectionView({
             sectionId: element.id,
             sectionName: element.dataset.sectionName ?? element.id,
             etap: Number(element.dataset.etap ?? "1"),
           })
-        }
-        const zestaw = document.getElementById("section-zestaw")
-        if (zestaw) {
-          const ratio = entries.find((entry) => entry.target === zestaw)?.intersectionRatio
-          if (ratio != null && ratio < TESLA_LAYOUT.sectionViewThreshold) {
-            const rect = zestaw.getBoundingClientRect()
-            if (rect.top > window.innerHeight * 0.4) setMatInView(false)
-          }
         }
       },
       { threshold: [0, TESLA_LAYOUT.sectionViewThreshold, 0.6] },
@@ -344,37 +332,74 @@ export default function TeslaConfigurator() {
     return () => observer.disconnect()
   }, [hydrated, editingCar, mapperResult.sections.vehicle.isComplete])
 
+  useEffect(() => {
+    const update = () => {
+      const zest = document.getElementById("section-zestaw")
+      if (!zest) return
+      const offset = Number.parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--configurator-header-offset"),
+      )
+      const pinBottom = (Number.isFinite(offset) ? offset : 64) + TESLA_LAYOUT.imageAspectHeight
+      const top = zest.getBoundingClientRect().top
+      setMatInView(top <= pinBottom + 12)
+    }
+    update()
+    window.addEventListener("scroll", update, { passive: true })
+    window.addEventListener("resize", update)
+    return () => {
+      window.removeEventListener("scroll", update)
+      window.removeEventListener("resize", update)
+    }
+  }, [hydrated])
+
   const bodyMatchedPreviews = useMemo(
-    () => filterPreviewsForBodyType(modelPreviews, config.bodyTypeKey),
+    () =>
+      filterPreviewsForBodyType(modelPreviews, config.bodyTypeKey).filter(
+        (preview) => !isMarketingConfiguratorImage(preview.image_url),
+      ),
     [config.bodyTypeKey, modelPreviews],
   )
   const offeredVariantKeys = pricingVariants.map((variant) => variant.key)
-  const variantImage = config.variant
-    ? getVariantPresentation(config.variant, config.pricingCategoryKey, config.bodyTypeKey, {
-        offeredVariantKeys,
-      }).image
-    : null
-  const typeImage = primaryTypePreviewImage(config.matType)
-  const perColorUrl = resolvePerColorMatImage({
+  const dynamicMatType = getMatTypeForDynamicPreview(config.matType, config.pricingCategoryKey)
+  const neutralMatUrl = DEFAULT_MAT_IMAGE
+  const explicitPerColorUrl = resolvePerColorMatImage({
     matType: config.matType,
     structure: config.structure,
     color: config.color,
     edgeColor: config.edgeColor,
   })
-  const pinnedMat = resolvePinnedMatImage({
-    inCarUrl: realizationPhotos[0]?.image_url,
-    perColorUrl,
-    variantImage,
-    typeImage,
-    defaultImage: DEFAULT_MAT_IMAGE,
-    focus: imageFocus,
-  })
+  const colorCandidate =
+    explicitPerColorUrl ||
+    getMatImagePath(dynamicMatType, config.structure, config.color, config.edgeColor)
+  const [loadedColorUrl, setLoadedColorUrl] = useState<string | null>(null)
+  useEffect(() => {
+    let cancelled = false
+    const image = new window.Image()
+    image.onload = () => {
+      if (!cancelled) setLoadedColorUrl(colorCandidate)
+    }
+    image.onerror = () => {
+      if (!cancelled) setLoadedColorUrl(null)
+    }
+    image.src = colorCandidate
+    return () => {
+      cancelled = true
+    }
+  }, [colorCandidate])
+  const inCarUrl = realizationPhotos.find(
+    (photo) => !isMarketingConfiguratorImage(photo.image_url),
+  )?.image_url
+  const modelPreviewUrl = [...bodyMatchedPreviews].sort((left, right) => {
+    if (left.is_primary !== right.is_primary) return left.is_primary ? -1 : 1
+    return left.sort_order - right.sort_order
+  })[0]?.image_url
+  const pinnedMatUrl = inCarUrl || loadedColorUrl || modelPreviewUrl || DEFAULT_MAT_IMAGE
 
   const carSlides = useMemo(() => {
     const items: GallerySlide[] = []
     const seen = new Set<string>()
     const push = (slide: GallerySlide) => {
-      if (!slide.src || seen.has(slide.src)) return
+      if (!slide.src || seen.has(slide.src) || isMarketingConfiguratorImage(slide.src)) return
       seen.add(slide.src)
       items.push(slide)
     }
@@ -390,47 +415,34 @@ export default function TeslaConfigurator() {
         group: "car",
       })
     })
-    if (items.length === 0) {
+    if (items.length === 0 && config.brand) {
       const logo = getBrandLogo(brandForImage)
-      if (logo) {
-        push({ id: "car-brand", src: logo, alt: config.brand || "Marka", group: "car" })
-      } else {
-        push({
-          id: "car-fallback",
-          src: DEFAULT_MAT_IMAGE,
-          alt: "Dywaniki EVA Premium",
-          group: "car",
-        })
+      if (logo && !isMarketingConfiguratorImage(logo)) {
+        push({ id: "car-brand", src: logo, alt: config.brand, group: "car" })
       }
     }
+    if (items.length === 0) {
+      push({ id: "car-neutral", src: neutralMatUrl, alt: "Dywaniki EVA Premium", group: "car" })
+    }
     return items
-  }, [bodyMatchedPreviews, brandForImage, config.brand])
+  }, [bodyMatchedPreviews, brandForImage, config.brand, neutralMatUrl])
 
   const matSlides = useMemo(() => {
     const items: GallerySlide[] = []
     const seen = new Set<string>()
     const push = (slide: GallerySlide) => {
-      if (!slide.src || seen.has(slide.src)) return
+      if (!slide.src || seen.has(slide.src) || isMarketingConfiguratorImage(slide.src)) return
       seen.add(slide.src)
       items.push(slide)
     }
-    push({ id: "mat-active", src: pinnedMat.url, alt: "Podgląd dywaników", group: "mat" })
-    if (variantImage) {
-      push({ id: "variant-preview", src: variantImage, alt: "Wariant zestawu", group: "mat" })
+    push({ id: "mat-active", src: pinnedMatUrl, alt: "Podgląd dywaników", group: "mat" })
+    if (neutralMatUrl !== pinnedMatUrl) {
+      push({ id: "mat-neutral", src: neutralMatUrl, alt: "Dywanik", group: "mat" })
     }
-    typePreviewImages(config.matType).forEach((src, index) => {
-      push({ id: `type-${index}`, src, alt: "Typ dywanika", group: "mat" })
-    })
-    realizationPhotos.forEach((photo) => {
-      push({
-        id: `incar-${photo.id}`,
-        src: photo.image_url,
-        alt: photo.alt_text ?? "Realizacja",
-        group: "mat",
-      })
-    })
+    const modelSlide = carSlides.find((slide) => slide.id.startsWith("car-") && slide.id !== "car-brand" && slide.id !== "car-neutral")
+    if (modelSlide) push({ ...modelSlide, id: "mat-model", group: "mat" })
     return items
-  }, [config.matType, pinnedMat.url, realizationPhotos, variantImage])
+  }, [carSlides, neutralMatUrl, pinnedMatUrl])
 
   const vehicleReady = mapperResult.sections.vehicle.isComplete
   const showCarForm = !vehicleReady || editingCar
@@ -550,25 +562,38 @@ export default function TeslaConfigurator() {
   ])
 
   const materialColors = useMemo(
-    () => getAvailableMaterialColorsForEdge(config.structure, config.matType, config.edgeColor || "black"),
-    [config.edgeColor, config.matType, config.structure],
+    () => getAvailableColors(config.structure, "material"),
+    [config.structure],
   )
   const edgeColors = useMemo(
     () => getAvailableColors(config.structure, "border"),
     [config.structure],
   )
 
+  const total = priceBreakdown.totalPrice + accessoryPrice
+  const configurationInCart = findMatchingMatInCart(cartItems, config) != null
+  const showPriceBar = vehicleReady && total > 0
+
+  useEffect(() => {
+    document.documentElement.dataset.configuratorOverlay = priceOpen ? "open" : ""
+    document.documentElement.dataset.configuratorBar = showPriceBar ? "open" : ""
+    return () => {
+      document.documentElement.dataset.configuratorOverlay = ""
+      document.documentElement.dataset.configuratorBar = ""
+    }
+  }, [priceOpen, showPriceBar])
+
   if ((brandsLoading && !config.brand) || !hydrated) {
     return <ConfiguratorLoader />
   }
 
-  const total = priceBreakdown.totalPrice + accessoryPrice
   const sticky = (
     <TeslaStickyBar
       total={total}
-      disabled={!mapperResult.isReadyForCart}
-      hint={firstMissing?.hint ?? null}
+      disabled={!mapperResult.isReadyForCart && !configurationInCart}
+      hint={showPriceBar && firstMissing ? firstMissing.hint : null}
       pending={isAdding || cartLoading}
+      inCart={configurationInCart}
       onPriceClick={() => setPriceOpen(true)}
       onAddToCart={() => {
         void handleAddToCart()
@@ -605,16 +630,19 @@ export default function TeslaConfigurator() {
 
       <div className="lg:grid lg:h-svh lg:grid-cols-[minmax(0,1fr)_minmax(22rem,34rem)] lg:overflow-hidden">
         <div className="bg-white lg:flex lg:h-svh lg:items-center lg:bg-[#f5f5f5]">
-          <div className="w-full max-lg:fixed max-lg:inset-x-0 max-lg:top-0 max-lg:z-20 max-lg:bg-white">
+          <div
+            className="w-full max-lg:fixed max-lg:inset-x-0 max-lg:z-20 max-lg:bg-white"
+            style={{ top: "var(--configurator-header-offset, 0px)" }}
+          >
             <TeslaPinnedGallery
               slides={matInView ? matSlides : carSlides}
               preferredId={matInView ? "mat-active" : (carSlides[0]?.id ?? null)}
-              resetKey={`${matInView ? "mat" : "car"}:${pinnedMat.url}`}
+              resetKey={`${matInView ? "mat" : "car"}:${pinnedMatUrl}`}
             />
           </div>
           <div
             className="lg:hidden"
-            style={{ height: TESLA_LAYOUT.imageAspectHeight + 36 }}
+            style={{ height: TESLA_LAYOUT.imageAspectHeight }}
             aria-hidden
           />
         </div>
@@ -623,7 +651,9 @@ export default function TeslaConfigurator() {
         <div
           className="lg:min-h-0 lg:flex-1 lg:overflow-y-auto"
           style={{
-            padding: `0 ${TESLA_LAYOUT.pagePaddingX}px calc(${TESLA_LAYOUT.stickyBarMinHeight + 24}px + env(safe-area-inset-bottom))`,
+            padding: showPriceBar
+              ? `0 ${TESLA_LAYOUT.pagePaddingX}px calc(${TESLA_LAYOUT.stickyBarMinHeight + 28}px + env(safe-area-inset-bottom))`
+              : `0 ${TESLA_LAYOUT.pagePaddingX}px calc(24px + env(safe-area-inset-bottom))`,
           }}
         >
           <div id="section-vehicle">
@@ -643,7 +673,7 @@ export default function TeslaConfigurator() {
                     config={config}
                     onUpdate={updateConfig}
                     onNext={() => setEditingCar(false)}
-                    hideNextButton={vehicleReady && !editingCar}
+                    hideNextButton
                     surface="light"
                   />
                 )}
@@ -675,7 +705,6 @@ export default function TeslaConfigurator() {
                     disabled={mapperResult.sections.variant.isDisabled}
                     onSelect={() => {
                       setResetNotice(null)
-                      setImageFocus("variant")
                       updateConfig({ variant: variant.key })
                     }}
                   />
@@ -717,7 +746,6 @@ export default function TeslaConfigurator() {
                       priceLabel="W zestawie"
                       disabled={mapperResult.sections.matType.isDisabled}
                       onSelect={() => {
-                        setImageFocus("type")
                         updateConfig({ matType: type.id, variant: "" })
                       }}
                     />
@@ -748,7 +776,6 @@ export default function TeslaConfigurator() {
               }))}
               onSelect={(color) => {
                 setAppearanceTouched(true)
-                setImageFocus("color")
                 updateConfig({ color })
               }}
             />
@@ -768,7 +795,6 @@ export default function TeslaConfigurator() {
               }))}
               onSelect={(edgeColor) => {
                 setAppearanceTouched(true)
-                setImageFocus("color")
                 const nextColors = getAvailableMaterialColorsForEdge(config.structure, config.matType, edgeColor)
                 const updates: Partial<ConfiguratorState> = { edgeColor }
                 if (!nextColors.includes(config.color)) updates.color = nextColors[0] || "black"
@@ -804,6 +830,7 @@ export default function TeslaConfigurator() {
               canProceedToSummary={mapperResult.isReadyForCart}
               hideNavigation
               surface="light"
+              layout="rows"
             />
           </TeslaSection>
 
@@ -816,7 +843,7 @@ export default function TeslaConfigurator() {
             </p>
           ) : null}
         </div>
-        <div className="fixed inset-x-0 bottom-0 z-40 bg-white lg:static lg:shrink-0">{sticky}</div>
+        <div className={`fixed inset-x-0 bottom-0 z-40 bg-white lg:static lg:shrink-0 ${showPriceBar ? "" : "hidden"}`}>{sticky}</div>
         </div>
       </div>
 
@@ -839,7 +866,6 @@ export default function TeslaConfigurator() {
         bodyTypeKey={config.bodyTypeKey}
         selectedVariantKey={config.variant}
         onSelectVariant={(key) => {
-          setImageFocus("variant")
           setResetNotice(null)
           updateConfig({ variant: key })
         }}

@@ -8,6 +8,7 @@ type TeslaStickyBarProps = {
   disabled: boolean
   hint: string | null
   pending?: boolean
+  inCart?: boolean
   onPriceClick: () => void
   onAddToCart: () => void
 }
@@ -17,6 +18,7 @@ export const TeslaStickyBar = ({
   disabled,
   hint,
   pending = false,
+  inCart = false,
   onPriceClick,
   onAddToCart,
 }: TeslaStickyBarProps) => (
@@ -71,7 +73,7 @@ export const TeslaStickyBar = ({
           opacity: disabled || pending ? 0.55 : 1,
         }}
       >
-        {pending ? "Dodawanie…" : "Dodaj do koszyka"}
+        {pending ? "Dodawanie…" : inCart ? "W koszyku · Przejdź do koszyka" : "Dodaj do koszyka"}
       </button>
     </div>
   </div>

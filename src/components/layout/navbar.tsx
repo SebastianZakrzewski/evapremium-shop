@@ -29,18 +29,30 @@ export default function Navbar() {
     const handleScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 20);
-      if (!onConfigurator || open) {
+      if (!onConfigurator) {
         setHidden(false);
+        document.documentElement.style.setProperty("--configurator-header-offset", "0px");
+        lastY = y;
+        return;
+      }
+      const navHeight = (document.querySelector("nav") as HTMLElement | null)?.offsetHeight ?? 64;
+      if (open) {
+        setHidden(false);
+        document.documentElement.style.setProperty("--configurator-header-offset", `${navHeight}px`);
         lastY = y;
         return;
       }
       const delta = y - lastY;
-      if (y < 8) setHidden(false);
-      else if (delta < -12) setHidden(false);
-      else if (delta > 2 || y > 64) setHidden(true);
+      const nextHidden = y >= 8 && delta >= -12 && (delta > 2 || y > 64);
+      setHidden(nextHidden);
+      document.documentElement.style.setProperty(
+        "--configurator-header-offset",
+        onConfigurator && !nextHidden ? `${navHeight}px` : "0px",
+      );
       lastY = y;
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, [onConfigurator, open]);
 

@@ -145,8 +145,8 @@ describe('EvaChatWidget', () => {
     render(<EvaChatWidget />)
 
     const launcher = screen.getByRole('button', { name: 'Otwórz czat EvaBot' })
-    expect(launcher.parentElement).toHaveClass('top-[4.75rem]')
-    expect(launcher).toHaveClass('!h-14')
+    expect(launcher.parentElement).toHaveClass('bottom-[calc(96px+env(safe-area-inset-bottom))]')
+    expect(launcher).toHaveClass('!h-12')
     expect(launcher.parentElement).toHaveAttribute('data-configurator-mobile', 'true')
   })
 

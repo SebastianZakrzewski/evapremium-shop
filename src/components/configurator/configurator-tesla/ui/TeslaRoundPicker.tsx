@@ -30,7 +30,7 @@ export const TeslaRoundPicker = ({
   <div>
     <div className="mb-3 flex items-start justify-between gap-3">
       <span
-        className="font-medium"
+        className="min-w-0 flex-1 font-medium"
         style={{
           fontSize: TESLA_LAYOUT.bodySize,
           lineHeight: `${TESLA_LAYOUT.bodyLine}px`,
@@ -40,10 +40,12 @@ export const TeslaRoundPicker = ({
         {selectedName}
       </span>
       <span
+        className="shrink-0"
         style={{
           fontSize: TESLA_LAYOUT.bodySize,
           lineHeight: `${TESLA_LAYOUT.bodyLine}px`,
           color: TESLA_LAYOUT.text,
+          paddingRight: 4,
         }}
       >
         {priceLabel}
@@ -71,11 +73,13 @@ export const TeslaRoundPicker = ({
             style={{
               width: TESLA_LAYOUT.swatchSize,
               height: TESLA_LAYOUT.swatchSize,
+              minWidth: TESLA_LAYOUT.swatchSize,
+              minHeight: TESLA_LAYOUT.swatchSize,
               border: selected
                 ? `2px solid ${TESLA_LAYOUT.selectedBorder}`
                 : `1px solid ${TESLA_LAYOUT.border}`,
               backgroundColor: option.color,
-              padding: option.imageSrc ? 0 : undefined,
+              padding: 0,
             }}
           >
             {option.imageSrc ? (

@@ -81,7 +81,7 @@ export const TeslaPriceSheet = ({
           </div>
           {discount > 0 ? (
             <div className="flex justify-between gap-4">
-              <dt>Rabat</dt>
+              <dt>Rabat ({basePrice > 0 ? Math.round((discount / basePrice) * 100) : 0}%)</dt>
               <dd>-{formatPriceValue(discount)} zł</dd>
             </div>
           ) : null}

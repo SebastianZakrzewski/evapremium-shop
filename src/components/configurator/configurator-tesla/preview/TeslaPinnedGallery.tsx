@@ -78,8 +78,7 @@ export const TeslaPinnedGallery = ({
   return (
     <div className="bg-white" data-pinned-src={active.src}>
       <div
-        className="relative w-full overflow-hidden bg-white"
-        style={{ aspectRatio: teslaImageAspectRatio }}
+        className="relative w-full overflow-hidden bg-white max-lg:h-[236px] lg:aspect-[390/236]"
         onTouchStart={(event) => {
           touchStart.current = event.changedTouches[0]?.clientX ?? null
         }}
@@ -114,47 +113,40 @@ export const TeslaPinnedGallery = ({
           style={{ transition: `opacity ${TESLA_LAYOUT.crossfadeMs}ms ease` }}
         />
         {slides.length > 1 ? (
-          <>
-            <button
-              type="button"
-              aria-label="Poprzednie zdjęcie"
-              onClick={() => go(-1)}
-              className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-lg"
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              aria-label="Następne zdjęcie"
-              onClick={() => go(1)}
-              className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-lg"
-            >
-              ›
-            </button>
-          </>
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-2 z-10 flex items-center justify-center"
+            role="tablist"
+            aria-label="Galeria"
+            style={{ gap: 6 }}
+          >
+            {slides.map((slide, slideIndex) => (
+              <button
+                key={slide.id}
+                type="button"
+                aria-label={`Zdjęcie ${slideIndex + 1}`}
+                aria-current={slideIndex === index}
+                onClick={() => {
+                  override.current = true
+                  setPreviousSrc(active.src)
+                  setIndex(slideIndex)
+                }}
+                className="pointer-events-auto rounded-full p-0"
+                style={{
+                  width: TESLA_LAYOUT.dotSize,
+                  height: TESLA_LAYOUT.dotSize,
+                  minWidth: TESLA_LAYOUT.dotSize,
+                  minHeight: TESLA_LAYOUT.dotSize,
+                  backgroundColor: slideIndex === index ? TESLA_LAYOUT.text : "rgba(23,26,32,0.28)",
+                }}
+              />
+            ))}
+          </div>
         ) : null}
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-8"
+          style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0), #fff)" }}
+        />
       </div>
-      {slides.length > 1 ? (
-        <div className="flex items-center justify-center gap-2 py-2" role="tablist" aria-label="Galeria">
-          {slides.map((slide, slideIndex) => (
-            <button
-              key={slide.id}
-              type="button"
-              aria-label={`Zdjęcie ${slideIndex + 1}`}
-              aria-current={slideIndex === index}
-              onClick={() => {
-                override.current = true
-                setPreviousSrc(active.src)
-                setIndex(slideIndex)
-              }}
-              className="h-2 w-2 rounded-full"
-              style={{
-                backgroundColor: slideIndex === index ? TESLA_LAYOUT.text : TESLA_LAYOUT.border,
-              }}
-            />
-          ))}
-        </div>
-      ) : null}
     </div>
   )
 }

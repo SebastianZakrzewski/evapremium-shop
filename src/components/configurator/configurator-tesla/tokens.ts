@@ -10,6 +10,7 @@ export const TESLA_LAYOUT = {
   viewportHeight: 844,
   imageAspectWidth: 390,
   imageAspectHeight: 236,
+  dotSize: 7,
   swatchSize: 40,
   swatchGap: 16,
   cardRadius: 4,

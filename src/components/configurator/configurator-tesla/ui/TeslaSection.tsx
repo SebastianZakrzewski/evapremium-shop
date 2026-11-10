@@ -17,7 +17,10 @@ export const TeslaSection = ({ id, title, etap, children }: TeslaSectionProps) =
     data-configurator-section
     data-section-name={title}
     data-etap={etap}
-    style={{ marginTop: TESLA_LAYOUT.sectionGap }}
+    style={{
+      marginTop: TESLA_LAYOUT.sectionGap,
+      scrollMarginTop: "calc(var(--configurator-header-offset, 4rem) + 236px)",
+    }}
   >
     <h2
       className="font-medium"
