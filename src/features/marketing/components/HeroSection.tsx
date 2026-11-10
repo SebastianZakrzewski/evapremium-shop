@@ -126,11 +126,25 @@ const HeroPromoBanner = ({
       <div className="absolute inset-0 bg-neutral-100">
         <picture>
           {slide.imageMobile ? (
-            <source
-              media="(max-width: 767px)"
-              srcSet={slide.imageMobile}
-              sizes={HERO_PROMO_MOBILE_IMAGE_SIZES}
-            />
+            <>
+              <source
+                media="(max-width: 767px)"
+                type="image/avif"
+                srcSet={slide.imageMobile.split("?")[0]?.replace(/\.png$/i, ".avif")}
+                sizes={HERO_PROMO_MOBILE_IMAGE_SIZES}
+              />
+              <source
+                media="(max-width: 767px)"
+                type="image/webp"
+                srcSet={slide.imageMobile.split("?")[0]?.replace(/\.png$/i, ".webp")}
+                sizes={HERO_PROMO_MOBILE_IMAGE_SIZES}
+              />
+              <source
+                media="(max-width: 767px)"
+                srcSet={slide.imageMobile}
+                sizes={HERO_PROMO_MOBILE_IMAGE_SIZES}
+              />
+            </>
           ) : null}
           {!mobileOnly ? (
             <>
@@ -143,9 +157,7 @@ const HeroPromoBanner = ({
             alt={slide.imageAlt ?? "Dywaniki samochodowe EVA Premium"}
             className="h-full w-full object-contain object-center"
             decoding="async"
-            ref={(element) => {
-              element?.setAttribute("fetchpriority", priority ? "high" : "auto")
-            }}
+            fetchPriority={priority ? "high" : "auto"}
             width={mobileOnly ? HERO_PROMO_MOBILE_NATIVE_WIDTH : HERO_PROMO_NATIVE_WIDTH}
             height={mobileOnly ? HERO_PROMO_MOBILE_NATIVE_HEIGHT : HERO_PROMO_NATIVE_HEIGHT}
           />

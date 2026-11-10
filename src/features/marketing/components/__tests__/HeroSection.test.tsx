@@ -71,7 +71,12 @@ describe("HeroSection", () => {
       "Jesienna promocja dywaników samochodowych EVA Premium do -30%"
     )
     expect(image).toHaveAttribute("src", "/jesien_hero.png?v=2168")
-    expect(document.querySelector('source[media="(max-width: 767px)"]')).toHaveAttribute(
+    expect(image).toHaveAttribute("fetchpriority", "high")
+    expect(document.querySelector('source[type="image/avif"][media="(max-width: 767px)"]')).toHaveAttribute(
+      "srcset",
+      "/zimowa_mobile_hero.avif",
+    )
+    expect(document.querySelector('source[media="(max-width: 767px)"]:not([type])')).toHaveAttribute(
       "srcset",
       "/zimowa_mobile_hero.png?v=577",
     )
