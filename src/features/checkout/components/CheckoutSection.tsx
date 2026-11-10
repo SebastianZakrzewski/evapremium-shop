@@ -90,6 +90,7 @@ export default function CheckoutSection() {
   const [formAlert, setFormAlert] = useState<string | null>(null);
   const checkoutTopRef = useRef<HTMLDivElement>(null);
   const scrollRequestId = useRef(0);
+  const stepChangeSubmitRef = useRef(false);
   const [scrollRequest, setScrollRequest] = useState<{
     id: number;
     kind: 'step' | 'field';
@@ -682,6 +683,13 @@ export default function CheckoutSection() {
       }
       queueCheckoutScroll('step');
       setCurrentStep(currentStep + 1);
+      // Dalej and the pay button share one DOM node. Advancing into Płatność
+      // flips it to type="submit" before the click's default action, which
+      // submits the form and the validation scroll replaces the step scroll.
+      stepChangeSubmitRef.current = true;
+      window.setTimeout(() => {
+        stepChangeSubmitRef.current = false;
+      }, 0);
     } else if (!isCurrentStepValid()) {
       console.log('🛒 CheckoutSection: Current step validation failed');
     }
@@ -1019,7 +1027,13 @@ export default function CheckoutSection() {
           <div className="lg:col-span-3 xl:col-span-2">
             <form 
               id="checkout-form"
-              onSubmit={handleSubmit(
+              onSubmit={(event) => {
+                if (stepChangeSubmitRef.current) {
+                  event.preventDefault();
+                  stepChangeSubmitRef.current = false;
+                  return;
+                }
+                void handleSubmit(
                 (data) => {
                   console.log('🛒 CheckoutSection: onSubmit called with valid data:', data);
                   onSubmit(data);
@@ -1038,7 +1052,8 @@ export default function CheckoutSection() {
                   setCurrentStep(checkoutFieldStep(firstField));
                   queueCheckoutScroll('field', firstField);
                 }
-              )} 
+              )(event);
+              }} 
               className="space-y-8"
             >
               {formAlert && (
@@ -1435,6 +1450,7 @@ export default function CheckoutSection() {
 
                   {currentStep < 3 ? (
                     <Button
+                      key="checkout-next"
                       type="button"
                       onClick={nextStep}
                       disabled={!isCurrentStepValid()}
@@ -1445,6 +1461,7 @@ export default function CheckoutSection() {
                     </Button>
                   ) : (
                     <Button
+                      key="checkout-pay"
                       type="submit"
                       form="checkout-form"
                       disabled={isSubmitting || orderLoading}
@@ -1736,6 +1753,7 @@ export default function CheckoutSection() {
 
                 {currentStep < 3 ? (
                   <Button
+                    key="checkout-next-mobile"
                     type="button"
                     onClick={nextStep}
                     disabled={!isCurrentStepValid()}
@@ -1746,6 +1764,7 @@ export default function CheckoutSection() {
                   </Button>
                 ) : (
                   <Button
+                    key="checkout-pay-mobile"
                     type="submit"
                     form="checkout-form"
                     disabled={isSubmitting || orderLoading}
