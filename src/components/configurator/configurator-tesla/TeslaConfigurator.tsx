@@ -58,7 +58,7 @@ import {
   type ConfiguratorAnalyticsStep,
 } from "./analytics/configuratorAnalytics"
 import { filterPreviewsForBodyType } from "./preview/filterPreviewsForBodyType"
-import { TeslaPinnedGallery, type GallerySlide } from "./preview/TeslaPinnedGallery"
+import { preloadPinnedImage, TeslaPinnedGallery, type GallerySlide } from "./preview/TeslaPinnedGallery"
 import { isMarketingConfiguratorImage } from "./preview/isMarketingConfiguratorImage"
 import {
   DEFAULT_MAT_IMAGE,
@@ -374,14 +374,9 @@ export default function TeslaConfigurator() {
   const [loadedColorUrl, setLoadedColorUrl] = useState<string | null>(null)
   useEffect(() => {
     let cancelled = false
-    const image = new window.Image()
-    image.onload = () => {
-      if (!cancelled) setLoadedColorUrl(colorCandidate)
-    }
-    image.onerror = () => {
-      if (!cancelled) setLoadedColorUrl(null)
-    }
-    image.src = colorCandidate
+    void preloadPinnedImage(colorCandidate).then((ready) => {
+      if (!cancelled && ready) setLoadedColorUrl(colorCandidate)
+    })
     return () => {
       cancelled = true
     }
@@ -446,20 +441,29 @@ export default function TeslaConfigurator() {
 
   const vehicleReady = mapperResult.sections.vehicle.isComplete
   useEffect(() => {
-    if (!vehicleReady) return
+    if (!vehicleReady) return undefined
     const materials = getAvailableColors(config.structure, "material")
     const edges = getAvailableColors(config.structure, "border")
-    const urls = new Set<string>()
+    const urls = [
+      getMatImagePath(dynamicMatType, config.structure, config.color || "black", config.edgeColor || "black"),
+    ]
     for (const color of materials) {
-      urls.add(getMatImagePath(dynamicMatType, config.structure, color, config.edgeColor || "black"))
+      urls.push(getMatImagePath(dynamicMatType, config.structure, color, config.edgeColor || "black"))
     }
     for (const edge of edges) {
-      urls.add(getMatImagePath(dynamicMatType, config.structure, config.color || "black", edge))
+      urls.push(getMatImagePath(dynamicMatType, config.structure, config.color || "black", edge))
     }
-    urls.forEach((src) => {
-      const image = new window.Image()
-      image.src = src
-    })
+    let cancelled = false
+    const unique = [...new Set(urls)]
+    void (async () => {
+      for (const src of unique) {
+        if (cancelled) return
+        await preloadPinnedImage(src)
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
   }, [vehicleReady, dynamicMatType, config.structure, config.color, config.edgeColor])
   const showCarForm = !vehicleReady || editingCar
   const summaryLine = [
