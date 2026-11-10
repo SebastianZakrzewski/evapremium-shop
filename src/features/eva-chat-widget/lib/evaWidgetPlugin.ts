@@ -80,4 +80,5 @@ export const buildEvaWidgetFrameSrc = (
   return page.toString()
 }
 
-export const EVA_CHAT_ICON_SRC = '/eva-chat-icon.png?v=3'
+/** Wyświetlana ikona 160 px. Oryginał 1024 px zostaje w public/eva-chat-icon.png. */
+export const EVA_CHAT_ICON_SRC = '/eva-chat-icon-160.webp?v=1'

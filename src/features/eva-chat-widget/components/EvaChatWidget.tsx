@@ -192,8 +192,9 @@ export const EvaChatWidget = () => {
         <img
           src={EVA_CHAT_ICON_SRC}
           alt=""
-          width={1024}
-          height={1024}
+          width={160}
+          height={160}
+          decoding="async"
           className="pointer-events-none block h-full w-full object-contain"
         />
       </button>
