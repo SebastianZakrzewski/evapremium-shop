@@ -19,6 +19,12 @@ describe('getGaMeasurementId', () => {
     expect(getGaMeasurementId()).toBe('G-TEST1234')
   })
 
+  it('trims whitespace and a trailing CRLF from NEXT_PUBLIC_GA_ID', () => {
+    vi.stubEnv('NEXT_PUBLIC_GA_ID', 'G-TEST1234\r\n')
+
+    expect(getGaMeasurementId()).toBe('G-TEST1234')
+  })
+
   it('falls back when the override is not a GA4 measurement id', () => {
     vi.stubEnv('NEXT_PUBLIC_GA_ID', 'UA-12345-1')
 

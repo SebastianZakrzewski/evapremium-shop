@@ -37,7 +37,7 @@ import { PricingService } from '@/lib/services/PricingService';
 import { debugLog } from '@/lib/config/features';
 import { useAbandonedCartHeartbeat } from '@/features/shopping-cart/hooks/useAbandonedCartHeartbeat';
 import { HybridSessionManager } from '@/lib/utils/hybrid-session-manager';
-import { useTracking, createInitiateCheckoutData } from '@/lib/tracking';
+import { useTracking, trackAddShippingInfo } from '@/lib/tracking';
 import { motion } from 'framer-motion';
 import { getColorInfo } from '@/lib/color-mapping';
 import { paymentsApi, abandonedCartsApi } from '@/lib/api';
@@ -55,6 +55,8 @@ import {
   getMatTypeLabel,
   isSinglePriceSetType,
 } from '@/shared/mat-set-labels';
+
+const CHECKOUT_SHIPPING_TIER = 'Standardowa dostawa';
 
 const paymentMarks = [
   { src: "/formy_platnosci/blik.png", alt: "BLIK" },
@@ -628,6 +630,16 @@ export default function CheckoutSection() {
     console.log('🛒 CheckoutSection: isCurrentStepValid:', isCurrentStepValid());
     
     if (currentStep < 3 && isCurrentStepValid()) {
+      if (currentStep === 2 && items.length > 0) {
+        try {
+          trackAddShippingInfo({
+            ...createInitiateCheckout(items, finalTotal),
+            shipping_tier: CHECKOUT_SHIPPING_TIER,
+          });
+        } catch (error) {
+          console.error('[Tracking] Error tracking AddShippingInfo:', error);
+        }
+      }
       setCurrentStep(currentStep + 1);
     } else if (!isCurrentStepValid()) {
       console.log('🛒 CheckoutSection: Current step validation failed');
@@ -672,7 +684,7 @@ export default function CheckoutSection() {
 
       const shippingData = {
         method: 'standard',
-        methodName: 'Standardowa dostawa',
+        methodName: CHECKOUT_SHIPPING_TIER,
         cost: 0,
         estimatedDelivery: '2-3 dni robocze',
       };

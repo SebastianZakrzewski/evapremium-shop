@@ -124,6 +124,13 @@ export interface InitiateCheckoutData extends EcommerceEventData {
 }
 
 /**
+ * Dane dla zdarzenia AddShippingInfo (potwierdzenie dostawy)
+ */
+export interface AddShippingInfoData extends InitiateCheckoutData {
+  shipping_tier: string;
+}
+
+/**
  * Dane dla zdarzenia AddPaymentInfo
  */
 export interface AddPaymentInfoData extends EcommerceEventData {

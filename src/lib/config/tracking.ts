@@ -9,7 +9,13 @@ import { z } from 'zod';
  * Schema walidacji zmiennych środowiskowych dla tracking
  */
 const trackingEnvSchema = z.object({
-  NEXT_PUBLIC_FB_PIXEL_ID: z.string().optional(),
+  NEXT_PUBLIC_FB_PIXEL_ID: z
+    .string()
+    .optional()
+    .transform((value) => {
+      const trimmed = value?.trim();
+      return trimmed ? trimmed : undefined;
+    }),
   NEXT_PUBLIC_TRACKING_ENABLED: z
     .string()
     .optional()

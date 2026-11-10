@@ -7,6 +7,8 @@ import { FacebookPixelProvider } from '../providers/FacebookPixelProvider';
 import { getTrackingConfigInstance } from '@/lib/config/tracking';
 import { isMarketingTrackingAllowed } from '../consent/isMarketingTrackingAllowed';
 import {
+  trackGaAddPaymentInfo,
+  trackGaAddShippingInfo,
   trackGaAddToCart,
   trackGaBeginCheckout,
   trackGaPurchase,
@@ -17,6 +19,7 @@ import type {
   ViewContentData,
   AddToCartData,
   InitiateCheckoutData,
+  AddShippingInfoData,
   AddPaymentInfoData,
   PurchaseData,
   SearchData,
@@ -185,10 +188,24 @@ export function trackInitiateCheckout(data: InitiateCheckoutData): void {
 }
 
 /**
+ * Śledzenie AddShippingInfo (potwierdzenie metody dostawy).
+ * GA4 idzie tą samą ścieżką co begin_checkout: Consent Mode decyduje o storage,
+ * brak zgody marketingowej nie blokuje zdarzenia.
+ */
+export function trackAddShippingInfo(data: AddShippingInfoData): void {
+  try {
+    trackGaAddShippingInfo(data);
+  } catch (error) {
+    console.error('[Tracking] Error tracking AddShippingInfo:', error);
+  }
+}
+
+/**
  * Śledzenie AddPaymentInfo (dodanie danych płatności)
  */
 export function trackAddPaymentInfo(data: AddPaymentInfoData): void {
   try {
+    trackGaAddPaymentInfo(data);
     const provider = getProvider();
     if (!provider) {
       return;

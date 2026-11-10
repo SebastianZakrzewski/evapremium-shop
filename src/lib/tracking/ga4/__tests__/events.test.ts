@@ -1,7 +1,16 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import type { AddToCartData, InitiateCheckoutData, PurchaseData, ViewContentData } from '../../types'
+import type {
+  AddPaymentInfoData,
+  AddShippingInfoData,
+  AddToCartData,
+  InitiateCheckoutData,
+  PurchaseData,
+  ViewContentData,
+} from '../../types'
 import {
   resetGa4StateForTests,
+  trackGaAddPaymentInfo,
+  trackGaAddShippingInfo,
   trackGaAddToCart,
   trackGaBeginCheckout,
   trackGaGenerateLead,
@@ -67,6 +76,20 @@ const checkout = (): InitiateCheckoutData => ({
   contents: cartItem().contents,
 })
 
+const shippingInfo = (): AddShippingInfoData => ({
+  ...checkout(),
+  shipping_tier: 'Standardowa dostawa',
+})
+
+const paymentInfo = (): AddPaymentInfoData => ({
+  content_name: 'Payment Info Added',
+  content_category: 'checkout',
+  value: 998,
+  currency: 'EUR',
+  payment_method: 'paynow',
+  contents: cartItem().contents,
+})
+
 const purchase = (): PurchaseData => ({
   content_name: 'Purchase Completed',
   content_ids: ['ORD-1'],
@@ -105,6 +128,46 @@ describe('GA4 ecommerce events', () => {
     expect(events.map((entry) => entry[1])).toEqual(['add_to_cart', 'begin_checkout'])
     expect(events[0]?.[2]).toMatchObject({ currency: 'PLN', value: 998 })
     expect(events[1]?.[2]).toMatchObject({ currency: 'PLN', value: 998 })
+  })
+
+  it('sends add_shipping_info and add_payment_info with the begin_checkout item payload', () => {
+    trackGaAddShippingInfo(shippingInfo())
+    trackGaAddPaymentInfo(paymentInfo())
+
+    const events = readQueue().slice(1)
+    expect(events.map((entry) => entry[1])).toEqual(['add_shipping_info', 'add_payment_info'])
+    expect(events[0]?.[2]).toEqual({
+      currency: 'PLN',
+      value: 998,
+      shipping_tier: 'Standardowa dostawa',
+      items: [
+        {
+          item_id: 'mat-1',
+          item_name: 'Dywaniki EVA',
+          price: 499,
+          quantity: 2,
+          item_brand: 'Audi',
+          item_category: 'car_mats',
+          item_variant: 'EVA-1',
+        },
+      ],
+    })
+    expect(events[1]?.[2]).toEqual({
+      currency: 'PLN',
+      value: 998,
+      payment_type: 'paynow',
+      items: [
+        {
+          item_id: 'mat-1',
+          item_name: 'Dywaniki EVA',
+          price: 499,
+          quantity: 2,
+          item_brand: 'Audi',
+          item_category: 'car_mats',
+          item_variant: 'EVA-1',
+        },
+      ],
+    })
   })
 
   it('sends purchase once per transaction id, including after refresh', () => {

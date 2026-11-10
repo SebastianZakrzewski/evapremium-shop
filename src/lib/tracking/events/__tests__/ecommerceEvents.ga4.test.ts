@@ -1,7 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { AddToCartData, InitiateCheckoutData, PurchaseData, ViewContentData } from '../../types'
+import type {
+  AddPaymentInfoData,
+  AddShippingInfoData,
+  AddToCartData,
+  InitiateCheckoutData,
+  PurchaseData,
+  ViewContentData,
+} from '../../types'
 
 const gaMocks = vi.hoisted(() => ({
+  trackGaAddPaymentInfo: vi.fn(),
+  trackGaAddShippingInfo: vi.fn(),
   trackGaAddToCart: vi.fn(),
   trackGaBeginCheckout: vi.fn(),
   trackGaPurchase: vi.fn(),
@@ -15,6 +24,8 @@ vi.mock('../../consent/isMarketingTrackingAllowed', () => ({
 }))
 
 import {
+  trackAddPaymentInfo,
+  trackAddShippingInfo,
   trackAddToCart,
   trackInitiateCheckout,
   trackPurchase,
@@ -53,6 +64,20 @@ const checkout = (): InitiateCheckoutData => ({
   contents: addToCart().contents,
 })
 
+const shippingInfo = (): AddShippingInfoData => ({
+  ...checkout(),
+  shipping_tier: 'Standardowa dostawa',
+})
+
+const paymentInfo = (): AddPaymentInfoData => ({
+  content_name: 'Payment Info Added',
+  content_category: 'checkout',
+  value: 499,
+  currency: 'PLN',
+  payment_method: 'paynow',
+  contents: addToCart().contents,
+})
+
 const purchase = (): PurchaseData => ({
   content_name: 'Purchase Completed',
   content_ids: ['ORD-1'],
@@ -64,6 +89,8 @@ const purchase = (): PurchaseData => ({
 
 describe('ecommerce events forward to GA4 without marketing consent', () => {
   beforeEach(() => {
+    gaMocks.trackGaAddPaymentInfo.mockClear()
+    gaMocks.trackGaAddShippingInfo.mockClear()
     gaMocks.trackGaAddToCart.mockClear()
     gaMocks.trackGaBeginCheckout.mockClear()
     gaMocks.trackGaPurchase.mockClear()
@@ -80,5 +107,13 @@ describe('ecommerce events forward to GA4 without marketing consent', () => {
     expect(gaMocks.trackGaAddToCart).toHaveBeenCalledWith(addToCart())
     expect(gaMocks.trackGaBeginCheckout).toHaveBeenCalledWith(checkout())
     expect(gaMocks.trackGaPurchase).toHaveBeenCalledWith(purchase())
+  })
+
+  it('forwards add_shipping_info and add_payment_info without marketing consent', () => {
+    trackAddShippingInfo(shippingInfo())
+    trackAddPaymentInfo(paymentInfo())
+
+    expect(gaMocks.trackGaAddShippingInfo).toHaveBeenCalledWith(shippingInfo())
+    expect(gaMocks.trackGaAddPaymentInfo).toHaveBeenCalledWith(paymentInfo())
   })
 })
