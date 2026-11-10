@@ -7,6 +7,7 @@ import {
   BRAND_GRID_SIZES_COMPACT,
   isBrandPhotoFile,
   isModeleBrandPhoto,
+  brandCardImageSrc,
   shouldServeBrandImageUnoptimized,
 } from "@/shared/brands"
 
@@ -60,7 +61,7 @@ export default function BrandPopularGridCard({
 
       {isImage && !imageError ? (
         <Image
-          src={brand.logo}
+          src={brandCardImageSrc(brand.logo)}
           alt={`${brand.name} logo`}
           fill
           className={isBrandImage ? "object-cover object-center" : compact ? "object-contain p-2" : "object-contain p-4"}

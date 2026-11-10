@@ -10,6 +10,7 @@ import {
   BRAND_GRID_SIZES_STANDARD,
   isBrandPhotoFile,
   isModeleBrandPhoto,
+  brandCardImageSrc,
   shouldServeBrandImageUnoptimized,
 } from "@/shared/brands";
 import { Car } from "lucide-react";
@@ -101,7 +102,7 @@ export const BrandGridCard: React.FC<BrandGridCardProps> = React.memo(({
           </div>
         ) : isImage ? (
           <Image
-            src={brand.logo}
+            src={brandCardImageSrc(brand.logo)}
             alt={`${brandLabel} logo`}
             fill
             className={`

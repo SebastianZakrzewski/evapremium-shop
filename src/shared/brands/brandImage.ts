@@ -21,3 +21,18 @@ export const isBrandPhotoFile = (logo: string): boolean =>
 
 export const isModeleBrandPhoto = (logo: string): boolean =>
   logo.includes('/modele/')
+
+/** Karta marki używa pochodnej 640 px. Oryginał w /modele/ zostaje. */
+export const brandCardImageSrc = (logo: string): string => {
+  if (!logo.includes('/modele/')) {
+    return logo
+  }
+
+  const file = logo.split('?')[0]?.split('/').pop() ?? ''
+  const base = file.replace(/\.[^.]+$/, '')
+  if (!base) {
+    return logo
+  }
+
+  return `/modele/display/${base}.webp`
+}

@@ -3,6 +3,7 @@ import {
   shouldServeBrandImageUnoptimized,
   isBrandPhotoFile,
   isModeleBrandPhoto,
+  brandCardImageSrc,
 } from '@/shared/brands/brandImage'
 
 describe('shouldServeBrandImageUnoptimized', () => {
@@ -20,6 +21,13 @@ describe('isBrandPhotoFile', () => {
   it('detects supported raster extensions', () => {
     expect(isBrandPhotoFile('/modele/ssangyong.avif')).toBe(true)
     expect(isBrandPhotoFile('/logo.svg')).toBe(false)
+  })
+})
+
+describe('brandCardImageSrc', () => {
+  it('points modele photos at the display derivative', () => {
+    expect(brandCardImageSrc('/modele/mclaren.avif')).toBe('/modele/display/mclaren.webp')
+    expect(brandCardImageSrc('/images/products/bmw.png')).toBe('/images/products/bmw.png')
   })
 })
 

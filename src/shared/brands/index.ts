@@ -32,6 +32,7 @@ export {
   BRAND_CAROUSEL_SIZES,
   isBrandPhotoFile,
   isModeleBrandPhoto,
+  brandCardImageSrc,
 } from './brandImage';
 
 // Car models API

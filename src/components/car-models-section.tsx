@@ -107,12 +107,17 @@ export default function CarModelsSection() {
   });
 
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [showAllBrands, setShowAllBrands] = useState(false);
   
   // Stan dla wybranego modelu (filtrowanie)
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
 
   // Pobierz marki dla sekcji wyboru marek
-  const { data: availableBrands = getFallbackBrands(), isLoading: loadingBrands } = useQuery({
+  const {
+    data: brandData,
+    isError: brandsFailed,
+    isPending: brandsPending,
+  } = useQuery({
     queryKey: ['car-brands', 'v3'],
     queryFn: fetchBrands,
     staleTime: 10 * 60 * 1000, // 10 minut
@@ -121,6 +126,8 @@ export default function CarModelsSection() {
     retryDelay: 1000,
     enabled: !pinnedCard,
   });
+  const availableBrands = brandData ?? (brandsFailed ? getFallbackBrands() : [])
+  const loadingBrands = brandsPending && !brandsFailed
 
   // Handler kliknięcia marki
   const handleBrandClick = useCallback((brand: Brand) => {
@@ -376,31 +383,45 @@ export default function CarModelsSection() {
             )}
           </div>
 
-          {/* Grid z markami */}
+          {/* Grid z markami. Min-height trzyma stopkę pod pierwszym ekranem, zanim dojdzie pełna lista. */}
           {loadingBrands ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500 mx-auto"></div>
-              <p className="text-gray-400 mt-4">Ładowanie marek...</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-              {availableBrands.map((brand, index) => (
+            <div
+              className="grid min-h-[70vh] grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5"
+              aria-busy="true"
+              aria-label="Ładowanie marek"
+            >
+              {Array.from({ length: 10 }, (_, index) => (
                 <div
-                  key={brand.id}
-                  className="animate-fade-in"
-                  style={{
-                    animationDelay: `${index * 0.05}s`,
-                  }}
-                >
-                  <BrandGridCard
-                    brand={brand}
-                    onClick={handleBrandClick}
-                    isClicked={clickedBrandId === brand.id}
-                    isPriority={index < 5}
-                  />
-                </div>
+                  key={index}
+                  className="aspect-square rounded-3xl bg-white/5"
+                />
               ))}
             </div>
+          ) : (
+            <>
+            <div className="grid min-h-[70vh] grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5">
+              {(showAllBrands ? availableBrands : availableBrands.slice(0, 12)).map((brand, index) => (
+                <BrandGridCard
+                  key={brand.id}
+                  brand={brand}
+                  onClick={handleBrandClick}
+                  isClicked={clickedBrandId === brand.id}
+                  isPriority={index < 2}
+                />
+              ))}
+            </div>
+            {!showAllBrands && availableBrands.length > 12 ? (
+              <div className="mt-8 flex justify-center">
+                <button
+                  type="button"
+                  className="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black"
+                  onClick={() => setShowAllBrands(true)}
+                >
+                  Pokaż wszystkie marki
+                </button>
+              </div>
+            ) : null}
+            </>
           )}
         </div>
       </section>
