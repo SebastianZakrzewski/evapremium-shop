@@ -3,6 +3,9 @@ import type { CSSProperties } from "react"
 /** iPhone 14 / 16 / 16 Pro zostawiają zdjęcie w pełnej wysokości. */
 export const MOBILE_PREVIEW_FULL_FROM_PX = 840
 
+/** Każdy telefon dostaje to samo, mniejsze okno. Wysokość schodzi razem z szerokością. */
+export const MOBILE_PREVIEW_FRAME_SCALE = 0.5
+
 /** Węższy bok ekranu nadal uznajemy za telefon, nie za okno desktopu. */
 const PHONE_SCREEN_MAX_SHORT_SIDE_PX = 500
 
@@ -92,9 +95,8 @@ export const resolveMobilePreviewFrameSrc = (
 ): string | null => resolvePreviewFrame(items, activeSrc).src
 
 /**
- * Skraca zbyt wysokie okno krokami do wysokości podglądu dywanika.
- * Zdjęcie modelu zostaje na całej szerokości. Niższy krok dałby czarny pas
- * u góry i po bokach, więc tam się zatrzymuje.
+ * Skraca zbyt wysokie okno do proporcji podglądu dywanika.
+ * Na telefonie całe okno jest dodatkowo węższe o MOBILE_PREVIEW_FRAME_SCALE.
  */
 export const shrinkMobilePreviewFrame = (size: {
   width: number
@@ -127,11 +129,12 @@ export const previewFrameStyle = (
 
   if (mode === "mobile") {
     const frame = shrinkMobilePreviewFrame(size)
+    const frameWidth = `${MOBILE_PREVIEW_FRAME_SCALE * 100}%`
     return {
       aspectRatio: `${frame.width} / ${frame.height}`,
-      width: "100%",
+      width: frameWidth,
       // Jawna wysokość. Safari zwija height:auto + aspect-ratio w flexie do paska.
-      height: `calc(100cqw * ${frame.height} / ${frame.width})`,
+      height: `calc(${MOBILE_PREVIEW_FRAME_SCALE * 100}cqw * ${frame.height} / ${frame.width})`,
     }
   }
 

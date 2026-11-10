@@ -29,6 +29,7 @@ describe("ConfiguratorV2StickyBar", () => {
     expect(screen.getByText(/549/)).toBeInTheDocument()
     const forward = screen.getByRole("button", { name: "Dalej" })
     expect(forward).toBeEnabled()
+    expect(forward).toHaveClass("h-8", "text-xs")
     fireEvent.click(forward)
     expect(onForward).toHaveBeenCalledOnce()
     expect(screen.queryByRole("button", { name: "Wstecz" })).not.toBeInTheDocument()

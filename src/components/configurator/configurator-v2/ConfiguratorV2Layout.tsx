@@ -116,7 +116,7 @@ export const ConfiguratorV2Layout = ({
     </div>
 
     <div
-      className={`shrink-0 pb-safe lg:hidden ${hideMobileStickyBar ? "hidden" : ""}`}
+      className={`shrink-0 lg:hidden ${hideMobileStickyBar ? "hidden" : ""}`}
     >
       {stickyBarMobile}
     </div>

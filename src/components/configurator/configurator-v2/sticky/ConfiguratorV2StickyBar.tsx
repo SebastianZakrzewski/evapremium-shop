@@ -30,13 +30,13 @@ type ConfiguratorV2StickyBarProps = {
 }
 
 const forwardButtonClassName =
-  "inline-flex min-h-9 min-w-9 flex-1 items-center justify-center rounded-full bg-red-600 px-4 text-[13px] font-medium text-white transition-colors hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40 lg:flex-none"
+  "inline-flex h-8 min-h-8 min-w-8 flex-1 items-center justify-center rounded-full bg-red-600 px-3 text-xs font-medium text-white transition-colors hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40"
 
 const headerForwardButtonClassName =
   "inline-flex h-12 min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-red-600 px-6 text-[15px] font-semibold text-white shadow-lg shadow-black/40 transition-colors hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-70"
 
 const backButtonClassName =
-  "inline-flex min-h-9 min-w-9 flex-1 items-center justify-center rounded-full border border-white/15 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:bg-white/10 lg:flex-none"
+  "inline-flex h-8 min-h-8 min-w-8 flex-1 items-center justify-center rounded-full border border-white/15 bg-transparent px-3 text-xs font-medium text-white transition-colors hover:bg-white/10"
 
 const headerBackButtonClassName =
   "inline-flex min-h-11 min-w-11 flex-1 items-center justify-center rounded-full border border-white/15 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:bg-white/10 lg:flex-none"
@@ -70,9 +70,14 @@ export const ConfiguratorV2StickyBar = ({
       aria-valuemax={stageCount}
       aria-valuenow={currentStage}
       aria-label={progressLabel}
-      className="flex min-w-0 items-center gap-2"
+      className={`flex min-w-0 items-center ${isHeader ? "gap-2" : "gap-1.5"}`}
     >
-      <span className="shrink-0 text-[11px] font-medium leading-none text-white/80" aria-hidden>
+      <span
+        className={`shrink-0 font-medium leading-none text-white/80 ${
+          isHeader ? "text-[11px]" : "text-[10px]"
+        }`}
+        aria-hidden
+      >
         {progressLabel}
       </span>
       <span className="flex min-w-0 flex-1 gap-1" aria-hidden>
@@ -84,7 +89,7 @@ export const ConfiguratorV2StickyBar = ({
               key={step}
               data-progress-segment={step}
               data-reached={reached ? "true" : "false"}
-              className={`h-1 min-w-[1.25rem] flex-1 rounded-full ${
+              className={`${isHeader ? "h-1 min-w-[1.25rem]" : "h-0.5 min-w-2"} flex-1 rounded-full ${
                 reached ? "bg-red-600" : "bg-white/25"
               }`}
             />
@@ -107,7 +112,7 @@ export const ConfiguratorV2StickyBar = ({
       {hasPrice ? (
         <>
           <span className="flex items-center gap-1.5">
-            <span className="text-base font-medium tabular-nums tracking-tight text-green-400 lg:text-xl">
+            <span className="text-sm font-medium tabular-nums tracking-tight text-green-400 lg:text-xl">
               {formatPricePln(totalWithAccessories)}
             </span>
             {onPriceClick && (
@@ -196,7 +201,7 @@ export const ConfiguratorV2StickyBar = ({
       className="relative w-full border-t border-white/[0.08] bg-black/80 backdrop-blur-2xl"
       data-variant={variant}
     >
-      <div className="flex flex-col gap-1 px-3 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] lg:px-6">
+      <div className="flex flex-col gap-1 px-3 py-1 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
         <div className="flex min-w-0 items-center gap-3">
           {hasPrice && <div className="shrink-0">{priceBlock}</div>}
           <div className="min-w-0 flex-1">{progress}</div>
