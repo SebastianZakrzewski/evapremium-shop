@@ -4,7 +4,7 @@ import type { ServerTrackingEnv } from './gate'
 import { planServerPurchase, type AdsClickConversion, type Ga4PurchaseBody } from './plan'
 
 const GA4_COLLECT_URL = 'https://www.google-analytics.com/mp/collect'
-const GOOGLE_ADS_VERSION = 'v18'
+const GOOGLE_ADS_VERSION = 'v23'
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token'
 
 export type TrackPaidPaynowInput = {
@@ -81,8 +81,11 @@ const postAds = async (
   const customerId = (env.googleAdsCustomerId as string).replace(/-/g, '')
   const headers: Record<string, string> = {
     Authorization: `Bearer ${token}`,
-    'developer-token': env.googleAdsDeveloperToken as string,
     'Content-Type': 'application/json',
+  }
+  const developerToken = env.googleAdsDeveloperToken?.trim()
+  if (developerToken) {
+    headers['developer-token'] = developerToken
   }
   if (env.googleAdsLoginCustomerId) {
     headers['login-customer-id'] = env.googleAdsLoginCustomerId.replace(/-/g, '')

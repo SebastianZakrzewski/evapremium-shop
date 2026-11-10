@@ -30,6 +30,8 @@ export type AdsClickConversion = {
   conversionValue: number
   currencyCode: 'PLN'
   orderId: string
+  /** v23 click uploads use adUserData. adPersonalization is not accepted on this service. */
+  consent: { adUserData: 'GRANTED' }
   gclid?: string
   gbraid?: string
   wbraid?: string
@@ -85,8 +87,7 @@ export const adsConversionResource = (env: ServerTrackingEnv): string | null => 
 
 export const adsCredentialsReady = (env: ServerTrackingEnv): boolean =>
   Boolean(
-    env.googleAdsDeveloperToken &&
-      env.googleAdsClientId &&
+    env.googleAdsClientId &&
       env.googleAdsClientSecret &&
       env.googleAdsRefreshToken &&
       env.googleAdsCustomerId &&
@@ -183,6 +184,7 @@ export const planServerPurchase = (input: {
       conversionValue: Number(input.order.total || 0),
       currencyCode: 'PLN',
       orderId: input.order.orderNumber,
+      consent: { adUserData: 'GRANTED' },
     }
     if (clickField === 'gclid') conversion.gclid = attribution?.gclid
     if (clickField === 'gbraid') conversion.gbraid = attribution?.gbraid
