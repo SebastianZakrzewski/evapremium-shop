@@ -1,27 +1,22 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter, Montserrat } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import { ShopChrome } from "@/components/layout/ShopChrome";
+import { FontsReady } from "@/components/layout/FontsReady";
 import { EvaChatWidget } from "@/features/eva-chat-widget";
 import Script from "next/script";
 import { SessionProvider } from "@/lib/contexts/session-context";
 import { TrackingProvider } from "@/components/tracking-provider";
-import { GoogleAnalyticsScript } from "@/components/analytics/GoogleAnalyticsScript";
+import { DeferredTags } from "@/components/analytics/DeferredTags";
 import { GoogleConsentDefaultScript } from "@/components/analytics/GoogleConsentDefaultScript";
 import { QueryProvider } from "@/lib/providers/query-provider";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "700"],
   display: "swap",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -211,24 +206,8 @@ export default function RootLayout({
         />
 
         <GoogleConsentDefaultScript />
+        <DeferredTags />
 
-        {/* Google Tag Manager — zgody obsługuje samo GTM, Cookiebot nie blokuje tego skryptu */}
-        <Script
-          id="gtm"
-          strategy="afterInteractive"
-          data-cookieconsent="ignore"
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-TD2WDGKV');`,
-          }}
-        />
-        {/* End Google Tag Manager */}
-
-        <GoogleAnalyticsScript />
-        
         {/* Schema.org */}
         <Script
           id="organization-schema"
@@ -245,7 +224,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
       </head>
-      <body className={`${montserrat.variable} ${inter.variable} bg-black min-h-screen`}>
+      <body className={`${montserrat.variable} bg-black min-h-screen`}>
+        <FontsReady />
         <QueryProvider>
           <SessionProvider>
             <TrackingProvider>

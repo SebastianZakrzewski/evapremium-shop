@@ -31,8 +31,8 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
 }
 
 @theme {
-  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-montserrat), ui-monospace, monospace;
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
   
   --color-background: 0 0% 0%;
   --color-foreground: 0 0% 100%;
@@ -130,7 +130,7 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
 
   h1, h2, h3, h4, h5, h6,
   .h1, .h2, .h3, .h4, .h5, .h6 {
-    font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+    font-family: ui-sans-serif, system-ui, sans-serif;
     font-weight: 400;
     letter-spacing: calc(0.06rem);
     line-height: 1.2;
@@ -240,6 +240,26 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+}
+
+html.fonts-ready {
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-montserrat), ui-monospace, monospace;
+}
+
+html.fonts-ready h1,
+html.fonts-ready h2,
+html.fonts-ready h3,
+html.fonts-ready h4,
+html.fonts-ready h5,
+html.fonts-ready h6,
+html.fonts-ready .h1,
+html.fonts-ready .h2,
+html.fonts-ready .h3,
+html.fonts-ready .h4,
+html.fonts-ready .h5,
+html.fonts-ready .h6 {
+  font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Responsywne animacje - ogranicz motion, ale nie zabijaj intentional marquees */
