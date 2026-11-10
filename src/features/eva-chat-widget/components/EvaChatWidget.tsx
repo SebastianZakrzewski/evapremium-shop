@@ -46,7 +46,6 @@ export const EvaChatWidget = () => {
 
   const embeddedInProductWindow = isReady && window.parent !== window
   const onConfigurator = pathname === '/konfigurator'
-  const hideLauncherOnMobileConfigurator = onConfigurator && isConfiguratorMobile
 
   useEffect(() => {
     if (!hasOpened) {
@@ -133,7 +132,7 @@ export const EvaChatWidget = () => {
       ? 'fixed inset-0 z-[80] flex h-dvh w-dvw flex-col overflow-hidden max-md:bg-black md:inset-auto md:bottom-6 md:left-4 md:right-auto md:h-auto md:w-auto md:items-start md:gap-3 md:overflow-visible md:bg-transparent'
       : 'fixed inset-0 z-[80] flex h-dvh w-dvw flex-col overflow-hidden max-md:bg-black md:inset-auto md:bottom-4 md:right-4 md:h-auto md:w-auto md:items-end md:gap-3 md:overflow-visible md:bg-transparent'
     : onConfigurator
-      ? 'fixed bottom-24 left-4 z-[80] flex flex-col items-start gap-3 lg:bottom-6'
+      ? 'fixed left-3 top-[4.75rem] z-30 flex flex-col items-start gap-3'
       : 'fixed bottom-4 right-4 z-[80] flex flex-col items-end gap-3'
 
   const slotClassName = isOpen
@@ -142,12 +141,16 @@ export const EvaChatWidget = () => {
 
   const openLauncherClassName = `absolute top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-10 h-14 w-14 md:static md:h-20 md:w-20 ${launcherChromeClassName}`
 
-  if (!isReady || embeddedInProductWindow || hideLauncherOnMobileConfigurator) {
+  if (!isReady || embeddedInProductWindow) {
     return null
   }
 
   return createPortal(
-    <div ref={shellRef} className={shellClassName}>
+    <div
+      ref={shellRef}
+      className={shellClassName}
+      data-configurator-mobile={isConfiguratorMobile ? 'true' : 'false'}
+    >
       <div data-eva-chat-slot className={slotClassName} />
       {showBubble ? (
         <p
@@ -183,7 +186,9 @@ export const EvaChatWidget = () => {
       ) : null}
       <button
         type="button"
-        className={isOpen ? openLauncherClassName : launcherButtonClassName}
+        className={`${isOpen ? openLauncherClassName : launcherButtonClassName} ${
+          onConfigurator && !isOpen ? '!h-14 !w-14' : ''
+        }`}
         aria-label={isOpen ? 'Zamknij czat EvaBot' : 'Otwórz czat EvaBot'}
         aria-expanded={isOpen}
         aria-describedby={showBubble ? 'eva-chat-greeting' : undefined}

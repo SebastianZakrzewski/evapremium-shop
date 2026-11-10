@@ -10,7 +10,7 @@ import { persistLandingClickIds } from '@/lib/tracking/attribution/collect'
 
 const pageOffsetClassName = 'pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden'
 const configuratorFrameClassName =
-  'box-border h-dvh overflow-hidden pt-16 md:pt-20 lg:pt-24 max-w-full'
+  'box-border min-h-svh max-w-full pb-[env(safe-area-inset-bottom)]'
 
 const isConfiguratorPath = (pathname: string | null) =>
   pathname === '/konfigurator'

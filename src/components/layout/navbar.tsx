@@ -11,9 +11,11 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const { itemCount } = useCart();
   const router = useRouter();
   const pathname = usePathname();
+  const onConfigurator = pathname === "/konfigurator";
 
   const handleGalleryClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -23,12 +25,24 @@ export default function Navbar() {
 
   // Nasłuchuj na scroll
   useEffect(() => {
+    let lastY = window.scrollY;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      const y = window.scrollY;
+      setScrolled(y > 20);
+      if (!onConfigurator || open) {
+        setHidden(false);
+        lastY = y;
+        return;
+      }
+      const delta = y - lastY;
+      if (y < 8) setHidden(false);
+      else if (delta < -12) setHidden(false);
+      else if (delta > 2 || y > 64) setHidden(true);
+      lastY = y;
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [onConfigurator, open]);
 
   // Zamknij menu hamburger przy przejściu na desktop (lg+)
   useEffect(() => {
@@ -63,7 +77,9 @@ export default function Navbar() {
   return (
     <>
       <nav 
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${
+          hidden ? "-translate-y-full" : "translate-y-0"
+        } ${
           scrolled 
             ? "bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg" 
             : "bg-black/60 backdrop-blur-sm border-b border-transparent"

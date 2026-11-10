@@ -133,7 +133,7 @@ describe('EvaChatWidget', () => {
     })
   })
 
-  it('hides the launcher in the mobile configurator', () => {
+  it('offsets the launcher above the configurator bar on mobile', () => {
     navigationState.pathname = '/konfigurator'
     window.matchMedia = vi.fn().mockImplementation((query: string) => ({
       matches: query === '(max-width: 1023px)',
@@ -144,7 +144,10 @@ describe('EvaChatWidget', () => {
 
     render(<EvaChatWidget />)
 
-    expect(screen.queryByRole('button', { name: 'Otwórz czat EvaBot' })).not.toBeInTheDocument()
+    const launcher = screen.getByRole('button', { name: 'Otwórz czat EvaBot' })
+    expect(launcher.parentElement).toHaveClass('top-[4.75rem]')
+    expect(launcher).toHaveClass('!h-14')
+    expect(launcher.parentElement).toHaveAttribute('data-configurator-mobile', 'true')
   })
 
   it('shows the launcher on the production shop', () => {
