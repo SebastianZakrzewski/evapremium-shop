@@ -1,0 +1,13 @@
+const home = await (await fetch("http://127.0.0.1:3010/")).text()
+const konf = await (await fetch("http://127.0.0.1:3010/konfigurator?brand=audi&model=a4")).text()
+const modele = await (await fetch("http://127.0.0.1:3010/modele")).text()
+
+const hits = (html, pattern) => [...html.matchAll(pattern)].map((match) => match[0]).slice(0, 6)
+console.log("home fetch attrs", hits(home, /fetchPriority="[^"]+"/g))
+console.log("konf imgs", hits(konf, /<img[^>]+>/g).slice(0, 8))
+console.log("konf audi count", (konf.match(/\/modele\/audi\.avif/g) || []).length)
+console.log("modele snippets")
+const index = modele.indexOf("adowanie")
+console.log(modele.slice(Math.max(0, index - 120), index + 180))
+console.log("modele cards", (modele.match(/Brand|aspect-square|rounded-3xl|Wybierz markę/g) || []).slice(0, 10))
+console.log("bmw.png", modele.includes("bmw.png"), "acura", modele.includes("acura"))

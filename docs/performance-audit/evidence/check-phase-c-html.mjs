@@ -1,0 +1,7 @@
+const home = await (await fetch("http://127.0.0.1:3010/")).text()
+console.log("gallery img", home.includes("/galeria/display/"))
+console.log("comparison", home.includes("eva-mat-comparison"))
+console.log("gtag src", home.includes("googletagmanager.com/gtag/js"))
+console.log("hero avif", home.includes("zimowa_mobile_hero.avif"))
+console.log("font links", (home.match(/as="font"/g) || []).length)
+console.log("inter", home.includes("font-inter"))

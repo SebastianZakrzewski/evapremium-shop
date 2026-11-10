@@ -1,0 +1,5 @@
+const html = await (await fetch("http://127.0.0.1:3010/")).text()
+const scripts = [...html.matchAll(/<script[^>]*src="([^"]+)"/g)].map((match) => match[1])
+console.log("scripts", scripts.length)
+scripts.forEach((src) => console.log(src))
+console.log("modulepreload", (html.match(/rel="modulepreload"/g) || []).length)

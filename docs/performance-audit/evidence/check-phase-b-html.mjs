@@ -1,0 +1,12 @@
+const home = await (await fetch("http://127.0.0.1:3010/")).text()
+const modele = await (await fetch("http://127.0.0.1:3010/modele")).text()
+const konf = await (await fetch("http://127.0.0.1:3010/konfigurator?brand=audi&model=a4")).text()
+const picture = home.slice(home.indexOf("<picture>"), home.indexOf("</picture>"))
+
+console.log("hero fetchPriority", picture.includes('fetchPriority="high"'))
+console.log("comparison lazy", home.includes('src="/images/eva-mat-comparison.webp"') && home.includes('loading="lazy"'))
+console.log("comparison preload link", home.includes('href="/images/eva-mat-comparison.webp"'))
+console.log("modele skeleton", modele.includes("aspect-square"), modele.includes("min-h-[70vh]"))
+console.log("modele old spinner", modele.includes("Ładowanie modeli"))
+console.log("konf img", /<img[^>]*\/modele\/audi\.avif/.test(konf))
+console.log("konf preload", konf.includes('href="/modele/audi.avif"'))
