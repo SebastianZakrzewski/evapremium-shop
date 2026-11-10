@@ -19,7 +19,7 @@ Checkout reads first-party click ids and the current cookies, then saves them on
 
 GA4 Measurement Protocol runs only when `SERVER_TRACKING_ENABLED=true`, statistics consent was granted, and `client_id` was stored.
 
-Google Ads `uploadClickConversions` runs only when `ADS_SERVER_UPLOAD_ENABLED=true` as well, marketing consent was granted, and one click id is stored (`gclid`, then `gbraid`, then `wbraid`). `orderId` is the shop order number (`ORD-...`). `conversionDateTime` is the paid time in Europe/Warsaw. The conversion action is `GOOGLE_ADS_SERVER_CONVERSION_ACTION` on `GOOGLE_ADS_CUSTOMER_ID`. The intended action is the existing secondary action `7861775516` (`Zakup – potwierdzona płatność`) on customer `6142700676`. This does not change the primary client-side Zakup action `AW-18303682173/GGzWCPqk_MscEP2M8JdE`.
+Google Ads `uploadClickConversions` runs only when `ADS_SERVER_UPLOAD_ENABLED=true` as well, marketing consent was granted, and one click id is stored (`gclid`, then `gbraid`, then `wbraid`). The call uses Google Ads API v23 (`https://googleads.googleapis.com/v23/customers/{customerId}:uploadClickConversions`) with `partialFailure: true`. `orderId` is the shop order number (`ORD-...`). `conversionDateTime` is the paid time in Europe/Warsaw, formatted `yyyy-mm-dd hh:mm:ss+hh:mm`. Because the upload runs only after marketing consent, `consent.adUserData` is `GRANTED`. `adPersonalization` is not sent; ConversionUploadService does not accept it. The conversion action is `GOOGLE_ADS_SERVER_CONVERSION_ACTION` on `GOOGLE_ADS_CUSTOMER_ID`. The intended action is the existing secondary action `7861775516` (`Zakup – potwierdzona płatność`) on customer `6142700676`. This does not change the primary client-side Zakup action `AW-18303682173/GGzWCPqk_MscEP2M8JdE`.
 
 `purchase_tracking.ga4.status` and `purchase_tracking.ads.status` become `sent`, `skipped`, or `failed`. A later Paynow retry does not send a channel that is already `sent` or `sending`. A failed channel can be retried by the next `CONFIRMED` notification. Tracking errors are logged and still return HTTP 200 to Paynow.
 
@@ -32,12 +32,12 @@ Google Ads `uploadClickConversions` runs only when `ADS_SERVER_UPLOAD_ENABLED=tr
 | `GA4_MEASUREMENT_ID` | `G-SGHPWGL4P4` (property 562402558). |
 | `GA4_API_SECRET` | Measurement Protocol secret from GA4 Admin → Data streams. |
 | `GA4_MP_DEBUG` | `true` adds `debug_mode: 1` so the hit can show in GA4 DebugView. Leave unset in normal production. |
-| `GOOGLE_ADS_DEVELOPER_TOKEN` | Ads API developer token. |
+| `GOOGLE_ADS_DEVELOPER_TOKEN` | Optional. Sent as the `developer-token` header only when set. Google ignores the header; access follows the OAuth client's Cloud project. |
 | `GOOGLE_ADS_OAUTH_CLIENT_ID` | OAuth client id. |
 | `GOOGLE_ADS_OAUTH_CLIENT_SECRET` | OAuth client secret. |
 | `GOOGLE_ADS_REFRESH_TOKEN` | Refresh token with Ads upload scope. |
 | `GOOGLE_ADS_CUSTOMER_ID` | `6142700676`. |
-| `GOOGLE_ADS_LOGIN_CUSTOMER_ID` | Manager account id, only if the API requires it. |
+| `GOOGLE_ADS_LOGIN_CUSTOMER_ID` | Optional manager account id. Leave unset when there is no manager account. |
 | `GOOGLE_ADS_SERVER_CONVERSION_ACTION` | `7861775516` or the full resource name. |
 
 Do not set these on Preview. Do not point them at a sandbox Paynow merchant.

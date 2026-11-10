@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import type { Order } from '@/lib/types/order-new'
 import type { PurchaseTrackingRecord } from '../attribution/types'
 import { collectPurchaseAttribution, parseGaClientId, parseGaSessionId, parseGclAw } from '../attribution/collect'
-import { planServerPurchase } from '../server/plan'
+import { adsCredentialsReady, planServerPurchase } from '../server/plan'
 import { trackPaidPaynowPurchase } from '../server/sendPurchase'
 import type { ServerTrackingEnv } from '../server/gate'
 
@@ -114,8 +114,40 @@ describe('server purchase plan', () => {
       currencyCode: 'PLN',
       orderId: 'ORD-2026-000528',
       gclid: 'click-123',
+      consent: { adUserData: 'GRANTED' },
     })
     expect(plan.ads.conversion?.conversionDateTime).toMatch(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/)
+    expect(plan.ads.conversion).not.toHaveProperty('adPersonalization')
+    expect(plan.ads.conversion?.consent).not.toHaveProperty('adPersonalization')
+  })
+
+  it('treats Ads credentials as ready without a developer token or login customer id', () => {
+    const withoutToken = { ...enabledEnv(), googleAdsDeveloperToken: undefined }
+    expect(adsCredentialsReady(withoutToken)).toBe(true)
+    expect(adsCredentialsReady({ ...withoutToken, googleAdsDeveloperToken: '   ' })).toBe(true)
+    expect(adsCredentialsReady({ ...enabledEnv(), googleAdsClientId: undefined })).toBe(false)
+    expect(adsCredentialsReady({ ...enabledEnv(), googleAdsRefreshToken: '' })).toBe(false)
+    expect(adsCredentialsReady({ ...enabledEnv(), googleAdsConversionAction: undefined })).toBe(false)
+
+    const plan = planServerPurchase({
+      order: paidOrder({ attribution, ga4: { status: 'pending' }, ads: { status: 'pending' } }),
+      tracking: { attribution, ga4: { status: 'pending' }, ads: { status: 'pending' } },
+      providerPaymentId: 'PAY-528',
+      paidAt,
+      env: withoutToken,
+    })
+    expect(plan.ads.status).toBe('pending')
+    expect(plan.ads.conversion?.consent).toEqual({ adUserData: 'GRANTED' })
+
+    const missing = planServerPurchase({
+      order: paidOrder({ attribution, ga4: { status: 'pending' }, ads: { status: 'pending' } }),
+      tracking: { attribution, ga4: { status: 'pending' }, ads: { status: 'pending' } },
+      providerPaymentId: 'PAY-528',
+      paidAt,
+      env: { ...enabledEnv(), googleAdsCustomerId: undefined },
+    })
+    expect(missing.ads.reason).toBe('missing_ads_config')
+    expect(missing.ga4.status).toBe('pending')
   })
 
   it('skips GA4 without statistics consent or client id, and Ads without a click id or marketing consent', () => {
@@ -277,5 +309,108 @@ describe('trackPaidPaynowPurchase', () => {
     )
     expect(result).toBeNull()
     expect(fetchImpl).not.toHaveBeenCalled()
+  })
+
+  it('uploads click conversions on Ads API v23 without a developer token', async () => {
+    const withoutToken = { ...enabledEnv(), googleAdsDeveloperToken: '   ' }
+    const fetchImpl = vi.fn(async (url: string) => {
+      if (String(url).includes('oauth2.googleapis.com')) {
+        return new Response(JSON.stringify({ access_token: 'token' }), { status: 200 })
+      }
+      if (String(url).includes('uploadClickConversions')) {
+        return new Response(
+          JSON.stringify({
+            results: [{ conversionAction: 'customers/6142700676/conversionActions/7861775516' }],
+          }),
+          { status: 200 }
+        )
+      }
+      return new Response(null, { status: 204 })
+    })
+    let stored: PurchaseTrackingRecord | null = {
+      attribution,
+      ga4: { status: 'pending' },
+      ads: { status: 'pending' },
+    }
+
+    const result = await trackPaidPaynowPurchase(
+      { orderId: 'order-1', providerPaymentId: 'PAY-528', paymentEnvironment: 'production', paidAt: '2026-11-08T12:00:00.000Z' },
+      {
+        env: withoutToken,
+        fetchImpl: fetchImpl as unknown as typeof fetch,
+        loadOrder: async () => paidOrder(stored),
+        saveTracking: async (_id, tracking) => {
+          stored = tracking
+        },
+      }
+    )
+
+    const adsCall = fetchImpl.mock.calls.find((call) => String(call[0]).includes('uploadClickConversions'))
+    expect(adsCall?.[0]).toBe('https://googleads.googleapis.com/v23/customers/6142700676:uploadClickConversions')
+    const init = adsCall?.[1] as RequestInit
+    const headers = init.headers as Record<string, string>
+    expect(headers.Authorization).toBe('Bearer token')
+    expect(headers['developer-token']).toBeUndefined()
+    expect(headers['login-customer-id']).toBeUndefined()
+    expect(JSON.parse(String(init.body))).toMatchObject({
+      partialFailure: true,
+      conversions: [
+        {
+          conversionAction: 'customers/6142700676/conversionActions/7861775516',
+          conversionValue: 847,
+          currencyCode: 'PLN',
+          orderId: 'ORD-2026-000528',
+          gclid: 'click-123',
+          consent: { adUserData: 'GRANTED' },
+          conversionDateTime: expect.stringMatching(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/),
+        },
+      ],
+    })
+    expect(JSON.parse(String(init.body)).conversions[0]).not.toHaveProperty('adPersonalization')
+    expect(String(fetchImpl.mock.calls.find((call) => String(call[0]).includes('google-analytics.com'))?.[0])).toContain(
+      'measurement_id=G-SGHPWGL4P4'
+    )
+    expect(result?.ads?.status).toBe('sent')
+    expect(result?.ga4?.status).toBe('sent')
+  })
+
+  it('sends the developer token and login customer id only when they are set, and records a partial failure', async () => {
+    const fetchImpl = vi.fn(async (url: string) => {
+      if (String(url).includes('oauth2.googleapis.com')) {
+        return new Response(JSON.stringify({ access_token: 'token' }), { status: 200 })
+      }
+      if (String(url).includes('uploadClickConversions')) {
+        return new Response(JSON.stringify({ partialFailureError: { code: 3, message: 'The click ID is invalid.' } }), {
+          status: 200,
+        })
+      }
+      return new Response(null, { status: 204 })
+    })
+
+    const result = await trackPaidPaynowPurchase(
+      { orderId: 'order-1', providerPaymentId: 'PAY-528', paymentEnvironment: 'production', paidAt: '2026-11-08T12:00:00.000Z' },
+      {
+        env: {
+          ...enabledEnv(),
+          googleAdsDeveloperToken: '  dev-token  ',
+          googleAdsLoginCustomerId: '123-456-7890',
+          googleAdsCustomerId: '614-270-0676',
+        },
+        fetchImpl: fetchImpl as unknown as typeof fetch,
+        loadOrder: async () =>
+          paidOrder({ attribution, ga4: { status: 'sent' }, ads: { status: 'pending' } }),
+        saveTracking: async () => undefined,
+      }
+    )
+
+    const adsCall = fetchImpl.mock.calls.find((call) => String(call[0]).includes('uploadClickConversions'))
+    expect(adsCall?.[0]).toBe('https://googleads.googleapis.com/v23/customers/6142700676:uploadClickConversions')
+    const headers = (adsCall?.[1] as RequestInit).headers as Record<string, string>
+    expect(headers['developer-token']).toBe('dev-token')
+    expect(headers['login-customer-id']).toBe('1234567890')
+    expect(fetchImpl.mock.calls.some((call) => String(call[0]).includes('google-analytics.com'))).toBe(false)
+    expect(result?.ga4?.status).toBe('sent')
+    expect(result?.ads?.status).toBe('failed')
+    expect(result?.ads?.reason).toBe('The click ID is invalid.')
   })
 })
