@@ -4,7 +4,7 @@ import type { CSSProperties } from "react"
 export const MOBILE_PREVIEW_FULL_FROM_PX = 840
 
 /** Każdy telefon dostaje to samo, mniejsze okno. Wysokość schodzi razem z szerokością. */
-export const MOBILE_PREVIEW_FRAME_SCALE = 0.4
+export const MOBILE_PREVIEW_FRAME_SCALE = 0.5
 
 /** Węższy bok ekranu nadal uznajemy za telefon, nie za okno desktopu. */
 const PHONE_SCREEN_MAX_SHORT_SIDE_PX = 500
