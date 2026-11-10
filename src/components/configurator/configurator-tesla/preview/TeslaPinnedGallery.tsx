@@ -30,12 +30,23 @@ export const TeslaPinnedGallery = ({
 }: TeslaPinnedGalleryProps) => {
   const [index, setIndex] = useState(0)
   const [previousSrc, setPreviousSrc] = useState<string | null>(null)
+  const [previousVisible, setPreviousVisible] = useState(false)
   const override = useRef(false)
   const touchStart = useRef<number | null>(null)
 
   useEffect(() => {
     slides.forEach((slide) => preload(slide.src))
   }, [slides])
+
+  useEffect(() => {
+    if (!previousSrc) return undefined
+    const frame = requestAnimationFrame(() => setPreviousVisible(false))
+    const timer = window.setTimeout(() => setPreviousSrc(null), TESLA_LAYOUT.crossfadeMs)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.clearTimeout(timer)
+    }
+  }, [previousSrc])
 
   useEffect(() => {
     override.current = false
@@ -48,7 +59,10 @@ export const TeslaPinnedGallery = ({
     setIndex((current) => {
       if (current === next) return current
       const leaving = slides[current]
-      if (leaving) setPreviousSrc(leaving.src)
+      if (leaving) {
+        setPreviousVisible(true)
+        setPreviousSrc(leaving.src)
+      }
       return next
     })
   }, [preferredId, slides])
@@ -60,7 +74,10 @@ export const TeslaPinnedGallery = ({
     setIndex((current) => {
       const next = (current + delta + slides.length) % slides.length
       const leaving = slides[current]
-      if (leaving) setPreviousSrc(leaving.src)
+      if (leaving) {
+        setPreviousVisible(true)
+        setPreviousSrc(leaving.src)
+      }
       return next
     })
   }
@@ -99,7 +116,10 @@ export const TeslaPinnedGallery = ({
             fill
             sizes="(max-width: 1024px) 100vw, 62vw"
             className="object-contain"
-            style={{ opacity: 0, transition: `opacity ${TESLA_LAYOUT.crossfadeMs}ms ease` }}
+            style={{
+              opacity: previousVisible ? 1 : 0,
+              transition: `opacity ${TESLA_LAYOUT.crossfadeMs}ms ease`,
+            }}
           />
         ) : null}
         <Image
@@ -127,6 +147,7 @@ export const TeslaPinnedGallery = ({
                 aria-current={slideIndex === index}
                 onClick={() => {
                   override.current = true
+                  setPreviousVisible(true)
                   setPreviousSrc(active.src)
                   setIndex(slideIndex)
                 }}

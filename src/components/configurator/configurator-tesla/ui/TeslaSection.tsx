@@ -8,9 +8,11 @@ type TeslaSectionProps = {
   title: string
   etap: number
   children: ReactNode
+  /** Less air when this section sits directly under the pinned image. */
+  tight?: boolean
 }
 
-export const TeslaSection = ({ id, title, etap, children }: TeslaSectionProps) => (
+export const TeslaSection = ({ id, title, etap, children, tight = false }: TeslaSectionProps) => (
   <section
     id={id}
     aria-label={title}
@@ -18,7 +20,7 @@ export const TeslaSection = ({ id, title, etap, children }: TeslaSectionProps) =
     data-section-name={title}
     data-etap={etap}
     style={{
-      marginTop: TESLA_LAYOUT.sectionGap,
+      marginTop: tight ? 12 : TESLA_LAYOUT.sectionGap,
       scrollMarginTop: "calc(var(--configurator-header-offset, 4rem) + 236px)",
     }}
   >

@@ -1,7 +1,20 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { formatPricePln } from "@/lib/utils/formatPrice"
 import { TESLA_LAYOUT } from "../tokens"
+
+const useMaxWidth = (width: number): boolean => {
+  const [matches, setMatches] = useState(false)
+  useEffect(() => {
+    const query = window.matchMedia(`(max-width: ${width}px)`)
+    const sync = () => setMatches(query.matches)
+    sync()
+    query.addEventListener("change", sync)
+    return () => query.removeEventListener("change", sync)
+  }, [width])
+  return matches
+}
 
 type TeslaStickyBarProps = {
   total: number
@@ -21,7 +34,10 @@ export const TeslaStickyBar = ({
   inCart = false,
   onPriceClick,
   onAddToCart,
-}: TeslaStickyBarProps) => (
+}: TeslaStickyBarProps) => {
+  const narrow = useMaxWidth(375)
+  const cartLabel = narrow ? "W koszyku · Do koszyka" : "W koszyku · Przejdź do koszyka"
+  return (
   <div
     className="border-t bg-white"
     style={{
@@ -48,7 +64,7 @@ export const TeslaStickyBar = ({
         type="button"
         onClick={onPriceClick}
         disabled={total <= 0}
-        className="flex min-w-0 flex-1 items-center gap-1 text-left font-medium disabled:opacity-40"
+        className="flex shrink-0 items-center gap-1 whitespace-nowrap text-left font-medium disabled:opacity-40"
         style={{
           fontSize: TESLA_LAYOUT.priceFontSize,
           lineHeight: `${TESLA_LAYOUT.priceLineHeight}px`,
@@ -56,25 +72,26 @@ export const TeslaStickyBar = ({
         }}
         aria-label="Pokaż szczegóły ceny"
       >
-        <span>{total > 0 ? formatPricePln(total) : "—"}</span>
+        <span className="whitespace-nowrap">{total > 0 ? formatPricePln(total) : "—"}</span>
         <span aria-hidden>⌄</span>
       </button>
       <button
         type="button"
         onClick={onAddToCart}
         aria-describedby={hint ? "configurator-cta-hint" : undefined}
-        className="shrink-0 font-medium text-white"
+        className="min-w-0 flex-1 whitespace-nowrap font-medium text-white"
         style={{
           height: TESLA_LAYOUT.buttonHeight,
           borderRadius: TESLA_LAYOUT.buttonRadius,
           backgroundColor: TESLA_LAYOUT.cta,
-          padding: "0 18px",
-          fontSize: TESLA_LAYOUT.bodySize,
+          padding: "0 10px",
+          fontSize: 13,
           opacity: disabled || pending ? 0.55 : 1,
         }}
       >
-        {pending ? "Dodawanie…" : inCart ? "W koszyku · Przejdź do koszyka" : "Dodaj do koszyka"}
+        {pending ? "Dodawanie…" : inCart ? cartLabel : "Dodaj do koszyka"}
       </button>
     </div>
   </div>
-)
+  )
+}

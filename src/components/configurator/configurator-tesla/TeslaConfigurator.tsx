@@ -445,6 +445,22 @@ export default function TeslaConfigurator() {
   }, [carSlides, neutralMatUrl, pinnedMatUrl])
 
   const vehicleReady = mapperResult.sections.vehicle.isComplete
+  useEffect(() => {
+    if (!vehicleReady) return
+    const materials = getAvailableColors(config.structure, "material")
+    const edges = getAvailableColors(config.structure, "border")
+    const urls = new Set<string>()
+    for (const color of materials) {
+      urls.add(getMatImagePath(dynamicMatType, config.structure, color, config.edgeColor || "black"))
+    }
+    for (const edge of edges) {
+      urls.add(getMatImagePath(dynamicMatType, config.structure, config.color || "black", edge))
+    }
+    urls.forEach((src) => {
+      const image = new window.Image()
+      image.src = src
+    })
+  }, [vehicleReady, dynamicMatType, config.structure, config.color, config.edgeColor])
   const showCarForm = !vehicleReady || editingCar
   const summaryLine = [
     formatBrandDisplayName(config.brand),
@@ -601,33 +617,33 @@ export default function TeslaConfigurator() {
     />
   )
 
+  const carSummary = vehicleReady && !showCarForm ? (
+    <div
+      className="flex items-center justify-between gap-3 border-b"
+      style={{
+        padding: `8px 0`,
+        borderColor: TESLA_LAYOUT.border,
+      }}
+    >
+      <p className="min-w-0 truncate font-medium" style={{ fontSize: TESLA_LAYOUT.bodySize }}>
+        {summaryLine}
+      </p>
+      <button
+        type="button"
+        className="shrink-0 underline"
+        style={{ fontSize: TESLA_LAYOUT.bodySize }}
+        onClick={() => {
+          setEditingCar(true)
+          scrollToSection("section-vehicle")
+        }}
+      >
+        Zmień
+      </button>
+    </div>
+  ) : null
+
   return (
     <div className="bg-white text-[#171a20]" style={{ fontFamily: "var(--font-montserrat), sans-serif" }}>
-      {vehicleReady && !showCarForm ? (
-        <div
-          className="flex items-center justify-between gap-3 border-b"
-          style={{
-            padding: `12px ${TESLA_LAYOUT.pagePaddingX}px`,
-            borderColor: TESLA_LAYOUT.border,
-          }}
-        >
-          <p className="min-w-0 truncate font-medium" style={{ fontSize: TESLA_LAYOUT.bodySize }}>
-            {summaryLine}
-          </p>
-          <button
-            type="button"
-            className="shrink-0 underline"
-            style={{ fontSize: TESLA_LAYOUT.bodySize }}
-            onClick={() => {
-              setEditingCar(true)
-              scrollToSection("section-vehicle")
-            }}
-          >
-            Zmień
-          </button>
-        </div>
-      ) : null}
-
       <div className="lg:grid lg:h-svh lg:grid-cols-[minmax(0,1fr)_minmax(22rem,34rem)] lg:overflow-hidden">
         <div className="bg-white lg:flex lg:h-svh lg:items-center lg:bg-[#f5f5f5]">
           <div
@@ -652,10 +668,11 @@ export default function TeslaConfigurator() {
           className="lg:min-h-0 lg:flex-1 lg:overflow-y-auto"
           style={{
             padding: showPriceBar
-              ? `0 ${TESLA_LAYOUT.pagePaddingX}px calc(${TESLA_LAYOUT.stickyBarMinHeight + 28}px + env(safe-area-inset-bottom))`
+              ? `0 ${TESLA_LAYOUT.pagePaddingX}px calc(${TESLA_LAYOUT.stickyBarMinHeight}px + env(safe-area-inset-bottom) + 16px)`
               : `0 ${TESLA_LAYOUT.pagePaddingX}px calc(24px + env(safe-area-inset-bottom))`,
           }}
         >
+          {carSummary}
           <div id="section-vehicle">
             {showCarForm ? (
               <TeslaSection id="section-vehicle-fields" title="Wybór samochodu" etap={1}>
@@ -681,7 +698,7 @@ export default function TeslaConfigurator() {
             ) : null}
           </div>
 
-          <TeslaSection id="section-zestaw" title="Zestaw" etap={2}>
+          <TeslaSection id="section-zestaw" title="Zestaw" etap={2} tight>
             {resetNotice ? (
               <p role="status" className="mb-3" style={{ fontSize: TESLA_LAYOUT.captionSize, color: TESLA_LAYOUT.text }}>
                 {resetNotice}
@@ -843,7 +860,12 @@ export default function TeslaConfigurator() {
             </p>
           ) : null}
         </div>
-        <div className={`fixed inset-x-0 bottom-0 z-40 bg-white lg:static lg:shrink-0 ${showPriceBar ? "" : "hidden"}`}>{sticky}</div>
+        <div
+          data-configurator-sticky
+          className={`fixed inset-x-0 bottom-0 z-40 bg-white lg:static lg:shrink-0 ${showPriceBar ? "" : "hidden"}`}
+        >
+          {sticky}
+        </div>
         </div>
       </div>
 
