@@ -8,6 +8,7 @@ import {
   extractSearchModels,
   groupTemplatesToCarModels,
 } from "../domain/catalogGrouping"
+import { chooseGenerationModelImage } from "../domain/chooseGenerationModelImage"
 import type { CarModelApiResponse } from "@/lib/types/api"
 import { getPrimaryModelPreviewsByTemplateIds } from "@/features/mat-model-previews/server/repository"
 import { resolvePrimaryPreviewImageUrl } from "@/features/mat-model-previews/lib/resolvePrimaryPreviewImageUrl"
@@ -52,13 +53,15 @@ const attachModelPreviewImages = async (
         yearFrom: generation.yearFrom,
         yearTo: generation.yearTo,
       })
-      const modelImage =
-        localImage?.publicPath ??
-        resolvePrimaryPreviewImageUrl(
-          primaryPreviews,
-          generation.matTemplateId,
-          generation.bodyType,
-        )
+      const previewUrl = resolvePrimaryPreviewImageUrl(
+        primaryPreviews,
+        generation.matTemplateId,
+        generation.bodyType,
+      )
+      const modelImage = chooseGenerationModelImage(
+        previewUrl,
+        localImage?.publicPath,
+      )
       return {
         ...generation,
         modelImage,
