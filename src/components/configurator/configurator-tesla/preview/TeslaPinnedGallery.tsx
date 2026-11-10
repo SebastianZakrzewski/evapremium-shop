@@ -1,8 +1,42 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import Image from "next/image"
+import Image, { getImageProps } from "next/image"
 import { TESLA_LAYOUT, teslaImageAspectRatio } from "../tokens"
+
+export const PINNED_IMAGE_SIZES = "(max-width: 1024px) 100vw, 62vw"
+export const PINNED_IMAGE_QUALITY = 75
+
+/**
+ * The exact optimizer URL the pinned <Image> requests for this viewport.
+ * getImageProps builds the same srcSet; we pick the candidate the browser
+ * would (smallest width at or above CSS width × devicePixelRatio).
+ */
+export const optimizedPinnedSrc = (src: string): string => {
+  if (!src || src.startsWith("data:") || src.startsWith("blob:")) return src
+  const { props } = getImageProps({
+    alt: "",
+    src,
+    fill: true,
+    sizes: PINNED_IMAGE_SIZES,
+    quality: PINNED_IMAGE_QUALITY,
+  })
+  if (typeof window === "undefined" || !props.srcSet) return props.src
+  const viewport = window.innerWidth
+  const slot = viewport <= 1024 ? viewport : Math.round(viewport * 0.62)
+  const target = Math.ceil(slot * (window.devicePixelRatio || 1))
+  const candidates = props.srcSet
+    .split(",")
+    .map((part) => {
+      const [url, descriptor] = part.trim().split(/\s+/)
+      const width = Number.parseInt(descriptor ?? "", 10)
+      return { url, width }
+    })
+    .filter((candidate) => candidate.url && Number.isFinite(candidate.width))
+    .sort((left, right) => left.width - right.width)
+  const match = candidates.find((candidate) => candidate.width >= target) ?? candidates.at(-1)
+  return match?.url ?? props.src
+}
 
 export type GallerySlide = {
   id: string
@@ -17,15 +51,11 @@ type TeslaPinnedGalleryProps = {
   resetKey: string
 }
 
-/**
- * The pinned frame uses unoptimized next/image so the request URL is the
- * file itself. Preload and decode that same URL; the optimizer URL would
- * miss this cache and flash white on a cold load.
- */
+/** Decode the same optimizer URL the pinned frame will request. */
 export const preloadPinnedImage = (src: string): Promise<boolean> => {
   if (typeof window === "undefined" || !src) return Promise.resolve(false)
   const image = new window.Image()
-  image.src = src
+  image.src = optimizedPinnedSrc(src)
   if (typeof image.decode === "function") {
     return image.decode().then(
       () => true,
@@ -55,10 +85,20 @@ export const TeslaPinnedGallery = ({
   const shownSrc = fadeIn && fadeSrc ? fadeSrc : baseSrc
 
   useEffect(() => {
-    slides.forEach((slide) => {
-      void preloadPinnedImage(slide.src)
-    })
-  }, [slides])
+    const activeSrc = slides[index]?.src
+    const rest = slides.map((slide) => slide.src).filter((src) => src && src !== activeSrc)
+    let cancelled = false
+    void (async () => {
+      if (activeSrc) await preloadPinnedImage(activeSrc)
+      for (const src of rest) {
+        if (cancelled) return
+        await preloadPinnedImage(src)
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [index, slides])
 
   useEffect(() => {
     override.current = false
@@ -78,6 +118,12 @@ export const TeslaPinnedGallery = ({
     const nextAlt = active?.alt ?? ""
     if (!nextSrc) return undefined
     let cancelled = false
+    if (!baseRef.current) {
+      baseRef.current = nextSrc
+      setBaseSrc(nextSrc)
+      setBaseAlt(nextAlt)
+      return undefined
+    }
     void preloadPinnedImage(nextSrc).then((ready) => {
       if (!ready || cancelled) return
       const current = baseRef.current
@@ -107,6 +153,10 @@ export const TeslaPinnedGallery = ({
     }
   }, [active?.alt, active?.src])
 
+  const lcpSrcRef = useRef<string | null>(null)
+  if (baseSrc && !lcpSrcRef.current) lcpSrcRef.current = baseSrc
+  const carSrc = slides.find((slide) => slide.group === "car")?.src ?? null
+  const prioritySrc = carSrc ?? lcpSrcRef.current
   const go = (delta: number) => {
     if (slides.length < 2) return
     override.current = true
@@ -135,9 +185,10 @@ export const TeslaPinnedGallery = ({
             src={baseSrc}
             alt={baseAlt}
             fill
-            unoptimized
-            priority
-            sizes="(max-width: 1024px) 100vw, 62vw"
+            sizes={PINNED_IMAGE_SIZES}
+            quality={PINNED_IMAGE_QUALITY}
+            preload={baseSrc === prioritySrc}
+            fetchPriority={baseSrc === prioritySrc ? "high" : "auto"}
             className="object-contain"
           />
         ) : null}
@@ -146,8 +197,10 @@ export const TeslaPinnedGallery = ({
             src={fadeSrc}
             alt={fadeAlt}
             fill
-            unoptimized
-            sizes="(max-width: 1024px) 100vw, 62vw"
+            sizes={PINNED_IMAGE_SIZES}
+            quality={PINNED_IMAGE_QUALITY}
+            preload={fadeSrc === prioritySrc}
+            fetchPriority={fadeSrc === prioritySrc ? "high" : "low"}
             className="object-contain"
             style={{
               opacity: fadeIn ? 1 : 0,
