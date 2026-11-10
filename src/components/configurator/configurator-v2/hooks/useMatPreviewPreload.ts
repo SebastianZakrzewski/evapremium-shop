@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { buildMatPreviewPreloadPaths } from "./buildMatPreviewPreloadPaths"
 import type { ConfiguratorState } from "@/features/car-configurator/utils/configuratorState"
 
@@ -15,7 +15,14 @@ export const useMatPreviewPreload = ({
   extraPaths = [],
   ...config
 }: UseMatPreviewPreloadProps) => {
+  const skipInitialPreloadRef = useRef(true)
+
   useEffect(() => {
+    if (skipInitialPreloadRef.current) {
+      skipInitialPreloadRef.current = false
+      return
+    }
+
     const paths = [
       ...buildMatPreviewPreloadPaths(config),
       ...extraPaths,

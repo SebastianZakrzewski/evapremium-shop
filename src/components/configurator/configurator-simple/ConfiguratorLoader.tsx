@@ -2,9 +2,26 @@
 
 import React from "react";
 
-export function ConfiguratorLoader() {
+type ConfiguratorLoaderProps = {
+  entryImageSrc?: string | null
+}
+
+export function ConfiguratorLoader({ entryImageSrc = null }: ConfiguratorLoaderProps) {
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center px-4">
+      {entryImageSrc ? (
+        // Lokalny plik marki, bez optymalizatora, żeby pierwsza odpowiedź HTML miała gotowy adres.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={entryImageSrc}
+          alt="Podgląd dywaników EVA Premium"
+          width={960}
+          height={640}
+          fetchPriority="high"
+          decoding="async"
+          className="mb-8 h-auto w-full max-w-3xl object-contain"
+        />
+      ) : null}
       <div className="text-center space-y-6">
         {/* Spinner */}
         <div className="relative w-16 h-16 mx-auto">

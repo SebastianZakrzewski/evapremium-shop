@@ -27,6 +27,7 @@ import {
 import { resolvePersistedMatSetVariantLabel } from "@/shared/mat-set-labels"
 import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels"
 import { normalizeBrandName } from "@/shared/brands"
+import { resolveConfiguratorEntryImageSrc } from "@/features/car-configurator/utils/resolveConfiguratorEntryImageSrc"
 import { getMatImagePath } from "@/lib/image-mapping"
 import { getMatTypeForDynamicPreview } from "@/components/configurator/configurator-simple/rugPreviewConfig"
 import { ConfiguratorLoader } from "@/components/configurator/configurator-simple/ConfiguratorLoader"
@@ -631,8 +632,13 @@ export default function ConfiguratorV2() {
       input: stageInput,
     })
 
+  const entryImageSrc = resolveConfiguratorEntryImageSrc(
+    searchParams.get("brand") ?? undefined,
+    searchParams.get("previewImage") ?? undefined,
+  )
+
   if ((brandsLoading && !config.brand) || !hydrated) {
-    return <ConfiguratorLoader />
+    return <ConfiguratorLoader entryImageSrc={entryImageSrc} />
   }
 
   const stickyBarProps = {

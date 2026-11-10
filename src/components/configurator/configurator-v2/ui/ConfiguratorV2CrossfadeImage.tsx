@@ -37,6 +37,7 @@ export const ConfiguratorV2CrossfadeImage = ({
         alt=""
         aria-hidden
         decoding="async"
+        fetchPriority={priority ? "high" : "auto"}
         draggable={false}
         className={imageClassName}
         style={{
@@ -50,6 +51,7 @@ export const ConfiguratorV2CrossfadeImage = ({
         src={topLayer.src}
         alt={alt}
         decoding={priority ? "sync" : "async"}
+        fetchPriority={priority ? "high" : "auto"}
         loading={priority ? "eager" : "lazy"}
         draggable={false}
         className={imageClassName}
