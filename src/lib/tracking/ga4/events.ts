@@ -1,4 +1,6 @@
 import type {
+  AddPaymentInfoData,
+  AddShippingInfoData,
   AddToCartData,
   ContentItem,
   InitiateCheckoutData,
@@ -95,6 +97,24 @@ export const trackGaBeginCheckout = (data: InitiateCheckoutData): void => {
   pushGtag('event', 'begin_checkout', {
     currency: 'PLN',
     value: data.value,
+    items: data.contents.map(toGa4Item),
+  })
+}
+
+export const trackGaAddShippingInfo = (data: AddShippingInfoData): void => {
+  pushGtag('event', 'add_shipping_info', {
+    currency: 'PLN',
+    value: data.value,
+    shipping_tier: data.shipping_tier,
+    items: data.contents.map(toGa4Item),
+  })
+}
+
+export const trackGaAddPaymentInfo = (data: AddPaymentInfoData): void => {
+  pushGtag('event', 'add_payment_info', {
+    currency: 'PLN',
+    value: data.value,
+    payment_type: data.payment_method,
     items: data.contents.map(toGa4Item),
   })
 }

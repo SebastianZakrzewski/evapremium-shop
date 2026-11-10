@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { pageViewMock, initMock } = vi.hoisted(() => ({
+const { pageViewMock, initMock, trackMock } = vi.hoisted(() => ({
   pageViewMock: vi.fn(),
   initMock: vi.fn(),
+  trackMock: vi.fn(),
 }))
 
 vi.mock('../../providers/FacebookPixelProvider', () => ({
@@ -10,7 +11,7 @@ vi.mock('../../providers/FacebookPixelProvider', () => ({
     return {
       init: initMock,
       pageView: pageViewMock,
-      track: vi.fn(),
+      track: trackMock,
     }
   }),
 }))
@@ -27,12 +28,13 @@ vi.mock('../../consent/isMarketingTrackingAllowed', () => ({
 }))
 
 import { isMarketingTrackingAllowed } from '../../consent/isMarketingTrackingAllowed'
-import { resetTrackingProviderForTests, trackPageView } from '../ecommerceEvents'
+import { resetTrackingProviderForTests, trackAddPaymentInfo, trackPageView } from '../ecommerceEvents'
 
 describe('trackPageView consent gating', () => {
   beforeEach(() => {
     pageViewMock.mockClear()
     initMock.mockClear()
+    trackMock.mockClear()
     vi.mocked(isMarketingTrackingAllowed).mockReset()
     resetTrackingProviderForTests()
   })
@@ -59,5 +61,25 @@ describe('trackPageView consent gating', () => {
 
     expect(initMock).toHaveBeenCalledTimes(1)
     expect(pageViewMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('still sends AddPaymentInfo to Facebook when marketing consent is granted', () => {
+    vi.mocked(isMarketingTrackingAllowed).mockReturnValue(true)
+
+    trackAddPaymentInfo({
+      content_name: 'Payment Info Added',
+      content_category: 'checkout',
+      value: 499,
+      currency: 'PLN',
+      payment_method: 'paynow',
+      contents: [
+        { id: 'mat-1', quantity: 1, item_price: 499, item_name: 'Dywaniki EVA' },
+      ],
+    })
+
+    expect(trackMock).toHaveBeenCalledWith(
+      'AddPaymentInfo',
+      expect.objectContaining({ payment_method: 'paynow', value: 499 })
+    )
   })
 })

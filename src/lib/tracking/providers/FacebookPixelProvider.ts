@@ -59,8 +59,8 @@ export class FacebookPixelProvider extends BasePixelProvider {
         return;
       }
 
-      // Pixel ID powinien być przekazany przez konfigurację
-      const pixelId = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
+      // Next wstawia literał ze zmiennej, więc trim jest tutaj. Końcowy CRLF nie może trafić do fbq('init').
+      const pixelId = process.env.NEXT_PUBLIC_FB_PIXEL_ID?.trim();
       
       if (!pixelId) {
         this.log('Facebook Pixel ID not configured');

@@ -4,6 +4,8 @@ export { readGoogleConsent, mapGoogleConsent, applyStoredConsentToGtag, DENIED_G
 export type { GoogleConsentUpdate } from './consent'
 export { pushGtag } from './gtag'
 export {
+  trackGaAddPaymentInfo,
+  trackGaAddShippingInfo,
   trackGaAddToCart,
   trackGaBeginCheckout,
   trackGaGenerateLead,
