@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { type CheckoutFormData } from "@/features/checkout/model/checkoutSchema";
 import { checkoutFieldStep, checkoutFormResolver } from "@/features/checkout/model/checkoutResolver";
@@ -88,7 +88,18 @@ export default function CheckoutSection() {
   
   const [currentStep, setCurrentStep] = useState(1);
   const [formAlert, setFormAlert] = useState<string | null>(null);
-  const [focusField, setFocusField] = useState<string | null>(null);
+  const checkoutTopRef = useRef<HTMLDivElement>(null);
+  const scrollRequestId = useRef(0);
+  const [scrollRequest, setScrollRequest] = useState<{
+    id: number;
+    kind: 'step' | 'field';
+    field?: string;
+  } | null>(null);
+
+  const queueCheckoutScroll = (kind: 'step' | 'field', field?: string) => {
+    scrollRequestId.current += 1;
+    setScrollRequest({ id: scrollRequestId.current, kind, field });
+  };
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
@@ -202,12 +213,31 @@ export default function CheckoutSection() {
   });
 
   useEffect(() => {
-    if (!focusField) return;
-    const field = document.getElementById(focusField);
-    if (!field) return;
-    field.scrollIntoView({ block: 'center' });
-    field.focus();
-  }, [focusField, currentStep]);
+    if (!scrollRequest) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const behavior: ScrollBehavior = reduceMotion ? 'auto' : 'smooth';
+
+      if (scrollRequest.kind === 'field' && scrollRequest.field) {
+        const field = document.getElementById(scrollRequest.field);
+        if (!field) return;
+        field.scrollIntoView({ block: 'center', behavior });
+        field.focus({ preventScroll: true });
+        return;
+      }
+
+      if (!window.matchMedia('(max-width: 1023px)').matches) return;
+      const node = checkoutTopRef.current;
+      if (!node) return;
+      const header = document.querySelector('nav');
+      const headerHeight = header instanceof HTMLElement ? header.getBoundingClientRect().height : 0;
+      const top = Math.max(0, node.getBoundingClientRect().top + window.scrollY - headerHeight - 8);
+      window.scrollTo({ top, behavior });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [scrollRequest]);
 
   const sameAsShipping = watch("sameAsShipping");
   const paymentMethod = watch("paymentMethod");
@@ -650,6 +680,7 @@ export default function CheckoutSection() {
           console.error('[Tracking] Error tracking AddShippingInfo:', error);
         }
       }
+      queueCheckoutScroll('step');
       setCurrentStep(currentStep + 1);
     } else if (!isCurrentStepValid()) {
       console.log('🛒 CheckoutSection: Current step validation failed');
@@ -658,6 +689,7 @@ export default function CheckoutSection() {
 
   const prevStep = () => {
     if (currentStep > 1) {
+      queueCheckoutScroll('step');
       setCurrentStep(currentStep - 1);
     }
   };
@@ -928,7 +960,7 @@ export default function CheckoutSection() {
   return (
     <div className="min-h-screen bg-black pb-safe text-white">
       <div className="mx-auto max-w-6xl px-5 py-10 md:px-8 md:py-16">
-        <div className="mb-10 flex flex-col gap-8 md:mb-14 md:flex-row md:items-end md:justify-between">
+        <div id="checkout-step-top" ref={checkoutTopRef} className="mb-10 flex flex-col gap-8 md:mb-14 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-white/40">
               Zamówienie
@@ -1004,7 +1036,7 @@ export default function CheckoutSection() {
                   setFormAlert(message);
                   if (!firstField) return;
                   setCurrentStep(checkoutFieldStep(firstField));
-                  setFocusField(firstField);
+                  queueCheckoutScroll('field', firstField);
                 }
               )} 
               className="space-y-8"
