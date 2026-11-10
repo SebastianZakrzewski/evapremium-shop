@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { checkoutSchema, type CheckoutFormData } from "@/features/checkout/model/checkoutSchema";
+import { type CheckoutFormData } from "@/features/checkout/model/checkoutSchema";
+import { checkoutFieldStep, checkoutFormResolver } from "@/features/checkout/model/checkoutResolver";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -87,6 +87,19 @@ export default function CheckoutSection() {
   const { trackInitiateCheckout, trackAddPaymentInfo, createInitiateCheckoutData: createInitiateCheckout } = useTracking();
   
   const [currentStep, setCurrentStep] = useState(1);
+  const [formAlert, setFormAlert] = useState<string | null>(null);
+  const checkoutTopRef = useRef<HTMLDivElement>(null);
+  const scrollRequestId = useRef(0);
+  const [scrollRequest, setScrollRequest] = useState<{
+    id: number;
+    kind: 'step' | 'field';
+    field?: string;
+  } | null>(null);
+
+  const queueCheckoutScroll = (kind: 'step' | 'field', field?: string) => {
+    scrollRequestId.current += 1;
+    setScrollRequest({ id: scrollRequestId.current, kind, field });
+  };
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
@@ -189,7 +202,7 @@ export default function CheckoutSection() {
     control,
     formState: { errors, isValid }
   } = useForm<CheckoutFormData>({
-    resolver: zodResolver(checkoutSchema),
+    resolver: checkoutFormResolver,
     defaultValues: {
       country: "Polska",
       sameAsShipping: true,
@@ -198,6 +211,33 @@ export default function CheckoutSection() {
       marketingAccepted: false,
     }
   });
+
+  useEffect(() => {
+    if (!scrollRequest) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const behavior: ScrollBehavior = reduceMotion ? 'auto' : 'smooth';
+
+      if (scrollRequest.kind === 'field' && scrollRequest.field) {
+        const field = document.getElementById(scrollRequest.field);
+        if (!field) return;
+        field.scrollIntoView({ block: 'center', behavior });
+        field.focus({ preventScroll: true });
+        return;
+      }
+
+      if (!window.matchMedia('(max-width: 1023px)').matches) return;
+      const node = checkoutTopRef.current;
+      if (!node) return;
+      const header = document.querySelector('nav');
+      const headerHeight = header instanceof HTMLElement ? header.getBoundingClientRect().height : 0;
+      const top = Math.max(0, node.getBoundingClientRect().top + window.scrollY - headerHeight - 8);
+      window.scrollTo({ top, behavior });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [scrollRequest]);
 
   const sameAsShipping = watch("sameAsShipping");
   const paymentMethod = watch("paymentMethod");
@@ -640,6 +680,7 @@ export default function CheckoutSection() {
           console.error('[Tracking] Error tracking AddShippingInfo:', error);
         }
       }
+      queueCheckoutScroll('step');
       setCurrentStep(currentStep + 1);
     } else if (!isCurrentStepValid()) {
       console.log('🛒 CheckoutSection: Current step validation failed');
@@ -648,6 +689,7 @@ export default function CheckoutSection() {
 
   const prevStep = () => {
     if (currentStep > 1) {
+      queueCheckoutScroll('step');
       setCurrentStep(currentStep - 1);
     }
   };
@@ -918,7 +960,7 @@ export default function CheckoutSection() {
   return (
     <div className="min-h-screen bg-black pb-safe text-white">
       <div className="mx-auto max-w-6xl px-5 py-10 md:px-8 md:py-16">
-        <div className="mb-10 flex flex-col gap-8 md:mb-14 md:flex-row md:items-end md:justify-between">
+        <div id="checkout-step-top" ref={checkoutTopRef} className="mb-10 flex flex-col gap-8 md:mb-14 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-white/40">
               Zamówienie
@@ -982,13 +1024,28 @@ export default function CheckoutSection() {
                   console.log('🛒 CheckoutSection: onSubmit called with valid data:', data);
                   onSubmit(data);
                 },
-                (errors) => {
-                  console.log('🛒 CheckoutSection: Form validation failed with errors:', errors);
-                  console.log('🛒 CheckoutSection: Please fix the form errors before submitting');
+                (formErrors) => {
+                  const firstField = Object.keys(formErrors)[0];
+                  const firstError = firstField
+                    ? formErrors[firstField as keyof typeof formErrors]
+                    : undefined;
+                  const message = firstError && 'message' in firstError && typeof firstError.message === 'string'
+                    ? firstError.message
+                    : 'Sprawdź pola oznaczone na formularzu.';
+                  console.log('🛒 CheckoutSection: Form validation failed with errors:', formErrors);
+                  setFormAlert(message);
+                  if (!firstField) return;
+                  setCurrentStep(checkoutFieldStep(firstField));
+                  queueCheckoutScroll('field', firstField);
                 }
               )} 
               className="space-y-8"
             >
+              {formAlert && (
+                <p role="alert" className="text-sm text-red-400">
+                  {formAlert}
+                </p>
+              )}
               {/* Step 1: Dane kontaktowe */}
               {currentStep === 1 && (
                 <Card className="rounded-2xl border border-white/[0.08] bg-[#1c1c1e] shadow-none">
@@ -1234,7 +1291,7 @@ export default function CheckoutSection() {
                     </p>
                   </CardHeader>
                   <CardContent className="space-y-6 px-5 pb-8 pt-6 md:px-8">
-                    <input type="hidden" {...register("paymentMethod")} />
+                    <input id="paymentMethod" type="hidden" {...register("paymentMethod")} />
                     <div className="rounded-2xl bg-[#2c2c2e] p-5">
                       <div>
                         <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/40">
