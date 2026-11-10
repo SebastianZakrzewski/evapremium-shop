@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { checkoutSchema, type CheckoutFormData } from "@/features/checkout/model/checkoutSchema";
+import { type CheckoutFormData } from "@/features/checkout/model/checkoutSchema";
+import { checkoutFieldStep, checkoutFormResolver } from "@/features/checkout/model/checkoutResolver";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -87,6 +87,8 @@ export default function CheckoutSection() {
   const { trackInitiateCheckout, trackAddPaymentInfo, createInitiateCheckoutData: createInitiateCheckout } = useTracking();
   
   const [currentStep, setCurrentStep] = useState(1);
+  const [formAlert, setFormAlert] = useState<string | null>(null);
+  const [focusField, setFocusField] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
@@ -189,7 +191,7 @@ export default function CheckoutSection() {
     control,
     formState: { errors, isValid }
   } = useForm<CheckoutFormData>({
-    resolver: zodResolver(checkoutSchema),
+    resolver: checkoutFormResolver,
     defaultValues: {
       country: "Polska",
       sameAsShipping: true,
@@ -198,6 +200,14 @@ export default function CheckoutSection() {
       marketingAccepted: false,
     }
   });
+
+  useEffect(() => {
+    if (!focusField) return;
+    const field = document.getElementById(focusField);
+    if (!field) return;
+    field.scrollIntoView({ block: 'center' });
+    field.focus();
+  }, [focusField, currentStep]);
 
   const sameAsShipping = watch("sameAsShipping");
   const paymentMethod = watch("paymentMethod");
@@ -982,13 +992,28 @@ export default function CheckoutSection() {
                   console.log('🛒 CheckoutSection: onSubmit called with valid data:', data);
                   onSubmit(data);
                 },
-                (errors) => {
-                  console.log('🛒 CheckoutSection: Form validation failed with errors:', errors);
-                  console.log('🛒 CheckoutSection: Please fix the form errors before submitting');
+                (formErrors) => {
+                  const firstField = Object.keys(formErrors)[0];
+                  const firstError = firstField
+                    ? formErrors[firstField as keyof typeof formErrors]
+                    : undefined;
+                  const message = firstError && 'message' in firstError && typeof firstError.message === 'string'
+                    ? firstError.message
+                    : 'Sprawdź pola oznaczone na formularzu.';
+                  console.log('🛒 CheckoutSection: Form validation failed with errors:', formErrors);
+                  setFormAlert(message);
+                  if (!firstField) return;
+                  setCurrentStep(checkoutFieldStep(firstField));
+                  setFocusField(firstField);
                 }
               )} 
               className="space-y-8"
             >
+              {formAlert && (
+                <p role="alert" className="text-sm text-red-400">
+                  {formAlert}
+                </p>
+              )}
               {/* Step 1: Dane kontaktowe */}
               {currentStep === 1 && (
                 <Card className="rounded-2xl border border-white/[0.08] bg-[#1c1c1e] shadow-none">
@@ -1234,7 +1259,7 @@ export default function CheckoutSection() {
                     </p>
                   </CardHeader>
                   <CardContent className="space-y-6 px-5 pb-8 pt-6 md:px-8">
-                    <input type="hidden" {...register("paymentMethod")} />
+                    <input id="paymentMethod" type="hidden" {...register("paymentMethod")} />
                     <div className="rounded-2xl bg-[#2c2c2e] p-5">
                       <div>
                         <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/40">
