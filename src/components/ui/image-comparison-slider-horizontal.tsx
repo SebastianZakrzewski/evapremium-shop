@@ -103,6 +103,8 @@ export const ImageComparisonSlider = React.forwardRef<
           alt={altRight}
           className="absolute inset-0 w-full h-full object-cover pointer-events-none"
           draggable={false}
+          loading="lazy"
+          decoding="async"
         />
 
         {/* Right label */}
@@ -125,6 +127,8 @@ export const ImageComparisonSlider = React.forwardRef<
             alt={altLeft}
             className="w-full h-full object-cover"
             draggable={false}
+            loading="lazy"
+            decoding="async"
           />
 
           {/* Left label */}

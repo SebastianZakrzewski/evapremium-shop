@@ -7,17 +7,12 @@ vi.mock("@/features/marketing", () => ({
   HeroSection: () => <section aria-label="Sekcja promocyjna">hero</section>,
 }))
 
+vi.mock("./HomeBelowFold", () => ({
+  HomeBelowFold: () => null,
+}))
+
 vi.mock("@/components/quick-search-bar", () => ({
   default: () => <section id="quick-search">search</section>,
-}))
-
-vi.mock("@/features/products", () => ({
-  ProductGallerySection: () => <section aria-label="Galeria">gallery</section>,
-  ProductSelection: () => <section aria-label="Wybór">selection</section>,
-}))
-
-vi.mock("next/dynamic", () => ({
-  default: () => () => null,
 }))
 
 describe("Home lead order", () => {

@@ -1,54 +1,13 @@
-import dynamic from "next/dynamic"
 import { HeroSection } from "@/features/marketing"
 import QuickSearchBar from "@/components/quick-search-bar"
-import { ProductGallerySection, ProductSelection } from "@/features/products"
-
-const ProductVideoCarouselSection = dynamic(
-  () => import("@/features/products/components/ProductVideoCarouselSection"),
-  {
-    loading: () => (
-      <section
-        className="w-full bg-black py-7 md:py-9"
-        aria-label="Ładowanie sekcji Premium w akcji"
-      />
-    ),
-  },
-)
-
-const InteractiveFeaturesSection = dynamic(
-  () => import("@/components/interactive-features-section"),
-)
-
-const MatComparisonSection = dynamic(
-  () => import("@/components/mat-comparison-section"),
-)
-
-const RoznorodnaKolorystykaSection = dynamic(
-  () => import("@/components/roznorodna-kolorystyka-section"),
-)
-
-const GlebokaStrukturaKomorekSection = dynamic(
-  () => import("@/components/gleboka-struktura-komorek-section"),
-)
-
-const CustomerReviews = dynamic(() => import("@/components/CustomerReviews"))
-
-const FAQSection = dynamic(() => import("@/components/FAQSection"))
+import { HomeBelowFold } from "./HomeBelowFold"
 
 export default function Home() {
   return (
     <div className="min-h-screen home-page">
       <QuickSearchBar />
       <HeroSection />
-      <ProductGallerySection />
-      <ProductVideoCarouselSection />
-      <InteractiveFeaturesSection />
-      <MatComparisonSection />
-      <ProductSelection />
-      <RoznorodnaKolorystykaSection />
-      <GlebokaStrukturaKomorekSection />
-      <CustomerReviews />
-      <FAQSection />
+      <HomeBelowFold />
     </div>
   )
 }
