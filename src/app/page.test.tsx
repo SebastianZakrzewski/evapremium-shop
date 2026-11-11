@@ -11,20 +11,11 @@ vi.mock("./HomeBelowFold", () => ({
   HomeBelowFold: () => null,
 }))
 
-vi.mock("@/components/quick-search-bar", () => ({
-  default: () => <section id="quick-search">search</section>,
-}))
-
 describe("Home lead order", () => {
-  it("places the mat picker above the hero on every viewport", () => {
+  it("opens with the hero and keeps the vehicle search inside it", () => {
     render(<Home />)
 
-    const hero = screen.getByRole("region", { name: "Sekcja promocyjna" })
-    const search = document.getElementById("quick-search")
-
-    expect(search).not.toBeNull()
-    expect((search as HTMLElement).compareDocumentPosition(hero)).toBe(
-      Node.DOCUMENT_POSITION_FOLLOWING,
-    )
+    expect(screen.getByRole("region", { name: "Sekcja promocyjna" })).toBeInTheDocument()
+    expect(document.getElementById("quick-search")).toBeNull()
   })
 })

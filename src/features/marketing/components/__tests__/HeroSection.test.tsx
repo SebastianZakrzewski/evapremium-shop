@@ -1,35 +1,30 @@
 import "@testing-library/jest-dom/vitest"
-import { render, screen, fireEvent } from "@testing-library/react"
+import { fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import HeroSection from "../HeroSection"
 
+const { push } = vi.hoisted(() => ({ push: vi.fn() }))
+
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
-    push: vi.fn(),
+    push,
   }),
 }))
 
-vi.mock("next/image", () => ({
-  default: ({
-    src,
-    alt,
-    fill: _fill,
-    priority: _priority,
-    quality: _quality,
-    unoptimized: _unoptimized,
-    ...props
-  }: {
-    src: string | { src: string }
-    alt?: string
-    fill?: boolean
-    priority?: boolean
-    quality?: number
-    unoptimized?: boolean
-  }) => {
-    const imageSrc = typeof src === "string" ? src : src.src
+vi.mock("@/features/brands/hooks/useBrands", () => ({
+  useBrands: () => ({
+    brands: [{ id: 1, name: "Audi", key: "audi" }],
+    isLoading: false,
+    error: null,
+  }),
+}))
 
-    return <img src={imageSrc} alt={alt ?? ""} {...props} />
-  },
+vi.mock("@/features/vehicle-catalog/hooks/useQuickSearchCatalog", () => ({
+  useQuickSearchCatalog: () => ({
+    models: [{ key: "a4", name: "A4", displayName: "A4" }],
+    templates: [],
+    isLoading: false,
+  }),
 }))
 
 const mockMatchMedia = (isMobile: boolean) => {
@@ -51,6 +46,7 @@ const mockMatchMedia = (isMobile: boolean) => {
 
 describe("HeroSection", () => {
   beforeEach(() => {
+    push.mockReset()
     mockMatchMedia(false)
   })
 
@@ -58,62 +54,43 @@ describe("HeroSection", () => {
     vi.restoreAllMocks()
   })
 
-  it("renders one responsive promo image without intro video", () => {
+  it("renders the desktop split with copy, search and the winter graphic", () => {
     render(<HeroSection />)
 
-    expect(screen.getByTestId("hero-promo")).toBeInTheDocument()
-    expect(screen.queryByTestId("hero-desktop-carousel")).not.toBeInTheDocument()
-    expect(screen.queryByTestId("hero-mobile-static")).not.toBeInTheDocument()
-    expect(screen.queryByTestId("hero-video-1")).not.toBeInTheDocument()
-    expect(screen.getByTestId("hero-promo-cta-hit-area")).toBeInTheDocument()
-    expect(screen.queryByRole("link", { name: "+48 793 993 430" })).not.toBeInTheDocument()
-    const image = screen.getByAltText(
-      "Jesienna promocja dywaników samochodowych EVA Premium do -30%"
-    )
-    expect(image).toHaveAttribute("src", "/jesien_hero.png?v=2168")
-    expect(image).toHaveAttribute("fetchpriority", "high")
-    expect(document.querySelector('source[type="image/avif"][media="(max-width: 767px)"]')).toHaveAttribute(
-      "srcset",
-      "/zimowa_mobile_hero.avif",
-    )
-    expect(document.querySelector('source[media="(max-width: 767px)"]:not([type])')).toHaveAttribute(
-      "srcset",
-      "/zimowa_mobile_hero.png?v=577",
-    )
-    expect(screen.getByTestId("hero-mobile-promo-cta-button")).toHaveTextContent(
-      "Skonfiguruj dywaniki do swojego auta",
-    )
-    expect(screen.getByTestId("hero-mobile-promo-cta-button")).toHaveClass("md:hidden")
+    expect(screen.getByRole("heading", { name: "Dywaniki samochodowe EVA Premium" })).toBeInTheDocument()
+    expect(
+      screen.getByText("Wodoodporne, łatwe w czyszczeniu i precyzyjnie dopasowane do Twojego auta."),
+    ).toBeInTheDocument()
+    expect(screen.getByLabelText("Wybierz markę samochodu")).toBeInTheDocument()
+    expect(screen.getByLabelText("Wybierz model samochodu")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Szukaj dywaników dla wybranego samochodu" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Przeglądaj wszystkie marki" })).toHaveAttribute("href", "/dywaniki")
+    expect(screen.getByTestId("hero-promo-image")).toHaveAttribute("src", "/images/hero/zimowa-promo.png")
+    expect(screen.getByRole("region", { name: "Sekcja promocyjna - dywaniki samochodowe" })).toHaveClass("bg-[#FDFDFD]")
+    expect(document.querySelector("video")).not.toBeInTheDocument()
+    expect(screen.queryByText("Failed to fetch")).not.toBeInTheDocument()
   })
 
-  it("keeps the same promo markup on a mobile viewport", () => {
+  it("shows the same winter graphic on a mobile viewport, without video", () => {
     mockMatchMedia(true)
     render(<HeroSection />)
 
-    expect(screen.getByTestId("hero-promo")).toBeInTheDocument()
-    expect(screen.queryByTestId("hero-video-1")).not.toBeInTheDocument()
-    expect(screen.getByTestId("hero-promo-cta-hit-area")).toBeInTheDocument()
+    const image = screen.getByTestId("hero-promo-image")
+    expect(image).toHaveAttribute("src", "/images/hero/zimowa-promo.png")
+    expect(document.querySelector("video")).not.toBeInTheDocument()
+    expect(screen.getByTestId("hero-vehicle-search").compareDocumentPosition(image)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    )
   })
 
-  it("scrolls to dywaniki section when promo CTA overlay is clicked", () => {
-    const target = document.createElement("section")
-    target.id = "products"
-    const scrollIntoView = vi.fn()
-    target.scrollIntoView = scrollIntoView
-    document.body.appendChild(target)
-
+  it("opens the configurator for the selected brand", () => {
     render(<HeroSection />)
 
-    fireEvent.click(screen.getByTestId("hero-promo-cta-hit-area"))
+    fireEvent.change(screen.getByLabelText("Wybierz markę samochodu"), {
+      target: { value: "Audi" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: "Szukaj dywaników dla wybranego samochodu" }))
 
-    expect(scrollIntoView).toHaveBeenCalledWith(
-      expect.objectContaining({ behavior: "smooth", block: "start" })
-    )
-
-    fireEvent.click(screen.getByTestId("hero-mobile-promo-cta-button"))
-
-    expect(scrollIntoView).toHaveBeenCalledTimes(2)
-
-    target.remove()
+    expect(push).toHaveBeenCalledWith("/konfigurator?brand=audi")
   })
 })
