@@ -7,6 +7,7 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
   /**
    * Mapuj dane z Supabase (snake_case) na typ Accessory (camelCase)
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private mapAccessoryFromDb(item: any): Accessory {
     // Usuń pola snake_case z obiektu, żeby nie było duplikatów
     const {
@@ -35,11 +36,11 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
       stockQuantity: stock_quantity !== null && stock_quantity !== undefined ? stock_quantity : null,
       isActive: is_active !== null && is_active !== undefined ? is_active : true,
       categoryId: category_id,
-      productType: product_type 
-        ? (product_type.toString().toLowerCase().trim() === 'organizer' || product_type.toString().toLowerCase().trim() === 'podpietka')
-          ? product_type.toString().toLowerCase().trim()
-          : undefined
-        : undefined,
+      productType: (['organizer', 'podpietka', 'wykonczenie'].includes(
+        product_type?.toString().toLowerCase().trim() ?? '',
+      )
+        ? product_type.toString().toLowerCase().trim()
+        : undefined) as Accessory['productType'],
       // Usuń product_type z rest jeśli istnieje, żeby nie było duplikatu
       product_type: undefined,
       createdAt: created_at ? new Date(created_at) : new Date(),

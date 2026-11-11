@@ -12,6 +12,7 @@ type TeslaPriceSheetProps = {
   accessoryName?: string
   accessoryPrice: number
   mountingFee: number
+  extraLines?: { name: string; price: number }[]
 }
 
 export const TeslaPriceSheet = ({
@@ -23,10 +24,12 @@ export const TeslaPriceSheet = ({
   accessoryName,
   accessoryPrice,
   mountingFee,
+  extraLines = [],
 }: TeslaPriceSheetProps) => {
   if (!open) return null
   const accessoryBase = Math.max(0, accessoryPrice - mountingFee)
-  const total = matPrice + accessoryPrice
+  const extraTotal = extraLines.reduce((sum, line) => sum + line.price, 0)
+  const total = matPrice + accessoryPrice + extraTotal
 
   return (
     <div className="fixed inset-0 z-[70]" role="presentation">
@@ -101,6 +104,12 @@ export const TeslaPriceSheet = ({
               <dd>{formatPricePln(mountingFee)}</dd>
             </div>
           ) : null}
+          {extraLines.map((line) => (
+            <div key={line.name} className="flex justify-between gap-4">
+              <dt className="min-w-0">{line.name}</dt>
+              <dd className="shrink-0 whitespace-nowrap">{formatPricePln(line.price)}</dd>
+            </div>
+          ))}
         </dl>
         <p
           className="mt-4"

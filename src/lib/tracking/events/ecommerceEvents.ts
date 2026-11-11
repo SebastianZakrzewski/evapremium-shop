@@ -269,6 +269,7 @@ export function createAddToCartData(
   item: CartItem,
   cartTotal?: number
 ): AddToCartData {
+  void cartTotal
   return {
     content_name: item.productName,
     content_ids: [item.productId],
@@ -330,16 +331,19 @@ export function createPurchaseData(
  */
 export function createViewContentData(
   product: ProductData,
-  price: number
+  price: number,
+  extras: ContentItem[] = [],
 ): ViewContentData {
+  const extraValue = extras.reduce((sum, item) => sum + item.item_price * item.quantity, 0)
   return {
     content_name: product.name,
-    content_ids: [product.id],
+    content_ids: [product.id, ...extras.map((item) => item.id)],
     content_type: 'product',
     content_category: product.category || 'product',
-    value: price,
+    value: price + extraValue,
     currency: 'PLN',
     product,
+    contents: extras,
   };
 }
 
