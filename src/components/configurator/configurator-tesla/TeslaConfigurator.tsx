@@ -7,10 +7,6 @@ import { openCartModal } from "@/features/shopping-cart/utils/openCartModal"
 import { useAccessories } from "@/features/accessories/hooks/useAccessories"
 import { useBrands } from "@/features/brands/hooks/useBrands"
 import { useMatModelPreviews } from "@/features/mat-model-previews"
-import {
-  isMatRealizationMatType,
-  useMatRealizationPhotos,
-} from "@/features/mat-realization-photos"
 import { useConfiguratorState } from "@/features/car-configurator/hooks/useConfiguratorState"
 import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import { useResolvedPricing } from "@/features/vehicle-catalog/hooks/useResolvedPricing"
@@ -108,14 +104,6 @@ export default function TeslaConfigurator() {
     return normalizeBrandName(brandSlug) || brandSlug
   }, [config.brand, searchParams])
 
-  const realizationMatType = isMatRealizationMatType(config.matType) ? config.matType : undefined
-  const { photos: realizationPhotos } = useMatRealizationPhotos({
-    recordKey: config.recordKey || undefined,
-    brandKey: config.brandKey || undefined,
-    modelKey: config.modelKey || config.model || undefined,
-    matType: realizationMatType,
-    enabled: !!(config.brand && config.model && realizationMatType),
-  })
   const { previews: modelPreviews } = useMatModelPreviews({
     recordKey: config.recordKey || undefined,
     brandKey: config.brandKey || undefined,
@@ -134,6 +122,7 @@ export default function TeslaConfigurator() {
   const [editingCar, setEditingCar] = useState(false)
   const [alignZestaw, setAlignZestaw] = useState(false)
   const [matInView, setMatInView] = useState(false)
+  const [matPinnedByType, setMatPinnedByType] = useState(false)
   const [resetNotice, setResetNotice] = useState<string | null>(null)
   const [priceOpen, setPriceOpen] = useState(false)
   const [compareTypes, setCompareTypes] = useState(false)
@@ -351,19 +340,23 @@ export default function TeslaConfigurator() {
     return () => observer.disconnect()
   }, [hydrated, editingCar, mapperResult.sections.vehicle.isComplete])
 
+  const productSectionId = skipMatTypeStep ? "section-zestaw" : "section-matType"
+  const showMat = matInView || matPinnedByType
+
   useEffect(() => {
     let mat = false
     let frame = 0
     const update = () => {
       frame = 0
-      const zest = document.getElementById("section-zestaw")
-      if (!zest) return
+      const section = document.getElementById(productSectionId)
+      if (!section) return
       const offset = Number.parseFloat(
         getComputedStyle(document.documentElement).getPropertyValue("--configurator-header-offset"),
       )
       const pinBottom = (Number.isFinite(offset) ? offset : 64) + TESLA_LAYOUT.imageAspectHeight
-      const top = zest.getBoundingClientRect().top
-      const next = mat ? top < pinBottom + 16 : top <= pinBottom - 16
+      const top = section.getBoundingClientRect().top
+      const next = mat ? top < pinBottom + 96 : top <= pinBottom + 80
+      if (top > pinBottom + 180) setMatPinnedByType(false)
       if (next === mat) return
       mat = next
       setMatInView(next)
@@ -383,7 +376,7 @@ export default function TeslaConfigurator() {
       window.removeEventListener("resize", requestUpdate)
       options?.removeEventListener("scroll", requestUpdate)
     }
-  }, [hydrated])
+  }, [hydrated, productSectionId])
 
   const bodyMatchedPreviews = useMemo(
     () =>
@@ -414,14 +407,7 @@ export default function TeslaConfigurator() {
       cancelled = true
     }
   }, [colorCandidate])
-  const inCarUrl = realizationPhotos.find(
-    (photo) => !isMarketingConfiguratorImage(photo.image_url),
-  )?.image_url
-  const modelPreviewUrl = [...bodyMatchedPreviews].sort((left, right) => {
-    if (left.is_primary !== right.is_primary) return left.is_primary ? -1 : 1
-    return left.sort_order - right.sort_order
-  })[0]?.image_url
-  const pinnedMatUrl = inCarUrl || loadedColorUrl || modelPreviewUrl || DEFAULT_MAT_IMAGE
+  const pinnedMatUrl = loadedColorUrl || colorCandidate || DEFAULT_MAT_IMAGE
 
   const carSlides = useMemo(() => {
     const items: GallerySlide[] = []
@@ -477,8 +463,12 @@ export default function TeslaConfigurator() {
     if (!vehicleReady) return undefined
     const materials = getAvailableColors(config.structure, "material")
     const edges = getAvailableColors(config.structure, "border")
+    const materialColor = config.color || "black"
+    const edgeColor = config.edgeColor || "black"
     const urls = [
-      getMatImagePath(dynamicMatType, config.structure, config.color || "black", config.edgeColor || "black"),
+      getMatImagePath("3d", config.structure, materialColor, edgeColor),
+      getMatImagePath("classic", config.structure, materialColor, edgeColor),
+      getMatImagePath(dynamicMatType, config.structure, materialColor, edgeColor),
     ]
     for (const color of materials) {
       urls.push(getMatImagePath(dynamicMatType, config.structure, color, config.edgeColor || "black"))
@@ -736,14 +726,14 @@ export default function TeslaConfigurator() {
       <div className="lg:grid lg:h-svh lg:grid-cols-[minmax(0,1fr)_minmax(22rem,34rem)] lg:overflow-hidden">
         <div className="bg-white lg:flex lg:h-svh lg:items-center lg:bg-[#f5f5f5]">
           <div
-            data-preview-mode={matInView ? "mat" : "car"}
+            data-preview-mode={showMat ? "mat" : "car"}
             className="w-full max-lg:fixed max-lg:inset-x-0 max-lg:z-20 max-lg:bg-white max-lg:[transform:translateY(calc(-1*var(--configurator-header-shift,0px)))] max-lg:transition-transform max-lg:duration-[220ms] max-lg:ease-out motion-reduce:transition-none"
             style={{ top: "var(--configurator-header-offset, 0px)" }}
           >
             <TeslaPinnedGallery
-              slides={matInView ? matSlides : carSlides}
-              preferredId={matInView ? "mat-active" : (carSlides[0]?.id ?? null)}
-              resetKey={`${matInView ? "mat" : "car"}:${pinnedMatUrl}`}
+              slides={showMat ? matSlides : carSlides}
+              preferredId={showMat ? "mat-active" : (carSlides[0]?.id ?? null)}
+              resetKey={`${showMat ? "mat" : "car"}:${pinnedMatUrl}`}
             />
           </div>
           <div
@@ -804,6 +794,7 @@ export default function TeslaConfigurator() {
                       priceLabel="W zestawie"
                       disabled={mapperResult.sections.matType.isDisabled}
                       onSelect={() => {
+                        setMatPinnedByType(true)
                         updateConfig({ matType: type.id, variant: "" })
                       }}
                     />
