@@ -150,23 +150,23 @@ export default function Navbar() {
         {/* Mobile / tablet Menu */}
         <div className={`shop-canvas fixed left-0 top-16 z-[40] w-full overflow-hidden border-b border-neutral-200 bg-[#FDFDFD] pb-safe shadow-xl transition-all duration-300 ease-in-out md:top-20 lg:hidden ${open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
           <div className="flex flex-col gap-4 py-8 px-6">
-            <Link href="/dywaniki" className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
+            <Link href="/dywaniki" className="text-neutral-950 hover:text-red-600 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               Dywaniki Samochodowe
             </Link>
             <div className="h-px w-full bg-neutral-200"></div>
-            <Link href="/akcesoria" className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
+            <Link href="/akcesoria" className="text-neutral-950 hover:text-red-600 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               Akcesoria
             </Link>
             <div className="h-px w-full bg-neutral-200"></div>
-            <Link href="/galeria" onClick={handleGalleryClick} className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors">
+            <Link href="/galeria" onClick={handleGalleryClick} className="text-neutral-950 hover:text-red-600 text-lg font-medium transition-colors">
               Galeria
             </Link>
             <div className="h-px w-full bg-neutral-200"></div>
-            <Link href="/o-nas" className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
+            <Link href="/o-nas" className="text-neutral-950 hover:text-red-600 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               O Nas
             </Link>
             <div className="h-px w-full bg-neutral-200"></div>
-            <Link href="/kontakt" className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
+            <Link href="/kontakt" className="text-neutral-950 hover:text-red-600 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               Kontakt
             </Link>
             

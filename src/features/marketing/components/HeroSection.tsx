@@ -426,7 +426,7 @@ export default function HeroSection() {
 
                 {(!isImageSlide || slide.title || slide.cta) && (
                   <div
-                    className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-white md:p-12"
+                    className="on-media absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-white md:p-12"
                     aria-live="polite"
                     aria-atomic="true"
                   >
