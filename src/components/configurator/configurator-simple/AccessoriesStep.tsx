@@ -16,6 +16,7 @@ import {
   type PodpietkaMounting,
 } from "@/features/car-configurator/domain/podpietkaMounting";
 import { formatPriceCurrency, formatPriceValue } from "@/lib/utils/formatPrice";
+import { MAT_FINISH_PRODUCT_TYPE } from "@/features/car-configurator/domain/matFinishes";
 
 type AccessoriesSurface = "dark" | "light"
 
@@ -94,6 +95,14 @@ export function AccessoriesStep({
     return accessories.filter(acc => acc.productType === 'podpietka' && acc.inStock);
   }, [accessories]);
 
+  const finishes = useMemo(() => {
+    return accessories
+      .filter((acc) => acc.productType === MAT_FINISH_PRODUCT_TYPE && acc.inStock)
+      .sort((left, right) => left.price - right.price);
+  }, [accessories]);
+
+  const selectedFinishIds = config.selectedFinishIds ?? [];
+
   // Znajdź wybraną podpiętkę
   const selectedPodpietka = useMemo(() => {
     if (!config.selectedPodpietka) return null;
@@ -149,6 +158,13 @@ export function AccessoriesStep({
       podpietkaColor: undefined,
       podpietkaMounting: undefined,
     });
+  };
+
+  const handleToggleFinish = (finishId: string) => {
+    const nextIds = selectedFinishIds.includes(finishId)
+      ? selectedFinishIds.filter((id) => id !== finishId)
+      : [...selectedFinishIds, finishId];
+    onUpdate({ selectedFinishIds: nextIds });
   };
 
   // Synchronizuj stan modala z rodzicem - zawsze aktualizuj gdy isSheetOpen się zmienia
@@ -332,6 +348,43 @@ export function AccessoriesStep({
           </div>
         )}
       </div>
+
+      {finishes.length > 0 && (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <h3 className={`text-sm font-semibold ${styles.heading}`}>Dodatki do dywanika</h3>
+            <span className={`text-xs ${styles.muted}`}>Opcjonalne</span>
+          </div>
+          <div className="grid grid-cols-1 gap-2">
+            {finishes.map((finish) => {
+              const isSelected = selectedFinishIds.includes(finish.id);
+              return (
+                <button
+                  key={finish.id}
+                  type="button"
+                  aria-pressed={isSelected}
+                  onClick={() => handleToggleFinish(finish.id)}
+                  className={`rounded-lg border-2 px-3 py-3 text-left transition-all ${
+                    isSelected ? styles.cardSelected : styles.card
+                  }`}
+                >
+                  <span className="flex items-start justify-between gap-3">
+                    <span className={`text-sm font-semibold ${styles.title}`}>{finish.name}</span>
+                    <span className={`shrink-0 text-sm font-bold ${styles.price}`}>
+                      {formatPriceCurrency(finish.price)}
+                    </span>
+                  </span>
+                  {finish.description ? (
+                    <span className={`mt-1 block text-xs leading-relaxed ${styles.muted}`}>
+                      {finish.description}
+                    </span>
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {!hideNavigation && (
       <div className="flex flex-col sm:flex-row gap-3 justify-end pt-2">

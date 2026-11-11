@@ -73,7 +73,7 @@ export default function AdvantagesSection() {
   };
 
   return (
-    <section id="advantages-section" className="py-20 md:py-32 bg-black relative overflow-hidden">
+    <section id="advantages-section" className="py-20 md:py-32 bg-[#FDFDFD] relative overflow-hidden">
       {/* Background Gradients */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[120px]"></div>
@@ -117,7 +117,7 @@ export default function AdvantagesSection() {
                 key={item.id}
                 className={`
                   group relative cursor-pointer rounded-3xl overflow-hidden transition-all duration-700 ease-out
-                  bg-[#111]/40 backdrop-blur-xl border border-white/5 hover:border-white/20
+                  bg-[#FDFDFD]/40 backdrop-blur-xl border border-white/5 hover:border-white/20
                   ${item.className}
                   ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}
                 `}
@@ -127,7 +127,7 @@ export default function AdvantagesSection() {
                 onClick={() => handleItemClick(item.targetSection)}
               >
                 {/* Image Background */}
-                <div className="absolute inset-0 w-full h-full bg-black">
+                <div className="absolute inset-0 w-full h-full bg-[#FDFDFD]">
                   <Image
                     src={item.src}
                     alt={item.title}

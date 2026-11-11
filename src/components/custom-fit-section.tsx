@@ -136,10 +136,8 @@ export default function CustomFitSection() {
   return (
     <section
       id="custom-fit-section"
-      className="py-7 md:py-9 bg-black relative overflow-hidden"
+      className="py-7 md:py-9 bg-[#FDFDFD] relative overflow-hidden"
     >
-      <div className="absolute inset-0 bg-gradient-to-bl from-red-900/5 via-black to-black pointer-events-none" />
-
       <div className="container mx-auto px-4 relative z-10">
         <div
           className={`text-center mb-5 md:mb-7 transition-all duration-1000 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
@@ -255,7 +253,7 @@ export default function CustomFitSection() {
             <div className="relative group">
               <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
                 <div
-                  className="relative rounded-2xl overflow-hidden aspect-[4/5] lg:aspect-[3/4] bg-[#111]"
+                  className="relative rounded-2xl overflow-hidden aspect-[4/5] lg:aspect-[3/4] bg-[#FDFDFD]"
                   role="tabpanel"
                   aria-label={`Etap ${activeStepData.id}: ${activeStepData.title}`}
                 >

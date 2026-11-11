@@ -69,7 +69,7 @@ export default function QuickSearchBar() {
   return (
     <section
       id="quick-search"
-      className="w-full bg-black pt-7 pb-14 md:pt-9 md:pb-16 relative"
+      className="w-full bg-[#FDFDFD] pt-7 pb-14 md:pt-9 md:pb-16 relative"
       role="region"
       aria-label="Wyszukiwarka dywaników - wybierz markę i model samochodu"
     >
@@ -93,12 +93,12 @@ export default function QuickSearchBar() {
                 value={selectedBrand}
                 onChange={(event) => setSelectedBrand(event.target.value)}
                 aria-label="Wybierz markę samochodu"
-                className="w-full pl-16 md:pl-20 pr-10 py-3.5 md:py-4 bg-black/40 hover:bg-black/60 border border-white/5 hover:border-white/20 rounded-xl text-white text-sm md:text-base font-medium appearance-none cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent"
+                className="w-full pl-16 md:pl-20 pr-10 py-3.5 md:py-4 bg-white hover:bg-neutral-50 border border-neutral-200 hover:border-neutral-300 rounded-xl text-neutral-950 text-sm md:text-base font-medium appearance-none cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent"
                 disabled={brandsLoading}
               >
-                <option value="" className="bg-[#111] text-gray-400">Wybierz...</option>
+                <option value="" className="bg-[#FDFDFD] text-gray-400">Wybierz...</option>
                 {brands.map((brand) => (
-                  <option key={brand.id} value={brand.name} className="bg-[#111] text-white">
+                  <option key={brand.id} value={brand.name} className="bg-[#FDFDFD] text-white">
                     {formatBrandDisplayName(brand.name)}
                   </option>
                 ))}
@@ -121,9 +121,9 @@ export default function QuickSearchBar() {
                 onChange={(event) => setSelectedModelFamilyKey(event.target.value)}
                 disabled={!selectedBrand || modelsLoading}
                 aria-label="Wybierz model samochodu"
-                className="w-full pl-16 md:pl-20 pr-10 py-3.5 md:py-4 bg-black/40 hover:bg-black/60 border border-white/5 hover:border-white/20 rounded-xl text-white text-sm md:text-base font-medium appearance-none cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full pl-16 md:pl-20 pr-10 py-3.5 md:py-4 bg-white hover:bg-neutral-50 border border-neutral-200 hover:border-neutral-300 rounded-xl text-neutral-950 text-sm md:text-base font-medium appearance-none cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent disabled:cursor-not-allowed disabled:bg-white"
               >
-                <option value="" className="bg-[#111] text-gray-400">
+                <option value="" className="bg-[#FDFDFD] text-gray-400">
                   {!selectedBrand
                     ? "Wybierz markę..."
                     : modelsLoading
@@ -131,7 +131,7 @@ export default function QuickSearchBar() {
                       : "Wybierz model..."}
                 </option>
                 {models.map((model) => (
-                  <option key={model.key} value={model.key} className="bg-[#111] text-white">
+                  <option key={model.key} value={model.key} className="bg-[#FDFDFD] text-white">
                     {model.displayName ?? model.name}
                   </option>
                 ))}

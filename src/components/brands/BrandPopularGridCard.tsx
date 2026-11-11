@@ -81,7 +81,7 @@ export default function BrandPopularGridCard({
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
       <div className="absolute inset-0 flex items-center justify-center p-2 z-10">
-        <h3 className={`text-white font-bold text-center leading-tight drop-shadow-lg ${compact ? "text-xs sm:text-sm" : "text-sm sm:text-base"}`}>
+        <h3 className={`on-media-label text-white font-bold text-center leading-tight drop-shadow-lg ${compact ? "text-xs sm:text-sm" : "text-sm sm:text-base"}`}>
           {brand.name}
         </h3>
       </div>

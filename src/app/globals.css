@@ -507,6 +507,103 @@ html.fonts-ready .h6 {
   .text-muted-foreground {
     color: #ffffff !important;
   }
+
+  /* Tło sklepu = biel paneli konfiguratora (#FDFDFD). W tej warstwie,
+     bo wymuszenie białego tekstu wyżej używa !important. */
+  .shop-canvas {
+    background-color: #fdfdfd;
+    color: #171717;
+  }
+
+  .shop-canvas .text-gray-300,
+  .shop-canvas .text-gray-400,
+  .shop-canvas .text-gray-500,
+  .shop-canvas .text-gray-600,
+  .shop-canvas .text-zinc-300,
+  .shop-canvas .text-zinc-400,
+  .shop-canvas .text-zinc-500,
+  .shop-canvas .text-zinc-600,
+  .shop-canvas .text-muted-foreground {
+    color: #525252 !important;
+  }
+
+  .shop-canvas [class*="text-white/"]:where(
+    :not([class*="bg-red"]):not([class*="bg-black"]):not([class*="from-red"]):not([class*="to-red"]):not([class*="bg-gradient"])
+  ) {
+    color: #525252 !important;
+  }
+
+  .shop-canvas [class*="text-white"]:not([class*="text-white/"]):where(
+    :not([class*="bg-red"]):not([class*="bg-black"]):not([class*="from-red"]):not([class*="to-red"]):not([class*="bg-gradient"])
+  ) {
+    color: #171717 !important;
+  }
+
+  /* Napis na zdjęciu marki ma zostać biały — reguła wyżej zamienia text-white na #171717. */
+  .shop-canvas .on-media-label[class*="text-white"] {
+    color: #ffffff !important;
+  }
+
+  .shop-canvas [class*="bg-black"] .text-gray-300,
+  .shop-canvas [class*="bg-black"] .text-gray-400,
+  .shop-canvas [class*="bg-black"] .text-gray-500,
+  .shop-canvas [class*="bg-black"] .text-gray-600,
+  .shop-canvas [class*="bg-black"] .text-zinc-300,
+  .shop-canvas [class*="bg-black"] .text-zinc-400,
+  .shop-canvas [class*="bg-black"] .text-zinc-500,
+  .shop-canvas [class*="bg-black"] .text-zinc-600,
+  .shop-canvas [class*="bg-black"] .text-muted-foreground,
+  .shop-canvas [class*="bg-black"] [class*="text-white"],
+  .shop-canvas [class*="bg-[#111]"] .text-gray-300,
+  .shop-canvas [class*="bg-[#111]"] .text-gray-400,
+  .shop-canvas [class*="bg-[#111]"] .text-gray-500,
+  .shop-canvas [class*="bg-[#111]"] .text-gray-600,
+  .shop-canvas [class*="bg-[#111]"] .text-zinc-300,
+  .shop-canvas [class*="bg-[#111]"] .text-zinc-400,
+  .shop-canvas [class*="bg-[#111]"] .text-zinc-500,
+  .shop-canvas [class*="bg-[#111]"] .text-zinc-600,
+  .shop-canvas [class*="bg-[#111]"] .text-muted-foreground,
+  .shop-canvas [class*="bg-[#111]"] [class*="text-white"],
+  .shop-canvas [class*="bg-[#1c1c1e]"] .text-gray-300,
+  .shop-canvas [class*="bg-[#1c1c1e]"] .text-gray-400,
+  .shop-canvas [class*="bg-[#1c1c1e]"] .text-gray-500,
+  .shop-canvas [class*="bg-[#1c1c1e]"] .text-gray-600,
+  .shop-canvas [class*="bg-[#1c1c1e]"] .text-zinc-300,
+  .shop-canvas [class*="bg-[#1c1c1e]"] .text-zinc-400,
+  .shop-canvas [class*="bg-[#1c1c1e]"] .text-zinc-500,
+  .shop-canvas [class*="bg-[#1c1c1e]"] .text-zinc-600,
+  .shop-canvas [class*="bg-[#1c1c1e]"] .text-muted-foreground,
+  .shop-canvas [class*="bg-[#1c1c1e]"] [class*="text-white"] {
+    color: #ffffff !important;
+  }
+
+  .shop-canvas [class*="border-white/"] {
+    border-color: #d4d4d4;
+  }
+
+  .shop-canvas [class*="bg-black"] [class*="border-white/"],
+  .shop-canvas [class*="bg-[#111]"] [class*="border-white/"],
+  .shop-canvas [class*="bg-[#1c1c1e]"] [class*="border-white/"] {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .shop-canvas [class*="bg-white/5"],
+  .shop-canvas [class*="bg-white/10"],
+  .shop-canvas [class*="bg-white/[0.04]"] {
+    background-color: #ffffff;
+  }
+
+  .shop-canvas [class*="bg-black"] [class*="bg-white/5"],
+  .shop-canvas [class*="bg-black"] [class*="bg-white/10"],
+  .shop-canvas [class*="bg-black"] [class*="bg-white/[0.04]"],
+  .shop-canvas [class*="bg-[#111]"] [class*="bg-white/5"],
+  .shop-canvas [class*="bg-[#111]"] [class*="bg-white/10"],
+  .shop-canvas [class*="bg-[#111]"] [class*="bg-white/[0.04]"],
+  .shop-canvas [class*="bg-[#1c1c1e]"] [class*="bg-white/5"],
+  .shop-canvas [class*="bg-[#1c1c1e]"] [class*="bg-white/10"],
+  .shop-canvas [class*="bg-[#1c1c1e]"] [class*="bg-white/[0.04]"] {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
 }
 
 @keyframes fadeIn {

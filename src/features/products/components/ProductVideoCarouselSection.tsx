@@ -43,8 +43,9 @@ const swiperStyles = `
 
   .product-videos-swiper .swiper-button-prev,
   .product-videos-swiper .swiper-button-next {
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.5);
+    color: #171717;
+    background: #ffffff;
+    border: 1px solid #d4d4d4;
     border-radius: 50%;
     width: 44px;
     height: 44px;
@@ -59,8 +60,8 @@ const swiperStyles = `
 
   .product-videos-swiper .swiper-button-prev:hover,
   .product-videos-swiper .swiper-button-next:hover {
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
+    background: #f5f5f5;
+    color: #171717;
   }
 
   .product-videos-swiper .swiper-button-prev:focus-visible,
@@ -165,7 +166,7 @@ const ProductVideoCard = ({
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onKeyDown={handleKeyDown}
-      className="relative w-full aspect-[9/16] rounded-xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50 bg-black cursor-pointer hover:border-red-500/40 transition-[border-color] duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-black"
+      className="relative w-full aspect-[9/16] rounded-xl overflow-hidden border border-neutral-200 shadow-sm bg-[#FDFDFD] cursor-pointer hover:border-neutral-400 transition-[border-color] duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-[#FDFDFD]"
     >
       {shouldLoadMedia && !hasVideoError ? (
         <video
@@ -198,7 +199,7 @@ const ProductVideoCard = ({
       />
 
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12 rounded-full bg-black/60 border border-white/20 text-white pointer-events-none min-h-[44px] min-w-[44px]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12 rounded-full bg-white border border-neutral-200 text-neutral-950 shadow-sm pointer-events-none min-h-[44px] min-w-[44px]"
         aria-hidden="true"
       >
         {isPlaying ? (
@@ -281,16 +282,11 @@ export default function ProductVideoCarouselSection() {
       ref={sectionRef}
       id="product-videos"
       data-section="product-videos"
-      className="w-full bg-black py-7 md:py-9 relative overflow-hidden"
+      className="w-full bg-[#FDFDFD] py-7 md:py-9 relative overflow-hidden"
       role="region"
       aria-label="Premium w akcji - krótkie reklamy EVA Premium"
     >
       <style>{swiperStyles}</style>
-
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-red-900/8 blur-[120px] rounded-full" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-red-800/6 blur-[100px] rounded-full" />
-      </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
         <ShopSectionHeading
@@ -336,7 +332,7 @@ export default function ProductVideoCarouselSection() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 mt-6 text-center">
         <Link
           href="/dywaniki"
-          className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium tracking-wide text-white transition-all duration-300 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 rounded-full shadow-lg shadow-red-900/25 hover:shadow-red-600/20 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-black min-h-[44px]"
+          className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium tracking-wide text-white transition-all duration-300 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 rounded-full shadow-lg shadow-red-900/25 hover:shadow-red-600/20 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-[#FDFDFD] min-h-[44px]"
           aria-label="Sprawdź dostępność dywaników dla Twojego auta"
         >
           Sprawdź Dostępność Dla Twojego Auta

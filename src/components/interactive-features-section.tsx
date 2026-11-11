@@ -157,12 +157,8 @@ export default function InteractiveFeaturesSection() {
   return (
     <section 
       id="interactive-features" 
-      className="py-7 md:py-9 bg-black relative overflow-hidden"
+      className="py-7 md:py-9 bg-[#FDFDFD] relative overflow-hidden"
     >
-      {/* Gradient line top */}
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-red-900/5 via-black to-black pointer-events-none"></div>
-
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <ShopSectionHeading
@@ -179,7 +175,7 @@ export default function InteractiveFeaturesSection() {
             <div className="relative group">
               {/* Kontener na zdjęcie */}
               <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
-                <div className="relative rounded-2xl overflow-hidden bg-[#111] flex min-h-[220px] sm:min-h-[280px]">
+                <div className="relative rounded-2xl overflow-hidden bg-[#FDFDFD] flex min-h-[220px] sm:min-h-[280px]">
                   {outgoingFeature && (
                     <Image
                       src={outgoingFeature.image}
@@ -233,7 +229,7 @@ export default function InteractiveFeaturesSection() {
 
           {/* Lewa strona: Interaktywny dywanik */}
           <div className={`order-1 lg:order-1 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-            <div className="relative w-full aspect-square max-w-[480px] mx-auto rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-[#111]">
+            <div className="relative w-full aspect-square max-w-[480px] mx-auto rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-[#FDFDFD]">
               <Image
                 src="/images/interactive-mat-clean.png"
                 alt="Dywaniki EVA - cechy"

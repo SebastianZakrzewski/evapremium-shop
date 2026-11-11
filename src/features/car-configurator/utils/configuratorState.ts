@@ -31,6 +31,7 @@ export interface ConfiguratorState {
   selectedPodpietka?: string;
   podpietkaColor?: string;
   podpietkaMounting?: PodpietkaMounting;
+  selectedFinishIds?: string[];
 }
 
 export type ConfiguratorUrlParams = {
@@ -110,6 +111,7 @@ export const freshVehicleConfiguration: Partial<ConfiguratorState> = {
   selectedPodpietka: undefined,
   podpietkaColor: undefined,
   podpietkaMounting: undefined,
+  selectedFinishIds: undefined,
 }
 
 export const getConfigUpdatesFromUrl = ({
@@ -264,6 +266,12 @@ export const parseStoredConfiguratorState = (
     if (typeof record.color === "string") stored.color = record.color
     if (typeof record.edgeColor === "string") stored.edgeColor = record.edgeColor
     if (typeof record.heelPad === "boolean") stored.heelPad = record.heelPad
+    if (
+      Array.isArray(record.selectedFinishIds) &&
+      record.selectedFinishIds.every((id) => typeof id === "string")
+    ) {
+      stored.selectedFinishIds = record.selectedFinishIds
+    }
 
     return stored
   } catch {

@@ -353,7 +353,7 @@ export default function CarModelsSection() {
   // Jeśli nie ma wybranej marki, pokaż sekcję wyboru marek
   if (!brandParam) {
     return (
-      <section className="py-8 md:py-12 bg-black">
+      <section className="py-8 md:py-12 bg-[#FDFDFD]">
         <div className="container mx-auto px-4">
           {/* Breadcrumbs */}
           <nav className="mb-6" aria-label="Breadcrumb">
@@ -429,10 +429,10 @@ export default function CarModelsSection() {
   }
 
   return (
-    <div className={pinnedCard ? "bg-[#111] text-white" : "min-h-screen bg-black text-white pb-20"}>
+    <div className={pinnedCard ? "bg-[#111] text-white" : "min-h-screen bg-[#FDFDFD] text-white pb-20"}>
       {/* Hero Header */}
       {pinnedCard ? null : (
-      <div className="bg-black text-white">
+      <div className="bg-[#FDFDFD] text-white">
         <div className="container mx-auto px-4 pb-10 pt-8 md:pb-12 md:pt-12">
           <nav className="flex items-center gap-2 text-xs tracking-wide text-white/40">
             <Link href="/" className="transition-colors hover:text-white">Home</Link>
@@ -482,7 +482,7 @@ export default function CarModelsSection() {
             <Button 
               onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
               variant="outline" 
-              className="w-full flex items-center justify-between border-white/20 bg-transparent text-white hover:bg-white/5"
+              className="w-full flex items-center justify-between border-neutral-300 bg-[#FDFDFD] text-neutral-950 hover:bg-neutral-100"
             >
               <span className="flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4" />
@@ -529,7 +529,7 @@ export default function CarModelsSection() {
                           onCheckedChange={(checked) =>
                             handleBodyTypeChange(key, checked as boolean)
                           }
-                          className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                          className="border-neutral-300 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                         />
                         <Label
                           htmlFor={`bodyType-${key}`}
@@ -544,7 +544,7 @@ export default function CarModelsSection() {
               )}
 
               {availableBodyTypes.length > 0 && availableGenerations.length > 0 && (
-                <Separator className="bg-white/10" />
+                <Separator className="bg-neutral-200" />
               )}
 
               {/* Generacje */}
@@ -560,7 +560,7 @@ export default function CarModelsSection() {
                           onCheckedChange={(checked) =>
                             handleGenerationChange(generation.value, checked as boolean)
                           }
-                          className="border-white/20 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                          className="border-neutral-300 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                         />
                         <Label
                           htmlFor={`generation-${generation.value}`}
@@ -581,7 +581,7 @@ export default function CarModelsSection() {
           <main className={pinnedCard ? "w-full" : "flex-1"}>
             {/* Results Header */}
             {pinnedCard ? null : (
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-neutral-200">
               <p className="text-gray-400">
                 {loading
                   ? "Ładowanie modeli…"
@@ -602,11 +602,11 @@ export default function CarModelsSection() {
 
             {/* Loading State */}
             {loading ? (
-              <div className={pinnedCard ? "grid w-full grid-cols-1" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}>
+              <div className={pinnedCard ? "grid w-full grid-cols-1" : "grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4"}>
                 {[...(pinnedCard ? [0] : Array(10))].map((_, i) => (
                   <div key={i} className={pinnedCard ? "flex flex-col bg-white/5 animate-pulse overflow-hidden" : "bg-white/5 rounded-xl animate-pulse overflow-hidden flex flex-col"}>
-                    <div className={pinnedCard ? "aspect-[4/3] w-full bg-white/10" : "w-full h-64 md:h-72 bg-white/10"} />
-                    <div className="p-4 md:p-5 flex-1 flex flex-col">
+                    <div className={pinnedCard ? "aspect-[4/3] w-full bg-white/10" : "aspect-square w-full bg-white/10 sm:aspect-auto sm:h-64 md:h-72"} />
+                    <div className="p-3 sm:p-4 md:p-5 flex-1 flex flex-col">
                       <div className="h-5 bg-white/10 rounded mb-2" />
                       <div className="h-4 bg-white/10 rounded mb-4 flex-1" />
                       <div className="h-10 bg-white/10 rounded mt-auto" />
@@ -617,7 +617,7 @@ export default function CarModelsSection() {
             ) : (
               <>
                 {/* Model Grid */}
-                <div className={pinnedCard ? "grid w-full grid-cols-1" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}>
+                <div className={pinnedCard ? "grid w-full grid-cols-1" : "grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4"}>
                   {filteredModels.map((model, index) => {
                     const imageSrc = model.imageSrc || '/vercel.svg';
                     const configuratorUrl = buildConfiguratorEntryUrl({
@@ -638,10 +638,10 @@ export default function CarModelsSection() {
                     const card = (
                       <div className={pinnedCard
                         ? "flex flex-col bg-[#111]"
-                        : "h-full flex flex-col bg-[#111] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1"}>
+                        : "h-full flex flex-col rounded-xl border border-neutral-300 bg-[#FDFDFD] overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-neutral-400 hover:shadow-md"}>
                         <div className={pinnedCard
                           ? "w-full bg-[#111] leading-none"
-                          : "relative aspect-square bg-gradient-to-br from-gray-900 to-black overflow-hidden"}>
+                          : "relative aspect-square overflow-hidden bg-neutral-100"}>
                           <Image
                             src={imageSrc}
                             alt={`Dywaniki do ${brandLabel} ${model.name} - Spersonalizowane dywaniki samochodowe`}
@@ -650,7 +650,7 @@ export default function CarModelsSection() {
                               ? "block h-auto w-full"
                               : `transition-transform duration-500 group-hover:scale-110 ${useBrandPhoto ? 'object-cover object-center' : 'object-cover'}`}
                             style={pinnedCard ? { width: '100%', height: 'auto' } : undefined}
-                            sizes={pinnedCard ? "420px" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"}
+                            sizes={pinnedCard ? "420px" : "(max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"}
                             priority={pinnedCard || index < 2}
                             quality={100}
                             unoptimized={
@@ -660,28 +660,32 @@ export default function CarModelsSection() {
                           />
                         </div>
 
-                        <div className={pinnedCard ? "flex shrink-0 flex-col px-3 pt-3" : "flex-1 flex flex-col p-5"}>
-                          <div className={pinnedCard ? "mb-1" : "mb-2"}>
-                            <h3 className="text-lg font-bold text-white leading-tight group-hover:text-red-500 transition-colors line-clamp-2">
+                        <div className={pinnedCard ? "flex shrink-0 flex-col px-3 pt-3" : "flex flex-1 flex-col p-3 sm:p-5"}>
+                          <div className={pinnedCard ? "mb-1" : "mb-1 sm:mb-2"}>
+                            <h3 className={pinnedCard
+                              ? "text-lg font-bold leading-tight text-white transition-colors line-clamp-2 group-hover:text-red-500"
+                              : "text-sm font-bold leading-tight text-white transition-colors line-clamp-2 group-hover:text-red-500 sm:text-lg"}>
                               {brandLabel} {model.nameDisplay ?? model.name}
                             </h3>
                           </div>
 
-                          <div className={pinnedCard ? "mb-2 space-y-1 text-sm text-gray-400" : "text-sm text-gray-400 mb-4 flex-1 space-y-1"}>
+                          <div className={pinnedCard ? "mb-2 space-y-1 text-sm text-gray-400" : "mb-2 flex-1 space-y-1 text-xs text-gray-400 sm:mb-4 sm:text-sm"}>
                             {model.generationDisplay && (
-                              <span className="block">{model.generationDisplay}</span>
+                              <span className={pinnedCard ? "block" : "block line-clamp-2"}>{model.generationDisplay}</span>
                             )}
                             {model.bodyTypeDisplay && (
-                              <span className="block uppercase tracking-wide text-xs text-gray-500">
+                              <span className={pinnedCard
+                                ? "block uppercase tracking-wide text-xs text-gray-500"
+                                : "block uppercase tracking-wide text-[10px] text-gray-500 sm:text-xs"}>
                                 {model.bodyTypeDisplay}
                               </span>
                             )}
                           </div>
 
-                          <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/5 py-3">
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-400">Cena od</span>
-                              <span className="text-xl font-bold text-white">
+                          <div className={`mt-auto flex items-center justify-between border-t ${pinnedCard ? "gap-3 border-white/5 py-3" : "gap-2 border-neutral-200 py-2 sm:gap-3 sm:py-3"}`}>
+                            <div className="flex min-w-0 flex-col">
+                              <span className={pinnedCard ? "text-xs text-gray-400" : "text-[10px] text-gray-400 sm:text-xs"}>Cena od</span>
+                              <span className={pinnedCard ? "text-xl font-bold text-white" : "text-sm font-bold leading-tight text-white sm:text-xl"}>
                                 {formatPriceCurrency(150)}
                               </span>
                             </div>
@@ -694,8 +698,9 @@ export default function CarModelsSection() {
                             ) : (
                               <Link href={configuratorUrl}>
                                 <Button
-                                  className="shrink-0 gap-2 transition-all duration-300 bg-red-600 text-white hover:bg-red-700"
+                                  className="h-8 w-8 shrink-0 gap-2 p-0 transition-all duration-300 bg-red-600 text-white hover:bg-red-700 sm:h-9 sm:w-auto sm:px-3"
                                   size="sm"
+                                  aria-label="Skonfiguruj"
                                 >
                                   <ShoppingCart className="w-4 h-4" aria-hidden="true" />
                                   <span className="hidden sm:inline">Skonfiguruj</span>
@@ -724,7 +729,7 @@ export default function CarModelsSection() {
                     return (
                       <article
                         key={model.id}
-                        className="group block h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black rounded-xl"
+                        className="group block h-full cursor-pointer rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-[#FDFDFD]"
                       >
                         {card}
                       </article>
@@ -734,7 +739,7 @@ export default function CarModelsSection() {
 
                 {/* Empty State */}
                 {filteredModels.length === 0 && (
-                  <div className="py-20 text-center border border-dashed border-white/10 rounded-xl">
+                  <div className="py-20 text-center border border-dashed border-neutral-300 rounded-xl">
                     <div className="text-4xl mb-4">🔍</div>
                     <h3 className="text-xl font-semibold text-white mb-2">Nie znaleziono modeli</h3>
                     <p className="text-gray-400 max-w-md mx-auto mb-6">

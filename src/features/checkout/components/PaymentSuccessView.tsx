@@ -86,7 +86,7 @@ export const PaymentSuccessView = ({
   const items = paymentStatus.items || []
 
   return (
-    <section className="bg-black text-white" aria-labelledby="payment-success-title">
+    <section className="bg-[#FDFDFD] text-white" aria-labelledby="payment-success-title">
       <div className="mx-auto max-w-6xl px-5 py-12 md:px-8 md:py-16">
         <header className="flex flex-col gap-8 border-b border-white/10 pb-10 md:flex-row md:items-end md:justify-between">
           <div>
@@ -140,7 +140,7 @@ export const PaymentSuccessView = ({
                   onClick={onRecheck}
                   disabled={isRefreshing}
                   variant="outline"
-                  className="mt-4 h-10 rounded-full border-0 bg-[#2c2c2e] text-white shadow-none hover:bg-[#3a3a3c]"
+                  className="mt-4 h-10 rounded-full border border-neutral-300 bg-white text-neutral-950 shadow-none hover:bg-neutral-100"
                 >
                   <RotateCcw className="mr-2 h-4 w-4" aria-hidden="true" />
                   {isRefreshing ? "Sprawdzanie..." : "Sprawdź ponownie"}
@@ -240,7 +240,7 @@ export const PaymentSuccessView = ({
             </Link>
           </Button>
           {paymentStatus.status === "paid" && (
-            <Button asChild variant="outline" className="h-12 rounded-full border-0 bg-[#1c1c1e] px-8 text-white shadow-none hover:bg-[#2c2c2e]">
+            <Button asChild variant="outline" className="h-12 rounded-full border border-neutral-300 bg-white px-8 text-neutral-950 shadow-none hover:bg-neutral-100">
               <Link href="/configurator">
                 Skonfiguruj kolejne
                 <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
@@ -248,7 +248,7 @@ export const PaymentSuccessView = ({
             </Button>
           )}
           {paymentStatus.status === "failed" && (
-            <Button asChild variant="outline" className="h-12 rounded-full border-0 bg-[#1c1c1e] px-8 text-white shadow-none hover:bg-[#2c2c2e]">
+            <Button asChild variant="outline" className="h-12 rounded-full border border-neutral-300 bg-white px-8 text-neutral-950 shadow-none hover:bg-neutral-100">
               <Link href="/checkout">
                 Spróbuj ponownie
                 <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
@@ -279,7 +279,7 @@ type PaymentSuccessMessageProps = {
 }
 
 export const PaymentSuccessMessage = ({ title, message }: PaymentSuccessMessageProps) => (
-  <section className="bg-black px-4 py-16 text-white">
+  <section className="bg-[#FDFDFD] px-4 py-16 text-white">
     <div className="mx-auto max-w-lg py-8 text-center">
       <XCircle className="mx-auto h-8 w-8 text-white/70" aria-hidden="true" />
       <h1 className="mt-4 text-2xl font-semibold">{title}</h1>
@@ -295,7 +295,7 @@ export const PaymentSuccessMessage = ({ title, message }: PaymentSuccessMessageP
 )
 
 export const PaymentSuccessPending = () => (
-  <section className="bg-black px-4 py-20 text-white" aria-live="polite">
+  <section className="bg-[#FDFDFD] px-4 py-20 text-white" aria-live="polite">
     <div className="mx-auto max-w-md py-8 text-center">
       <div className="mx-auto h-8 w-8 animate-spin rounded-full border border-white/15 border-t-white" />
       <p className="mt-5 text-sm text-white/70">Sprawdzanie statusu płatności...</p>

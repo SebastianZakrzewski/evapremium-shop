@@ -319,7 +319,7 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative overflow-visible bg-black pb-6 max-sm:pb-4 md:overflow-hidden md:pb-4"
+      className="relative overflow-visible bg-[#FDFDFD] pb-6 max-sm:pb-4 md:overflow-hidden md:pb-4"
       role="region"
       aria-roledescription={isMobileHero || !HERO_HAS_CAROUSEL_NAV ? undefined : "carousel"}
       aria-label="Sekcja promocyjna - dywaniki samochodowe"

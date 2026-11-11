@@ -47,7 +47,7 @@ export default function GlebokaStrukturaKomorekSection() {
   return (
     <section 
       id="gleboka-struktura-komorek-section" 
-      className="py-7 md:py-9 bg-black relative overflow-hidden"
+      className="py-7 md:py-9 bg-[#FDFDFD] relative overflow-hidden"
       role="region"
       aria-label="Cechy materiału EVA - struktura komórkowa"
     >

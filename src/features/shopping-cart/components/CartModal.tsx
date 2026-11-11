@@ -229,7 +229,7 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
       
       {/* Modal */}
       <div 
-        className={`fixed top-0 right-0 h-full w-full sm:max-w-md bg-black border-l border-white/5 shadow-2xl z-[100] transform transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`shop-canvas fixed top-0 right-0 z-[100] flex h-full w-full transform flex-col border-l border-neutral-200 bg-[#FDFDFD] shadow-2xl transition-transform duration-300 ease-in-out sm:max-w-md ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -296,7 +296,7 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
 
           {/* Footer - tylko gdy są produkty */}
           {!isLoading && !error && items.length > 0 && (
-            <div className="flex-shrink-0 border-t border-white/5 p-6 space-y-4 bg-black">
+            <div className="flex-shrink-0 space-y-4 border-t border-neutral-200 bg-[#FDFDFD] p-6">
               {/* Discount Code Input */}
               <div className="space-y-2">
                 <Label className="text-white text-sm font-medium">Kod rabatowy</Label>
@@ -305,7 +305,7 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
                     value={discountCode}
                     onChange={(e) => handleDiscountCodeChange(e.target.value)}
                     placeholder=""
-                    className={`min-h-[40px] h-10 bg-neutral-600/40 border-white/10 text-white placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm ${
+                    className={`min-h-[40px] h-10 bg-white border-neutral-300 text-neutral-950 placeholder:text-neutral-400 focus:border-red-500 focus:ring-red-500/30 rounded-lg text-sm ${
                       discountError ? 'border-red-500' : discountApplied ? 'border-green-500' : ''
                     }`}
                     disabled={discountApplied || isDiscountFromCheckout}

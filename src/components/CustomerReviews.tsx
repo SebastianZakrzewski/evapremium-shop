@@ -99,7 +99,7 @@ export default function CustomerReviews() {
   return (
     <section 
       id="opinie" 
-      className="py-7 md:py-9 bg-black relative overflow-hidden"
+      className="py-7 md:py-9 bg-[#FDFDFD] relative overflow-hidden"
       role="region"
       aria-label="Opinie klientów o dywanikach EVA"
     >

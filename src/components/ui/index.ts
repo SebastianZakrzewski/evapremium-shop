@@ -58,7 +58,3 @@ export { BrandGridCard, default as BrandGridCardDefault } from './BrandGridCard'
 // Window Card
 export { default as WindowCard } from './WindowCard';
 
-// Product reveal card
-export { ProductRevealCard } from './product-reveal-card';
-export type { ProductRevealFeature } from './product-reveal-card';
-

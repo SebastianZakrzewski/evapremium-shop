@@ -1,6 +1,14 @@
 import { BaseRepository } from './BaseRepository';
 import { Accessory, AccessoryFilters } from '@/entities/product';
 
+const accessoryProductTypes = ['organizer', 'podpietka', 'wykonczenie'] as const;
+
+const mapAccessoryProductType = (value: unknown): Accessory['productType'] => {
+  if (typeof value !== 'string') return undefined;
+  const normalized = value.toLowerCase().trim();
+  return accessoryProductTypes.find((type) => type === normalized);
+};
+
 export class AccessoryRepository extends BaseRepository<Accessory> {
   protected tableName = 'accessories';
 
@@ -35,11 +43,7 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
       stockQuantity: stock_quantity !== null && stock_quantity !== undefined ? stock_quantity : null,
       isActive: is_active !== null && is_active !== undefined ? is_active : true,
       categoryId: category_id,
-      productType: product_type 
-        ? (product_type.toString().toLowerCase().trim() === 'organizer' || product_type.toString().toLowerCase().trim() === 'podpietka')
-          ? product_type.toString().toLowerCase().trim()
-          : undefined
-        : undefined,
+      productType: mapAccessoryProductType(product_type),
       // Usuń product_type z rest jeśli istnieje, żeby nie było duplikatu
       product_type: undefined,
       createdAt: created_at ? new Date(created_at) : new Date(),
