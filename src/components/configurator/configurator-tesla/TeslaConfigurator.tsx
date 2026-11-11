@@ -55,6 +55,7 @@ import {
   type ConfiguratorAnalyticsStep,
 } from "./analytics/configuratorAnalytics"
 import { filterPreviewsForBodyType } from "./preview/filterPreviewsForBodyType"
+import { resolveCarGallerySlides, type CarGallerySlide } from "./preview/resolveCarGallerySlides"
 import { preloadPinnedImage, TeslaPinnedGallery, type GallerySlide } from "./preview/TeslaPinnedGallery"
 import { isMarketingConfiguratorImage } from "./preview/isMarketingConfiguratorImage"
 import {
@@ -106,12 +107,10 @@ export default function TeslaConfigurator() {
     return normalizeBrandName(brandSlug) || brandSlug
   }, [config.brand, searchParams])
 
-  const { previews: modelPreviews } = useMatModelPreviews({
-    recordKey: config.recordKey || undefined,
+  const { previews: modelPreviews, isLoading: modelPreviewsLoading } = useMatModelPreviews({
     brandKey: config.brandKey || undefined,
-    modelKey: config.modelKey || config.model || undefined,
-    bodyTypeKey: config.bodyTypeKey || config.bodyType || undefined,
-    enabled: !!(config.modelKey || config.recordKey || (config.brand && config.model)),
+    modelKey: config.modelKey || undefined,
+    enabled: Boolean(config.brandKey && config.modelKey),
   })
   const pricingQuery = useResolvedPricing({
     recordKey: config.recordKey || undefined,
@@ -442,37 +441,24 @@ export default function TeslaConfigurator() {
   }, [colorCandidate])
   const pinnedMatUrl = loadedColorUrl || colorCandidate || DEFAULT_MAT_IMAGE
 
+  const heldModelSlides = useRef<CarGallerySlide[]>([])
   const carSlides = useMemo(() => {
-    const items: GallerySlide[] = []
-    const seen = new Set<string>()
-    const push = (slide: GallerySlide) => {
-      if (!slide.src || seen.has(slide.src) || isMarketingConfiguratorImage(slide.src)) return
-      seen.add(slide.src)
-      items.push(slide)
-    }
-    const ordered = [...bodyMatchedPreviews].sort((left, right) => {
-      if (left.is_primary !== right.is_primary) return left.is_primary ? -1 : 1
-      return left.sort_order - right.sort_order
+    const visiblePreviews = bodyMatchedPreviews.filter(
+      (preview) => preview.image_url && !isMarketingConfiguratorImage(preview.image_url),
+    )
+    const logo = getBrandLogo(brandForImage)
+    const resolved = resolveCarGallerySlides({
+      previews: visiblePreviews,
+      brandName: config.brand,
+      brandLogo: logo && !isMarketingConfiguratorImage(logo) ? logo : null,
+      neutralSrc: neutralMatUrl,
+      modelSelected: Boolean(config.modelKey),
+      pending: modelPreviewsLoading,
+      heldModelSlides: heldModelSlides.current,
     })
-    ordered.forEach((preview) => {
-      push({
-        id: `car-${preview.id}`,
-        src: preview.image_url,
-        alt: preview.alt_text ?? "Podgląd modelu",
-        group: "car",
-      })
-    })
-    if (items.length === 0 && config.brand) {
-      const logo = getBrandLogo(brandForImage)
-      if (logo && !isMarketingConfiguratorImage(logo)) {
-        push({ id: "car-brand", src: logo, alt: config.brand, group: "car" })
-      }
-    }
-    if (items.length === 0) {
-      push({ id: "car-neutral", src: neutralMatUrl, alt: "Dywaniki EVA Premium", group: "car" })
-    }
-    return items
-  }, [bodyMatchedPreviews, brandForImage, config.brand, neutralMatUrl])
+    heldModelSlides.current = resolved.heldModelSlides
+    return resolved.slides
+  }, [bodyMatchedPreviews, brandForImage, config.brand, config.modelKey, modelPreviewsLoading, neutralMatUrl])
 
   const matSlides = useMemo(() => {
     const items: GallerySlide[] = []
