@@ -37,18 +37,15 @@ export const resolveConfiguratorV2VehicleScrollTarget = (
     ? LOCKED_VEHICLE_YEAR_FIELD_ID
     : VEHICLE_YEAR_FIELD_ID
 
+  const needsBodyType = input.bodyOptionsCount > 1 && !input.bodyTypeKey
+  if (needsBodyType) return bodyTypeFieldId
+
   const needsYear =
     !input.year && Boolean(input.modelKey) && input.yearOptionsCount > 0
   if (needsYear) return yearFieldId
 
   const needsGearbox = Boolean(input.year) && !input.gearbox
   if (needsGearbox) return gearboxFieldId
-
-  const needsBodyType =
-    Boolean(input.year) &&
-    input.bodyOptionsCount > 0 &&
-    !input.bodyTypeKey
-  if (needsBodyType) return bodyTypeFieldId
 
   return null
 }

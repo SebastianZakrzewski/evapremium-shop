@@ -10,6 +10,8 @@ import { useMatModelPreviews } from "@/features/mat-model-previews"
 import { useConfiguratorState } from "@/features/car-configurator/hooks/useConfiguratorState"
 import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext"
 import { useResolvedPricing } from "@/features/vehicle-catalog/hooks/useResolvedPricing"
+import { useVehicleCatalog } from "@/features/vehicle-catalog/hooks/useVehicleCatalog"
+import { previewModelKeyForBody } from "@/components/configurator/configurator-simple/vehicleBodySelection"
 import { reconcileVariantWithOfferedKeys } from "@/features/vehicle-catalog/domain/reconcileVariantWithOfferedKeys"
 import { mapConfiguratorV2Sections } from "@/features/car-configurator/adapters/configuratorV2SectionMapper"
 import {
@@ -107,10 +109,15 @@ export default function TeslaConfigurator() {
     return normalizeBrandName(brandSlug) || brandSlug
   }, [config.brand, searchParams])
 
+  const { templates: familyTemplates } = useVehicleCatalog(config.brandKey, config.modelFamilyKey)
+  const previewModelKey = useMemo(
+    () => previewModelKeyForBody(familyTemplates, config.bodyTypeKey, config.modelKey),
+    [config.bodyTypeKey, config.modelKey, familyTemplates],
+  )
   const { previews: modelPreviews, isLoading: modelPreviewsLoading } = useMatModelPreviews({
     brandKey: config.brandKey || undefined,
-    modelKey: config.modelKey || undefined,
-    enabled: Boolean(config.brandKey && config.modelKey),
+    modelKey: previewModelKey || undefined,
+    enabled: Boolean(config.brandKey && previewModelKey),
   })
   const pricingQuery = useResolvedPricing({
     recordKey: config.recordKey || undefined,
