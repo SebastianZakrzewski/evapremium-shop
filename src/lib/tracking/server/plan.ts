@@ -24,24 +24,30 @@ export type Ga4PurchaseBody = {
   }>
 }
 
-export type AdsClickConversion = {
-  conversionAction: string
-  conversionDateTime: string
+/**
+ * One offline click conversion for Data Manager `events:ingest`.
+ * `transactionId` is the shop order number and is how Google deduplicates retries.
+ * `adPersonalization` is omitted: checkout only records a single marketing-consent bit.
+ */
+export type DataManagerAdsEvent = {
+  transactionId: string
+  eventTimestamp: string
+  eventSource: 'WEB'
   conversionValue: number
-  currencyCode: 'PLN'
-  orderId: string
-  /** v23 click uploads use adUserData. adPersonalization is not accepted on this service. */
-  consent: { adUserData: 'GRANTED' }
-  gclid?: string
-  gbraid?: string
-  wbraid?: string
+  currency: 'PLN'
+  consent: { adUserData: 'CONSENT_GRANTED' }
+  adIdentifiers: {
+    gclid?: string
+    gbraid?: string
+    wbraid?: string
+  }
 }
 
 export type PurchaseSendPlan = {
   blocked?: string
   transactionId: string
   ga4: TrackingChannelState & { body?: Ga4PurchaseBody }
-  ads: TrackingChannelState & { conversion?: AdsClickConversion }
+  ads: TrackingChannelState & { event?: DataManagerAdsEvent }
 }
 
 const toItem = (item: OrderItem): Ga4ItemPayload => ({
@@ -77,12 +83,12 @@ export const preferredClickId = (
   return null
 }
 
-export const adsConversionResource = (env: ServerTrackingEnv): string | null => {
+/** Numeric conversion action id. Accepts a bare id or a Google Ads resource name. */
+export const adsProductDestinationId = (env: ServerTrackingEnv): string | null => {
   const action = env.googleAdsConversionAction?.trim()
-  const customerId = env.googleAdsCustomerId?.replace(/-/g, '').trim()
-  if (!action || !customerId) return null
-  if (action.startsWith('customers/')) return action
-  return `customers/${customerId}/conversionActions/${action}`
+  if (!action) return null
+  const id = action.startsWith('customers/') ? action.split('/').pop() : action
+  return id && /^\d+$/.test(id) ? id : null
 }
 
 export const adsCredentialsReady = (env: ServerTrackingEnv): boolean =>
@@ -90,15 +96,15 @@ export const adsCredentialsReady = (env: ServerTrackingEnv): boolean =>
     env.googleAdsClientId &&
       env.googleAdsClientSecret &&
       env.googleAdsRefreshToken &&
-      env.googleAdsCustomerId &&
-      adsConversionResource(env)
+      env.googleAdsCustomerId?.replace(/-/g, '').trim() &&
+      adsProductDestinationId(env)
   )
 
 /**
- * Ads wants `yyyy-mm-dd hh:mm:ss+hh:mm` in the account timezone.
- * The shop account is Poland, so the stamp is Europe/Warsaw.
+ * Data Manager wants an RFC 3339 timestamp. The Ads account is Poland,
+ * so the offset is Europe/Warsaw.
  */
-export const formatAdsConversionDateTime = (date: Date): string => {
+export const formatDataManagerEventTimestamp = (date: Date): string => {
   const parts = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'Europe/Warsaw',
     year: 'numeric',
@@ -115,7 +121,7 @@ export const formatAdsConversionDateTime = (date: Date): string => {
     parts.find((part) => part.type === type)?.value ?? ''
   const offset = read('timeZoneName').replace('GMT', '') || '+00:00'
 
-  return `${read('year')}-${read('month')}-${read('day')} ${read('hour')}:${read('minute')}:${read('second')}${offset}`
+  return `${read('year')}-${read('month')}-${read('day')}T${read('hour')}:${read('minute')}:${read('second')}${offset}`
 }
 
 export const planServerPurchase = (input: {
@@ -178,18 +184,19 @@ export const planServerPurchase = (input: {
   } else if (!adsCredentialsReady(input.env)) {
     ads = channel('skipped', 'missing_ads_config')
   } else {
-    const conversion: AdsClickConversion = {
-      conversionAction: adsConversionResource(input.env) as string,
-      conversionDateTime: formatAdsConversionDateTime(input.paidAt),
+    const event: DataManagerAdsEvent = {
+      transactionId: input.order.orderNumber,
+      eventTimestamp: formatDataManagerEventTimestamp(input.paidAt),
+      eventSource: 'WEB',
       conversionValue: Number(input.order.total || 0),
-      currencyCode: 'PLN',
-      orderId: input.order.orderNumber,
-      consent: { adUserData: 'GRANTED' },
+      currency: 'PLN',
+      consent: { adUserData: 'CONSENT_GRANTED' },
+      adIdentifiers: {},
     }
-    if (clickField === 'gclid') conversion.gclid = attribution?.gclid
-    if (clickField === 'gbraid') conversion.gbraid = attribution?.gbraid
-    if (clickField === 'wbraid') conversion.wbraid = attribution?.wbraid
-    ads = { status: 'pending', conversion }
+    if (clickField === 'gclid' && attribution?.gclid) event.adIdentifiers.gclid = attribution.gclid
+    if (clickField === 'gbraid' && attribution?.gbraid) event.adIdentifiers.gbraid = attribution.gbraid
+    if (clickField === 'wbraid' && attribution?.wbraid) event.adIdentifiers.wbraid = attribution.wbraid
+    ads = { status: 'pending', event }
   }
 
   return { transactionId, ga4, ads }

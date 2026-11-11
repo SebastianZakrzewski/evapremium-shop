@@ -19,9 +19,17 @@ Checkout reads first-party click ids and the current cookies, then saves them on
 
 GA4 Measurement Protocol runs only when `SERVER_TRACKING_ENABLED=true`, statistics consent was granted, and `client_id` was stored.
 
-Google Ads `uploadClickConversions` runs only when `ADS_SERVER_UPLOAD_ENABLED=true` as well, marketing consent was granted, and one click id is stored (`gclid`, then `gbraid`, then `wbraid`). The call uses Google Ads API v23 (`https://googleads.googleapis.com/v23/customers/{customerId}:uploadClickConversions`) with `partialFailure: true`. `orderId` is the shop order number (`ORD-...`). `conversionDateTime` is the paid time in Europe/Warsaw, formatted `yyyy-mm-dd hh:mm:ss+hh:mm`. Because the upload runs only after marketing consent, `consent.adUserData` is `GRANTED`. `adPersonalization` is not sent; ConversionUploadService does not accept it. The conversion action is `GOOGLE_ADS_SERVER_CONVERSION_ACTION` on `GOOGLE_ADS_CUSTOMER_ID`. The intended action is the existing secondary action `7861775516` (`Zakup – potwierdzona płatność`) on customer `6142700676`. This does not change the primary client-side Zakup action `AW-18303682173/GGzWCPqk_MscEP2M8JdE`.
+Google Ads runs only when `ADS_SERVER_UPLOAD_ENABLED=true` as well, marketing consent was granted, and one click id is stored (`gclid`, then `gbraid`, then `wbraid`). The call is `POST https://datamanager.googleapis.com/v1/events:ingest` (Data Manager API, offline click conversions). Google rejects `ConversionUploadService.UploadClickConversions` for this Cloud project: stored failures on ORD-2026-000536, ORD-2026-000540, and ORD-2026-000541 say new integrations must use the Data Manager API. A developer token is not sent and does not authorize this call.
 
-`purchase_tracking.ga4.status` and `purchase_tracking.ads.status` become `sent`, `skipped`, or `failed`. A later Paynow retry does not send a channel that is already `sent` or `sending`. A failed channel can be retried by the next `CONFIRMED` notification. Tracking errors are logged and still return HTTP 200 to Paynow.
+The destination operating account is `GOOGLE_ADS_CUSTOMER_ID` (`6142700676`). `productDestinationId` is the numeric `GOOGLE_ADS_SERVER_CONVERSION_ACTION` (`7896361865`). That action must be type `UPLOAD_CLICKS` (Google Ads UI source: Website → Import from clicks). `loginAccount` is sent only when `GOOGLE_ADS_LOGIN_CUSTOMER_ID` is set, and then it must be a manager account that contains `6142700676` and that the OAuth user belongs to. The event sends `eventSource=WEB`, `currency=PLN`, the order total, the paid time as RFC 3339 in Europe/Warsaw, the click id, and `transactionId` = the shop order number (`ORD-...`). Google deduplicates retries with that `transactionId` inside the conversion action. `consent.adUserData` is `CONSENT_GRANTED` because the upload runs only after marketing consent. `adPersonalization` is not sent. No email, phone, or other user data is sent. This does not change the client-side Zakup action `AW-18303682173/GGzWCPqk_MscEP2M8JdE`.
+
+Each Google call aborts after 8 seconds. A failure is stored on `purchase_tracking.ads.reason` and the Paynow webhook still returns HTTP 200. A success stores `purchase_tracking.ads.requestId`.
+
+`purchase_tracking.ga4.status` and `purchase_tracking.ads.status` become `sent`, `skipped`, or `failed`. A later Paynow retry does not send a channel that is already `sent` or `sending`. A failed channel can be retried by the next `CONFIRMED` notification. Orders without marketing consent stay `skipped` and are not uploaded.
+
+## Backfill
+
+`npx tsx scripts/backfill-ads-conversions.ts` lists paid orders created in the last 90 days that have marketing consent, a `gclid`, and `ads.status` of `failed` or `pending`. It does not upload. Add `--send` to upload those orders through the same client. `--send` does not call GA4 again and refuses to run when server tracking is blocked or `ADS_SERVER_UPLOAD_ENABLED` is not `true`. Conversion time is the payment `paid_at`, or the order `updated_at` when that is missing. Run it only after the Data Manager scope and API enablement below are in place.
 
 ## Environment variables
 
@@ -32,21 +40,32 @@ Google Ads `uploadClickConversions` runs only when `ADS_SERVER_UPLOAD_ENABLED=tr
 | `GA4_MEASUREMENT_ID` | `G-SGHPWGL4P4` (property 562402558). |
 | `GA4_API_SECRET` | Measurement Protocol secret from GA4 Admin → Data streams. |
 | `GA4_MP_DEBUG` | `true` adds `debug_mode: 1` so the hit can show in GA4 DebugView. Leave unset in normal production. |
-| `GOOGLE_ADS_DEVELOPER_TOKEN` | Optional. Sent as the `developer-token` header only when set. Google ignores the header; access follows the OAuth client's Cloud project. |
-| `GOOGLE_ADS_OAUTH_CLIENT_ID` | OAuth client id. |
+| `GOOGLE_ADS_DEVELOPER_TOKEN` | Unused. Data Manager does not accept a developer token. Leave it unset. |
+| `GOOGLE_ADS_OAUTH_CLIENT_ID` | OAuth client id from Cloud project `evapremium-ads`. |
 | `GOOGLE_ADS_OAUTH_CLIENT_SECRET` | OAuth client secret. |
-| `GOOGLE_ADS_REFRESH_TOKEN` | Refresh token with Ads upload scope. |
-| `GOOGLE_ADS_CUSTOMER_ID` | `6142700676`. |
-| `GOOGLE_ADS_LOGIN_CUSTOMER_ID` | Optional manager account id. Leave unset when there is no manager account. |
-| `GOOGLE_ADS_SERVER_CONVERSION_ACTION` | `7861775516` or the full resource name. |
+| `GOOGLE_ADS_REFRESH_TOKEN` | Refresh token that includes `https://www.googleapis.com/auth/datamanager`. An older token that only has `https://www.googleapis.com/auth/adwords` cannot call Data Manager. |
+| `GOOGLE_ADS_CUSTOMER_ID` | Operating account `6142700676`. Hyphens are stripped. |
+| `GOOGLE_ADS_LOGIN_CUSTOMER_ID` | Optional. Set only when the OAuth user reaches `6142700676` through a manager account. Leave unset for a direct user of `6142700676`. |
+| `GOOGLE_ADS_SERVER_CONVERSION_ACTION` | Numeric id `7896361865` (or the resource name; only the trailing id is sent). The action must be `UPLOAD_CLICKS`. |
 
 Do not set these on Preview. Do not point them at a sandbox Paynow merchant.
+
+## One-time Google setup
+
+Do this in Cloud project `evapremium-ads` before turning the upload on. The existing Ads refresh token does not include the Data Manager scope.
+
+1. Enable the Data Manager API (`datamanager.googleapis.com`) on project `evapremium-ads`.
+2. On the OAuth consent screen, open Data Access and add `https://www.googleapis.com/auth/datamanager`. Do not add `https://www.googleapis.com/auth/datamanager.partnerlink`. Save.
+3. If the app is External and in Testing, add the Google account that has access to Ads customer `6142700676` as a test user. If the app is In production, granting a new sensitive scope can require Google’s OAuth verification before that account can consent. That consent screen is a manual step.
+4. Sign in as that Ads user and mint a new refresh token with scope `https://www.googleapis.com/auth/datamanager` (and `https://www.googleapis.com/auth/adwords` if the same token is still used elsewhere). Replace `GOOGLE_ADS_REFRESH_TOKEN` in Vercel production. Do not commit the token.
+5. The same Google user must be a user on customer `6142700676`, or a user on a manager account that contains it. In the manager case set `GOOGLE_ADS_LOGIN_CUSTOMER_ID` to that manager’s 10-digit id. Otherwise leave it unset. The operating account stays `6142700676`.
+6. Confirm conversion action `7896361865` on that customer is type Upload clicks (`UPLOAD_CLICKS`). Data Manager rejects a website-tag (`WEBPAGE`) action for this offline ingest.
 
 ## How to verify
 
 1. Apply the migration before enabling the flags. Until the column exists, a send error is logged and Paynow still receives HTTP 200.
 2. Place a production-flagged test only after consent, with `gclid` on the landing URL and statistics consent granted. Confirm `purchase_tracking.ga4.status` is `sent` and DebugView shows one purchase when `GA4_MP_DEBUG=true`.
-3. With marketing consent and a click id, confirm `ads.status` is `sent`. Use the Google Ads API upload diagnostics / conversion action diagnostics for action `7861775516`. A second webhook for the same payment must not create a second row in `purchase_tracking` send timestamps.
+3. With marketing consent and a click id, confirm `ads.status` is `sent` and `ads.requestId` is set. In Google Ads, open conversion action `7896361865` and confirm the upload. A second webhook for the same payment must not call Data Manager again.
 4. In GA4 Admin → Data streams → Configure tag settings → List unwanted referrals, add `paynow.pl` and `paywall.paynow.pl`. That referral exclusion is a GA4 admin change, not something this code does. It stops the client-side purchase from being credited to the Paynow redirect.
 
 ## Not done here

@@ -49,6 +49,7 @@
     "backup:list": "node scripts/backup.js --list",
     "backup:restore": "node scripts/backup.js --restore",
     "test:p24": "tsx scripts/test-p24-connection.ts",
+    "backfill:ads-conversions": "tsx scripts/backfill-ads-conversions.ts",
     "docker:dev": "docker-compose up -d",
     "docker:build": "docker build -t eva-website .",
     "docker:stop": "docker-compose down",
