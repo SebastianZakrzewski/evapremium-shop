@@ -225,7 +225,7 @@ function SearchDropdown() {
       {/* Przycisk z ikoną lupy */}
       <button
         onClick={handleOpenModal}
-        className="text-white/90 hover:text-white transition-colors p-2 group"
+        className="text-neutral-950 hover:text-red-600 transition-colors p-2 group"
         aria-label="Otwórz wyszukiwanie"
       >
         <Search className="w-6 h-6 group-hover:scale-110 transition-transform" />

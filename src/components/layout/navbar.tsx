@@ -119,12 +119,11 @@ export default function Navbar() {
           hidden ? "-translate-y-full" : "translate-y-0"
         } ${
           scrolled 
-            ? "bg-black border-b border-white/10 shadow-lg"
-            : "bg-black border-b border-white/10"
+            ? "bg-white border-b border-neutral-200 shadow-lg"
+            : "bg-white border-b border-neutral-200"
         }`}
       >
-        {/* Gradient bottom border line */}
-        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50"></div>
+        <div className="absolute bottom-0 left-0 w-full h-px bg-neutral-200"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-20 lg:h-24 flex items-center justify-between overflow-x-hidden">
           {/* Logo — animacja power-on po akceptacji cookies */}
@@ -132,21 +131,21 @@ export default function Navbar() {
           
           {/* Desktop Links - Centered (from lg: tablets keep hamburger) */}
           <div className="hidden lg:flex gap-4 xl:gap-8 items-center absolute left-1/2 transform -translate-x-1/2">
-            <Link href="/dywaniki" className="text-white/90 hover:text-red-500 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="Dywaniki Samochodowe EVA Premium">Dywaniki Samochodowe</Link>
-            <Link href="/akcesoria" className="text-white/90 hover:text-red-500 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="Akcesoria Samochodowe - Kompletna Oferta">Akcesoria</Link>
-            <Link href="/galeria" onClick={handleGalleryClick} className="text-white/90 hover:text-red-500 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="Galeria Produktów EVA Premium">Galeria</Link>
-            <Link href="/o-nas" className="text-white/90 hover:text-red-500 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="O Firmie EvaPremium">O Nas</Link>
-            <Link href="/kontakt" className="text-white/90 hover:text-red-500 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="Kontakt - EvaPremium">Kontakt</Link>
+            <Link href="/dywaniki" className="text-neutral-950 hover:text-red-600 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="Dywaniki Samochodowe EVA Premium">Dywaniki Samochodowe</Link>
+            <Link href="/akcesoria" className="text-neutral-950 hover:text-red-600 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="Akcesoria Samochodowe - Kompletna Oferta">Akcesoria</Link>
+            <Link href="/galeria" onClick={handleGalleryClick} className="text-neutral-950 hover:text-red-600 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="Galeria Produktów EVA Premium">Galeria</Link>
+            <Link href="/o-nas" className="text-neutral-950 hover:text-red-600 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="O Firmie EvaPremium">O Nas</Link>
+            <Link href="/kontakt" className="text-neutral-950 hover:text-red-600 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="Kontakt - EvaPremium">Kontakt</Link>
           </div>
           
           {/* Desktop Cart Icon and Contact */}
           <div className="hidden lg:flex items-center gap-3 xl:gap-5 z-10 shrink-0">
-            <a href="tel:+48793993430" className="hidden xl:inline text-white/80 hover:text-white transition-colors font-medium text-sm tracking-wide hover:scale-105 transform duration-200 whitespace-nowrap">
+            <a href="tel:+48793993430" className="hidden xl:inline text-neutral-800 hover:text-neutral-950 transition-colors font-medium text-sm tracking-wide hover:scale-105 transform duration-200 whitespace-nowrap">
               +48 793 993 430
             </a>
             <Link
               href="/kontakt"
-              className="text-white/80 hover:text-white transition-colors font-medium text-sm tracking-wide whitespace-nowrap"
+              className="text-neutral-800 hover:text-neutral-950 transition-colors font-medium text-sm tracking-wide whitespace-nowrap"
               aria-label="Pytania? Przejdź do kontaktu"
               title="Pytania? Skontaktuj się z nami"
             >
@@ -156,14 +155,14 @@ export default function Navbar() {
               <SearchDropdown />
               <button 
                 onClick={() => setIsCartOpen(true)}
-                className="text-white/90 hover:text-white transition-colors p-2 relative group glass-button rounded-full !border-white/10 hover:!bg-white/20"
+                className="text-neutral-950 hover:text-red-600 transition-colors p-2 relative group rounded-full border border-neutral-200 hover:bg-neutral-100"
               >
                 <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
                 {/* Cart Badge */}
                 {itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-lg group-hover:bg-red-500 transition-colors ring-2 ring-black">
+                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-lg group-hover:bg-red-500 transition-colors ring-2 ring-white">
                     {itemCount}
                   </span>
                 )}
@@ -176,27 +175,27 @@ export default function Navbar() {
             <SearchDropdown />
             <button 
               onClick={() => setIsCartOpen(true)}
-              className="text-white/90 hover:text-white transition-colors p-2 relative group"
+              className="text-neutral-950 hover:text-red-600 transition-colors p-2 relative group"
             >
               <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {/* Cart Badge */}
               {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow-lg ring-1 ring-black">
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow-lg ring-1 ring-white">
                   {itemCount}
                 </span>
               )}
             </button>
             <button
-              className="flex flex-col justify-center items-center w-10 h-10 text-white glass-button rounded-lg !border-white/10"
+              className="flex flex-col justify-center items-center w-10 h-10 text-neutral-950 rounded-lg border border-neutral-200"
               onClick={() => setOpen((v) => !v)}
               aria-label="Toggle menu"
               aria-expanded={open}
             >
-              <span className={`block h-0.5 w-5 bg-white transition-all duration-300 ${open ? "rotate-45 translate-y-1.5" : ""}`}></span>
-              <span className={`block h-0.5 w-5 bg-white my-1 transition-all duration-300 ${open ? "opacity-0 translate-x-2" : ""}`}></span>
-              <span className={`block h-0.5 w-5 bg-white transition-all duration-300 ${open ? "-rotate-45 -translate-y-1.5" : ""}`}></span>
+              <span className={`block h-0.5 w-5 bg-neutral-950 transition-all duration-300 ${open ? "rotate-45 translate-y-1.5" : ""}`}></span>
+              <span className={`block h-0.5 w-5 bg-neutral-950 my-1 transition-all duration-300 ${open ? "opacity-0 translate-x-2" : ""}`}></span>
+              <span className={`block h-0.5 w-5 bg-neutral-950 transition-all duration-300 ${open ? "-rotate-45 -translate-y-1.5" : ""}`}></span>
             </button>
           </div>
         </div>

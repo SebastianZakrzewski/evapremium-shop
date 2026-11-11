@@ -10,7 +10,7 @@ export const NavbarLogo = () => {
   return (
     <Link
       href="/"
-      className="z-10 flex items-center justify-center gap-2 text-lg font-bold text-white transition-opacity hover:opacity-80"
+      className="z-10 flex items-center justify-center gap-2 text-lg font-bold text-neutral-950 transition-opacity hover:opacity-80"
       aria-label="EvaPremium – strona główna"
     >
       <NavbarLogoSvg
