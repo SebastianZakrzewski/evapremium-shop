@@ -119,8 +119,8 @@ export default function Navbar() {
           hidden ? "-translate-y-full" : "translate-y-0"
         } ${
           scrolled 
-            ? "bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg" 
-            : "bg-black/60 backdrop-blur-sm border-b border-transparent"
+            ? "bg-black border-b border-white/10 shadow-lg"
+            : "bg-black border-b border-white/10"
         }`}
       >
         {/* Gradient bottom border line */}
@@ -202,30 +202,30 @@ export default function Navbar() {
         </div>
         
         {/* Mobile / tablet Menu */}
-        <div className={`lg:hidden fixed top-16 md:top-20 left-0 w-full bg-black/95 backdrop-blur-xl border-b border-white/10 z-[40] shadow-2xl pb-safe transition-all duration-300 ease-in-out overflow-hidden ${open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
+        <div className={`shop-canvas fixed left-0 top-16 z-[40] w-full overflow-hidden border-b border-neutral-200 bg-[#FDFDFD] pb-safe shadow-xl transition-all duration-300 ease-in-out md:top-20 lg:hidden ${open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
           <div className="flex flex-col gap-4 py-8 px-6">
-            <Link href="/dywaniki" className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
+            <Link href="/dywaniki" className="text-neutral-950 hover:text-red-600 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               Dywaniki Samochodowe
             </Link>
-            <div className="h-[1px] bg-white/5 w-full"></div>
-            <Link href="/akcesoria" className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
+            <div className="h-px w-full bg-neutral-200"></div>
+            <Link href="/akcesoria" className="text-neutral-950 hover:text-red-600 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               Akcesoria
             </Link>
-            <div className="h-[1px] bg-white/5 w-full"></div>
-            <Link href="/galeria" onClick={handleGalleryClick} className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors">
+            <div className="h-px w-full bg-neutral-200"></div>
+            <Link href="/galeria" onClick={handleGalleryClick} className="text-neutral-950 hover:text-red-600 text-lg font-medium transition-colors">
               Galeria
             </Link>
-            <div className="h-[1px] bg-white/5 w-full"></div>
-            <Link href="/o-nas" className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
+            <div className="h-px w-full bg-neutral-200"></div>
+            <Link href="/o-nas" className="text-neutral-950 hover:text-red-600 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               O Nas
             </Link>
-            <div className="h-[1px] bg-white/5 w-full"></div>
-            <Link href="/kontakt" className="text-white/90 hover:text-red-500 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
+            <div className="h-px w-full bg-neutral-200"></div>
+            <Link href="/kontakt" className="text-neutral-950 hover:text-red-600 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               Kontakt
             </Link>
             
-            <div className="mt-6 pt-6 border-t border-white/10 space-y-3">
-              <a href="tel:+48793993430" className="flex items-center justify-center gap-3 text-white font-bold text-lg bg-white/5 p-4 rounded-xl border border-white/10" onClick={() => setOpen(false)}>
+            <div className="mt-6 space-y-3 border-t border-neutral-200 pt-6">
+              <a href="tel:+48793993430" className="flex items-center justify-center gap-3 rounded-xl border border-neutral-300 bg-white p-4 text-lg font-bold text-neutral-950" onClick={() => setOpen(false)}>
                 <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                 +48 793 993 430
               </a>

@@ -311,9 +311,9 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
   // Obsługa stanu ładowania
   if (!brand) {
     return (
-      <section className="py-8 md:py-12 bg-black">
+      <section className="py-8 md:py-12 bg-[#FDFDFD]">
         <div className="container mx-auto px-4">
-          <div className="min-h-screen bg-black flex items-center justify-center">
+          <div className="min-h-screen bg-[#FDFDFD] flex items-center justify-center">
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-red-500 animate-spin mx-auto mb-4" />
               <div className="text-white text-xl">Ładowanie...</div>
@@ -326,11 +326,11 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
 
   if (loadingModels || loadingMats) {
     return (
-      <section className="py-8 md:py-12 bg-black relative overflow-hidden">
+      <section className="py-8 md:py-12 bg-[#FDFDFD] relative overflow-hidden">
         {/* Animowane tło */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-red-800/5"></div>
         <div className="container mx-auto px-4">
-          <div className="min-h-screen bg-black flex items-center justify-center relative z-10">
+          <div className="min-h-screen bg-[#FDFDFD] flex items-center justify-center relative z-10">
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-red-500 animate-spin mx-auto mb-4" />
               <div className="text-white text-xl">Ładowanie produktów...</div>
@@ -345,9 +345,9 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
   // Ale tylko jeśli nie ładują się dane (nie podczas ładowania)
   if (!loadingModels && !loadingMats && carModels.length === 0 && mats.length === 0) {
     return (
-      <section className="py-8 md:py-12 bg-black">
+      <section className="py-8 md:py-12 bg-[#FDFDFD]">
         <div className="container mx-auto px-4">
-          <div className="min-h-screen bg-black flex items-center justify-center">
+          <div className="min-h-screen bg-[#FDFDFD] flex items-center justify-center">
             <div className="text-center max-w-md">
               <div className="text-6xl mb-6">🚗</div>
               <h2 className="text-2xl font-bold text-white mb-4">Brak dostępnych produktów</h2>
@@ -378,7 +378,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pb-20">
+    <div className="min-h-screen bg-[#FDFDFD] text-white pb-20">
       {/* Hero Header */}
       <div className="relative bg-[#0a0a0a] border-b border-white/5 py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
@@ -545,7 +545,7 @@ export default function ProductSelectionSection({ params }: ProductSelectionSect
                 return (
                   <article
                     key={product.id}
-                    className="bg-[#111] rounded-xl border border-white/5 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group"
+                    className="bg-[#FDFDFD] rounded-xl border border-white/5 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group"
                   >
                     {/* Obraz produktu */}
                     <div className="relative w-full h-48 bg-white/5">

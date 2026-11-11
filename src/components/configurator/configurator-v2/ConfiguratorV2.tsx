@@ -24,6 +24,11 @@ import {
   getPodpietkaMountingFee,
   getPodpietkaTotalPrice,
 } from "@/features/car-configurator/domain/podpietkaMounting"
+import {
+  matFinishCartLines,
+  matFinishTotal,
+  selectedMatFinishes,
+} from "@/features/car-configurator/domain/matFinishes"
 import { resolvePersistedMatSetVariantLabel } from "@/shared/mat-set-labels"
 import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels"
 import { normalizeBrandName } from "@/shared/brands"
@@ -259,13 +264,17 @@ export default function ConfiguratorV2() {
     return accessories.find((acc) => acc.id === config.selectedPodpietka) ?? null
   }, [accessories, config.selectedPodpietka])
 
+  const selectedFinishes = useMemo(
+    () => selectedMatFinishes(accessories, config.selectedFinishIds),
+    [accessories, config.selectedFinishIds],
+  )
+
   const accessoryPrice = useMemo(() => {
-    if (!selectedPodpietka) return 0
-    return getPodpietkaTotalPrice(
-      selectedPodpietka.price,
-      config.podpietkaMounting,
-    )
-  }, [selectedPodpietka, config.podpietkaMounting])
+    const podpietkaPrice = selectedPodpietka
+      ? getPodpietkaTotalPrice(selectedPodpietka.price, config.podpietkaMounting)
+      : 0
+    return podpietkaPrice + matFinishTotal(selectedFinishes)
+  }, [selectedPodpietka, config.podpietkaMounting, selectedFinishes])
 
   const accessoryMountingFee = useMemo(
     () => getPodpietkaMountingFee(config.podpietkaMounting),
@@ -533,6 +542,21 @@ export default function ConfiguratorV2() {
         }
       }
 
+      for (const finishLine of matFinishCartLines(selectedFinishes)) {
+        try {
+          await addToCart(finishLine)
+        } catch (finishError) {
+          console.error("Error adding mat finish to cart:", finishError)
+          const finishMessage =
+            finishError instanceof Error
+              ? finishError.message
+              : "Nie udało się dodać dodatku"
+          setCartActionError(
+            `Dywaniki dodano do koszyka, ale dodatek nie został dodany: ${finishMessage}`,
+          )
+        }
+      }
+
       openCartModal()
     } catch (error) {
       const message =
@@ -551,6 +575,7 @@ export default function ConfiguratorV2() {
     pricingQuery.data?.selectedVariant?.label,
     addToCart,
     selectedPodpietka,
+    selectedFinishes,
   ])
 
   const pageTitle = config.brand && config.model
@@ -819,6 +844,10 @@ export default function ConfiguratorV2() {
             accessoryPrice={accessoryPrice}
             accessoryName={selectedPodpietka?.name}
             accessoryMountingFee={accessoryMountingFee}
+            extraLines={selectedFinishes.map((finish) => ({
+              label: finish.name,
+              amount: finish.price,
+            }))}
           />
           <CompareMatTypesModal
             isOpen={isCompareMatTypesOpen}

@@ -507,6 +507,7 @@ html.fonts-ready .h6 {
   .text-muted-foreground {
     color: #ffffff !important;
   }
+
 }
 
 @keyframes fadeIn {
@@ -938,4 +939,67 @@ html.fonts-ready .h6 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Białe tło sklepu: tytuły czarne, opisy ciemnoszare, etykiety zostają czerwone.
+   Warstwa base, bo !important w utilities (wymuszenie bieli) wygrywa z regułami poza warstwami. */
+@layer base {
+  .shop-canvas {
+    color: #171717;
+  }
+
+  .shop-canvas .text-white {
+    color: #171717 !important;
+  }
+
+  .shop-canvas .text-gray-100,
+  .shop-canvas .text-gray-200,
+  .shop-canvas .text-gray-300,
+  .shop-canvas .text-gray-400,
+  .shop-canvas .text-gray-500,
+  .shop-canvas .text-gray-600,
+  .shop-canvas .text-zinc-300,
+  .shop-canvas .text-zinc-400,
+  .shop-canvas .text-zinc-500,
+  .shop-canvas .text-zinc-600,
+  .shop-canvas .text-neutral-300,
+  .shop-canvas .text-neutral-400,
+  .shop-canvas .text-neutral-500,
+  .shop-canvas .text-muted-foreground,
+  .shop-canvas .text-white\/40,
+  .shop-canvas .text-white\/45,
+  .shop-canvas .text-white\/50,
+  .shop-canvas .text-white\/55,
+  .shop-canvas .text-white\/60,
+  .shop-canvas .text-white\/70,
+  .shop-canvas .text-white\/80 {
+    color: #404040 !important;
+  }
+
+  .shop-canvas .on-media,
+  .shop-canvas .on-media.text-white,
+  .shop-canvas .on-media .text-white,
+  .shop-canvas .on-media .text-gray-200,
+  .shop-canvas .on-media .text-gray-300,
+  .shop-canvas .on-media-label,
+  .shop-canvas .on-media-label.text-white {
+    color: #ffffff !important;
+  }
+
+  .shop-canvas .bg-red-500.text-white,
+  .shop-canvas .bg-red-600.text-white,
+  .shop-canvas .bg-red-700.text-white,
+  .shop-canvas .from-red-500.text-white,
+  .shop-canvas .from-red-600.text-white,
+  .shop-canvas .from-red-700.text-white,
+  .shop-canvas .to-red-600.text-white,
+  .shop-canvas .to-red-700.text-white,
+  .shop-canvas .bg-red-500 .text-white,
+  .shop-canvas .bg-red-600 .text-white,
+  .shop-canvas .bg-red-700 .text-white,
+  .shop-canvas .from-red-500 .text-white,
+  .shop-canvas .from-red-600 .text-white,
+  .shop-canvas .from-red-700 .text-white {
+    color: #ffffff !important;
+  }
 }

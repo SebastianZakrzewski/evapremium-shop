@@ -134,7 +134,7 @@ export default function HeroSection() {
   }, [currentSlide]);
 
   return (
-    <section className="relative h-[100svh] min-h-[700px] w-full bg-black overflow-hidden">
+    <section className="relative h-[100svh] min-h-[700px] w-full bg-[#FDFDFD] overflow-hidden">
       {/* Phone number - Mobile only */}
       <div className="md:hidden absolute top-24 left-0 right-0 z-30 px-6">
         <a 

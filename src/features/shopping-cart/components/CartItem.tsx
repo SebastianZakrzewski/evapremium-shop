@@ -89,7 +89,7 @@ function ProductPlate({ src, alt }: { src?: string | null; alt: string }) {
   const [failed, setFailed] = useState(false)
 
   return (
-    <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#2c2c2e] ring-1 ring-inset ring-white/10">
+    <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100">
       {src && !failed ? (
         <Image
           src={src}
@@ -114,7 +114,7 @@ function QuantityStepper({
   onChange: (quantity: number) => void
 }) {
   return (
-    <div className="inline-flex items-center rounded-full bg-black/40 p-1 ring-1 ring-inset ring-white/10">
+    <div className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-100 p-1">
       <button
         type="button"
         aria-label="Zmniejsz ilość"
@@ -242,7 +242,7 @@ function MatCartItem({
     : ""
 
   return (
-    <article className="rounded-[20px] bg-[#1c1c1e] p-3.5 ring-1 ring-inset ring-white/[0.08]">
+    <article className="rounded-[20px] border border-neutral-200 bg-white p-3.5">
       <div className="flex gap-3">
         <ProductPlate src={item.productImage} alt="Dywaniki samochodowe" />
         <div className="min-w-0 flex-1">
@@ -309,7 +309,7 @@ function AccessoryCartItem({
   const colorLabel = accessoryConfig?.color
 
   return (
-    <article className="rounded-[20px] bg-[#1c1c1e] p-3.5 ring-1 ring-inset ring-white/[0.08]">
+    <article className="rounded-[20px] border border-neutral-200 bg-white p-3.5">
       <div className="flex gap-3">
         <ProductPlate src={item.productImage} alt={item.productName} />
         <div className="min-w-0 flex-1">

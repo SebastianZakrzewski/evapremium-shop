@@ -30,7 +30,7 @@ export default function ProductSelection() {
 
   if (loading) {
     return (
-      <section id="products" className="bg-black py-20 md:py-32 flex items-center justify-center min-h-[60vh] relative overflow-hidden">
+      <section id="products" className="bg-[#FDFDFD] py-20 md:py-32 flex items-center justify-center min-h-[60vh] relative overflow-hidden">
         {/* Subtle background glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-900/10 blur-[120px] rounded-full pointer-events-none" aria-hidden="true"></div>
 
@@ -50,7 +50,7 @@ export default function ProductSelection() {
   }
 
   return (
-    <section id="products" className="bg-black py-20 md:py-32 flex items-center justify-center relative overflow-hidden">
+    <section id="products" className="bg-[#FDFDFD] py-20 md:py-32 flex items-center justify-center relative overflow-hidden">
       {/* Subtle background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-red-900/10 blur-[120px] rounded-full pointer-events-none" aria-hidden="true"></div>
 

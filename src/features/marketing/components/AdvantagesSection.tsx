@@ -74,7 +74,7 @@ export default function AdvantagesSection() {
   return (
     <section
       id="advantages-section"
-      className="w-full bg-black py-20 md:py-24 relative overflow-x-hidden overflow-y-visible"
+      className="w-full bg-[#FDFDFD] py-20 md:py-24 relative overflow-x-hidden overflow-y-visible"
       role="region"
       aria-label="Poznaj nasz produkt - zalety dywaników EVA Premium"
     >
@@ -121,7 +121,7 @@ export default function AdvantagesSection() {
                 `}>
                   
                   {/* Image Area */}
-                  <div className="relative h-56 w-full overflow-hidden bg-[#111]">
+                  <div className="relative h-56 w-full overflow-hidden bg-[#FDFDFD]">
                     <Image
                       src={item.src}
                       alt={item.title}
@@ -138,7 +138,7 @@ export default function AdvantagesSection() {
                   </div>
 
                   {/* Text Area */}
-                  <div className="p-6 md:p-8 flex-1 flex flex-col justify-between bg-[#111]/30">
+                  <div className="p-6 md:p-8 flex-1 flex flex-col justify-between bg-[#FDFDFD]/30">
                     <div>
                       <h3 className={`
                         text-xl font-bold mb-3 transition-colors duration-300

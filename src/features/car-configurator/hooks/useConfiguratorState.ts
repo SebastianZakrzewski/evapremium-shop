@@ -60,6 +60,7 @@ const defaultState: ConfiguratorState = {
   podpietkaColor: undefined,
   podpietkaMounting: undefined,
   selectedAddonIds: [],
+  selectedFinishIds: undefined,
 };
 
 const isFourDigitYear = (value: string | null): value is string =>

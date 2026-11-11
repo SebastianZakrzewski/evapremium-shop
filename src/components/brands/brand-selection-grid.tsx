@@ -73,7 +73,7 @@ export default function BrandSelectionGrid() {
 
 
   return (
-    <section id="brand-selection" className="bg-black pb-20 text-white">
+    <section id="brand-selection" className="bg-[#FDFDFD] pb-20 text-white">
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 md:px-6 md:pt-12">
         <nav className="flex items-center gap-2 text-xs tracking-wide text-white/40">
           <Link href="/" className="transition-colors hover:text-white">
@@ -106,7 +106,7 @@ export default function BrandSelectionGrid() {
               placeholder="Szukaj marki"
               value={searchQuery}
               onChange={handleSearchChange}
-              className="h-10 rounded-full border-white/10 bg-transparent pl-10 pr-10 text-sm text-white shadow-none placeholder:text-white/40 focus:border-white/25 focus:ring-0"
+              className="h-10 rounded-full border-neutral-300 bg-white pl-10 pr-10 text-sm text-neutral-950 shadow-none placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-0"
             />
             {searchQuery && (
               <button

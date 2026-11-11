@@ -40,11 +40,10 @@ const ImageTile = ({
     className={`
       flex-shrink-0 ${tileSize}
       relative rounded-xl overflow-hidden
-      shadow-2xl shadow-black/50
-      border border-white/10
-      hover:border-red-500/40
+      shadow-sm
+      border border-neutral-200 bg-[#FDFDFD]
+      hover:border-neutral-400
       transition-[border-color,box-shadow] duration-300
-      hover:shadow-red-900/30
       focus:outline-none focus:ring-2 focus:ring-red-500/60
       cursor-pointer
     `}

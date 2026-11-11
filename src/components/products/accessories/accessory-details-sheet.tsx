@@ -25,6 +25,8 @@ interface AccessoryDetailsSheetProps {
   onClose: () => void;
   onAddToConfig?: (accessory: Accessory, color?: string) => void; // Callback dla konfiguratora
   imageFallback?: ReactNode;
+  onOpenAutoFocus?: (event: Event) => void;
+  onCloseAutoFocus?: (event: Event) => void;
 }
 
 export default function AccessoryDetailsSheet({
@@ -33,6 +35,8 @@ export default function AccessoryDetailsSheet({
   onClose,
   onAddToConfig,
   imageFallback,
+  onOpenAutoFocus,
+  onCloseAutoFocus,
 }: AccessoryDetailsSheetProps) {
   const { addToCart } = useCart();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -159,15 +163,17 @@ export default function AccessoryDetailsSheet({
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent 
-        className="w-full sm:max-w-xl bg-black border-l border-white/10 text-white p-0 flex flex-col h-full [&>button]:hidden md:[&>button]:block"
+        className="shop-canvas flex h-full w-full flex-col border-l border-neutral-200 bg-[#FDFDFD] p-0 text-neutral-950 sm:max-w-xl [&>button]:hidden md:[&>button]:block"
         aria-labelledby="accessory-details-title"
         aria-describedby="accessory-details-description"
+        onOpenAutoFocus={onOpenAutoFocus}
+        onCloseAutoFocus={onCloseAutoFocus}
       >
         
         {/* Scrollable Content Container */}
         <div className="flex-1 overflow-y-auto">
           {/* Image Section - Fixed at top on mobile, scrollable content below */}
-          <div className="relative w-full bg-[#111]">
+          <div className="relative w-full bg-[#FDFDFD]">
             {/* Main Image */}
             <div className="relative aspect-video w-full">
               {currentImage && !imageError ? (
@@ -224,7 +230,7 @@ export default function AccessoryDetailsSheet({
 
             {/* Thumbnail Carousel - zawsze widoczna z placeholderami */}
             {productImages.length > 0 && !(imageError && imageFallback) && (
-              <div className="px-4 py-3 bg-[#111] border-t border-white/5">
+              <div className="px-4 py-3 bg-[#FDFDFD] border-t border-neutral-200">
                 <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
                   {Array.from({ length: thumbnailSlots }).map((_, index) => {
                     const hasImage = index < productImages.length;
@@ -381,7 +387,7 @@ export default function AccessoryDetailsSheet({
         </div>
 
         {/* Fixed Footer Action */}
-        <div className="shrink-0 p-6 bg-black/95 backdrop-blur border-t border-white/10 space-y-4">
+        <div className="shrink-0 p-6 bg-white border-t border-neutral-200 space-y-4">
           {/* Quantity Selector */}
           {accessory.inStock && (
             <div className="flex items-center justify-center gap-4">

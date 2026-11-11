@@ -8,7 +8,8 @@ import { CookieConsentBanner } from '@/features/cookie-consent'
 import { readModelCardQuery, shouldPinShopChrome } from '@/features/brands/model/modelCardUrl'
 import { persistLandingClickIds } from '@/lib/tracking/attribution/collect'
 
-const pageOffsetClassName = 'pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden'
+const pageOffsetClassName =
+  'shop-canvas bg-[#FDFDFD] text-neutral-950 pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden'
 const configuratorFrameClassName =
   'box-border min-h-svh max-w-full pb-[env(safe-area-inset-bottom)] pt-[var(--configurator-header-offset,4rem)]'
 

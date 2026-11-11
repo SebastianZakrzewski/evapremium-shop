@@ -80,7 +80,7 @@ const values = [
 
 export default function AboutUsSection() {
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden py-20 md:py-32">
+    <div className="min-h-screen bg-[#FDFDFD] relative overflow-hidden py-20 md:py-32">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-red-900/5 blur-[120px] rounded-full" />
@@ -95,7 +95,7 @@ export default function AboutUsSection() {
             return (
               <div 
                 key={idx}
-                className="bg-[#111] border border-white/5 p-8 rounded-2xl hover:border-red-900/30 transition-all duration-300 group hover:-translate-y-1"
+                className="bg-[#FDFDFD] border border-white/5 p-8 rounded-2xl hover:border-red-900/30 transition-all duration-300 group hover:-translate-y-1"
               >
                 <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-600 transition-colors">
                   <Icon className="w-6 h-6 text-white" />
@@ -114,7 +114,7 @@ export default function AboutUsSection() {
         <div className="grid lg:grid-cols-2 gap-12 items-center mb-24">
           <div className="relative">
              <div className="absolute -inset-4 bg-gradient-to-r from-red-600 to-blue-600 opacity-20 blur-2xl rounded-full" />
-             <div className="relative bg-[#111] border border-white/10 rounded-3xl p-8 md:p-12">
+             <div className="relative bg-[#FDFDFD] border border-white/10 rounded-3xl p-8 md:p-12">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 text-red-500 text-sm font-medium mb-6">
                   <Target className="w-4 h-4" />
                   Nasza Misja
@@ -139,7 +139,7 @@ export default function AboutUsSection() {
           </div>
 
           <div className="space-y-8">
-             <div className="bg-[#111] border border-white/5 p-8 rounded-2xl hover:bg-[#161616] transition-colors">
+             <div className="bg-[#FDFDFD] border border-white/5 p-8 rounded-2xl hover:bg-neutral-100 transition-colors">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center shrink-0">
                     <Globe className="w-5 h-5 text-blue-500" />
@@ -152,7 +152,7 @@ export default function AboutUsSection() {
                   </div>
                 </div>
              </div>
-             <div className="bg-[#111] border border-white/5 p-8 rounded-2xl hover:bg-[#161616] transition-colors">
+             <div className="bg-[#FDFDFD] border border-white/5 p-8 rounded-2xl hover:bg-neutral-100 transition-colors">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center shrink-0">
                     <Award className="w-5 h-5 text-purple-500" />
@@ -175,7 +175,7 @@ export default function AboutUsSection() {
             {values.map((val, idx) => {
               const Icon = val.icon;
               return (
-                <div key={idx} className="p-6 rounded-xl bg-[#111] border border-white/5 hover:border-white/20 transition-all duration-300 group">
+                <div key={idx} className="p-6 rounded-xl bg-[#FDFDFD] border border-white/5 hover:border-white/20 transition-all duration-300 group">
                   <Icon className="w-8 h-8 text-gray-400 group-hover:text-white mb-4 transition-colors" />
                   <h3 className="text-lg font-bold text-white mb-2">{val.title}</h3>
                   <p className="text-gray-400 text-sm leading-relaxed">{val.description}</p>
@@ -186,7 +186,7 @@ export default function AboutUsSection() {
         </div>
 
         {/* CTA Section */}
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#1a1a1a] to-[#111] border border-white/10 p-8 md:p-16 text-center">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#FDFDFD] to-[#FDFDFD] border border-white/10 p-8 md:p-16 text-center">
           <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
           <div className="relative z-10 max-w-2xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">

@@ -51,7 +51,7 @@ export default function ProductSelection() {
     return (
       <section
         id="products"
-        className="w-full bg-black py-7 md:py-9 flex items-center justify-center relative"
+        className="w-full bg-[#FDFDFD] py-7 md:py-9 flex items-center justify-center relative"
         role="region"
         aria-label="Popularne marki samochodów - ładowanie"
       >
@@ -72,7 +72,7 @@ export default function ProductSelection() {
   return (
     <section
       id="products"
-      className="w-full bg-black py-8 md:py-10 relative"
+      className="w-full bg-[#FDFDFD] py-8 md:py-10 relative"
       role="region"
       aria-label="Popularne marki samochodów - wybierz markę i znajdź dywaniki"
     >
@@ -103,7 +103,7 @@ export default function ProductSelection() {
             placeholder="Szukaj marki..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-4 pr-10 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all"
+            className="w-full pl-4 pr-10 py-3 rounded-xl bg-white border border-neutral-300 text-neutral-950 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all"
             aria-label="Szukaj marki samochodu"
           />
           <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />

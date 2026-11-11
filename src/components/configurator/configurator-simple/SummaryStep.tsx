@@ -23,6 +23,7 @@ import {
   getPodpietkaMountingLabel,
   getPodpietkaTotalPrice,
 } from "@/features/car-configurator/domain/podpietkaMounting";
+import { matFinishTotal, selectedMatFinishes } from "@/features/car-configurator/domain/matFinishes";
 import {
   CELL_STRUCTURE_DIAMONDS_ICON_SRC,
   CELL_STRUCTURE_HONEY_ICON_SRC,
@@ -131,9 +132,13 @@ export function SummaryStep({
     return accessories.find(acc => acc.id === config.selectedPodpietka) || null;
   }, [accessories, config.selectedPodpietka]);
 
-  const accessoryPrice = selectedPodpietka
+  const selectedFinishes = useMemo(
+    () => selectedMatFinishes(accessories, config.selectedFinishIds),
+    [accessories, config.selectedFinishIds],
+  );
+  const accessoryPrice = (selectedPodpietka
     ? getPodpietkaTotalPrice(selectedPodpietka.price, config.podpietkaMounting)
-    : 0;
+    : 0) + matFinishTotal(selectedFinishes);
   const accessoryMountingFee = getPodpietkaMountingFee(config.podpietkaMounting);
   
   const brandLogo = useMemo(
@@ -286,6 +291,13 @@ export function SummaryStep({
                   <span className="font-medium">{formatPricePln(accessoryMountingFee)}</span>
                 </div>
               )}
+
+              {selectedFinishes.map((finish) => (
+                <div key={finish.id} className={styles.extraRow}>
+                  <span>{finish.name}</span>
+                  <span className="font-medium">{formatPricePln(finish.price)}</span>
+                </div>
+              ))}
             </div>
 
             <div className={styles.divider}>

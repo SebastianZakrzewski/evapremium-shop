@@ -224,7 +224,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${montserrat.variable} bg-black min-h-screen`}>
+      <body className={`${montserrat.variable} bg-[#FDFDFD] min-h-screen`}>
         <FontsReady />
         <QueryProvider>
           <SessionProvider>

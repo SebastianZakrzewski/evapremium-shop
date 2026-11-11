@@ -248,7 +248,7 @@ function SearchDropdown() {
             md:transform md:-translate-x-1/2
             w-full
             md:w-auto md:max-w-2xl
-            bg-black md:bg-[#111]/95
+            shop-canvas bg-[#FDFDFD] md:bg-[#FDFDFD]
             backdrop-blur-sm
             border-0 md:border border-white/5
             rounded-none md:rounded-lg
@@ -284,10 +284,10 @@ function SearchDropdown() {
                     pl-12 pr-12
                     h-14 sm:h-12
                     w-full
-                    bg-white/5 md:bg-white/5/80 backdrop-blur-xl
-                    border-2 border-white/10 md:border-white/5/50
-                    text-white text-base sm:text-base
-                    placeholder:text-gray-400 md:placeholder:text-gray-400
+                    bg-white
+                    border-2 border-neutral-300
+                    text-neutral-950 text-base sm:text-base
+                    placeholder:text-neutral-400
                     focus:border-red-500 focus:ring-2 focus:ring-red-500/50 md:focus:ring-red-500/30
                     rounded-lg
                     transition-all duration-300

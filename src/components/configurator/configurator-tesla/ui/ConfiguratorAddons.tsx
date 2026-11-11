@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useLayoutEffect, useRef, useState } from "react"
 import Image from "next/image"
 import type { Accessory } from "@/entities/product"
 import AccessoryDetailsSheet from "@/components/products/accessories/accessory-details-sheet"
@@ -86,6 +86,18 @@ export const ConfiguratorAddons = ({
   onToggle,
 }: ConfiguratorAddonsProps) => {
   const [sheetAccessory, setSheetAccessory] = useState<Accessory | null>(null)
+  const lockedScroll = useRef(0)
+  const rememberScroll = () => {
+    lockedScroll.current = window.scrollY
+  }
+  const restoreScroll = () => {
+    const top = lockedScroll.current
+    if (Math.abs(window.scrollY - top) > 1) window.scrollTo({ top, behavior: "auto" })
+  }
+  const openSheet = (accessory: Accessory) => {
+    rememberScroll()
+    setSheetAccessory(accessory)
+  }
   const organizers = accessories.filter(
     (item) => item.productType === "organizer" && item.isActive !== false && item.inStock !== false,
   )
@@ -95,12 +107,11 @@ export const ConfiguratorAddons = ({
   const Finish = sheetAccessory?.productType === "wykonczenie" ? finishIcon(sheetAccessory.sku) : null
   const organizerFallback = sheetAccessory?.productType === "organizer" ? <OrganizerIcon className="h-40 w-40" /> : null
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!sheetAccessory) return undefined
-    const scrollY = window.scrollY
-    return () => {
-      requestAnimationFrame(() => window.scrollTo({ top: scrollY, behavior: "instant" }))
-    }
+    restoreScroll()
+    const frame = requestAnimationFrame(restoreScroll)
+    return () => cancelAnimationFrame(frame)
   }, [sheetAccessory])
 
   if (organizers.length === 0 && finishes.length === 0) return null
@@ -115,7 +126,7 @@ export const ConfiguratorAddons = ({
                 key={item.id}
                 accessory={item}
                 selected={selectedIds.includes(item.id)}
-                onAdd={setSheetAccessory}
+                onAdd={openSheet}
                 onRemove={onToggle}
               />
             ))}
@@ -131,7 +142,7 @@ export const ConfiguratorAddons = ({
                 key={item.id}
                 accessory={item}
                 selected={selectedIds.includes(item.id)}
-                onAdd={setSheetAccessory}
+                onAdd={openSheet}
                 onRemove={onToggle}
               />
             ))}
@@ -141,10 +152,22 @@ export const ConfiguratorAddons = ({
       <AccessoryDetailsSheet
         accessory={sheetAccessory}
         isOpen={sheetAccessory != null}
-        onClose={() => setSheetAccessory(null)}
+        onClose={() => {
+          setSheetAccessory(null)
+          restoreScroll()
+        }}
         onAddToConfig={(accessory) => {
           if (!selectedIds.includes(accessory.id)) onToggle(accessory.id)
           setSheetAccessory(null)
+          restoreScroll()
+        }}
+        onOpenAutoFocus={(event) => {
+          event.preventDefault()
+          restoreScroll()
+        }}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault()
+          restoreScroll()
         }}
         imageFallback={Finish ? <Finish className="h-40 w-40" /> : organizerFallback}
       />

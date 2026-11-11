@@ -15,6 +15,7 @@ import type { ConfiguratorState } from "@/features/car-configurator/utils/config
 import { useResolvedPricing } from "@/features/vehicle-catalog/hooks/useResolvedPricing";
 import { getProductEntryLock } from "@/features/car-configurator/utils/productEntryContext";
 import { getPodpietkaTotalPrice } from "@/features/car-configurator/domain/podpietkaMounting";
+import { matFinishCartLines, matFinishTotal, selectedMatFinishes } from "@/features/car-configurator/domain/matFinishes";
 import { normalizeBrandName } from "@/shared/brands";
 import {
   resolvePersistedMatSetVariantLabel,
@@ -342,12 +343,17 @@ export default function ConfiguratorSimple() {
   }, [accessories, config.selectedPodpietka]);
 
   // Oblicz całkowitą cenę z podpiętką
+  const selectedFinishes = useMemo(
+    () => selectedMatFinishes(accessories, config.selectedFinishIds),
+    [accessories, config.selectedFinishIds],
+  );
+
   const totalPriceWithAccessories = useMemo(() => {
     const accessoryPrice = selectedPodpietka
       ? getPodpietkaTotalPrice(selectedPodpietka.price, config.podpietkaMounting)
       : 0;
-    return priceBreakdown.totalPrice + accessoryPrice;
-  }, [priceBreakdown.totalPrice, selectedPodpietka, config.podpietkaMounting]);
+    return priceBreakdown.totalPrice + accessoryPrice + matFinishTotal(selectedFinishes);
+  }, [priceBreakdown.totalPrice, selectedPodpietka, config.podpietkaMounting, selectedFinishes]);
 
   // Generuj ścieżkę do dynamicznego obrazu dywanika (zmienia się z kolorami/strukturą)
   const dynamicPreviewPath = useMemo(() => {
@@ -971,6 +977,10 @@ export default function ConfiguratorSimple() {
             },
           });
         }
+      }
+
+      for (const finishLine of matFinishCartLines(selectedFinishes)) {
+        await addToCart(finishLine);
       }
 
       // Ustaw isCartOpen na true przed wysłaniem eventu, aby sticky bottom bar zniknął natychmiast

@@ -14,6 +14,7 @@ import { X } from "lucide-react";
 import AccessoryCard from "./accessory-card";
 import AccessoryDetailsSheet from "./accessory-details-sheet";
 import { formatPriceCurrency } from "@/lib/utils/formatPrice";
+import { isShopAccessory, MAT_FINISH_CATEGORY_SLUG } from "@/features/car-configurator/domain/matFinishes";
 
 const MAIN_CATEGORIES = ["Organizery do Bagażnika", "Podpiętki"];
 
@@ -62,11 +63,14 @@ export default function AccessoriesSection() {
 
   // Podkategorie - pokazuj tylko te, które należą do wybranych głównych kategorii
   const availableCategories = useMemo(() => {
-    let filtered = categories;
+    let filtered = categories.filter((category) => category.slug !== MAT_FINISH_CATEGORY_SLUG);
     
     // Jeśli wybrano główną kategorię, pokaż tylko podkategorie z tej głównej kategorii
     if (selectedMainCategories.length > 0) {
       filtered = categories.filter(cat => {
+        if (cat.slug === MAT_FINISH_CATEGORY_SLUG) {
+          return false;
+        }
         // Jeśli kategoria jest główną kategorią, nie pokazuj jej w podkategoriach
         if (MAIN_CATEGORIES.includes(cat.name)) {
           return false;
@@ -87,14 +91,16 @@ export default function AccessoriesSection() {
       });
     } else {
       // Jeśli nie wybrano głównej kategorii, pokaż wszystkie oprócz głównych
-      filtered = categories.filter(cat => !MAIN_CATEGORIES.includes(cat.name));
+      filtered = categories.filter(
+        (cat) => cat.slug !== MAT_FINISH_CATEGORY_SLUG && !MAIN_CATEGORIES.includes(cat.name),
+      );
     }
     
     return filtered.map(cat => cat.name).sort();
   }, [categories, selectedMainCategories]);
 
   const filteredAccessories = useMemo(() => {
-    let filtered = accessories;
+    let filtered = accessories.filter(isShopAccessory);
 
     // Filtruj po kategoriach (główne + podkategorie)
     if (filters.categories.length > 0) {
@@ -216,7 +222,7 @@ export default function AccessoriesSection() {
     if (categoryParam) {
       setLoadingCategory(true);
       getAccessoriesByCategorySlug(categoryParam).then(accessories => {
-        setCategoryAccessories(accessories);
+        setCategoryAccessories(accessories.filter(isShopAccessory));
         setLoadingCategory(false);
       }).catch(() => {
         setCategoryAccessories([]);
@@ -242,7 +248,7 @@ export default function AccessoriesSection() {
 
   if (error) {
     return (
-      <section className="min-h-[60vh] flex items-center justify-center bg-black">
+      <section className="min-h-[60vh] flex items-center justify-center bg-[#FDFDFD]">
         <div className="text-center space-y-4">
           <div className="text-red-500 text-xl font-semibold">Wystąpił błąd</div>
           <p className="text-gray-400">{error}</p>
@@ -255,7 +261,7 @@ export default function AccessoriesSection() {
   }
 
   return (
-    <div className="bg-black pb-20 text-white">
+    <div className="bg-[#FDFDFD] pb-20 text-white">
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 md:px-6 md:pt-12">
         <nav className="flex items-center gap-2 text-xs tracking-wide text-white/40">
           <Link href="/" className="transition-colors hover:text-white">
@@ -397,24 +403,24 @@ export default function AccessoriesSection() {
 
         <div className="mt-10">
           {isLoading || loadingCategory ? (
-            <div className="flex flex-wrap justify-center gap-8">
-              {[...Array(6)].map((_, index) => (
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
+              {[...Array(8)].map((_, index) => (
                 <div
                   key={index}
-                  className="h-[24.5rem] w-80 max-w-full overflow-hidden rounded-2xl border border-white/10"
+                  className="flex flex-col overflow-hidden rounded-xl border border-neutral-200"
                 >
-                  <div className="h-56 animate-pulse bg-white/10" />
-                  <div className="space-y-3 p-6">
-                    <div className="h-4 w-28 animate-pulse rounded bg-white/10" />
-                    <div className="h-12 w-4/5 animate-pulse rounded bg-white/10" />
-                    <div className="h-8 w-24 animate-pulse rounded bg-white/10" />
+                  <div className="aspect-square w-full animate-pulse bg-neutral-100" />
+                  <div className="flex flex-1 flex-col p-3 sm:p-5">
+                    <div className="mb-2 h-5 animate-pulse rounded bg-neutral-100" />
+                    <div className="mb-4 h-4 flex-1 animate-pulse rounded bg-neutral-100" />
+                    <div className="mt-auto h-10 animate-pulse rounded bg-neutral-100" />
                   </div>
                 </div>
               ))}
             </div>
           ) : (
             <>
-              <div className="flex flex-wrap justify-center gap-8">
+              <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
                 {currentAccessories.map((accessory) => (
                   <AccessoryCard
                     key={accessory.id}

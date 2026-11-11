@@ -16,6 +16,7 @@ import {
   getPodpietkaMountingFee,
   getPodpietkaTotalPrice,
 } from "@/features/car-configurator/domain/podpietkaMounting"
+import { matFinishTotal, selectedMatFinishes } from "@/features/car-configurator/domain/matFinishes"
 import { resolvePersistedMatSetVariantLabel } from "@/shared/mat-set-labels"
 import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels"
 import { getBrandLogo, normalizeBrandName } from "@/shared/brands"
@@ -227,9 +228,22 @@ export default function TeslaConfigurator() {
   const accessoryMountingFee = getPodpietkaMountingFee(config.podpietkaMounting)
   const selectedAddons = useMemo(() => {
     const ids = new Set(config.selectedAddonIds ?? [])
-    return accessories.filter((item) => ids.has(item.id))
+    return accessories.filter((item) => ids.has(item.id) && item.productType !== "wykonczenie")
   }, [accessories, config.selectedAddonIds])
-  const addonPrice = selectedAddons.reduce((sum, item) => sum + item.price, 0)
+  const selectedFinishes = useMemo(() => {
+    const ids = new Set(config.selectedFinishIds ?? [])
+    for (const item of accessories) {
+      if (item.productType === "wykonczenie" && (config.selectedAddonIds ?? []).includes(item.id)) {
+        ids.add(item.id)
+      }
+    }
+    return selectedMatFinishes(accessories, [...ids])
+  }, [accessories, config.selectedAddonIds, config.selectedFinishIds])
+  const pricedExtras = useMemo(
+    () => [...selectedAddons, ...selectedFinishes],
+    [selectedAddons, selectedFinishes],
+  )
+  const addonPrice = selectedAddons.reduce((sum, item) => sum + item.price, 0) + matFinishTotal(selectedFinishes)
 
   const mapperResult = useMemo(
     () =>
@@ -278,15 +292,15 @@ export default function TeslaConfigurator() {
     ) {
       markStep("appearance")
     }
-    if (config.selectedPodpietka || (config.selectedAddonIds?.length ?? 0) > 0) {
+    if (config.selectedPodpietka || pricedExtras.length > 0) {
       markStep("accessories")
     }
-  }, [appearanceTouched, config.selectedAddonIds, config.selectedPodpietka, hydrated, mapperResult.sections, markStep])
+  }, [appearanceTouched, config.selectedPodpietka, hydrated, mapperResult.sections, markStep, pricedExtras.length])
 
   useEffect(() => {
     if (!hydrated || !mapperResult.isReadyForCart || priceBreakdown.totalPrice <= 0) return
     const year = config.year || "all"
-    const key = `${config.brand}_${config.model}_${year}_${config.matType}_${config.variant}_${config.structure}_${config.color}_${config.edgeColor}_${(config.selectedAddonIds ?? []).join(",")}`
+    const key = `${config.brand}_${config.model}_${year}_${config.matType}_${config.variant}_${config.structure}_${config.color}_${config.edgeColor}_${pricedExtras.map((item) => item.id).join(",")}`
     if (viewedContentKey.current === key) return
     try {
       if (window.sessionStorage.getItem(`viewcontent_${key}`)) {
@@ -323,7 +337,7 @@ export default function TeslaConfigurator() {
           },
         },
         priceBreakdown.totalPrice,
-        selectedAddons.map((item) => ({
+        pricedExtras.map((item) => ({
           id: item.id,
           quantity: 1,
           item_price: item.price,
@@ -334,7 +348,7 @@ export default function TeslaConfigurator() {
         })),
       ),
     )
-  }, [config, hydrated, mapperResult.isReadyForCart, priceBreakdown.totalPrice, selectedAddons])
+  }, [config, hydrated, mapperResult.isReadyForCart, priceBreakdown.totalPrice, pricedExtras])
 
   useEffect(() => {
     const nodes = document.querySelectorAll<HTMLElement>("[data-configurator-section]")
@@ -656,7 +670,7 @@ export default function TeslaConfigurator() {
           },
         })
       }
-      for (const addon of selectedAddons) {
+      for (const addon of pricedExtras) {
         const alreadyThere = cartItems.some(
           (item) => item.productType === "accessory" && item.productId === addon.id,
         )
@@ -686,7 +700,7 @@ export default function TeslaConfigurator() {
     mapperResult.isReadyForCart,
     markStep,
     priceBreakdown,
-    selectedAddons,
+    pricedExtras,
     selectedPodpietka,
     selectedVariant?.label,
   ])
@@ -872,7 +886,11 @@ export default function TeslaConfigurator() {
                 )
               })}
             </div>
-            {pricingVariants.length === 0 && !pricingQuery.isFetching && !pricingQuery.isPlaceholderData ? (
+            {pricingQuery.isError ? (
+              <p role="alert" style={{ fontSize: TESLA_LAYOUT.captionSize, color: TESLA_LAYOUT.text }}>
+                Nie udało się pobrać cen. Odśwież stronę i spróbuj ponownie.
+              </p>
+            ) : pricingVariants.length === 0 && !pricingQuery.isFetching && !pricingQuery.isPlaceholderData ? (
               <p style={{ fontSize: TESLA_LAYOUT.captionSize, color: TESLA_LAYOUT.muted }}>
                 Wybierz samochód, aby zobaczyć zestawy.
               </p>
@@ -967,14 +985,25 @@ export default function TeslaConfigurator() {
               hideNavigation
               surface="light"
               layout="rows"
+              showMatFinishes={false}
             />
             <ConfiguratorAddons
               accessories={accessories}
-              selectedIds={config.selectedAddonIds ?? []}
+              selectedIds={pricedExtras.map((item) => item.id)}
               onToggle={(id) => {
+                const item = accessories.find((accessory) => accessory.id === id)
+                if (item?.productType === "wykonczenie") {
+                  const current = config.selectedFinishIds ?? []
+                  const next = current.includes(id)
+                    ? current.filter((finishId) => finishId !== id)
+                    : [...current, id]
+                  addonIdsRef.current = (config.selectedAddonIds ?? []).filter((addonId) => addonId !== id)
+                  updateConfig({ selectedFinishIds: next, selectedAddonIds: addonIdsRef.current })
+                  return
+                }
                 const current = addonIdsRef.current
                 const next = current.includes(id)
-                  ? current.filter((item) => item !== id)
+                  ? current.filter((addonId) => addonId !== id)
                   : [...current, id]
                 addonIdsRef.current = next
                 updateConfig({ selectedAddonIds: next })
@@ -1009,7 +1038,7 @@ export default function TeslaConfigurator() {
         accessoryName={selectedPodpietka?.name}
         accessoryPrice={accessoryPrice}
         mountingFee={accessoryMountingFee}
-        extraLines={selectedAddons.map((item) => ({ name: item.name, price: item.price }))}
+        extraLines={pricedExtras.map((item) => ({ name: item.name, price: item.price }))}
       />
       <CompareMatTypesModal isOpen={compareTypes} onClose={() => setCompareTypes(false)} />
       <CompareVariantsModal

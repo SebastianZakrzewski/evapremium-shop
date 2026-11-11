@@ -23,9 +23,21 @@ const mockAccessory: Accessory = {
   updatedAt: new Date("2024-01-01"),
 }
 
+const finishAccessory: Accessory = {
+  ...mockAccessory,
+  id: "finish-seams",
+  name: "Wzmocnione szwy premium",
+  slug: "wzmocnione-szwy-premium",
+  price: 29,
+  sku: "WYK-SZWY-PREMIUM",
+  productType: "wykonczenie",
+  availableColors: undefined,
+  description: "Dodatkowe wzmocnienie szwów w obszyciu.",
+}
+
 vi.mock("@/features/accessories/hooks/useAccessories", () => ({
   useAccessories: () => ({
-    accessories: [mockAccessory],
+    accessories: [mockAccessory, finishAccessory],
     isLoading: false,
   }),
 }))
@@ -180,5 +192,21 @@ describe("AccessoriesStep mounting flow", () => {
       podpietkaColor: undefined,
       podpietkaMounting: undefined,
     })
+  })
+
+  it("toggles a mat finish without treating it as a heel pad", () => {
+    const onUpdate = vi.fn()
+    render(
+      <AccessoriesStep
+        config={baseConfig}
+        onUpdate={onUpdate}
+        onNext={vi.fn()}
+        onPrevious={vi.fn()}
+      />,
+    )
+
+    fireEvent.click(screen.getByRole("button", { name: /Wzmocnione szwy premium/i }))
+    expect(onUpdate).toHaveBeenCalledWith({ selectedFinishIds: ["finish-seams"] })
+    expect(screen.queryByText("Montaż podpiętki")).not.toBeInTheDocument()
   })
 })

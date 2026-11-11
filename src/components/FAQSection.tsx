@@ -119,7 +119,7 @@ export default function FAQSection() {
   return (
     <section 
       id="faq-section" 
-      className="py-7 md:py-9 bg-black text-white relative overflow-hidden"
+      className="py-7 md:py-9 bg-[#FDFDFD] text-white relative overflow-hidden"
       role="region"
       aria-label="Najczęściej zadawane pytania - FAQ"
     >

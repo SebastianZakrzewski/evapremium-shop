@@ -31,8 +31,9 @@ export interface ConfiguratorState {
   selectedPodpietka?: string;
   podpietkaColor?: string;
   podpietkaMounting?: PodpietkaMounting;
-  /** Optional accessory ids (organizers and finishes). Prices come from the shop catalog. */
+  /** Optional organizer ids. Mat finishes live in selectedFinishIds. */
   selectedAddonIds?: string[];
+  selectedFinishIds?: string[];
 }
 
 export type ConfiguratorUrlParams = {
@@ -113,6 +114,7 @@ export const freshVehicleConfiguration: Partial<ConfiguratorState> = {
   podpietkaColor: undefined,
   podpietkaMounting: undefined,
   selectedAddonIds: [],
+  selectedFinishIds: undefined,
 }
 
 export const getConfigUpdatesFromUrl = ({
@@ -269,6 +271,12 @@ export const parseStoredConfiguratorState = (
     if (typeof record.heelPad === "boolean") stored.heelPad = record.heelPad
     if (Array.isArray(record.selectedAddonIds)) {
       stored.selectedAddonIds = record.selectedAddonIds.filter((id) => typeof id === "string")
+    }
+    if (
+      Array.isArray(record.selectedFinishIds) &&
+      record.selectedFinishIds.every((id) => typeof id === "string")
+    ) {
+      stored.selectedFinishIds = record.selectedFinishIds
     }
 
     return stored

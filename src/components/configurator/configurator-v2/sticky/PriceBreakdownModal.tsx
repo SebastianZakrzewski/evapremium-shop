@@ -12,6 +12,7 @@ type PriceBreakdownModalProps = {
   accessoryPrice?: number
   accessoryName?: string
   accessoryMountingFee?: number
+  extraLines?: { label: string; amount: number }[]
 }
 
 export const PriceBreakdownModal = ({
@@ -21,6 +22,7 @@ export const PriceBreakdownModal = ({
   accessoryPrice = 0,
   accessoryName,
   accessoryMountingFee = 0,
+  extraLines = [],
 }: PriceBreakdownModalProps) => {
   useEffect(() => {
     if (!isOpen) return
@@ -33,7 +35,8 @@ export const PriceBreakdownModal = ({
 
   if (!isOpen) return null
 
-  const accessoryBasePrice = Math.max(0, accessoryPrice - accessoryMountingFee)
+  const extraTotal = extraLines.reduce((sum, line) => sum + line.amount, 0)
+  const accessoryBasePrice = Math.max(0, accessoryPrice - accessoryMountingFee - extraTotal)
   const total = priceBreakdown.totalPrice + accessoryPrice
 
   return (
@@ -85,6 +88,12 @@ export const PriceBreakdownModal = ({
               <dd className="text-green-400">{formatPricePln(accessoryBasePrice)}</dd>
             </div>
           )}
+          {extraLines.map((line) => (
+            <div key={line.label} className="flex justify-between">
+              <dt className="text-gray-400">{line.label}</dt>
+              <dd className="text-green-400">{formatPricePln(line.amount)}</dd>
+            </div>
+          ))}
           {accessoryMountingFee > 0 && (
             <div className="flex justify-between">
               <dt className="text-gray-400">Montaż podpiętki</dt>

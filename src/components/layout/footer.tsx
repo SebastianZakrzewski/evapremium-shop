@@ -5,9 +5,8 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-black relative pt-20 pb-10 overflow-hidden">
-      {/* Gradient Top Border */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+    <footer className="shop-canvas relative border-t border-neutral-200 bg-[#FDFDFD] pt-20 pb-10 overflow-hidden">
+      <div className="absolute top-0 left-0 h-px w-full bg-neutral-200"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
@@ -159,7 +158,7 @@ export default function Footer() {
               { src: "/formy_platnosci/google.png", alt: "Google Pay" },
               { src: "/formy_platnosci/apple.jpg", alt: "Apple Pay" },
               { src: "/formy_platnosci/blik.png", alt: "BLIK" },
-              { src: "/formy_platnosci/bank.png", alt: "Przelew" }
+              { src: "/formy_platnosci/przelewy.png", alt: "Przelewy24" }
             ].map((item, index) => (
               <div key={index} className="bg-white p-2 rounded hover:scale-110 transition-transform duration-300 shadow-lg grayscale hover:grayscale-0 w-14 h-10 flex items-center justify-center">
                 <Image
