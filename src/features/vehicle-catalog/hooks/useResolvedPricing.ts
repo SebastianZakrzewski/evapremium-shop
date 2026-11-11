@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { fetchResolvedPricing } from "../api/client"
 import { resolveSelectedPricingVariant } from "../domain/resolveSelectedPricingVariant"
 import type { PricingResolveInput } from "../model/schemas"
@@ -33,6 +33,7 @@ export const useResolvedPricing = (
     enabled,
     staleTime: 5 * 60 * 1000,
     retry: false,
+    placeholderData: keepPreviousData,
   })
 
   const data = useMemo(() => {

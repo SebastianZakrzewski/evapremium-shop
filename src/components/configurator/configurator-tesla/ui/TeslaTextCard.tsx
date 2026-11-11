@@ -29,9 +29,7 @@ export const TeslaTextCard = ({
       minHeight: TESLA_LAYOUT.buttonHeight + 16,
       padding: `${TESLA_LAYOUT.cardPaddingY}px ${TESLA_LAYOUT.cardPaddingX}px`,
       borderRadius: TESLA_LAYOUT.cardRadius,
-      border: selected
-        ? `2px solid ${TESLA_LAYOUT.selectedBorder}`
-        : `1px solid ${TESLA_LAYOUT.border}`,
+      border: `2px solid ${selected ? TESLA_LAYOUT.selectedBorder : TESLA_LAYOUT.border}`,
     }}
   >
     <span className="min-w-0">

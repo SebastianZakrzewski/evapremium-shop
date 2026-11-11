@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 import { useCart } from "@/features/shopping-cart/hooks/useCart"
 import { openCartModal } from "@/features/shopping-cart/utils/openCartModal"
 import { useAccessories } from "@/features/accessories/hooks/useAccessories"
@@ -77,8 +77,21 @@ const scrollToSection = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "center" })
 }
 
+/** If a click changes height above the card, put that card back where the finger was. */
+const holdClickedCard = (event: { target: EventTarget | null }) => {
+  const target = event.target
+  if (!(target instanceof HTMLElement)) return
+  const card = target.closest("button")
+  if (!card) return
+  const before = card.getBoundingClientRect().top
+  const y = window.scrollY
+  requestAnimationFrame(() => {
+    const delta = card.getBoundingClientRect().top - before
+    if (Math.abs(delta) > 1) window.scrollTo({ top: y + delta, behavior: "auto" })
+  })
+}
+
 export default function TeslaConfigurator() {
-  const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { addToCart, isLoading: cartLoading, items: cartItems } = useCart()
@@ -234,12 +247,14 @@ export default function TeslaConfigurator() {
 
   const writeEtap = useCallback(
     (etap: number) => {
-      const params = new URLSearchParams(searchParams.toString())
+      if (typeof window === "undefined") return
+      const params = new URLSearchParams(window.location.search)
       if (params.get("etap") === String(etap)) return
       params.set("etap", String(etap))
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+      const url = `${pathname}?${params.toString()}${window.location.hash}`
+      window.history.replaceState(window.history.state, "", url)
     },
-    [pathname, router, searchParams],
+    [pathname],
   )
 
   const markStep = useCallback(
@@ -775,59 +790,8 @@ export default function TeslaConfigurator() {
             ) : null}
           </div>
 
-          <TeslaSection id="section-zestaw" title="Zestaw" etap={2} tight>
-            {resetNotice ? (
-              <p role="status" className="mb-3" style={{ fontSize: TESLA_LAYOUT.captionSize, color: TESLA_LAYOUT.text }}>
-                {resetNotice}
-              </p>
-            ) : null}
-            <div className="flex flex-col" style={{ gap: TESLA_LAYOUT.cardGap }}>
-              {pricingVariants.map((variant) => {
-                const presentation = getVariantPresentation(
-                  variant.key,
-                  config.pricingCategoryKey,
-                  config.bodyTypeKey,
-                  { offeredVariantKeys },
-                )
-                return (
-                  <TeslaTextCard
-                    key={variant.key}
-                    selected={config.variant === variant.key}
-                    title={presentation.name ?? variant.label}
-                    detail={presentation.description}
-                    priceLabel={formatPricePln(variant.priceAfterDiscount)}
-                    disabled={mapperResult.sections.variant.isDisabled}
-                    onSelect={() => {
-                      setResetNotice(null)
-                      updateConfig({ variant: variant.key })
-                    }}
-                  />
-                )
-              })}
-            </div>
-            {pricingVariants.length === 0 ? (
-              <p style={{ fontSize: TESLA_LAYOUT.captionSize, color: TESLA_LAYOUT.muted }}>
-                Wybierz samochód, aby zobaczyć zestawy.
-              </p>
-            ) : null}
-            <button
-              type="button"
-              className="mt-3 underline"
-              style={{ fontSize: TESLA_LAYOUT.captionSize }}
-              onClick={() => setCompareVariants(true)}
-            >
-              Porównaj warianty
-            </button>
-            {shouldShowVariantTrunkMatRimNotice({ matType: config.matType, variantKey: config.variant }) ? (
-              <VariantTrunkMatRimNotice />
-            ) : null}
-            {shouldShowVariantTunnelBonus(config.pricingCategoryKey) && pricingVariants.length > 0 ? (
-              <VariantTunnelBonusNotice />
-            ) : null}
-          </TeslaSection>
-
           {!skipMatTypeStep ? (
-            <TeslaSection id="section-matType" title="Typ dywanika" etap={2}>
+            <TeslaSection id="section-matType" title="Typ dywanika" etap={2} tight onClick={holdClickedCard}>
               <div className="flex flex-col" style={{ gap: TESLA_LAYOUT.cardGap }}>
                 {matTypeOptions
                   .filter((type) => !availableMatTypes.length || availableMatTypes.includes(type.id))
@@ -855,6 +819,57 @@ export default function TeslaConfigurator() {
               </button>
             </TeslaSection>
           ) : null}
+
+          <TeslaSection id="section-zestaw" title="Zestaw" etap={2} tight={skipMatTypeStep} onClick={holdClickedCard}>
+            <div className="flex flex-col" style={{ gap: TESLA_LAYOUT.cardGap }}>
+              {pricingVariants.map((variant) => {
+                const presentation = getVariantPresentation(
+                  variant.key,
+                  config.pricingCategoryKey,
+                  config.bodyTypeKey,
+                  { offeredVariantKeys },
+                )
+                return (
+                  <TeslaTextCard
+                    key={variant.key}
+                    selected={config.variant === variant.key}
+                    title={presentation.name ?? variant.label}
+                    detail={presentation.description}
+                    priceLabel={formatPricePln(variant.priceAfterDiscount)}
+                    disabled={mapperResult.sections.variant.isDisabled}
+                    onSelect={() => {
+                      setResetNotice(null)
+                      updateConfig({ variant: variant.key })
+                    }}
+                  />
+                )
+              })}
+            </div>
+            {pricingVariants.length === 0 && !pricingQuery.isFetching && !pricingQuery.isPlaceholderData ? (
+              <p style={{ fontSize: TESLA_LAYOUT.captionSize, color: TESLA_LAYOUT.muted }}>
+                Wybierz samochód, aby zobaczyć zestawy.
+              </p>
+            ) : null}
+            {resetNotice ? (
+              <p role="status" className="mt-3" style={{ fontSize: TESLA_LAYOUT.captionSize, color: TESLA_LAYOUT.text }}>
+                {resetNotice}
+              </p>
+            ) : null}
+            <button
+              type="button"
+              className="mt-3 underline"
+              style={{ fontSize: TESLA_LAYOUT.captionSize }}
+              onClick={() => setCompareVariants(true)}
+            >
+              Porównaj warianty
+            </button>
+            {shouldShowVariantTrunkMatRimNotice({ matType: config.matType, variantKey: config.variant }) ? (
+              <VariantTrunkMatRimNotice />
+            ) : null}
+            {shouldShowVariantTunnelBonus(config.pricingCategoryKey) && pricingVariants.length > 0 ? (
+              <VariantTunnelBonusNotice />
+            ) : null}
+          </TeslaSection>
 
           <TeslaSection id="section-color" title="Kolor dywanika" etap={3}>
             <TeslaRoundPicker

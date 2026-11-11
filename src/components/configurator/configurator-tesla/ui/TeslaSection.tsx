@@ -1,6 +1,6 @@
 "use client"
 
-import type { ReactNode } from "react"
+import type { MouseEvent, ReactNode } from "react"
 import { TESLA_LAYOUT } from "../tokens"
 
 type TeslaSectionProps = {
@@ -10,12 +10,14 @@ type TeslaSectionProps = {
   children: ReactNode
   /** Less air when this section sits directly under the pinned image. */
   tight?: boolean
+  onClick?: (event: MouseEvent<HTMLElement>) => void
 }
 
-export const TeslaSection = ({ id, title, etap, children, tight = false }: TeslaSectionProps) => (
+export const TeslaSection = ({ id, title, etap, children, tight = false, onClick }: TeslaSectionProps) => (
   <section
     id={id}
     aria-label={title}
+    onClick={onClick}
     data-configurator-section
     data-section-name={title}
     data-etap={etap}
