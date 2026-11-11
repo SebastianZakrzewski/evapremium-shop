@@ -70,6 +70,7 @@ import { TeslaSection } from "./ui/TeslaSection"
 import { TeslaPriceSheet } from "./ui/TeslaPriceSheet"
 import { TeslaStickyBar } from "./ui/TeslaStickyBar"
 import { TeslaTextCard } from "./ui/TeslaTextCard"
+import { alignCarSummary, scrollBehaviorForMotion } from "./scroll/alignCarSummary"
 import { TeslaTrustRow } from "./ui/TeslaTrustRow"
 
 const scrollToSection = (id: string) => {
@@ -118,6 +119,7 @@ export default function TeslaConfigurator() {
   })
 
   const [editingCar, setEditingCar] = useState(false)
+  const [alignZestaw, setAlignZestaw] = useState(false)
   const [matInView, setMatInView] = useState(false)
   const [resetNotice, setResetNotice] = useState<string | null>(null)
   const [priceOpen, setPriceOpen] = useState(false)
@@ -128,6 +130,8 @@ export default function TeslaConfigurator() {
   const [appearanceTouched, setAppearanceTouched] = useState(false)
   const previousConfig = useRef(config)
   const sawHydrated = useRef(false)
+  const vehicleWasComplete = useRef<boolean | null>(null)
+  const editBaseline = useRef<string | null>(null)
   const completedSteps = useRef(new Set<ConfiguratorAnalyticsStep>())
   const viewedContentKey = useRef<string | null>(null)
 
@@ -466,6 +470,57 @@ export default function TeslaConfigurator() {
     }
   }, [vehicleReady, dynamicMatType, config.structure, config.color, config.edgeColor])
   const showCarForm = !vehicleReady || editingCar
+  const vehicleSignature = [
+    config.brand,
+    config.model,
+    config.year,
+    config.gearbox,
+    config.bodyType,
+    config.recordKey,
+  ].join("|")
+
+  useEffect(() => {
+    if (!hydrated) return
+    if (vehicleWasComplete.current === null) {
+      vehicleWasComplete.current = vehicleReady
+      return
+    }
+    const becameComplete = !vehicleWasComplete.current && vehicleReady
+    vehicleWasComplete.current = vehicleReady
+    if (!becameComplete) return
+    setEditingCar(false)
+    setAlignZestaw(true)
+  }, [hydrated, vehicleReady])
+
+  useEffect(() => {
+    if (!editingCar) {
+      editBaseline.current = null
+      return
+    }
+    if (editBaseline.current === null) {
+      editBaseline.current = vehicleSignature
+      return
+    }
+    if (!vehicleReady || editBaseline.current === vehicleSignature) return
+    editBaseline.current = vehicleSignature
+    setEditingCar(false)
+    setAlignZestaw(true)
+  }, [editingCar, vehicleReady, vehicleSignature])
+
+  useEffect(() => {
+    if (!alignZestaw || showCarForm) return undefined
+    let inner = 0
+    const frame = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => {
+        alignCarSummary(scrollBehaviorForMotion())
+        setAlignZestaw(false)
+      })
+    })
+    return () => {
+      cancelAnimationFrame(frame)
+      cancelAnimationFrame(inner)
+    }
+  }, [alignZestaw, showCarForm])
   const summaryLine = [
     formatBrandDisplayName(config.brand),
     config.model,
@@ -623,6 +678,7 @@ export default function TeslaConfigurator() {
 
   const carSummary = vehicleReady && !showCarForm ? (
     <div
+      id="configurator-car-summary"
       className="flex items-center justify-between gap-3 border-b"
       style={{
         padding: `8px 0`,
@@ -669,8 +725,10 @@ export default function TeslaConfigurator() {
 
         <div className="lg:flex lg:h-svh lg:min-h-0 lg:flex-col">
         <div
+          id="configurator-options"
           className="lg:min-h-0 lg:flex-1 lg:overflow-y-auto"
           style={{
+            overflowAnchor: "none",
             padding: showPriceBar
               ? `0 ${TESLA_LAYOUT.pagePaddingX}px calc(${TESLA_LAYOUT.stickyBarMinHeight}px + env(safe-area-inset-bottom) + 16px)`
               : `0 ${TESLA_LAYOUT.pagePaddingX}px calc(24px + env(safe-area-inset-bottom))`,
