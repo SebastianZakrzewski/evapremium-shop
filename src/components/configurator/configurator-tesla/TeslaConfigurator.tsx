@@ -337,7 +337,10 @@ export default function TeslaConfigurator() {
   }, [hydrated, editingCar, mapperResult.sections.vehicle.isComplete])
 
   useEffect(() => {
+    let mat = false
+    let frame = 0
     const update = () => {
+      frame = 0
       const zest = document.getElementById("section-zestaw")
       if (!zest) return
       const offset = Number.parseFloat(
@@ -345,14 +348,25 @@ export default function TeslaConfigurator() {
       )
       const pinBottom = (Number.isFinite(offset) ? offset : 64) + TESLA_LAYOUT.imageAspectHeight
       const top = zest.getBoundingClientRect().top
-      setMatInView(top <= pinBottom + 12)
+      const next = mat ? top < pinBottom + 16 : top <= pinBottom - 16
+      if (next === mat) return
+      mat = next
+      setMatInView(next)
     }
-    update()
-    window.addEventListener("scroll", update, { passive: true })
-    window.addEventListener("resize", update)
+    const requestUpdate = () => {
+      if (frame) return
+      frame = requestAnimationFrame(update)
+    }
+    requestUpdate()
+    const options = document.getElementById("configurator-options")
+    window.addEventListener("scroll", requestUpdate, { passive: true })
+    window.addEventListener("resize", requestUpdate)
+    options?.addEventListener("scroll", requestUpdate, { passive: true })
     return () => {
-      window.removeEventListener("scroll", update)
-      window.removeEventListener("resize", update)
+      cancelAnimationFrame(frame)
+      window.removeEventListener("scroll", requestUpdate)
+      window.removeEventListener("resize", requestUpdate)
+      options?.removeEventListener("scroll", requestUpdate)
     }
   }, [hydrated])
 
@@ -707,7 +721,8 @@ export default function TeslaConfigurator() {
       <div className="lg:grid lg:h-svh lg:grid-cols-[minmax(0,1fr)_minmax(22rem,34rem)] lg:overflow-hidden">
         <div className="bg-white lg:flex lg:h-svh lg:items-center lg:bg-[#f5f5f5]">
           <div
-            className="w-full max-lg:fixed max-lg:inset-x-0 max-lg:z-20 max-lg:bg-white"
+            data-preview-mode={matInView ? "mat" : "car"}
+            className="w-full max-lg:fixed max-lg:inset-x-0 max-lg:z-20 max-lg:bg-white max-lg:[transform:translateY(calc(-1*var(--configurator-header-shift,0px)))] max-lg:transition-transform max-lg:duration-[220ms] max-lg:ease-out motion-reduce:transition-none"
             style={{ top: "var(--configurator-header-offset, 0px)" }}
           >
             <TeslaPinnedGallery

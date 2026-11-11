@@ -6,6 +6,7 @@ import { CartModalWrapper } from "@/features/shopping-cart/components";
 import { useCart } from "@/features/shopping-cart/hooks/useCart";
 import SearchDropdown from "../search-dropdown";
 import { NavbarLogo } from "./NavbarLogo";
+import { initialHeaderScroll, nextHeaderScroll } from "./headerScroll";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -23,37 +24,62 @@ export default function Navbar() {
     setOpen(false); // Zamknij menu mobilne jeśli otwarte
   };
 
-  // Nasłuchuj na scroll
+  // Nasłuchuj na scroll. On the configurator the header is an overlay: its
+  // height stays reserved, and hide/show is only a transform.
   useEffect(() => {
-    let lastY = window.scrollY;
-    const handleScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 20);
+    const root = document.documentElement
+    const navHeight = () =>
+      (document.querySelector("nav") as HTMLElement | null)?.offsetHeight ?? 64
+    const applyChrome = (headerHidden: boolean) => {
       if (!onConfigurator) {
-        setHidden(false);
-        document.documentElement.style.setProperty("--configurator-header-offset", "0px");
-        lastY = y;
-        return;
+        root.style.setProperty("--configurator-header-offset", "0px")
+        root.style.setProperty("--configurator-header-shift", "0px")
+        return
       }
-      const navHeight = (document.querySelector("nav") as HTMLElement | null)?.offsetHeight ?? 64;
-      if (open) {
-        setHidden(false);
-        document.documentElement.style.setProperty("--configurator-header-offset", `${navHeight}px`);
-        lastY = y;
-        return;
+      const height = navHeight()
+      root.style.setProperty("--configurator-header-offset", `${height}px`)
+      root.style.setProperty("--configurator-header-shift", headerHidden ? `${height}px` : "0px")
+    }
+
+    applyChrome(false)
+    setHidden(false)
+
+    let scrollState = initialHeaderScroll(window.scrollY)
+    let frame = 0
+    const read = () => {
+      frame = 0
+      setScrolled(window.scrollY > 20)
+      if (!onConfigurator || open) {
+        if (scrollState.hidden) {
+          scrollState = { ...initialHeaderScroll(window.scrollY), hidden: false }
+          applyChrome(false)
+          setHidden(false)
+        }
+        return
       }
-      const delta = y - lastY;
-      const nextHidden = y >= 8 && delta >= -12 && (delta > 2 || y > 64);
-      setHidden(nextHidden);
-      document.documentElement.style.setProperty(
-        "--configurator-header-offset",
-        onConfigurator && !nextHidden ? `${navHeight}px` : "0px",
-      );
-      lastY = y;
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+      const maxY = Math.max(0, root.scrollHeight - window.innerHeight)
+      const next = nextHeaderScroll(scrollState, window.scrollY, maxY, navHeight())
+      const changed = next.hidden !== scrollState.hidden
+      scrollState = next
+      if (!changed) return
+      applyChrome(next.hidden)
+      setHidden(next.hidden)
+    }
+    const handleScroll = () => {
+      if (frame) return
+      frame = requestAnimationFrame(read)
+    }
+    const handleResize = () => {
+      applyChrome(scrollState.hidden)
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    window.addEventListener("resize", handleResize)
+    handleScroll()
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("resize", handleResize)
+    }
   }, [onConfigurator, open]);
 
   // Zamknij menu hamburger przy przejściu na desktop (lg+)
@@ -89,7 +115,7 @@ export default function Navbar() {
   return (
     <>
       <nav 
-        className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${
+        className={`fixed top-0 left-0 w-full z-50 transition-transform duration-[220ms] ease-out motion-reduce:transition-none ${
           hidden ? "-translate-y-full" : "translate-y-0"
         } ${
           scrolled 
