@@ -201,6 +201,7 @@ export default function CheckoutSection() {
     watch,
     setValue,
     control,
+    trigger,
     formState: { errors, isValid }
   } = useForm<CheckoutFormData>({
     resolver: checkoutFormResolver,
@@ -665,11 +666,14 @@ export default function CheckoutSection() {
     }
   };
 
-  const nextStep = () => {
-    console.log('🛒 CheckoutSection: nextStep called, currentStep:', currentStep, 'isValid:', isValid);
-    console.log('🛒 CheckoutSection: form errors:', errors);
-    console.log('🛒 CheckoutSection: isCurrentStepValid:', isCurrentStepValid());
-    
+  const nextStep = async () => {
+    if (currentStep < 3) {
+      const fields = currentStep === 1
+        ? ["firstName", "lastName", "email", "phone"] as const
+        : ["street", "city", "postalCode"] as const
+      const valid = await trigger([...fields])
+      if (!valid) return
+    }
     if (currentStep < 3 && isCurrentStepValid()) {
       if (currentStep === 2 && items.length > 0) {
         try {
@@ -690,8 +694,6 @@ export default function CheckoutSection() {
       window.setTimeout(() => {
         stepChangeSubmitRef.current = false;
       }, 0);
-    } else if (!isCurrentStepValid()) {
-      console.log('🛒 CheckoutSection: Current step validation failed');
     }
   };
 
@@ -1442,7 +1444,7 @@ export default function CheckoutSection() {
                     variant="outline"
                     onClick={prevStep}
                     disabled={currentStep === 1}
-                    className="h-12 rounded-full border border-neutral-300 bg-white px-8 text-[15px] font-medium text-white shadow-none hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="h-12 rounded-full border border-neutral-300 bg-white px-8 text-[15px] font-medium text-neutral-950 shadow-none hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <ArrowLeft className="w-5 h-5 mr-3" />
                     Wstecz
@@ -1453,7 +1455,6 @@ export default function CheckoutSection() {
                       key="checkout-next"
                       type="button"
                       onClick={nextStep}
-                      disabled={!isCurrentStepValid()}
                       className="rounded-full bg-red-600 text-white shadow-none hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40 px-10 py-4 text-base"
                     >
                       Dalej
@@ -1745,7 +1746,7 @@ export default function CheckoutSection() {
                   variant="outline"
                   onClick={prevStep}
                   disabled={currentStep === 1}
-                  className="h-12 w-full rounded-full border border-neutral-300 bg-white px-6 text-[15px] font-medium text-white shadow-none hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+                  className="h-12 w-full rounded-full border border-neutral-300 bg-white px-6 text-[15px] font-medium text-neutral-950 shadow-none hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
                 >
                   <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 mr-2 sm:mr-3 lg:mr-3" />
                   Wstecz
@@ -1756,7 +1757,6 @@ export default function CheckoutSection() {
                     key="checkout-next-mobile"
                     type="button"
                     onClick={nextStep}
-                    disabled={!isCurrentStepValid()}
                     className="rounded-full bg-red-600 text-white shadow-none hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40 px-6 sm:px-10 lg:px-10 py-3 sm:py-4 lg:py-4 text-sm sm:text-base lg:text-base w-full sm:w-auto"
                   >
                     Dalej

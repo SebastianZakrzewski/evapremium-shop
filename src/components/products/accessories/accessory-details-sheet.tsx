@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, type ReactNode } from "react";
 import Image from "next/image";
 import { Accessory } from "@/entities/product";
 import { useCart } from "@/features/shopping-cart/hooks/useCart";
@@ -24,13 +24,19 @@ interface AccessoryDetailsSheetProps {
   isOpen: boolean;
   onClose: () => void;
   onAddToConfig?: (accessory: Accessory, color?: string) => void; // Callback dla konfiguratora
+  imageFallback?: ReactNode;
+  onOpenAutoFocus?: (event: Event) => void;
+  onCloseAutoFocus?: (event: Event) => void;
 }
 
 export default function AccessoryDetailsSheet({
   accessory,
   isOpen,
   onClose,
-  onAddToConfig
+  onAddToConfig,
+  imageFallback,
+  onOpenAutoFocus,
+  onCloseAutoFocus,
 }: AccessoryDetailsSheetProps) {
   const { addToCart } = useCart();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -78,15 +84,7 @@ export default function AccessoryDetailsSheet({
       item_category: accessory.category?.name ?? accessory.categorySlug ?? "accessories",
       item_variant: accessory.sku,
     });
-  }, [
-    isOpen,
-    accessory?.id,
-    accessory?.name,
-    accessory?.price,
-    accessory?.sku,
-    accessory?.category?.name,
-    accessory?.categorySlug,
-  ]);
+  }, [isOpen, accessory]);
 
   // Ustaw domyślny kolor przy otwarciu
   useEffect(() => {
@@ -168,6 +166,8 @@ export default function AccessoryDetailsSheet({
         className="shop-canvas flex h-full w-full flex-col border-l border-neutral-200 bg-[#FDFDFD] p-0 text-neutral-950 sm:max-w-xl [&>button]:hidden md:[&>button]:block"
         aria-labelledby="accessory-details-title"
         aria-describedby="accessory-details-description"
+        onOpenAutoFocus={onOpenAutoFocus}
+        onCloseAutoFocus={onCloseAutoFocus}
       >
         
         {/* Scrollable Content Container */}
@@ -193,6 +193,10 @@ export default function AccessoryDetailsSheet({
                     setImageError(false);
                   }}
                 />
+              ) : imageFallback ? (
+                <div className="flex h-full w-full items-center justify-center bg-white text-neutral-950">
+                  {imageFallback}
+                </div>
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-white/5">
                   <span className="text-6xl mb-2">📦</span>
@@ -225,8 +229,8 @@ export default function AccessoryDetailsSheet({
             </div>
 
             {/* Thumbnail Carousel - zawsze widoczna z placeholderami */}
-            {productImages.length > 0 && (
-              <div className="px-4 py-3 bg-[#FDFDFD] border-t border-white/5">
+            {productImages.length > 0 && !(imageError && imageFallback) && (
+              <div className="px-4 py-3 bg-[#FDFDFD] border-t border-neutral-200">
                 <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
                   {Array.from({ length: thumbnailSlots }).map((_, index) => {
                     const hasImage = index < productImages.length;

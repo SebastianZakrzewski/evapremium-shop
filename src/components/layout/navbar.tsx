@@ -6,14 +6,17 @@ import { CartModalWrapper } from "@/features/shopping-cart/components";
 import { useCart } from "@/features/shopping-cart/hooks/useCart";
 import SearchDropdown from "../search-dropdown";
 import { NavbarLogo } from "./NavbarLogo";
+import { initialHeaderScroll, nextHeaderScroll } from "./headerScroll";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const { itemCount } = useCart();
   const router = useRouter();
   const pathname = usePathname();
+  const onConfigurator = pathname === "/konfigurator";
 
   const handleGalleryClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -21,14 +24,63 @@ export default function Navbar() {
     setOpen(false); // Zamknij menu mobilne jeśli otwarte
   };
 
-  // Nasłuchuj na scroll
+  // Nasłuchuj na scroll. On the configurator the header is an overlay: its
+  // height stays reserved, and hide/show is only a transform.
   useEffect(() => {
+    const root = document.documentElement
+    const navHeight = () =>
+      (document.querySelector("nav") as HTMLElement | null)?.offsetHeight ?? 64
+    const applyChrome = (headerHidden: boolean) => {
+      if (!onConfigurator) {
+        root.style.setProperty("--configurator-header-offset", "0px")
+        root.style.setProperty("--configurator-header-shift", "0px")
+        return
+      }
+      const height = navHeight()
+      root.style.setProperty("--configurator-header-offset", `${height}px`)
+      root.style.setProperty("--configurator-header-shift", headerHidden ? `${height}px` : "0px")
+    }
+
+    applyChrome(false)
+    setHidden(false)
+
+    let scrollState = initialHeaderScroll(window.scrollY)
+    let frame = 0
+    const read = () => {
+      frame = 0
+      setScrolled(window.scrollY > 20)
+      if (!onConfigurator || open) {
+        if (scrollState.hidden) {
+          scrollState = { ...initialHeaderScroll(window.scrollY), hidden: false }
+          applyChrome(false)
+          setHidden(false)
+        }
+        return
+      }
+      const maxY = Math.max(0, root.scrollHeight - window.innerHeight)
+      const next = nextHeaderScroll(scrollState, window.scrollY, maxY, navHeight())
+      const changed = next.hidden !== scrollState.hidden
+      scrollState = next
+      if (!changed) return
+      applyChrome(next.hidden)
+      setHidden(next.hidden)
+    }
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+      if (frame) return
+      frame = requestAnimationFrame(read)
+    }
+    const handleResize = () => {
+      applyChrome(scrollState.hidden)
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    window.addEventListener("resize", handleResize)
+    handleScroll()
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [onConfigurator, open]);
 
   // Zamknij menu hamburger przy przejściu na desktop (lg+)
   useEffect(() => {
@@ -63,7 +115,9 @@ export default function Navbar() {
   return (
     <>
       <nav 
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 w-full z-50 transition-transform duration-[220ms] ease-out motion-reduce:transition-none ${
+          hidden ? "-translate-y-full" : "translate-y-0"
+        } ${
           scrolled 
             ? "bg-black border-b border-white/10 shadow-lg"
             : "bg-black border-b border-white/10"

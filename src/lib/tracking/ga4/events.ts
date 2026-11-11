@@ -72,16 +72,23 @@ export const trackGaViewItem = (item: Ga4Item): void => {
 }
 
 export const trackGaViewContent = (data: ViewContentData): void => {
-  trackGaViewItem({
+  const main: Ga4Item = {
     item_id: data.product.id,
     item_name: data.product.name,
-    price: data.value,
+    price: data.product.price ?? data.value,
     quantity: data.product.quantity ?? 1,
     ...(data.product.brand ? { item_brand: data.product.brand } : {}),
     item_category: data.content_category,
     ...(data.product.variant || data.product.sku
       ? { item_variant: data.product.variant ?? data.product.sku }
       : {}),
+  }
+  const extras = (data.contents ?? []).map(toGa4Item)
+  const items = [main, ...extras]
+  pushGtag("event", "view_item", {
+    currency: "PLN",
+    value: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    items,
   })
 }
 

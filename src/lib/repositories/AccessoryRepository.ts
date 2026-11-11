@@ -15,6 +15,7 @@ export class AccessoryRepository extends BaseRepository<Accessory> {
   /**
    * Mapuj dane z Supabase (snake_case) na typ Accessory (camelCase)
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private mapAccessoryFromDb(item: any): Accessory {
     // Usuń pola snake_case z obiektu, żeby nie było duplikatów
     const {

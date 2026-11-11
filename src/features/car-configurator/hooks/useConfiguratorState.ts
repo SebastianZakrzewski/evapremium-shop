@@ -59,6 +59,7 @@ const defaultState: ConfiguratorState = {
   selectedPodpietka: undefined,
   podpietkaColor: undefined,
   podpietkaMounting: undefined,
+  selectedAddonIds: [],
   selectedFinishIds: undefined,
 };
 

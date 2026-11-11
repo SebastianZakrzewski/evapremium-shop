@@ -159,12 +159,12 @@ function PriceBlock({
   quantity: number
 }) {
   return (
-    <div className="text-right">
-      <p className="text-[15px] font-semibold tracking-tight text-white tabular-nums">
+    <div className="shrink-0 text-right">
+      <p className="whitespace-nowrap text-[15px] font-semibold tracking-tight text-white tabular-nums">
         {PricingService.formatPrice(subtotal)}
       </p>
       {quantity > 1 && (
-        <p className="mt-0.5 text-[12px] text-white/40 tabular-nums">
+        <p className="mt-0.5 whitespace-nowrap text-[12px] text-white/40 tabular-nums">
           {PricingService.formatPrice(unitPrice)} × {quantity}
         </p>
       )}

@@ -4,8 +4,8 @@ import { Suspense } from "react"
 import { ConfiguratorLoader } from "@/components/configurator/configurator-simple/ConfiguratorLoader"
 import { resolveConfiguratorEntryImageSrc } from "@/features/car-configurator/utils/resolveConfiguratorEntryImageSrc"
 
-const ConfiguratorV2 = dynamic(
-  () => import("@/components/configurator/configurator-v2/ConfiguratorV2"),
+const TeslaConfigurator = dynamic(
+  () => import("@/components/configurator/configurator-tesla/TeslaConfigurator"),
   {
     loading: () => <ConfiguratorLoader />,
   },
@@ -51,7 +51,7 @@ export default async function Page({ searchParams }: PageProps) {
         />
       ) : null}
       <Suspense fallback={<ConfiguratorLoader entryImageSrc={entryImageSrc} />}>
-        <ConfiguratorV2 />
+        <TeslaConfigurator />
       </Suspense>
     </>
   )

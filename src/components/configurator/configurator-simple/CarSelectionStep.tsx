@@ -187,6 +187,13 @@ export const CarSelectionStep = ({
     })
   }
 
+  const clearDependentProduct = {
+    variant: "",
+    selectedPodpietka: undefined,
+    podpietkaColor: undefined,
+    podpietkaMounting: undefined,
+  }
+
   const handleGenerationChange = (value: string) => {
     const generation = generations.find((item) => item.value === value)
     onUpdate({
@@ -198,7 +205,7 @@ export const CarSelectionStep = ({
       recordKey: "",
       templateId: "",
       pricingCategoryKey: "",
-      variant: "",
+      ...clearDependentProduct,
     })
   }
 
@@ -210,7 +217,7 @@ export const CarSelectionStep = ({
       recordKey: option?.template.recordKey ?? "",
       templateId: option?.template.id ?? "",
       pricingCategoryKey: option?.template.pricingCategoryKey ?? "",
-      variant: "",
+      ...clearDependentProduct,
     })
   }
 
@@ -266,7 +273,7 @@ export const CarSelectionStep = ({
           recordKey: "",
           templateId: "",
           pricingCategoryKey: "",
-          variant: "",
+          ...clearDependentProduct,
         }),
     },
     {

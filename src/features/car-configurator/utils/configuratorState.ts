@@ -31,6 +31,8 @@ export interface ConfiguratorState {
   selectedPodpietka?: string;
   podpietkaColor?: string;
   podpietkaMounting?: PodpietkaMounting;
+  /** Optional organizer ids. Mat finishes live in selectedFinishIds. */
+  selectedAddonIds?: string[];
   selectedFinishIds?: string[];
 }
 
@@ -111,6 +113,7 @@ export const freshVehicleConfiguration: Partial<ConfiguratorState> = {
   selectedPodpietka: undefined,
   podpietkaColor: undefined,
   podpietkaMounting: undefined,
+  selectedAddonIds: [],
   selectedFinishIds: undefined,
 }
 
@@ -266,6 +269,9 @@ export const parseStoredConfiguratorState = (
     if (typeof record.color === "string") stored.color = record.color
     if (typeof record.edgeColor === "string") stored.edgeColor = record.edgeColor
     if (typeof record.heelPad === "boolean") stored.heelPad = record.heelPad
+    if (Array.isArray(record.selectedAddonIds)) {
+      stored.selectedAddonIds = record.selectedAddonIds.filter((id) => typeof id === "string")
+    }
     if (
       Array.isArray(record.selectedFinishIds) &&
       record.selectedFinishIds.every((id) => typeof id === "string")

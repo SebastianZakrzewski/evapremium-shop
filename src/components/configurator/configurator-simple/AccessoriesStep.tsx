@@ -64,6 +64,8 @@ interface AccessoriesStepProps {
   nextLabel?: string;
   hideNavigation?: boolean;
   surface?: AccessoriesSurface;
+  layout?: "grid" | "rows";
+  showMatFinishes?: boolean;
   onProductModalOpenChange?: (isOpen: boolean) => void;
 }
 
@@ -81,6 +83,8 @@ export function AccessoriesStep({
   nextLabel = "Dalej",
   hideNavigation = false,
   surface = "dark",
+  layout = "grid",
+  showMatFinishes = true,
   onProductModalOpenChange,
 }: AccessoriesStepProps) {
   const styles = accessoriesStyles[surface];
@@ -205,6 +209,41 @@ export function AccessoriesStep({
         ) : podpietki.length === 0 ? (
           <div className={`text-center py-6 ${styles.empty}`}>
             <p className="text-sm">Brak dostępnych podpiętek</p>
+          </div>
+        ) : layout === "rows" ? (
+          <div className="flex flex-col gap-2">
+            {podpietki.map((podpietka) => {
+              const isSelected = config.selectedPodpietka === podpietka.id
+              const displayImage = podpietka.images?.[0] ?? podpietka.imageSrc
+              const rowPrice = isSelected
+                ? getPodpietkaTotalPrice(podpietka.price, config.podpietkaMounting)
+                : podpietka.price
+              return (
+                <div
+                  key={podpietka.id}
+                  className="flex items-center gap-3 border bg-white p-3"
+                  style={{ borderRadius: 4, borderColor: isSelected ? "#171a20" : "#d0d1d2", borderWidth: isSelected ? 2 : 1 }}
+                >
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden bg-neutral-100" style={{ borderRadius: 4 }}>
+                    {displayImage ? (
+                      <Image src={displayImage} alt="" fill className="object-cover" sizes="64px" />
+                    ) : null}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium leading-5 text-neutral-950">{podpietka.name}</p>
+                    <p className="mt-1 text-sm leading-5 text-neutral-950">{formatPriceValue(rowPrice)} zł</p>
+                  </div>
+                  <button
+                    type="button"
+                    className="h-10 shrink-0 rounded px-3 text-sm font-medium"
+                    style={{ minWidth: 88, minHeight: 40, border: "1px solid #171a20" }}
+                    onClick={() => (isSelected ? handleRemovePodpietka() : handlePodpietkaClick(podpietka))}
+                  >
+                    {isSelected ? "Usuń" : "Dodaj"}
+                  </button>
+                </div>
+              )
+            })}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -349,7 +388,7 @@ export function AccessoriesStep({
         )}
       </div>
 
-      {finishes.length > 0 && (
+      {showMatFinishes && finishes.length > 0 && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className={`text-sm font-semibold ${styles.heading}`}>Dodatki do dywanika</h3>

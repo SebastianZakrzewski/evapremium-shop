@@ -133,14 +133,8 @@ describe('EvaChatWidget', () => {
     })
   })
 
-  it('hides the launcher in the mobile configurator', () => {
+  it('hides the launcher on the configurator', () => {
     navigationState.pathname = '/konfigurator'
-    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
-      matches: query === '(max-width: 1023px)',
-      media: query,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-    }))
 
     render(<EvaChatWidget />)
 
