@@ -201,6 +201,7 @@ export default function CheckoutSection() {
     watch,
     setValue,
     control,
+    trigger,
     formState: { errors, isValid }
   } = useForm<CheckoutFormData>({
     resolver: checkoutFormResolver,
@@ -691,7 +692,10 @@ export default function CheckoutSection() {
         stepChangeSubmitRef.current = false;
       }, 0);
     } else if (!isCurrentStepValid()) {
-      console.log('🛒 CheckoutSection: Current step validation failed');
+      const fields = currentStep === 1
+        ? ["firstName", "lastName", "email", "phone"] as const
+        : ["street", "city", "postalCode"] as const
+      void trigger([...fields])
     }
   };
 

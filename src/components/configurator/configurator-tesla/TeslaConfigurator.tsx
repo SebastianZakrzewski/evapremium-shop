@@ -605,7 +605,9 @@ export default function TeslaConfigurator() {
     return null
   }, [mapperResult.sections])
 
+  const addingRef = useRef(false)
   const handleAddToCart = useCallback(async () => {
+    if (addingRef.current) return
     if (!mapperResult.isReadyForCart || firstMissing) {
       if (firstMissing) scrollToSection(firstMissing.id)
       return
@@ -614,6 +616,7 @@ export default function TeslaConfigurator() {
       openCartModal()
       return
     }
+    addingRef.current = true
     setCartError(null)
     setIsAdding(true)
     markStep("appearance")
@@ -690,6 +693,7 @@ export default function TeslaConfigurator() {
     } catch (error) {
       setCartError(error instanceof Error ? error.message : "Nie udało się dodać produktu do koszyka")
     } finally {
+      addingRef.current = false
       setIsAdding(false)
     }
   }, [
