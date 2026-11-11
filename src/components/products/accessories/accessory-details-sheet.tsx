@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, type ReactNode } from "react";
 import Image from "next/image";
 import { Accessory } from "@/entities/product";
 import { useCart } from "@/features/shopping-cart/hooks/useCart";
@@ -24,13 +24,15 @@ interface AccessoryDetailsSheetProps {
   isOpen: boolean;
   onClose: () => void;
   onAddToConfig?: (accessory: Accessory, color?: string) => void; // Callback dla konfiguratora
+  imageFallback?: ReactNode;
 }
 
 export default function AccessoryDetailsSheet({
   accessory,
   isOpen,
   onClose,
-  onAddToConfig
+  onAddToConfig,
+  imageFallback,
 }: AccessoryDetailsSheetProps) {
   const { addToCart } = useCart();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -78,15 +80,7 @@ export default function AccessoryDetailsSheet({
       item_category: accessory.category?.name ?? accessory.categorySlug ?? "accessories",
       item_variant: accessory.sku,
     });
-  }, [
-    isOpen,
-    accessory?.id,
-    accessory?.name,
-    accessory?.price,
-    accessory?.sku,
-    accessory?.category?.name,
-    accessory?.categorySlug,
-  ]);
+  }, [isOpen, accessory]);
 
   // Ustaw domyślny kolor przy otwarciu
   useEffect(() => {
@@ -193,6 +187,10 @@ export default function AccessoryDetailsSheet({
                     setImageError(false);
                   }}
                 />
+              ) : imageFallback ? (
+                <div className="flex h-full w-full items-center justify-center bg-white text-neutral-950">
+                  {imageFallback}
+                </div>
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-white/5">
                   <span className="text-6xl mb-2">📦</span>
@@ -225,7 +223,7 @@ export default function AccessoryDetailsSheet({
             </div>
 
             {/* Thumbnail Carousel - zawsze widoczna z placeholderami */}
-            {productImages.length > 0 && (
+            {productImages.length > 0 && !(imageError && imageFallback) && (
               <div className="px-4 py-3 bg-[#111] border-t border-white/5">
                 <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
                   {Array.from({ length: thumbnailSlots }).map((_, index) => {

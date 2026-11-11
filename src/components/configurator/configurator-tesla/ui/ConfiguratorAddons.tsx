@@ -1,9 +1,11 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import type { Accessory } from "@/entities/product"
+import AccessoryDetailsSheet from "@/components/products/accessories/accessory-details-sheet"
 import { formatPriceValue } from "@/lib/utils/formatPrice"
-import { AntiDirtIcon, PremiumStitchIcon } from "./addonIcons"
+import { AntiDirtIcon, OrganizerIcon, PremiumStitchIcon } from "./addonIcons"
 
 type ConfiguratorAddonsProps = {
   accessories: Accessory[]
@@ -20,14 +22,18 @@ const finishIcon = (sku: string) => {
 const AddonRow = ({
   accessory,
   selected,
-  onToggle,
+  onAdd,
+  onRemove,
 }: {
   accessory: Accessory
   selected: boolean
-  onToggle: (id: string) => void
+  onAdd: (accessory: Accessory) => void
+  onRemove: (id: string) => void
 }) => {
   const image = accessory.images?.[0] ?? accessory.imageSrc
-  const Icon = accessory.productType === "wykonczenie" ? finishIcon(accessory.sku) : null
+  const Finish = accessory.productType === "wykonczenie" ? finishIcon(accessory.sku) : null
+  const [imageBroken, setImageBroken] = useState(false)
+  const showOrganizerIcon = accessory.productType === "organizer" && (!image || imageBroken)
   return (
     <div
       className="flex items-center gap-3 border bg-white p-3"
@@ -37,10 +43,19 @@ const AddonRow = ({
         className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden bg-neutral-100 text-neutral-950"
         style={{ borderRadius: 4 }}
       >
-        {Icon ? (
-          <Icon className="h-10 w-10" />
+        {Finish ? (
+          <Finish className="h-10 w-10" />
+        ) : showOrganizerIcon ? (
+          <OrganizerIcon className="h-10 w-10" />
         ) : image ? (
-          <Image src={image} alt="" fill className="object-cover" sizes="64px" />
+          <Image
+            src={image}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="64px"
+            onError={() => setImageBroken(true)}
+          />
         ) : null}
       </div>
       <div className="min-w-0 flex-1">
@@ -57,7 +72,7 @@ const AddonRow = ({
         className="h-10 shrink-0 rounded px-3 text-sm font-medium"
         style={{ minWidth: 88, minHeight: 40, border: "1px solid #171a20" }}
         aria-pressed={selected}
-        onClick={() => onToggle(accessory.id)}
+        onClick={() => (selected ? onRemove(accessory.id) : onAdd(accessory))}
       >
         {selected ? "Usuń" : "Dodaj"}
       </button>
@@ -70,12 +85,24 @@ export const ConfiguratorAddons = ({
   selectedIds,
   onToggle,
 }: ConfiguratorAddonsProps) => {
+  const [sheetAccessory, setSheetAccessory] = useState<Accessory | null>(null)
   const organizers = accessories.filter(
     (item) => item.productType === "organizer" && item.isActive !== false && item.inStock !== false,
   )
   const finishes = accessories.filter(
     (item) => item.productType === "wykonczenie" && item.isActive !== false && item.inStock !== false,
   )
+  const Finish = sheetAccessory?.productType === "wykonczenie" ? finishIcon(sheetAccessory.sku) : null
+  const organizerFallback = sheetAccessory?.productType === "organizer" ? <OrganizerIcon className="h-40 w-40" /> : null
+
+  useEffect(() => {
+    if (!sheetAccessory) return undefined
+    const scrollY = window.scrollY
+    return () => {
+      requestAnimationFrame(() => window.scrollTo({ top: scrollY, behavior: "instant" }))
+    }
+  }, [sheetAccessory])
+
   if (organizers.length === 0 && finishes.length === 0) return null
   return (
     <div className="mt-6 flex flex-col gap-6">
@@ -88,7 +115,8 @@ export const ConfiguratorAddons = ({
                 key={item.id}
                 accessory={item}
                 selected={selectedIds.includes(item.id)}
-                onToggle={onToggle}
+                onAdd={setSheetAccessory}
+                onRemove={onToggle}
               />
             ))}
           </div>
@@ -103,12 +131,23 @@ export const ConfiguratorAddons = ({
                 key={item.id}
                 accessory={item}
                 selected={selectedIds.includes(item.id)}
-                onToggle={onToggle}
+                onAdd={setSheetAccessory}
+                onRemove={onToggle}
               />
             ))}
           </div>
         </div>
       ) : null}
+      <AccessoryDetailsSheet
+        accessory={sheetAccessory}
+        isOpen={sheetAccessory != null}
+        onClose={() => setSheetAccessory(null)}
+        onAddToConfig={(accessory) => {
+          if (!selectedIds.includes(accessory.id)) onToggle(accessory.id)
+          setSheetAccessory(null)
+        }}
+        imageFallback={Finish ? <Finish className="h-40 w-40" /> : organizerFallback}
+      />
     </div>
   )
 }

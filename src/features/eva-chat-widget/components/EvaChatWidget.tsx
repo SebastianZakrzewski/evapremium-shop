@@ -13,17 +13,12 @@ const launcherChromeClassName =
 
 const launcherButtonClassName = `relative h-20 w-20 ${launcherChromeClassName}`
 
-const configuratorMobileQuery = '(max-width: 1023px)'
-
 export const EvaChatWidget = () => {
   const pathname = usePathname()
   const shellRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [hasOpened, setHasOpened] = useState(false)
   const [isReady, setIsReady] = useState(false)
-  const [isConfiguratorMobile, setIsConfiguratorMobile] = useState(false)
-  const [cartCoversLauncher, setCartCoversLauncher] = useState(false)
-  const [priceSheetOpen, setPriceSheetOpen] = useState(false)
   const showGreeting = !isOpen && !hasOpened
   const privacyAccepted = usePrivacyWindowAccepted()
   const greeting = useEvaChatGreeting(showGreeting && isReady && privacyAccepted)
@@ -34,34 +29,9 @@ export const EvaChatWidget = () => {
   useEffect(() => {
     setIsReady(true)
 
-    if (typeof window.matchMedia !== 'function') {
-      return undefined
-    }
-
-    const mobile = window.matchMedia(configuratorMobileQuery)
-    const sync = () => setIsConfiguratorMobile(mobile.matches)
-    sync()
-    mobile.addEventListener('change', sync)
-    const onCart = (event: Event) => {
-      const detail = (event as CustomEvent<{ isOpen?: boolean }>).detail
-      setCartCoversLauncher(Boolean(detail?.isOpen))
-    }
-    const syncOverlay = () => {
-      setPriceSheetOpen(document.documentElement.dataset.configuratorOverlay === 'open')
-    }
-    syncOverlay()
-    const overlay = new MutationObserver(syncOverlay)
-    overlay.observe(document.documentElement, { attributes: true, attributeFilter: ['data-configurator-overlay'] })
-    window.addEventListener('cartModalStateChange', onCart)
-    return () => {
-      mobile.removeEventListener('change', sync)
-      window.removeEventListener('cartModalStateChange', onCart)
-      overlay.disconnect()
-    }
   }, [])
 
   const embeddedInProductWindow = isReady && window.parent !== window
-  const onConfigurator = pathname === '/konfigurator'
 
   useEffect(() => {
     if (!hasOpened) {
@@ -144,12 +114,8 @@ export const EvaChatWidget = () => {
   }
 
   const shellClassName = isOpen
-    ? onConfigurator
-      ? 'fixed inset-0 z-[80] flex h-dvh w-dvw flex-col overflow-hidden max-md:bg-black md:inset-auto md:bottom-6 md:left-4 md:right-auto md:h-auto md:w-auto md:items-start md:gap-3 md:overflow-visible md:bg-transparent'
-      : 'fixed inset-0 z-[80] flex h-dvh w-dvw flex-col overflow-hidden max-md:bg-black md:inset-auto md:bottom-4 md:right-4 md:h-auto md:w-auto md:items-end md:gap-3 md:overflow-visible md:bg-transparent'
-    : onConfigurator
-      ? 'fixed right-3 z-30 flex flex-col items-end gap-3 bottom-[calc(96px+env(safe-area-inset-bottom))]'
-      : 'fixed bottom-4 right-4 z-[80] flex flex-col items-end gap-3'
+    ? 'fixed inset-0 z-[80] flex h-dvh w-dvw flex-col overflow-hidden max-md:bg-black md:inset-auto md:bottom-4 md:right-4 md:h-auto md:w-auto md:items-end md:gap-3 md:overflow-visible md:bg-transparent'
+    : 'fixed bottom-4 right-4 z-[80] flex flex-col items-end gap-3'
 
   const slotClassName = isOpen
     ? 'min-h-0 w-full flex-1 md:h-[min(640px,calc(100dvh-7rem))] md:w-[min(420px,calc(100vw-2rem))] md:flex-none'
@@ -157,7 +123,8 @@ export const EvaChatWidget = () => {
 
   const openLauncherClassName = `absolute top-[max(0.75rem,env(safe-area-inset-top))] right-[max(0.75rem,env(safe-area-inset-right))] z-10 h-14 w-14 md:static md:h-20 md:w-20 ${launcherChromeClassName}`
 
-  if (!isReady || embeddedInProductWindow || (onConfigurator && (cartCoversLauncher || priceSheetOpen))) {
+  const configuratorRoute = pathname === "/konfigurator" || pathname?.startsWith("/konfigurator/")
+  if (!isReady || embeddedInProductWindow || configuratorRoute) {
     return null
   }
 
@@ -165,7 +132,6 @@ export const EvaChatWidget = () => {
     <div
       ref={shellRef}
       className={shellClassName}
-      data-configurator-mobile={isConfiguratorMobile ? 'true' : 'false'}
     >
       <div data-eva-chat-slot className={slotClassName} />
       {showBubble ? (
@@ -194,22 +160,19 @@ export const EvaChatWidget = () => {
           )}
           <span
             aria-hidden="true"
-            className={`absolute -bottom-1.5 h-3 w-3 rotate-45 border-b border-r border-[#e10600]/50 bg-[#141414] ${
-              onConfigurator ? 'left-8' : 'right-8'
-            }`}
+            className="absolute -bottom-1.5 right-8 h-3 w-3 rotate-45 border-b border-r border-[#e10600]/50 bg-[#141414]"
           />
         </p>
       ) : null}
       <button
         type="button"
-        className={`${isOpen ? openLauncherClassName : launcherButtonClassName} ${
-          onConfigurator && !isOpen ? '!h-12 !w-12' : ''
-        }`}
+        className={isOpen ? openLauncherClassName : launcherButtonClassName}
         aria-label={isOpen ? 'Zamknij czat EvaBot' : 'Otwórz czat EvaBot'}
         aria-expanded={isOpen}
         aria-describedby={showBubble ? 'eva-chat-greeting' : undefined}
         onClick={handleToggle}
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={EVA_CHAT_ICON_SRC}
           alt=""

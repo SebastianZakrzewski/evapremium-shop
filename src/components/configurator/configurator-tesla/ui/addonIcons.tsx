@@ -8,6 +8,15 @@ const stroke = {
   strokeLinejoin: "round" as const,
 }
 
+/** Open trunk bin. */
+export const OrganizerIcon = ({ className }: IconProps) => (
+  <svg viewBox="0 0 64 64" className={className} aria-hidden>
+    <path d="M12 24h40l-4 22H16L12 24z" {...stroke} />
+    <path d="M18 24l4-8h20l4 8" {...stroke} />
+    <path d="M32 28v12M26 34h12" {...stroke} />
+  </svg>
+)
+
 /** Edge with a running stitch. */
 export const PremiumStitchIcon = ({ className }: IconProps) => (
   <svg viewBox="0 0 64 64" className={className} aria-hidden>
