@@ -18,6 +18,8 @@ export type TrackingChannelState = {
   status: TrackingChannelStatus
   sentAt?: string
   reason?: string
+  /** Data Manager `requestId` after a successful ingest. */
+  requestId?: string
 }
 
 export type PurchaseTrackingRecord = {

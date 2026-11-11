@@ -1,17 +1,18 @@
 import type { Order } from '@/lib/types/order-new'
 import type { PurchaseTrackingRecord, TrackingChannelState } from '../attribution/types'
+import { adsFailureReason, GOOGLE_REQUEST_TIMEOUT_MS, ingestAdsClickEvent } from './dataManagerAds'
 import type { ServerTrackingEnv } from './gate'
-import { planServerPurchase, type AdsClickConversion, type Ga4PurchaseBody } from './plan'
+import { planServerPurchase, type Ga4PurchaseBody } from './plan'
 
 const GA4_COLLECT_URL = 'https://www.google-analytics.com/mp/collect'
-const GOOGLE_ADS_VERSION = 'v23'
-const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token'
 
 export type TrackPaidPaynowInput = {
   orderId: string
   providerPaymentId?: string | null
   paymentEnvironment?: string | null
   paidAt?: string | null
+  /** Omit a channel to leave its stored state unchanged. Backfill sends Ads only. */
+  channels?: { ga4?: boolean; ads?: boolean }
 }
 
 export type TrackPaidDeps = {
@@ -44,73 +45,33 @@ const postGa4 = async (
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
+    signal: AbortSignal.timeout(GOOGLE_REQUEST_TIMEOUT_MS),
   })
   if (!response.ok) {
     throw new Error(`GA4 Measurement Protocol HTTP ${response.status}`)
   }
 }
 
-const accessToken = async (env: ServerTrackingEnv, fetchImpl: typeof fetch): Promise<string> => {
-  const body = new URLSearchParams({
-    grant_type: 'refresh_token',
-    client_id: env.googleAdsClientId as string,
-    client_secret: env.googleAdsClientSecret as string,
-    refresh_token: env.googleAdsRefreshToken as string,
-  })
-  const response = await fetchImpl(GOOGLE_TOKEN_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body,
-  })
-  if (!response.ok) {
-    throw new Error(`Google OAuth HTTP ${response.status}`)
+const channelForSave = (
+  stored: TrackingChannelState | undefined,
+  planned: TrackingChannelState
+): TrackingChannelState => {
+  if (stored && (stored.status === 'sent' || stored.status === 'sending')) return stored
+  return {
+    status: planned.status,
+    ...(planned.reason ? { reason: planned.reason } : {}),
+    ...(stored?.sentAt ? { sentAt: stored.sentAt } : {}),
   }
-  const payload = (await response.json()) as { access_token?: string }
-  if (!payload.access_token) {
-    throw new Error('Google OAuth response missing access_token')
-  }
-  return payload.access_token
 }
 
-const postAds = async (
-  env: ServerTrackingEnv,
-  conversion: AdsClickConversion,
-  fetchImpl: typeof fetch
-): Promise<void> => {
-  const token = await accessToken(env, fetchImpl)
-  const customerId = (env.googleAdsCustomerId as string).replace(/-/g, '')
-  const headers: Record<string, string> = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  }
-  const developerToken = env.googleAdsDeveloperToken?.trim()
-  if (developerToken) {
-    headers['developer-token'] = developerToken
-  }
-  if (env.googleAdsLoginCustomerId) {
-    headers['login-customer-id'] = env.googleAdsLoginCustomerId.replace(/-/g, '')
-  }
-  const response = await fetchImpl(
-    `https://googleads.googleapis.com/${GOOGLE_ADS_VERSION}/customers/${customerId}:uploadClickConversions`,
-    {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        conversions: [conversion],
-        partialFailure: true,
-      }),
-    }
-  )
-  if (!response.ok) {
-    throw new Error(`Google Ads upload HTTP ${response.status}`)
-  }
-  const text = await response.text()
-  if (!text) return
-  const payload = JSON.parse(text) as { partialFailureError?: { message?: string } }
-  if (payload.partialFailureError) {
-    throw new Error(payload.partialFailureError.message || 'Google Ads partial failure')
-  }
-}
+const markSent = (
+  extra?: { requestId?: string; warning?: string }
+): TrackingChannelState => ({
+  status: 'sent',
+  sentAt: new Date().toISOString(),
+  ...(extra?.requestId ? { requestId: extra.requestId } : {}),
+  ...(extra?.warning ? { reason: extra.warning } : {}),
+})
 
 export const trackPaidPaynowPurchase = async (
   input: TrackPaidPaynowInput,
@@ -131,14 +92,17 @@ export const trackPaidPaynowPurchase = async (
 
   if (plan.blocked) return null
 
+  const sendGa4 = input.channels?.ga4 !== false
+  const sendAds = input.channels?.ads !== false
+
   const next: PurchaseTrackingRecord = {
     attribution: stored?.attribution,
     transactionId: plan.transactionId,
-    ga4: { status: plan.ga4.status, reason: plan.ga4.reason, sentAt: stored?.ga4?.sentAt },
-    ads: { status: plan.ads.status, reason: plan.ads.reason, sentAt: stored?.ads?.sentAt },
+    ga4: sendGa4 ? channelForSave(stored?.ga4, plan.ga4) : stored?.ga4,
+    ads: sendAds ? channelForSave(stored?.ads, plan.ads) : stored?.ads,
   }
 
-  if (plan.ga4.status === 'pending' && plan.ga4.body) {
+  if (sendGa4 && plan.ga4.status === 'pending' && plan.ga4.body) {
     next.ga4 = withStatus(next.ga4 || { status: 'pending' }, 'sending')
     await deps.saveTracking(order.id, next)
     try {
@@ -153,18 +117,14 @@ export const trackPaidPaynowPurchase = async (
     }
   }
 
-  if (plan.ads.status === 'pending' && plan.ads.conversion) {
+  if (sendAds && plan.ads.status === 'pending' && plan.ads.event) {
     next.ads = withStatus(next.ads || { status: 'pending' }, 'sending')
     await deps.saveTracking(order.id, next)
     try {
-      await postAds(deps.env, plan.ads.conversion, deps.fetchImpl)
-      next.ads = withStatus(next.ads, 'sent')
+      const result = await ingestAdsClickEvent(deps.env, plan.ads.event, deps.fetchImpl)
+      next.ads = markSent({ requestId: result.requestId, warning: result.warning })
     } catch (error) {
-      next.ads = withStatus(
-        next.ads,
-        'failed',
-        error instanceof Error ? error.message : 'ads_failed'
-      )
+      next.ads = withStatus(next.ads, 'failed', adsFailureReason(error))
     }
   }
 
