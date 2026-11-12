@@ -44,26 +44,23 @@ describe("resolveConfiguratorV2VehicleScrollTarget", () => {
     ).toBe(VEHICLE_GEARBOX_FIELD_ID)
   })
 
-  it("scrolls to body type after year and gearbox are selected", () => {
+  it("scrolls to body type before year when the model has several bodies", () => {
     expect(
       resolveConfiguratorV2VehicleScrollTarget({
         ...baseInput,
-        year: "2020",
-        gearbox: "Manualna",
         bodyOptionsCount: 2,
       }),
     ).toBe(VEHICLE_BODY_TYPE_FIELD_ID)
   })
 
-  it("prefers gearbox over body type when both are pending", () => {
+  it("scrolls to year once the body type is known", () => {
     expect(
       resolveConfiguratorV2VehicleScrollTarget({
         ...baseInput,
-        year: "2020",
+        bodyTypeKey: "sedan",
         bodyOptionsCount: 2,
-        yearOptionsCount: 5,
       }),
-    ).toBe(VEHICLE_GEARBOX_FIELD_ID)
+    ).toBe(VEHICLE_YEAR_FIELD_ID)
   })
 
   it("uses locked field ids for locked product entry", () => {
@@ -78,8 +75,6 @@ describe("resolveConfiguratorV2VehicleScrollTarget", () => {
       resolveConfiguratorV2VehicleScrollTarget({
         ...baseInput,
         isLocked: true,
-        year: "2018",
-        gearbox: "Automatyczna",
         bodyOptionsCount: 3,
       }),
     ).toBe(LOCKED_VEHICLE_BODY_TYPE_FIELD_ID)

@@ -50,7 +50,7 @@ export const useMatModelPreviews = (
     recordKey || matTemplateId || (brandKey && modelKey),
   )
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, isPlaceholderData, error } = useQuery({
     queryKey: [
       "mat-model-previews",
       recordKey,
@@ -67,6 +67,9 @@ export const useMatModelPreviews = (
       return response
     },
     enabled: enabled && canQuery,
+    // Year and gearbox clear recordKey and would otherwise paint an empty
+    // list (and the brand logo) until this query resolves again.
+    placeholderData: (previous) => (canQuery ? previous : undefined),
     staleTime: 10 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
     retry: 2,
@@ -75,7 +78,7 @@ export const useMatModelPreviews = (
 
   return {
     previews: data?.previews ?? [],
-    isLoading,
+    isLoading: isLoading || isPlaceholderData,
     error: (error as Error) ?? null,
   }
 }

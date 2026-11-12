@@ -19,6 +19,13 @@ import {
   VEHICLE_GEARBOX_FIELD_ID,
   VEHICLE_YEAR_FIELD_ID,
 } from "@/components/configurator/configurator-v2/utils/configuratorV2VehicleFieldIds"
+import {
+  generationsForBody,
+  resolveTemplateForSelection,
+  selectionAfterBodyType,
+  uniqueBodyOptions,
+  yearsForBodyGeneration,
+} from "./vehicleBodySelection"
 
 type CarSelectionStepProps = {
   config: ConfiguratorState
@@ -27,12 +34,6 @@ type CarSelectionStepProps = {
   onVehicleChange?: () => void
   hideNextButton?: boolean
   surface?: "dark" | "light"
-}
-
-const yearsInRange = (from: number | null, to: number | null): number[] => {
-  if (from == null) return []
-  const end = Math.min(to ?? new Date().getFullYear() + 1, 2100)
-  return Array.from({ length: end - from + 1 }, (_, index) => from + index).reverse()
 }
 
 export const CarSelectionStep = ({
@@ -73,52 +74,40 @@ export const CarSelectionStep = ({
     }
   }, [models, config.model, config.modelFamilyKey, onUpdate])
 
+  const bodyOptions = useMemo(() => uniqueBodyOptions(templates), [templates])
   const generations = useMemo(
-    () =>
-      [
-        ...new Map(
-          templates.map((template) => [
-            `${template.modelKey}|${template.generation}`,
-            {
-              value: `${template.modelKey}|${template.generation}`,
-              modelKey: template.modelKey,
-              generation: template.generation,
-              generationDisplay: template.generationDisplay,
-              yearFrom: template.yearFrom,
-              yearTo: template.yearTo,
-            },
-          ]),
-        ).values(),
-      ].sort((left, right) => (right.yearFrom ?? 0) - (left.yearFrom ?? 0)),
-    [templates],
+    () => generationsForBody(templates, config.bodyTypeKey),
+    [config.bodyTypeKey, templates],
   )
-
   const selectedGeneration = generations.find(
-    (item) =>
-      item.modelKey === config.modelKey &&
-      item.generation === config.generation,
+    (item) => item.modelKey === config.modelKey && item.generation === config.generation,
   )
   const years = selectedGeneration
-    ? yearsInRange(selectedGeneration.yearFrom, selectedGeneration.yearTo)
+    ? yearsForBodyGeneration(templates, config.bodyTypeKey, selectedGeneration.modelKey, selectedGeneration.generation)
     : []
-  const matchingTemplates = templates.filter((template) => {
-    if (template.modelKey !== config.modelKey || !config.year) return false
-    const year = Number(config.year)
-    return (
-      (template.yearFrom == null || year >= template.yearFrom) &&
-      (template.yearTo == null || year <= template.yearTo)
-    )
-  })
-  const bodyOptions = matchingTemplates.flatMap((template) =>
-    template.bodyTypes.map((bodyType) => ({
-      value: `${template.recordKey}::${bodyType.key}`,
-      template,
-      bodyType,
-    })),
-  )
-  const selectedBodyValue = config.recordKey && config.bodyTypeKey
-    ? `${config.recordKey}::${config.bodyTypeKey}`
-    : ""
+
+  useEffect(() => {
+    if (isLoading || !config.modelFamilyKey || bodyOptions.length !== 1) return
+    const only = bodyOptions[0]
+    if (!only) return
+    const next = selectionAfterBodyType(config, templates, only)
+    if (
+      next.bodyTypeKey === config.bodyTypeKey &&
+      next.modelKey === config.modelKey &&
+      next.generation === config.generation &&
+      next.year === config.year &&
+      next.recordKey === config.recordKey
+    ) {
+      return
+    }
+    onUpdate(next)
+  }, [
+    bodyOptions,
+    config,
+    isLoading,
+    onUpdate,
+    templates,
+  ])
   const isComplete = Boolean(
     config.brandKey &&
       config.modelFamilyKey &&
@@ -200,8 +189,6 @@ export const CarSelectionStep = ({
       modelKey: generation?.modelKey ?? "",
       generation: generation?.generation ?? "",
       year: "",
-      bodyType: "",
-      bodyTypeKey: "",
       recordKey: "",
       templateId: "",
       pricingCategoryKey: "",
@@ -209,14 +196,27 @@ export const CarSelectionStep = ({
     })
   }
 
-  const handleBodyChange = (value: string) => {
-    const option = bodyOptions.find((item) => item.value === value)
+  const handleBodyChange = (bodyTypeKey: string) => {
+    const body = bodyOptions.find((item) => item.key === bodyTypeKey)
+    if (!body) return
     onUpdate({
-      bodyType: option?.bodyType.displayLabel ?? option?.bodyType.label ?? "",
-      bodyTypeKey: option?.bodyType.key ?? "",
-      recordKey: option?.template.recordKey ?? "",
-      templateId: option?.template.id ?? "",
-      pricingCategoryKey: option?.template.pricingCategoryKey ?? "",
+      ...selectionAfterBodyType(config, templates, body),
+      ...clearDependentProduct,
+    })
+  }
+
+  const handleYearChange = (year: string) => {
+    const template = resolveTemplateForSelection(templates, {
+      modelKey: config.modelKey,
+      generation: config.generation,
+      bodyTypeKey: config.bodyTypeKey,
+      year,
+    })
+    onUpdate({
+      year,
+      recordKey: template?.recordKey ?? "",
+      templateId: template?.id ?? "",
+      pricingCategoryKey: template?.pricingCategoryKey ?? "",
       ...clearDependentProduct,
     })
   }
@@ -246,35 +246,42 @@ export const CarSelectionStep = ({
       })),
       onChange: handleModelChange,
     },
-    {
-      id: undefined,
-      label: "Generacja",
-      value: selectedGeneration?.value ?? "",
-      disabled: !config.modelFamilyKey,
-      placeholder: "Wybierz generację",
-      options: generations.map((item) => ({
-        value: item.value,
-        label: item.generationDisplay ?? item.generation,
-      })),
-      onChange: handleGenerationChange,
-    },
+    ...(bodyOptions.length > 1
+      ? [{
+          id: VEHICLE_BODY_TYPE_FIELD_ID,
+          label: "Typ nadwozia",
+          value: config.bodyTypeKey,
+          disabled: !config.modelFamilyKey || isLoading,
+          placeholder: "Wybierz typ nadwozia",
+          options: bodyOptions.map((item) => ({
+            value: item.key,
+            label: item.displayLabel || item.label,
+          })),
+          onChange: handleBodyChange,
+        }]
+      : []),
+    ...(generations.length > 1
+      ? [{
+          id: undefined,
+          label: "Generacja",
+          value: selectedGeneration?.value ?? "",
+          disabled: !config.bodyTypeKey,
+          placeholder: "Wybierz generację",
+          options: generations.map((item) => ({
+            value: item.value,
+            label: item.generationDisplay || item.generation,
+          })),
+          onChange: handleGenerationChange,
+        }]
+      : []),
     {
       id: VEHICLE_YEAR_FIELD_ID,
       label: "Rok produkcji",
       value: config.year,
-      disabled: !config.modelKey,
+      disabled: !config.modelKey || !config.bodyTypeKey,
       placeholder: "Wybierz rok",
       options: years.map((year) => ({ value: String(year), label: String(year) })),
-      onChange: (year: string) =>
-        onUpdate({
-          year,
-          bodyType: "",
-          bodyTypeKey: "",
-          recordKey: "",
-          templateId: "",
-          pricingCategoryKey: "",
-          ...clearDependentProduct,
-        }),
+      onChange: handleYearChange,
     },
     {
       id: VEHICLE_GEARBOX_FIELD_ID,
@@ -290,18 +297,6 @@ export const CarSelectionStep = ({
         onUpdate({
           gearbox: isGearbox(gearbox) ? gearbox : "",
         }),
-    },
-    {
-      id: VEHICLE_BODY_TYPE_FIELD_ID,
-      label: "Typ nadwozia",
-      value: selectedBodyValue,
-      disabled: !config.year,
-      placeholder: "Wybierz typ nadwozia",
-      options: bodyOptions.map((item) => ({
-        value: item.value,
-        label: item.bodyType.displayLabel ?? item.bodyType.label,
-      })),
-      onChange: handleBodyChange,
     },
   ]
 
