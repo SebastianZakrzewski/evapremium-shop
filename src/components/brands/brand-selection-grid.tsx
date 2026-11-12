@@ -73,7 +73,7 @@ export default function BrandSelectionGrid() {
 
 
   return (
-    <section id="brand-selection" className="bg-[#FDFDFD] pb-20 text-white">
+    <section id="brand-selection" className="bg-[#FFFFFF] pb-20 text-white">
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 md:px-6 md:pt-12">
         <nav className="flex items-center gap-2 text-xs tracking-wide text-white/40">
           <Link href="/" className="transition-colors hover:text-white">

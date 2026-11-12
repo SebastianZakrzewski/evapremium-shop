@@ -66,7 +66,7 @@ describe("HeroSection", () => {
     expect(screen.getByRole("button", { name: "Szukaj dywaników dla wybranego samochodu" })).toBeInTheDocument()
     expect(screen.getByRole("link", { name: "Przeglądaj wszystkie marki" })).toHaveAttribute("href", "/dywaniki")
     expect(screen.getByTestId("hero-promo-image")).toHaveAttribute("src", "/images/hero/zimowa-promo.png")
-    expect(screen.getByRole("region", { name: "Sekcja promocyjna - dywaniki samochodowe" })).toHaveClass("bg-[#FDFDFD]")
+    expect(screen.getByRole("region", { name: "Sekcja promocyjna - dywaniki samochodowe" })).toHaveClass("bg-[#FFFFFF]")
     expect(document.querySelector("video")).not.toBeInTheDocument()
     expect(screen.queryByText("Failed to fetch")).not.toBeInTheDocument()
   })

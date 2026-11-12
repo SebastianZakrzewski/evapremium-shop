@@ -9,7 +9,7 @@ const desktopAvif = readAvif("public/images/hero/responsive/jesien-hero-1234.avi
 
 export const HeroPromoImage = () => (
   <section
-    className="relative overflow-visible bg-[#FDFDFD] pb-6 max-sm:pb-4 md:overflow-hidden md:pb-4"
+    className="relative overflow-visible bg-[#FFFFFF] pb-6 max-sm:pb-4 md:overflow-hidden md:pb-4"
     role="region"
     aria-label="Sekcja promocyjna - dywaniki samochodowe"
   >

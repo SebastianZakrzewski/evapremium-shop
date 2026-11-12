@@ -43,7 +43,7 @@ export default function MatComparisonSection() {
   return (
     <section
       id="mat-comparison-section"
-      className="py-8 md:py-10 bg-[#FDFDFD] relative overflow-hidden"
+      className="py-8 md:py-10 bg-[#FFFFFF] relative overflow-hidden"
       role="region"
       aria-label="Porównanie dywaników EVA z gumowymi"
     >

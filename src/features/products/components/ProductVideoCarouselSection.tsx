@@ -166,7 +166,7 @@ const ProductVideoCard = ({
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onKeyDown={handleKeyDown}
-      className="relative w-full aspect-[9/16] rounded-xl overflow-hidden border border-neutral-200 shadow-sm bg-[#FDFDFD] cursor-pointer hover:border-neutral-400 transition-[border-color] duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-[#FDFDFD]"
+      className="relative w-full aspect-[9/16] rounded-xl overflow-hidden border border-neutral-200 shadow-sm bg-[#FFFFFF] cursor-pointer hover:border-neutral-400 transition-[border-color] duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-[#FFFFFF]"
     >
       {shouldLoadMedia && !hasVideoError ? (
         <video
@@ -282,7 +282,7 @@ export default function ProductVideoCarouselSection() {
       ref={sectionRef}
       id="product-videos"
       data-section="product-videos"
-      className="w-full bg-[#FDFDFD] py-7 md:py-9 relative overflow-hidden"
+      className="w-full bg-[#FFFFFF] py-7 md:py-9 relative overflow-hidden"
       role="region"
       aria-label="Premium w akcji - krótkie reklamy EVA Premium"
     >
@@ -332,7 +332,7 @@ export default function ProductVideoCarouselSection() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 mt-6 text-center">
         <Link
           href="/dywaniki"
-          className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium tracking-wide text-white transition-all duration-300 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 rounded-full shadow-lg shadow-red-900/25 hover:shadow-red-600/20 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-[#FDFDFD] min-h-[44px]"
+          className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium tracking-wide text-white transition-all duration-300 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 rounded-full shadow-lg shadow-red-900/25 hover:shadow-red-600/20 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-[#FFFFFF] min-h-[44px]"
           aria-label="Sprawdź dostępność dywaników dla Twojego auta"
         >
           Sprawdź Dostępność Dla Twojego Auta

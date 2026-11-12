@@ -19,7 +19,7 @@ export default function PageHeroBanner({
   meta,
 }: PageHeroBannerProps) {
   return (
-    <div className="bg-[#FDFDFD] text-neutral-950">
+    <div className="bg-[#FFFFFF] text-neutral-950">
       <div className="mx-auto w-full max-w-6xl px-4 pt-8 md:px-6 md:pt-12">
         <nav className="flex items-center gap-2 text-xs tracking-wide text-neutral-500">
           <Link href="/" className="transition-colors hover:text-neutral-950">

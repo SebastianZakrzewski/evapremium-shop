@@ -874,6 +874,11 @@ export default function TeslaConfigurator() {
                     title={presentation.name ?? variant.label}
                     detail={presentation.description}
                     priceLabel={formatPricePln(variant.priceAfterDiscount)}
+                    comparePriceLabel={
+                      variant.discount > 0 && variant.basePrice > variant.priceAfterDiscount
+                        ? formatPricePln(variant.basePrice)
+                        : undefined
+                    }
                     disabled={mapperResult.sections.variant.isDisabled}
                     onSelect={() => {
                       setResetNotice(null)

@@ -142,7 +142,7 @@ const HeroVehicleSearch = () => {
 
       <button
         type="submit"
-        className="mt-4 flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-r from-red-600 to-red-700 px-6 text-base text-white transition-colors hover:from-red-500 hover:to-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FDFDFD]"
+        className="mt-4 flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-r from-red-600 to-red-700 px-6 text-base text-white transition-colors hover:from-red-500 hover:to-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFFFFF]"
         aria-label="Szukaj dywaników dla wybranego samochodu"
       >
         Szukaj
@@ -173,7 +173,7 @@ const HeroPromoImage = () => (
 export default function HeroSection() {
   return (
     <section
-      className="bg-[#FDFDFD] text-neutral-950"
+      className="bg-[#FFFFFF] text-neutral-950"
       role="region"
       aria-label="Sekcja promocyjna - dywaniki samochodowe"
     >
@@ -186,7 +186,7 @@ export default function HeroSection() {
             <HeroVehicleSearch />
           </div>
         </div>
-        <div className="order-2 bg-[#FDFDFD] md:order-none md:flex md:items-center">
+        <div className="order-2 bg-[#FFFFFF] md:order-none md:flex md:items-center">
           <HeroPromoImage />
         </div>
       </div>

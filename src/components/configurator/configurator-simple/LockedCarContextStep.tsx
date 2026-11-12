@@ -496,7 +496,7 @@ export const LockedCarContextStep = ({
       <div
         className={
           light
-            ? "space-y-2 rounded-2xl border border-neutral-300 bg-[#FDFDFD] p-3"
+            ? "space-y-2 rounded-2xl border border-neutral-300 bg-[#FFFFFF] p-3"
             : "space-y-2 rounded-2xl bg-[#1c1c1e] p-3"
         }
       >

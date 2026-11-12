@@ -20,9 +20,9 @@ function DywanikiPageContent() {
 
 export default function DywanikiPage() {
   return (
-    <div className="min-h-screen bg-[#FDFDFD]">
+    <div className="min-h-screen bg-[#FFFFFF]">
       <Suspense fallback={
-        <div className="flex min-h-screen items-center justify-center bg-[#FDFDFD]">
+        <div className="flex min-h-screen items-center justify-center bg-[#FFFFFF]">
           <div className="text-xl text-white">Ładowanie...</div>
         </div>
       }>

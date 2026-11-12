@@ -59,7 +59,7 @@ export default function RoznorodnaKolorystykaSection() {
   }, []);
 
   return (
-    <section id="roznorodna-kolorystyka-section" className="py-7 md:py-9 bg-[#FDFDFD] relative overflow-hidden">
+    <section id="roznorodna-kolorystyka-section" className="py-7 md:py-9 bg-[#FFFFFF] relative overflow-hidden">
       {/* Gradient line top */}
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
@@ -76,7 +76,7 @@ export default function RoznorodnaKolorystykaSection() {
             <div className="relative group">
               {/* Glass Container - Consistent with other sections */}
               <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
-                <div className="relative rounded-2xl overflow-hidden aspect-square bg-[#FDFDFD]">
+                <div className="relative rounded-2xl overflow-hidden aspect-square bg-[#FFFFFF]">
                   {colorImages[selectedColor.name] ? (
                     <Image
                       src={colorImages[selectedColor.name]}
@@ -86,7 +86,7 @@ export default function RoznorodnaKolorystykaSection() {
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-[#FDFDFD] text-gray-400 p-6 text-center">
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-[#FFFFFF] text-gray-400 p-6 text-center">
                       <Palette className="w-12 h-12 mb-4 opacity-20" />
                       <span>Podgląd dla koloru {selectedColor.name} niedostępny</span>
                     </div>
@@ -136,7 +136,7 @@ export default function RoznorodnaKolorystykaSection() {
                       style={{ backgroundColor: color.hex }}
                       aria-label={`Wybierz kolor ${color.name}`}
                     >
-                      <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-xs text-white opacity-0 group-hover:opacity-100 whitespace-nowrap bg-[#FDFDFD] border border-white/10 px-3 py-1.5 rounded-lg transition-all duration-200 pointer-events-none z-50 shadow-xl transform translate-y-2 group-hover:translate-y-0">
+                      <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-xs text-white opacity-0 group-hover:opacity-100 whitespace-nowrap bg-[#FFFFFF] border border-white/10 px-3 py-1.5 rounded-lg transition-all duration-200 pointer-events-none z-50 shadow-xl transform translate-y-2 group-hover:translate-y-0">
                         {color.name}
                       </span>
                     </button>
@@ -164,7 +164,7 @@ export default function RoznorodnaKolorystykaSection() {
                       style={{ backgroundColor: color.hex }}
                       aria-label={`Wybierz kolor ${color.name}`}
                     >
-                      <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-xs text-white opacity-0 group-hover:opacity-100 whitespace-nowrap bg-[#FDFDFD] border border-white/10 px-3 py-1.5 rounded-lg transition-all duration-200 pointer-events-none z-50 shadow-xl transform translate-y-2 group-hover:translate-y-0">
+                      <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-xs text-white opacity-0 group-hover:opacity-100 whitespace-nowrap bg-[#FFFFFF] border border-white/10 px-3 py-1.5 rounded-lg transition-all duration-200 pointer-events-none z-50 shadow-xl transform translate-y-2 group-hover:translate-y-0">
                         {color.name}
                       </span>
                     </button>

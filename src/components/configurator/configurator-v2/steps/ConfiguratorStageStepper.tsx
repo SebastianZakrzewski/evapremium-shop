@@ -21,19 +21,19 @@ const stageButtonClass = (stage: StageSnapshot): string => {
     return `${base} ${width} border-red-600 bg-red-600 text-white`
   }
   if (stage.status === "completed") {
-    return `${base} ${width} border-red-600 bg-[#FDFDFD] text-red-600`
+    return `${base} ${width} border-red-600 bg-[#FFFFFF] text-red-600`
   }
   if (stage.status === "available") {
-    return `${base} ${width} border-red-600 bg-[#FDFDFD] text-red-600`
+    return `${base} ${width} border-red-600 bg-[#FFFFFF] text-red-600`
   }
-  return `${base} ${width} cursor-not-allowed border-red-200 bg-[#FDFDFD] text-red-300`
+  return `${base} ${width} cursor-not-allowed border-red-200 bg-[#FFFFFF] text-red-300`
 }
 
 export const ConfiguratorStageStepper = ({
   stages,
   onOpen,
 }: ConfiguratorStageStepperProps) => (
-  <nav aria-label="Etapy konfiguracji" className="bg-[#FDFDFD] text-neutral-950">
+  <nav aria-label="Etapy konfiguracji" className="bg-[#FFFFFF] text-neutral-950">
     <ol className="flex min-w-0 items-center gap-2">
       {stages.map((stage) => {
         const statusLabel = stageStatusLabel(stage.status)

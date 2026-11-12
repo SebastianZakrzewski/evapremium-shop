@@ -250,7 +250,7 @@ export default function GallerySection() {
   }, [selectedImage, goToPrevious, goToNext, closeModal]);
 
   return (
-    <section id="galeria" className="bg-[#FDFDFD] pb-20 pt-10">
+    <section id="galeria" className="bg-[#FFFFFF] pb-20 pt-10">
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 md:px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {galleryImages.map((image, index) => (
@@ -260,7 +260,7 @@ export default function GallerySection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.05 }}
-              className="group relative aspect-square bg-[#FDFDFD] rounded-xl overflow-hidden cursor-pointer border-2 border-white/5 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-900/20 hover:-translate-y-1"
+              className="group relative aspect-square bg-[#FFFFFF] rounded-xl overflow-hidden cursor-pointer border-2 border-white/5 hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-900/20 hover:-translate-y-1"
               onClick={() => openModal(image, index)}
             >
               <Image
