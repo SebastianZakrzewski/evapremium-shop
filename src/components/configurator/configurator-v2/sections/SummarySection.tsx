@@ -42,7 +42,7 @@ export const SummarySection = ({
   >
     <div
       data-testid="summary-surface"
-      className="flex min-h-full w-full min-w-0 max-w-full flex-1 flex-col overflow-x-hidden rounded-2xl bg-[#FDFDFD] p-3 text-neutral-950"
+      className="flex min-h-full w-full min-w-0 max-w-full flex-1 flex-col overflow-x-hidden rounded-2xl bg-[#FFFFFF] p-3 text-neutral-950"
     >
     <SummaryStep
       config={config}

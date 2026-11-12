@@ -229,18 +229,18 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
       
       {/* Modal */}
       <div 
-        className={`shop-canvas fixed top-0 right-0 z-[100] flex h-full w-full transform flex-col border-l border-neutral-200 bg-[#FDFDFD] shadow-2xl transition-transform duration-300 ease-in-out sm:max-w-md ${
+        className={`shop-canvas fixed top-0 right-0 z-[100] flex h-full w-full transform flex-col border-l border-neutral-200 bg-[#FFFFFF] shadow-2xl transition-transform duration-300 ease-in-out sm:max-w-md ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* Header */}
         <div className="flex-shrink-0 flex items-center justify-between p-6 border-b border-white/5">
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-2xl font-bold text-neutral-950">
             Koszyk {itemCount > 0 && `(${itemCount})`}
           </h2>
           <button
             onClick={onClose}
-            className="text-neutral-400 hover:text-white transition-colors"
+            className="text-neutral-500 hover:text-neutral-950 transition-colors"
           >
             <X className="h-6 w-6" />
           </button>
@@ -265,7 +265,7 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
             {!isLoading && !error && items.length === 0 && (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <ShoppingBag className="h-16 w-16 text-gray-400 mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">
+                <h3 className="text-xl font-semibold text-neutral-950 mb-2">
                   Twój koszyk jest pusty
                 </h3>
                 <p className="text-neutral-400 mb-6">
@@ -273,7 +273,7 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
                 </p>
                 <button
                   onClick={handleContinueShopping}
-                  className="px-6 py-2 bg-white/5 text-white rounded-lg hover:bg-white/10 transition-colors"
+                  className="px-6 py-2 bg-neutral-950 text-white rounded-lg hover:bg-neutral-800 transition-colors"
                 >
                   Kontynuuj zakupy
                 </button>
@@ -296,10 +296,10 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
 
           {/* Footer - tylko gdy są produkty */}
           {!isLoading && !error && items.length > 0 && (
-            <div className="flex-shrink-0 space-y-4 border-t border-neutral-200 bg-[#FDFDFD] p-6">
+            <div className="flex-shrink-0 space-y-4 border-t border-neutral-200 bg-[#FFFFFF] p-6">
               {/* Discount Code Input */}
               <div className="space-y-2">
-                <Label className="text-white text-sm font-medium">Kod rabatowy</Label>
+                <Label className="text-neutral-950 text-sm font-medium">Kod rabatowy</Label>
                 <div className="flex space-x-2">
                   <Input 
                     value={discountCode}
@@ -340,23 +340,23 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
 
               {/* Podsumowanie */}
               <div className="space-y-2">
-                <div className="flex justify-between text-neutral-300">
+                <div className="flex justify-between text-neutral-700">
                   <span>Dywaniki:</span>
                   <span>{PricingService.formatPrice(cart.subtotal)}</span>
                 </div>
                 {discountApplied && (
-                  <div className="flex justify-between text-green-400 text-sm">
+                  <div className="flex justify-between text-green-700 text-sm">
                     <span>Zniżka ({discountCode}):</span>
                     <span>-{PricingService.formatPrice(discountAmount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-neutral-300">
+                <div className="flex justify-between text-neutral-700">
                   <span>Wysyłka:</span>
-                  <span className={cart.shippingCost === 0 ? 'text-green-400' : ''}>
+                  <span className={cart.shippingCost === 0 ? 'text-green-700' : ''}>
                     {cart.shippingCost === 0 ? 'Gratis' : PricingService.formatPrice(cart.shippingCost)}
                   </span>
                 </div>
-                <div className="flex justify-between text-lg font-bold text-white border-t border-white/10 pt-2">
+                <div className="flex justify-between text-lg font-bold text-neutral-950 border-t border-neutral-200 pt-2">
                   <span>Razem:</span>
                   <span>{PricingService.formatPrice(finalTotal)}</span>
                 </div>
@@ -373,7 +373,7 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
                 
                 <button
                   onClick={handleContinueShopping}
-                  className="w-full border border-white/10 text-white py-3 px-6 rounded-lg hover:bg-white/5 transition-colors"
+                  className="w-full border border-neutral-300 text-neutral-950 py-3 px-6 rounded-lg hover:bg-neutral-100 transition-colors"
                 >
                   Kontynuuj zakupy
                 </button>

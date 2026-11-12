@@ -248,7 +248,7 @@ function SearchDropdown() {
             md:transform md:-translate-x-1/2
             w-full
             md:w-auto md:max-w-2xl
-            shop-canvas bg-[#FDFDFD] md:bg-[#FDFDFD]
+            shop-canvas bg-[#FFFFFF] md:bg-[#FFFFFF]
             backdrop-blur-sm
             border-0 md:border border-white/5
             rounded-none md:rounded-lg

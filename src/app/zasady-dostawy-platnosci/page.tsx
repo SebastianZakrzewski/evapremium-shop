@@ -7,12 +7,12 @@ export const metadata: Metadata = {
 
 export default function DeliveryAndPaymentTermsPage() {
   return (
-    <div className="min-h-screen bg-[#FDFDFD]">
+    <div className="min-h-screen bg-[#FFFFFF]">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-white mb-8 text-center">Zasady dostawy i płatności</h1>
           
-          <div className="bg-[#FDFDFD] border border-white/5 rounded-lg shadow-lg p-8 space-y-8">
+          <div className="bg-[#FFFFFF] border border-white/5 rounded-lg shadow-lg p-8 space-y-8">
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">KOSZT, TERMIN I SPOSOBY DOSTAWY PRODUKTU</h2>
               <div className="text-gray-400 leading-relaxed space-y-4">
@@ -25,7 +25,7 @@ export default function DeliveryAndPaymentTermsPage() {
                   Termin dostawy Produktu składa się z dwóch elementów:
                 </p>
                 
-                <div className="bg-[#FDFDFD] border border-white/5 p-6 rounded-lg my-4">
+                <div className="bg-[#FFFFFF] border border-white/5 p-6 rounded-lg my-4">
                   <h3 className="text-lg font-semibold text-white mb-3">Czasu kompletowania Produktu</h3>
                   <p className="text-gray-400 mb-3">
                     który wynosi do 14 dni roboczych od momentu:
@@ -38,7 +38,7 @@ export default function DeliveryAndPaymentTermsPage() {
                   </ul>
                 </div>
 
-                <div className="bg-[#FDFDFD] border border-white/5 p-6 rounded-lg my-4">
+                <div className="bg-[#FFFFFF] border border-white/5 p-6 rounded-lg my-4">
                   <h3 className="text-lg font-semibold text-white mb-3">+ Czasu dostawy przez przewoźnika</h3>
                   <p className="text-gray-400">
                     który wynosi zazwyczaj do 7 dni roboczych od momentu nadania przesyłki na terenie Polski (dostawy realizowane są tylko w dni robocze,
@@ -55,15 +55,15 @@ export default function DeliveryAndPaymentTermsPage() {
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
-                  <div className="bg-[#FDFDFD] border border-white/5 p-4 rounded-lg text-center">
+                  <div className="bg-[#FFFFFF] border border-white/5 p-4 rounded-lg text-center">
                     <h4 className="text-lg font-semibold text-white mb-2">Standard</h4>
                     <p className="text-gray-400">do 14 dni roboczych</p>
                   </div>
-                  <div className="bg-[#FDFDFD] border border-white/5 p-4 rounded-lg text-center">
+                  <div className="bg-[#FFFFFF] border border-white/5 p-4 rounded-lg text-center">
                     <h4 className="text-lg font-semibold text-white mb-2">Ekspres</h4>
                     <p className="text-gray-400">do 7 dni roboczych</p>
                   </div>
-                  <div className="bg-[#FDFDFD] border border-white/5 p-4 rounded-lg text-center">
+                  <div className="bg-[#FFFFFF] border border-white/5 p-4 rounded-lg text-center">
                     <h4 className="text-lg font-semibold text-white mb-2">Premium</h4>
                     <p className="text-gray-400">do 3 dni roboczych</p>
                   </div>
@@ -101,9 +101,9 @@ export default function DeliveryAndPaymentTermsPage() {
                 </p>
 
                 <div className="space-y-6">
-                  <div className="bg-[#FDFDFD] border border-white/5 p-6 rounded-lg">
+                  <div className="bg-[#FFFFFF] border border-white/5 p-6 rounded-lg">
                     <h3 className="text-xl font-semibold text-white mb-4">1.1. Przelew tradycyjny na rachunek bankowy Sprzedawcy:</h3>
-                    <div className="bg-[#FDFDFD] border border-white/10 p-4 rounded-lg">
+                    <div className="bg-[#FFFFFF] border border-white/10 p-4 rounded-lg">
                       <div className="text-gray-400 space-y-2">
                         <p><strong>Klaudia Kłosińska</strong></p>
                         <p>ul. Tadeusza Kościuszki 34/1</p>
@@ -118,7 +118,7 @@ export default function DeliveryAndPaymentTermsPage() {
                     </p>
                   </div>
 
-                  <div className="bg-[#FDFDFD] border border-white/5 p-6 rounded-lg">
+                  <div className="bg-[#FFFFFF] border border-white/5 p-6 rounded-lg">
                     <h3 className="text-xl font-semibold text-white mb-4">1.2. Płatność online</h3>
                     <p className="text-gray-400 mb-4">
                       za pośrednictwem systemów płatności elektronicznych (Stripe, BLIK, karta płatnicza).
@@ -139,7 +139,7 @@ export default function DeliveryAndPaymentTermsPage() {
                     </div>
                   </div>
 
-                  <div className="bg-[#FDFDFD] border border-white/5 p-6 rounded-lg">
+                  <div className="bg-[#FFFFFF] border border-white/5 p-6 rounded-lg">
                     <h3 className="text-xl font-semibold text-white mb-4">1.3. Płatność za pobraniem (przy odbiorze)</h3>
                     <p className="text-gray-400">
                       możliwa po uprzednim dokonaniu przedpłaty oraz weryfikacji danych adresowych.
@@ -177,7 +177,7 @@ export default function DeliveryAndPaymentTermsPage() {
               </div>
             </section>
 
-            <div className="bg-[#FDFDFD] border border-white/5 p-6 rounded-lg mt-8">
+            <div className="bg-[#FFFFFF] border border-white/5 p-6 rounded-lg mt-8">
               <h3 className="text-lg font-semibold text-white mb-3">Kontakt w sprawach dostawy i płatności</h3>
               <div className="text-gray-400 space-y-2">
                 <p><strong>Email:</strong> 

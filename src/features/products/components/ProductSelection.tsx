@@ -51,7 +51,7 @@ export default function ProductSelection() {
     return (
       <section
         id="products"
-        className="w-full bg-[#FDFDFD] py-7 md:py-9 flex items-center justify-center relative"
+        className="w-full bg-[#FFFFFF] py-7 md:py-9 flex items-center justify-center relative"
         role="region"
         aria-label="Popularne marki samochodów - ładowanie"
       >
@@ -72,7 +72,7 @@ export default function ProductSelection() {
   return (
     <section
       id="products"
-      className="w-full bg-[#FDFDFD] py-8 md:py-10 relative"
+      className="w-full bg-[#FFFFFF] py-8 md:py-10 relative"
       role="region"
       aria-label="Popularne marki samochodów - wybierz markę i znajdź dywaniki"
     >

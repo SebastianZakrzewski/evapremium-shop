@@ -23,7 +23,7 @@ export default function ModelNavigationBar({
   }
 
   return (
-    <div className="w-full border-b border-neutral-200 bg-[#FDFDFD]">
+    <div className="w-full border-b border-neutral-200 bg-[#FFFFFF]">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-center gap-2 overflow-x-auto scrollbar-hide pb-2">
           <button

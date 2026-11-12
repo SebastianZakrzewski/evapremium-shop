@@ -939,7 +939,7 @@ export default function CheckoutSection() {
   // Strona sukcesu
   if (orderSuccess && orderNumber) {
     return (
-      <div className="min-h-screen bg-[#FDFDFD] text-white">
+      <div className="min-h-screen bg-[#FFFFFF] text-white">
         <div className="mx-auto flex min-h-screen max-w-xl flex-col justify-center px-6 py-20">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-white/45">
             EVA Premium
@@ -968,7 +968,7 @@ export default function CheckoutSection() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] pb-safe text-white">
+    <div className="min-h-screen bg-[#FFFFFF] pb-safe text-white">
       <div className="mx-auto max-w-6xl px-5 py-10 md:px-8 md:py-16">
         <div id="checkout-step-top" ref={checkoutTopRef} className="mb-10 flex flex-col gap-8 md:mb-14 md:flex-row md:items-end md:justify-between">
           <div>

@@ -55,7 +55,7 @@ function ProductCardV2({ product }: ProductCardV2Props) {
 
   return (
     <Link href={configuratorUrl} className="group block h-full">
-      <article className="h-full flex flex-col bg-[#FDFDFD] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1">
+      <article className="h-full flex flex-col bg-[#FFFFFF] border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-red-900/10 hover:-translate-y-1">
         <div className="relative aspect-square bg-gradient-to-br from-gray-900 to-black overflow-hidden p-8 flex items-center justify-center">
           {product.imageSrc ? (
             <div className="relative w-full h-full">

@@ -70,7 +70,7 @@ export default function ContactSection() {
   };
 
   return (
-    <div className="bg-[#FDFDFD] pb-20 pt-10">
+    <div className="bg-[#FFFFFF] pb-20 pt-10">
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 md:px-6">
         <div className="grid lg:grid-cols-12 gap-12">
           {/* Left Side - Contact Info & Map */}
@@ -83,7 +83,7 @@ export default function ContactSection() {
                   <a 
                     key={idx} 
                     href={info.action}
-                    className="flex items-center gap-5 p-5 rounded-xl bg-[#FDFDFD] border border-white/5 hover:border-white/20 hover:bg-neutral-100 transition-all duration-300 group"
+                    className="flex items-center gap-5 p-5 rounded-xl bg-[#FFFFFF] border border-white/5 hover:border-white/20 hover:bg-neutral-100 transition-all duration-300 group"
                   >
                     <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-110", info.bg)}>
                       <Icon className={cn("w-6 h-6", info.color)} />
@@ -115,7 +115,7 @@ export default function ContactSection() {
               <div className="absolute inset-0 pointer-events-none border-2 border-white/5 rounded-2xl" />
             </div>
             
-            <div className="p-6 bg-[#FDFDFD] rounded-xl border border-white/5">
+            <div className="p-6 bg-[#FFFFFF] rounded-xl border border-white/5">
               <div className="flex items-center gap-3 mb-4">
                 <Building2 className="w-5 h-5 text-gray-400" />
                 <h4 className="font-bold text-white">Dane Firmowe</h4>
@@ -131,7 +131,7 @@ export default function ContactSection() {
 
           {/* Right Side - Form */}
           <div className="lg:col-span-7">
-            <div className="bg-[#FDFDFD] border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
+            <div className="bg-[#FFFFFF] border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/5 blur-[80px] rounded-full pointer-events-none" />
               
               <div className="flex items-center gap-3 mb-8">

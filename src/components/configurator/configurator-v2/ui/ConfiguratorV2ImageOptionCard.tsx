@@ -50,7 +50,7 @@ export const ConfiguratorV2ImageOptionCard = ({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`flex flex-col rounded-2xl border bg-[#FDFDFD] px-2 py-2 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950 ${
+      className={`flex flex-col rounded-2xl border bg-[#FFFFFF] px-2 py-2 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950 ${
         inline ? "w-[8.75rem]" : "w-full"
       } ${
         selected
@@ -58,7 +58,7 @@ export const ConfiguratorV2ImageOptionCard = ({
           : "border-neutral-300 hover:border-neutral-500"
       }`}
     >
-      <span className="mb-2 flex h-24 items-center justify-center overflow-hidden rounded-xl bg-[#FDFDFD]">
+      <span className="mb-2 flex h-24 items-center justify-center overflow-hidden rounded-xl bg-[#FFFFFF]">
         <Image
           src={imageSrc}
           alt={imageAlt || title}

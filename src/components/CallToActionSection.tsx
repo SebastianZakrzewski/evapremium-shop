@@ -7,7 +7,7 @@ export default function CallToActionSection() {
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold mb-4">Zamów swoje dywaniki EVA już teraz!</h2>
         <p className="mb-8">Wybierz model, kolor i wariant – a my zajmiemy się resztą.</p>
-        <Link href="/modele" className="inline-block bg-[#FDFDFD] px-8 py-4 rounded-full font-semibold text-lg hover:bg-[#FDFDFD] transition">Zobacz modele aut</Link>
+        <Link href="/modele" className="inline-block bg-[#FFFFFF] px-8 py-4 rounded-full font-semibold text-lg hover:bg-[#FFFFFF] transition">Zobacz modele aut</Link>
       </div>
     </section>
   );

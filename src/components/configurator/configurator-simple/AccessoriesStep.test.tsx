@@ -165,7 +165,7 @@ describe("AccessoriesStep mounting flow", () => {
     )
 
     const card = screen.getByLabelText(/Wybierz podpiętkę Podpiętka gumowa/i)
-    expect(card).toHaveClass("bg-[#FDFDFD]", "border-neutral-300")
+    expect(card).toHaveClass("bg-[#FFFFFF]", "border-neutral-300")
     expect(card.className).not.toContain("bg-[#111]")
     expect(screen.getByText("Podpiętka gumowa")).toHaveClass("text-neutral-950")
   })

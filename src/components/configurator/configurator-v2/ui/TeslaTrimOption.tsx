@@ -26,7 +26,7 @@ export const TeslaTrimOption = ({
     type="button"
     onClick={onSelect}
     aria-pressed={selected}
-    className={`flex min-h-11 w-full items-center gap-3 rounded-2xl border bg-[#FDFDFD] px-3.5 py-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950 ${
+    className={`flex min-h-11 w-full items-center gap-3 rounded-2xl border bg-[#FFFFFF] px-3.5 py-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950 ${
       selected
         ? "border-2 border-neutral-950"
         : "border-neutral-300 hover:border-neutral-500"

@@ -201,7 +201,7 @@ export default function Navbar() {
         </div>
         
         {/* Mobile / tablet Menu */}
-        <div className={`shop-canvas fixed left-0 top-16 z-[40] w-full overflow-hidden border-b border-neutral-200 bg-[#FDFDFD] pb-safe shadow-xl transition-all duration-300 ease-in-out md:top-20 lg:hidden ${open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
+        <div className={`shop-canvas fixed left-0 top-16 z-[40] w-full overflow-hidden border-b border-neutral-200 bg-[#FFFFFF] pb-safe shadow-xl transition-all duration-300 ease-in-out md:top-20 lg:hidden ${open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
           <div className="flex flex-col gap-4 py-8 px-6">
             <Link href="/dywaniki" className="text-neutral-950 hover:text-red-600 text-lg font-medium transition-colors" onClick={() => setOpen(false)}>
               Dywaniki Samochodowe

@@ -7,12 +7,12 @@ export const metadata: Metadata = {
 
 export default function ReturnsAndExchangesPage() {
   return (
-    <div className="min-h-screen bg-[#FDFDFD]">
+    <div className="min-h-screen bg-[#FFFFFF]">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-white mb-8 text-center">Zwroty i wymiany</h1>
           
-          <div className="bg-[#FDFDFD] border border-white/5 rounded-lg shadow-lg p-8 space-y-8">
+          <div className="bg-[#FFFFFF] border border-white/5 rounded-lg shadow-lg p-8 space-y-8">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-white mb-4">POLITYKA ZWROTÓW I REKLAMACJI</h1>
               <div className="text-sm text-gray-400">
@@ -74,7 +74,7 @@ export default function ReturnsAndExchangesPage() {
                 <p>
                   Aby skorzystać z prawa odstąpienia od umowy, muszą Państwo poinformować nas:
                 </p>
-                <div className="bg-[#FDFDFD] border border-white/5 p-6 rounded-lg my-4">
+                <div className="bg-[#FFFFFF] border border-white/5 p-6 rounded-lg my-4">
                   <div className="text-gray-400 space-y-2">
                     <p><strong>Klaudia Kłosińska</strong></p>
                     <p>ul. Tadeusza Kościuszki 34/1</p>
@@ -156,7 +156,7 @@ export default function ReturnsAndExchangesPage() {
                       </a>
                     </li>
                     <li>pisemnie na adres:
-                      <div className="bg-[#FDFDFD] border border-white/5 p-4 rounded-lg my-2 ml-4">
+                      <div className="bg-[#FFFFFF] border border-white/5 p-4 rounded-lg my-2 ml-4">
                         <div className="text-gray-400 space-y-1">
                           <p>Klaudia Kłosińska</p>
                           <p>ul. Tadeusza Kościuszki 34/1</p>
@@ -194,7 +194,7 @@ export default function ReturnsAndExchangesPage() {
               </div>
             </section>
 
-            <div className="bg-[#FDFDFD] border border-white/5 p-6 rounded-lg mt-8">
+            <div className="bg-[#FFFFFF] border border-white/5 p-6 rounded-lg mt-8">
               <h3 className="text-lg font-semibold text-white mb-3">Kontakt w sprawach zwrotów i reklamacji</h3>
               <div className="text-gray-400 space-y-2">
                 <p><strong>Email:</strong> 

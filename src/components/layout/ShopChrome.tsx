@@ -9,7 +9,7 @@ import { readModelCardQuery, shouldPinShopChrome } from '@/features/brands/model
 import { persistLandingClickIds } from '@/lib/tracking/attribution/collect'
 
 const pageOffsetClassName =
-  'shop-canvas bg-[#FDFDFD] text-neutral-950 pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden'
+  'shop-canvas bg-[#FFFFFF] text-neutral-950 pt-16 md:pt-20 lg:pt-24 max-w-full overflow-x-hidden'
 const configuratorFrameClassName =
   'box-border min-h-svh max-w-full pb-[env(safe-area-inset-bottom)] pt-[var(--configurator-header-offset,4rem)]'
 
