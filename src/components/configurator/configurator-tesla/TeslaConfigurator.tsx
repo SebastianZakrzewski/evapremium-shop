@@ -732,7 +732,7 @@ export default function TeslaConfigurator() {
     <TeslaStickyBar
       total={total}
       disabled={!mapperResult.isReadyForCart && !configurationInCart}
-      hint={showPriceBar && firstMissing ? firstMissing.hint : null}
+      hint={firstMissing ? firstMissing.hint : null}
       pending={isAdding || cartLoading}
       inCart={configurationInCart}
       onPriceClick={() => setPriceOpen(true)}
@@ -770,8 +770,8 @@ export default function TeslaConfigurator() {
 
   return (
     <div className="bg-white text-[#171a20]" style={{ fontFamily: "var(--font-montserrat), sans-serif" }}>
-      <div className="lg:grid lg:h-svh lg:grid-cols-[minmax(0,1fr)_minmax(22rem,34rem)] lg:overflow-hidden">
-        <div className="bg-white lg:flex lg:h-svh lg:items-center lg:bg-[#f5f5f5]">
+      <div className="lg:grid lg:h-[calc(100svh-var(--configurator-header-offset,4rem)-88px-env(safe-area-inset-bottom))] lg:grid-cols-[minmax(0,1fr)_minmax(22rem,34rem)] lg:overflow-hidden">
+        <div className="bg-white lg:flex lg:h-full lg:min-h-0 lg:items-center lg:bg-[#f5f5f5]">
           <div
             data-preview-mode={showMat ? "mat" : "car"}
             className="w-full max-lg:fixed max-lg:inset-x-0 max-lg:z-20 max-lg:bg-white max-lg:[transform:translateY(calc(-1*var(--configurator-header-shift,0px)))] max-lg:transition-transform max-lg:duration-[220ms] max-lg:ease-out motion-reduce:transition-none"
@@ -790,15 +790,16 @@ export default function TeslaConfigurator() {
           />
         </div>
 
-        <div className="lg:flex lg:h-svh lg:min-h-0 lg:flex-col">
+        <div className="lg:flex lg:h-full lg:min-h-0 lg:flex-col">
         <div
           id="configurator-options"
-          className="lg:min-h-0 lg:flex-1 lg:overflow-y-auto"
+          className={`lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:!pb-6 ${
+            showPriceBar ? "max-lg:pb-[calc(70px+env(safe-area-inset-bottom)+16px)]" : "max-lg:pb-6"
+          }`}
           style={{
             overflowAnchor: "none",
-            padding: showPriceBar
-              ? `0 ${TESLA_LAYOUT.pagePaddingX}px calc(${TESLA_LAYOUT.stickyBarMinHeight}px + env(safe-area-inset-bottom) + 16px)`
-              : `0 ${TESLA_LAYOUT.pagePaddingX}px calc(24px + env(safe-area-inset-bottom))`,
+            paddingLeft: TESLA_LAYOUT.pagePaddingX,
+            paddingRight: TESLA_LAYOUT.pagePaddingX,
           }}
         >
           {carSummary}
@@ -1019,7 +1020,7 @@ export default function TeslaConfigurator() {
         </div>
         <div
           data-configurator-sticky
-          className={`fixed inset-x-0 bottom-0 z-40 bg-white lg:static lg:shrink-0 ${showPriceBar ? "" : "hidden"}`}
+          className={`fixed inset-x-0 bottom-0 z-40 w-full bg-white lg:h-[88px] ${showPriceBar ? "" : "max-lg:hidden"}`}
         >
           {sticky}
         </div>

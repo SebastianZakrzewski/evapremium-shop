@@ -46,38 +46,44 @@ export default function Navbar() {
 
     let scrollState = initialHeaderScroll(window.scrollY)
     let frame = 0
-    const read = () => {
+    const read = (source?: EventTarget | null) => {
       frame = 0
-      setScrolled(window.scrollY > 20)
+      const optionsScroller =
+        source instanceof HTMLElement && source.id === "configurator-options" ? source : null
+      const y = optionsScroller ? optionsScroller.scrollTop : window.scrollY
+      const maxY = optionsScroller
+        ? Math.max(0, optionsScroller.scrollHeight - optionsScroller.clientHeight)
+        : Math.max(0, root.scrollHeight - window.innerHeight)
+      setScrolled(y > 20)
       if (!onConfigurator || open) {
         if (scrollState.hidden) {
-          scrollState = { ...initialHeaderScroll(window.scrollY), hidden: false }
+          scrollState = { ...initialHeaderScroll(y), hidden: false }
           applyChrome(false)
           setHidden(false)
         }
         return
       }
-      const maxY = Math.max(0, root.scrollHeight - window.innerHeight)
-      const next = nextHeaderScroll(scrollState, window.scrollY, maxY, navHeight())
+      const next = nextHeaderScroll(scrollState, y, maxY, navHeight())
       const changed = next.hidden !== scrollState.hidden
       scrollState = next
       if (!changed) return
       applyChrome(next.hidden)
       setHidden(next.hidden)
     }
-    const handleScroll = () => {
+    const handleScroll = (event: Event) => {
       if (frame) return
-      frame = requestAnimationFrame(read)
+      const source = event.target
+      frame = requestAnimationFrame(() => read(source))
     }
     const handleResize = () => {
       applyChrome(scrollState.hidden)
     }
-    window.addEventListener("scroll", handleScroll, { passive: true })
+    document.addEventListener("scroll", handleScroll, { passive: true, capture: true })
     window.addEventListener("resize", handleResize)
-    handleScroll()
+    read(null)
     return () => {
       cancelAnimationFrame(frame)
-      window.removeEventListener("scroll", handleScroll)
+      document.removeEventListener("scroll", handleScroll, true)
       window.removeEventListener("resize", handleResize)
     }
   }, [onConfigurator, open]);

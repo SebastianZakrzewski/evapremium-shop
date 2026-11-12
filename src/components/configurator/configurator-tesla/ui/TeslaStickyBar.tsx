@@ -39,7 +39,7 @@ export const TeslaStickyBar = ({
   const cartLabel = narrow ? "W koszyku · Do koszyka" : "W koszyku · Przejdź do koszyka"
   return (
   <div
-    className="border-t bg-white"
+    className="border-t bg-white lg:flex lg:h-full lg:items-center lg:!min-h-0 lg:!p-0"
     style={{
       borderColor: TESLA_LAYOUT.border,
       minHeight: TESLA_LAYOUT.stickyBarMinHeight,
@@ -49,7 +49,7 @@ export const TeslaStickyBar = ({
     {hint ? (
       <p
         id="configurator-cta-hint"
-        className="mb-2"
+        className="mb-2 lg:hidden"
         style={{
           fontSize: TESLA_LAYOUT.captionSize,
           lineHeight: `${TESLA_LAYOUT.captionLine}px`,
@@ -59,27 +59,41 @@ export const TeslaStickyBar = ({
         {hint}
       </p>
     ) : null}
-    <div className="flex items-center gap-3">
-      <button
-        type="button"
-        onClick={onPriceClick}
-        disabled={total <= 0}
-        className="flex shrink-0 items-center gap-1 whitespace-nowrap text-left font-medium disabled:opacity-40"
-        style={{
-          fontSize: TESLA_LAYOUT.priceFontSize,
-          lineHeight: `${TESLA_LAYOUT.priceLineHeight}px`,
-          color: TESLA_LAYOUT.text,
-        }}
-        aria-label="Pokaż szczegóły ceny"
-      >
-        <span className="whitespace-nowrap">{total > 0 ? formatPricePln(total) : "—"}</span>
-        <span aria-hidden>⌄</span>
-      </button>
+    <div className="mx-auto flex w-full items-center gap-3 lg:max-w-7xl lg:justify-between lg:px-8">
+      <div className="flex min-w-0 items-center gap-4">
+        <button
+          type="button"
+          onClick={onPriceClick}
+          disabled={total <= 0}
+          className="flex shrink-0 items-center gap-1 whitespace-nowrap text-left font-medium disabled:opacity-40"
+          style={{
+            fontSize: TESLA_LAYOUT.priceFontSize,
+            lineHeight: `${TESLA_LAYOUT.priceLineHeight}px`,
+            color: TESLA_LAYOUT.text,
+          }}
+          aria-label="Pokaż szczegóły ceny"
+        >
+          <span className="whitespace-nowrap">{total > 0 ? formatPricePln(total) : "—"}</span>
+          <span aria-hidden>⌄</span>
+        </button>
+        {hint ? (
+          <p
+            className="hidden truncate lg:block"
+            style={{
+              fontSize: TESLA_LAYOUT.captionSize,
+              lineHeight: `${TESLA_LAYOUT.captionLine}px`,
+              color: TESLA_LAYOUT.muted,
+            }}
+          >
+            {hint}
+          </p>
+        ) : null}
+      </div>
       <button
         type="button"
         onClick={onAddToCart}
         aria-describedby={hint ? "configurator-cta-hint" : undefined}
-        className="min-w-0 flex-1 whitespace-nowrap font-medium text-white"
+        className="min-w-0 flex-1 whitespace-nowrap font-medium text-white lg:w-80 lg:flex-none"
         style={{
           height: TESLA_LAYOUT.buttonHeight,
           borderRadius: TESLA_LAYOUT.buttonRadius,
