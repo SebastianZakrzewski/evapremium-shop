@@ -370,7 +370,7 @@ export default function TermsOfServicePage() {
                 <ul className="list-disc list-inside text-gray-400 space-y-2 ml-4">
                   <li>mediację,</li>
                   <li>sądy polubowne,</li>
-                  <li>platformę ODR: <a href="https://ec.europa.eu/consumers/odr" className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr</a>.</li>
+                  <li>platformę ODR: <a href="https://ec.europa.eu/consumers/odr" className="text-blue-800 underline" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr</a>.</li>
                 </ul>
                 <p>Regulamin obowiązuje od dnia jego publikacji na stronie Sklepu.</p>
               </div>
