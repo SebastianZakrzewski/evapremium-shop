@@ -770,7 +770,7 @@ export default function TeslaConfigurator() {
 
   return (
     <div className="bg-white text-[#171a20]" style={{ fontFamily: "var(--font-montserrat), sans-serif" }}>
-      <div className="lg:grid lg:h-[calc(100svh-var(--configurator-header-offset,4rem))] lg:grid-cols-[minmax(0,1fr)_minmax(22rem,34rem)] lg:overflow-hidden">
+      <div className="lg:grid lg:h-[calc(100svh-var(--configurator-header-offset,4rem)-88px-env(safe-area-inset-bottom))] lg:grid-cols-[minmax(0,1fr)_minmax(22rem,34rem)] lg:overflow-hidden">
         <div className="bg-white lg:flex lg:h-full lg:min-h-0 lg:items-center lg:bg-[#f5f5f5]">
           <div
             data-preview-mode={showMat ? "mat" : "car"}
@@ -1020,7 +1020,7 @@ export default function TeslaConfigurator() {
         </div>
         <div
           data-configurator-sticky
-          className={`fixed inset-x-0 bottom-0 z-40 bg-white lg:static lg:z-auto lg:shrink-0 ${showPriceBar ? "" : "max-lg:hidden"}`}
+          className={`fixed inset-x-0 bottom-0 z-40 w-full bg-white lg:h-[88px] ${showPriceBar ? "" : "max-lg:hidden"}`}
         >
           {sticky}
         </div>
