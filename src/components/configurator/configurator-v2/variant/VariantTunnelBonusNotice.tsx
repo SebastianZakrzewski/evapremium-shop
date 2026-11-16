@@ -6,7 +6,7 @@ import {
 } from "./variantTunnelBonus"
 
 export const VariantTunnelBonusNotice = () => (
-  <div className="mt-3 flex items-center gap-3 rounded-2xl border border-neutral-300 bg-[#FDFDFD] px-3 py-2.5">
+  <div className="mt-3 flex items-center gap-3 rounded-2xl border border-neutral-300 bg-[#FFFFFF] px-3 py-2.5">
     <Image
       src={VARIANT_TUNNEL_BONUS_ICON_SRC}
       alt={VARIANT_TUNNEL_BONUS_ALT}

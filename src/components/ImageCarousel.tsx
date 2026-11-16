@@ -126,14 +126,14 @@ export default function ImageCarousel<T>({
   // Jeśli nie ma elementów, nie renderuj karuzeli
   if (!filteredItems || filteredItems.length === 0) {
     return (
-      <div className={`relative bg-[#FDFDFD] py-16 flex flex-col justify-center items-center ${className}`}>
+      <div className={`relative bg-[#FFFFFF] py-16 flex flex-col justify-center items-center ${className}`}>
         <div className="relative mb-6 w-full max-w-xs">
           <input
             type="text"
             placeholder="Szukaj marki..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg bg-[#FDFDFD] text-white border border-white/5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
+            className="w-full px-4 py-3 rounded-lg bg-[#FFFFFF] text-white border border-white/5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
           />
           <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
         </div>
@@ -184,14 +184,14 @@ export default function ImageCarousel<T>({
   };
 
   return (
-    <div className={`relative bg-[#FDFDFD] py-16 flex flex-col justify-center items-center ${className}`}>
+    <div className={`relative bg-[#FFFFFF] py-16 flex flex-col justify-center items-center ${className}`}>
       <div className="relative mb-6 w-full max-w-xs">
         <input
           type="text"
           placeholder="Szukaj marki..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full px-4 py-3 rounded-lg bg-[#FDFDFD] text-white border border-white/5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
+          className="w-full px-4 py-3 rounded-lg bg-[#FFFFFF] text-white border border-white/5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400"
         />
         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
       </div>

@@ -353,7 +353,7 @@ export default function CarModelsSection() {
   // Jeśli nie ma wybranej marki, pokaż sekcję wyboru marek
   if (!brandParam) {
     return (
-      <section className="py-8 md:py-12 bg-[#FDFDFD]">
+      <section className="py-8 md:py-12 bg-[#FFFFFF]">
         <div className="container mx-auto px-4">
           {/* Breadcrumbs */}
           <nav className="mb-6" aria-label="Breadcrumb">
@@ -429,10 +429,10 @@ export default function CarModelsSection() {
   }
 
   return (
-    <div className={pinnedCard ? "bg-[#111] text-white" : "min-h-screen bg-[#FDFDFD] text-white pb-20"}>
+    <div className={pinnedCard ? "bg-[#111] text-white" : "min-h-screen bg-[#FFFFFF] text-white pb-20"}>
       {/* Hero Header */}
       {pinnedCard ? null : (
-      <div className="bg-[#FDFDFD] text-white">
+      <div className="bg-[#FFFFFF] text-white">
         <div className="container mx-auto px-4 pb-10 pt-8 md:pb-12 md:pt-12">
           <nav className="flex items-center gap-2 text-xs tracking-wide text-white/40">
             <Link href="/" className="transition-colors hover:text-white">Home</Link>
@@ -482,7 +482,7 @@ export default function CarModelsSection() {
             <Button 
               onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
               variant="outline" 
-              className="w-full flex items-center justify-between border-neutral-300 bg-[#FDFDFD] text-neutral-950 hover:bg-neutral-100"
+              className="w-full flex items-center justify-between border-neutral-300 bg-[#FFFFFF] text-neutral-950 hover:bg-neutral-100"
             >
               <span className="flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4" />
@@ -638,7 +638,7 @@ export default function CarModelsSection() {
                     const card = (
                       <div className={pinnedCard
                         ? "flex flex-col bg-[#111]"
-                        : "h-full flex flex-col rounded-xl border border-neutral-300 bg-[#FDFDFD] overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-neutral-400 hover:shadow-md"}>
+                        : "h-full flex flex-col rounded-xl border border-neutral-300 bg-[#FFFFFF] overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-neutral-400 hover:shadow-md"}>
                         <div className={pinnedCard
                           ? "w-full bg-[#111] leading-none"
                           : "relative aspect-square overflow-hidden bg-neutral-100"}>
@@ -729,7 +729,7 @@ export default function CarModelsSection() {
                     return (
                       <article
                         key={model.id}
-                        className="group block h-full cursor-pointer rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-[#FDFDFD]"
+                        className="group block h-full cursor-pointer rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-[#FFFFFF]"
                       >
                         {card}
                       </article>

@@ -26,7 +26,7 @@ export default function BrandPage({ params }: BrandPageProps) {
 
   if (isRedirecting) {
     return (
-      <div className="min-h-screen bg-[#FDFDFD] flex items-center justify-center">
+      <div className="min-h-screen bg-[#FFFFFF] flex items-center justify-center">
         <div className="text-white text-xl">Przekierowywanie...</div>
       </div>
     );

@@ -143,7 +143,7 @@ export default function ThreeDMatsSection() {
   return (
     <section 
       id="3d-mats-section" 
-      className="w-full bg-[#FDFDFD] py-20 md:py-24 relative overflow-hidden"
+      className="w-full bg-[#FFFFFF] py-20 md:py-24 relative overflow-hidden"
       role="region"
       aria-label="Dywaniki 3D z rantami - szczegóły produktu"
     >
@@ -166,7 +166,7 @@ export default function ThreeDMatsSection() {
             <div className="relative group">
               {/* Kontener z obrazem - spójny z BrandCard/Gallery */}
               <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
-                <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-[#FDFDFD]">
+                <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-[#FFFFFF]">
                   <Image
                     ref={imageRef}
                     src={mainImage}

@@ -34,13 +34,13 @@ const AccessoryCard = ({ accessory, onAddToCart, onView }: AccessoryCardProps) =
 
   return (
     <article
-      className="group block h-full cursor-pointer rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-[#FDFDFD]"
+      className="group block h-full cursor-pointer rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-[#FFFFFF]"
       tabIndex={0}
       aria-label={accessory.name}
       onClick={handleOpen}
       onKeyDown={handleKeyDown}
     >
-      <div className="flex h-full flex-col overflow-hidden rounded-xl border border-neutral-300 bg-[#FDFDFD] transition-all duration-300 hover:-translate-y-1 hover:border-neutral-400 hover:shadow-md">
+      <div className="flex h-full flex-col overflow-hidden rounded-xl border border-neutral-300 bg-[#FFFFFF] transition-all duration-300 hover:-translate-y-1 hover:border-neutral-400 hover:shadow-md">
         <div className="relative aspect-square overflow-hidden bg-neutral-100">
           {displayImage ? (
             <Image

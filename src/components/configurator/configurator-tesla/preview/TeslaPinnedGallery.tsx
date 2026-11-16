@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import Image, { getImageProps } from "next/image"
 import { TESLA_LAYOUT, teslaImageAspectRatio } from "../tokens"
+import { TeslaPreviewLightbox } from "./TeslaPreviewLightbox"
 
 export const PINNED_IMAGE_SIZES = "(max-width: 1024px) 100vw, 62vw"
 export const PINNED_IMAGE_QUALITY = 75
@@ -79,9 +80,11 @@ export const TeslaPinnedGallery = ({
   const [fadeSrc, setFadeSrc] = useState<string | null>(null)
   const [fadeAlt, setFadeAlt] = useState("")
   const [fadeIn, setFadeIn] = useState(false)
+  const [zoomed, setZoomed] = useState(false)
   const override = useRef(false)
   const baseRef = useRef<string | null>(null)
   const touchStart = useRef<number | null>(null)
+  const suppressZoomClick = useRef(false)
   const shownSrc = fadeIn && fadeSrc ? fadeSrc : baseSrc
 
   useEffect(() => {
@@ -176,7 +179,9 @@ export const TeslaPinnedGallery = ({
           const end = event.changedTouches[0]?.clientX
           touchStart.current = null
           if (start == null || end == null) return
-          if (Math.abs(end - start) < 30) return
+          const delta = Math.abs(end - start)
+          suppressZoomClick.current = delta > 10
+          if (delta < 30) return
           go(end < start ? 1 : -1)
         }}
       >
@@ -189,7 +194,7 @@ export const TeslaPinnedGallery = ({
             quality={PINNED_IMAGE_QUALITY}
             preload={baseSrc === prioritySrc}
             fetchPriority={baseSrc === prioritySrc ? "high" : "auto"}
-            className="object-contain"
+            className="pointer-events-none object-contain"
           />
         ) : null}
         {fadeSrc ? (
@@ -201,13 +206,25 @@ export const TeslaPinnedGallery = ({
             quality={PINNED_IMAGE_QUALITY}
             preload={fadeSrc === prioritySrc}
             fetchPriority={fadeSrc === prioritySrc ? "high" : "low"}
-            className="object-contain"
+            className="pointer-events-none object-contain"
             style={{
               opacity: fadeIn ? 1 : 0,
               transition: `opacity ${TESLA_LAYOUT.crossfadeMs}ms ease`,
             }}
           />
         ) : null}
+        <button
+          type="button"
+          className="absolute inset-0 z-[1] lg:hidden"
+          aria-label="Powiększ podgląd"
+          onClick={() => {
+            if (suppressZoomClick.current) {
+              suppressZoomClick.current = false
+              return
+            }
+            if (active?.src) setZoomed(true)
+          }}
+        />
         {slides.length > 1 ? (
           <div
             className="pointer-events-none absolute inset-x-0 bottom-2 z-10 flex items-center justify-center"
@@ -242,6 +259,12 @@ export const TeslaPinnedGallery = ({
           style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0), #fff)" }}
         />
       </div>
+      <TeslaPreviewLightbox
+        open={zoomed}
+        src={active?.src ?? ""}
+        alt={active?.alt ?? "Podgląd"}
+        onClose={() => setZoomed(false)}
+      />
     </div>
   )
 }

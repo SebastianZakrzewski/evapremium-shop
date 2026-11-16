@@ -100,7 +100,7 @@ function ProductPlate({ src, alt }: { src?: string | null; alt: string }) {
           onError={() => setFailed(true)}
         />
       ) : (
-        <span className="text-[11px] font-medium tracking-[0.16em] text-white/35">EVA</span>
+        <span className="text-[11px] font-medium tracking-[0.16em] text-neutral-400">EVA</span>
       )}
     </div>
   )
@@ -119,18 +119,18 @@ function QuantityStepper({
         type="button"
         aria-label="Zmniejsz ilość"
         onClick={() => onChange(quantity - 1)}
-        className="flex h-8 w-8 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10"
+        className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-800 transition-colors hover:bg-neutral-200"
       >
         <Minus className="h-3.5 w-3.5" strokeWidth={2.25} />
       </button>
-      <span className="w-7 text-center text-[15px] font-medium tabular-nums text-white">
+      <span className="w-7 text-center text-[15px] font-medium tabular-nums text-neutral-950">
         {quantity}
       </span>
       <button
         type="button"
         aria-label="Zwiększ ilość"
         onClick={() => onChange(quantity + 1)}
-        className="flex h-8 w-8 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10"
+        className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-800 transition-colors hover:bg-neutral-200"
       >
         <Plus className="h-3.5 w-3.5" strokeWidth={2.25} />
       </button>
@@ -141,8 +141,8 @@ function QuantityStepper({
 function SpecRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-baseline justify-between gap-4 py-2">
-      <dt className="shrink-0 text-[13px] text-white/45">{label}</dt>
-      <dd className="max-w-[68%] text-right text-[13px] font-medium leading-snug text-white/90">
+      <dt className="shrink-0 text-[13px] text-neutral-500">{label}</dt>
+      <dd className="max-w-[68%] text-right text-[13px] font-medium leading-snug text-neutral-950">
         {value}
       </dd>
     </div>
@@ -160,11 +160,11 @@ function PriceBlock({
 }) {
   return (
     <div className="shrink-0 text-right">
-      <p className="whitespace-nowrap text-[15px] font-semibold tracking-tight text-white tabular-nums">
+      <p className="whitespace-nowrap text-[15px] font-semibold tracking-tight text-neutral-950 tabular-nums">
         {PricingService.formatPrice(subtotal)}
       </p>
       {quantity > 1 && (
-        <p className="mt-0.5 whitespace-nowrap text-[12px] text-white/40 tabular-nums">
+        <p className="mt-0.5 whitespace-nowrap text-[12px] text-neutral-500 tabular-nums">
           {PricingService.formatPrice(unitPrice)} × {quantity}
         </p>
       )}
@@ -247,16 +247,16 @@ function MatCartItem({
         <ProductPlate src={item.productImage} alt="Dywaniki samochodowe" />
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="text-[15px] font-semibold leading-snug tracking-tight text-white">
+            <h3 className="text-[15px] font-semibold leading-snug tracking-tight text-neutral-950">
               Dywaniki samochodowe
             </h3>
             <RemoveButton onClick={onRemove} />
           </div>
           {vehicleName && (
-            <p className="mt-0.5 text-[13px] leading-snug text-white/70">{vehicleName}</p>
+            <p className="mt-0.5 text-[13px] leading-snug text-neutral-700">{vehicleName}</p>
           )}
           {vehicleMeta && (
-            <p className="mt-0.5 text-[12px] capitalize leading-snug text-white/40">{vehicleMeta}</p>
+            <p className="mt-0.5 text-[12px] capitalize leading-snug text-neutral-500">{vehicleMeta}</p>
           )}
           <div className="mt-2.5 flex items-center justify-between gap-2">
             <QuantityStepper quantity={item.quantity} onChange={onUpdateQuantity} />
@@ -270,7 +270,7 @@ function MatCartItem({
       </div>
 
       {config && (
-        <dl className="mt-3 divide-y divide-white/[0.06] border-t border-white/[0.06]">
+        <dl className="mt-3 divide-y divide-neutral-200 border-t border-neutral-200">
           <SpecRow label="Zestaw" value={getMatVariantLabel(config)} />
           {!isSinglePriceSetType(config.setType) && (
             <SpecRow label="Typ" value={getMatTypeLabel(config.setType)} />
@@ -314,7 +314,7 @@ function AccessoryCartItem({
         <ProductPlate src={item.productImage} alt={item.productName} />
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="text-[15px] font-semibold leading-snug tracking-tight text-white">
+            <h3 className="text-[15px] font-semibold leading-snug tracking-tight text-neutral-950">
               {item.productName}
             </h3>
             <RemoveButton onClick={onRemove} />
@@ -331,7 +331,7 @@ function AccessoryCartItem({
       </div>
 
       {(colorLabel || mountingLabel) && (
-        <dl className="mt-3 divide-y divide-white/[0.06] border-t border-white/[0.06]">
+        <dl className="mt-3 divide-y divide-neutral-200 border-t border-neutral-200">
           {colorLabel && <SpecRow label="Kolor" value={colorLabel} />}
           {mountingLabel && <SpecRow label="Montaż" value={mountingLabel} />}
         </dl>

@@ -120,7 +120,7 @@ export const DarkSelect = ({
             }}
             className={`fixed z-[90] overflow-y-auto rounded-xl border py-1 shadow-[0_16px_40px_rgba(0,0,0,0.45)] ${
               surface === "light"
-                ? "border-neutral-300 bg-[#FDFDFD]"
+                ? "border-neutral-300 bg-[#FFFFFF]"
                 : "border-white/10 bg-black"
             }`}
           >
@@ -173,7 +173,7 @@ export const DarkSelect = ({
         onClick={() => setOpen((current) => !current)}
         className={`flex w-full min-h-11 items-center justify-between gap-3 rounded-xl px-4 py-3 text-left text-sm outline-none transition-shadow disabled:cursor-not-allowed disabled:opacity-50 ${
           surface === "light"
-            ? `border bg-[#FDFDFD] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950 ${
+            ? `border bg-[#FFFFFF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950 ${
                 selected ? "border-neutral-950" : "border-neutral-300"
               }`
             : "bg-black/40 ring-1 ring-transparent focus-visible:ring-red-500/70"

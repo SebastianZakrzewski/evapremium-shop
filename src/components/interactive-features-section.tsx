@@ -9,44 +9,44 @@ const features = [
   {
     id: "ochrona",
     title: "Doskonała ochrona",
-    description: "Ranty 3D o wysokości do 8 cm skutecznie chronią przed wnikaniem brudu, wilgoci i zanieczyszczeń pod dywanik, zapewniając długotrwałą ochronę podłogi Twojego samochodu.",
+    description: "Ranty do 7 cm zatrzymują wodę i błoto na dywaniku i chronią wykładzinę przed zabrudzeniem.",
     position: { top: "25%", left: "80%" },
-    image: "/images/zalety/ranty-do-7cm.jpg"
+    image: "/images/zalety/cechy/ranty.jpg"
   },
   {
     id: "jezor",
     title: "3D Jęzor",
-    description: "Jęzor 3D pod pedałami gazu jest zintegrowany z dywanikiem, nie przesuwa się i skutecznie chroni wykładzinę w miejscu najbardziej narażonym na zużycie.",
+    description: "Podstopnica 3D osłania wykładzinę przy pedałach i daje pełną ochronę w miejscu najbardziej narażonym na zużycie.",
     position: { top: "14%", left: "20%" },
-    image: "/images/zalety/3d-jezor-detail.png"
+    image: "/images/zalety/cechy/podstopnica-3d-1024.jpg"
   },
   {
-    id: "bezpieczenstwo",
-    title: "Bezpieczeństwo",
-    description: "Specjalne antypoślizgowe właściwości dywaników 3D zapewniają maksymalne bezpieczeństwo podczas jazdy. Materiał EVA o wysokiej gęstości zapobiega przesuwaniu się dywaników.",
+    id: "mocowania",
+    title: "Mocowania",
+    description: "Mocowania pasują do podłogi Twojego auta. Dywanik wpinasz w fabryczne zaczepy.",
     position: { top: "60%", left: "65%" },
-    image: "/1.webp"
+    image: "/images/zalety/cechy/mocowania.jpg"
   },
   {
     id: "czyszczenie",
     title: "Łatwość czyszczenia",
-    description: "Głęboka struktura komórek 3D ułatwia szybkie i skuteczne czyszczenie dywaników. Brud i zanieczyszczenia nie wnikają głęboko w materiał, co pozwala na łatwe usunięcie ich za pomocą wody.",
+    description: "Komórki zatrzymują płyny i błoto, więc nic nie rozlewa się po aucie.",
     position: { top: "45%", left: "35%" },
-    image: "/komorki.png"
+    image: "/images/zalety/cechy/komorki.jpg"
   },
   {
     id: "rzep",
     title: "Rzep na każdym rogu",
-    description: "Specjalne rzepy umieszczone na każdym rogu dywanika zapewniają idealne dopasowanie do podłogi samochodu. Dzięki temu dywaniki pozostają na swoim miejscu nawet podczas dynamicznej jazdy.",
+    description: "Rzep na każdym rogu trzyma dywanik w miejscu, więc nie przesuwa się pod stopami.",
     position: { top: "75%", left: "25%" },
-    image: "/images/zalety/rzepy.png"
+    image: "/images/zalety/cechy/rzepy.jpg"
   },
   {
     id: "grubosc",
     title: "Grubość 10mm",
-    description: "Grubość dywanika wynosząca 10mm została starannie dobrana, aby zapewnić doskonałą amortyzację, komfort jazdy oraz skuteczną ochronę wykładziny samochodowej.",
+    description: "Dywanik ma 10 mm grubości. Solidna pianka EVA amortyzuje i chroni wykładzinę.",
     position: { top: "85%", left: "75%" },
-    image: "/images/zalety/10mm.png"
+    image: "/images/zalety/cechy/grubosc.jpg"
   },
 ];
 
@@ -157,7 +157,7 @@ export default function InteractiveFeaturesSection() {
   return (
     <section 
       id="interactive-features" 
-      className="py-7 md:py-9 bg-[#FDFDFD] relative overflow-hidden"
+      className="py-7 md:py-9 bg-[#FFFFFF] relative overflow-hidden"
     >
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
@@ -175,7 +175,7 @@ export default function InteractiveFeaturesSection() {
             <div className="relative group">
               {/* Kontener na zdjęcie */}
               <div className="relative bg-white/5 backdrop-blur-md rounded-3xl p-2 border border-white/10 shadow-2xl shadow-black/50 overflow-hidden group-hover:border-red-500/20 transition-all duration-500">
-                <div className="relative rounded-2xl overflow-hidden bg-[#FDFDFD] flex min-h-[220px] sm:min-h-[280px]">
+                <div className="relative rounded-2xl overflow-hidden bg-[#FFFFFF] flex min-h-[220px] sm:min-h-[280px]">
                   {outgoingFeature && (
                     <Image
                       src={outgoingFeature.image}
@@ -200,8 +200,6 @@ export default function InteractiveFeaturesSection() {
                     )}
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
                 </div>
                 
                 {/* Shine Effect */}
@@ -229,7 +227,7 @@ export default function InteractiveFeaturesSection() {
 
           {/* Lewa strona: Interaktywny dywanik */}
           <div className={`order-1 lg:order-1 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-            <div className="relative w-full aspect-square max-w-[480px] mx-auto rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-[#FDFDFD]">
+            <div className="relative w-full aspect-square max-w-[480px] mx-auto rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-[#FFFFFF]">
               <Image
                 src="/images/interactive-mat-clean.png"
                 alt="Dywaniki EVA - cechy"

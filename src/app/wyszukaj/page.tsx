@@ -117,7 +117,7 @@ function SearchPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] pt-24 md:pt-28 pb-16">
+    <div className="min-h-screen bg-[#FFFFFF] pt-24 md:pt-28 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
@@ -198,7 +198,7 @@ function SearchPageContent() {
                       href={`/modele?brand=${encodeURIComponent(brandNameToNavigationSlug(brand.name))}`}
                       className="
                         group relative
-                        bg-[#FDFDFD]/80 backdrop-blur-xl
+                        bg-[#FFFFFF]/80 backdrop-blur-xl
                         border border-white/5/50
                         rounded-xl p-6
                         hover:border-red-500/70
@@ -242,7 +242,7 @@ function SearchPageContent() {
                       })}
                       className="
                         group relative
-                        bg-[#FDFDFD]/80 backdrop-blur-xl
+                        bg-[#FFFFFF]/80 backdrop-blur-xl
                         border border-white/5/50
                         rounded-xl p-6
                         hover:border-red-500/70
@@ -288,7 +288,7 @@ function SearchPageContent() {
                       })}
                       className="
                         group relative
-                        bg-[#FDFDFD]/80 backdrop-blur-xl
+                        bg-[#FFFFFF]/80 backdrop-blur-xl
                         border border-white/5/50
                         rounded-xl p-6
                         hover:border-red-500/70
@@ -330,7 +330,7 @@ function SearchPageContent() {
 export default function SearchPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#FDFDFD] pt-24 md:pt-28 pb-16 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FFFFFF] pt-24 md:pt-28 pb-16 flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-red-500 animate-spin" />
       </div>
     }>

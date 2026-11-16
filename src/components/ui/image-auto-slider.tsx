@@ -41,7 +41,7 @@ const ImageTile = ({
       flex-shrink-0 ${tileSize}
       relative rounded-xl overflow-hidden
       shadow-sm
-      border border-neutral-200 bg-[#FDFDFD]
+      border border-neutral-200 bg-[#FFFFFF]
       hover:border-neutral-400
       transition-[border-color,box-shadow] duration-300
       focus:outline-none focus:ring-2 focus:ring-red-500/60

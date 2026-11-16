@@ -9,7 +9,7 @@ import {
 export const VariantTrunkMatRimNotice = () => (
   <div
     role="status"
-    className="mt-3 flex items-center gap-3 rounded-2xl border border-neutral-300 bg-[#FDFDFD] px-3 py-2.5"
+    className="mt-3 flex items-center gap-3 rounded-2xl border border-neutral-300 bg-[#FFFFFF] px-3 py-2.5"
   >
     <Image
       src={VARIANT_TRUNK_MAT_RIM_NOTICE_ICON_SRC}

@@ -5,7 +5,7 @@ import { MobilePreviewDockProvider } from "./MobilePreviewDockContext"
 import { resolveMobilePreviewDocked } from "./mobilePreviewDock"
 
 const configuratorWindowClassName =
-  "rounded-2xl border border-neutral-300 bg-[#FDFDFD] text-neutral-950 shadow-sm"
+  "rounded-2xl border border-neutral-300 bg-[#FFFFFF] text-neutral-950 shadow-sm"
 
 type ConfiguratorV2LayoutProps = {
   topBar: ReactNode

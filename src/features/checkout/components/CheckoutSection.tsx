@@ -56,6 +56,9 @@ import {
   isSinglePriceSetType,
 } from '@/shared/mat-set-labels';
 
+const checkoutCheckboxClassName =
+  "on-media relative h-5 w-5 rounded-[4px] border-2 border-neutral-500 bg-white text-white shadow-none ring-offset-white after:absolute after:-inset-3 after:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 data-[state=checked]:border-red-600 data-[state=checked]:bg-red-600 data-[state=checked]:text-white"
+
 const CHECKOUT_SHIPPING_TIER = 'Standardowa dostawa';
 
 const paymentMarks = [
@@ -939,7 +942,7 @@ export default function CheckoutSection() {
   // Strona sukcesu
   if (orderSuccess && orderNumber) {
     return (
-      <div className="min-h-screen bg-[#FDFDFD] text-white">
+      <div className="min-h-screen bg-[#FFFFFF] text-white">
         <div className="mx-auto flex min-h-screen max-w-xl flex-col justify-center px-6 py-20">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-white/45">
             EVA Premium
@@ -968,7 +971,7 @@ export default function CheckoutSection() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] pb-safe text-white">
+    <div className="min-h-screen bg-[#FFFFFF] pb-safe text-white">
       <div className="mx-auto max-w-6xl px-5 py-10 md:px-8 md:py-16">
         <div id="checkout-step-top" ref={checkoutTopRef} className="mb-10 flex flex-col gap-8 md:mb-14 md:flex-row md:items-end md:justify-between">
           <div>
@@ -1248,6 +1251,7 @@ export default function CheckoutSection() {
                           id="sameAsShipping"
                           checked={sameAsShipping}
                           onCheckedChange={(checked) => setValue("sameAsShipping", !!checked)}
+                          className={checkoutCheckboxClassName}
                         />
                         <Label htmlFor="sameAsShipping" className="text-white/70">
                           Adres do faktury taki sam jak adres wysyłkowy
@@ -1399,7 +1403,7 @@ export default function CheckoutSection() {
                               id="termsAccepted"
                               checked={field.value}
                               onCheckedChange={field.onChange}
-                              className="border-white/20 data-[state=checked]:border-red-600 data-[state=checked]:bg-red-600 data-[state=checked]:text-white"
+                              className={checkoutCheckboxClassName}
                             />
                           )}
                         />
@@ -1417,7 +1421,7 @@ export default function CheckoutSection() {
                         <Checkbox
                           id="marketingAccepted"
                           {...register("marketingAccepted")}
-                          className="border-white/20 data-[state=checked]:border-red-600 data-[state=checked]:bg-red-600 data-[state=checked]:text-white"
+                          className={checkoutCheckboxClassName}
                         />
                         <Label htmlFor="marketingAccepted" className="text-sm text-white/55 leading-relaxed">
                           Chcę otrzymywać informacje o nowościach i promocjach

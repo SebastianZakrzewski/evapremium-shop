@@ -163,7 +163,7 @@ export default function AccessoryDetailsSheet({
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent 
-        className="shop-canvas flex h-full w-full flex-col border-l border-neutral-200 bg-[#FDFDFD] p-0 text-neutral-950 sm:max-w-xl [&>button]:hidden md:[&>button]:block"
+        className="shop-canvas flex h-full w-full flex-col border-l border-neutral-200 bg-[#FFFFFF] p-0 text-neutral-950 sm:max-w-xl [&>button]:hidden md:[&>button]:block"
         aria-labelledby="accessory-details-title"
         aria-describedby="accessory-details-description"
         onOpenAutoFocus={onOpenAutoFocus}
@@ -173,7 +173,7 @@ export default function AccessoryDetailsSheet({
         {/* Scrollable Content Container */}
         <div className="flex-1 overflow-y-auto">
           {/* Image Section - Fixed at top on mobile, scrollable content below */}
-          <div className="relative w-full bg-[#FDFDFD]">
+          <div className="relative w-full bg-[#FFFFFF]">
             {/* Main Image */}
             <div className="relative aspect-video w-full">
               {currentImage && !imageError ? (
@@ -230,7 +230,7 @@ export default function AccessoryDetailsSheet({
 
             {/* Thumbnail Carousel - zawsze widoczna z placeholderami */}
             {productImages.length > 0 && !(imageError && imageFallback) && (
-              <div className="px-4 py-3 bg-[#FDFDFD] border-t border-neutral-200">
+              <div className="px-4 py-3 bg-[#FFFFFF] border-t border-neutral-200">
                 <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
                   {Array.from({ length: thumbnailSlots }).map((_, index) => {
                     const hasImage = index < productImages.length;

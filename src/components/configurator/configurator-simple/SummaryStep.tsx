@@ -66,14 +66,14 @@ const summaryStyles = {
     strong: "text-neutral-950",
     total: "text-green-600",
     priceCard:
-      "flex-1 min-w-0 max-w-full bg-[#FDFDFD] border border-neutral-300 rounded-2xl p-3 md:p-4 shadow-sm flex flex-col justify-between relative overflow-hidden",
+      "flex-1 min-w-0 max-w-full bg-[#FFFFFF] border border-neutral-300 rounded-2xl p-3 md:p-4 shadow-sm flex flex-col justify-between relative overflow-hidden",
     glow: "hidden",
     discount: "flex justify-between text-green-700 bg-green-50 px-2 py-1 rounded text-sm",
     extraRow: "flex justify-between text-neutral-700 bg-neutral-100 px-2 py-1 rounded text-sm",
     divider: "pt-4 md:pt-6 mt-4 md:mt-6 border-t border-neutral-200 relative z-10",
     savings: "text-xs text-green-700 font-medium",
     configCard:
-      "min-w-0 max-w-full bg-[#FDFDFD] border border-neutral-300 rounded-2xl overflow-hidden",
+      "min-w-0 max-w-full bg-[#FFFFFF] border border-neutral-300 rounded-2xl overflow-hidden",
     rowBorder: "border-neutral-200",
     thumb:
       "relative w-12 h-12 md:w-14 md:h-14 bg-neutral-100 rounded-lg overflow-hidden flex-shrink-0 border border-neutral-300",
@@ -83,9 +83,9 @@ const summaryStyles = {
     addonLabel: "text-xs text-red-600 uppercase tracking-wider font-medium mb-0.5",
     actions: "flex flex-col gap-3 md:gap-4 pt-4 border-t border-neutral-200 lg:border-t",
     sticky:
-      "fixed inset-x-0 bottom-0 z-30 border-t border-neutral-300 bg-[#FDFDFD]/95 backdrop-blur-xl px-4 py-3 pb-safe lg:static lg:z-auto lg:border-0 lg:bg-transparent lg:backdrop-blur-none lg:px-0 lg:py-0",
+      "fixed inset-x-0 bottom-0 z-30 border-t border-neutral-300 bg-[#FFFFFF]/95 backdrop-blur-xl px-4 py-3 pb-safe lg:static lg:z-auto lg:border-0 lg:bg-transparent lg:backdrop-blur-none lg:px-0 lg:py-0",
     error: "w-full text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2",
-    back: "h-11 min-h-11 flex-1 px-2 text-[12px] leading-tight border-neutral-300 bg-[#FDFDFD] text-neutral-700 hover:bg-neutral-100 hover:text-neutral-950 transition-all duration-300 sm:h-12 sm:min-h-[48px] sm:px-4 sm:text-base",
+    back: "h-11 min-h-11 flex-1 px-2 text-[12px] leading-tight border-neutral-300 bg-[#FFFFFF] text-neutral-700 hover:bg-neutral-100 hover:text-neutral-950 transition-all duration-300 sm:h-12 sm:min-h-[48px] sm:px-4 sm:text-base",
     cart: "h-11 min-h-11 flex-1 px-2 text-[12px] leading-tight bg-red-600 hover:bg-red-500 text-white font-medium transition-colors sm:h-12 sm:min-h-[48px] sm:flex-[2] sm:px-4 sm:text-base",
   },
 } as const

@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="shop-canvas relative border-t border-neutral-200 bg-[#FDFDFD] pt-20 pb-10 overflow-hidden">
+    <footer className="shop-canvas relative border-t border-neutral-200 bg-[#FFFFFF] pt-20 pb-10 overflow-hidden">
       <div className="absolute top-0 left-0 h-px w-full bg-neutral-200"></div>
       
       <div className="container mx-auto px-4 relative z-10">

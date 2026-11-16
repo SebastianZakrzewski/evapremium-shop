@@ -17,7 +17,7 @@ describe("ConfiguratorV2Layout", () => {
     )
 
     const panel = document.querySelector("[data-configurator-panel]")
-    expect(panel).toHaveClass("rounded-2xl", "bg-[#FDFDFD]", "px-3", "flex")
+    expect(panel).toHaveClass("rounded-2xl", "bg-[#FFFFFF]", "px-3", "flex")
     expect(panel).not.toHaveClass("overflow-hidden")
     expect(panel?.parentElement).toHaveClass("px-3", "bg-[#E6E6E6]")
     expect(screen.getByRole("button", { name: "Marka" })).toBeInTheDocument()

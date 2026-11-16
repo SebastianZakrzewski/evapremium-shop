@@ -7,6 +7,8 @@ type TeslaTextCardProps = {
   title: string
   detail?: string
   priceLabel: string
+  /** Cena przed rabatem. Gdy jest, obok ceny widać przekreślenie i dopisek „po rabacie”. */
+  comparePriceLabel?: string
   disabled?: boolean
   onSelect: () => void
 }
@@ -16,6 +18,7 @@ export const TeslaTextCard = ({
   title,
   detail,
   priceLabel,
+  comparePriceLabel,
   disabled = false,
   onSelect,
 }: TeslaTextCardProps) => (
@@ -64,7 +67,31 @@ export const TeslaTextCard = ({
         color: TESLA_LAYOUT.text,
       }}
     >
-      {priceLabel}
+      {comparePriceLabel ? (
+        <span
+          className="block font-normal line-through"
+          style={{
+            fontSize: TESLA_LAYOUT.captionSize,
+            lineHeight: `${TESLA_LAYOUT.captionLine}px`,
+            color: TESLA_LAYOUT.muted,
+          }}
+        >
+          {comparePriceLabel}
+        </span>
+      ) : null}
+      <span className="block">{priceLabel}</span>
+      {comparePriceLabel ? (
+        <span
+          className="block font-normal"
+          style={{
+            fontSize: 11,
+            lineHeight: "14px",
+            color: TESLA_LAYOUT.muted,
+          }}
+        >
+          po rabacie
+        </span>
+      ) : null}
     </span>
   </button>
 )

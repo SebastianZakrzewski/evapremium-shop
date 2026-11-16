@@ -226,7 +226,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       
       {/* Modal */}
       <div 
-        className={`shop-canvas fixed top-0 right-0 z-50 flex h-full w-full transform flex-col border-l border-neutral-200 bg-[#FDFDFD] shadow-2xl transition-transform duration-300 ease-in-out sm:max-w-md ${
+        className={`shop-canvas fixed top-0 right-0 z-50 flex h-full w-full transform flex-col border-l border-neutral-200 bg-[#FFFFFF] shadow-2xl transition-transform duration-300 ease-in-out sm:max-w-md ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -293,7 +293,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
 
           {/* Footer - tylko gdy są produkty */}
           {!isLoading && !error && items.length > 0 && (
-            <div className="flex-shrink-0 space-y-4 border-t border-neutral-200 bg-[#FDFDFD] p-6">
+            <div className="flex-shrink-0 space-y-4 border-t border-neutral-200 bg-[#FFFFFF] p-6">
               {/* Discount Code Input */}
               <div className="space-y-2">
                 <Label className="text-white text-sm font-medium">Kod rabatowy</Label>

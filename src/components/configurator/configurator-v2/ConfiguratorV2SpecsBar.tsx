@@ -17,7 +17,7 @@ export const ConfiguratorV2SpecsBar = ({
         {title}
       </h1>
       {year && (
-        <span className="inline-flex items-center rounded-full border border-neutral-300 bg-[#FDFDFD] px-2.5 py-0.5 text-[13px] font-medium text-neutral-700">
+        <span className="inline-flex items-center rounded-full border border-neutral-300 bg-[#FFFFFF] px-2.5 py-0.5 text-[13px] font-medium text-neutral-700">
           {year}
         </span>
       )}

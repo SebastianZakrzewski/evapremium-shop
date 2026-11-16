@@ -8,7 +8,7 @@ const brandGridClassName =
   "grid min-h-[70vh] grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5"
 
 const BrandGridFallback = () => (
-  <div className="bg-[#FDFDFD] py-8 md:py-12">
+  <div className="bg-[#FFFFFF] py-8 md:py-12">
     <div className="container mx-auto px-4">
       <div className="mb-8 mt-8 h-28" aria-hidden="true" />
       <div className={brandGridClassName} aria-hidden="true">
@@ -22,7 +22,7 @@ const BrandGridFallback = () => (
 
 export default function ModelePage() {
   return (
-    <div className="bg-[#FDFDFD]">
+    <div className="bg-[#FFFFFF]">
       <Suspense fallback={<BrandGridFallback />}>
         <CarModelsSection />
       </Suspense>

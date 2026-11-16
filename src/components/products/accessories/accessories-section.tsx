@@ -248,7 +248,7 @@ export default function AccessoriesSection() {
 
   if (error) {
     return (
-      <section className="min-h-[60vh] flex items-center justify-center bg-[#FDFDFD]">
+      <section className="min-h-[60vh] flex items-center justify-center bg-[#FFFFFF]">
         <div className="text-center space-y-4">
           <div className="text-red-500 text-xl font-semibold">Wystąpił błąd</div>
           <p className="text-gray-400">{error}</p>
@@ -261,7 +261,7 @@ export default function AccessoriesSection() {
   }
 
   return (
-    <div className="bg-[#FDFDFD] pb-20 text-white">
+    <div className="bg-[#FFFFFF] pb-20 text-white">
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 md:px-6 md:pt-12">
         <nav className="flex items-center gap-2 text-xs tracking-wide text-white/40">
           <Link href="/" className="transition-colors hover:text-white">

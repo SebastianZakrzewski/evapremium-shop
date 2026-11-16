@@ -47,6 +47,8 @@ describe("CompareVariantsModal", () => {
     expect(screen.getByText("Porównaj warianty zestawu")).toBeInTheDocument()
     expect(screen.getByText("Przód")).toBeInTheDocument()
     expect(screen.getByText("Przód + tył + bagażnik")).toBeInTheDocument()
+    expect(screen.getByText("400,00 zł")).toHaveClass("line-through")
+    expect(screen.getAllByText("po rabacie")).toHaveLength(2)
   })
 
   it("does not render when closed", () => {
