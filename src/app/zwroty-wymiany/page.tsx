@@ -53,7 +53,7 @@ export default function ReturnsAndExchangesPage() {
                 </ul>
                 <p>
                   <strong>Zgłoszenia należy kierować na adres e-mail:</strong> 
-                  <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-400 hover:underline ml-1">
+                  <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-800 underline ml-1">
                     evapremium.kontakt@gmail.com
                   </a>
                 </p>
@@ -82,7 +82,7 @@ export default function ReturnsAndExchangesPage() {
                     <p>NIP: 5871715880</p>
                     <p>tel. +48 793 993 430</p>
                     <p>e-mail: 
-                      <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-400 hover:underline ml-1">
+                      <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-800 underline ml-1">
                         evapremium.kontakt@gmail.com
                       </a>
                     </p>
@@ -151,7 +151,7 @@ export default function ReturnsAndExchangesPage() {
                   <p><strong>2.4.</strong> Zgłoszenia reklamacyjne można kierować:</p>
                   <ul className="list-disc list-inside text-gray-400 space-y-2 ml-4">
                     <li>mailowo na adres: 
-                      <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-400 hover:underline ml-1">
+                      <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-800 underline ml-1">
                         evapremium.kontakt@gmail.com
                       </a>
                     </li>
@@ -198,7 +198,7 @@ export default function ReturnsAndExchangesPage() {
               <h3 className="text-lg font-semibold text-white mb-3">Kontakt w sprawach zwrotów i reklamacji</h3>
               <div className="text-gray-400 space-y-2">
                 <p><strong>Email:</strong> 
-                  <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-400 hover:underline ml-1">
+                  <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-800 underline ml-1">
                     evapremium.kontakt@gmail.com
                   </a>
                 </p>
