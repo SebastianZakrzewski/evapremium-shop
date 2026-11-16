@@ -252,7 +252,7 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
             {isLoading && (
               <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neutral-950"></div>
               </div>
             )}
 
@@ -273,7 +273,7 @@ function CartModal({ isOpen, onClose }: CartModalProps) {
                 </p>
                 <button
                   onClick={handleContinueShopping}
-                  className="px-6 py-2 bg-neutral-950 text-white rounded-lg hover:bg-neutral-800 transition-colors"
+                  className="on-media min-h-11 rounded-lg bg-neutral-950 px-6 py-2 text-white transition-colors hover:bg-neutral-800 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   Kontynuuj zakupy
                 </button>

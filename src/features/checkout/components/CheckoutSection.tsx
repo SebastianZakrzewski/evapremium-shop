@@ -56,6 +56,9 @@ import {
   isSinglePriceSetType,
 } from '@/shared/mat-set-labels';
 
+const checkoutCheckboxClassName =
+  "on-media relative h-5 w-5 rounded-[4px] border-2 border-neutral-500 bg-white text-white shadow-none ring-offset-white after:absolute after:-inset-3 after:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 data-[state=checked]:border-red-600 data-[state=checked]:bg-red-600 data-[state=checked]:text-white"
+
 const CHECKOUT_SHIPPING_TIER = 'Standardowa dostawa';
 
 const paymentMarks = [
@@ -1248,6 +1251,7 @@ export default function CheckoutSection() {
                           id="sameAsShipping"
                           checked={sameAsShipping}
                           onCheckedChange={(checked) => setValue("sameAsShipping", !!checked)}
+                          className={checkoutCheckboxClassName}
                         />
                         <Label htmlFor="sameAsShipping" className="text-white/70">
                           Adres do faktury taki sam jak adres wysyłkowy
@@ -1399,7 +1403,7 @@ export default function CheckoutSection() {
                               id="termsAccepted"
                               checked={field.value}
                               onCheckedChange={field.onChange}
-                              className="border-white/20 data-[state=checked]:border-red-600 data-[state=checked]:bg-red-600 data-[state=checked]:text-white"
+                              className={checkoutCheckboxClassName}
                             />
                           )}
                         />
@@ -1417,7 +1421,7 @@ export default function CheckoutSection() {
                         <Checkbox
                           id="marketingAccepted"
                           {...register("marketingAccepted")}
-                          className="border-white/20 data-[state=checked]:border-red-600 data-[state=checked]:bg-red-600 data-[state=checked]:text-white"
+                          className={checkoutCheckboxClassName}
                         />
                         <Label htmlFor="marketingAccepted" className="text-sm text-white/55 leading-relaxed">
                           Chcę otrzymywać informacje o nowościach i promocjach
