@@ -15,6 +15,7 @@ import {
   trackPaidPaynowPurchaseFromDatabase,
 } from '@/lib/tracking/server/sendPurchaseFromDatabase'
 import type { TrackPaidPaynowInput } from '@/lib/tracking/server/sendPurchase'
+import { parsePaynowModifiedAt } from '@/lib/services/paynowTimestamp'
 
 export type InitiatePaymentResult = {
   success: boolean
@@ -283,7 +284,7 @@ export class PaymentService {
         orderId: payment.orderId,
         providerPaymentId: payment.providerPaymentId ?? notificationPaymentId,
         paymentEnvironment: payment.environment,
-        paidAt: payment.paidAt ?? modifiedAt,
+        paidAt: payment.paidAt ?? parsePaynowModifiedAt(modifiedAt).toISOString(),
       })
     } catch (trackingError) {
       console.error('[ServerTracking] Purchase tracking failed without failing the Paynow webhook', trackingError)

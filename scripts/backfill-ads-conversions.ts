@@ -1,8 +1,11 @@
 /**
  * Re-send Google Ads click conversions for paid orders from the last 90 days
- * whose upload is failed or still pending, and that have marketing consent and a gclid.
+ * whose upload is failed or still pending, and that have marketing consent and a click id.
  *
  * Dry-run by default. Nothing is uploaded unless you pass --send.
+ * The dry-run prints the Data Manager body with click ids shortened.
+ * Google dedupes on `transactionId` (the shop order number). Orders already
+ * marked `sent` are not selected, so a second --send does not upload them again.
  *
  *   npx tsx scripts/backfill-ads-conversions.ts
  *   npx tsx scripts/backfill-ads-conversions.ts --send
@@ -10,9 +13,14 @@
  * Loads the same env as production (Supabase service role, SERVER_TRACKING_ENABLED,
  * ADS_SERVER_UPLOAD_ENABLED, Google OAuth, customer id, conversion action).
  * Does not send GA4 again. Does not upload orders without marketing consent.
+ * Event time is payments.paid_at, the absolute instant the webhook marked the order paid.
  */
 import { createClient } from '@supabase/supabase-js'
-import { selectAdsBackfillCandidates, type AdsBackfillOrder } from '../src/lib/tracking/server/backfillAds'
+import {
+  previewAdsBackfillPayload,
+  selectAdsBackfillCandidates,
+  type AdsBackfillOrder,
+} from '../src/lib/tracking/server/backfillAds'
 import { readServerTrackingEnv, serverTrackingBlockReason } from '../src/lib/tracking/server/gate'
 import { OrderRepository } from '../src/lib/repositories/OrderRepository'
 import { trackPaidPaynowPurchase } from '../src/lib/tracking/server/sendPurchase'
@@ -107,15 +115,23 @@ const main = async (): Promise<void> => {
     })
   )
   for (const candidate of candidates) {
-    const paidAt = paidAtById.get(candidate.orderId) ?? updatedAtById.get(candidate.orderId)
+    const paidAtRaw = paidAtById.get(candidate.orderId) ?? updatedAtById.get(candidate.orderId)
+    const paidAt = paidAtRaw ? new Date(paidAtRaw) : null
+    const order = orders.find((item) => item.id === candidate.orderId)
+    const payload =
+      order && paidAt && !Number.isNaN(paidAt.getTime())
+        ? previewAdsBackfillPayload(order, paidAt, env)
+        : null
     console.log(
       JSON.stringify({
         orderNumber: candidate.orderNumber,
         totalPln: candidate.total,
         adsStatus: candidate.adsStatus,
-        gclidPrefix: candidate.gclidPrefix,
+        clickIdField: candidate.clickIdField,
+        clickIdPrefix: candidate.clickIdPrefix,
         transactionId: candidate.orderNumber,
-        paidAt: paidAt ?? null,
+        paidAt: paidAt && !Number.isNaN(paidAt.getTime()) ? paidAt.toISOString() : null,
+        payload,
       })
     )
   }

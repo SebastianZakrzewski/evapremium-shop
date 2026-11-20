@@ -97,4 +97,39 @@ describe('Paynow webhook purchase tracking', () => {
       paidAt: '2026-11-08T12:00:00.000Z',
     })
   })
+
+  it('sends Paynow modifiedAt as Europe/Warsaw instead of a zone-less wall clock', async () => {
+    const current = payment()
+    const currentOrder = order()
+    const trackPaidPurchase = vi.fn(async () => undefined)
+    const service = new PaymentService(
+      {
+        findByWebhookDedupeKey: async () => null,
+        findByProviderPaymentId: async () => current,
+        findLatestByOrderId: async () => current,
+        update: async () => current,
+      } as never,
+      {
+        getOrderById: async () => currentOrder,
+        updatePaymentStatus: async () => {
+          currentOrder.paymentStatus = 'paid'
+        },
+      } as never,
+      { verifyNotificationSignature: () => true } as never,
+      trackPaidPurchase
+    )
+
+    const raw = JSON.stringify({
+      paymentId: 'PAY-528',
+      externalId: 'order-1',
+      status: 'CONFIRMED',
+      modifiedAt: '2026-11-12T10:11:03',
+    })
+    const result = await service.handleWebhook(raw, 'signature')
+
+    expect(result).toEqual({ success: true })
+    expect(trackPaidPurchase).toHaveBeenCalledWith(
+      expect.objectContaining({ paidAt: '2026-11-12T09:11:03.000Z' })
+    )
+  })
 })
