@@ -101,6 +101,35 @@ export const adsCredentialsReady = (env: ServerTrackingEnv): boolean =>
   )
 
 /**
+ * Data Manager wants an RFC 3339 timestamp. `date` is an absolute instant.
+ * The Ads account is Poland, so the rendered offset is Europe/Warsaw.
+ * Do not pass a zone-less Paynow `modifiedAt` through `new Date()` first:
+ * on UTC that wall clock is one hour in the future and Google rejects it.
+ */
+export const buildAdsPurchaseEvent = (input: {
+  orderNumber: string
+  total: number
+  paidAt: Date
+  attribution?: PurchaseAttribution
+}): DataManagerAdsEvent | null => {
+  const clickField = preferredClickId(input.attribution)
+  if (!clickField || !input.attribution) return null
+  const event: DataManagerAdsEvent = {
+    transactionId: input.orderNumber,
+    eventTimestamp: formatDataManagerEventTimestamp(input.paidAt),
+    eventSource: 'WEB',
+    conversionValue: Number(input.total || 0),
+    currency: 'PLN',
+    consent: { adUserData: 'CONSENT_GRANTED' },
+    adIdentifiers: {},
+  }
+  if (clickField === 'gclid' && input.attribution.gclid) event.adIdentifiers.gclid = input.attribution.gclid
+  if (clickField === 'gbraid' && input.attribution.gbraid) event.adIdentifiers.gbraid = input.attribution.gbraid
+  if (clickField === 'wbraid' && input.attribution.wbraid) event.adIdentifiers.wbraid = input.attribution.wbraid
+  return event
+}
+
+/**
  * Data Manager wants an RFC 3339 timestamp. The Ads account is Poland,
  * so the offset is Europe/Warsaw.
  */
@@ -184,19 +213,13 @@ export const planServerPurchase = (input: {
   } else if (!adsCredentialsReady(input.env)) {
     ads = channel('skipped', 'missing_ads_config')
   } else {
-    const event: DataManagerAdsEvent = {
-      transactionId: input.order.orderNumber,
-      eventTimestamp: formatDataManagerEventTimestamp(input.paidAt),
-      eventSource: 'WEB',
-      conversionValue: Number(input.order.total || 0),
-      currency: 'PLN',
-      consent: { adUserData: 'CONSENT_GRANTED' },
-      adIdentifiers: {},
-    }
-    if (clickField === 'gclid' && attribution?.gclid) event.adIdentifiers.gclid = attribution.gclid
-    if (clickField === 'gbraid' && attribution?.gbraid) event.adIdentifiers.gbraid = attribution.gbraid
-    if (clickField === 'wbraid' && attribution?.wbraid) event.adIdentifiers.wbraid = attribution.wbraid
-    ads = { status: 'pending', event }
+    const event = buildAdsPurchaseEvent({
+      orderNumber: input.order.orderNumber,
+      total: Number(input.order.total || 0),
+      paidAt: input.paidAt,
+      attribution,
+    })
+    ads = event ? { status: 'pending', event } : channel('skipped', 'missing_click_id')
   }
 
   return { transactionId, ga4, ads }

@@ -116,7 +116,7 @@ describe('server purchase plan', () => {
       adIdentifiers: { gclid: 'click-123' },
       consent: { adUserData: 'CONSENT_GRANTED' },
     })
-    expect(plan.ads.event?.eventTimestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/)
+    expect(plan.ads.event?.eventTimestamp).toBe('2026-11-08T13:00:00+01:00')
     expect(plan.ads.event).not.toHaveProperty('adPersonalization')
     expect(plan.ads.event?.consent).not.toHaveProperty('adPersonalization')
     expect(plan.ads.event?.adIdentifiers).not.toHaveProperty('gbraid')
