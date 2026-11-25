@@ -12,8 +12,8 @@ export const OmnibusPriceLine = ({ amount, tone = "dark" }: OmnibusPriceLineProp
   <span
     className={
       tone === "light"
-        ? "mt-2 block text-[15px] font-medium leading-snug text-white"
-        : "mt-2 block text-[15px] font-medium leading-snug text-neutral-950"
+        ? "mt-1 block text-[11px] font-normal leading-snug text-neutral-200 md:text-xs"
+        : "mt-1 block text-[11px] font-normal leading-snug text-neutral-600 md:text-xs"
     }
   >
     {omnibusPriceText(amount)}
