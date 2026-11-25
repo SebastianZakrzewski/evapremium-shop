@@ -677,4 +677,133 @@ describe("resolveVehiclePricing contract", () => {
       priceAfterDiscount: 280,
     })
   })
+
+  it("resolves the 3D driver mat at 289 with no discount for pickup and passenger", async () => {
+    const driverRows = (driverMatrix: ReturnType<typeof matrix>) => ({
+      variants: [
+        variant("driver_mat", "Dywanik kierowcy", "v-driver"),
+        variant("front", "Przód", "v-front"),
+      ],
+      matrices: [
+        driverMatrix,
+        {
+          ...matrix("v-driver", "classic", 175),
+          price_after_discount_pln: null,
+          discount_excluded: true,
+        },
+        matrix("v-front", "3d-with-rims", 550, 440),
+      ],
+      links: [],
+    })
+    const noDiscountDriver = {
+      ...matrix("v-driver", "3d-with-rims", 289),
+      price_after_discount_pln: null,
+      discount_excluded: true,
+    }
+    const shopOffer = {
+      shopHandle: "driver-mat",
+      axis: "dual" as const,
+      sets: [
+        {
+          key: "driver_mat",
+          label: "Dywanik kierowcy",
+          prices: { classic: 175, "3d-with-rims": 289 },
+        },
+        {
+          key: "front",
+          label: "Przód",
+          prices: { classic: 320, "3d-with-rims": 550 },
+        },
+      ],
+    }
+
+    const resolve = async (
+      category: { id: string; slug: string; label: string; pricing_model: string },
+      recordKey: string,
+      bodyTypeKey: string,
+      rows: ReturnType<typeof driverRows>,
+      matType: "3d-with-rims" | "classic" = "3d-with-rims",
+    ) => {
+      getMatTemplateByRecordKey.mockResolvedValue({
+        id: `tpl-${category.slug}`,
+        record_key: recordKey,
+        brand_key: "ford",
+        model_family_key: "ranger",
+        dealer_pricing_category_key: category.slug,
+        seat_rows: 2,
+        year_from: 2020,
+        year_to: 2028,
+        body_type_1_key: bodyTypeKey,
+        body_type_2_key: null,
+        body_type_3_key: null,
+      })
+      getPricingCategory.mockResolvedValue(category)
+      getCategoryPricingRows.mockResolvedValue(rows)
+      getShopTemplateOffer.mockReturnValue(shopOffer)
+      return resolveVehiclePricing({
+        recordKey,
+        year: 2024,
+        bodyTypeKey,
+        matType,
+        variantKey: "driver_mat",
+      })
+    }
+
+    const pickup = await resolve(
+      { id: "cat-pickup", slug: "pickup", label: "Pickup", pricing_model: "dual_mat_type" },
+      "pickup|ford|ranger_6_gen|2022-2028|pickup|966",
+      "pickup",
+      driverRows(noDiscountDriver),
+    )
+    const passenger = await resolve(
+      {
+        id: "cat-passenger",
+        slug: "passenger_car",
+        label: "Passenger car",
+        pricing_model: "dual_mat_type",
+      },
+      "passenger_car|ford|focus|2018-2025|hatchback|1",
+      "hatchback",
+      driverRows(noDiscountDriver),
+    )
+    const minivan = await resolve(
+      { id: "cat-minivan", slug: "minivan", label: "Minivan", pricing_model: "single_price" },
+      "minivan|ford|transit|2014-2024|minivan|1",
+      "minivan",
+      driverRows(matrix("v-driver", "single", 350, 280)),
+    )
+
+    expect(pickup.selectedVariant).toMatchObject({
+      basePrice: 289,
+      priceAfterDiscount: 289,
+      discount: 0,
+    })
+    expect(pickup.variants.find((item) => item.key === "front")).toMatchObject({
+      basePrice: 550,
+      priceAfterDiscount: 440,
+    })
+    expect(passenger.selectedVariant).toMatchObject({
+      basePrice: 289,
+      priceAfterDiscount: 289,
+      discount: 0,
+    })
+    expect(minivan.selectedVariant).toMatchObject({
+      basePrice: 289,
+      priceAfterDiscount: 231.2,
+      discount: 57.8,
+    })
+
+    const classic = await resolve(
+      { id: "cat-pickup", slug: "pickup", label: "Pickup", pricing_model: "dual_mat_type" },
+      "pickup|ford|ranger_6_gen|2022-2028|pickup|966",
+      "pickup",
+      driverRows(noDiscountDriver),
+      "classic",
+    )
+    expect(classic.selectedVariant).toMatchObject({
+      basePrice: 175,
+      priceAfterDiscount: 175,
+      discount: 0,
+    })
+  })
 })
