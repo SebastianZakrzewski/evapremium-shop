@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { CartItemV2 as CartItemType, isMatCartConfiguration } from '@/lib/types';
 import { Minus, Plus } from 'lucide-react';
 import { PricingService } from '@/lib/services/PricingService';
+import { OmnibusPriceLine } from '@/shared/omnibus/OmnibusPriceLine';
 import type { MatConfiguration } from '@/features/vehicle-catalog/model/matConfiguration';
 import {
   getMatConfigurationLabelContext,
@@ -240,6 +241,10 @@ function MatCartItem({
   const vehicleMeta = carDetails
     ? [carDetails.year, carDetails.bodyType, carDetails.gearbox].filter(Boolean).join(" · ")
     : ""
+  const priorPrice =
+    config?.pricing && config.pricing.basePrice > config.pricing.priceAfterDiscount
+      ? config.pricing.lowestPriceBeforeReduction ?? item.unitPrice
+      : null
 
   return (
     <article className="rounded-[20px] border border-neutral-200 bg-white p-3.5">
@@ -266,6 +271,7 @@ function MatCartItem({
               quantity={item.quantity}
             />
           </div>
+          {priorPrice != null ? <OmnibusPriceLine amount={priorPrice} /> : null}
         </div>
       </div>
 

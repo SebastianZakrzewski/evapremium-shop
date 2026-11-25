@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { formatPricePln } from "@/lib/utils/formatPrice"
+import { OmnibusPriceLine } from "@/shared/omnibus/OmnibusPriceLine"
 import { TESLA_LAYOUT } from "../tokens"
 
 const useMaxWidth = (width: number): boolean => {
@@ -18,6 +19,7 @@ const useMaxWidth = (width: number): boolean => {
 
 type TeslaStickyBarProps = {
   total: number
+  lowestPriceBeforeReduction?: number | null
   disabled: boolean
   hint: string | null
   pending?: boolean
@@ -28,6 +30,7 @@ type TeslaStickyBarProps = {
 
 export const TeslaStickyBar = ({
   total,
+  lowestPriceBeforeReduction,
   disabled,
   hint,
   pending = false,
@@ -58,6 +61,9 @@ export const TeslaStickyBar = ({
       >
         {hint}
       </p>
+    ) : null}
+    {lowestPriceBeforeReduction != null ? (
+      <OmnibusPriceLine amount={lowestPriceBeforeReduction} />
     ) : null}
     <div className="flex items-center gap-3">
       <button

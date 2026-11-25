@@ -1,5 +1,6 @@
 "use client"
 
+import { OmnibusPriceLine } from "@/shared/omnibus/OmnibusPriceLine"
 import { TESLA_LAYOUT } from "../tokens"
 
 type TeslaTextCardProps = {
@@ -9,6 +10,7 @@ type TeslaTextCardProps = {
   priceLabel: string
   /** Cena przed rabatem. Gdy jest, obok ceny widać przekreślenie i dopisek „po rabacie”. */
   comparePriceLabel?: string
+  lowestPriceBeforeReduction?: number
   disabled?: boolean
   onSelect: () => void
 }
@@ -19,6 +21,7 @@ export const TeslaTextCard = ({
   detail,
   priceLabel,
   comparePriceLabel,
+  lowestPriceBeforeReduction,
   disabled = false,
   onSelect,
 }: TeslaTextCardProps) => (
@@ -27,7 +30,7 @@ export const TeslaTextCard = ({
     onClick={onSelect}
     disabled={disabled}
     aria-pressed={selected}
-    className="flex w-full items-center justify-between gap-3 bg-white text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171a20] disabled:cursor-not-allowed disabled:opacity-50"
+    className="flex w-full flex-col bg-white text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171a20] disabled:cursor-not-allowed disabled:opacity-50"
     style={{
       minHeight: TESLA_LAYOUT.buttonHeight + 16,
       padding: `${TESLA_LAYOUT.cardPaddingY}px ${TESLA_LAYOUT.cardPaddingX}px`,
@@ -35,6 +38,7 @@ export const TeslaTextCard = ({
       border: `2px solid ${selected ? TESLA_LAYOUT.selectedBorder : TESLA_LAYOUT.border}`,
     }}
   >
+    <span className="flex w-full items-center justify-between gap-3">
     <span className="min-w-0">
       <span
         className="block font-medium"
@@ -93,5 +97,9 @@ export const TeslaTextCard = ({
         </span>
       ) : null}
     </span>
+    </span>
+    {comparePriceLabel && lowestPriceBeforeReduction != null ? (
+      <OmnibusPriceLine amount={lowestPriceBeforeReduction} />
+    ) : null}
   </button>
 )

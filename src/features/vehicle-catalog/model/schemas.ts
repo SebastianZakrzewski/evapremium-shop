@@ -72,4 +72,10 @@ export type PricingVariantOption = {
   basePrice: number
   priceAfterDiscount: number
   discount: number
+  /** Lowest proven price before the reduction. Null when this variant is not on promotion. */
+  lowestPriceBeforeReduction?: number | null
+  /** False until a recorded 30-day window exists. The amount is then only the current selling price. */
+  omnibusPriceProven?: boolean
+  /** False when the struck-through base was not a listed or charged price in that window. */
+  referencePriceWasCharged?: boolean
 }

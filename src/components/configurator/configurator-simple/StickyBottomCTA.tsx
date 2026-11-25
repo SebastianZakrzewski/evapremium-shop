@@ -7,6 +7,7 @@ import Image from "next/image";
 import { getColorInfo } from "@/lib/color-mapping";
 import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels";
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
+import { OmnibusPriceLine } from "@/shared/omnibus/OmnibusPriceLine";
 
 interface StickyBottomCTAProps {
   priceBreakdown: {
@@ -168,6 +169,9 @@ export function StickyBottomCTA({
                     Rabat: -{formatPriceValue(priceBreakdown.discount)} zł
                   </div>
                 )}
+                {priceBreakdown.discount > 0 ? (
+                  <OmnibusPriceLine tone="light" amount={priceBreakdown.basePrice - priceBreakdown.discount} />
+                ) : null}
               </button>
 
               {/* Expandable Price Breakdown */}

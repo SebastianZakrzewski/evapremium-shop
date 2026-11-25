@@ -203,6 +203,9 @@ describe("resolveVehiclePricing contract", () => {
 
     expect(result.pricingCategoryKey).toBe("pickup")
     expect(result.selectedVariant?.priceAfterDiscount).toBe(693)
+    expect(result.selectedVariant?.lowestPriceBeforeReduction).toBe(693)
+    expect(result.selectedVariant?.omnibusPriceProven).toBe(false)
+    expect(result.selectedVariant?.referencePriceWasCharged).toBe(false)
   })
 
   it("resolves minivan single-price front at 440 PLN after discount", async () => {

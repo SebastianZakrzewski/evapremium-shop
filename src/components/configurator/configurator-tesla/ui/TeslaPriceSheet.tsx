@@ -1,6 +1,7 @@
 "use client"
 
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice"
+import { OmnibusPriceLine } from "@/shared/omnibus/OmnibusPriceLine"
 import { TESLA_LAYOUT } from "../tokens"
 
 type TeslaPriceSheetProps = {
@@ -8,6 +9,7 @@ type TeslaPriceSheetProps = {
   onClose: () => void
   basePrice: number
   discount: number
+  lowestPriceBeforeReduction?: number | null
   matPrice: number
   accessoryName?: string
   accessoryPrice: number
@@ -20,6 +22,7 @@ export const TeslaPriceSheet = ({
   onClose,
   basePrice,
   discount,
+  lowestPriceBeforeReduction,
   matPrice,
   accessoryName,
   accessoryPrice,
@@ -87,6 +90,9 @@ export const TeslaPriceSheet = ({
               <dt>Rabat ({basePrice > 0 ? Math.round((discount / basePrice) * 100) : 0}%)</dt>
               <dd>-{formatPriceValue(discount)} zł</dd>
             </div>
+          ) : null}
+          {discount > 0 && lowestPriceBeforeReduction != null ? (
+            <OmnibusPriceLine amount={lowestPriceBeforeReduction} />
           ) : null}
           <div className="flex justify-between gap-4">
             <dt>Dywaniki</dt>

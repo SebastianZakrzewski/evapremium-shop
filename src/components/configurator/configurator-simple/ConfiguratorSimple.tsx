@@ -22,6 +22,7 @@ import {
 } from "@/shared/mat-set-labels";
 import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels";
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
+import { OmnibusPriceLine } from "@/shared/omnibus/OmnibusPriceLine";
 import { StepProgress } from "./StepProgress";
 import { StepAccordion } from "./StepAccordion";
 import { CarSelectionStep } from "./CarSelectionStep";
@@ -1388,6 +1389,12 @@ export default function ConfiguratorSimple() {
                               Rabat {Math.round((priceBreakdown.discount / priceBreakdown.basePrice) * 100)}%: -{formatPriceValue(priceBreakdown.discount)} zł
                             </span>
                           )}
+                          {priceBreakdown.discount > 0 ? (
+                            <OmnibusPriceLine
+                              tone="light"
+                              amount={pricingQuery.data?.selectedVariant?.lowestPriceBeforeReduction ?? priceBreakdown.priceAfterDiscount}
+                            />
+                          ) : null}
                         </div>
                       ) : (
                         <div className="text-sm text-gray-400">
@@ -1614,6 +1621,12 @@ export default function ConfiguratorSimple() {
                       Rabat {Math.round((priceBreakdown.discount / priceBreakdown.basePrice) * 100)}%: -{formatPriceValue(priceBreakdown.discount)} zł
                     </div>
                   )}
+                  {priceBreakdown.discount > 0 ? (
+                    <OmnibusPriceLine
+                      tone="light"
+                      amount={pricingQuery.data?.selectedVariant?.lowestPriceBeforeReduction ?? priceBreakdown.priceAfterDiscount}
+                    />
+                  ) : null}
                 </div>
               ) : (
                 <div className="flex-1 min-w-0">

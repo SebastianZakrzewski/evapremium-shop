@@ -214,13 +214,15 @@ export default function TeslaConfigurator() {
   const selectedVariant = pricingQuery.data?.selectedVariant
   const priceBreakdown = useMemo(() => {
     if (!config.variant || !selectedVariant) {
-      return { basePrice: 0, discount: 0, priceAfterDiscount: 0, totalPrice: 0 }
+      return { basePrice: 0, discount: 0, priceAfterDiscount: 0, totalPrice: 0, lowestPriceBeforeReduction: undefined }
     }
     return {
       basePrice: selectedVariant.basePrice,
       discount: selectedVariant.discount,
       priceAfterDiscount: selectedVariant.priceAfterDiscount,
       totalPrice: selectedVariant.priceAfterDiscount,
+      lowestPriceBeforeReduction:
+        selectedVariant.lowestPriceBeforeReduction ?? selectedVariant.priceAfterDiscount,
     }
   }, [config.variant, selectedVariant])
 
@@ -631,6 +633,7 @@ export default function TeslaConfigurator() {
             basePrice: priceBreakdown.basePrice,
             priceAfterDiscount: priceBreakdown.priceAfterDiscount,
             totalPrice: priceBreakdown.totalPrice,
+            lowestPriceBeforeReduction: priceBreakdown.lowestPriceBeforeReduction,
           },
           productId: crypto.randomUUID(),
           productImage: getMatImagePath(
@@ -731,6 +734,9 @@ export default function TeslaConfigurator() {
   const sticky = (
     <TeslaStickyBar
       total={total}
+      lowestPriceBeforeReduction={
+        priceBreakdown.discount > 0 ? priceBreakdown.lowestPriceBeforeReduction ?? priceBreakdown.priceAfterDiscount : null
+      }
       disabled={!mapperResult.isReadyForCart && !configurationInCart}
       hint={showPriceBar && firstMissing ? firstMissing.hint : null}
       pending={isAdding || cartLoading}
@@ -877,6 +883,11 @@ export default function TeslaConfigurator() {
                     comparePriceLabel={
                       variant.discount > 0 && variant.basePrice > variant.priceAfterDiscount
                         ? formatPricePln(variant.basePrice)
+                        : undefined
+                    }
+                    lowestPriceBeforeReduction={
+                      variant.discount > 0 && variant.basePrice > variant.priceAfterDiscount
+                        ? variant.lowestPriceBeforeReduction ?? variant.priceAfterDiscount
                         : undefined
                     }
                     disabled={mapperResult.sections.variant.isDisabled}
@@ -1036,6 +1047,11 @@ export default function TeslaConfigurator() {
         onClose={() => setPriceOpen(false)}
         basePrice={priceBreakdown.basePrice}
         discount={priceBreakdown.discount}
+        lowestPriceBeforeReduction={
+          priceBreakdown.discount > 0
+            ? priceBreakdown.lowestPriceBeforeReduction ?? priceBreakdown.priceAfterDiscount
+            : null
+        }
         matPrice={priceBreakdown.totalPrice}
         accessoryName={selectedPodpietka?.name}
         accessoryPrice={accessoryPrice}
