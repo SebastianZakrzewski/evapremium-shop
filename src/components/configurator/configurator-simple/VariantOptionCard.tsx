@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { formatPricePln } from "@/lib/utils/formatPrice"
+import { OmnibusPriceLine } from "@/shared/omnibus/OmnibusPriceLine"
 
 type VariantOptionCardProps = {
   selected: boolean
@@ -69,6 +70,7 @@ export const VariantOptionCard = ({
           {formatPricePln(priceAfterDiscount)}
         </span>
       </div>
+      {discount > 0 ? <OmnibusPriceLine tone="light" amount={priceAfterDiscount} /> : null}
     </div>
   </button>
 )

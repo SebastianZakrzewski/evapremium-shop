@@ -6,6 +6,7 @@ import { X } from "lucide-react"
 import type { PricingVariantOption } from "@/features/vehicle-catalog/model/schemas"
 import { getVariantPresentation } from "@/components/configurator/configurator-simple/variantPresentation"
 import { formatPricePln } from "@/lib/utils/formatPrice"
+import { OmnibusPriceLine } from "@/shared/omnibus/OmnibusPriceLine"
 
 type CompareVariantsModalProps = {
   isOpen: boolean
@@ -113,6 +114,12 @@ export const CompareVariantsModal = ({
                     </span>
                     {variant.discount > 0 && variant.basePrice > variant.priceAfterDiscount ? (
                       <span className="mt-0.5 block text-[11px] text-gray-400">po rabacie</span>
+                    ) : null}
+                    {variant.discount > 0 && variant.basePrice > variant.priceAfterDiscount ? (
+                      <OmnibusPriceLine
+                        tone="light"
+                        amount={variant.lowestPriceBeforeReduction ?? variant.priceAfterDiscount}
+                      />
                     ) : null}
                   </p>
                 </button>

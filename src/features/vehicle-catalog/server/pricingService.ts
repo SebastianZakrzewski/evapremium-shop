@@ -2,6 +2,7 @@ import {
   filterSellableVariantKeys,
   selectPricingOverride,
 } from "../domain/pricingRules"
+import { lowestPriceBeforeReduction } from "../domain/omnibusPrice"
 import { applyShopBasePrice } from "../domain/shopPrice"
 import {
   copyTrunkMatPricesToBothDualTypes,
@@ -23,6 +24,28 @@ import { getShopTemplateOffer } from "./shopOfferRepository"
 
 type RawOverride = Awaited<ReturnType<typeof getPricingOverrides>>[number]
 type CategoryPricingRows = Awaited<ReturnType<typeof getCategoryPricingRows>>
+
+const withOmnibus = <T extends {
+  basePrice: number
+  priceAfterDiscount: number
+  discount: number
+}>(priced: T) => {
+  const promo = priced.discount > 0 && priced.basePrice > priced.priceAfterDiscount
+  const omnibus = promo
+    ? lowestPriceBeforeReduction({
+        sellingPricePln: priced.priceAfterDiscount,
+        referencePricePln: priced.basePrice,
+        observations: [],
+        reductionStartedAt: null,
+      })
+    : null
+  return {
+    ...priced,
+    lowestPriceBeforeReduction: omnibus?.amountPln ?? null,
+    omnibusPriceProven: omnibus?.proven ?? false,
+    referencePriceWasCharged: omnibus?.referenceWasApplied ?? false,
+  }
+}
 
 const calculateDiscountedPrice = (
   basePrice: number,
@@ -216,7 +239,7 @@ export const resolveVehiclePricing = async (input: PricingResolveInput) => {
           return [{
             key: variantKey,
             label: shopSet?.label || variant?.variant_label || "Mata do bagażnika",
-            ...priced,
+            ...withOmnibus(priced),
           }]
         }
 
@@ -267,9 +290,11 @@ export const resolveVehiclePricing = async (input: PricingResolveInput) => {
         return [{
           key: variantKey,
           label: variant.variant_label,
-          basePrice,
-          priceAfterDiscount: finalPrice,
-          discount: Math.max(0, Math.round((basePrice - finalPrice) * 100) / 100),
+          ...withOmnibus({
+            basePrice,
+            priceAfterDiscount: finalPrice,
+            discount: Math.max(0, Math.round((basePrice - finalPrice) * 100) / 100),
+          }),
         }]
       })
     : []

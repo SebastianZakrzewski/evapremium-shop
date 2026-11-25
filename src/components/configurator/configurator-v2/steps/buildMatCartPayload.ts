@@ -6,6 +6,7 @@ export type MatCartPrice = {
   basePrice: number
   priceAfterDiscount: number
   totalPrice: number
+  lowestPriceBeforeReduction?: number | null
 }
 
 export const buildMatCartPayload = ({
@@ -49,6 +50,7 @@ export const buildMatCartPayload = ({
       basePrice: price.basePrice,
       priceAfterDiscount: price.priceAfterDiscount,
       totalPrice: price.totalPrice,
+      lowestPriceBeforeReduction: price.lowestPriceBeforeReduction ?? undefined,
     },
     setType: config.matType,
     setVariant: config.variant,

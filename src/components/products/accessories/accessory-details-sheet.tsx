@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPriceCurrency, formatPriceValue } from "@/lib/utils/formatPrice";
+import { OmnibusPriceLine } from "@/shared/omnibus/OmnibusPriceLine";
 import { Separator } from "@/components/ui/separator";
 import { ShoppingCart, Check, X as XIcon, Loader2, Minus, Plus } from "lucide-react";
 import { toast } from "react-hot-toast";
@@ -306,6 +307,9 @@ export default function AccessoryDetailsSheet({
                   </span>
                )}
              </div>
+             {accessory.originalPrice && accessory.originalPrice > accessory.price ? (
+               <OmnibusPriceLine amount={accessory.price} tone="light" />
+             ) : null}
 
              <div className="flex items-center gap-2 text-sm">
                 {accessory.inStock ? (

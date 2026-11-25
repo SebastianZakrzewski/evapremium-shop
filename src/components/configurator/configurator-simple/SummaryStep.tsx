@@ -18,6 +18,7 @@ import { useMatModelPreviews } from "@/features/mat-model-previews";
 import { Plus, CheckCircle2, ShoppingCart } from "lucide-react";
 import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels";
 import { formatPricePln, formatPriceValue } from "@/lib/utils/formatPrice";
+import { OmnibusPriceLine } from "@/shared/omnibus/OmnibusPriceLine";
 import {
   getPodpietkaMountingFee,
   getPodpietkaMountingLabel,
@@ -277,6 +278,9 @@ export function SummaryStep({
                   <span>-{formatPriceValue(priceBreakdown.discount)} zł</span>
                 </div>
               )}
+              {priceBreakdown.discount > 0 ? (
+                <OmnibusPriceLine tone="light" amount={priceBreakdown.basePrice - priceBreakdown.discount} />
+              ) : null}
               
               {selectedPodpietka && (
                 <div className={styles.extraRow}>
@@ -314,6 +318,9 @@ export function SummaryStep({
                       {formatPricePln(totalWithAccessories)}
                     </span>
                   </div>
+                  {priceBreakdown.discount > 0 ? (
+                    <OmnibusPriceLine tone="light" amount={totalWithAccessories} />
+                  ) : null}
                   {priceBreakdown.discount > 0 && (
                     <span className={styles.savings}>
                       Oszczędzasz {formatPriceValue(priceBreakdown.discount)} zł

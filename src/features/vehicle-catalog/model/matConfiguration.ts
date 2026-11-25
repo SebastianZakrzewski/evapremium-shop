@@ -33,6 +33,7 @@ export const MatPricingSnapshotSchema = z.object({
   basePrice: z.number().nonnegative(),
   priceAfterDiscount: z.number().nonnegative(),
   totalPrice: z.number().nonnegative(),
+  lowestPriceBeforeReduction: z.number().nonnegative().optional(),
 })
 
 export const MatBitrixSnapshotSchema = z.object({

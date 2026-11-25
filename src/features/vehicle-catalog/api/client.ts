@@ -33,6 +33,9 @@ export type PricingResponse = {
     basePrice: number
     priceAfterDiscount: number
     discount: number
+    lowestPriceBeforeReduction?: number | null
+    omnibusPriceProven?: boolean
+    referencePriceWasCharged?: boolean
   }>
   selectedVariant: {
     key: string
@@ -40,6 +43,9 @@ export type PricingResponse = {
     basePrice: number
     priceAfterDiscount: number
     discount: number
+    lowestPriceBeforeReduction?: number | null
+    omnibusPriceProven?: boolean
+    referencePriceWasCharged?: boolean
   } | null
 }
 

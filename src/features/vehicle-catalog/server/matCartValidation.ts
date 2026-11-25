@@ -73,6 +73,7 @@ export const revalidateMatItemPrice = async (
       basePrice: selectedVariant.basePrice,
       priceAfterDiscount: selectedVariant.priceAfterDiscount,
       totalPrice: selectedVariant.priceAfterDiscount,
+      lowestPriceBeforeReduction: selectedVariant.lowestPriceBeforeReduction ?? undefined,
     },
     setVariantLabel: resolvePersistedMatSetVariantLabel({
       setType: config.setType,
