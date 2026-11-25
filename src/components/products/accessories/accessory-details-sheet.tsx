@@ -308,7 +308,7 @@ export default function AccessoryDetailsSheet({
                )}
              </div>
              {accessory.originalPrice && accessory.originalPrice > accessory.price ? (
-               <OmnibusPriceLine amount={accessory.price} tone="light" />
+               <OmnibusPriceLine amount={accessory.price} />
              ) : null}
 
              <div className="flex items-center gap-2 text-sm">

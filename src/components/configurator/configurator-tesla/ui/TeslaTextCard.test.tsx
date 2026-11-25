@@ -19,7 +19,12 @@ describe("TeslaTextCard", () => {
     expect(screen.getByText("710 zł")).toHaveClass("line-through")
     expect(screen.getByText("568 zł")).toBeInTheDocument()
     expect(screen.getByText("po rabacie")).toBeInTheDocument()
-    expect(screen.getByText("Najniższa cena z 30 dni przed obniżką: 568,00 zł")).toHaveClass("text-[15px]")
+    expect(screen.getByText("Najniższa cena z 30 dni przed obniżką: 568,00 zł")).toHaveClass(
+      "text-[11px]",
+      "md:text-xs",
+      "font-normal",
+      "text-neutral-600",
+    )
   })
 
   it("keeps a single price when there is no discount", () => {
