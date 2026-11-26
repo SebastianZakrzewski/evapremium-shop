@@ -54,7 +54,7 @@ describe("HeroSection", () => {
     vi.restoreAllMocks()
   })
 
-  it("renders the desktop split with copy, search and the winter graphic", () => {
+  it("renders the desktop split with copy, search and the Black Friday graphic", () => {
     render(<HeroSection />)
 
     expect(screen.getByRole("heading", { name: "Dywaniki samochodowe EVA Premium" })).toBeInTheDocument()
@@ -65,18 +65,35 @@ describe("HeroSection", () => {
     expect(screen.getByLabelText("Wybierz model samochodu")).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Szukaj dywaników dla wybranego samochodu" })).toBeInTheDocument()
     expect(screen.getByRole("link", { name: "Przeglądaj wszystkie marki" })).toHaveAttribute("href", "/dywaniki")
-    expect(screen.getByTestId("hero-promo-image")).toHaveAttribute("src", "/images/hero/zimowa-promo.png")
+    const image = screen.getByTestId("hero-promo-image")
+    expect(image).toHaveAttribute(
+      "src",
+      "/images/hero/evapremium-hero-blackfriday-v2-desktop-1920x1646.png",
+    )
+    expect(image).toHaveAttribute("fetchpriority", "high")
+    const sources = image.closest("picture")?.querySelectorAll("source")
+    expect(sources?.[2]).toHaveAttribute("type", "image/webp")
+    expect(sources?.[2]?.getAttribute("srcset")).toContain("960x823.webp 960w")
+    expect(sources?.[2]?.getAttribute("srcset")).toContain("1920x1646.webp 1920w")
+    expect(sources?.[2]).toHaveAttribute("sizes", "50vw")
     expect(screen.getByRole("region", { name: "Sekcja promocyjna - dywaniki samochodowe" })).toHaveClass("bg-[#FFFFFF]")
     expect(document.querySelector("video")).not.toBeInTheDocument()
     expect(screen.queryByText("Failed to fetch")).not.toBeInTheDocument()
   })
 
-  it("shows the same winter graphic on a mobile viewport, without video", () => {
+  it("keeps search ahead of the mobile Black Friday creative, without video", () => {
     mockMatchMedia(true)
     render(<HeroSection />)
 
     const image = screen.getByTestId("hero-promo-image")
-    expect(image).toHaveAttribute("src", "/images/hero/zimowa-promo.png")
+    const mobileSource = image.closest("picture")?.querySelector("source")
+    expect(mobileSource).toHaveAttribute("media", "(max-width: 767px)")
+    expect(mobileSource).toHaveAttribute(
+      "srcset",
+      "/images/hero/evapremium-hero-blackfriday-v2-mobile-768x1365.webp",
+    )
+    expect(mobileSource).toHaveAttribute("width", "768")
+    expect(mobileSource).toHaveAttribute("height", "1365")
     expect(document.querySelector("video")).not.toBeInTheDocument()
     expect(screen.getByTestId("hero-vehicle-search").compareDocumentPosition(image)).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,

@@ -9,10 +9,18 @@ import { buildConfiguratorEntryUrl } from "@/features/car-configurator/utils/bui
 import { useQuickSearchCatalog } from "@/features/vehicle-catalog/hooks/useQuickSearchCatalog"
 import { enrichCarContextFromTemplates } from "@/features/vehicle-catalog/utils/enrichCarContextFromTemplates"
 import {
+  HERO_PROMO_DESKTOP_HEIGHT,
+  HERO_PROMO_DESKTOP_PNG_1920,
+  HERO_PROMO_DESKTOP_PNG_960,
+  HERO_PROMO_DESKTOP_WEBP_1920,
+  HERO_PROMO_DESKTOP_WEBP_960,
+  HERO_PROMO_DESKTOP_WIDTH,
   HERO_PROMO_IMAGE_ALT,
   HERO_PROMO_IMAGE_SRC,
-  HERO_PROMO_NATIVE_HEIGHT,
-  HERO_PROMO_NATIVE_WIDTH,
+  HERO_PROMO_MOBILE_HEIGHT,
+  HERO_PROMO_MOBILE_PNG,
+  HERO_PROMO_MOBILE_WEBP,
+  HERO_PROMO_MOBILE_WIDTH,
 } from "@/features/marketing/lib/heroImage"
 import { cn } from "@/lib/utils"
 import { formatBrandDisplayName } from "@/shared/vehicle/displayLabels"
@@ -158,16 +166,54 @@ const HeroVehicleSearch = () => {
   )
 }
 
+const desktopWebpSrcSet = `${HERO_PROMO_DESKTOP_WEBP_960} 960w, ${HERO_PROMO_DESKTOP_WEBP_1920} 1920w`
+const desktopPngSrcSet = `${HERO_PROMO_DESKTOP_PNG_960} 960w, ${HERO_PROMO_DESKTOP_PNG_1920} 1920w`
+const desktopSizes = "50vw"
+
 const HeroPromoImage = () => (
-  <img
-    src={HERO_PROMO_IMAGE_SRC}
-    alt={HERO_PROMO_IMAGE_ALT}
-    width={HERO_PROMO_NATIVE_WIDTH}
-    height={HERO_PROMO_NATIVE_HEIGHT}
-    data-testid="hero-promo-image"
-    decoding="async"
-    className="block h-auto w-full"
-  />
+  <picture className="block w-full max-md:flex max-md:justify-center">
+    <source
+      media="(max-width: 767px)"
+      type="image/webp"
+      srcSet={HERO_PROMO_MOBILE_WEBP}
+      width={HERO_PROMO_MOBILE_WIDTH}
+      height={HERO_PROMO_MOBILE_HEIGHT}
+    />
+    <source
+      media="(max-width: 767px)"
+      type="image/png"
+      srcSet={HERO_PROMO_MOBILE_PNG}
+      width={HERO_PROMO_MOBILE_WIDTH}
+      height={HERO_PROMO_MOBILE_HEIGHT}
+    />
+    <source
+      media="(min-width: 768px)"
+      type="image/webp"
+      srcSet={desktopWebpSrcSet}
+      sizes={desktopSizes}
+      width={HERO_PROMO_DESKTOP_WIDTH}
+      height={HERO_PROMO_DESKTOP_HEIGHT}
+    />
+    <source
+      media="(min-width: 768px)"
+      type="image/png"
+      srcSet={desktopPngSrcSet}
+      sizes={desktopSizes}
+      width={HERO_PROMO_DESKTOP_WIDTH}
+      height={HERO_PROMO_DESKTOP_HEIGHT}
+    />
+    <img
+      src={HERO_PROMO_IMAGE_SRC}
+      alt={HERO_PROMO_IMAGE_ALT}
+      width={HERO_PROMO_DESKTOP_WIDTH}
+      height={HERO_PROMO_DESKTOP_HEIGHT}
+      data-testid="hero-promo-image"
+      decoding="async"
+      loading="eager"
+      fetchPriority="high"
+      className="block h-auto w-full max-md:max-h-[130svh] max-md:w-auto max-md:max-w-full max-md:object-contain"
+    />
+  </picture>
 )
 
 export default function HeroSection() {
