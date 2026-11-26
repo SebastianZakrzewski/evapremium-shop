@@ -210,7 +210,7 @@ const HeroPromoImage = () => (
       data-testid="hero-promo-image"
       decoding="async"
       loading="eager"
-      {...{ fetchpriority: "high" }}
+      fetchPriority="high"
       className="block h-auto w-full max-md:max-h-[130svh] max-md:w-auto max-md:max-w-full max-md:object-contain"
     />
   </picture>
