@@ -167,10 +167,13 @@ export const TeslaPinnedGallery = ({
   }
 
   return (
-    <div className="bg-white" data-pinned-src={shownSrc ?? ""} data-target-src={active?.src ?? ""}>
+    <div className="bg-white dark:px-4 dark:pt-4" data-pinned-src={shownSrc ?? ""} data-target-src={active?.src ?? ""}>
       <div
-        className="relative w-full overflow-hidden bg-white max-lg:h-[236px] lg:aspect-[390/236]"
-        style={baseSrc ? undefined : { aspectRatio: teslaImageAspectRatio }}
+        className="relative w-full overflow-hidden max-lg:h-[236px] lg:aspect-[390/236] dark:rounded-2xl"
+        style={{
+          backgroundColor: "var(--preview-well)",
+          ...(baseSrc ? {} : { aspectRatio: teslaImageAspectRatio }),
+        }}
         onTouchStart={(event) => {
           touchStart.current = event.changedTouches[0]?.clientX ?? null
         }}
@@ -255,7 +258,8 @@ export const TeslaPinnedGallery = ({
           </div>
         ) : null}
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-8"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-8 dark:hidden"
+          data-preview-fade
           style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0), #fff)" }}
         />
       </div>

@@ -10,6 +10,7 @@ import { TrackingProvider } from "@/components/tracking-provider";
 import { DeferredTags } from "@/components/analytics/DeferredTags";
 import { GoogleConsentDefaultScript } from "@/components/analytics/GoogleConsentDefaultScript";
 import { QueryProvider } from "@/lib/providers/query-provider";
+import { ThemeProvider, themeInitScript } from "@/features/theme";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -142,8 +143,9 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="pl">
+    <html lang="pl" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -225,15 +227,17 @@ export default function RootLayout({
         />
       </head>
       <body className={`${montserrat.variable} bg-[#FFFFFF] min-h-screen`}>
-        <FontsReady />
-        <QueryProvider>
-          <SessionProvider>
-            <TrackingProvider>
-              <ShopChrome>{children}</ShopChrome>
-              <EvaChatWidget />
-            </TrackingProvider>
-          </SessionProvider>
-        </QueryProvider>
+        <ThemeProvider>
+          <FontsReady />
+          <QueryProvider>
+            <SessionProvider>
+              <TrackingProvider>
+                <ShopChrome>{children}</ShopChrome>
+                <EvaChatWidget />
+              </TrackingProvider>
+            </SessionProvider>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
