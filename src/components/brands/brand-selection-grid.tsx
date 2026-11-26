@@ -131,7 +131,7 @@ export default function BrandSelectionGrid() {
               {[...Array(8)].map((_, index) => (
                 <div
                   key={index}
-                  className="aspect-[4/5] animate-pulse rounded-md border border-white/15 bg-white/10"
+                  className="brand-tile-skeleton aspect-[4/5] animate-pulse rounded-md border"
                 />
               ))}
             </div>

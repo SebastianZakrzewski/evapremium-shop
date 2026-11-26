@@ -1005,6 +1005,7 @@ html.fonts-ready .h6 {
   --tesla-border: #d0d1d2;
   --tesla-page: #ffffff;
   --tesla-selected: #171a20;
+  --preview-well: #ffffff;
   color-scheme: light;
 }
 
@@ -1026,6 +1027,7 @@ html.dark {
   --tesla-border: #767676;
   --tesla-page: #121212;
   --tesla-selected: #f5f5f5;
+  --preview-well: #e6e6e6;
   color-scheme: dark;
   background-color: var(--shop-bg);
 }
@@ -1160,4 +1162,14 @@ html.dark select:-webkit-autofill {
 
 html.dark .theme-logo {
   filter: brightness(0) invert(1);
+}
+
+.brand-tile-skeleton {
+  background-color: #e5e5e5;
+  border-color: #d4d4d4;
+}
+
+html.dark .brand-tile-skeleton {
+  background-color: rgb(255 255 255 / 0.1);
+  border-color: rgb(255 255 255 / 0.15);
 }

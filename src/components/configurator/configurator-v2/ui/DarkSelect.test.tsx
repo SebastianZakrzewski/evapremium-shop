@@ -47,4 +47,36 @@ describe("DarkSelect", () => {
 
     expect(screen.getByRole("button", { name: "Rok produkcji, 2015" })).toBeInTheDocument()
   })
+
+  it("keeps an enabled light placeholder darker than a disabled one only on white", () => {
+    const { rerender } = render(
+      <DarkSelect
+        id="brand"
+        value=""
+        placeholder="Wybierz markę"
+        ariaLabel="Marka"
+        options={[]}
+        surface="light"
+        onChange={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByText("Wybierz markę")).toHaveClass("text-[#525252]")
+    expect(screen.getByRole("button", { name: "Marka" })).not.toHaveClass("disabled:opacity-50")
+
+    rerender(
+      <DarkSelect
+        id="model"
+        value=""
+        placeholder="Wybierz model"
+        ariaLabel="Model"
+        options={[]}
+        surface="light"
+        disabled
+        onChange={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByText("Wybierz model")).toHaveClass("text-[#737373]", "dark:text-[#8d8d8d]")
+  })
 })

@@ -10,7 +10,11 @@ vi.mock("next/image", () => ({
   }: {
     src: string
     alt?: string
-  }) => <img src={src} alt={alt ?? ""} />,
+  }) => (
+    // The gallery test stubs next/image. The real component still uses Image.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={alt ?? ""} />
+  ),
   getImageProps: () => ({ props: { src: "/optimized.png" } }),
 }))
 
@@ -38,5 +42,17 @@ describe("TeslaPinnedGallery", () => {
     fireEvent.click(screen.getByRole("button", { name: "Zamknij podgląd" }))
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+  })
+
+  it("rounds the preview well and drops the white fade in dark mode", () => {
+    const { container } = render(
+      <TeslaPinnedGallery slides={slides} preferredId="mat-active" resetKey="mat" />,
+    )
+
+    const well = container.querySelector("[data-pinned-src]")?.firstElementChild
+    expect(well).toHaveClass("dark:rounded-2xl")
+    expect(well).toHaveStyle({ backgroundColor: "var(--preview-well)" })
+    expect(container.querySelector("[data-preview-fade]")).toHaveClass("dark:hidden")
+    expect(container.querySelector("img")).not.toHaveClass("dark:invert")
   })
 })

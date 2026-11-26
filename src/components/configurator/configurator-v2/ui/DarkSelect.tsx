@@ -171,12 +171,12 @@ export const DarkSelect = ({
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
         onClick={() => setOpen((current) => !current)}
-        className={`flex w-full min-h-11 items-center justify-between gap-3 rounded-xl px-4 py-3 text-left text-sm outline-none transition-shadow disabled:cursor-not-allowed disabled:opacity-50 ${
+        className={`flex w-full min-h-11 items-center justify-between gap-3 rounded-xl px-4 py-3 text-left text-sm outline-none transition-shadow disabled:cursor-not-allowed ${
           surface === "light"
             ? `border bg-[#FFFFFF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950 ${
-                selected ? "border-neutral-950" : "border-neutral-300"
+                selected && !disabled ? "border-neutral-950" : "border-neutral-300"
               }`
-            : "bg-black/40 ring-1 ring-transparent focus-visible:ring-red-500/70"
+            : "bg-black/40 ring-1 ring-transparent focus-visible:ring-red-500/70 disabled:opacity-50"
         }`}
       >
         <span
@@ -184,7 +184,9 @@ export const DarkSelect = ({
             surface === "light"
               ? selected
                 ? "text-neutral-950"
-                : "text-neutral-500"
+                : disabled
+                  ? "text-[#737373] dark:text-[#8d8d8d]"
+                  : "text-[#525252] dark:text-[#d4d4d4]"
               : selected
                 ? "text-white"
                 : "text-white/45"
@@ -194,7 +196,11 @@ export const DarkSelect = ({
         </span>
         <ChevronDown
           className={`h-4 w-4 shrink-0 transition-transform ${
-            surface === "light" ? "text-neutral-500" : "text-white/35"
+            surface === "light"
+              ? disabled
+                ? "text-[#737373] dark:text-[#8d8d8d]"
+                : "text-[#525252] dark:text-[#d4d4d4]"
+              : "text-white/35"
           } ${open ? "rotate-180" : ""}`}
           aria-hidden
         />
