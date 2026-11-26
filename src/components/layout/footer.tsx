@@ -19,7 +19,7 @@ export default function Footer() {
                 alt="EvaPremium Logo"
                 width={500}
                 height={200}
-                className="object-contain h-24 md:h-28 w-auto"
+                className="theme-logo object-contain h-24 md:h-28 w-auto"
                 priority
               />
             </Link>

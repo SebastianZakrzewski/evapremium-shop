@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Class strategy. Tailwind v4 otherwise follows prefers-color-scheme. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Touch optimizations */
 * {
   -webkit-tap-highlight-color: transparent;
@@ -67,27 +70,7 @@ button:disabled, a[aria-disabled="true"], [role="button"][aria-disabled="true"],
   --radius: 0.5rem;
 }
 
-@theme dark {
-  --color-background: 0 0% 0%;
-  --color-foreground: 0 0% 100%;
-  --color-card: 0 0% 5%;
-  --color-card-foreground: 0 0% 100%;
-  --color-popover: 0 0% 5%;
-  --color-popover-foreground: 0 0% 100%;
-  --color-primary: #d00328;
-  --color-primary-foreground: #ffffff;
-  --color-secondary: 0 0% 10%;
-  --color-secondary-foreground: 0 0% 100%;
-  --color-muted: 0 0% 10%;
-  --color-muted-foreground: 0 0% 65%;
-  --color-accent: 0 0% 15%;
-  --color-accent-foreground: 0 0% 100%;
-  --color-destructive: #d00328;
-  --color-destructive-foreground: #ffffff;
-  --color-border: 0 0% 15%;
-  --color-input: 0 0% 15%;
-  --color-ring: #d00328;
-}
+/* Dark values live on html.dark in the theme block below, not in a media query. */
 
 @layer utilities {
   .transform-style-3d {
@@ -945,11 +928,11 @@ html.fonts-ready .h6 {
    Warstwa base, bo !important w utilities (wymuszenie bieli) wygrywa z regułami poza warstwami. */
 @layer base {
   .shop-canvas {
-    color: #171717;
+    color: var(--shop-ink-strong);
   }
 
   .shop-canvas .text-white {
-    color: #171717 !important;
+    color: var(--shop-ink-strong) !important;
   }
 
   .shop-canvas .text-gray-100,
@@ -973,7 +956,7 @@ html.fonts-ready .h6 {
   .shop-canvas .text-white\/60,
   .shop-canvas .text-white\/70,
   .shop-canvas .text-white\/80 {
-    color: #404040 !important;
+    color: var(--shop-ink-body) !important;
   }
 
   .shop-canvas .on-media,
@@ -1002,4 +985,179 @@ html.fonts-ready .h6 {
   .shop-canvas .from-red-700 .text-white {
     color: #ffffff !important;
   }
+}
+
+/* shop-theme-light */
+:root {
+  --shop-bg: #ffffff;
+  --shop-bg-muted: #f5f5f5;
+  --shop-ink-strong: #171717;
+  --shop-ink-body: #404040;
+  --shop-ink-muted: #525252;
+  --shop-line: #e5e5e5;
+  --shop-brand-text: #d00328;
+  --shop-danger: #d00328;
+  --shop-inverse: #0a0a0a;
+  --shop-on-inverse: #ffffff;
+  --shop-placeholder: #595959;
+  --tesla-text: #171a20;
+  --tesla-muted: #5c5e62;
+  --tesla-border: #d0d1d2;
+  --tesla-page: #ffffff;
+  --tesla-selected: #171a20;
+  color-scheme: light;
+}
+
+/* shop-theme-dark */
+html.dark {
+  --shop-bg: #121212;
+  --shop-bg-muted: #1c1c1c;
+  --shop-ink-strong: #fafafa;
+  --shop-ink-body: #e5e5e5;
+  --shop-ink-muted: #e5e5e5;
+  --shop-line: #767676;
+  --shop-brand-text: #ff8b9e;
+  --shop-danger: #ff8b9e;
+  --shop-inverse: #f5f5f5;
+  --shop-on-inverse: #121212;
+  --shop-placeholder: #d4d4d4;
+  --tesla-text: #f5f5f5;
+  --tesla-muted: #e5e5e5;
+  --tesla-border: #767676;
+  --tesla-page: #121212;
+  --tesla-selected: #f5f5f5;
+  color-scheme: dark;
+  background-color: var(--shop-bg);
+}
+
+html {
+  background-color: var(--shop-bg);
+}
+
+html.dark body,
+html.dark .bg-white,
+html.dark .bg-\[\#FFFFFF\],
+html.dark .bg-\[\#ffffff\],
+html.dark .bg-\[\#fff\],
+html.dark .bg-\[\#f5f5f5\],
+html.dark .lg\:bg-\[\#f5f5f5\],
+html.dark .max-lg\:bg-white,
+html.dark .hover\:bg-white:hover,
+html.dark .hover\:bg-\[\#FFFFFF\]:hover,
+html.dark .hover\:bg-\[\#FFFFFF\]\/40:hover,
+html.dark .bg-\[\#FFFFFF\]\/40,
+html.dark .disabled\:bg-white:disabled {
+  background-color: var(--shop-bg) !important;
+}
+
+html.dark .bg-neutral-50,
+html.dark .bg-neutral-100,
+html.dark .bg-gray-50,
+html.dark .bg-gray-100,
+html.dark .hover\:bg-neutral-50:hover,
+html.dark .hover\:bg-neutral-100:hover,
+html.dark .hover\:bg-gray-50:hover,
+html.dark .hover\:bg-gray-100:hover,
+html.dark .disabled\:bg-neutral-100:disabled {
+  background-color: var(--shop-bg-muted) !important;
+}
+
+html.dark .text-neutral-950,
+html.dark .text-neutral-900,
+html.dark .text-neutral-800,
+html.dark .text-black,
+html.dark .text-gray-900,
+html.dark .text-gray-800,
+html.dark .hover\:text-neutral-950:hover,
+html.dark .hover\:text-black:hover,
+html.dark .text-\[\#171a20\] {
+  color: var(--shop-ink-strong) !important;
+}
+
+html.dark .text-neutral-700,
+html.dark .text-neutral-600,
+html.dark .text-gray-700 {
+  color: var(--shop-ink-muted) !important;
+}
+
+html.dark .text-red-700,
+html.dark .text-red-600,
+html.dark .text-red-500,
+html.dark .text-red-400,
+html.dark .hover\:text-red-600:hover,
+html.dark .hover\:text-red-500:hover,
+html.dark .hover\:text-red-400:hover,
+html.dark .hover\:text-red-300:hover,
+html.dark .group:hover .group-hover\:text-red-600,
+html.dark .group:hover .group-hover\:text-red-400 {
+  color: var(--shop-brand-text) !important;
+}
+
+html.dark .border-neutral-200,
+html.dark .border-neutral-300,
+html.dark .border-gray-200,
+html.dark .border-gray-300,
+html.dark .border-black,
+html.dark .hover\:border-neutral-300:hover,
+html.dark .hover\:border-neutral-400:hover,
+html.dark .divide-neutral-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--shop-line) !important;
+}
+
+html.dark .ring-offset-white {
+  --tw-ring-offset-color: var(--shop-bg);
+}
+
+html.dark nav .bg-neutral-950 {
+  background-color: var(--shop-ink-strong) !important;
+}
+
+html.dark nav .ring-white {
+  --tw-ring-color: var(--shop-bg);
+}
+
+html.dark .on-media.bg-neutral-950 {
+  box-shadow: inset 0 0 0 1px var(--shop-ink-strong);
+}
+
+html.dark button.bg-black {
+  background-color: var(--shop-inverse) !important;
+  color: var(--shop-on-inverse) !important;
+}
+
+html.dark button.bg-black:hover {
+  background-color: #e5e5e5 !important;
+}
+
+html.dark .placeholder\:text-neutral-400::placeholder,
+html.dark .placeholder\:text-neutral-500::placeholder {
+  color: var(--shop-placeholder) !important;
+}
+
+html.dark .focus-visible\:outline-red-600:focus-visible {
+  outline-color: var(--shop-brand-text);
+}
+
+html.dark .focus-visible\:outline-\[\#171a20\]:focus-visible {
+  outline-color: var(--tesla-selected);
+}
+
+:is(p, div).text-red-400 {
+  color: var(--shop-danger);
+}
+
+html.dark nav svg path[fill="#010304"] {
+  fill: var(--shop-ink-strong);
+}
+
+html.dark input:-webkit-autofill,
+html.dark textarea:-webkit-autofill,
+html.dark select:-webkit-autofill {
+  -webkit-text-fill-color: var(--shop-ink-strong);
+  caret-color: var(--shop-ink-strong);
+  box-shadow: 0 0 0 1000px var(--shop-bg-muted) inset;
+}
+
+html.dark .theme-logo {
+  filter: brightness(0) invert(1);
 }

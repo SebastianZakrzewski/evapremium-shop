@@ -7,6 +7,7 @@ import { useCart } from "@/features/shopping-cart/hooks/useCart";
 import SearchDropdown from "../search-dropdown";
 import { NavbarLogo } from "./NavbarLogo";
 import { initialHeaderScroll, nextHeaderScroll } from "./headerScroll";
+import { ThemeToggle } from "@/features/theme";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -125,12 +126,12 @@ export default function Navbar() {
       >
         <div className="absolute bottom-0 left-0 w-full h-px bg-neutral-200"></div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-20 lg:h-24 flex items-center justify-between overflow-x-hidden">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between overflow-x-hidden px-4 sm:px-6 md:h-20 lg:grid lg:h-24 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-4 lg:px-8">
           {/* Logo — animacja power-on po akceptacji cookies */}
           <NavbarLogo />
           
-          {/* Desktop Links - Centered (from lg: tablets keep hamburger) */}
-          <div className="hidden lg:flex gap-4 xl:gap-8 items-center absolute left-1/2 transform -translate-x-1/2">
+          {/* Desktop Links - Centered in the free space between logo and actions */}
+          <div className="hidden min-w-0 lg:flex items-center justify-center gap-3 xl:gap-6">
             <Link href="/dywaniki" className="text-neutral-950 hover:text-red-600 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="Dywaniki Samochodowe EVA Premium">Dywaniki Samochodowe</Link>
             <Link href="/akcesoria" className="text-neutral-950 hover:text-red-600 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="Akcesoria Samochodowe - Kompletna Oferta">Akcesoria</Link>
             <Link href="/galeria" onClick={handleGalleryClick} className="text-neutral-950 hover:text-red-600 transition-colors font-medium text-sm xl:text-base py-1 whitespace-nowrap" title="Galeria Produktów EVA Premium">Galeria</Link>
@@ -152,10 +153,12 @@ export default function Navbar() {
               Pytania?
             </Link>
             <div className="flex items-center gap-2 xl:gap-3">
+              <ThemeToggle />
               <SearchDropdown />
               <button 
                 onClick={() => setIsCartOpen(true)}
                 className="text-neutral-950 hover:text-red-600 transition-colors p-2 relative group rounded-full border border-neutral-200 hover:bg-neutral-100"
+                aria-label="Koszyk"
               >
                 <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -171,11 +174,13 @@ export default function Navbar() {
           </div>
           
           {/* Mobile / tablet Cart Icon and Hamburger */}
-          <div className="lg:hidden flex items-center gap-3 z-10 shrink-0">
+          <div className="lg:hidden flex items-center gap-1.5 z-10 shrink-0">
+            <ThemeToggle />
             <SearchDropdown />
             <button 
               onClick={() => setIsCartOpen(true)}
               className="text-neutral-950 hover:text-red-600 transition-colors p-2 relative group"
+              aria-label="Koszyk"
             >
               <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
