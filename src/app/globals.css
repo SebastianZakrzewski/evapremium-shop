@@ -1010,23 +1010,28 @@ html.fonts-ready .h6 {
 }
 
 /* shop-theme-dark */
+/* Sampled from the Black Friday hero: background #010102, accent #f0152f, text #ffffff.
+   White on #f0152f is 4.33:1, so filled buttons use #ea152f (4.52:1). */
 html.dark {
-  --shop-bg: #121212;
-  --shop-bg-muted: #1c1c1c;
-  --shop-ink-strong: #fafafa;
-  --shop-ink-body: #e5e5e5;
-  --shop-ink-muted: #e5e5e5;
-  --shop-line: #767676;
-  --shop-brand-text: #ff8b9e;
-  --shop-danger: #ff8b9e;
-  --shop-inverse: #f5f5f5;
-  --shop-on-inverse: #121212;
+  --shop-bg: #010102;
+  --shop-surface: #121212;
+  --shop-bg-muted: #1a1a1a;
+  --shop-ink-strong: #ffffff;
+  --shop-ink-body: #d4d4d4;
+  --shop-ink-muted: #d4d4d4;
+  --shop-line: #262626;
+  --shop-input-line: #6b6b6b;
+  --shop-brand-text: #f0152f;
+  --shop-brand-fill: #ea152f;
+  --shop-danger: #f0152f;
+  --shop-inverse: #ffffff;
+  --shop-on-inverse: #010102;
   --shop-placeholder: #d4d4d4;
-  --tesla-text: #f5f5f5;
-  --tesla-muted: #e5e5e5;
-  --tesla-border: #767676;
-  --tesla-page: #121212;
-  --tesla-selected: #f5f5f5;
+  --tesla-text: #ffffff;
+  --tesla-muted: #d4d4d4;
+  --tesla-border: #262626;
+  --tesla-page: #010102;
+  --tesla-selected: #ffffff;
   --preview-well: #e6e6e6;
   color-scheme: dark;
   background-color: var(--shop-bg);
@@ -1037,18 +1042,27 @@ html {
 }
 
 html.dark body,
-html.dark .bg-white,
 html.dark .bg-\[\#FFFFFF\],
 html.dark .bg-\[\#ffffff\],
 html.dark .bg-\[\#fff\],
 html.dark .bg-\[\#f5f5f5\],
-html.dark .lg\:bg-\[\#f5f5f5\],
+html.dark .lg\:bg-\[\#f5f5f5\] {
+  background-color: var(--shop-bg) !important;
+}
+
+html.dark .bg-white,
 html.dark .max-lg\:bg-white,
 html.dark .hover\:bg-white:hover,
 html.dark .hover\:bg-\[\#FFFFFF\]:hover,
 html.dark .hover\:bg-\[\#FFFFFF\]\/40:hover,
 html.dark .bg-\[\#FFFFFF\]\/40,
-html.dark .disabled\:bg-white:disabled {
+html.dark .disabled\:bg-white:disabled,
+html.dark .fixed.bg-\[\#FFFFFF\] {
+  background-color: var(--shop-surface) !important;
+}
+
+html.dark nav.bg-white,
+html.dark footer {
   background-color: var(--shop-bg) !important;
 }
 
@@ -1104,6 +1118,28 @@ html.dark .hover\:border-neutral-300:hover,
 html.dark .hover\:border-neutral-400:hover,
 html.dark .divide-neutral-200 > :not([hidden]) ~ :not([hidden]) {
   border-color: var(--shop-line) !important;
+}
+
+html.dark input.border-neutral-200,
+html.dark input.border-neutral-300,
+html.dark select.border-neutral-200,
+html.dark select.border-neutral-300,
+html.dark textarea.border-neutral-200,
+html.dark textarea.border-neutral-300,
+html.dark button.border-neutral-200,
+html.dark button.border-neutral-300 {
+  border-color: var(--shop-input-line) !important;
+}
+
+html.dark .bg-red-600,
+html.dark .hover\:bg-red-600:hover,
+html.dark .hover\:bg-red-500:hover,
+html.dark .data-\[state\=checked\]\:bg-red-600[data-state="checked"] {
+  background-color: var(--shop-brand-fill) !important;
+}
+
+html.dark .bg-gradient-to-r.from-red-600 {
+  background-image: linear-gradient(to right, #ea152f, #d0122c) !important;
 }
 
 html.dark .ring-offset-white {

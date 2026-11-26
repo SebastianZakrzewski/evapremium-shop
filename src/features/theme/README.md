@@ -14,4 +14,4 @@ export const Example = () => (
 )
 ```
 
-Kolory powierzchni, tekstu, linii i akcentu są zmiennymi CSS (`--shop-*`, `--tesla-*`). Jasny motyw zachowuje dotychczasowe wartości. Zdjęcia produktów i hero nie dostają filtrów.
+Kolory powierzchni, tekstu, linii i akcentu są zmiennymi CSS (`--shop-*`, `--tesla-*`). Jasny motyw zachowuje dotychczasowe wartości. Ciemne tło strony jest próbką z grafiki Black Friday (`#010102`), a wypełnienie przycisków to `#ea152f`, bo biel na próbkowanej czerwieni `#f0152f` ma kontrast 4.33:1. Zdjęcia produktów i hero nie dostają filtrów.
