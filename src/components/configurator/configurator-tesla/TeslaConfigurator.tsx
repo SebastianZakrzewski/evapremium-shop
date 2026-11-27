@@ -60,6 +60,7 @@ import { filterPreviewsForBodyType } from "./preview/filterPreviewsForBodyType"
 import { resolveCarGallerySlides, type CarGallerySlide } from "./preview/resolveCarGallerySlides"
 import { preloadPinnedImage, TeslaPinnedGallery, type GallerySlide } from "./preview/TeslaPinnedGallery"
 import { isMarketingConfiguratorImage } from "./preview/isMarketingConfiguratorImage"
+import { shouldShowProductPreview } from "./preview/shouldShowProductPreview"
 import {
   DEFAULT_MAT_IMAGE,
   resolvePerColorMatImage,
@@ -131,6 +132,7 @@ export default function TeslaConfigurator() {
   const [alignZestaw, setAlignZestaw] = useState(false)
   const [matInView, setMatInView] = useState(false)
   const [matPinnedByType, setMatPinnedByType] = useState(false)
+  const [productScrolled, setProductScrolled] = useState(false)
   const [resetNotice, setResetNotice] = useState<string | null>(null)
   const [priceOpen, setPriceOpen] = useState(false)
   const [compareTypes, setCompareTypes] = useState(false)
@@ -382,13 +384,21 @@ export default function TeslaConfigurator() {
   }, [hydrated, editingCar, mapperResult.sections.vehicle.isComplete])
 
   const productSectionId = skipMatTypeStep ? "section-zestaw" : "section-matType"
-  const showMat = matInView || matPinnedByType
+  const showMat = shouldShowProductPreview({
+    productSectionInView: matInView,
+    productSectionPinned: matPinnedByType,
+    appearanceTouched,
+    scrolled: productScrolled,
+  })
 
   useEffect(() => {
     let mat = false
     let frame = 0
     const update = () => {
       frame = 0
+      const options = document.getElementById("configurator-options")
+      const scrolled = (options?.scrollTop ?? 0) > 48 || window.scrollY > 48
+      setProductScrolled((current) => (current === scrolled ? current : scrolled))
       const section = document.getElementById(productSectionId)
       if (!section) return
       const offset = Number.parseFloat(
