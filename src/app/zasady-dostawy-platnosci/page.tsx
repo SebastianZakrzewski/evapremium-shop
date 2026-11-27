@@ -78,14 +78,14 @@ export default function DeliveryAndPaymentTermsPage() {
                   Sprzedawca nie ponosi odpowiedzialności za działania przewoźnika, lecz podejmuje wszelkie możliwe starania, aby przesyłka dotarła na czas.
                 </p>
 
-                <div className="bg-yellow-900/20 border border-yellow-600/30 p-4 rounded-lg my-4">
-                  <p className="text-yellow-200">
-                    <strong>Ważne:</strong> Klient ma obowiązek sprawdzenia przesyłki przy odbiorze. W przypadku stwierdzenia uszkodzenia opakowania lub Produktu należy spisać protokół szkody w obecności kuriera oraz niezwłocznie skontaktować się ze Sprzedawcą pod adresem e-mail 
-                    <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-400 hover:underline ml-1">
+                <div className="bg-amber-50 border border-amber-700 p-4 rounded-lg my-4">
+                  <p className="text-neutral-950">
+                    <strong className="text-amber-950">Ważne:</strong> Klient ma obowiązek sprawdzenia przesyłki przy odbiorze. W przypadku stwierdzenia uszkodzenia opakowania lub Produktu należy spisać protokół szkody w obecności kuriera oraz niezwłocznie skontaktować się ze Sprzedawcą pod adresem e-mail 
+                    <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-800 underline ml-1">
                       evapremium.kontakt@gmail.com
                     </a>
                     {' '}lub telefonicznie pod numerem 
-                    <a href="tel:+48793993430" className="text-blue-400 hover:underline ml-1">
+                    <a href="tel:+48793993430" className="text-blue-800 underline ml-1">
                       +48 793 993 430
                     </a>.
                   </p>
@@ -110,7 +110,7 @@ export default function DeliveryAndPaymentTermsPage() {
                         <p>81-198 Pogórze</p>
                         <p>NIP: 5871715880</p>
                         <p><strong>Numer rachunku (mBank S.A.):</strong></p>
-                        <p className="text-lg font-mono bg-white/5 p-2 rounded text-green-400">47 1140 2004 0000 3702 7951 8739</p>
+                        <p className="text-lg font-mono bg-neutral-100 p-2 rounded text-green-800">47 1140 2004 0000 3702 7951 8739</p>
                       </div>
                     </div>
                     <p className="text-gray-400 mt-4">
@@ -147,9 +147,9 @@ export default function DeliveryAndPaymentTermsPage() {
                   </div>
                 </div>
 
-                <div className="bg-blue-900/20 border border-blue-600/30 p-4 rounded-lg my-6">
-                  <h4 className="text-lg font-semibold text-blue-200 mb-2">Informacje o płatnościach:</h4>
-                  <ul className="text-blue-200 space-y-2">
+                <div className="bg-blue-50 border border-blue-700 p-4 rounded-lg my-6">
+                  <h4 className="text-lg font-semibold text-blue-950 mb-2">Informacje o płatnościach:</h4>
+                  <ul className="text-neutral-950 space-y-2">
                     <li>• W przypadku płatności elektronicznych (pkt 1.2), Klient dokonuje zapłaty przed rozpoczęciem realizacji zamówienia.</li>
                     <li>• W przypadku płatności za pobraniem (pkt 1.3), przesyłka zostanie wysłana po wpłacie przedpłaty przez Klienta i weryfikacji adresu dostawy na terenie Polski. Pozostała kwota płatna jest u kuriera.</li>
                     <li>• Klient zobowiązany jest do dokonania zapłaty Ceny z tytułu Umowy Sprzedaży w terminie 5 dni roboczych od dnia jej zawarcia, chyba że Umowa Sprzedaży stanowi inaczej.</li>
@@ -169,7 +169,7 @@ export default function DeliveryAndPaymentTermsPage() {
                 
                 <p>
                   Reklamacje dotyczące dostawy (np. opóźnienia, uszkodzenia) można zgłaszać mailowo na adres: 
-                  <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-400 hover:underline ml-1">
+                  <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-800 underline ml-1">
                     evapremium.kontakt@gmail.com
                   </a>
                   {' '}w ciągu 3 dni roboczych od odbioru.
@@ -181,12 +181,12 @@ export default function DeliveryAndPaymentTermsPage() {
               <h3 className="text-lg font-semibold text-white mb-3">Kontakt w sprawach dostawy i płatności</h3>
               <div className="text-gray-400 space-y-2">
                 <p><strong>Email:</strong> 
-                  <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-400 hover:underline ml-1">
+                  <a href="mailto:evapremium.kontakt@gmail.com" className="text-blue-800 underline ml-1">
                     evapremium.kontakt@gmail.com
                   </a>
                 </p>
                 <p><strong>Telefon:</strong> 
-                  <a href="tel:+48793993430" className="text-blue-400 hover:underline ml-1">
+                  <a href="tel:+48793993430" className="text-blue-800 underline ml-1">
                     +48 793 993 430
                   </a>
                 </p>
